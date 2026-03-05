@@ -74,3 +74,4 @@ Cells Data
 - How_and_where_to_use_enumerators_using_XLSX_format..cs
 - Where_to_use_enumerators_using_XLSX_format..cs
 - Conclusion_using_XLSX_format..cs
+- Cells_enumerator_using_XLSX_format..cs
