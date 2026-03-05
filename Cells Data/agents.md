@@ -81,3 +81,4 @@ Cells Data
 - Using_MaxDataRow_&_MaxDataColumn_using_XLSX_format..cs
 - Reading_cell_values_in_multiple_threads_simultaneously_using.cs
 - Populate_data_first_by_row_then_by_column_using_XLSX_format..cs
+- Preserve_single_quote_prefix_of_cell_value_or_range_using_XL.cs
