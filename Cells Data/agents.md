@@ -85,3 +85,4 @@ Cells Data
 - Console_output_using_XLSX_format..cs
 - Access_and_update_the_portions_of_rich_text_of_cell_using_XL.cs
 - C#_code_to_access_and_update_the_portions_of_rich_text_of_ce.cs
+- Console_output_generated_by_the_sample_code_using_XLSX_forma.cs
