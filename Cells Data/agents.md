@@ -84,3 +84,4 @@ Cells Data
 - Preserve_single_quote_prefix_of_cell_value_or_range_using_XL.cs
 - Console_output_using_XLSX_format..cs
 - Access_and_update_the_portions_of_rich_text_of_cell_using_XL.cs
+- C#_code_to_access_and_update_the_portions_of_rich_text_of_ce.cs
