@@ -51,3 +51,4 @@ Cells Data
 - Finding_cells_containing_a_formula_using_XLSX_format..cs
 - Finding_data_or_formulas_using_FindOptions_using_XLSX_format.cs
 - Finding_cells_containing_specified_string_value_or_number_us.cs
+- Using_Aspose.Cells_using_XLSX_format..cs
