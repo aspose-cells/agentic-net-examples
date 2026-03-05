@@ -12,3 +12,4 @@ Working With Tables
 - Convert_Table_to_ODS_from_an_XLSX_file_and_save_as_ODS..cs
 - Find_Query_Tables_and_List_Objects_related_to_External_Data_.cs
 - Create_and_manage_tables_of_Microsoft_Excel_files_using_an_X.cs
+- Create_Table_using_an_XLSX_file..cs
