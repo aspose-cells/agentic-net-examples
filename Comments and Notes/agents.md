@@ -15,3 +15,4 @@ Comments and Notes
 - Threaded_Comments_in_a_workbook_loaded_in_XLSX_format..cs
 - Add_Threaded_Comments_in_a_workbook_loaded_in_XLSX_format..cs
 - Read_Threaded_Comments_in_a_workbook_loaded_in_XLSX_format..cs
+- Add_Threaded_Comment_with_Excel_in_a_workbook_loaded_in_XLSX.cs
