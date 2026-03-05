@@ -10,3 +10,4 @@ Working With Tables
 - Insert_pictures_and_shapes_into_an_Excel_file_using_an_XLSX_.cs
 - Protect_the_list_from_accidental_row_and_column_deletion_in_.cs
 - Convert_Table_to_ODS_from_an_XLSX_file_and_save_as_ODS..cs
+- Find_Query_Tables_and_List_Objects_related_to_External_Data_.cs
