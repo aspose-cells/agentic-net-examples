@@ -14,3 +14,4 @@ Cells Data
 - How_to_get_a_cell_object_by_cell_index_in_the_cells_collecti.cs
 - Convert_text_numeric_data_to_number_and_export_to_XLSX_forma.cs
 - C#_code_to_convert_string_numeric_data_to_actual_numbers_and.cs
+- Possible_usage_scenarios_using_XLSX_format..cs
