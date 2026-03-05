@@ -24,3 +24,4 @@ Cells Data
 - Autofilter_in_Microsoft_Excel_using_XLSX_format..cs
 - Autofilter_with_Aspose.Cells_using_XLSX_format..cs
 - Creating_subtotals_using_XLSX_format..cs
+- Advanced_topics_using_XLSX_format..cs
