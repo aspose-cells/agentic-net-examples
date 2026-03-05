@@ -15,3 +15,4 @@ Globalization and Localization
 - Localize_spreadsheet_by_implementing_subtotal_and_grand_tota.cs
 - Localize_spreadsheet_by_using_GlobalizationSettings_class_to.cs
 - Localize_spreadsheet_by_reviewing_introduction_to_Globalizat.cs
+- Localize_spreadsheet_by_creating_custom_labels_for_subtotals.cs
