@@ -68,3 +68,4 @@ Cells Data
 - How_to_import_DataView_into_Excel_using_XLSX_format..cs
 - How_to_import_DataGrid_into_Excel_using_XLSX_format..cs
 - How_to_import_GridView_into_Excel_using_XLSX_format..cs
+- How_to_import_HTML_formatted_data_into_Excel_using_XLSX_form.cs
