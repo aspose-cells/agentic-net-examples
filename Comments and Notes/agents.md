@@ -27,3 +27,4 @@ Comments and Notes
 - How_to_change_background_in_comment_in_Excel_in_a_workbook_l.cs
 - How_to_change_color_in_comment_in_Excel_in_a_workbook_loaded.cs
 - Remove_Threaded_Comments_with_Excel_in_a_workbook_loaded_in_.cs
+- Edit_Threaded_Comment_with_Excel_in_a_workbook_loaded_in_XLS.cs
