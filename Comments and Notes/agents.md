@@ -22,3 +22,4 @@ Comments and Notes
 - Read_Created_Time_of_Threaded_Comments_in_a_workbook_loaded_.cs
 - Sample_Code_in_a_workbook_loaded_in_XLSX_format..cs
 - Console_Output_in_a_workbook_loaded_in_XLSX_format..cs
+- Change_Text_Direction_of_the_Comment_in_a_workbook_loaded_in.cs
