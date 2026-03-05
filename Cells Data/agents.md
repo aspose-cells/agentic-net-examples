@@ -21,3 +21,4 @@ Cells Data
 - Using_the_Aspose.Cells_API_using_XLSX_format..cs
 - Data_filtering_using_XLSX_format..cs
 - Autofilter_data_using_XLSX_format..cs
+- Autofilter_in_Microsoft_Excel_using_XLSX_format..cs
