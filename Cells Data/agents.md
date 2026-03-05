@@ -18,3 +18,4 @@ Cells Data
 - How_to_convert_numbers_stored_as_text_to_numbers_in_Excel_an.cs
 - How_to_convert_numbers_stored_as_text_to_numbers_using_Aspos.cs
 - Using_Microsoft_Excel_using_XLSX_format..cs
+- Using_the_Aspose.Cells_API_using_XLSX_format..cs
