@@ -20,3 +20,4 @@ Working With Tables
 - Set_the_Comment_of_Table_or_List_Object_inside_the_Worksheet.cs
 - Review_the_Introduction_using_an_XLSX_file..cs
 - Convert_Table_to_Range_with_Options_using_an_XLSX_file..cs
+- Tables_and_Ranges_using_an_XLSX_file..cs
