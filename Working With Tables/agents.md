@@ -17,3 +17,4 @@ Working With Tables
 - Explore_advanced_topics_using_an_XLSX_file..cs
 - Create_a_List_Object_using_Microsoft_Excel_using_an_XLSX_fil.cs
 - Read_and_Write_Table_with_Query_Table_Data_Source_using_an_X.cs
+- Set_the_Comment_of_Table_or_List_Object_inside_the_Worksheet.cs
