@@ -83,3 +83,4 @@ Cells Data
 - Populate_data_first_by_row_then_by_column_using_XLSX_format..cs
 - Preserve_single_quote_prefix_of_cell_value_or_range_using_XL.cs
 - Console_output_using_XLSX_format..cs
+- Access_and_update_the_portions_of_rich_text_of_cell_using_XL.cs
