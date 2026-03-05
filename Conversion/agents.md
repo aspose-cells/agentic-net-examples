@@ -7,3 +7,4 @@ Conversion
 ## Examples
 
 - Convert_an_Excel_workbook_to_PDF_using_XLSX_as_the_input_and.cs
+- Convert_an_Excel_workbook_to_XPS_using_XLSX_as_the_input_and.cs
