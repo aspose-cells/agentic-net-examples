@@ -48,3 +48,4 @@ Cells Data
 - How_to_export_range_with_header_and_export_to_XLSX_format..cs
 - Find_or_search_data_using_XLSX_format..cs
 - Finding_cells_containing_specified_data_using_XLSX_format..cs
+- Finding_cells_containing_a_formula_using_XLSX_format..cs
