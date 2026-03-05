@@ -57,3 +57,4 @@ Cells Data
 - Related_articles_using_XLSX_format..cs
 - Import_data_into_worksheet_using_XLSX_format..cs
 - How_to_import_data_into_worksheet_using_XLSX_format..cs
+- How_to_import_data_into_Excel_with_ICellsDataTable_interface.cs
