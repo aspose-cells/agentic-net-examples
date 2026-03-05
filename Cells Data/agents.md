@@ -22,3 +22,4 @@ Cells Data
 - Data_filtering_using_XLSX_format..cs
 - Autofilter_data_using_XLSX_format..cs
 - Autofilter_in_Microsoft_Excel_using_XLSX_format..cs
+- Autofilter_with_Aspose.Cells_using_XLSX_format..cs
