@@ -32,3 +32,4 @@ Cells Data
 - Sorting_data_with_background_color_using_XLSX_format..cs
 - Data_validation_using_XLSX_format..cs
 - Data_validation_types_and_execution_using_XLSX_format..cs
+- Check_if_validation_in_cell_is_dropdown_using_XLSX_format..cs
