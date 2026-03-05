@@ -13,3 +13,4 @@ Globalization and Localization
 - Localize_spreadsheet_by_implementing_error_and_Boolean_value.cs
 - Localize_spreadsheet_by_running_sample_code_for_error_and_Bo.cs
 - Localize_spreadsheet_by_implementing_subtotal_and_grand_tota.cs
+- Localize_spreadsheet_by_using_GlobalizationSettings_class_to.cs
