@@ -15,3 +15,4 @@ Cells Data
 - Convert_text_numeric_data_to_number_and_export_to_XLSX_forma.cs
 - C#_code_to_convert_string_numeric_data_to_actual_numbers_and.cs
 - Possible_usage_scenarios_using_XLSX_format..cs
+- How_to_convert_numbers_stored_as_text_to_numbers_in_Excel_an.cs
