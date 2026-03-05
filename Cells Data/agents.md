@@ -45,3 +45,4 @@ Cells Data
 - How_to_export_data_to_DataTable_using_Aspose.Cells_and_expor.cs
 - Columns_containing_strongly_typed_data_using_XLSX_format..cs
 - Columns_containing_non-strongly_typed_data_using_XLSX_format.cs
+- How_to_export_range_with_header_and_export_to_XLSX_format..cs
