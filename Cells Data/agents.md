@@ -78,3 +78,4 @@ Cells Data
 - Rows_enumerator_using_XLSX_format..cs
 - Columns_enumerator_using_XLSX_format..cs
 - Using_display_range_using_XLSX_format..cs
+- Using_MaxDataRow_&_MaxDataColumn_using_XLSX_format..cs
