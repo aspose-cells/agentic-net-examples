@@ -8,3 +8,4 @@ Cells Data
 
 - Accessing_cells_of_a_worksheet_using_XLSX_format..cs
 - How_to_access_cells_using_XLSX_format..cs
+- How_to_get_the_maximum_display_range_of_a_worksheet_using_XL.cs
