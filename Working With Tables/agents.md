@@ -14,3 +14,4 @@ Working With Tables
 - Create_and_manage_tables_of_Microsoft_Excel_files_using_an_X.cs
 - Create_Table_using_an_XLSX_file..cs
 - Format_a_Table_using_an_XLSX_file..cs
+- Explore_advanced_topics_using_an_XLSX_file..cs
