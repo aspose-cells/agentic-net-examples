@@ -31,3 +31,4 @@ Cells Data
 - Sorting_data_with_Aspose.Cells_using_XLSX_format..cs
 - Sorting_data_with_background_color_using_XLSX_format..cs
 - Data_validation_using_XLSX_format..cs
+- Data_validation_types_and_execution_using_XLSX_format..cs
