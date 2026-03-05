@@ -29,3 +29,4 @@ Cells Data
 - Data_sorting_using_XLSX_format..cs
 - Sorting_data_in_Microsoft_Excel_using_XLSX_format..cs
 - Sorting_data_with_Aspose.Cells_using_XLSX_format..cs
+- Sorting_data_with_background_color_using_XLSX_format..cs
