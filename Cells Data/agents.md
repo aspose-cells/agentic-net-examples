@@ -35,3 +35,4 @@ Cells Data
 - Check_if_validation_in_cell_is_dropdown_using_XLSX_format..cs
 - Add_CellArea_to_existing_validation_using_XLSX_format..cs
 - Data_validation_with_Microsoft_Excel_using_XLSX_format..cs
+- Data_validation_with_Aspose.Cells_using_XLSX_format..cs
