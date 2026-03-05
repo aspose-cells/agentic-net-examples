@@ -12,3 +12,4 @@ Comments and Notes
 - Click_the_New_Comment_option_in_a_workbook_loaded_in_XLSX_fo.cs
 - Click_the_Review_tab_in_a_workbook_loaded_in_XLSX_format..cs
 - Right‑click_on_the_cell_where_you_want_to_insert_the_comment.cs
+- Threaded_Comments_in_a_workbook_loaded_in_XLSX_format..cs
