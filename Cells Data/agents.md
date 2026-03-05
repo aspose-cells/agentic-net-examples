@@ -37,3 +37,4 @@ Cells Data
 - Data_validation_with_Microsoft_Excel_using_XLSX_format..cs
 - Data_validation_with_Aspose.Cells_using_XLSX_format..cs
 - Data_validation_rules_using_XLSX_format..cs
+- Types_of_data_validation_using_XLSX_format..cs
