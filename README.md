@@ -12,7 +12,7 @@ The generation pipeline works as follows:
 2. Examples Super Agent (7050) generates code examples.
 3. Aspose.Cells Product Agent:
    - builds the code
-   - validates execution
+   - validates code execution
    - fixes issues automatically if needed
    - publishes working examples
 
