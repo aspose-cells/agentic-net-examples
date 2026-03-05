@@ -54,3 +54,4 @@ Cells Data
 - Using_Aspose.Cells_using_XLSX_format..cs
 - Get_cell_string_value_with_and_without_formatting_using_XLSX.cs
 - Adding_HTML_rich_text_inside_the_cell_using_XLSX_format..cs
+- Related_articles_using_XLSX_format..cs
