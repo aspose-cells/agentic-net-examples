@@ -27,3 +27,4 @@ Cells Data
 - Advanced_topics_using_XLSX_format..cs
 - Different_types_of_filter_using_XLSX_format..cs
 - Data_sorting_using_XLSX_format..cs
+- Sorting_data_in_Microsoft_Excel_using_XLSX_format..cs
