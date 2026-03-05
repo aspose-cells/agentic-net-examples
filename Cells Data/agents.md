@@ -71,3 +71,4 @@ Cells Data
 - How_to_import_HTML_formatted_data_into_Excel_using_XLSX_form.cs
 - How_to_import_data_into_Excel_from_JSON_using_XLSX_format..cs
 - Sample_code_using_XLSX_format..cs
+- How_and_where_to_use_enumerators_using_XLSX_format..cs
