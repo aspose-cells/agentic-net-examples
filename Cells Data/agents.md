@@ -33,3 +33,4 @@ Cells Data
 - Data_validation_using_XLSX_format..cs
 - Data_validation_types_and_execution_using_XLSX_format..cs
 - Check_if_validation_in_cell_is_dropdown_using_XLSX_format..cs
+- Add_CellArea_to_existing_validation_using_XLSX_format..cs
