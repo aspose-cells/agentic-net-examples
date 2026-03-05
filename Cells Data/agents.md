@@ -76,3 +76,4 @@ Cells Data
 - Conclusion_using_XLSX_format..cs
 - Cells_enumerator_using_XLSX_format..cs
 - Rows_enumerator_using_XLSX_format..cs
+- Columns_enumerator_using_XLSX_format..cs
