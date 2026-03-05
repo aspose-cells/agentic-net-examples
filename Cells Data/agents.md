@@ -36,3 +36,4 @@ Cells Data
 - Add_CellArea_to_existing_validation_using_XLSX_format..cs
 - Data_validation_with_Microsoft_Excel_using_XLSX_format..cs
 - Data_validation_with_Aspose.Cells_using_XLSX_format..cs
+- Data_validation_rules_using_XLSX_format..cs
