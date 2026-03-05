@@ -9,3 +9,4 @@ Conversion
 - Convert_an_Excel_workbook_to_PDF_using_XLSX_as_the_input_and.cs
 - Convert_an_Excel_workbook_to_XPS_using_XLSX_as_the_input_and.cs
 - Convert_an_Excel_workbook_to_ODS,_SXC,_and_FODS_using_XLSX_a.cs
+- Convert_an_Excel_workbook_to_MHTML_using_XLSX_as_the_input_a.cs
