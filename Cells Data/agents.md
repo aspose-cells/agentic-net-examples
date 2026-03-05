@@ -63,3 +63,4 @@ Cells Data
 - How_to_import_data_into_Excel_from_custom_objects_using_XLSX.cs
 - How_to_import_data_into_Excel_from_custom_objects_and_check_.cs
 - How_to_import_data_into_Excel_from_DataTable_using_XLSX_form.cs
+- How_to_import_data_into_Excel_from_dynamic_object_as_data_so.cs
