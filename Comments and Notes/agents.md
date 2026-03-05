@@ -25,3 +25,4 @@ Comments and Notes
 - Change_Text_Direction_of_the_Comment_in_a_workbook_loaded_in.cs
 - How_to_change_the_Comment_Font_Color_in_a_workbook_loaded_in.cs
 - How_to_change_background_in_comment_in_Excel_in_a_workbook_l.cs
+- How_to_change_color_in_comment_in_Excel_in_a_workbook_loaded.cs
