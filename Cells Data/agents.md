@@ -61,3 +61,4 @@ Cells Data
 - How_to_import_data_into_Excel_from_array_using_XLSX_format..cs
 - How_to_import_data_into_Excel_from_ArrayList_using_XLSX_form.cs
 - How_to_import_data_into_Excel_from_custom_objects_using_XLSX.cs
+- How_to_import_data_into_Excel_from_custom_objects_and_check_.cs
