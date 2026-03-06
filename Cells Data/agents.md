@@ -88,3 +88,4 @@ Cells Data
 - Console_output_generated_by_the_sample_code_using_XLSX_forma.cs
 - Accessing_cells_of_a_worksheet_using_XLSX_format.cs
 - How_to_access_cells_using_XLSX_format.cs
+- How_to_get_the_maximum_display_range_of_a_worksheet_using_XLSX_format.cs
