@@ -8,3 +8,4 @@ Open Workbook
 
 - Open_Workbook_from_a_local_file_path_using_the_default_XLSX_format.cs
 - Open_Workbook_from_a_stream_using_the_default_XLSX_format.cs
+- Open_Workbook_with_data_only_using_LoadOptions_in_XLSX_format.cs
