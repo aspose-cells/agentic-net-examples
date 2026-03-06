@@ -15,3 +15,4 @@ Pivot Table
 - Create_Pivot_Table_example_using_XLSX_format.cs
 - Run_example_using_XLSX_format.cs
 - Generate_summary_using_XLSX_format.cs
+- Change_the_layout_of_a_Pivot_Table_using_XLSX_format.cs
