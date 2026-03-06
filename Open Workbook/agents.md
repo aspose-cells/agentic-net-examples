@@ -63,3 +63,4 @@ Open Workbook
 - Open_Workbook_for_writing_large_Excel_files_with_memory_optimization.cs
 - Open_Workbook_while_filtering_objects_such_as_charts_shapes_and_conditional_form.cs
 - Possible_usage_scenarios_for_filtering_objects_while_loading_Workbook.cs
+- Open_Workbook_using_sample_code_that_filters_objects.cs
