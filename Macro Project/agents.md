@@ -167,3 +167,4 @@ Macro Project
 - Export_VBA_Certificate_to_File_or_Stream_using_DBF_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_PRN_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_XPS_format.cs
+- Export_VBA_Certificate_to_File_or_Stream_using_OXPS_format.cs
