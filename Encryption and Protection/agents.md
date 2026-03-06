@@ -70,3 +70,4 @@ Encryption and Protection
 - Password_protect_or_unprotect_the_shared_workbook_XLSX.cs
 - Protect_and_unprotect_workbook_structure_XLSX.cs
 - Protect_and_unprotect_workbook_structure_in_Microsoft_Excel_XLSX.cs
+- Setting_strong_encryption_type_input_XLSX.cs
