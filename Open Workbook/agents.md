@@ -40,3 +40,4 @@ Open Workbook
 - Open_Workbook_from_a_CSV_file_and_replace_invalid_characters.cs
 - Open_Workbook_using_a_preferred_parser_for_CSV_files.cs
 - Open_Workbook_while_filtering_defined_names_using_LoadDataFilterOptionsDefinedNa.cs
+- Open_Workbook_with_defined_names_filtered_out_using_LoadDataFilterOptionsDefined.cs
