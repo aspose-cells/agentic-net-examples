@@ -17,3 +17,4 @@ Document Properties
 - Add_custom_document_properties_to_an_XLSX_workbook.cs
 - Configure_a_link_to_content_custom_property_in_an_XLSX_workbook.cs
 - Remove_custom_document_properties_from_an_XLSX_workbook.cs
+- Specify_the_document_version_of_an_XLSX_workbook_using_builtin_document_properti.cs
