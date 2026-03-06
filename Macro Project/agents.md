@@ -119,3 +119,4 @@ Macro Project
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_HTML_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_MHT_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_XML_format.cs
+- Check_if_VBA_project_in_a_Workbook_is_Signed_using_SpreadsheetML_format.cs
