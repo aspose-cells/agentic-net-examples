@@ -36,3 +36,4 @@ Encryption and Protection
 - Configure_signature_line_properties_input_XLSX.cs
 - Detect_file_format_of_encrypted_office_open_xml_OOXML_files_input_XLSX.cs
 - Identify_encrypted_OOXML_format_input_XLSX.cs
+- Check_password_to_modify_using_AsposeCells_input_XLSX.cs
