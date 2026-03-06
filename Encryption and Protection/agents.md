@@ -54,3 +54,4 @@ Encryption and Protection
 - Using_Microsoft_Excel_XLSX.cs
 - Specifying_password_to_modify_option_XLSX.cs
 - Encrypt_and_decrypt_ODS_files_XLSX.cs
+- Encrypt_with_OpenOffice_Calc_XLSX.cs
