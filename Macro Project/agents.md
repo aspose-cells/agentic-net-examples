@@ -67,3 +67,4 @@ Macro Project
 - Find_out_if_VBA_Project_is_Protected_in_C_using_PDF_format.cs
 - Find_out_if_VBA_Project_is_Protected_in_C_using_JSON_format.cs
 - Check_if_VBA_Project_is_Protected_and_Locked_for_Viewing_using_XLS_format.cs
+- Check_if_VBA_Project_is_Protected_and_Locked_for_Viewing_using_XLSX_format.cs
