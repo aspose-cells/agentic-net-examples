@@ -188,3 +188,4 @@ Macro Project
 - Check_if_VBA_Code_is_Signed_in_C_using_SpreadsheetML_format.cs
 - Console_Output_using_NUMBERS_format.cs
 - Console_Output_using_SXC_format.cs
+- Console_Output_using_DIF_format.cs
