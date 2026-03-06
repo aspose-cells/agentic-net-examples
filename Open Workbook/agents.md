@@ -13,3 +13,4 @@ Open Workbook
 - Open_Workbook_using_various_supported_formats.cs
 - Open_Workbook_via_a_file_path_using_the_default_XLSX_format.cs
 - Open_Workbook_via_a_stream_using_the_default_XLSX_format.cs
+- Open_Workbook_loading_only_visible_sheets_using_a_custom_LoadFilter_in_XLSX_form.cs
