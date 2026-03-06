@@ -164,3 +164,4 @@ Macro Project
 - Export_VBA_Certificate_to_File_or_Stream_using_SXC_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_FODS_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_DIF_format.cs
+- Export_VBA_Certificate_to_File_or_Stream_using_DBF_format.cs
