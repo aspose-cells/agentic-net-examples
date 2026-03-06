@@ -48,3 +48,4 @@ Macro Project
 - Find_out_if_VBA_Project_is_Protected_using_XLSX_format.cs
 - Find_out_if_VBA_Project_is_Protected_using_XLSM_format.cs
 - Find_out_if_VBA_Project_is_Protected_using_XLTX_format.cs
+- Find_out_if_VBA_Project_is_Protected_using_XLTM_format.cs
