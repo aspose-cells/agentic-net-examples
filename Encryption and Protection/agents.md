@@ -62,3 +62,4 @@ Encryption and Protection
 - Verify_password_of_encrypted_files_XLSX.cs
 - Verify_the_password_of_the_encrypted_file_XLSX.cs
 - Specify_author_while_writeprotecting_workbook_XLSX.cs
+- Possible_usage_scenarios_XLSX.cs
