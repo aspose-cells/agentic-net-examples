@@ -15,3 +15,4 @@ Managing Ranges
 - Manage_ranges_by_copying_only_the_data_of_a_range_as_per_documentation_in_XLSX_f.cs
 - Manage_ranges_by_copying_ranges_of_Excel_in_XLSX_format.cs
 - Manage_ranges_by_reviewing_the_introduction_in_XLSX_format.cs
+- Manage_ranges_by_copying_ranges_using_AsposeCells_in_XLSX_format.cs
