@@ -79,3 +79,4 @@ Pivot Table
 - Add_a_filter_to_a_Pivot_Field_using_XLSX_format.cs
 - Clear_all_filters_from_a_Pivot_Field_using_XLSX_format.cs
 - Add_or_Clear_Pivot_Filter_example_using_XLSX_format.cs
+- Set_the_number_format_of_a_data_field_in_a_Pivot_Table_using_XLSX_format.cs
