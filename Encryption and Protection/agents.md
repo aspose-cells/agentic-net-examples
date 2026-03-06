@@ -34,3 +34,4 @@ Encryption and Protection
 - Create_signature_line_in_an_excel_workbook_using_AsposeCells_input_XLSX.cs
 - Add_signature_line_input_XLSX.cs
 - Configure_signature_line_properties_input_XLSX.cs
+- Detect_file_format_of_encrypted_office_open_xml_OOXML_files_input_XLSX.cs
