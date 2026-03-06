@@ -98,3 +98,4 @@ Cells Data
 - How_to_convert_numbers_stored_as_text_to_numbers_in_Excel_and_export_to_XLSX_for.cs
 - How_to_convert_numbers_stored_as_text_to_numbers_using_AsposeCells_for_NET_and_e.cs
 - Creating_subtotals_using_XLSX_format.cs
+- Using_Microsoft_Excel_using_XLSX_format.cs
