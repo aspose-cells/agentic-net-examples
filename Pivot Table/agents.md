@@ -29,3 +29,4 @@ Pivot Table
 - Create_a_Pivot_Table_and_generate_a_linked_Pivot_Chart_using_XLSX_format.cs
 - Create_a_Pivot_Chart_using_XLSX_format.cs
 - Create_Pivot_Tables_and_Pivot_Charts_example_using_XLSX_format.cs
+- Specify_source_data_for_a_Pivot_Table_using_XLSX_format.cs
