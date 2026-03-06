@@ -184,3 +184,4 @@ Macro Project
 - Check_if_VBA_Code_is_Signed_using_TXT_format.cs
 - Check_if_VBA_Code_is_Signed_in_C_using_TAB_format.cs
 - Check_if_VBA_Code_is_Signed_in_C_using_MHT_format.cs
+- Check_if_VBA_Code_is_Signed_in_C_using_XML_format.cs
