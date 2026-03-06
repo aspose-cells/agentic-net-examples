@@ -17,3 +17,4 @@ Open Workbook
 - Open_modern_Excel_Workbook_XLSX_or_XLSB_from_a_file_path_using_LoadOptions_in_XL.cs
 - Open_legacy_Excel_9550_Workbook_using_LoadOptions_in_XLS_format.cs
 - Open_Excel_972003_Workbook_using_LoadOptions_in_XLS_format.cs
+- Open_Workbook_supporting_different_Microsoft_Excel_versions.cs
