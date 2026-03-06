@@ -23,3 +23,4 @@ Encryption and Protection
 - Password_protect_or_unprotect_the_shared_workbook_input_XLSX.cs
 - Protect_shared_workbook_input_XLSX.cs
 - Protect_and_unprotect_workbook_structure_input_XLSX.cs
+- Protect_workbook_structure_input_XLSX.cs
