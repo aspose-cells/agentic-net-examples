@@ -61,3 +61,4 @@ Encryption and Protection
 - To_encrypt_an_ODS_file_load_the_file_and_set_WorkbookSettingsPassword_to_the_des.cs
 - Verify_password_of_encrypted_files_XLSX.cs
 - Verify_the_password_of_the_encrypted_file_XLSX.cs
+- Specify_author_while_writeprotecting_workbook_XLSX.cs
