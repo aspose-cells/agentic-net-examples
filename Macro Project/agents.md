@@ -16,3 +16,4 @@ Macro Project
 - Manage_VBA_code_of_Excel_MacroEnabled_workbook_using_CSV_format.cs
 - Add_a_VBA_Module_in_C_using_TSV_format.cs
 - Add_a_VBA_Module_in_C_using_TXT_format.cs
+- Add_a_VBA_Module_in_C_using_TAB_format.cs
