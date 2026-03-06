@@ -56,3 +56,4 @@ Pivot Table
 - Enable_loading_of_Pivot_Table_cache_records_using_XLSX_format.cs
 - Set_LoadPivotTableCache_to_true_using_XLSX_format.cs
 - Parsing_Pivot_Cached_Records_While_Loading_Excel_File_example_using_XLSX_format.cs
+- Set_PivotTableIsExcel2003Compatible_property_using_XLSX_format.cs
