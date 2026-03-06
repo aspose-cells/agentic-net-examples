@@ -59,3 +59,4 @@ Managing Ranges
 - Manage_ranges_by_reviewing_the_example_in_XLSX_format.cs
 - Manage_ranges_by_moving_a_range_of_cells_in_a_worksheet_in_XLSX_format.cs
 - Manage_ranges_by_creating_access_and_copying_named_ranges_in_XLSX_format.cs
+- Manage_ranges_by_formatting_and_modifying_named_ranges_in_XLSX_format.cs
