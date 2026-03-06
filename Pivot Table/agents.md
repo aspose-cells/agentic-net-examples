@@ -62,3 +62,4 @@ Pivot Table
 - Set_WorkbookSettingsDisablePivotTableRibbons_to_true_using_XLSX_format.cs
 - Disable_Pivot_Table_Ribbons_example_using_XLSX_format.cs
 - Get_the_refresh_date_of_a_Pivot_Table_using_XLSX_format.cs
+- Access_PivotTableRefreshDate_property_using_XLSX_format.cs
