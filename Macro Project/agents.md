@@ -170,3 +170,4 @@ Macro Project
 - Export_VBA_Certificate_to_File_or_Stream_using_OXPS_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_PDF_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_JSON_format.cs
+- Export_VBA_Certificate_to_File_or_Stream_in_C_using_PDF_format.cs
