@@ -30,3 +30,4 @@ Encryption and Protection
 - Unprotect_worksheet_input_XLSX.cs
 - Encrypting_excel_files_input_XLSX.cs
 - Set_password_for_encryption_input_XLSX.cs
+- Validate_digital_signature_input_XLSX.cs
