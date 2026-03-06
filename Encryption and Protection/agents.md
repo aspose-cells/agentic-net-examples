@@ -39,3 +39,4 @@ Encryption and Protection
 - Check_password_to_modify_using_AsposeCells_input_XLSX.cs
 - Validate_modification_password_input_XLSX.cs
 - How_to_detect_a_file_format_and_check_if_the_file_is_encrypted_input_XLSX.cs
+- Detect_file_format_input_XLSX.cs
