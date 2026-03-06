@@ -155,3 +155,4 @@ Macro Project
 - Export_VBA_Certificate_to_File_or_Stream_using_TSV_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_TXT_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_in_C_using_TAB_format.cs
+- Export_VBA_Certificate_to_File_or_Stream_in_C_using_HTML_format.cs
