@@ -27,3 +27,4 @@ Pivot Table
 - Set_Sum_Count_Average_Max_Min_functions_for_a_data_field_using_XLSX_format.cs
 - Consolidation_Function_example_using_XLSX_format.cs
 - Create_a_Pivot_Table_and_generate_a_linked_Pivot_Chart_using_XLSX_format.cs
+- Create_a_Pivot_Chart_using_XLSX_format.cs
