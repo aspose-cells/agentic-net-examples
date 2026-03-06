@@ -29,3 +29,4 @@ Slicer
 - Manage_slicer_-_Associate_slicer_and_pivot_table_-_load_XLSX.cs
 - Manage_slicer_-_Sample_code_-_load_XLSX.cs
 - Manage_slicer_-_Remove_pivot_connection_-_load_XLSX.cs
+- Manage_slicer_-_Disassociate_slicer_from_pivot_table_-_load_XLSX.cs
