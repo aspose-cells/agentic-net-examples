@@ -41,3 +41,4 @@ Encryption and Protection
 - How_to_detect_a_file_format_and_check_if_the_file_is_encrypted_input_XLSX.cs
 - Detect_file_format_input_XLSX.cs
 - Check_encryption_status_input_XLSX.cs
+- Protect_and_unprotect_XLSX.cs
