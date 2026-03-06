@@ -10,3 +10,4 @@ Queries and Connections
 - Retrieve_SQL_connection_data_using_the_default_XLSX_format.cs
 - Access_and_modify_Data_Connections_using_the_default_XLSX_format.cs
 - Download_source_and_output_Excel_files_loading_an_XLSX_workbook_and_saving_it_as.cs
+- Add_or_view_Data_Connections_in_Excel_using_the_default_XLSX_format.cs
