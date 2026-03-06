@@ -61,3 +61,4 @@ Macro Project
 - Find_out_if_VBA_Project_is_Protected_in_C_using_XML_format.cs
 - Find_out_if_VBA_Project_is_Protected_in_C_using_SpreadsheetML_format.cs
 - Console_Output_using_PDF_format.cs
+- Console_Output_using_JSON_format.cs
