@@ -66,3 +66,4 @@ Encryption and Protection
 - Sample_code_XLSX.cs
 - Apply_encryption_with_Microsoft_Excel_XLSX.cs
 - Apply_encryption_with_AsposeCells_XLSX.cs
+- Set_strong_encryption_type_XLSX.cs
