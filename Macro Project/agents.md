@@ -199,3 +199,4 @@ Macro Project
 - Console_Output_using_XLSX_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_XLS_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_XLSX_format.cs
+- Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_XLSM_format.cs
