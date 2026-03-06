@@ -55,3 +55,4 @@ Open Workbook
 - Open_Numbers_spreadsheet_using_AsposeCells.cs
 - Execute_sample_code_to_read_Numbers_spreadsheet.cs
 - Open_Workbook_for_writing_a_large_Excel_file_using_LightCells_API.cs
+- Open_Workbook_with_memory_optimization_for_large_datasets.cs
