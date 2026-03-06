@@ -50,3 +50,4 @@ Pivot Table
 - Iterate_through_Pivot_Tables_collection_using_XLSX_format.cs
 - Check_if_a_Pivot_Table_is_a_child_using_XLSX_format.cs
 - Refresh_child_Pivot_Tables_using_XLSX_format.cs
+- Retrieve_a_cell_object_from_a_Pivot_Table_by_display_name_using_XLSX_format.cs
