@@ -37,3 +37,4 @@ Open Workbook
 - Open_Workbook_from_a_text_file_with_a_custom_separator.cs
 - Open_Workbook_from_an_SXC_file.cs
 - Open_Workbook_from_an_FODS_file.cs
+- Open_Workbook_from_a_CSV_file_and_replace_invalid_characters.cs
