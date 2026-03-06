@@ -19,3 +19,4 @@ Encryption and Protection
 - Check_password_validity_input_XLSX.cs
 - Specify_author_while_write_protecting_workbook_input_XLSX.cs
 - Set_author_for_write_protection_input_XLSX.cs
+- Choose_encryption_algorithm_input_XLSX.cs
