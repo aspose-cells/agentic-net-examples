@@ -99,3 +99,4 @@ Macro Project
 - Assign_Macro_to_Form_Control_in_C_using_NUMBERS_format.cs
 - Assign_Macro_to_Form_Control_in_C_using_SXC_format.cs
 - Assign_Macro_to_Form_Control_in_C_using_FODS_format.cs
+- Assign_Macro_to_Form_Control_in_C_using_DIF_format.cs
