@@ -149,3 +149,4 @@ Macro Project
 - Export_VBA_Certificate_to_File_or_Stream_using_XLSM_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_XLTX_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_XLTM_format.cs
+- Export_VBA_Certificate_to_File_or_Stream_using_XLSB_format.cs
