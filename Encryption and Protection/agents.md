@@ -43,3 +43,4 @@ Encryption and Protection
 - Check_encryption_status_input_XLSX.cs
 - Protect_and_unprotect_XLSX.cs
 - Encrypt_and_decrypt_Excel_files_XLSX.cs
+- Protect_and_unprotect_workbook_XLSX.cs
