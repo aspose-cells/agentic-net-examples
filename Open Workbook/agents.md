@@ -66,3 +66,4 @@ Open Workbook
 - Open_Workbook_using_sample_code_that_filters_objects.cs
 - Open_Spreadsheet_without_charts.cs
 - Open_Workbook_for_reading_large_Excel_files_with_memory_optimization.cs
+- Open_Workbook_while_filtering_objects_in_a_specific_worksheet.cs
