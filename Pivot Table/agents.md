@@ -23,3 +23,4 @@ Pivot Table
 - Format_a_data_field_number_format_in_a_Pivot_Table_using_XLSX_format.cs
 - Apply_style_to_the_entire_Pivot_Table_using_XLSX_format.cs
 - Format_individual_cells_in_a_Pivot_Table_using_XLSX_format.cs
+- Set_a_consolidation_function_for_a_data_field_using_XLSX_format.cs
