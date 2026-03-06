@@ -197,3 +197,4 @@ Macro Project
 - Check_if_VBA_Code_is_Signed_in_C_using_PDF_format.cs
 - Console_Output_using_XLS_format.cs
 - Console_Output_using_XLSX_format.cs
+- Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_XLS_format.cs
