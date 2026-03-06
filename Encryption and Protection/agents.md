@@ -17,3 +17,4 @@ Encryption and Protection
 - Decrypt_an_ods_file_input_XLSX.cs
 - Verify_password_of_encrypted_excel_and_ods_files_input_XLSX.cs
 - Check_password_validity_input_XLSX.cs
+- Specify_author_while_write_protecting_workbook_input_XLSX.cs
