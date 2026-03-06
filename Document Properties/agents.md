@@ -27,3 +27,4 @@ Document Properties
 - Review_language_property_handling_in_an_XLSX_workbook.cs
 - Add_custom_properties_visible_in_the_Document_Information_Panel_of_an_XLSX_workb.cs
 - Add_custom_properties_without_a_type_to_an_XLSX_workbook.cs
+- Add_custom_DateTimetype_properties_to_an_XLSX_workbook.cs
