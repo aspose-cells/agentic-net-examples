@@ -13,3 +13,4 @@ Document Properties
 - Work_with_document_properties_using_AsposeCells_in_an_XLSX_workbook.cs
 - Explore_advanced_document_properties_features_in_an_XLSX_workbook.cs
 - Access_document_properties_in_an_XLSX_workbook.cs
+- Add_or_remove_custom_document_properties_in_an_XLSX_workbook.cs
