@@ -57,3 +57,4 @@ Managing Ranges
 - Manage_ranges_by_reviewing_the_console_output_in_XLSX_format.cs
 - Manage_ranges_by_merging_or_unmerging_a_range_of_cells_as_demonstrated_in_XLSX_f.cs
 - Manage_ranges_by_reviewing_the_example_in_XLSX_format.cs
+- Manage_ranges_by_moving_a_range_of_cells_in_a_worksheet_in_XLSX_format.cs
