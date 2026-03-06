@@ -28,3 +28,4 @@ Encryption and Protection
 - Protect_and_unprotect_worksheets_input_XLSX.cs
 - Protect_worksheet_input_XLSX.cs
 - Unprotect_worksheet_input_XLSX.cs
+- Encrypting_excel_files_input_XLSX.cs
