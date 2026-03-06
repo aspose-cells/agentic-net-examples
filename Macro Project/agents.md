@@ -54,3 +54,4 @@ Macro Project
 - Find_out_if_VBA_Project_is_Protected_using_CSV_format.cs
 - Find_out_if_VBA_Project_is_Protected_in_C_using_TSV_format.cs
 - Find_out_if_VBA_Project_is_Protected_in_C_using_TXT_format.cs
+- Find_out_if_VBA_Project_is_Protected_in_C_using_TAB_format.cs
