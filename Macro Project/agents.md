@@ -145,3 +145,4 @@ Macro Project
 - Add_a_library_reference_to_VBA_project_in_Microsoft_Excel_using_JSON_format.cs
 - Add_a_library_reference_to_the_VBA_project_in_a_workbook_using_AsposeCells_using.cs
 - Export_VBA_Certificate_to_File_or_Stream_using_XLS_format.cs
+- Export_VBA_Certificate_to_File_or_Stream_using_XLSX_format.cs
