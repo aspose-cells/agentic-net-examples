@@ -43,3 +43,4 @@ Open Workbook
 - Open_Workbook_with_defined_names_filtered_out_using_LoadDataFilterOptionsDefined.cs
 - Open_Workbook_using_sample_code_that_filters_defined_names.cs
 - Open_Workbook_loading_specific_worksheets_only.cs
+- Stop_conversion_of_Workbook_to_PDF_using_InterruptMonitor.cs
