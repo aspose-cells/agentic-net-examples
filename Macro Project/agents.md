@@ -190,3 +190,4 @@ Macro Project
 - Console_Output_using_SXC_format.cs
 - Console_Output_using_DIF_format.cs
 - Console_Output_using_DBF_format.cs
+- Console_Output_using_XPS_format.cs
