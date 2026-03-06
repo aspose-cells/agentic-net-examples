@@ -195,3 +195,4 @@ Macro Project
 - Check_if_VBA_Code_is_Signed_using_PDF_format.cs
 - Check_if_VBA_Code_is_Signed_using_JSON_format.cs
 - Check_if_VBA_Code_is_Signed_in_C_using_PDF_format.cs
+- Console_Output_using_XLS_format.cs
