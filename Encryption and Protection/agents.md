@@ -46,3 +46,4 @@ Encryption and Protection
 - Protect_and_unprotect_workbook_XLSX.cs
 - Protect_and_unprotect_worksheet_XLSX.cs
 - Protect_and_unprotect_shared_workbook_XLSX.cs
+- Check_password_to_modify_using_AsposeCells_XLSX.cs
