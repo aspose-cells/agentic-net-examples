@@ -127,3 +127,4 @@ Macro Project
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_DBF_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_PRN_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_OXPS_format.cs
+- Check_if_VBA_project_in_a_Workbook_is_Signed_using_PDF_format.cs
