@@ -56,3 +56,4 @@ Encryption and Protection
 - Encrypt_and_decrypt_ODS_files_XLSX.cs
 - Encrypt_with_OpenOffice_Calc_XLSX.cs
 - Encrypt_an_ODS_file_with_AsposeCells_for_NET_XLSX.cs
+- Decrypt_an_ODS_file_with_AsposeCells_for_NET_XLSX.cs
