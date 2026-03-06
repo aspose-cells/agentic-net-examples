@@ -105,3 +105,4 @@ Macro Project
 - Assign_Macro_to_Form_Control_using_JSON_format.cs
 - Assign_Macro_to_Form_Control_in_C_using_PDF_format.cs
 - Assign_Macro_to_Form_Control_in_C_using_JSON_format.cs
+- Check_if_VBA_project_in_a_Workbook_is_Signed_using_XLS_format.cs
