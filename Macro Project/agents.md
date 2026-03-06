@@ -173,3 +173,4 @@ Macro Project
 - Export_VBA_Certificate_to_File_or_Stream_in_C_using_PDF_format.cs
 - Export_VBA_Certificate_to_File_or_Stream_in_C_using_JSON_format.cs
 - Check_if_VBA_Code_is_Signed_using_XLS_format.cs
+- Check_if_VBA_Code_is_Signed_using_XLSX_format.cs
