@@ -65,3 +65,4 @@ Encryption and Protection
 - Possible_usage_scenarios_XLSX.cs
 - Sample_code_XLSX.cs
 - Apply_encryption_with_Microsoft_Excel_XLSX.cs
+- Apply_encryption_with_AsposeCells_XLSX.cs
