@@ -22,3 +22,4 @@ Slicer
 - Format_slicer_-_Formatting_slicer_-_load_XLSX.cs
 - Format_slicer_-_Possible_usage_scenarios_-_load_XLSX.cs
 - Format_slicer_-_Sample_code_-_load_XLSX.cs
+- Manage_slicer_-_Associate_slicer_with_pivot_table_-_load_XLSX.cs
