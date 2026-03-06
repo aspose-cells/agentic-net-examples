@@ -92,3 +92,4 @@ Cells Data
 - How_to_get_a_cell_object_by_cell_name_using_XLSX_format.cs
 - How_to_get_a_cell_object_by_row__column_index_using_XLSX_format.cs
 - How_to_get_a_cell_object_by_cell_index_in_the_cells_collection_using_XLSX_format.cs
+- Convert_text_numeric_data_to_number_and_export_to_XLSX_format.cs
