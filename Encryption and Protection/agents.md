@@ -31,3 +31,4 @@ Encryption and Protection
 - Encrypting_excel_files_input_XLSX.cs
 - Set_password_for_encryption_input_XLSX.cs
 - Validate_digital_signature_input_XLSX.cs
+- Create_signature_line_in_an_excel_workbook_using_AsposeCells_input_XLSX.cs
