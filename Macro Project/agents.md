@@ -204,3 +204,4 @@ Macro Project
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_XLSB_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_ODS_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_CSV_format.cs
+- Check_if_Digital_Signature_of_VBA_Code_is_Valid_in_C_using_TAB_format.cs
