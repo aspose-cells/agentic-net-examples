@@ -37,3 +37,4 @@ Pivot Table
 - Recalculate_the_Pivot_Table_after_refresh_using_XLSX_format.cs
 - Refresh_a_Pivot_Table_using_XLSX_format.cs
 - Refresh_and_Calculate_Pivot_Table_Having_Calculated_Items_example_using_XLSX_for.cs
+- Set_the_ShowEmptyCells_option_on_a_Pivot_Table_using_XLSX_format.cs
