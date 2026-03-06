@@ -124,3 +124,4 @@ Macro Project
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_SXC_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_FODS_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_DIF_format.cs
+- Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_DBF_format.cs
