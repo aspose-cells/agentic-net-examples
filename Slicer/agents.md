@@ -19,3 +19,4 @@ Slicer
 - Create_slicer_-_Create_a_slicer_for_a_pivot_table_-_load_XLSX.cs
 - Create_slicer_-_Create_a_slicer_for_an_Excel_table_-_load_XLSX.cs
 - Create_slicer_-_Advanced_topics_-_load_XLSX.cs
+- Format_slicer_-_Formatting_slicer_-_load_XLSX.cs
