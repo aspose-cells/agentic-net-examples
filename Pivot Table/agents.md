@@ -53,3 +53,4 @@ Pivot Table
 - Retrieve_a_cell_object_from_a_Pivot_Table_by_display_name_using_XLSX_format.cs
 - Get_a_cell_by_display_name_from_a_Pivot_Table_using_XLSX_format.cs
 - Get_the_Cell_Object_by_DisplayName_of_PivotField_of_PivotTable_example_using_XLS.cs
+- Enable_loading_of_Pivot_Table_cache_records_using_XLSX_format.cs
