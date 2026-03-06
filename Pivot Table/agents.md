@@ -49,3 +49,4 @@ Pivot Table
 - Find_child_Pivot_Tables_and_refresh_them_using_XLSX_format.cs
 - Iterate_through_Pivot_Tables_collection_using_XLSX_format.cs
 - Check_if_a_Pivot_Table_is_a_child_using_XLSX_format.cs
+- Refresh_child_Pivot_Tables_using_XLSX_format.cs
