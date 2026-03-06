@@ -7,3 +7,4 @@ Pivot Table
 ## Examples
 
 - Create_a_Pivot_Table_using_XLSX_format.cs
+- Add_fields_to_the_Pivot_Table_using_XLSX_format.cs
