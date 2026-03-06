@@ -40,3 +40,4 @@ Pivot Table
 - Set_the_ShowEmptyCells_option_on_a_Pivot_Table_using_XLSX_format.cs
 - Customize_the_culture_of_a_Pivot_Table_using_XLSX_format.cs
 - Set_PivotTableGlobalizationSettingsCultureInfo_using_XLSX_format.cs
+- Customize_Globalization_Settings_for_Pivot_Table_example_using_XLSX_format.cs
