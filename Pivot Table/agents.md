@@ -14,3 +14,4 @@ Pivot Table
 - Add_row_column_data_and_page_fields_to_the_Pivot_Table_using_XLSX_format.cs
 - Create_Pivot_Table_example_using_XLSX_format.cs
 - Run_example_using_XLSX_format.cs
+- Generate_summary_using_XLSX_format.cs
