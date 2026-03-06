@@ -45,3 +45,4 @@ Encryption and Protection
 - Encrypt_and_decrypt_Excel_files_XLSX.cs
 - Protect_and_unprotect_workbook_XLSX.cs
 - Protect_and_unprotect_worksheet_XLSX.cs
+- Protect_and_unprotect_shared_workbook_XLSX.cs
