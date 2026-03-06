@@ -47,3 +47,4 @@ Pivot Table
 - Call_WorksheetPivotTablesRemoveAt_using_XLSX_format.cs
 - Delete_Pivot_Table_from_a_Worksheet_example_using_XLSX_format.cs
 - Find_child_Pivot_Tables_and_refresh_them_using_XLSX_format.cs
+- Iterate_through_Pivot_Tables_collection_using_XLSX_format.cs
