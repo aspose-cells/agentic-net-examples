@@ -60,3 +60,4 @@ Pivot Table
 - Specify_whether_the_PivotTable_is_compatible_for_Excel2003_while_refreshing_Pivo.cs
 - Disable_Pivot_Table_ribbons_using_XLSX_format.cs
 - Set_WorkbookSettingsDisablePivotTableRibbons_to_true_using_XLSX_format.cs
+- Disable_Pivot_Table_Ribbons_example_using_XLSX_format.cs
