@@ -211,3 +211,4 @@ Macro Project
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_in_C_using_SpreadsheetML_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_NUMBERS_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_SXC_format.cs
+- Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_FODS_format.cs
