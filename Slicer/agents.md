@@ -12,3 +12,4 @@ Slicer
 - Create_slicer_-_Removing_slicer_-_load_XLSX.cs
 - Create_slicer_-_Rendering_slicer_-_load_XLSX.cs
 - Create_slicer_-_Updating_slicer_-_load_XLSX.cs
+- Create_slicer_-_Create_slicer_-_load_XLSX.cs
