@@ -58,3 +58,4 @@ Pivot Table
 - Parsing_Pivot_Cached_Records_While_Loading_Excel_File_example_using_XLSX_format.cs
 - Set_PivotTableIsExcel2003Compatible_property_using_XLSX_format.cs
 - Specify_whether_the_PivotTable_is_compatible_for_Excel2003_while_refreshing_Pivo.cs
+- Disable_Pivot_Table_ribbons_using_XLSX_format.cs
