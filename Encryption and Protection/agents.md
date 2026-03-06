@@ -49,3 +49,4 @@ Encryption and Protection
 - Check_password_to_modify_using_AsposeCells_XLSX.cs
 - Encrypt_an_Excel_file_with_AsposeCells_XLSX.cs
 - Choose_the_encryption_type_and_confirm_the_password_XLSX.cs
+- Encrypt_and_passwordprotect_Microsoft_Excel_files_XLSX.cs
