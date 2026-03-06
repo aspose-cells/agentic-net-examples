@@ -22,3 +22,4 @@ Pivot Table
 - Apply_a_builtin_style_to_a_Pivot_Table_using_XLSX_format.cs
 - Format_a_data_field_number_format_in_a_Pivot_Table_using_XLSX_format.cs
 - Apply_style_to_the_entire_Pivot_Table_using_XLSX_format.cs
+- Format_individual_cells_in_a_Pivot_Table_using_XLSX_format.cs
