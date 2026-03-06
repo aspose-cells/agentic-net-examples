@@ -67,3 +67,4 @@ Pivot Table
 - Get_Pivot_Table_Refresh_Date_and_Refresh_By_Who_Information_example_using_XLSX_f.cs
 - Enable_Report_Filter_Pages_for_a_Pivot_Table_using_XLSX_format.cs
 - Set_PivotTableShowReportFilterPages_to_true_using_XLSX_format.cs
+- Hide_specific_items_in_a_Pivot_Table_using_XLSX_format.cs
