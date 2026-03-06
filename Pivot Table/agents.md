@@ -71,3 +71,4 @@ Pivot Table
 - Sort_Pivot_Table_data_using_XLSX_format.cs
 - Hide_items_using_PivotItemVisible__false_using_XLSX_format.cs
 - Pivot_Table_Hide_and_Sort_Data_example_using_XLSX_format.cs
+- Add_a_calculated_field_to_a_Pivot_Table_using_XLSX_format.cs
