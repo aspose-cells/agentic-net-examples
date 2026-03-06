@@ -65,3 +65,4 @@ Open Workbook
 - Possible_usage_scenarios_for_filtering_objects_while_loading_Workbook.cs
 - Open_Workbook_using_sample_code_that_filters_objects.cs
 - Open_Spreadsheet_without_charts.cs
+- Open_Workbook_for_reading_large_Excel_files_with_memory_optimization.cs
