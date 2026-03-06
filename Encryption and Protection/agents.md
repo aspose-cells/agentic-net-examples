@@ -15,3 +15,4 @@ Encryption and Protection
 - Encrypt_and_decrypt_ods_files_input_XLSX.cs
 - Encrypt_an_ods_file_input_XLSX.cs
 - Decrypt_an_ods_file_input_XLSX.cs
+- Verify_password_of_encrypted_excel_and_ods_files_input_XLSX.cs
