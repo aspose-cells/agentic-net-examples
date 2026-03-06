@@ -42,3 +42,4 @@ Pivot Table
 - Set_PivotTableGlobalizationSettingsCultureInfo_using_XLSX_format.cs
 - Customize_Globalization_Settings_for_Pivot_Table_example_using_XLSX_format.cs
 - Set_the_absolute_position_of_a_Pivot_Item_using_XLSX_format.cs
+- Use_PivotItemPosition_property_using_XLSX_format.cs
