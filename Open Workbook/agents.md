@@ -60,3 +60,4 @@ Open Workbook
 - Open_Workbook_for_reading_a_large_Excel_file_example_using_LightCells_API.cs
 - Open_Workbook_with_memory_optimization_general.cs
 - Open_Workbook_with_caution_notes_on_memory_optimization.cs
+- Open_Workbook_for_writing_large_Excel_files_with_memory_optimization.cs
