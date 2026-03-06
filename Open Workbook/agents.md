@@ -10,3 +10,4 @@ Open Workbook
 - Open_Workbook_from_a_stream_using_the_default_XLSX_format.cs
 - Open_Workbook_with_data_only_using_LoadOptions_in_XLSX_format.cs
 - Open_Workbook_loading_only_visible_worksheets_using_a_custom_LoadFilter_in_XLSX_.cs
+- Open_Workbook_using_various_supported_formats.cs
