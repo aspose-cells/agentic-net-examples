@@ -131,3 +131,4 @@ Macro Project
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_JSON_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_PDF_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_in_C_using_JSON_format.cs
+- Add_a_library_reference_to_a_VBA_project_in_a_workbook_using_XLSX_format.cs
