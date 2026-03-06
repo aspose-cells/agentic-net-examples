@@ -34,3 +34,4 @@ Open Workbook
 - Open_Workbook_from_a_TSV_file.cs
 - Open_Workbook_from_a_plain_text_file.cs
 - Open_Workbook_using_different_file_formats.cs
+- Open_Workbook_from_a_text_file_with_a_custom_separator.cs
