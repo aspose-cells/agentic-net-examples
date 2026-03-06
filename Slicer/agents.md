@@ -25,3 +25,4 @@ Slicer
 - Manage_slicer_-_Associate_slicer_with_pivot_table_-_load_XLSX.cs
 - Manage_slicer_-_Load_sample_Excel_file_-_load_XLSX.cs
 - Manage_slicer_-_Add_pivot_connection_-_load_XLSX.cs
+- Manage_slicer_-_Possible_usage_scenarios_-_load_XLSX.cs
