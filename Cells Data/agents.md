@@ -102,3 +102,4 @@ Cells Data
 - Using_the_AsposeCells_API_using_XLSX_format.cs
 - Advanced_topics_using_XLSX_format.cs
 - Data_filtering_using_XLSX_format.cs
+- Autofilter_data_using_XLSX_format.cs
