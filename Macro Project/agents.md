@@ -113,3 +113,4 @@ Macro Project
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_XLSB_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_ODS_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_CSV_format.cs
+- Check_if_VBA_project_in_a_Workbook_is_Signed_using_TSV_format.cs
