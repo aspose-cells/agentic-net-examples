@@ -69,3 +69,4 @@ Pivot Table
 - Set_PivotTableShowReportFilterPages_to_true_using_XLSX_format.cs
 - Hide_specific_items_in_a_Pivot_Table_using_XLSX_format.cs
 - Sort_Pivot_Table_data_using_XLSX_format.cs
+- Hide_items_using_PivotItemVisible__false_using_XLSX_format.cs
