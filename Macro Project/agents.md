@@ -215,3 +215,4 @@ Macro Project
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_DIF_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_DBF_format.cs
 - Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_PRN_format.cs
+- Check_if_Digital_Signature_of_VBA_Code_is_Valid_using_XPS_format.cs
