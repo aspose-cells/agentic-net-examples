@@ -82,3 +82,4 @@ Pivot Table
 - Set_the_number_format_of_a_data_field_in_a_Pivot_Table_using_XLSX_format.cs
 - Set_PivotFieldNumberFormat_property_using_XLSX_format.cs
 - Working_with_Data_Display_Formats_of_DataField_in_Pivot_Table_example_using_XLSX.cs
+- Retrieve_the_external_data_source_of_a_Pivot_Table_using_XLSX_format.cs
