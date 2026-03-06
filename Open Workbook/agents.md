@@ -42,3 +42,4 @@ Open Workbook
 - Open_Workbook_while_filtering_defined_names_using_LoadDataFilterOptionsDefinedNa.cs
 - Open_Workbook_with_defined_names_filtered_out_using_LoadDataFilterOptionsDefined.cs
 - Open_Workbook_using_sample_code_that_filters_defined_names.cs
+- Open_Workbook_loading_specific_worksheets_only.cs
