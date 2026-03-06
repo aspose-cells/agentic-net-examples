@@ -58,3 +58,4 @@ Encryption and Protection
 - Encrypt_an_ODS_file_with_AsposeCells_for_NET_XLSX.cs
 - Decrypt_an_ODS_file_with_AsposeCells_for_NET_XLSX.cs
 - Select_Save_As_and_click_the_Save_With_Password_box_XLSX.cs
+- To_encrypt_an_ODS_file_load_the_file_and_set_WorkbookSettingsPassword_to_the_des.cs
