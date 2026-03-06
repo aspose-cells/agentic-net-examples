@@ -175,3 +175,4 @@ Macro Project
 - Check_if_VBA_Code_is_Signed_using_XLS_format.cs
 - Check_if_VBA_Code_is_Signed_using_XLSX_format.cs
 - Check_if_VBA_Code_is_Signed_using_XLSM_format.cs
+- Check_if_VBA_Code_is_Signed_using_XLTX_format.cs
