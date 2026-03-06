@@ -64,3 +64,4 @@ Encryption and Protection
 - Specify_author_while_writeprotecting_workbook_XLSX.cs
 - Possible_usage_scenarios_XLSX.cs
 - Sample_code_XLSX.cs
+- Apply_encryption_with_Microsoft_Excel_XLSX.cs
