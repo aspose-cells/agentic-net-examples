@@ -52,3 +52,4 @@ Encryption and Protection
 - Encrypt_and_passwordprotect_Microsoft_Excel_files_XLSX.cs
 - Open_a_passwordprotected_Excel_file_and_decrypt_it_XLSX.cs
 - Using_Microsoft_Excel_XLSX.cs
+- Specifying_password_to_modify_option_XLSX.cs
