@@ -29,3 +29,4 @@ Document Properties
 - Add_custom_properties_without_a_type_to_an_XLSX_workbook.cs
 - Add_custom_DateTimetype_properties_to_an_XLSX_workbook.cs
 - Open_the_Document_Information_Panel_of_an_XLSX_workbook_to_view_custom_propertie.cs
+- Set_the_ScaleCrop_builtin_document_property_of_an_XLSX_workbook.cs
