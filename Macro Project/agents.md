@@ -193,3 +193,4 @@ Macro Project
 - Console_Output_using_XPS_format.cs
 - Console_Output_using_OXPS_format.cs
 - Check_if_VBA_Code_is_Signed_using_PDF_format.cs
+- Check_if_VBA_Code_is_Signed_using_JSON_format.cs
