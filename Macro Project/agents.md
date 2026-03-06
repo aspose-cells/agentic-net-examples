@@ -58,3 +58,4 @@ Macro Project
 - Find_out_if_VBA_Project_is_Protected_in_C_using_HTML_format.cs
 - Find_out_if_VBA_Project_is_Protected_in_C_using_MHT_format.cs
 - Find_out_if_VBA_Project_is_Protected_in_C_using_MHTML_format.cs
+- Find_out_if_VBA_Project_is_Protected_in_C_using_XML_format.cs
