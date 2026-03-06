@@ -68,3 +68,4 @@ Encryption and Protection
 - Apply_encryption_with_AsposeCells_XLSX.cs
 - Set_strong_encryption_type_XLSX.cs
 - Password_protect_or_unprotect_the_shared_workbook_XLSX.cs
+- Protect_and_unprotect_workbook_structure_XLSX.cs
