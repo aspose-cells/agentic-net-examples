@@ -26,3 +26,4 @@ Encryption and Protection
 - Protect_workbook_structure_input_XLSX.cs
 - Unprotect_workbook_structure_input_XLSX.cs
 - Protect_and_unprotect_worksheets_input_XLSX.cs
+- Protect_worksheet_input_XLSX.cs
