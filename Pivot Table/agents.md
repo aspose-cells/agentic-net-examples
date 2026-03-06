@@ -76,3 +76,4 @@ Pivot Table
 - Add_Calculated_Field_in_Pivot_Table_example_using_XLSX_format.cs
 - Apply_custom_sort_order_to_a_Pivot_Field_using_XLSX_format.cs
 - Custom_Sorting_in_Pivot_Table_example_using_XLSX_format.cs
+- Add_a_filter_to_a_Pivot_Field_using_XLSX_format.cs
