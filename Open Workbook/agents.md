@@ -38,3 +38,4 @@ Open Workbook
 - Open_Workbook_from_an_SXC_file.cs
 - Open_Workbook_from_an_FODS_file.cs
 - Open_Workbook_from_a_CSV_file_and_replace_invalid_characters.cs
+- Open_Workbook_using_a_preferred_parser_for_CSV_files.cs
