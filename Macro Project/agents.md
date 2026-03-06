@@ -63,3 +63,4 @@ Macro Project
 - Console_Output_using_PDF_format.cs
 - Console_Output_using_JSON_format.cs
 - Find_out_if_VBA_Project_is_Protected_using_PDF_format.cs
+- Find_out_if_VBA_Project_is_Protected_using_JSON_format.cs
