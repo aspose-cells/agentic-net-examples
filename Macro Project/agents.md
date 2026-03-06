@@ -109,3 +109,4 @@ Macro Project
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_XLSX_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_XLSM_format.cs
 - Check_if_VBA_project_in_a_Workbook_is_Signed_using_XLTX_format.cs
+- Check_if_VBA_project_in_a_Workbook_is_Signed_using_XLTM_format.cs
