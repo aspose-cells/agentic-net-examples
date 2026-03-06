@@ -87,3 +87,4 @@ Cells Data
 - C#_code_to_access_and_update_the_portions_of_rich_text_of_ce.cs
 - Console_output_generated_by_the_sample_code_using_XLSX_forma.cs
 - Accessing_cells_of_a_worksheet_using_XLSX_format.cs
+- How_to_access_cells_using_XLSX_format.cs
