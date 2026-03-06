@@ -19,3 +19,4 @@ Pivot Table
 - Show_or_hide_subtotals_in_a_Pivot_Table_using_XLSX_format.cs
 - Set_the_layout_type_of_a_Pivot_Table_using_XLSX_format.cs
 - Enable_or_disable_repeat_item_labels_using_XLSX_format.cs
+- Apply_a_builtin_style_to_a_Pivot_Table_using_XLSX_format.cs
