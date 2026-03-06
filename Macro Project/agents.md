@@ -51,3 +51,4 @@ Macro Project
 - Find_out_if_VBA_Project_is_Protected_using_XLTM_format.cs
 - Find_out_if_VBA_Project_is_Protected_using_XLSB_format.cs
 - Find_out_if_VBA_Project_is_Protected_using_ODS_format.cs
+- Find_out_if_VBA_Project_is_Protected_using_CSV_format.cs
