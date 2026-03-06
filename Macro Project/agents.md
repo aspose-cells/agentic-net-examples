@@ -30,3 +30,4 @@ Macro Project
 - Advanced_topics_using_XLS_format.cs
 - Advanced_topics_using_XLSX_format.cs
 - Password_Protect_the_VBA_Project_of_Excel_Workbook_using_XLS_format.cs
+- Password_Protect_the_VBA_Project_of_Excel_Workbook_using_XLSB_format.cs
