@@ -25,3 +25,4 @@ Document Properties
 - Explore_usage_scenarios_for_setting_the_language_in_an_XLSX_workbook.cs
 - Demonstrate_sample_code_that_sets_the_language_of_an_XLSX_workbook.cs
 - Review_language_property_handling_in_an_XLSX_workbook.cs
+- Add_custom_properties_visible_in_the_Document_Information_Panel_of_an_XLSX_workb.cs
