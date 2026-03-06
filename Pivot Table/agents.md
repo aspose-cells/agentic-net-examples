@@ -33,3 +33,4 @@ Pivot Table
 - Define_source_range_using_CellArea_using_XLSX_format.cs
 - Use_named_ranges_as_source_for_a_Pivot_Table_using_XLSX_format.cs
 - Pivot_Table_and_Source_Data_example_using_XLSX_format.cs
+- Refresh_a_Pivot_Table_with_calculated_items_using_XLSX_format.cs
