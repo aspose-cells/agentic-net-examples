@@ -15,3 +15,4 @@ Document Properties
 - Access_document_properties_in_an_XLSX_workbook.cs
 - Add_or_remove_custom_document_properties_in_an_XLSX_workbook.cs
 - Add_custom_document_properties_to_an_XLSX_workbook.cs
+- Configure_a_link_to_content_custom_property_in_an_XLSX_workbook.cs
