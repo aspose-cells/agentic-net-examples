@@ -52,3 +52,4 @@ Managing Ranges
 - Manage_ranges_by_creating_a_range_as_shown_in_XLSX_format.cs
 - Manage_ranges_by_creating_a_second_range_of_cells_as_shown_in_XLSX_format.cs
 - Manage_ranges_by_copying_range_style_only_in_XLSX_format.cs
+- Manage_ranges_by_getting_the_address_cell_count_offset_entire_column_and_entire_.cs
