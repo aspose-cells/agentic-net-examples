@@ -44,3 +44,4 @@ Pivot Table
 - Set_the_absolute_position_of_a_Pivot_Item_using_XLSX_format.cs
 - Use_PivotItemPosition_property_using_XLSX_format.cs
 - Specifying_the_absolute_position_of_the_Pivot_Item_example_using_XLSX_format.cs
+- Call_WorksheetPivotTablesRemoveAt_using_XLSX_format.cs
