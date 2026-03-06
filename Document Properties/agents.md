@@ -10,3 +10,4 @@ Document Properties
 - Manage_document_properties_in_an_XLSX_workbook.cs
 - Review_document_properties_in_an_XLSX_workbook.cs
 - Manage_document_properties_using_Microsoft_Excel_in_an_XLSX_workbook.cs
+- Work_with_document_properties_using_AsposeCells_in_an_XLSX_workbook.cs
