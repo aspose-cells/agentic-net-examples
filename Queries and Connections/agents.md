@@ -18,3 +18,4 @@ Queries and Connections
 - Read_and_write_query_table_of_worksheet_using_the_default_XLSX_format.cs
 - Retrieve_query_table_result_range_using_the_default_XLSX_format.cs
 - Generate_console_output_for_query_table_loading_an_XLSX_workbook_and_writing_out.cs
+- Get_OData_connection_information_using_the_default_XLSX_format.cs
