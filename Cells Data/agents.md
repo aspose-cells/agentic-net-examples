@@ -101,3 +101,4 @@ Cells Data
 - Using_Microsoft_Excel_using_XLSX_format.cs
 - Using_the_AsposeCells_API_using_XLSX_format.cs
 - Advanced_topics_using_XLSX_format.cs
+- Data_filtering_using_XLSX_format.cs
