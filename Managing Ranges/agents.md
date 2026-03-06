@@ -17,3 +17,4 @@ Managing Ranges
 - Manage_ranges_by_reviewing_the_introduction_in_XLSX_format.cs
 - Manage_ranges_by_copying_ranges_using_AsposeCells_in_XLSX_format.cs
 - Manage_ranges_by_copying_a_range_in_XLSX_format.cs
+- Manage_ranges_by_pasting_a_range_with_options_in_XLSX_format.cs
