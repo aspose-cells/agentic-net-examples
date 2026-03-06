@@ -14,3 +14,4 @@ Slicer
 - Create_slicer_-_Updating_slicer_-_load_XLSX.cs
 - Create_slicer_-_Create_slicer_-_load_XLSX.cs
 - Create_slicer_-_Save_workbook_as_XLSX_-_save_as_XLSX.cs
+- Create_slicer_-_Save_workbook_as_XLSB_-_save_as_XLSB.cs
