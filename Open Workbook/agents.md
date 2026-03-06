@@ -45,3 +45,4 @@ Open Workbook
 - Open_Workbook_loading_specific_worksheets_only.cs
 - Stop_conversion_of_Workbook_to_PDF_using_InterruptMonitor.cs
 - Convert_large_Workbook_to_PDF_using_InterruptMonitor.cs
+- Possible_usage_scenarios_for_InterruptMonitor_to_stop_conversion_or_loading.cs
