@@ -26,3 +26,4 @@ Managing Ranges
 - Manage_ranges_by_creating_a_range_in_XLSX_format.cs
 - Manage_ranges_by_creating_a_style_object_with_specified_formatting_attributes_in.cs
 - Manage_ranges_by_creating_a_workbook_in_XLSX_format.cs
+- Manage_ranges_by_adding_data_to_cells_in_the_first_worksheet_as_per_example_in_X.cs
