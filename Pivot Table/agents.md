@@ -17,3 +17,4 @@ Pivot Table
 - Generate_summary_using_XLSX_format.cs
 - Change_the_layout_of_a_Pivot_Table_using_XLSX_format.cs
 - Show_or_hide_subtotals_in_a_Pivot_Table_using_XLSX_format.cs
+- Set_the_layout_type_of_a_Pivot_Table_using_XLSX_format.cs
