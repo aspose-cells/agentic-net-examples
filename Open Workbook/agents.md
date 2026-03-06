@@ -27,3 +27,4 @@ Open Workbook
 - Open_Workbook_from_an_HTML_file.cs
 - Open_Workbook_from_a_CSV_file.cs
 - Open_Workbook_from_a_CSV_file_handling_special_characters.cs
+- Open_Workbook_from_a_CSV_file_using_a_preferred_parser.cs
