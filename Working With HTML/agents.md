@@ -28,3 +28,4 @@ Working With HTML
 - Exclude_unused_styles_during_Excel_to_HTML_conversion_load_XLSX_save_HTML.cs
 - Convert_an_Excel_workbook_to_HTML_while_excluding_unused_styles_by_enabling_Html.cs
 - Set_HtmlSaveOptionsExcludeUnusedStyles__true_load_XLSX_save_HTML.cs
+- How_to_remove_unused_styles_load_XLSX_save_HTML.cs
