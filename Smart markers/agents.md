@@ -25,3 +25,4 @@ Smart markers
 - Assign_the_object_to_the_designer_designerSetDataSourcedata_loading_XLSX.cs
 - Add_anonymous_or_custom_object_into_smart_markers_loading_XLSX.cs
 - Create_an_anonymous_object_loading_XLSX.cs
+- Create_a_custom_object_loading_XLSX.cs
