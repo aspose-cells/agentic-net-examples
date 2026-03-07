@@ -48,3 +48,4 @@ Working With Worksheets
 - Making_Tabs_Visible.cs
 - Hiding_Tabs.cs
 - Controlling_the_Tab_Bar_Width.cs
+- Show_and_Hide_Rows_Columns_and_Scroll_Bars.cs
