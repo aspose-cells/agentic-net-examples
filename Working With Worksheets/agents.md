@@ -95,3 +95,4 @@ Working With Worksheets
 - Console_Output.cs
 - Remove_existing_printer_settings_of_worksheets_in_Excel_file.cs
 - Remove_Existing_PrinterSettings_of_Worksheets_in_Excel_file.cs
+- Screenshot.cs
