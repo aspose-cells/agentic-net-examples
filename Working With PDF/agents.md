@@ -40,3 +40,4 @@ Working With PDF
 - Review_sample_code_for_converting_an_XLS_file_with_images_or_charts_to_PDF.cs
 - Create_a_PdfBookmarkEntry_for_a_chart_sheet_in_the_PDF_generated_from_Excel.cs
 - Explore_possible_usage_scenarios_for_chartsheet_PDF_bookmarks.cs
+- Generate_PDF_bookmark_entries_for_chart_sheets_using_sample_code.cs
