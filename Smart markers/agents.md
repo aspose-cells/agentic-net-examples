@@ -59,3 +59,4 @@ Smart markers
 - Group_data_by_a_specific_field_using_the_GROUP_parameter_before_applying_the_RAN.cs
 - Place_the_GROUP_marker_before_the_RANGE_block_loading_XLSX.cs
 - Use_GROUP_Parameter_loading_XLSX.cs
+- Insert_an_image_into_a_cell_using_the_Image_marker_syntax_and_provide_image_data.cs
