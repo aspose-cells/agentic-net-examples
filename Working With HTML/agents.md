@@ -113,3 +113,4 @@ Working With HTML
 - Recognise_self-closing_tags_load_HTML_save_XLSX.cs
 - How_to_handle_self-closing_HTML_tags_load_HTML_save_XLSX.cs
 - Export_an_Excel_worksheet_to_HTML_with_column_widths_defined_in_em_or_percent_un.cs
+- Set_HtmlSaveOptionsColumnWidthUnit__ColumnWidthUnitEm_or_ColumnWidthUnitPercent_.cs
