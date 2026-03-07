@@ -60,3 +60,4 @@ Working With PDF
 - Apply_TextCrossType_settings_to_control_string_crossing_in_PDF_or_image_output.cs
 - Provide_sample_code_demonstrating_TextCrossType_usage_during_Excel_to_PDF_or_ima.cs
 - Convert_an_Excel_file_to_PDF_format_compatible_with_PDFA1a.cs
+- Identify_possible_usage_scenarios_for_PDFA1a_conversion.cs
