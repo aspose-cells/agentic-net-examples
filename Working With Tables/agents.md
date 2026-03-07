@@ -26,3 +26,4 @@ Working With Tables
 - Review_the_Example_using_an_XLSX_file..cs
 - Execute_C#_Code_to_Access_a_Table_from_a_Cell_and_Add_Values.cs
 - Convert_a_list_of_data_to_a_List_Object_using_an_XLSX_file.cs
+- Protect_the_list_from_accidental_row_and_column_deletion_in_an_XLSX_file.cs
