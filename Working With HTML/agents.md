@@ -7,3 +7,4 @@ Working With HTML
 ## Examples
 
 - Avoid_exponential_notation_of_large_numbers_while_importing_from_CSV_load_CSV.cs
+- Use_LoadOptionsConvertNumericData__false_to_prevent_automatic_conversion_load_CS.cs
