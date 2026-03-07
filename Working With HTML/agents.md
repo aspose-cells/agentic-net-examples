@@ -1,0 +1,9 @@
+# Working With HTML Examples
+
+This folder contains **Aspose.Cells for .NET** examples for:
+
+Working With HTML
+
+## Examples
+
+- Avoid_exponential_notation_of_large_numbers_while_importing_from_CSV_load_CSV.cs
