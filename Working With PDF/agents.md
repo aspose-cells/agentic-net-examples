@@ -62,3 +62,4 @@ Working With PDF
 - Convert_an_Excel_file_to_PDF_format_compatible_with_PDFA1a.cs
 - Identify_possible_usage_scenarios_for_PDFA1a_conversion.cs
 - Convert_an_Excel_file_to_a_PDFA1acompliant_format.cs
+- View_a_screenshot_of_the_PDFA1a_conversion_result.cs
