@@ -18,3 +18,4 @@ Working With Images
 - Load_an_XLSX_column_chart_and_generate_an_image_preview.cs
 - Track_the_progress_of_converting_an_XLSX_workbook_to_an_image.cs
 - Monitor_image_conversion_status_for_an_XLSX_workbook.cs
+- Create_a_sample_image_from_an_XLSX_worksheet.cs
