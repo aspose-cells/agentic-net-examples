@@ -98,3 +98,4 @@ Working With HTML
 - How_to_preserve_WordArt_gradient_fill_load_XLSX_save_HTML.cs
 - Export_an_Excel_worksheet_to_HTML_while_hiding_overlaid_content_using_CrossHideR.cs
 - Set_HtmlSaveOptionsCrossHideRight__true_load_XLSX_save_HTML.cs
+- Hiding_overlaid_content_with_CrossHideRight_while_saving_to_HTML_load_XLSX_save_.cs
