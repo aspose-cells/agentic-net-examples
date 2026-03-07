@@ -90,3 +90,4 @@ Working With HTML
 - Implementation_steps_load_HTML_save_XLSX.cs
 - Convert_Excel_to_HTML_with_StreamProvider_load_XLSX_save_HTML.cs
 - Export_an_Excel_workbook_to_HTML_using_a_custom_IStreamProvider_to_control_the_o.cs
+- Implement_IStreamProvider_for_output_stream_management_load_XLSX_save_HTML.cs
