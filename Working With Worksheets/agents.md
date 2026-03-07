@@ -89,3 +89,4 @@ Working With Worksheets
 - Set_Print_Area.cs
 - Set_Print_Titles.cs
 - Set_Other_Print_Options.cs
+- Get_Paper_Width_and_Height_of_Page_Setup_of_Worksheet.cs
