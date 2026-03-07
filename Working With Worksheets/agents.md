@@ -72,3 +72,4 @@ Working With Worksheets
 - Setting_Page_Options.cs
 - Page_Orientation.cs
 - FitToPages_Options.cs
+- Paper_Size.cs
