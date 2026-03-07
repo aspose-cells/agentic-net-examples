@@ -100,3 +100,4 @@ Working With Worksheets
 - Determine_if_Paper_Size_of_Worksheet_is_Automatic.cs
 - Insert_background_image_to_Excel.cs
 - Setting_Sheet_Background_in_Microsoft_Excel.cs
+- Setting_Sheet_Background_with_AsposeCells.cs
