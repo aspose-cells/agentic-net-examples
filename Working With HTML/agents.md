@@ -65,3 +65,4 @@ Working With HTML
 - Convert_Excel_to_MHTML_with_IE_compatible_load_XLSX_save_MHTML.cs
 - Convert_an_Excel_workbook_to_MHTML_with_Internet_Explorer_compatibility_by_setti.cs
 - Set_MhtmlSaveOptionsIeCompatible__true_load_XLSX_save_MHTML.cs
+- How_to_generate_IE-compatible_MHTML_load_XLSX_save_MHTML.cs
