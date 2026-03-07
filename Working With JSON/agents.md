@@ -97,3 +97,4 @@ Working With JSON
 - Convert_a_NUMBERS_Excel_file_to_JSON.cs
 - Convert_an_SXC_Excel_file_to_JSON.cs
 - Convert_a_FODS_Excel_file_to_JSON.cs
+- Convert_a_DIF_Excel_file_to_JSON.cs
