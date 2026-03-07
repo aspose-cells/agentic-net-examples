@@ -60,3 +60,4 @@ Working With Worksheets
 - Show_Formulas_Instead_of_Values_in_a_Worksheet.cs
 - Show_and_Hide_Gridlines_and_Row_Column_Headers.cs
 - Show_and_Hide_Gridlines.cs
+- Show_and_Hide_Row_Column_Headers.cs
