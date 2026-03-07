@@ -34,3 +34,4 @@ Working With HTML
 - Set_HtmlSaveOptionsExportConditionalFormatting__true_load_XLSX_save_HTML.cs
 - How_to_preserve_conditional_formatting_load_XLSX_save_HTML.cs
 - Export_comments_while_saving_Excel_file_to_HTML_load_XLSX_save_HTML.cs
+- Save_an_Excel_workbook_to_HTML_with_cell_comments_included_by_enabling_HtmlSaveO.cs
