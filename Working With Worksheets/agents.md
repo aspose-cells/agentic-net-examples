@@ -67,3 +67,4 @@ Working With Worksheets
 - Hiding_Gridlines.cs
 - Making_RowColumn_Headers_Visible.cs
 - Hiding_RowColumn_Headers.cs
+- Use_Error_Checking_Options.cs
