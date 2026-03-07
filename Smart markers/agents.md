@@ -57,3 +57,4 @@ Smart markers
 - Apply_the_concepts_from_Getting_Notifications_While_Merging_Data_with_Smart_Mark.cs
 - Set_up_Event_Handlers_loading_XLSX.cs
 - Group_data_by_a_specific_field_using_the_GROUP_parameter_before_applying_the_RAN.cs
+- Place_the_GROUP_marker_before_the_RANGE_block_loading_XLSX.cs
