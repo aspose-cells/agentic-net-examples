@@ -11,3 +11,4 @@ Working With Images
 - Convert_an_XLSX_worksheet_to_an_SVG_image.cs
 - Convert_an_XLSX_chart_to_an_image.cs
 - Convert_an_XLSX_chart_to_an_SVG_image.cs
+- Export_an_XLSX_chart_to_an_SVG_image_with_a_viewBox_attribute.cs
