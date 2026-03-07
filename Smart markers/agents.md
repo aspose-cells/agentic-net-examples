@@ -29,3 +29,4 @@ Smart markers
 - Populate_smart_markers_with_objects_loading_XLSX.cs
 - Apply_an_IF_condition_in_a_smart_marker_to_display_a_value_only_when_a_specific_.cs
 - Define_a_variable_in_the_Excel_template_and_use_it_to_repeat_a_block_of_rows_loa.cs
+- IF_syntax_IF_conditionENDIF_loading_XLSX.cs
