@@ -124,3 +124,4 @@ Working With Worksheets
 - Clear_print_titles_using_AsposeCells.cs
 - How_to_Set_Print_Titles.cs
 - How_to_Set_Print_Titles_in_Excel.cs
+- How_to_Clear_Print_Titles_in_Excel.cs
