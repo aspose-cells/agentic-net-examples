@@ -69,3 +69,4 @@ Working With HTML
 - MHTML_save_options_load_XLSX_save_MHTML.cs
 - Example_load_XLSX_save_MHTML.cs
 - Provide_exported_worksheet_HTML_file_path_via_IFilePathProvider_interface_load_X.cs
+- Export_an_Excel_workbook_to_HTML_with_custom_file_paths_by_implementing_IFilePat.cs
