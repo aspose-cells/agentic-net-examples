@@ -41,3 +41,4 @@ Working With PDF
 - Create_a_PdfBookmarkEntry_for_a_chart_sheet_in_the_PDF_generated_from_Excel.cs
 - Explore_possible_usage_scenarios_for_chartsheet_PDF_bookmarks.cs
 - Generate_PDF_bookmark_entries_for_chart_sheets_using_sample_code.cs
+- Provide_sample_code_for_creating_a_PdfBookmarkEntry_for_a_chart_sheet.cs
