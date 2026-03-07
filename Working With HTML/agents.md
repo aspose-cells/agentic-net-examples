@@ -48,3 +48,4 @@ Working With HTML
 - Load_an_HTML_file_into_an_Excel_workbook_while_preserving_DIV_tag_layout_by_enab.cs
 - Set_HtmlLoadOptionsPreserveDivLayout__true_load_HTML_save_XLSX.cs
 - Support_the_layout_of_DIV_tags_while_loading_HTML_to_Excel_workbook_load_HTML_sa.cs
+- How_to_preserve_DIV_layout_load_HTML_save_XLSX.cs
