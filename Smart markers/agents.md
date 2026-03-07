@@ -8,3 +8,4 @@ Smart markers
 
 - Insert_smart_markers_into_an_Excel_template_and_populate_them_with_data_from_a_N.cs
 - Use_the_RANGE_parameter_to_generate_rows_dynamically_based_on_a_collection_of_ob.cs
+- Insert_a_smart_marker_into_a_cell_using_the_syntax_field_name_loading_XLSX.cs
