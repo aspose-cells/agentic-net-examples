@@ -56,3 +56,4 @@ Working With PDF
 - Render_one_PDF_page_per_Excel_worksheet_during_conversion.cs
 - Secure_PDF_documents_generated_from_Excel_by_setting_passwords_and_permissions.cs
 - Specify_how_to_cross_a_string_in_output_PDF_using_TextCrossType.cs
+- Explore_possible_usage_scenarios_for_TextCrossType_in_PDF_or_image_output.cs
