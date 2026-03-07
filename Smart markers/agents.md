@@ -32,3 +32,4 @@ Smart markers
 - IF_syntax_IF_conditionENDIF_loading_XLSX.cs
 - Define_a_variable_varName_loading_XLSX.cs
 - Reference_a_variable_varName_loading_XLSX.cs
+- Use_the_concepts_from_How_to_Use_IF_Parameter_and_Variables_in_Smart_Markers_loa.cs
