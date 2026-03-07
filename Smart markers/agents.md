@@ -14,3 +14,4 @@ Smart markers
 - Apply_formatting_using_the_FORMAT_parameter_field_nameFORMAT_loading_XLSX.cs
 - Utilize_the_concepts_from_Using_Smart_Markers_loading_XLSX.cs
 - Identify_the_Smart_Markers_definition_loading_XLSX.cs
+- Apply_Smart_Marker_Syntax_loading_XLSX.cs
