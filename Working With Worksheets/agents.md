@@ -119,3 +119,4 @@ Working With Worksheets
 - How_to_Set_Print_Area_Using_AsposeCells.cs
 - How_to_Clear_Print_Area_Using_AsposeCells.cs
 - Set_print_titles_in_Excel.cs
+- Clear_print_titles_in_Excel.cs
