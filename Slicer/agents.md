@@ -48,3 +48,4 @@ Slicer
 - Update_slicer_-_Updating_slicer_-_load_XLSX.cs
 - Update_slicer_-_Possible_usage_scenarios_-_load_XLSX.cs
 - Update_slicer_-_Sample_code_-_load_XLSX.cs
+- Render_slicer_to_PDF_-_Draw_slicer_while_rendering_Excel_to_PDF_-_render_to_PDF.cs
