@@ -20,3 +20,4 @@ Smart markers
 - Implement_a_smart_marker_with_conditional_logic_example_loading_XLSX.cs
 - Consider_Smart_Marker_Limitations_loading_XLSX.cs
 - Create_an_anonymous_object_in_C_and_use_WorkbookDesignerSetDataSource_to_populat.cs
+- Create_an_anonymous_object_var_data__new__Name__John_Age__30__loading_XLSX.cs
