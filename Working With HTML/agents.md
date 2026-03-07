@@ -31,3 +31,4 @@ Working With HTML
 - How_to_remove_unused_styles_load_XLSX_save_HTML.cs
 - Export_DataBar_ColorScale_and_IconSet_conditional_formatting_while_Excel_to_HTML.cs
 - Export_an_Excel_worksheet_to_HTML_while_preserving_DataBar_ColorScale_and_IconSe.cs
+- Set_HtmlSaveOptionsExportConditionalFormatting__true_load_XLSX_save_HTML.cs
