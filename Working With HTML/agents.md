@@ -33,3 +33,4 @@ Working With HTML
 - Export_an_Excel_worksheet_to_HTML_while_preserving_DataBar_ColorScale_and_IconSe.cs
 - Set_HtmlSaveOptionsExportConditionalFormatting__true_load_XLSX_save_HTML.cs
 - How_to_preserve_conditional_formatting_load_XLSX_save_HTML.cs
+- Export_comments_while_saving_Excel_file_to_HTML_load_XLSX_save_HTML.cs
