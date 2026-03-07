@@ -127,3 +127,4 @@ Working With HTML
 - Prevent_exporting_hidden_worksheet_contents_on_saving_to_HTML_load_XLSX_save_HTM.cs
 - Save_an_Excel_workbook_to_HTML_while_preventing_hidden_worksheet_contents_from_b.cs
 - Set_HtmlSaveOptionsExportHiddenElements__false_load_XLSX_save_HTML.cs
+- How_to_exclude_hidden_content_load_XLSX_save_HTML.cs
