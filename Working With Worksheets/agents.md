@@ -32,3 +32,4 @@ Working With Worksheets
 - Removing_a_Specific_Page_Break.cs
 - Worksheet_Views.cs
 - Page_Break_Preview.cs
+- Zoom_Factor.cs
