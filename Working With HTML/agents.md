@@ -74,3 +74,4 @@ Working With HTML
 - How_to_customize_export_paths_load_XLSX_save_HTML.cs
 - Implementation_steps_load_XLSX_save_HTML.cs
 - Export_worksheet_CSS_separately_in_output_load_XLSX_save_HTML.cs
+- Export_an_Excel_worksheet_to_HTML_with_CSS_saved_in_separate_files_by_enabling_H.cs
