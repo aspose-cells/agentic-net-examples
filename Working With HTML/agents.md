@@ -111,3 +111,4 @@ Working With HTML
 - Import_an_HTML_document_into_a_workbook_while_recognizing_self-closing_tags_by_e.cs
 - Set_HtmlLoadOptionsRecognizeSelfClosingTags__true_load_HTML_save_XLSX.cs
 - Recognise_self-closing_tags_load_HTML_save_XLSX.cs
+- How_to_handle_self-closing_HTML_tags_load_HTML_save_XLSX.cs
