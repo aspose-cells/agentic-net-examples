@@ -103,3 +103,4 @@ Working With HTML
 - Export_an_Excel_worksheet_to_HTML_with_a_custom_prefix_for_table_CSS_IDs_by_sett.cs
 - Set_HtmlSaveOptionsTableCssId__myPrefix__load_XLSX_save_HTML.cs
 - Prefix_table_elements_styles_with_HtmlSaveOptionsTableCssId_property_load_XLSX_s.cs
+- How_to_add_prefix_to_table_CSS_IDs_load_XLSX_save_HTML.cs
