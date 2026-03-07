@@ -68,3 +68,4 @@ Working With HTML
 - How_to_generate_IE-compatible_MHTML_load_XLSX_save_MHTML.cs
 - MHTML_save_options_load_XLSX_save_MHTML.cs
 - Example_load_XLSX_save_MHTML.cs
+- Provide_exported_worksheet_HTML_file_path_via_IFilePathProvider_interface_load_X.cs
