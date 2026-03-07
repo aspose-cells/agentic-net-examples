@@ -83,3 +83,4 @@ Working With Worksheets
 - Setting_Headers_and_Footers.cs
 - Script_Commands.cs
 - Set_Header_and_Footers.cs
+- Setting_Different_Headers_and_Footers_For_Different_Pages.cs
