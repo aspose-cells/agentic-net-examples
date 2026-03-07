@@ -110,3 +110,4 @@ Working With HTML
 - How_to_AutoFit_during_HTML_load_load_HTML_save_XLSX.cs
 - Import_an_HTML_document_into_a_workbook_while_recognizing_self-closing_tags_by_e.cs
 - Set_HtmlLoadOptionsRecognizeSelfClosingTags__true_load_HTML_save_XLSX.cs
+- Recognise_self-closing_tags_load_HTML_save_XLSX.cs
