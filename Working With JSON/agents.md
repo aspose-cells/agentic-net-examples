@@ -79,3 +79,4 @@ Working With JSON
 - Convert_an_XLSX_CSV_file_to_JSON_with_default_options.cs
 - Convert_an_XLSM_CSV_file_to_JSON_with_default_options.cs
 - Convert_an_XLTX_CSV_file_to_JSON_with_default_options.cs
+- Convert_an_XLS_Excel_file_to_JSON.cs
