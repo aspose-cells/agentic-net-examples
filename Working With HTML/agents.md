@@ -23,3 +23,4 @@ Working With HTML
 - Load_options_load_XLSX.cs
 - Export_an_Excel_workbook_to_HTML_without_downlevel_revealed_comments_by_setting_.cs
 - Set_HtmlSaveOptionsDisableDownlevelRevealedComments__true_load_XLSX_save_HTML.cs
+- Disable_downlevel_revealed_comments_while_saving_to_HTML_load_XLSX_save_HTML.cs
