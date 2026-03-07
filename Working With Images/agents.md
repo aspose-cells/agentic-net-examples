@@ -23,3 +23,4 @@ Working With Images
 - Convert_an_XLSX_worksheet_to_an_image.cs
 - Perform_worksheet_conversion_to_generate_an_image.cs
 - Export_an_XLSX_chart_as_an_image.cs
+- Export_an_XLSX_chart_as_an_image_with_custom_attributes.cs
