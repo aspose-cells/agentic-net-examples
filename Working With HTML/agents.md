@@ -39,3 +39,4 @@ Working With HTML
 - How_to_include_comments_in_HTML_output_load_XLSX_save_HTML.cs
 - Export_Excel_to_HTML_with_gridlines_load_XLSX_save_HTML.cs
 - Export_an_Excel_worksheet_to_HTML_with_visible_gridlines_by_setting_HtmlSaveOpti.cs
+- Set_HtmlSaveOptionsExportGridLines__true_load_XLSX_save_HTML.cs
