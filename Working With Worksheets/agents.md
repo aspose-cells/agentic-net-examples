@@ -7,3 +7,4 @@ Working With Worksheets
 ## Examples
 
 - Remove_worksheets_using_sheet_index.cs
+- Adding_Worksheets_to_a_New_Excel_File.cs
