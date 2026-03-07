@@ -40,3 +40,4 @@ Slicer
 - Render_slicer_-_Load_sample_Excel_file_-_load_XLSX.cs
 - Render_slicer_-_Save_rendered_image_-_load_XLSX.cs
 - Render_slicer_-_Possible_usage_scenarios_-_load_XLSX.cs
+- Render_slicer_-_Sample_code_-_load_XLSX.cs
