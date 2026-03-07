@@ -10,3 +10,4 @@ Working With Images
 - Render_an_XLSX_worksheet_as_an_image.cs
 - Convert_an_XLSX_worksheet_to_an_SVG_image.cs
 - Convert_an_XLSX_chart_to_an_image.cs
+- Convert_an_XLSX_chart_to_an_SVG_image.cs
