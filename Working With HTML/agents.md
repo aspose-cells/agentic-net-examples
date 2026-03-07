@@ -14,3 +14,4 @@ Working With HTML
 - Example_load_XLSX.cs
 - Convert_Excel_to_HTML_with_headings_load_XLSX_save_HTML.cs
 - Export_an_Excel_worksheet_to_HTML_while_preserving_headings_by_enabling_HtmlSave.cs
+- Set_HtmlSaveOptionsExportHeadings__true_to_include_headings_load_XLSX_save_HTML.cs
