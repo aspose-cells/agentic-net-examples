@@ -58,3 +58,4 @@ Working With Worksheets
 - Making_Scroll_Bars_Visible.cs
 - Hiding_Scroll_Bars.cs
 - Show_Formulas_Instead_of_Values_in_a_Worksheet.cs
+- Show_and_Hide_Gridlines_and_Row_Column_Headers.cs
