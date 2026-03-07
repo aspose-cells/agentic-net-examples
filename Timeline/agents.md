@@ -23,3 +23,4 @@ Timeline
 - Convert_timeline_from_XLTM_to_XLSX_format.cs
 - Convert_timeline_from_XLSB_to_XLSX_format.cs
 - Export_timeline_from_XLS_to_XLSX_format.cs
+- Export_timeline_from_XLSX_to_XLSX_format.cs
