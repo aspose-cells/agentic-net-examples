@@ -42,3 +42,4 @@ Slicer
 - Render_slicer_-_Possible_usage_scenarios_-_load_XLSX.cs
 - Render_slicer_-_Sample_code_-_load_XLSX.cs
 - Update_slicer_-_Select_slicer_items_-_load_XLSX.cs
+- Update_slicer_-_Unselect_slicer_items_-_load_XLSX.cs
