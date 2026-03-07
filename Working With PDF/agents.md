@@ -55,3 +55,4 @@ Working With PDF
 - Provide_sample_code_for_rendering_Office_AddIns_during_Excel_to_PDF_conversion.cs
 - Render_one_PDF_page_per_Excel_worksheet_during_conversion.cs
 - Secure_PDF_documents_generated_from_Excel_by_setting_passwords_and_permissions.cs
+- Specify_how_to_cross_a_string_in_output_PDF_using_TextCrossType.cs
