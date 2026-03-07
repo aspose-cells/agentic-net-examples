@@ -7,3 +7,4 @@ Sparkline
 ## Examples
 
 - Create_a_SparklineGroup_in_an_XLSX_workbook_using_the_WorksheetSparklineGroupsAd.cs
+- Add_a_Sparkline_to_a_SparklineGroup_in_an_XLSX_workbook_using_the_SparklineGroup.cs
