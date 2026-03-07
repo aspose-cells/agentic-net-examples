@@ -50,3 +50,4 @@ Smart markers
 - Apply_the_concepts_from_Formatting_Smart_Markers_loading_XLSX.cs
 - Apply_Number_Formatting_loading_XLSX.cs
 - Apply_Date_Formatting_loading_XLSX.cs
+- Apply_Custom_Formatting_loading_XLSX.cs
