@@ -95,3 +95,4 @@ Working With HTML
 - Render_gradient_fill_for_the_WordArt_while_converting_spreadsheets_to_HTML_load_.cs
 - Convert_an_Excel_worksheet_containing_WordArt_with_gradient_fill_to_HTML_by_enab.cs
 - Set_HtmlSaveOptionsRenderWordArtGradient__true_load_XLSX_save_HTML.cs
+- How_to_preserve_WordArt_gradient_fill_load_XLSX_save_HTML.cs
