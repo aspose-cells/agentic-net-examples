@@ -134,3 +134,4 @@ Working With HTML
 - How_to_improve_layout_using_PresentationPreference_load_XLSX_save_HTML.cs
 - Export_an_Excel_worksheet_to_HTML_with_links_opening_in_a_new_window_by_setting_.cs
 - Set_HtmlSaveOptionsLinkTarget___blank_load_XLSX_save_HTML.cs
+- Change_the_HTML_link_target_type_load_XLSX_save_HTML.cs
