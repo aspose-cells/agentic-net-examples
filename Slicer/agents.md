@@ -50,3 +50,4 @@ Slicer
 - Update_slicer_-_Sample_code_-_load_XLSX.cs
 - Render_slicer_to_PDF_-_Draw_slicer_while_rendering_Excel_to_PDF_-_render_to_PDF.cs
 - Render_slicer_to_PDF_-_Load_sample_Excel_file_-_load_XLSX.cs
+- Render_slicer_to_PDF_-_Sample_code_-_load_XLSX.cs
