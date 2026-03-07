@@ -34,3 +34,4 @@ Working With Worksheets
 - Page_Break_Preview.cs
 - Zoom_Factor.cs
 - Freeze_Panes.cs
+- Controlling_View_Modes.cs
