@@ -34,3 +34,4 @@ Working With PDF
 - Execute_the_conversion_process_from_XLSX_to_PDF.cs
 - Review_the_resulting_PDF_after_converting_the_XLSX_file.cs
 - Identify_possible_usage_scenarios_for_externalresource_control_during_PDF_render.cs
+- Load_externalresource_control_settings_in_the_Excel_workbook_for_PDF_rendering.cs
