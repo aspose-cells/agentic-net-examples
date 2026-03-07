@@ -54,3 +54,4 @@ Working With Worksheets
 - Show_Rows_and_Columns.cs
 - Hide_Rows_and_Columns.cs
 - Hide_Multiple_Rows_and_Columns.cs
+- Controlling_the_Visibility_of_Scroll_Bars.cs
