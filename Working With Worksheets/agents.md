@@ -46,3 +46,4 @@ Working With Worksheets
 - Making_a_Worksheet_Visible.cs
 - Hiding_a_Worksheet.cs
 - Making_Tabs_Visible.cs
+- Hiding_Tabs.cs
