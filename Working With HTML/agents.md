@@ -105,3 +105,4 @@ Working With HTML
 - Prefix_table_elements_styles_with_HtmlSaveOptionsTableCssId_property_load_XLSX_s.cs
 - How_to_add_prefix_to_table_CSS_IDs_load_XLSX_save_HTML.cs
 - Load_an_HTML_file_into_a_workbook_with_AutoFit_for_columns_and_rows_enabled_by_s.cs
+- Set_HtmlLoadOptionsAutoFitColumns__true_load_HTML_save_XLSX.cs
