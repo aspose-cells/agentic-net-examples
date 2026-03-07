@@ -105,3 +105,4 @@ Working With Worksheets
 - Print_Excel_as_fitted_pages_wide_and_tall_using_AsposeCells.cs
 - Print_all_columns_of_worksheet_in_one_page_using_AsposeCells.cs
 - Introduction.cs
+- Why_Use_FitToPagesWide_and_FitToPagesTall.cs
