@@ -28,3 +28,4 @@ Working With Worksheets
 - Managing_Page_Breaks.cs
 - Page_Breaks.cs
 - Adding_Page_Breaks.cs
+- Clearing_All_Page_Breaks.cs
