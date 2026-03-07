@@ -64,3 +64,4 @@ Smart markers
 - Supported_image_formats_PNG_JPEG_BMP_GIF_loading_XLSX.cs
 - Apply_the_concepts_from_How_to_Use_Image_Markers_in_Smart_Markers_loading_XLSX.cs
 - Use_Image_Marker_Syntax_loading_XLSX.cs
+- Use_the_IF_parameter_to_conditionally_display_data_in_a_smart_marker_loading_XLS.cs
