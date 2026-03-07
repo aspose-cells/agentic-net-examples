@@ -48,3 +48,4 @@ Smart markers
 - Date_format_field_nameMMddyyyy_loading_XLSX.cs
 - Custom_format_field_name-409000_loading_XLSX.cs
 - Apply_the_concepts_from_Formatting_Smart_Markers_loading_XLSX.cs
+- Apply_Number_Formatting_loading_XLSX.cs
