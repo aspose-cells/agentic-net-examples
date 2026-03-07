@@ -39,3 +39,4 @@ Working With Worksheets
 - AsposeCells__Zoom_Factor.cs
 - AsposeCells__Freeze_Panes.cs
 - Enabling_Normal_View.cs
+- Enabling_Page_Break_Preview.cs
