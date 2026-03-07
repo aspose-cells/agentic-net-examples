@@ -52,3 +52,4 @@ Slicer
 - Render_slicer_to_PDF_-_Load_sample_Excel_file_-_load_XLSX.cs
 - Render_slicer_to_PDF_-_Sample_code_-_load_XLSX.cs
 - Modify_slicer_properties_-_Change_slicer_properties_-_load_XLSX.cs
+- Modify_slicer_properties_-_Possible_usage_scenarios_-_load_XLSX.cs
