@@ -68,3 +68,4 @@ Working With Worksheets
 - Making_RowColumn_Headers_Visible.cs
 - Hiding_RowColumn_Headers.cs
 - Use_Error_Checking_Options.cs
+- Numbers_Stored_as_Text.cs
