@@ -20,3 +20,4 @@ Working With HTML
 - Example_load_XLSX_save_HTML.cs
 - Delete_redundant_spaces_after_line_break_while_importing_load_CSV.cs
 - How_to_remove_extra_spaces_during_CSV_import_load_CSV.cs
+- Load_options_load_XLSX.cs
