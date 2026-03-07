@@ -72,3 +72,4 @@ Working With HTML
 - Export_an_Excel_workbook_to_HTML_with_custom_file_paths_by_implementing_IFilePat.cs
 - Create_a_class_that_implements_IFilePathProvider_and_override_GetFilePath_method.cs
 - How_to_customize_export_paths_load_XLSX_save_HTML.cs
+- Implementation_steps_load_XLSX_save_HTML.cs
