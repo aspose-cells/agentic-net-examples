@@ -80,3 +80,4 @@ Working With Worksheets
 - Center_on_Page.cs
 - Header_and_Footer_Margins.cs
 - Insert_an_image_into_a_header_or_footer.cs
+- Setting_Headers_and_Footers.cs
