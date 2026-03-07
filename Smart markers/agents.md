@@ -45,3 +45,4 @@ Smart markers
 - Apply_number_formatting_to_a_smart_marker_to_display_values_with_two_decimal_pla.cs
 - Format_a_date_smart_marker_to_show_dates_in_MMddyyyy_format_loading_XLSX.cs
 - Number_format_field_name000_loading_XLSX.cs
+- Date_format_field_nameMMddyyyy_loading_XLSX.cs
