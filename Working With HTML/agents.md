@@ -22,3 +22,4 @@ Working With HTML
 - How_to_remove_extra_spaces_during_CSV_import_load_CSV.cs
 - Load_options_load_XLSX.cs
 - Export_an_Excel_workbook_to_HTML_without_downlevel_revealed_comments_by_setting_.cs
+- Set_HtmlSaveOptionsDisableDownlevelRevealedComments__true_load_XLSX_save_HTML.cs
