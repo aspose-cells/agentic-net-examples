@@ -20,3 +20,4 @@ Conversion
 - Convert_an_Excel_workbook_to_CSV_with_trimmed_leading_blank_.cs
 - Convert_an_Excel_workbook_to_CSV_keeping_separators_for_blan.cs
 - Convert_an_Excel_workbook_to_TIFF_using_XLSX_as_the_input_an.cs
+- Convert_an_Excel_workbook_to_PDF_using_XLSX_as_the_input_and_PDF_as_the_output.cs
