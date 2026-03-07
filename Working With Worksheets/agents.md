@@ -117,3 +117,4 @@ Working With Worksheets
 - How_to_Clear_Print_Area_in_Excel.cs
 - What_Happens_After_Clearing_the_Print_Area.cs
 - How_to_Set_Print_Area_Using_AsposeCells.cs
+- How_to_Clear_Print_Area_Using_AsposeCells.cs
