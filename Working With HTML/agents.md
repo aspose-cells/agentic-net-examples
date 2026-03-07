@@ -12,3 +12,4 @@ Working With HTML
 - How_to_avoid_exponential_notation_of_large_numbers_while_importing_from_CSV_load.cs
 - Supported_formats_load_XLSX.cs
 - Example_load_XLSX.cs
+- Convert_Excel_to_HTML_with_headings_load_XLSX_save_HTML.cs
