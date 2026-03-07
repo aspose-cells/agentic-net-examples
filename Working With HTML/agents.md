@@ -99,3 +99,4 @@ Working With HTML
 - Export_an_Excel_worksheet_to_HTML_while_hiding_overlaid_content_using_CrossHideR.cs
 - Set_HtmlSaveOptionsCrossHideRight__true_load_XLSX_save_HTML.cs
 - Hiding_overlaid_content_with_CrossHideRight_while_saving_to_HTML_load_XLSX_save_.cs
+- How_to_hide_overlaid_content_load_XLSX_save_HTML.cs
