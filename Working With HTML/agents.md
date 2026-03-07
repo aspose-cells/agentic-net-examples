@@ -17,3 +17,4 @@ Working With HTML
 - Set_HtmlSaveOptionsExportHeadings__true_to_include_headings_load_XLSX_save_HTML.cs
 - Customize_heading_levels_using_HtmlSaveOptionsHeadingLevel_load_XLSX_save_HTML.cs
 - HTML_save_options_load_XLSX_save_HTML.cs
+- Example_load_XLSX_save_HTML.cs
