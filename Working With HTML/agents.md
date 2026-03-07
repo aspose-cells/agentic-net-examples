@@ -146,3 +146,4 @@ Working With HTML
 - How_to_use_CSS_variables_load_XLSX_save_HTML.cs
 - Render_an_Excel_worksheet_to_HTML_using_a_default_font_by_setting_HtmlSaveOption.cs
 - Set_HtmlSaveOptionsDefaultFont__Arial_load_XLSX_save_HTML.cs
+- Set_default_font_while_rendering_spreadsheet_to_HTML_load_XLSX_save_HTML.cs
