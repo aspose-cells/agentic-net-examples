@@ -22,3 +22,4 @@ Working With Images
 - Display_image_conversion_progress_in_the_console_for_an_XLSX_workbook.cs
 - Convert_an_XLSX_worksheet_to_an_image.cs
 - Perform_worksheet_conversion_to_generate_an_image.cs
+- Export_an_XLSX_chart_as_an_image.cs
