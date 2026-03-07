@@ -64,3 +64,4 @@ Working With Worksheets
 - Controlling_the_Visibility_of_the_Gridlines.cs
 - Controlling_the_Visibility_of_the_Worksheets.cs
 - Making_Gridlines_Visible.cs
+- Hiding_Gridlines.cs
