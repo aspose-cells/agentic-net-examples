@@ -61,3 +61,4 @@ Smart markers
 - Use_GROUP_Parameter_loading_XLSX.cs
 - Insert_an_image_into_a_cell_using_the_Image_marker_syntax_and_provide_image_data.cs
 - Image_marker_syntax_Imagefield_name_loading_XLSX.cs
+- Supported_image_formats_PNG_JPEG_BMP_GIF_loading_XLSX.cs
