@@ -11,3 +11,4 @@ Working With HTML
 - Specify_custom_culture_settings_if_required_load_XLSX.cs
 - How_to_avoid_exponential_notation_of_large_numbers_while_importing_from_CSV_load.cs
 - Supported_formats_load_XLSX.cs
+- Example_load_XLSX.cs
