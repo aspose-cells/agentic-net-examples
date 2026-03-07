@@ -18,3 +18,4 @@ Smart markers
 - Use_supported_Smart_Marker_Types_loading_XLSX.cs
 - Implement_a_simple_smart_marker_example_loading_XLSX.cs
 - Implement_a_smart_marker_with_conditional_logic_example_loading_XLSX.cs
+- Consider_Smart_Marker_Limitations_loading_XLSX.cs
