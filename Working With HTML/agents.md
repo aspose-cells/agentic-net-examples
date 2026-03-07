@@ -55,3 +55,4 @@ Working With HTML
 - Export_an_Excel_worksheet_containing_RTL_text_to_HTML_with_expanded_text_by_enab.cs
 - Set_HtmlSaveOptionsExpandRtlText__true_load_XLSX_save_HTML.cs
 - Export_print_area_range_to_HTML_load_XLSX_save_HTML.cs
+- Export_only_the_print_area_of_an_Excel_worksheet_to_HTML_by_enabling_HtmlSaveOpt.cs
