@@ -62,3 +62,4 @@ Working With HTML
 - Export_an_Excel_worksheet_to_HTML_with_simulated_border_styles_for_unsupported_b.cs
 - Set_HtmlSaveOptionsSimulateUnsupportedBorders__true_load_XLSX_save_HTML.cs
 - How_to_approximate_unsupported_borders_load_XLSX_save_HTML.cs
+- Convert_Excel_to_MHTML_with_IE_compatible_load_XLSX_save_MHTML.cs
