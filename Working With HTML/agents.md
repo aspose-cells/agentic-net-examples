@@ -87,3 +87,4 @@ Working With HTML
 - Convert_an_HTML_document_to_Excel_using_a_custom_IStreamProvider_implementation_.cs
 - Implement_IStreamProvider_to_manage_input_and_output_streams_load_HTML_save_XLSX.cs
 - Pass_the_provider_to_HtmlLoadOptions_load_HTML_save_XLSX.cs
+- Implementation_steps_load_HTML_save_XLSX.cs
