@@ -15,3 +15,4 @@ Working With PDF
 - Save_the_Excel_workbook_as_a_PDFAcompliant_PDF.cs
 - Set_the_PDF_creation_time_during_Excel_to_PDF_conversion.cs
 - Enable_the_ContentCopyForAccessibility_option_while_converting_Excel_to_PDF.cs
+- Export_custom_properties_from_the_Excel_workbook_to_PDF.cs
