@@ -51,3 +51,4 @@ Smart markers
 - Apply_Number_Formatting_loading_XLSX.cs
 - Apply_Date_Formatting_loading_XLSX.cs
 - Apply_Custom_Formatting_loading_XLSX.cs
+- Subscribe_to_the_SmartMarkerProcessing_event_to_receive_notifications_while_merg.cs
