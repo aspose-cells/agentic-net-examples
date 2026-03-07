@@ -36,3 +36,4 @@ Working With JSON
 - Convert_an_XLSM_workbook_to_JSON_with_default_options.cs
 - Convert_an_XLTX_workbook_to_JSON_with_default_options.cs
 - Convert_an_XLSX_JSON_file_to_CSV.cs
+- Convert_an_XLSM_JSON_file_to_CSV.cs
