@@ -85,3 +85,4 @@ Working With HTML
 - Example_load_HTML_save_PDF.cs
 - Convert_HTML_to_Excel_with_StreamProvider_load_HTML_save_XLSX.cs
 - Convert_an_HTML_document_to_Excel_using_a_custom_IStreamProvider_implementation_.cs
+- Implement_IStreamProvider_to_manage_input_and_output_streams_load_HTML_save_XLSX.cs
