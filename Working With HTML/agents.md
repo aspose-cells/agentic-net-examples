@@ -67,3 +67,4 @@ Working With HTML
 - Set_MhtmlSaveOptionsIeCompatible__true_load_XLSX_save_MHTML.cs
 - How_to_generate_IE-compatible_MHTML_load_XLSX_save_MHTML.cs
 - MHTML_save_options_load_XLSX_save_MHTML.cs
+- Example_load_XLSX_save_MHTML.cs
