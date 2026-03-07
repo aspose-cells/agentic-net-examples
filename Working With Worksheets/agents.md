@@ -38,3 +38,4 @@ Working With Worksheets
 - Using_Microsoft_Excel.cs
 - AsposeCells__Zoom_Factor.cs
 - AsposeCells__Freeze_Panes.cs
+- Enabling_Normal_View.cs
