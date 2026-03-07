@@ -109,3 +109,4 @@ Working With Worksheets
 - How_to_Print_Worksheet_as_One_Page_Using_AsposeCells.cs
 - How_to_Print_All_Columns_of_Worksheet_in_One_Page_Using_AsposeCells.cs
 - Set_print_area_in_Excel.cs
+- Clear_print_area_in_Excel.cs
