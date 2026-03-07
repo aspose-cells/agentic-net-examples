@@ -53,3 +53,4 @@ Smart markers
 - Apply_Custom_Formatting_loading_XLSX.cs
 - Subscribe_to_the_SmartMarkerProcessing_event_to_receive_notifications_while_merg.cs
 - Subscribe_to_the_SmartMarkerProcessing_event_to_get_progress_updates_loading_XLS.cs
+- Handle_the_event_to_log_or_modify_data_during_merging_loading_XLSX.cs
