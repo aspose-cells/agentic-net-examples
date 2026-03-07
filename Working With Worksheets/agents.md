@@ -71,3 +71,4 @@ Working With Worksheets
 - Numbers_Stored_as_Text.cs
 - Setting_Page_Options.cs
 - Page_Orientation.cs
+- FitToPages_Options.cs
