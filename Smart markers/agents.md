@@ -65,3 +65,4 @@ Smart markers
 - Apply_the_concepts_from_How_to_Use_Image_Markers_in_Smart_Markers_loading_XLSX.cs
 - Use_Image_Marker_Syntax_loading_XLSX.cs
 - Use_the_IF_parameter_to_conditionally_display_data_in_a_smart_marker_loading_XLS.cs
+- Apply_the_RANGE_parameter_to_repeat_rows_for_each_item_in_a_collection_loading_X.cs
