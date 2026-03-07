@@ -101,3 +101,4 @@ Working With HTML
 - Hiding_overlaid_content_with_CrossHideRight_while_saving_to_HTML_load_XLSX_save_.cs
 - How_to_hide_overlaid_content_load_XLSX_save_HTML.cs
 - Export_an_Excel_worksheet_to_HTML_with_a_custom_prefix_for_table_CSS_IDs_by_sett.cs
+- Set_HtmlSaveOptionsTableCssId__myPrefix__load_XLSX_save_HTML.cs
