@@ -36,3 +36,4 @@ Working With Worksheets
 - Freeze_Panes.cs
 - Controlling_View_Modes.cs
 - Using_Microsoft_Excel.cs
+- AsposeCells__Zoom_Factor.cs
