@@ -111,3 +111,4 @@ Working With Worksheets
 - Set_print_area_in_Excel.cs
 - Clear_print_area_in_Excel.cs
 - Set_print_area_using_AsposeCells.cs
+- Clear_print_area_using_AsposeCells.cs
