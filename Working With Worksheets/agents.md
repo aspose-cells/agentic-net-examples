@@ -87,3 +87,4 @@ Working With Worksheets
 - Setting_Different_Headers_and_Footers_in_MS_Excel.cs
 - Setting_Different_Headers_and_Footers_with_AsposeCells.cs
 - Set_Print_Area.cs
+- Set_Print_Titles.cs
