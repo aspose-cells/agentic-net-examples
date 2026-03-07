@@ -66,3 +66,4 @@ Working With PDF
 - Use_sample_code_to_convert_Excel_to_PDFA1a.cs
 - Save_each_worksheet_of_an_Excel_workbook_to_a_different_PDF_file.cs
 - Generate_separate_PDF_files_for_each_worksheet_using_PdfSaveOptionsSheetSet.cs
+- Save_specified_worksheets_to_PDF.cs
