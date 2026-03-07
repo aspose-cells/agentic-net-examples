@@ -61,3 +61,4 @@ Working With PDF
 - Provide_sample_code_demonstrating_TextCrossType_usage_during_Excel_to_PDF_or_ima.cs
 - Convert_an_Excel_file_to_PDF_format_compatible_with_PDFA1a.cs
 - Identify_possible_usage_scenarios_for_PDFA1a_conversion.cs
+- Convert_an_Excel_file_to_a_PDFA1acompliant_format.cs
