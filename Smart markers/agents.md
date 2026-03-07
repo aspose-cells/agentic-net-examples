@@ -13,3 +13,4 @@ Smart markers
 - Use_the_RANGE_parameter_to_repeat_a_block_of_rows_for_each_item_in_a_collection_.cs
 - Apply_formatting_using_the_FORMAT_parameter_field_nameFORMAT_loading_XLSX.cs
 - Utilize_the_concepts_from_Using_Smart_Markers_loading_XLSX.cs
+- Identify_the_Smart_Markers_definition_loading_XLSX.cs
