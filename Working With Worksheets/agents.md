@@ -50,3 +50,4 @@ Working With Worksheets
 - Controlling_the_Tab_Bar_Width.cs
 - Show_and_Hide_Rows_Columns_and_Scroll_Bars.cs
 - Show_and_Hide_Rows_and_Columns.cs
+- Show_and_Hide_Scroll_Bars.cs
