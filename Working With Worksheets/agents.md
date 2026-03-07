@@ -82,3 +82,4 @@ Working With Worksheets
 - Insert_an_image_into_a_header_or_footer.cs
 - Setting_Headers_and_Footers.cs
 - Script_Commands.cs
+- Set_Header_and_Footers.cs
