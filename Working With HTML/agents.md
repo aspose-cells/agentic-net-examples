@@ -63,3 +63,4 @@ Working With HTML
 - Set_HtmlSaveOptionsSimulateUnsupportedBorders__true_load_XLSX_save_HTML.cs
 - How_to_approximate_unsupported_borders_load_XLSX_save_HTML.cs
 - Convert_Excel_to_MHTML_with_IE_compatible_load_XLSX_save_MHTML.cs
+- Convert_an_Excel_workbook_to_MHTML_with_Internet_Explorer_compatibility_by_setti.cs
