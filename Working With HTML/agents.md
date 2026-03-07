@@ -73,3 +73,4 @@ Working With HTML
 - Create_a_class_that_implements_IFilePathProvider_and_override_GetFilePath_method.cs
 - How_to_customize_export_paths_load_XLSX_save_HTML.cs
 - Implementation_steps_load_XLSX_save_HTML.cs
+- Export_worksheet_CSS_separately_in_output_load_XLSX_save_HTML.cs
