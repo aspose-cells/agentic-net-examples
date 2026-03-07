@@ -28,3 +28,4 @@ Working With Tables
 - Convert_a_list_of_data_to_a_List_Object_using_an_XLSX_file.cs
 - Protect_the_list_from_accidental_row_and_column_deletion_in_an_XLSX_file.cs
 - Convert_Table_to_ODS_from_an_XLSX_file_and_save_as_ODS.cs
+- Find_Query_Tables_and_List_Objects_related_to_External_Data_Connections_in_an_XL.cs
