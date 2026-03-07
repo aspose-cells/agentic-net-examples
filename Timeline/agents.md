@@ -10,3 +10,4 @@ Timeline
 - Insert_timeline_using_TAB_format.cs
 - Insert_timeline_using_NUMBERS_format.cs
 - Insert_sparkline_using_XLS_format.cs
+- Insert_sparkline_using_XLSX_format.cs
