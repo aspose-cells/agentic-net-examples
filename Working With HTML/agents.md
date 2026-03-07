@@ -88,3 +88,4 @@ Working With HTML
 - Implement_IStreamProvider_to_manage_input_and_output_streams_load_HTML_save_XLSX.cs
 - Pass_the_provider_to_HtmlLoadOptions_load_HTML_save_XLSX.cs
 - Implementation_steps_load_HTML_save_XLSX.cs
+- Convert_Excel_to_HTML_with_StreamProvider_load_XLSX_save_HTML.cs
