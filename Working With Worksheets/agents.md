@@ -84,3 +84,4 @@ Working With Worksheets
 - Script_Commands.cs
 - Set_Header_and_Footers.cs
 - Setting_Different_Headers_and_Footers_For_Different_Pages.cs
+- Setting_Different_Headers_and_Footers_in_MS_Excel.cs
