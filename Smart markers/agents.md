@@ -15,3 +15,4 @@ Smart markers
 - Utilize_the_concepts_from_Using_Smart_Markers_loading_XLSX.cs
 - Identify_the_Smart_Markers_definition_loading_XLSX.cs
 - Apply_Smart_Marker_Syntax_loading_XLSX.cs
+- Use_supported_Smart_Marker_Types_loading_XLSX.cs
