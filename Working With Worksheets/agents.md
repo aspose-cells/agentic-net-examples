@@ -41,3 +41,4 @@ Working With Worksheets
 - Enabling_Normal_View.cs
 - Enabling_Page_Break_Preview.cs
 - Show_and_Hide_Worksheets_and_Tabs.cs
+- Show_and_Hide_a_Worksheet.cs
