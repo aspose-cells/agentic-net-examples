@@ -16,3 +16,4 @@ Working With HTML
 - Export_an_Excel_worksheet_to_HTML_while_preserving_headings_by_enabling_HtmlSave.cs
 - Set_HtmlSaveOptionsExportHeadings__true_to_include_headings_load_XLSX_save_HTML.cs
 - Customize_heading_levels_using_HtmlSaveOptionsHeadingLevel_load_XLSX_save_HTML.cs
+- HTML_save_options_load_XLSX_save_HTML.cs
