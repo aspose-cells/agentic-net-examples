@@ -19,3 +19,4 @@ Working With Images
 - Track_the_progress_of_converting_an_XLSX_workbook_to_an_image.cs
 - Monitor_image_conversion_status_for_an_XLSX_workbook.cs
 - Create_a_sample_image_from_an_XLSX_worksheet.cs
+- Display_image_conversion_progress_in_the_console_for_an_XLSX_workbook.cs
