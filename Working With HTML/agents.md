@@ -108,3 +108,4 @@ Working With HTML
 - Set_HtmlLoadOptionsAutoFitColumns__true_load_HTML_save_XLSX.cs
 - AutoFit_columns_and_rows_while_loading_HTML_in_workbook_load_HTML_save_XLSX.cs
 - How_to_AutoFit_during_HTML_load_load_HTML_save_XLSX.cs
+- Import_an_HTML_document_into_a_workbook_while_recognizing_self-closing_tags_by_e.cs
