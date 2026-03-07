@@ -38,3 +38,4 @@ Working With PDF
 - Provide_sample_code_for_controlling_external_resources_during_Excel_to_PDF_conve.cs
 - Convert_an_XLS_file_with_images_or_charts_to_PDF.cs
 - Review_sample_code_for_converting_an_XLS_file_with_images_or_charts_to_PDF.cs
+- Create_a_PdfBookmarkEntry_for_a_chart_sheet_in_the_PDF_generated_from_Excel.cs
