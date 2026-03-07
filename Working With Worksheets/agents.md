@@ -97,3 +97,4 @@ Working With Worksheets
 - Remove_Existing_PrinterSettings_of_Worksheets_in_Excel_file.cs
 - Screenshot.cs
 - Implement_custom_paper_size_of_worksheet_for_rendering.cs
+- Determine_if_Paper_Size_of_Worksheet_is_Automatic.cs
