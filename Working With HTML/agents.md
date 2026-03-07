@@ -81,3 +81,4 @@ Working With HTML
 - Convert_an_HTML_file_to_PDF_by_loading_it_with_HtmlLoadOptions_and_saving_the_wo.cs
 - Use_HtmlLoadOptions_to_load_the_HTML_file_load_HTML_save_PDF.cs
 - Create_a_Workbook_object_and_call_Save_with_SaveFormatPdf_load_HTML_save_PDF.cs
+- Conversion_options_load_HTML_save_PDF.cs
