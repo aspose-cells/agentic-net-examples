@@ -138,3 +138,4 @@ Working With HTML
 - How_to_set_link_target_load_XLSX_save_HTML.cs
 - Save_an_Excel_workbook_to_HTML_without_any_CSS_by_enabling_HtmlSaveOptionsDisabl.cs
 - Set_HtmlSaveOptionsDisableCss__true_load_XLSX_save_HTML.cs
+- Disable_CSS_while_saving_to_HTML_load_XLSX_save_HTML.cs
