@@ -37,3 +37,4 @@ Working With PDF
 - Load_externalresource_control_settings_in_the_Excel_workbook_for_PDF_rendering.cs
 - Provide_sample_code_for_controlling_external_resources_during_Excel_to_PDF_conve.cs
 - Convert_an_XLS_file_with_images_or_charts_to_PDF.cs
+- Review_sample_code_for_converting_an_XLS_file_with_images_or_charts_to_PDF.cs
