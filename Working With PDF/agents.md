@@ -19,3 +19,4 @@ Working With PDF
 - Add_a_watermark_to_the_PDF_generated_from_an_Excel_workbook.cs
 - Add_a_text_watermark_to_the_PDF_when_converting_an_Excel_file.cs
 - Add_an_image_watermark_to_the_PDF_when_converting_an_Excel_file.cs
+- Add_PDF_bookmarks_to_the_PDF_generated_from_an_Excel_workbook.cs
