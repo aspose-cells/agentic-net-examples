@@ -83,3 +83,4 @@ Working With HTML
 - Create_a_Workbook_object_and_call_Save_with_SaveFormatPdf_load_HTML_save_PDF.cs
 - Conversion_options_load_HTML_save_PDF.cs
 - Example_load_HTML_save_PDF.cs
+- Convert_HTML_to_Excel_with_StreamProvider_load_HTML_save_XLSX.cs
