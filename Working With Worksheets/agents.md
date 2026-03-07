@@ -62,3 +62,4 @@ Working With Worksheets
 - Show_and_Hide_Gridlines.cs
 - Show_and_Hide_Row_Column_Headers.cs
 - Controlling_the_Visibility_of_the_Gridlines.cs
+- Controlling_the_Visibility_of_the_Worksheets.cs
