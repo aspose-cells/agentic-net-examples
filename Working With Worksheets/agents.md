@@ -69,3 +69,4 @@ Working With Worksheets
 - Hiding_RowColumn_Headers.cs
 - Use_Error_Checking_Options.cs
 - Numbers_Stored_as_Text.cs
+- Setting_Page_Options.cs
