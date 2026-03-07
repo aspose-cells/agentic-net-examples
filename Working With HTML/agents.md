@@ -51,3 +51,4 @@ Working With HTML
 - How_to_preserve_DIV_layout_load_HTML_save_XLSX.cs
 - HTML_load_options_load_HTML_save_XLSX.cs
 - Example_load_HTML_save_XLSX.cs
+- Expanding_text_from_right_to_left_while_exporting_Excel_file_to_HTML_load_XLSX_s.cs
