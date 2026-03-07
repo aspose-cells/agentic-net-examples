@@ -98,3 +98,4 @@ Working With Worksheets
 - Screenshot.cs
 - Implement_custom_paper_size_of_worksheet_for_rendering.cs
 - Determine_if_Paper_Size_of_Worksheet_is_Automatic.cs
+- Insert_background_image_to_Excel.cs
