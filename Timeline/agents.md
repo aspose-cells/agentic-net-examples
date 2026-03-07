@@ -16,3 +16,4 @@ Timeline
 - Insert_sparkline_using_XLSB_format.cs
 - Print_timeline_using_XLSB_format.cs
 - Print_timeline_using_SpreadsheetML_format.cs
+- Convert_timeline_from_XLS_to_XLSX_format.cs
