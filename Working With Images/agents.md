@@ -7,3 +7,4 @@ Working With Images
 ## Examples
 
 - Convert_an_XLSX_workbook_to_a_TIFF_image.cs
+- Render_an_XLSX_worksheet_as_an_image.cs
