@@ -73,3 +73,4 @@ Working With Worksheets
 - Page_Orientation.cs
 - FitToPages_Options.cs
 - Paper_Size.cs
+- Print_Quality.cs
