@@ -47,3 +47,4 @@ Working With HTML
 - How_to_include_metadata_in_HTML_output_load_XLSX_save_HTML.cs
 - Load_an_HTML_file_into_an_Excel_workbook_while_preserving_DIV_tag_layout_by_enab.cs
 - Set_HtmlLoadOptionsPreserveDivLayout__true_load_HTML_save_XLSX.cs
+- Support_the_layout_of_DIV_tags_while_loading_HTML_to_Excel_workbook_load_HTML_sa.cs
