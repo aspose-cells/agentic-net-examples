@@ -122,3 +122,4 @@ Working With HTML
 - How_to_define_cross_string_behavior_load_XLSX_save_HTML.cs
 - Convert_Excel_to_HTML_with_tooltip_load_XLSX_save_HTML.cs
 - Convert_an_Excel_workbook_to_HTML_with_cell_comments_displayed_as_tooltips_by_en.cs
+- Set_HtmlSaveOptionsExportCommentsAsTooltips__true_load_XLSX_save_HTML.cs
