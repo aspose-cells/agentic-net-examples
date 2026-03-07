@@ -54,3 +54,4 @@ Working With HTML
 - Expanding_text_from_right_to_left_while_exporting_Excel_file_to_HTML_load_XLSX_s.cs
 - Export_an_Excel_worksheet_containing_RTL_text_to_HTML_with_expanded_text_by_enab.cs
 - Set_HtmlSaveOptionsExpandRtlText__true_load_XLSX_save_HTML.cs
+- Export_print_area_range_to_HTML_load_XLSX_save_HTML.cs
