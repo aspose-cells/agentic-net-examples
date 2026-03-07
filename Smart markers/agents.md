@@ -42,3 +42,4 @@ Smart markers
 - Apply_RANGE_Parameter_Syntax_loading_XLSX.cs
 - Repeat_Rows_with_RANGE_loading_XLSX.cs
 - Review_Example_loading_XLSX.cs
+- Apply_number_formatting_to_a_smart_marker_to_display_values_with_two_decimal_pla.cs
