@@ -46,3 +46,4 @@ Slicer
 - Update_slicer_-_Load_sample_Excel_file_-_load_XLSX.cs
 - Update_slicer_-_Save_workbook_as_Excel_file_-_load_XLSX.cs
 - Update_slicer_-_Updating_slicer_-_load_XLSX.cs
+- Update_slicer_-_Possible_usage_scenarios_-_load_XLSX.cs
