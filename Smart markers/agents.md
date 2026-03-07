@@ -70,3 +70,4 @@ Smart markers
 - Use_IF_Parameter_loading_XLSX.cs
 - Reference_a_specific_array_element_by_its_zerobased_index_in_a_smart_marker_load.cs
 - Apply_the_concepts_from_How_to_Import_Array_Element_by_Index_with_Smart_Markers_.cs
+- Use_a_slicer_expression_within_a_smart_marker_to_import_only_the_array_elements_.cs
