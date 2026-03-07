@@ -49,3 +49,4 @@ Smart markers
 - Custom_format_field_name-409000_loading_XLSX.cs
 - Apply_the_concepts_from_Formatting_Smart_Markers_loading_XLSX.cs
 - Apply_Number_Formatting_loading_XLSX.cs
+- Apply_Date_Formatting_loading_XLSX.cs
