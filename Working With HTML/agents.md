@@ -143,3 +143,4 @@ Working With HTML
 - Export_an_Excel_workbook_to_HTML_with_CSS_custom_properties_enabled_by_setting_H.cs
 - Set_HtmlSaveOptionsEnableCssCustomProperties__true_load_XLSX_save_HTML.cs
 - Enable_CSS_custom_properties_while_saving_to_HTML_load_XLSX_save_HTML.cs
+- How_to_use_CSS_variables_load_XLSX_save_HTML.cs
