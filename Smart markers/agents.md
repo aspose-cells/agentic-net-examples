@@ -27,3 +27,4 @@ Smart markers
 - Create_an_anonymous_object_loading_XLSX.cs
 - Create_a_custom_object_loading_XLSX.cs
 - Populate_smart_markers_with_objects_loading_XLSX.cs
+- Apply_an_IF_condition_in_a_smart_marker_to_display_a_value_only_when_a_specific_.cs
