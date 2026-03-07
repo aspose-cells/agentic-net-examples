@@ -68,3 +68,4 @@ Smart markers
 - Apply_the_RANGE_parameter_to_repeat_rows_for_each_item_in_a_collection_loading_X.cs
 - Apply_the_concepts_from_Smart_Marker_Parameters_loading_XLSX.cs
 - Use_IF_Parameter_loading_XLSX.cs
+- Reference_a_specific_array_element_by_its_zerobased_index_in_a_smart_marker_load.cs
