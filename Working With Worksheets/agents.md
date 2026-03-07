@@ -47,3 +47,4 @@ Working With Worksheets
 - Hiding_a_Worksheet.cs
 - Making_Tabs_Visible.cs
 - Hiding_Tabs.cs
+- Controlling_the_Tab_Bar_Width.cs
