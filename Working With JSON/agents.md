@@ -60,3 +60,4 @@ Working With JSON
 - Convert_a_TSV_CSV_file_to_JSON.cs
 - Convert_a_TXT_CSV_file_to_JSON.cs
 - Convert_a_TAB_CSV_file_to_JSON.cs
+- Convert_an_HTML_CSV_file_to_JSON.cs
