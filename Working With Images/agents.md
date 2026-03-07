@@ -15,3 +15,4 @@ Working With Images
 - Track_the_conversion_progress_of_an_XLSX_workbook_to_a_TIFF_image.cs
 - Apply_advanced_image_conversion_settings_to_an_XLSX_workbook.cs
 - Load_an_XLSX_pie_chart_and_generate_an_image_preview.cs
+- Load_an_XLSX_column_chart_and_generate_an_image_preview.cs
