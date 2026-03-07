@@ -8,3 +8,4 @@ Sparkline
 
 - Create_a_SparklineGroup_in_an_XLSX_workbook_using_the_WorksheetSparklineGroupsAd.cs
 - Add_a_Sparkline_to_a_SparklineGroup_in_an_XLSX_workbook_using_the_SparklineGroup.cs
+- Set_the_Sparkline_type_Line_Column_WinLoss_in_an_XLSX_workbook_using_the_Sparkli.cs
