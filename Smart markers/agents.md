@@ -60,3 +60,4 @@ Smart markers
 - Place_the_GROUP_marker_before_the_RANGE_block_loading_XLSX.cs
 - Use_GROUP_Parameter_loading_XLSX.cs
 - Insert_an_image_into_a_cell_using_the_Image_marker_syntax_and_provide_image_data.cs
+- Image_marker_syntax_Imagefield_name_loading_XLSX.cs
