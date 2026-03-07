@@ -57,3 +57,4 @@ Working With Worksheets
 - Controlling_the_Visibility_of_Scroll_Bars.cs
 - Making_Scroll_Bars_Visible.cs
 - Hiding_Scroll_Bars.cs
+- Show_Formulas_Instead_of_Values_in_a_Worksheet.cs
