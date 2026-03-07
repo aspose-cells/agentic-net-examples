@@ -52,3 +52,4 @@ Working With HTML
 - HTML_load_options_load_HTML_save_XLSX.cs
 - Example_load_HTML_save_XLSX.cs
 - Expanding_text_from_right_to_left_while_exporting_Excel_file_to_HTML_load_XLSX_s.cs
+- Export_an_Excel_worksheet_containing_RTL_text_to_HTML_with_expanded_text_by_enab.cs
