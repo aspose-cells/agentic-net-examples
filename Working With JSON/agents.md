@@ -17,3 +17,4 @@ Working With JSON
 - Convert_a_TSV_workbook_to_JSON.cs
 - Convert_a_TXT_workbook_to_JSON.cs
 - Convert_a_TAB_workbook_to_JSON.cs
+- Convert_an_HTML_workbook_to_JSON.cs
