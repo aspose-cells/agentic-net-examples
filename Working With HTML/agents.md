@@ -79,3 +79,4 @@ Working With HTML
 - How_to_separate_CSS_from_HTML_load_XLSX_save_HTML.cs
 - Convert_HTML_to_PDF_load_HTML_save_PDF.cs
 - Convert_an_HTML_file_to_PDF_by_loading_it_with_HtmlLoadOptions_and_saving_the_wo.cs
+- Use_HtmlLoadOptions_to_load_the_HTML_file_load_HTML_save_PDF.cs
