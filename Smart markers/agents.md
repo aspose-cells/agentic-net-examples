@@ -31,3 +31,4 @@ Smart markers
 - Define_a_variable_in_the_Excel_template_and_use_it_to_repeat_a_block_of_rows_loa.cs
 - IF_syntax_IF_conditionENDIF_loading_XLSX.cs
 - Define_a_variable_varName_loading_XLSX.cs
+- Reference_a_variable_varName_loading_XLSX.cs
