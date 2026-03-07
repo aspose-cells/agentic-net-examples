@@ -26,3 +26,4 @@ Smart markers
 - Add_anonymous_or_custom_object_into_smart_markers_loading_XLSX.cs
 - Create_an_anonymous_object_loading_XLSX.cs
 - Create_a_custom_object_loading_XLSX.cs
+- Populate_smart_markers_with_objects_loading_XLSX.cs
