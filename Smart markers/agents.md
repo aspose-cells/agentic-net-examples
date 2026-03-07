@@ -37,3 +37,4 @@ Smart markers
 - Use_Variables_in_Smart_Markers_loading_XLSX.cs
 - Review_Examples_loading_XLSX.cs
 - Use_the_RANGE_parameter_to_generate_rows_for_each_element_in_a_collection_of_obj.cs
+- End_the_range_block_with_ENDRANGE_loading_XLSX.cs
