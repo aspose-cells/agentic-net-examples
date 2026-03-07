@@ -59,3 +59,4 @@ Working With HTML
 - Set_HtmlSaveOptionsExportPrintAreaOnly__true_load_XLSX_save_HTML.cs
 - How_to_export_specific_print_area_load_XLSX_save_HTML.cs
 - Export_similar_border_style_when_border_style_is_not_supported_by_web_browsers_l.cs
+- Export_an_Excel_worksheet_to_HTML_with_simulated_border_styles_for_unsupported_b.cs
