@@ -50,3 +50,4 @@ Working With PDF
 - Ignore_errors_while_rendering_Excel_to_PDF_to_ensure_the_conversion_completes.cs
 - Explore_possible_usage_scenarios_for_error_ignoring_in_PDF_rendering.cs
 - Apply_PdfSaveOptionsIgnoreError_to_suppress_conversion_errors.cs
+- Provide_sample_code_demonstrating_error_ignoring_during_Excel_to_PDF_conversion.cs
