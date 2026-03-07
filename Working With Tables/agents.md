@@ -25,3 +25,4 @@ Working With Tables
 - Access_a_Table_from_a_Cell_and_Add_Values_Inside_It_Using_Ro.cs
 - Review_the_Example_using_an_XLSX_file..cs
 - Execute_C#_Code_to_Access_a_Table_from_a_Cell_and_Add_Values.cs
+- Convert_a_list_of_data_to_a_List_Object_using_an_XLSX_file.cs
