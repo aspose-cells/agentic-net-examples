@@ -43,3 +43,4 @@ Working With HTML
 - How_to_show_gridlines_in_HTML_load_XLSX_save_HTML.cs
 - Export_document_workbook_and_worksheet_properties_in_Excel_to_HTML_conversion_lo.cs
 - Convert_an_Excel_workbook_to_HTML_while_exporting_document_workbook_and_workshee.cs
+- Set_HtmlSaveOptionsExportDocumentProperties__true_load_XLSX_save_HTML.cs
