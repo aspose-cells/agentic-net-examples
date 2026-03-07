@@ -28,3 +28,4 @@ Working With PDF
 - Implement_blankpage_avoidance_using_the_provided_sample_code.cs
 - Handle_exceptions_related_to_blankpage_handling_during_Excel_to_PDF_conversion.cs
 - Configure_the_PdfSaveOptionsOutputBlankPageWhenNothingToPrint_property_to_contro.cs
+- Convert_an_XLSX_file_to_PDF_format.cs
