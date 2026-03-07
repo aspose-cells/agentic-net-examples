@@ -11,3 +11,4 @@ Working With JSON
 - Convert_an_XLSM_workbook_to_JSON.cs
 - Convert_an_XLTX_workbook_to_JSON.cs
 - Convert_an_XLTM_workbook_to_JSON.cs
+- Convert_an_XLSB_workbook_to_JSON.cs
