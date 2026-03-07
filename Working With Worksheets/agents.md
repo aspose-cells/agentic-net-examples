@@ -40,3 +40,4 @@ Working With Worksheets
 - AsposeCells__Freeze_Panes.cs
 - Enabling_Normal_View.cs
 - Enabling_Page_Break_Preview.cs
+- Show_and_Hide_Worksheets_and_Tabs.cs
