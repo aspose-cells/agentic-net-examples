@@ -12,3 +12,4 @@ Working With Worksheets
 - Accessing_Worksheets_using_Sheet_Name.cs
 - Manage_Worksheets_of_Microsoft_Excel_files.cs
 - Removing_Worksheets_using_Sheet_Name.cs
+- Removing_Worksheets_using_Sheet_Index.cs
