@@ -49,3 +49,4 @@ Working With PDF
 - Examine_the_console_output_of_DrawObjectEventHandler_during_PDF_rendering.cs
 - Ignore_errors_while_rendering_Excel_to_PDF_to_ensure_the_conversion_completes.cs
 - Explore_possible_usage_scenarios_for_error_ignoring_in_PDF_rendering.cs
+- Apply_PdfSaveOptionsIgnoreError_to_suppress_conversion_errors.cs
