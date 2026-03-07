@@ -27,3 +27,4 @@ Working With HTML
 - How_to_turn_off_downlevel_revealed_comments_load_XLSX_save_HTML.cs
 - Exclude_unused_styles_during_Excel_to_HTML_conversion_load_XLSX_save_HTML.cs
 - Convert_an_Excel_workbook_to_HTML_while_excluding_unused_styles_by_enabling_Html.cs
+- Set_HtmlSaveOptionsExcludeUnusedStyles__true_load_XLSX_save_HTML.cs
