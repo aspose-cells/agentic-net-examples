@@ -55,3 +55,4 @@ Smart markers
 - Subscribe_to_the_SmartMarkerProcessing_event_to_get_progress_updates_loading_XLS.cs
 - Handle_the_event_to_log_or_modify_data_during_merging_loading_XLSX.cs
 - Apply_the_concepts_from_Getting_Notifications_While_Merging_Data_with_Smart_Mark.cs
+- Set_up_Event_Handlers_loading_XLSX.cs
