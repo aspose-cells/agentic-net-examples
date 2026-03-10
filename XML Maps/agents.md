@@ -11,3 +11,4 @@ XML Maps
 - Execute_step_2_import_the_XML_map_into_the_workbook_by_loading_the_XML_schema_fi.cs
 - Import_an_XML_map_inside_a_workbook_using_AsposeCells_loading_the_workbook_file.cs
 - Check_prerequisites_before_importing_an_XML_map.cs
+- Load_the_workbook_from_a_supported_format_to_prepare_for_XML_map_import.cs
