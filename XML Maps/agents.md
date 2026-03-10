@@ -29,3 +29,4 @@ XML Maps
 - Load_the_workbook_from_a_supported_format_to_prepare_for_XML_data_export.cs
 - Access_the_XML_map_in_the_loaded_workbook_before_exporting_data.cs
 - Review_the_XML_data_export_process_from_the_workbook.cs
+- Find_the_root_element_name_of_the_XML_map_by_loading_the_workbook_from_a_support.cs
