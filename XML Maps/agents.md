@@ -7,3 +7,4 @@ XML Maps
 ## Examples
 
 - Import_an_XML_map_into_a_workbook_using_AsposeCells_loading_the_workbook_from_a_.cs
+- Use_AsposeCells_to_import_an_XML_map_into_a_workbook_loading_the_workbook_file.cs
