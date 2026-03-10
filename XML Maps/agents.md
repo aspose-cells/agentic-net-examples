@@ -33,3 +33,4 @@ XML Maps
 - Retrieve_the_root_element_name_of_the_XML_map_after_loading_the_workbook.cs
 - Check_prerequisites_before_retrieving_the_root_element_name_of_an_XML_map.cs
 - Load_the_workbook_from_a_supported_format_to_access_the_XML_map.cs
+- Retrieve_the_XML_map_from_the_loaded_workbook_to_get_its_root_element_name.cs
