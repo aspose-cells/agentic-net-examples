@@ -21,3 +21,4 @@ XML Maps
 - Load_the_workbook_from_a_supported_format_to_add_an_XML_map.cs
 - Add_the_XML_map_to_the_loaded_workbook_using_XmlMapCollectionAdd_with_the_schema.cs
 - Save_the_workbook_after_adding_the_XML_map_to_a_chosen_format.cs
+- Summarize_the_XML_map_addition_process.cs
