@@ -8,3 +8,4 @@ XML Maps
 
 - Import_an_XML_map_into_a_workbook_using_AsposeCells_loading_the_workbook_from_a_.cs
 - Use_AsposeCells_to_import_an_XML_map_into_a_workbook_loading_the_workbook_file.cs
+- Execute_step_2_import_the_XML_map_into_the_workbook_by_loading_the_XML_schema_fi.cs
