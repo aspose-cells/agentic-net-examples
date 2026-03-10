@@ -36,3 +36,4 @@ XML Maps
 - Retrieve_the_XML_map_from_the_loaded_workbook_to_get_its_root_element_name.cs
 - Get_the_root_element_name_of_the_XML_map_from_the_loaded_workbook.cs
 - Access_the_XML_map_in_the_loaded_workbook_before_linking_cells.cs
+- Query_cell_areas_mapped_to_an_XML_map_path_by_loading_the_workbook_and_accessing.cs
