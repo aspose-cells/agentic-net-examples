@@ -19,3 +19,4 @@ XML Maps
 - Add_an_XML_map_inside_the_workbook_using_XmlMapCollectionAdd_loading_the_workboo.cs
 - Check_prerequisites_for_adding_an_XML_map_to_a_workbook.cs
 - Load_the_workbook_from_a_supported_format_to_add_an_XML_map.cs
+- Add_the_XML_map_to_the_loaded_workbook_using_XmlMapCollectionAdd_with_the_schema.cs
