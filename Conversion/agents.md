@@ -35,3 +35,4 @@ Conversion
 - convert-an-excel-workbook-to-ods-using-xlsx-as-the-input-and-ods-as-the-output.cs
 - convert-an-excel-workbook-to-csv-tsv-and-txt-using-xlsx-as-the-input-and-csv-tsv.cs
 - convert-an-excel-workbook-to-csv-with-trimmed-leading-blank-rows-and-columns-usi.cs
+- convert-an-excel-workbook-to-csv-keeping-separators-for-blank-rows-using-xlsx-as.cs
