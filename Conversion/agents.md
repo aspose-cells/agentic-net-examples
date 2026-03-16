@@ -31,3 +31,4 @@ Conversion
 - convert-an-excel-workbook-to-xml-using-xlsx-as-the-input-and-xml-as-the-output.cs
 - convert-an-excel-workbook-to-tiff-using-xlsx-as-the-input-and-tiff-as-the-output.cs
 - convert-an-excel-workbook-to-docx-using-xlsx-as-the-input-and-docx-as-the-output.cs
+- convert-an-excel-workbook-to-pptx-using-xlsx-as-the-input-and-pptx-as-the-output.cs
