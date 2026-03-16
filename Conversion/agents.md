@@ -23,3 +23,4 @@ Conversion
 - Convert_an_Excel_workbook_to_PDF_using_XLSX_as_the_input_and_PDF_as_the_output.cs
 - Convert_an_Excel_workbook_to_XPS_using_XLSX_as_the_input_and_XPS_as_the_output.cs
 - convert-an-excel-workbook-to-pdf-using-xlsx-as-the-input-and-pdf-as-the-output.cs
+- convert-an-excel-workbook-to-xps-using-xlsx-as-the-input-and-xps-as-the-output.cs
