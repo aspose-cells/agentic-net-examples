@@ -25,3 +25,4 @@ Conversion
 - convert-an-excel-workbook-to-pdf-using-xlsx-as-the-input-and-pdf-as-the-output.cs
 - convert-an-excel-workbook-to-xps-using-xlsx-as-the-input-and-xps-as-the-output.cs
 - convert-an-excel-workbook-to-ods-sxc-and-fods-using-xlsx-as-the-input-and-ods-sx.cs
+- convert-an-excel-workbook-to-mhtml-using-xlsx-as-the-input-and-mhtml-as-the-outp.cs
