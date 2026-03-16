@@ -29,3 +29,4 @@ Conversion
 - convert-an-excel-workbook-to-html-using-xlsx-as-the-input-and-html-as-the-output.cs
 - convert-an-excel-workbook-to-json-using-xlsx-as-the-input-and-json-as-the-output.cs
 - convert-an-excel-workbook-to-xml-using-xlsx-as-the-input-and-xml-as-the-output.cs
+- convert-an-excel-workbook-to-tiff-using-xlsx-as-the-input-and-tiff-as-the-output.cs
