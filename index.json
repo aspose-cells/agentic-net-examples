@@ -1381,6 +1381,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-specify-a-print-area-and-export-that-region-to-html-format.cs",
+      "title": "Load an XLSX workbook, specify a print area, and export that region to HTML format."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-then-export-it-to-html-preserving-worksheet-headings-in-th.cs",
       "title": "Load an XLSX workbook, then export it to HTML preserving worksheet headings in the generated output."
     },
