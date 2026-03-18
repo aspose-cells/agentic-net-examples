@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - configure-htmlloadoptionsautofitcolumns-to-true-when-loading-html-then-export-as.cs
 - enable-automatic-row-fitting-when-loading-html-by-setting-htmlloadoptionsautofit.cs
 - load-an-html-file-into-a-workbook-autofit-all-columns-and-rows-and-export-the-re.cs
+- apply-autofit-to-columns-when-importing-html-content-and-exporting-the-workbook-.cs
