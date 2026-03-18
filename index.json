@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlloadoptionsautofitcolumns-to-true-when-loading-html-then-export-as.cs",
+      "title": "Configure HtmlLoadOptions.AutoFitColumns to true when loading HTML, then export as an XLSX workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-assign-the-tablecssid-value-myprefix_-when-converti.cs",
       "title": "Configure HtmlSaveOptions to assign the TableCssId value 'myPrefix_' when converting an XLSX file to HTML."
     },
