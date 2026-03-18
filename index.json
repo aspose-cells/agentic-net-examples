@@ -961,6 +961,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xlsx-workbook-perform-external-connection-tasks-and-output-results-to-a-.cs",
+      "title": "Load an XLSX workbook, perform external connection tasks, and output results to a TXT file via the console."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs",
       "title": "Load an XLSX workbook, process its contents, and emit the results to the console and a TXT file."
     },
