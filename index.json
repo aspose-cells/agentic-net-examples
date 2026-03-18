@@ -1906,6 +1906,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-xlsx-workbook-to-json-using-the-default-conversion-settings-preservin.cs",
+      "title": "Convert an XLSX workbook to JSON using the default conversion settings, preserving worksheet data structures and cell types."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-csv-workbook-into-a-json-representation-preserving-data-types-and-st.cs",
       "title": "Transform a CSV workbook into a JSON representation, preserving data types and structure accurately."
     },
