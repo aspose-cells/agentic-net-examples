@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - provide-sample-net-code-illustrating-creation-manipulation-and-saving-of-workboo.cs
 - utilize-enumerators-to-iterate-over-workbook-elements-in-xlsx-files-applying-the.cs
 - employ-enumerators-to-iterate-through-worksheets-rows-and-cells-within-an-xlsx-w.cs
+- generate-a-concluding-workbook-in-xlsx-format-that-summarizes-the-processed-data.cs
