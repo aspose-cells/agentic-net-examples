@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - configure-htmlsaveoptionscrossstringtype-to-htmlcrosstypestrikethrough-when-load.cs
 - configure-htmlcrosstype-to-apply-string-crossing-when-converting-a-loaded-xlsx-w.cs
 - specify-cross-string-handling-behavior-when-loading-an-xlsx-workbook-and-saving-.cs
+- load-an-xlsx-workbook-and-export-it-as-html-preserving-cell-tooltips-in-the-resu.cs
