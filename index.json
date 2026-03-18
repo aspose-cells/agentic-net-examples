@@ -2081,6 +2081,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-numbers-json-export-into-an-xlsx-workbook-preserving-data-types-and-.cs",
+      "title": "Transform a NUMBERS JSON export into an XLSX workbook, preserving data types and formatting."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-numbers-workbook-into-a-json-representation-preserving-cell-data-for.cs",
       "title": "Transform a NUMBERS workbook into a JSON representation preserving cell data, formulas, and worksheet structures."
     },
