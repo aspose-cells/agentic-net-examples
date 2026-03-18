@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - disable-downlevel-revealed-comments-during-the-conversion-of-an-xlsx-workbook-fi.cs
 - during-xlsx-to-html-conversion-omit-any-styles-not-referenced-in-the-workbook-to.cs
 - convert-an-xlsx-workbook-to-html-activating-htmlsaveoptionsexcludeunusedstyles-t.cs
+- enable-htmlsaveoptionsexcludeunusedstyles-during-xlsx-loading-and-html-export-to.cs
