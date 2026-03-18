@@ -961,6 +961,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "read-and-write-a-query-table-within-a-worksheet-using-the-default-xlsx-format.cs",
+      "title": "Read and write a query table within a worksheet using the default XLSX format."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-source-and-output-excel-files-load-the-source-xlsx-workbook-then-export.cs",
       "title": "Retrieve source and output Excel files, load the source XLSX workbook, then export it as an XLSX file."
     },
