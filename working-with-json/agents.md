@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - convert-an-xltx-json-file-to-csv-format-utilizing-the-librarys-default-conversio.cs
 - transform-data-from-an-xls-csv-file-into-json-format-preserving-all-rows-and-col.cs
 - convert-data-from-an-xlsx-or-csv-spreadsheet-into-a-json-formatted-output-preser.cs
+- transform-the-contents-of-a-csv-file-into-a-json-representation-preserving-data-.cs
