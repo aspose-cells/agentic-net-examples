@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - convert-an-mhtml-json-file-into-csv-format-while-maintaining-data-integrity-and-.cs
 - transform-data-from-an-xml-or-json-source-file-into-a-csv-file-preserving-field-.cs
 - transform-a-spreadsheetmlformatted-json-document-into-a-csv-file-preserving-cell.cs
+- convert-a-numbers-json-file-into-csv-format-preserving-data-fidelity-and-appropr.cs
