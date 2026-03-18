@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - implement-sorting-functionality-for-data-within-an-xlsx-workbook-applying-excels.cs
 - sort-spreadsheet-data-programmatically-when-working-with-xlsx-files-maintaining-.cs
 - sort-rows-in-an-xlsx-workbook-based-on-cell-background-color-while-maintaining-d.cs
+- implement-data-validation-rules-on-cells-within-an-xlsx-workbook-using-net-apis-.cs
