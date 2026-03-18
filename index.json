@@ -376,6 +376,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "review-the-globalizationsettings-class-introduction-to-configure-localization-fo.cs",
+      "title": "Review the GlobalizationSettings class introduction to configure localization for a workbook loaded from an XLSX file."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "run-sample-localization-code-to-translate-error-messages-and-boolean-values-in-a.cs",
       "title": "Run sample localization code to translate error messages and Boolean values in an XLSX workbook."
     },
