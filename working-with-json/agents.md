@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - transform-an-oxps-csv-file-into-a-json-document-maintaining-data-fidelity-and-pr.cs
 - transform-a-pdfembedded-csv-dataset-into-json-format-preserving-data-fidelity-an.cs
 - transform-an-input-json-file-into-a-new-json-output-applying-any-required-schema.cs
+- transform-an-xls-or-csv-file-into-json-using-the-librarys-default-conversion-set.cs
