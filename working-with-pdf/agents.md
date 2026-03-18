@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs
 - transfer-workbook-custom-properties-into-a-pdf-output-during-conversion-while-re.cs
 - apply-a-watermark-to-the-pdf-generated-from-an-excel-workbook-during-the-convers.cs
+- apply-a-text-watermark-to-the-resulting-pdf-automatically-during-the-excel-to-pd.cs
