@@ -2006,6 +2006,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xlsb-json-file-into-csv-format-ensuring-accurate-data-conversion-an.cs",
+      "title": "Transform an XLSB JSON file into CSV format, ensuring accurate data conversion and appropriate field delimitation."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsb-workbook-into-a-json-representation-preserving-cell-data-types.cs",
       "title": "Transform an XLSB workbook into a JSON representation, preserving cell data types and worksheet structures."
     },
