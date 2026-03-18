@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - apply-autofit-to-columns-when-importing-html-content-and-exporting-the-workbook-.cs
 - load-an-html-file-into-a-workbook-enable-htmlloadoptionsrecognizeselfclosingtags.cs
 - enable-selfclosing-tag-recognition-in-htmlloadoptions-then-load-html-content-and.cs
+- identify-and-correctly-handle-selfclosing-html-tags-during-html-import-and-subse.cs
