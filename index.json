@@ -791,6 +791,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "instantiate-a-customxmlpart-object-to-manage-custom-xml-data-within-workbook-str.cs",
+      "title": "Instantiate a CustomXmlPart object to manage custom XML data within workbook structures and enable advanced data integration."
+    },
+    {
+      "category": "manage-workbook",
       "file": "instantiate-the-workbook-class-to-load-an-xlsx-workbook-into-memory-for-further-.cs",
       "title": "Instantiate the Workbook class to load an XLSX workbook into memory for further manipulation."
     },
