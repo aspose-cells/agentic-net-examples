@@ -11,6 +11,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-an-autofilter-to-an-xlsx-worksheet-programmatically-to-enable-dynamic-data.cs",
+      "title": "Apply an AutoFilter to an XLSX worksheet programmatically to enable dynamic data filtering functionality."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs",
       "title": "Apply filtering criteria to data within an XLSX spreadsheet to display rows that meet specified conditions."
     },
