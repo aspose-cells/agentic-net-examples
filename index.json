@@ -1266,6 +1266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptionsdefaultfont-to-arial-when-loading-an-xlsx-workbook-and-.cs",
+      "title": "Configure HtmlSaveOptions.DefaultFont to \"Arial\" when loading an XLSX workbook and exporting it to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptionsdisablecss-to-true-when-converting-an-xlsx-workbook-to-.cs",
       "title": "Configure HtmlSaveOptions.DisableCss to true when converting an XLSX workbook to HTML output, ensuring CSS is omitted."
     },
