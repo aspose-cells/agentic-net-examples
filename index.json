@@ -2151,6 +2151,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-txt-json-file-into-an-excel-workbook-mapping-json-structures-to-corr.cs",
+      "title": "Transform a TXT JSON file into an Excel workbook, mapping JSON structures to corresponding spreadsheet tables."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-txt-json-file-into-csv-format-while-preserving-data-integrity-and-ma.cs",
       "title": "Transform a TXT JSON file into CSV format while preserving data integrity and maintaining field mappings."
     },
