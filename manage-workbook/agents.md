@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - instantiate-a-new-workbook-object-to-begin-constructing-a-spreadsheet-for-data-m.cs
 - insert-a-custom-xml-part-into-the-workbook-to-store-additional-metadata-alongsid.cs
 - retrieve-a-custom-xml-part-from-the-document-by-specifying-its-unique-id-value.cs
+- define-the-target-workbook-when-performing-copy-or-move-operations-between-separ.cs
