@@ -766,6 +766,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "define-the-target-workbook-when-performing-copy-or-move-operations-between-separ.cs",
+      "title": "Define the target workbook when performing copy or move operations between separate workbooks in code."
+    },
+    {
+      "category": "manage-workbook",
       "file": "enable-shared-mode-for-the-workbook-allowing-multiple-users-to-edit-the-file-sim.cs",
       "title": "Enable shared mode for the workbook, allowing multiple users to edit the file simultaneously."
     },
