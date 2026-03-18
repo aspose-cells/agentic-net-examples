@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - inspect-and-retrieve-metadata-properties-from-an-xlsx-workbook-programmatically-.cs
 - create-read-update-and-delete-workbook-document-properties-within-an-xlsx-file-u.cs
 - read-modify-or-create-document-properties-in-an-xlsx-workbook-via-the-net-api.cs
+- examine-and-manipulate-advanced-workbook-property-features-within-an-xlsx-spread.cs
