@@ -1206,6 +1206,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "generate-a-data-table-from-the-contents-of-an-xlsx-workbook-preserving-cell-form.cs",
+      "title": "Generate a data table from the contents of an XLSX workbook, preserving cell formatting and structural hierarchy."
+    },
+    {
+      "category": "working-with-tables",
       "file": "identify-query-tables-and-list-objects-that-are-linked-to-external-data-connecti.cs",
       "title": "Identify query tables and list objects that are linked to external data connections within an XLSX workbook."
     },
