@@ -136,6 +136,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-c-functionality-to-retrieve-and-modify-specific-richtext-fragments-wit.cs",
+      "title": "Implement C# functionality to retrieve and modify specific rich\u2011text fragments within a cell of an XLSX workbook."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-c-logic-that-parses-numeric-strings-into-numeric-types-and-writes-the-.cs",
       "title": "Implement C# logic that parses numeric strings into numeric types and writes the results to an XLSX file."
     },
