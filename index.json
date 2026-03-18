@@ -1266,6 +1266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptionsdisablecss-to-true-when-converting-an-xlsx-workbook-to-.cs",
+      "title": "Configure HtmlSaveOptions.DisableCss to true when converting an XLSX workbook to HTML output, ensuring CSS is omitted."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs",
       "title": "Configure HtmlSaveOptions.ExportPrintAreaOnly to true when loading an XLSX workbook and exporting it as HTML."
     },
