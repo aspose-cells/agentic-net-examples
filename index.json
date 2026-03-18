@@ -1966,6 +1966,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-oxps-workbook-into-a-json-representation-preserving-data-fidelity-a.cs",
+      "title": "Transform an OXPS workbook into a JSON representation, preserving data fidelity and workbook structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-sxc-workbook-file-into-json-format-mapping-spreadsheet-data-to-stru.cs",
       "title": "Transform an SXC workbook file into JSON format, mapping spreadsheet data to structured JSON objects."
     },
