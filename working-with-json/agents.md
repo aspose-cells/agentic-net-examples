@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - convert-an-xlsm-workbook-to-json-format-employing-the-default-conversion-options.cs
 - convert-an-xltx-workbook-to-a-json-file-using-the-default-conversion-settings-wi.cs
 - transform-data-from-an-xls-json-source-into-a-csv-format-while-preserving-column.cs
+- transform-an-xlsxderived-json-dataset-into-a-commaseparated-values-csv-file-whil.cs
