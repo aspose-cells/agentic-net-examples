@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - preserve-div-tag-layout-when-importing-html-into-an-excel-workbook-and-exporting.cs
 - ensure-div-layout-is-retained-when-importing-html-content-and-exporting-to-xlsx-.cs
 - configure-html-load-options-to-import-html-content-and-export-it-as-an-xlsx-work.cs
+- load-an-html-document-and-convert-it-to-an-xlsx-workbook-while-preserving-cell-d.cs
