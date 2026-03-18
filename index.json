@@ -1891,6 +1891,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-dif-spreadsheet-into-json-format-preserving-all-cell-data-types-and-wo.cs",
+      "title": "Convert a DIF spreadsheet into JSON format, preserving all cell data, types, and workbook structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-json-file-with-tabdelimited-structure-to-csv-format-preserving-data-in.cs",
       "title": "Convert a JSON file with TAB\u2011delimited structure to CSV format, preserving data integrity and field mapping."
     },
