@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-the-htmlsaveoptionsdisabledownlevelrevealedcomments-property-when-loading.cs",
+      "title": "Enable the HtmlSaveOptions.DisableDownlevelRevealedComments property when loading an XLSX workbook and exporting output as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-numeric-values-parsed-from-csv-files-retain-full-precision-without-c.cs",
       "title": "Ensure that numeric values parsed from CSV files retain full precision without converting to exponential notation."
     },
