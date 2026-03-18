@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - retrieve-and-manipulate-the-contenttypeproperties-of-a-worksheet-to-read-or-set-.cs
 - implement-functionality-to-add-new-contenttypeproperties-or-modify-existing-ones.cs
 - implement-a-using-block-to-ensure-deterministic-disposal-of-unmanaged-resources-.cs
+- dispose-the-workbook-properly-to-free-all-associated-unmanaged-resources-and-pre.cs
