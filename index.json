@@ -1351,6 +1351,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "instantiate-a-workbook-load-html-content-then-export-it-as-a-pdf-using-the-appro.cs",
+      "title": "Instantiate a workbook, load HTML content, then export it as a PDF using the appropriate save format."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-csv-file-with-loadoptionsnumberformat-to-retain-large-numeric-values-in-f.cs",
       "title": "Load a CSV file with LoadOptions.NumberFormat to retain large numeric values in full precision, avoiding exponential notation."
     },
