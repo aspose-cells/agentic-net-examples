@@ -1636,6 +1636,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "when-converting-an-xlsx-workbook-to-html-apply-the-htmlsaveoptionstablecssid-pre.cs",
+      "title": "When converting an XLSX workbook to HTML, apply the HtmlSaveOptions.TableCssId prefix to all table element styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-converting-an-xlsx-workbook-to-html-include-all-cell-comments-in-the-genera.cs",
       "title": "When converting an XLSX workbook to HTML, include all cell comments in the generated output."
     },
