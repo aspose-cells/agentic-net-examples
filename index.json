@@ -46,6 +46,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "modify-the-background-color-of-a-comment-in-an-xlsx-workbook-after-loading-the-f.cs",
+      "title": "Modify the background color of a comment in an XLSX workbook after loading the file."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "modify-the-comment-font-color-within-an-xlsx-workbook-by-accessing-its-comment-s.cs",
       "title": "Modify the comment font color within an XLSX workbook by accessing its comment style and setting the desired color."
     },
