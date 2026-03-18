@@ -1126,6 +1126,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "write-the-workbook-to-the-http-response-stream-as-a-pdf-document-setting-appropr.cs",
+      "title": "Write the workbook to the HTTP response stream as a PDF document, setting appropriate content-type and disposition headers."
+    },
+    {
+      "category": "save-workbook",
       "file": "write-the-workbooks-contents-directly-to-an-in-memory-stream-in-the-xlsx-file-fo.cs",
       "title": "Write the workbook's contents directly to an in-memory stream in the XLSX file format."
     }
