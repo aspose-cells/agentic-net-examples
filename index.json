@@ -1541,6 +1541,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-worksheet-and-export-it-to-html-configuring-htmlsaveoptionstablecss.cs",
+      "title": "Load an XLSX worksheet and export it to HTML, configuring HtmlSaveOptions.TableCssId to apply a custom CSS ID prefix for tables."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-worksheet-and-save-it-as-html-enabling-htmlsaveoptionsexportheading.cs",
       "title": "Load an XLSX worksheet and save it as HTML, enabling HtmlSaveOptions.ExportHeadings to retain headings."
     },
