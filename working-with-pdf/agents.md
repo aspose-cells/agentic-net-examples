@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - configure-conversion-options-to-control-pdf-output-characteristics-such-as-page-.cs
 - serialize-the-workbook-to-a-pdfacompliant-pdf-preserving-formatting-fonts-and-me.cs
 - specify-the-pdf-creation-timestamp-while-converting-an-excel-workbook-to-a-pdf-f.cs
+- activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs
