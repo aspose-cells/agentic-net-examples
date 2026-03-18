@@ -2051,6 +2051,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-oxps-json-file-into-csv-format-mapping-json-elements-to-correspondi.cs",
+      "title": "Transform an OXPS JSON file into CSV format, mapping JSON elements to corresponding comma\u2011separated values."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-oxps-workbook-into-a-json-representation-preserving-data-fidelity-a.cs",
       "title": "Transform an OXPS workbook into a JSON representation, preserving data fidelity and workbook structure."
     },
