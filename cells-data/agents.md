@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - insert-data-into-an-xlsx-worksheet-following-rowmajor-order-before-proceeding-to.cs
 - maintain-a-leading-singlequote-prefix-for-cell-values-or-ranges-when-exporting-t.cs
 - emit-spreadsheet-data-to-the-console-using-xlsx-format-ensuring-compatibility-wi.cs
+- access-and-modify-specific-rich-text-segments-within-a-cell-programmatically-in-.cs
