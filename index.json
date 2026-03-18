@@ -1206,6 +1206,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs",
+      "title": "Configure HtmlSaveOptions.ExportPrintAreaOnly to true when loading an XLSX workbook and exporting it as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-load-options-to-customize-how-an-xlsx-workbook-is-imported-controlling.cs",
       "title": "Configure load options to customize how an XLSX workbook is imported, controlling parsing behavior and data handling."
     },
