@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - transform-an-xls-spreadsheet-into-json-format-using-the-default-provided-convers.cs
 - transform-an-xlsx-spreadsheet-into-a-json-file-using-the-default-conversion-sett.cs
 - convert-an-xlsm-excel-workbook-to-json-format-employing-the-default-conversion-s.cs
+- convert-an-xltx-excel-file-to-a-json-document-employing-the-librarys-default-con.cs
