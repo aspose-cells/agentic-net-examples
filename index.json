@@ -71,6 +71,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "read-an-xlsx-workbook-and-write-its-contents-to-the-console-output-preserving-ce.cs",
+      "title": "Read an XLSX workbook and write its contents to the console output, preserving cell values and formatting."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "retrieve-all-threaded-comments-from-an-xlsx-workbook-programmatically-using-the-.cs",
       "title": "Retrieve all threaded comments from an XLSX workbook programmatically using the .NET spreadsheet API."
     },
