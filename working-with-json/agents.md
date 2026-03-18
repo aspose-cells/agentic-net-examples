@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - transform-a-numbers-workbook-into-a-json-representation-preserving-cell-data-for.cs
 - transform-an-sxc-workbook-file-into-json-format-mapping-spreadsheet-data-to-stru.cs
 - transform-a-fods-workbook-into-a-json-representation-ensuring-all-cell-values-fo.cs
+- transform-a-dif-workbook-into-a-json-representation-preserving-cell-data-types-a.cs
