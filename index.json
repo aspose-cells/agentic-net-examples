@@ -131,6 +131,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-a-datacolumn-into-an-xlsx-workbook-mapping-column-data-to-corresponding-e.cs",
+      "title": "Import a DataColumn into an XLSX workbook, mapping column data to corresponding Excel worksheet cells."
+    },
+    {
+      "category": "cells-data",
       "file": "import-a-datatable-into-an-xlsx-workbook-mapping-rows-and-columns-to-correspondi.cs",
       "title": "Import a DataTable into an XLSX workbook, mapping rows and columns to corresponding spreadsheet cells."
     },
