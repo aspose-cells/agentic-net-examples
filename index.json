@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "cells-data",
+      "file": "retrieve-a-cell-object-by-its-named-reference-from-an-xlsx-worksheet-within-the-.cs",
+      "title": "Retrieve a cell object by its named reference from an XLSX worksheet within the workbook."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-and-manipulate-individual-cells-within-an-xlsx-workbook-using-the-provi.cs",
       "title": "Retrieve and manipulate individual cells within an XLSX workbook using the provided API methods."
     },
