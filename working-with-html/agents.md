@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - enable-htmlsaveoptionsexcludeunusedstyles-during-xlsx-loading-and-html-export-to.cs
 - load-an-xlsx-workbook-discard-unused-styles-and-export-the-content-to-html-forma.cs
 - export-an-xlsx-worksheet-to-html-with-databar-colorscale-and-iconset-conditional.cs
+- when-loading-an-xlsx-file-and-saving-as-html-set-htmlsaveoptionsexportconditiona.cs
