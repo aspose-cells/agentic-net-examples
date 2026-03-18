@@ -921,6 +921,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "retrieve-and-manipulate-a-custom-xml-part-embedded-within-a-workbook-using-the-a.cs",
+      "title": "Retrieve and manipulate a custom XML part embedded within a workbook using the API."
+    },
+    {
+      "category": "manage-workbook",
       "file": "retrieve-and-manipulate-the-contenttypeproperties-of-a-worksheet-to-read-or-set-.cs",
       "title": "Retrieve and manipulate the ContentTypeProperties of a worksheet to read or set document metadata."
     },
