@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - analyze-how-the-language-property-is-managed-within-an-xlsx-workbook-and-ensure-.cs
 - add-user-defined-properties-to-an-xlsx-workbook-so-they-appear-in-the-document-i.cs
 - add-untyped-custom-properties-to-an-xlsx-workbook-to-store-metadata-without-spec.cs
+- implement-custom-datetime-properties-within-an-xlsx-workbook-using-the-apis-prop.cs
