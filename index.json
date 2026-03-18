@@ -1198,6 +1198,11 @@
       "category": "save-workbook",
       "file": "write-the-workbooks-contents-directly-to-an-in-memory-stream-in-the-xlsx-file-fo.cs",
       "title": "Write the workbook's contents directly to an in-memory stream in the XLSX file format."
+    },
+    {
+      "category": "working-with-tables",
+      "file": "transform-a-data-collection-into-an-excel-listobject-by-loading-it-from-an-xlsx-.cs",
+      "title": "Transform a data collection into an Excel ListObject by loading it from an XLSX workbook."
     }
   ]
 }
