@@ -351,6 +351,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-localization-of-error-messages-and-boolean-values-in-an-xlsx-workbook-.cs",
+      "title": "Implement localization of error messages and Boolean values in an XLSX workbook for Russian and other languages."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs",
       "title": "Verify localized formulas by examining console output of the Cell.FormulaLocal implementation with an XLSX workbook."
     }
