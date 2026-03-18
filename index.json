@@ -186,6 +186,11 @@
     },
     {
       "category": "document-properties",
+      "file": "create-read-update-and-delete-workbook-document-properties-within-an-xlsx-file-u.cs",
+      "title": "Create, read, update, and delete workbook document properties within an XLSX file using the .NET API."
+    },
+    {
+      "category": "document-properties",
       "file": "inspect-and-retrieve-metadata-properties-from-an-xlsx-workbook-programmatically-.cs",
       "title": "Inspect and retrieve metadata properties from an XLSX workbook programmatically using the available API."
     },
