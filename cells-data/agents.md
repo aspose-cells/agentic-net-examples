@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - locate-cells-in-an-xlsx-workbook-that-match-a-given-string-or-numeric-value.cs
 - manipulate-spreadsheet-data-programmatically-with-full-xlsx-format-support-enabl.cs
 - retrieve-the-cells-string-content-from-an-xlsx-worksheet-both-with-its-original-.cs
+- insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs
