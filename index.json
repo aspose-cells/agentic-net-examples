@@ -41,6 +41,11 @@
     },
     {
       "category": "cells-data",
+      "file": "define-and-apply-data-validation-constraints-within-an-xlsx-workbook-to-enforce-.cs",
+      "title": "Define and apply data validation constraints within an XLSX workbook to enforce input rules."
+    },
+    {
+      "category": "cells-data",
       "file": "determine-whether-a-cells-data-validation-in-an-xlsx-workbook-is-configured-as-a.cs",
       "title": "Determine whether a cell's data validation in an XLSX workbook is configured as a drop\u2011down list."
     },
