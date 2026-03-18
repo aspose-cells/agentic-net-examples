@@ -1361,6 +1361,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "preserve-div-tag-layout-when-importing-html-into-an-excel-workbook-and-exporting.cs",
+      "title": "Preserve DIV tag layout when importing HTML into an Excel workbook and exporting the result as XLSX."
+    },
+    {
+      "category": "working-with-html",
       "file": "prevent-automatic-numeric-conversion-during-csv-import-for-the-operation-by-sett.cs",
       "title": "Prevent automatic numeric conversion during CSV import for the operation by setting LoadOptions.ConvertNumericData to false."
     },
