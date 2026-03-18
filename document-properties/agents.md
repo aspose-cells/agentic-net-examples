@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - implement-custom-datetime-properties-within-an-xlsx-workbook-using-the-apis-prop.cs
 - access-the-document-information-panel-of-an-xlsx-workbook-to-display-its-custom-.cs
 - configure-the-scalecrop-built-in-property-for-an-xlsx-workbook-to-adjust-its-sca.cs
+- update-the-linksuptodate-builtin-property-of-an-xlsx-workbook-to-reflect-its-cur.cs
