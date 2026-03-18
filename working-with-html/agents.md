@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-save-it-as-html-with-css-custom-properties-enabled-via.cs
 - when-converting-an-xlsx-workbook-to-html-configure-htmlsaveoptions-to-enable-css.cs
 - enable-css-custom-properties-during-conversion-of-an-xlsx-workbook-to-html-prese.cs
+- utilize-css-custom-properties-to-style-the-html-output-generated-from-loading-an.cs
