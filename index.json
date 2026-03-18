@@ -1561,6 +1561,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-a-streamprovider-to-load-html-content-and-generate-an-xlsx-workbook-then-sav.cs",
+      "title": "Use a StreamProvider to load HTML content and generate an XLSX workbook, then save the file via the same provider."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-converting-an-xlsx-to-html-substitute-unsupported-cell-border-styles-with-v.cs",
       "title": "When converting an XLSX to HTML, substitute unsupported cell border styles with visually similar alternatives."
     },
