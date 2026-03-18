@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - manipulate-table-structures-within-an-xlsx-workbook-using-net-apis-including-add.cs
 - transform-a-spreadsheet-table-into-a-cell-range-with-configurable-options-in-an-.cs
 - create-modify-and-query-tables-and-cell-ranges-within-an-xlsx-workbook-using-the.cs
+- create-a-basic-workbook-demonstration-that-reads-and-manipulates-data-from-an-xl.cs
