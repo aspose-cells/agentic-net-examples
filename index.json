@@ -211,6 +211,11 @@
     },
     {
       "category": "document-properties",
+      "file": "configure-the-scalecrop-built-in-property-for-an-xlsx-workbook-to-adjust-its-sca.cs",
+      "title": "Configure the ScaleCrop built-in property for an XLSX workbook to adjust its scaling behavior."
+    },
+    {
+      "category": "document-properties",
       "file": "create-read-update-and-delete-workbook-document-properties-within-an-xlsx-file-u.cs",
       "title": "Create, read, update, and delete workbook document properties within an XLSX file using the .NET API."
     },
