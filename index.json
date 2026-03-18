@@ -186,6 +186,11 @@
     },
     {
       "category": "document-properties",
+      "file": "access-the-document-information-panel-of-an-xlsx-workbook-to-display-its-custom-.cs",
+      "title": "Access the Document Information Panel of an XLSX workbook to display its custom properties."
+    },
+    {
+      "category": "document-properties",
       "file": "add-or-delete-custom-document-properties-in-an-xlsx-workbook-programmatically-vi.cs",
       "title": "Add or delete custom document properties in an XLSX workbook programmatically via the API."
     },
