@@ -141,6 +141,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-from-custom-objects-into-an-xlsx-workbook-programmatically-mapping-o.cs",
+      "title": "Import data from custom objects into an XLSX workbook programmatically, mapping object properties to worksheet cells."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-into-a-worksheet-from-an-xlsx-file-programmatically-mapping-cells-to.cs",
       "title": "Import data into a worksheet from an XLSX file, programmatically mapping cells to their corresponding ranges."
     },
