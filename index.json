@@ -1486,6 +1486,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-prepend-a-specified-prefix-to-generated-html-table-css.cs",
+      "title": "Load an XLSX workbook and prepend a specified prefix to generated HTML table CSS IDs during export."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-save-it-as-mhtml-enabling-internet-explorer-compatibil.cs",
       "title": "Load an XLSX workbook and save it as MHTML, enabling Internet Explorer compatibility via MhtmlSaveOptions.IeCompatible."
     },
