@@ -976,6 +976,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "retrieve-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs",
+      "title": "Retrieve OData connection details from a workbook saved in the default XLSX format for further processing."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-source-and-output-excel-files-load-the-source-xlsx-workbook-then-export.cs",
       "title": "Retrieve source and output Excel files, load the source XLSX workbook, then export it as an XLSX file."
     },
