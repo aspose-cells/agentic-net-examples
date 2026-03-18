@@ -1271,6 +1271,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-xlsx-worksheet-to-html-while-rendering-strikethrough-text-by-appropri.cs",
+      "title": "Convert an XLSX worksheet to HTML while rendering strikethrough text by appropriately configuring HtmlSaveOptions.CrossStringType."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-an-istreamprovider-implementation-that-handles-html-input-loading-and-xls.cs",
       "title": "Create an IStreamProvider implementation that handles HTML input loading and XLSX output saving via streams."
     },
