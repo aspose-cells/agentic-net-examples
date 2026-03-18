@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - save-a-workbook-to-various-file-formats-using-default-settings-specifying-xlsx-a.cs
 - stream-the-workbook-as-an-xlsx-file-directly-in-the-http-response-setting-approp.cs
 - write-the-workbook-to-the-http-response-stream-as-a-pdf-document-setting-appropr.cs
+- write-the-workbook-to-an-http-response-stream-in-xlsx-format-utilizing-default-c.cs
