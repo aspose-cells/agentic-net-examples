@@ -66,6 +66,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-excel-data-using-c-to-generate-an-xlsx-file-while-maintaining-worksheet-f.cs",
+      "title": "Export Excel data using C# to generate an XLSX file while maintaining worksheet fidelity."
+    },
+    {
+      "category": "cells-data",
       "file": "generate-an-xlsx-file-by-exporting-worksheet-data-using-net-apis-while-preservin.cs",
       "title": "Generate an XLSX file by exporting worksheet data using .NET APIs while preserving cell values and formatting."
     },
