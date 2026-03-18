@@ -2111,6 +2111,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xps-json-file-into-a-csv-format-preserving-data-fidelity-and-column.cs",
+      "title": "Transform an XPS JSON file into a CSV format, preserving data fidelity and column alignment for downstream processing."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xps-workbook-into-a-json-representation-preserving-all-worksheet-da.cs",
       "title": "Transform an XPS workbook into a JSON representation, preserving all worksheet data and formatting details."
     },
