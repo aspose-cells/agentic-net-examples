@@ -2121,6 +2121,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-ods-spreadsheet-into-json-maintaining-data-integrity-and-appropriat.cs",
+      "title": "Transform an ODS spreadsheet into JSON, maintaining data integrity and appropriate type mappings for application consumption."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-ods-workbook-into-a-json-representation-preserving-cell-data-and-wo.cs",
       "title": "Transform an ODS workbook into a JSON representation, preserving cell data and worksheet hierarchy."
     },
