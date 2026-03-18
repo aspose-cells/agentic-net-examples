@@ -186,6 +186,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-json-data-into-an-xlsx-workbook-mapping-json-structures-to-corresponding-.cs",
+      "title": "Import JSON data into an XLSX workbook, mapping JSON structures to corresponding spreadsheet cells and tables."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs",
       "title": "Insert HTML\u2011formatted rich text into a worksheet cell when programmatically generating an XLSX file."
     },
