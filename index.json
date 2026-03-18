@@ -361,6 +361,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "run-sample-localization-code-to-translate-error-messages-and-boolean-values-in-a.cs",
+      "title": "Run sample localization code to translate error messages and Boolean values in an XLSX workbook."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs",
       "title": "Verify localized formulas by examining console output of the Cell.FormulaLocal implementation with an XLSX workbook."
     }
