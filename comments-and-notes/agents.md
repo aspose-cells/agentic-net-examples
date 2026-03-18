@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - modify-the-comment-text-orientation-within-an-xlsx-workbook-after-loading-it-pro.cs
 - modify-the-comment-font-color-within-an-xlsx-workbook-by-accessing-its-comment-s.cs
 - modify-the-background-color-of-a-comment-in-an-xlsx-workbook-after-loading-the-f.cs
+- change-the-color-of-an-excel-comment-in-a-loaded-xlsx-workbook-programmatically-.cs
