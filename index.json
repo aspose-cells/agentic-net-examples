@@ -2171,6 +2171,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xmlformatted-csv-file-into-an-equivalent-json-representation-preser.cs",
+      "title": "Transform an XML\u2011formatted CSV file into an equivalent JSON representation, preserving data types and hierarchical structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xps-json-file-into-a-csv-format-preserving-data-fidelity-and-column.cs",
       "title": "Transform an XPS JSON file into a CSV format, preserving data fidelity and column alignment for downstream processing."
     },
