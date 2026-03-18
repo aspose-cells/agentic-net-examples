@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - apply-an-autofilter-to-a-worksheet-in-an-xlsx-workbook-to-enable-dynamic-data-fi.cs
 - apply-an-autofilter-to-an-xlsx-worksheet-programmatically-to-enable-dynamic-data.cs
 - apply-and-configure-various-filter-types-on-xlsx-worksheets-to-control-data-visi.cs
+- implement-sorting-of-data-within-an-xlsx-workbook-applying-specified-criteria-an.cs
