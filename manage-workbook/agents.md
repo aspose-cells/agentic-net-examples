@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - instantiate-the-workbook-class-to-load-an-xlsx-workbook-into-memory-for-further-.cs
+- export-the-workbook-to-an-xlsx-file-preserving-all-worksheets-formulas-formattin.cs
