@@ -10,6 +10,11 @@
       "title": "Delete all threaded comments from an XLSX workbook after loading the file into memory."
     },
     {
+      "category": "comments-and-notes",
+      "file": "programmatically-delete-all-threaded-comments-from-an-xlsx-workbook-after-loadin.cs",
+      "title": "Programmatically delete all threaded comments from an XLSX workbook after loading it with the Excel library."
+    },
+    {
       "category": "conversion",
       "file": "convert-an-xlsx-workbook-to-a-tiff-image-file-preserving-visual-fidelity-and-lay.cs",
       "title": "Convert an XLSX workbook to a TIFF image file, preserving visual fidelity and layout."
