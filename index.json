@@ -1361,6 +1361,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-extract-its-defined-print-area-and-generate-an-html-repres.cs",
+      "title": "Load an XLSX workbook, extract its defined print area, and generate an HTML representation preserving layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs",
       "title": "Load an XLSX workbook into memory for programmatic manipulation and data extraction via the API."
     },
