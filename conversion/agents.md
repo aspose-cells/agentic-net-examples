@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - transform-an-xlsx-workbook-into-an-html-document-preserving-cell-formatting-and-.cs
 - transform-an-xlsx-workbook-into-a-json-file-preserving-worksheet-data-cell-types.cs
 - transform-a-workbook-in-xlsx-format-into-an-xml-file-using-the-librarys-conversi.cs
+- convert-an-xlsx-workbook-to-a-tiff-image-file-preserving-visual-fidelity-and-lay.cs
