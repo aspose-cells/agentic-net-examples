@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - transform-data-from-an-xls-csv-file-into-json-format-preserving-all-rows-and-col.cs
 - convert-data-from-an-xlsx-or-csv-spreadsheet-into-a-json-formatted-output-preser.cs
 - transform-the-contents-of-a-csv-file-into-a-json-representation-preserving-data-.cs
+- transform-a-tsv-csv-file-into-a-json-document-preserving-data-types-and-structur.cs
