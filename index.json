@@ -1446,6 +1446,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-autofit-all-columns-and-rows-and-export-the-re.cs",
+      "title": "Load an HTML file into a workbook, auto\u2011fit all columns and rows, and export the result as XLSX."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-html-file-into-a-workbook-enable-htmlloadoptionspreservedivlayout-and-sa.cs",
       "title": "Load an HTML file into a workbook, enable HtmlLoadOptions.PreserveDivLayout, and save the result as XLSX."
     },
