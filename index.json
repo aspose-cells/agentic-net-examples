@@ -2051,6 +2051,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-json-representation-of-an-xlsm-workbook-into-a-native-excel-file-whi.cs",
+      "title": "Transform a JSON representation of an XLSM workbook into a native Excel file while preserving all macros and data."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-json-representation-of-xlsx-data-into-a-fully-compatible-native-exce.cs",
       "title": "Transform a JSON representation of XLSX data into a fully compatible native Excel workbook file."
     },
