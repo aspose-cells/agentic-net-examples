@@ -1201,6 +1201,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-load-options-to-customize-how-an-xlsx-workbook-is-imported-controlling.cs",
+      "title": "Configure load options to customize how an XLSX workbook is imported, controlling parsing behavior and data handling."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-loadoptionsnumberformat-to-0-to-ensure-csv-data-loads-as-plain-numeric.cs",
       "title": "Configure LoadOptions.NumberFormat to \"0\" to ensure CSV data loads as plain numeric values during import."
     },
