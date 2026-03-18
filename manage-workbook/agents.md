@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - enable-shared-mode-for-the-workbook-allowing-multiple-users-to-edit-the-file-sim.cs
 - persist-the-currently-loaded-workbook-to-a-file-in-its-native-format-ensuring-al.cs
 - examine-the-provided-sample-code-to-verify-its-correctness-and-adherence-to-codi.cs
+- instantiate-a-customxmlpart-object-to-manage-custom-xml-data-within-workbook-str.cs
