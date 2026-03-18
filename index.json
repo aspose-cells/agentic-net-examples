@@ -1336,6 +1336,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "implement-a-custom-istreamprovider-to-load-an-html-document-and-export-it-direct.cs",
+      "title": "Implement a custom IStreamProvider to load an HTML document and export it directly to an XLSX workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-ifilepathprovider-load-an-xlsx-workbook-and-use-htmlsaveoptions-to-exp.cs",
       "title": "Implement IFilePathProvider, load an XLSX workbook, and use HtmlSaveOptions to export HTML with custom file paths."
     },
