@@ -221,6 +221,11 @@
     },
     {
       "category": "cells-data",
+      "file": "insert-data-into-an-xlsx-worksheet-following-rowmajor-order-before-proceeding-to.cs",
+      "title": "Insert data into an XLSX worksheet following row\u2011major order before proceeding to column\u2011wise population."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs",
       "title": "Insert HTML\u2011formatted rich text into a worksheet cell when programmatically generating an XLSX file."
     },
