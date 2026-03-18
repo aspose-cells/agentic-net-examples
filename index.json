@@ -206,6 +206,11 @@
     },
     {
       "category": "document-properties",
+      "file": "examine-how-the-version-property-is-managed-within-an-xlsx-workbook-and-ensure-c.cs",
+      "title": "Examine how the version property is managed within an XLSX workbook and ensure correct handling."
+    },
+    {
+      "category": "document-properties",
       "file": "identify-relevant-usage-scenarios-for-configuring-the-document-version-property-.cs",
       "title": "Identify relevant usage scenarios for configuring the document version property within an XLSX workbook."
     },
