@@ -1616,6 +1616,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-configure-htmlsaveoptions-with-linktarget-set-to-_blank-an.cs",
+      "title": "Load an XLSX workbook, configure HtmlSaveOptions with LinkTarget set to \u201c_blank\u201d, and save it as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-configure-htmlsaveoptionspresentationpreference-to-bestfit.cs",
       "title": "Load an XLSX workbook, configure\u202fHtmlSaveOptions.PresentationPreference\u202fto\u202fBestFit, and export it as HTML format."
     },
