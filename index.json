@@ -16,6 +16,11 @@
     },
     {
       "category": "conversion",
+      "file": "transform-an-xlsx-workbook-into-a-csv-file-removing-any-leading-empty-rows-and-c.cs",
+      "title": "Transform an XLSX workbook into a CSV file, removing any leading empty rows and columns during conversion."
+    },
+    {
+      "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-a-docx-document-preserving-cell-data-and-formatt.cs",
       "title": "Transform an XLSX workbook into a DOCX document, preserving cell data and formatting during conversion."
     },
