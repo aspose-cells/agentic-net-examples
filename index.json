@@ -36,6 +36,11 @@
     },
     {
       "category": "cells-data",
+      "file": "determine-whether-a-cells-data-validation-in-an-xlsx-workbook-is-configured-as-a.cs",
+      "title": "Determine whether a cell's data validation in an XLSX workbook is configured as a drop\u2011down list."
+    },
+    {
+      "category": "cells-data",
       "file": "employ-the-net-api-to-programmatically-read-modify-and-generate-spreadsheet-data.cs",
       "title": "Employ the .NET API to programmatically read, modify, and generate spreadsheet data in XLSX format."
     },
