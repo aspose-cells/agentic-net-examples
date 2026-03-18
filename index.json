@@ -1926,6 +1926,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-xlsm-json-file-to-csv-while-applying-the-standard-default-conversion-.cs",
+      "title": "Convert an XLSM JSON file to CSV while applying the standard default conversion options."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-an-xlsm-workbook-to-json-format-employing-the-default-conversion-options.cs",
       "title": "Convert an XLSM workbook to JSON format employing the default conversion options provided, without additional configuration."
     },
