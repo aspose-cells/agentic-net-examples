@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - transform-a-pdf-workbook-into-a-json-representation-preserving-data-fidelity-and.cs
 - transform-a-workbook-defined-in-json-into-a-json-output-while-preserving-data-in.cs
 - transform-an-xls-workbook-into-a-json-representation-using-the-default-conversio.cs
+- convert-an-xlsx-workbook-to-json-using-the-default-conversion-settings-preservin.cs
