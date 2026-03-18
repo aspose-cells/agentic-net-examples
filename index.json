@@ -66,6 +66,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-various-data-validation-types-in-xlsx-files-and-execute-them-programma.cs",
+      "title": "Implement various data validation types in XLSX files and execute them programmatically during spreadsheet processing."
+    },
+    {
+      "category": "cells-data",
       "file": "parse-stringbased-numeric-values-convert-them-to-numeric-types-and-generate-an-x.cs",
       "title": "Parse string\u2011based numeric values, convert them to numeric types, and generate an XLSX workbook containing the data."
     },
