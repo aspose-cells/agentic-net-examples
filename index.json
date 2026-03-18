@@ -1341,6 +1341,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-it-as-an-iecompatible-mhtml-file-while-preservi.cs",
+      "title": "Load an XLSX workbook and export it as an IE\u2011compatible MHTML file while preserving formatting."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-it-to-an-iecompatible-mhtml-file-preserving-for.cs",
       "title": "Load an XLSX workbook and export it to an IE\u2011compatible MHTML file, preserving formatting and interactivity."
     },
