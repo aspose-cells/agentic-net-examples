@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - ensure-wordart-shapes-retain-their-gradient-fill-when-converting-an-xlsx-workboo.cs
 - export-a-spreadsheet-worksheet-to-html-with-overlaid-objects-hidden-by-activatin.cs
 - enable-the-crosshideright-option-when-converting-an-xlsx-workbook-to-html-by-set.cs
+- load-an-xlsx-workbook-apply-crosshideright-to-conceal-overlaid-cells-and-export-.cs
