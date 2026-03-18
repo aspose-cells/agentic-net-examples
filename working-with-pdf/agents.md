@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - convert-an-excel-workbook-from-any-supported-input-format-into-a-resulting-pdf-f.cs
 - transform-an-excel-workbook-into-a-pdf-document-by-applying-the-standard-workboo.cs
+- convert-an-excel-workbook-directly-to-a-pdf-document-preserving-formatting-layou.cs
