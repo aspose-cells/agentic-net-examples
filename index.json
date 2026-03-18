@@ -828,6 +828,11 @@
       "category": "manage-workbook",
       "file": "persist-the-currently-loaded-workbook-to-a-file-in-its-native-format-ensuring-al.cs",
       "title": "Persist the currently loaded workbook to a file in its native format, ensuring all changes are stored."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "retrieve-a-custom-xml-part-from-the-document-by-specifying-its-unique-id-value.cs",
+      "title": "Retrieve a custom XML part from the document by specifying its unique ID value."
     }
   ]
 }
