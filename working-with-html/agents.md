@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - ensure-that-numeric-values-parsed-from-csv-files-retain-full-precision-without-c.cs
 - load-a-csv-file-with-loadoptionsnumberformat-to-retain-large-numeric-values-in-f.cs
 - prevent-automatic-numeric-conversion-during-csv-import-for-the-operation-by-sett.cs
+- configure-loadoptionsnumberformat-to-0-to-ensure-csv-data-loads-as-plain-numeric.cs
