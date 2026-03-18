@@ -333,6 +333,11 @@
       "category": "document-properties",
       "file": "update-the-linksuptodate-builtin-property-of-an-xlsx-workbook-to-reflect-its-cur.cs",
       "title": "Update the LinksUpToDate built\u2011in property of an XLSX workbook to reflect its current link status."
+    },
+    {
+      "category": "globalization-and-localization",
+      "file": "implement-cellformulalocal-to-localize-formulas-in-an-xlsx-workbook-mirroring-ex.cs",
+      "title": "Implement Cell.FormulaLocal to localize formulas in an XLSX workbook, mirroring Excel VBA Range.FormulaLocal behavior."
     }
   ]
 }
