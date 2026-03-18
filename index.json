@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "cells-data",
+      "file": "parse-stringbased-numeric-values-convert-them-to-numeric-types-and-generate-an-x.cs",
+      "title": "Parse string\u2011based numeric values, convert them to numeric types, and generate an XLSX workbook containing the data."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cell-object-by-its-named-reference-from-an-xlsx-worksheet-within-the-.cs",
       "title": "Retrieve a cell object by its named reference from an XLSX worksheet within the workbook."
     },
