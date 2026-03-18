@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-export-it-to-html-using-configurable-html-save-options.cs
 - load-an-xlsx-workbook-and-export-its-contents-to-an-html-file-while-preserving-f.cs
 - trim-unnecessary-whitespace-following-line-breaks-during-csv-import-to-ensure-cl.cs
+- strip-leading-and-trailing-whitespace-from-fields-when-loading-csv-data-to-ensur.cs
