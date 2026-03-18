@@ -136,6 +136,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-into-an-xlsx-workbook-via-the-icellsdatatable-interface-mapping-colu.cs",
+      "title": "Import data into an XLSX workbook via the ICellsDataTable interface, mapping columns to cells efficiently."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs",
       "title": "Insert HTML\u2011formatted rich text into a worksheet cell when programmatically generating an XLSX file."
     },
