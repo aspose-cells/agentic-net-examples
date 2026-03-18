@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - convert-a-datatable-into-an-xlsx-workbook-using-the-net-spreadsheet-api-preservi.cs
 - process-xlsx-columns-that-contain-nonstrongly-typed-data-preserving-original-val.cs
 - export-a-defined-cell-range-including-its-header-row-to-an-xlsx-file-while-prese.cs
+- search-and-locate-specific-data-within-an-xlsx-workbook-returning-matching-cell-.cs
