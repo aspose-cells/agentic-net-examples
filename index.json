@@ -1251,6 +1251,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-the-xlsx-workbook-and-save-it-as-html-while-disabling-downlevel-revealed-co.cs",
+      "title": "Load the XLSX workbook and save it as HTML while disabling downlevel revealed comments via HtmlSaveOptions.DisableDownlevelRevealedComments."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-xlsx-spreadsheets-as-a-supported-input-format-for-processing-preserving-wor.cs",
       "title": "Load XLSX spreadsheets as a supported input format for processing, preserving worksheet integrity and cell data."
     },
