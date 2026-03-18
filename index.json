@@ -191,6 +191,11 @@
     },
     {
       "category": "document-properties",
+      "file": "examine-and-manipulate-advanced-workbook-property-features-within-an-xlsx-spread.cs",
+      "title": "Examine and manipulate advanced workbook property features within an XLSX spreadsheet to control metadata and custom settings."
+    },
+    {
+      "category": "document-properties",
       "file": "inspect-and-retrieve-metadata-properties-from-an-xlsx-workbook-programmatically-.cs",
       "title": "Inspect and retrieve metadata properties from an XLSX workbook programmatically using the available API."
     },
