@@ -351,6 +351,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "configure-globalizationsettings-to-assign-custom-text-to-a-pie-charts-other-labe.cs",
+      "title": "Configure GlobalizationSettings to assign custom text to a pie chart's \u201cOther\u201d label in an XLSX workbook."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "execute-the-cellformulalocal-sample-on-an-xlsx-workbook-to-apply-localespecific-.cs",
       "title": "Execute the Cell.FormulaLocal sample on an XLSX workbook to apply locale\u2011specific formulas throughout the spreadsheet."
     },
