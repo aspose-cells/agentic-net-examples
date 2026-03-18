@@ -186,6 +186,11 @@
     },
     {
       "category": "document-properties",
+      "file": "inspect-and-retrieve-metadata-properties-from-an-xlsx-workbook-programmatically-.cs",
+      "title": "Inspect and retrieve metadata properties from an XLSX workbook programmatically using the available API."
+    },
+    {
+      "category": "document-properties",
       "file": "programmatically-delete-all-custom-document-properties-from-an-xlsx-workbook-to-.cs",
       "title": "Programmatically delete all custom document properties from an XLSX workbook to clean its metadata thoroughly."
     },
