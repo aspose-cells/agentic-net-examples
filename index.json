@@ -2201,6 +2201,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xlsx-workbook-into-a-json-representation-preserving-cell-data-types.cs",
+      "title": "Transform an XLSX workbook into a JSON representation preserving cell data types and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsxderived-json-dataset-into-a-commaseparated-values-csv-file-whil.cs",
       "title": "Transform an XLSX\u2011derived JSON dataset into a comma\u2011separated values (CSV) file while preserving column alignment."
     },
