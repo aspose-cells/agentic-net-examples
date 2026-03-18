@@ -1346,6 +1346,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-enable-htmlsaveoptionsexpandrtltext-and-export-the-file-co.cs",
+      "title": "Load an XLSX workbook, enable HtmlSaveOptions.ExpandRtlText, and export the file correctly to HTML format."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-enable-htmlsaveoptionsexportcomments-and-save-it-as-html-t.cs",
       "title": "Load an XLSX workbook, enable HtmlSaveOptions.ExportComments, and save it as HTML to retain cell comments."
     },
