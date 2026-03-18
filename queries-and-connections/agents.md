@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - determine-whether-an-xlsx-workbook-includes-any-hidden-external-hyperlinks-when-.cs
 - identify-and-document-potential-use-cases-for-hidden-external-hyperlinks-in-the-.cs
 - retrieve-example-code-that-detects-hidden-external-hyperlinks-in-xlsx-files-usin.cs
+- validate-hidden-external-links-in-an-xlsx-workbook-and-output-the-findings-to-a-.cs
