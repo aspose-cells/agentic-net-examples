@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - provide-a-concise-overview-of-the-librarys-features-presented-in-an-xlsx-workboo.cs
 - export-excel-data-using-c-to-generate-an-xlsx-file-while-maintaining-worksheet-f.cs
 - export-worksheet-data-to-an-xlsx-file-while-preserving-formatting-formulas-and-d.cs
+- convert-a-datatable-into-an-xlsx-workbook-using-the-net-spreadsheet-api-preservi.cs
