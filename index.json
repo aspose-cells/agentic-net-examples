@@ -1366,6 +1366,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-save-it-as-mhtml-enabling-internet-explorer-compatibil.cs",
+      "title": "Load an XLSX workbook and save it as MHTML, enabling Internet Explorer compatibility via MhtmlSaveOptions.IeCompatible."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-configure-html-export-options-to-embed-metadata-and-save-t.cs",
       "title": "Load an XLSX workbook, configure HTML export options to embed metadata, and save the result as HTML."
     },
