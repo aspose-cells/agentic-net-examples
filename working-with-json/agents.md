@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - convert-a-tabdelimited-excel-workbook-to-json-format-preserving-column-headers-a.cs
 - transform-an-htmlformatted-spreadsheet-into-a-json-representation-preserving-cel.cs
 - transform-an-mhtml-formatted-excel-workbook-into-a-json-representation-while-pre.cs
+- transform-an-excel-file-in-xml-format-into-a-json-representation-preserving-data.cs
