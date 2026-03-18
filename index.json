@@ -66,6 +66,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "provide-sample-code-demonstrating-operations-on-a-workbook-opened-from-an-xlsx-f.cs",
+      "title": "Provide sample code demonstrating operations on a workbook opened from an XLSX file format."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "retrieve-all-threaded-comments-from-an-xlsx-workbook-programmatically-using-the-.cs",
       "title": "Retrieve all threaded comments from an XLSX workbook programmatically using the .NET spreadsheet API."
     },
