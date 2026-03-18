@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - export-excel-data-using-c-to-generate-an-xlsx-file-while-maintaining-worksheet-f.cs
 - export-worksheet-data-to-an-xlsx-file-while-preserving-formatting-formulas-and-d.cs
 - convert-a-datatable-into-an-xlsx-workbook-using-the-net-spreadsheet-api-preservi.cs
+- process-xlsx-columns-that-contain-nonstrongly-typed-data-preserving-original-val.cs
