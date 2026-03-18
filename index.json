@@ -1531,6 +1531,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "when-converting-an-xlsx-worksheet-to-html-generate-the-stylesheet-as-a-distinct-.cs",
+      "title": "When converting an XLSX worksheet to HTML, generate the stylesheet as a distinct CSS file alongside the output."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-loading-an-xlsx-file-and-saving-as-html-set-htmlsaveoptionsexportconditiona.cs",
       "title": "When loading an XLSX file and saving as HTML, set HtmlSaveOptions.ExportConditionalFormatting to true to include conditional formatting."
     },
