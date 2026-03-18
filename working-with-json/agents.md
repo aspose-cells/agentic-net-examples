@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - transform-an-xls-or-csv-file-into-json-using-the-librarys-default-conversion-set.cs
 - transform-an-xlsx-or-csv-source-file-into-a-json-representation-using-default-co.cs
 - transform-an-xlsm-csv-file-into-json-format-using-the-provided-default-conversio.cs
+- transform-an-xltx-csv-document-into-json-format-using-the-provided-default-conve.cs
