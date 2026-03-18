@@ -46,6 +46,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "modify-the-comment-text-orientation-within-an-xlsx-workbook-after-loading-it-pro.cs",
+      "title": "Modify the comment text orientation within an XLSX workbook after loading it programmatically in memory."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "modify-threaded-comments-within-an-xlsx-workbook-after-loading-it-into-memory-vi.cs",
       "title": "Modify threaded comments within an XLSX workbook after loading it into memory via the API."
     },
