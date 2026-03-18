@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-column-widths-in-loaded-xlsx-files-to-use-scalable-units-such-as-em-or.cs",
+      "title": "Configure column widths in loaded XLSX files to use scalable units such as em or percent when exporting to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-html-load-options-to-import-html-content-and-export-it-as-an-xlsx-work.cs",
       "title": "Configure HTML load options to import HTML content and export it as an XLSX workbook."
     },
