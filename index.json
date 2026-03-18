@@ -946,6 +946,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs",
+      "title": "Load an XLSX workbook, process its contents, and emit the results to the console and a TXT file."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs",
       "title": "Obtain the SQL connection details from a workbook saved in the default XLSX format."
     },
