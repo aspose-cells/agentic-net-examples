@@ -1220,6 +1220,11 @@
       "title": "Prevent automatic numeric conversion during CSV import for the operation by setting LoadOptions.ConvertNumericData to false."
     },
     {
+      "category": "working-with-html",
+      "file": "set-loadoptionsconvertnumericdata-to-false-when-loading-csv-files-to-disable-aut.cs",
+      "title": "Set LoadOptions.ConvertNumericData to false when loading CSV files to disable automatic numeric type conversion."
+    },
+    {
       "category": "working-with-tables",
       "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
       "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
