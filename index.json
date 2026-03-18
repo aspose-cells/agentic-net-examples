@@ -1991,6 +1991,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-dbf-excel-file-into-a-json-document-preserving-data-types-and-struct.cs",
+      "title": "Transform a DBF Excel file into a JSON document, preserving data types and structural hierarchy."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-dbf-json-file-into-a-csv-document-preserving-field-integrity-and-dat.cs",
       "title": "Transform a DBF JSON file into a CSV document, preserving field integrity and data types."
     },
