@@ -2045,6 +2045,11 @@
       "title": "Transform data from an XLS JSON source into a CSV format while preserving column integrity."
     },
     {
+      "category": "working-with-json",
+      "file": "transform-the-content-of-an-xlsm-json-file-into-csv-format-while-preserving-all-.cs",
+      "title": "Transform the content of an XLSM JSON file into CSV format while preserving all cell data."
+    },
+    {
       "category": "working-with-pdf",
       "file": "activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs",
       "title": "Activate the ContentCopyForAccessibility setting during Excel-to-PDF conversion to ensure accessible content can be copied."
