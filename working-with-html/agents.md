@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - set-loadoptionsconvertnumericdata-to-false-when-loading-csv-files-to-disable-aut.cs
 - when-loading-an-xlsx-file-configure-the-required-custom-culture-settings-to-ensu.cs
 - prevent-large-numeric-values-from-being-interpreted-in-exponential-notation-duri.cs
+- load-xlsx-spreadsheets-as-a-supported-input-format-for-processing-preserving-wor.cs
