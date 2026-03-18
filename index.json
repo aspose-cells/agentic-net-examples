@@ -853,6 +853,11 @@
       "category": "manage-workbook",
       "file": "retrieve-a-custom-xml-part-from-the-document-by-specifying-its-unique-id-value.cs",
       "title": "Retrieve a custom XML part from the document by specifying its unique ID value."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "transfer-a-worksheet-from-the-current-workbook-to-a-different-workbook-maintaini.cs",
+      "title": "Transfer a worksheet from the current workbook to a different workbook, maintaining all cell data, formatting, and formulas."
     }
   ]
 }
