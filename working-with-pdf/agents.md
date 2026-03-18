@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - apply-an-image-watermark-to-each-pdf-generated-during-the-conversion-of-an-excel.cs
 - insert-hierarchical-pdf-bookmarks-into-the-pdf-generated-from-an-excel-workbook-.cs
 - insert-pdf-bookmarks-referencing-named-destinations-into-pdfs-generated-from-exc.cs
+- determine-applicable-scenarios-for-utilizing-pdf-bookmarks-with-named-destinatio.cs
