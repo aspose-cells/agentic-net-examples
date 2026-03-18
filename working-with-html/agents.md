@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - configure-load-options-to-customize-how-an-xlsx-workbook-is-imported-controlling.cs
 - load-the-xlsx-workbook-and-save-it-as-html-while-disabling-downlevel-revealed-co.cs
 - enable-the-htmlsaveoptionsdisabledownlevelrevealedcomments-property-when-loading.cs
+- when-loading-an-xlsx-workbook-and-exporting-to-html-suppress-downlevelrevealed-c.cs
