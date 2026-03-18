@@ -996,6 +996,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "modify-the-default-xlsx-workbook-to-customize-its-ribbon-xml-configuration-for-t.cs",
+      "title": "Modify the default XLSX workbook to customize its Ribbon XML configuration for tailored UI functionality."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-a-sample-implementation-illustrating-odata-connection-retrieval-for-gener.cs",
       "title": "Obtain a sample implementation illustrating OData connection retrieval for generating files in the default XLSX format."
     },
