@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - prevent-large-numeric-values-from-being-interpreted-in-exponential-notation-duri.cs
 - load-xlsx-spreadsheets-as-a-supported-input-format-for-processing-preserving-wor.cs
 - load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs
+- load-an-xlsx-workbook-then-export-it-to-html-preserving-worksheet-headings-in-th.cs
