@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - export-the-xlsx-worksheet-with-righttoleft-text-to-html-enabling-the-expandrtlte.cs
 - load-an-xlsx-workbook-enable-htmlsaveoptionsexpandrtltext-and-export-the-file-co.cs
 - process-an-xlsx-workbook-containing-rtl-text-and-export-it-to-html-ensuring-prop.cs
+- load-an-xlsx-workbook-extract-its-defined-print-area-and-generate-an-html-repres.cs
