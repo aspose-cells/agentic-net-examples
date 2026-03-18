@@ -1931,6 +1931,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "insert-hierarchical-pdf-bookmarks-into-the-pdf-generated-from-an-excel-workbook-.cs",
+      "title": "Insert hierarchical PDF bookmarks into the PDF generated from an Excel workbook to enable navigation."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "serialize-the-workbook-to-a-pdfacompliant-pdf-preserving-formatting-fonts-and-me.cs",
       "title": "Serialize the workbook to a PDF/A\u2011compliant PDF, preserving formatting, fonts, and metadata according to PDF/A standards."
     },
