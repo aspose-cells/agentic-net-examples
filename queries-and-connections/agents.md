@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-retrieve-its-odata-metadata-and-output-the-information-to-.cs
 - load-xls-and-xlsb-workbooks-then-load-an-xlsx-workbook-and-persist-it-back-as-xl.cs
 - load-an-xlsx-workbook-manage-external-connections-of-xlsxlsb-files-and-save-the-.cs
+- identify-and-document-potential-use-cases-for-external-data-connections-within-s.cs
