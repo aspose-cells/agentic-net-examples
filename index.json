@@ -1221,6 +1221,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "prevent-large-numeric-values-from-being-interpreted-in-exponential-notation-duri.cs",
+      "title": "Prevent large numeric values from being interpreted in exponential notation during CSV import processing."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-loadoptionsconvertnumericdata-to-false-when-loading-csv-files-to-disable-aut.cs",
       "title": "Set LoadOptions.ConvertNumericData to false when loading CSV files to disable automatic numeric type conversion."
     },
