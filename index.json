@@ -2196,6 +2196,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-oxps-spreadsheet-file-into-a-json-representation-preserving-cell-da.cs",
+      "title": "Transform an OXPS spreadsheet file into a JSON representation, preserving cell data and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-oxps-workbook-into-a-json-representation-preserving-data-fidelity-a.cs",
       "title": "Transform an OXPS workbook into a JSON representation, preserving data fidelity and workbook structure."
     },
