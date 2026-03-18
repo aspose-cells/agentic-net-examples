@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - implement-c-logic-that-parses-numeric-strings-into-numeric-types-and-writes-the-.cs
 - identify-typical-application-scenarios-where-the-xlsx-format-can-be-utilized-wit.cs
 - convert-textformatted-numeric-cells-to-true-numeric-values-in-an-excel-worksheet.cs
+- transform-numeric-strings-in-a-worksheet-to-true-numeric-types-and-save-the-work.cs
