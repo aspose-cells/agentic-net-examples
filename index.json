@@ -206,6 +206,11 @@
     },
     {
       "category": "document-properties",
+      "file": "identify-relevant-usage-scenarios-for-configuring-the-document-version-property-.cs",
+      "title": "Identify relevant usage scenarios for configuring the document version property within an XLSX workbook."
+    },
+    {
+      "category": "document-properties",
       "file": "insert-custom-document-properties-into-an-xlsx-workbook-to-store-additional-meta.cs",
       "title": "Insert custom document properties into an XLSX workbook to store additional metadata for downstream processing."
     },
