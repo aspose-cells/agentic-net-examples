@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - process-an-xlsx-workbook-containing-rtl-text-and-export-it-to-html-ensuring-prop.cs
 - load-an-xlsx-workbook-extract-its-defined-print-area-and-generate-an-html-repres.cs
 - export-the-worksheets-defined-print-area-to-html-by-setting-htmlsaveoptionsexpor.cs
+- configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs
