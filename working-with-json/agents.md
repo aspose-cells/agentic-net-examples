@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - convert-an-xls-workbook-into-a-json-document-maintaining-worksheet-structures-ce.cs
 - transform-an-xlsx-workbook-into-a-json-representation-mapping-sheets-and-cells-t.cs
+- convert-an-xlsm-workbook-to-json-format-preserving-all-cell-data-formulas-and-fo.cs
