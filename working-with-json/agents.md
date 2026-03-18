@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - transform-a-dif-json-data-file-into-a-csv-format-while-preserving-data-fidelity-.cs
 - transform-a-dbf-json-file-into-a-csv-document-preserving-field-integrity-and-dat.cs
 - transform-a-prn-json-file-into-csv-format-preserving-data-fidelity-and-appropria.cs
+- transform-an-xps-json-file-into-a-csv-format-preserving-data-fidelity-and-column.cs
