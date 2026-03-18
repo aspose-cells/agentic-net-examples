@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - load-an-html-document-using-htmlloadoptions-and-convert-it-directly-to-a-pdf-fil.cs
 - instantiate-a-workbook-load-html-content-then-export-it-as-a-pdf-using-the-appro.cs
 - load-an-html-document-into-memory-and-export-it-directly-as-a-pdf-file-while-pre.cs
+- use-a-streamprovider-to-load-html-content-and-generate-an-xlsx-workbook-then-sav.cs
