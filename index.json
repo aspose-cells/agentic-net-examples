@@ -1736,6 +1736,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "transform-an-xlsx-workbook-into-html-using-htmlsaveoptions-with-presentationpref.cs",
+      "title": "Transform an XLSX workbook into HTML using HtmlSaveOptions with PresentationPreference set to BestFit for optimal layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "trim-unnecessary-whitespace-following-line-breaks-during-csv-import-to-ensure-cl.cs",
       "title": "Trim unnecessary whitespace following line breaks during CSV import to ensure clean data parsing."
     },
