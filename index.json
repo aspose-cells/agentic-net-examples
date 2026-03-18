@@ -1501,6 +1501,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "specify-custom-output-locations-when-loading-an-xlsx-workbook-and-exporting-it-a.cs",
+      "title": "Specify custom output locations when loading an XLSX workbook and exporting it as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "strip-leading-and-trailing-whitespace-from-fields-when-loading-csv-data-to-ensur.cs",
       "title": "Strip leading and trailing whitespace from fields when loading CSV data to ensure a clean dataset."
     },
