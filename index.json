@@ -71,6 +71,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-a-defined-cell-range-including-its-header-row-to-an-xlsx-file-while-prese.cs",
+      "title": "Export a defined cell range, including its header row, to an XLSX file while preserving formatting."
+    },
+    {
+      "category": "cells-data",
       "file": "export-excel-data-using-c-to-generate-an-xlsx-file-while-maintaining-worksheet-f.cs",
       "title": "Export Excel data using C# to generate an XLSX file while maintaining worksheet fidelity."
     },
