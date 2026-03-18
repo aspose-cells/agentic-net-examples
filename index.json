@@ -956,6 +956,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "obtain-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-format.cs",
+      "title": "Obtain OData connection details from a workbook saved in the default XLSX format using the provided API."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-the-result-range-of-a-query-table-from-a-workbook-saved-in-the-default-xl.cs",
       "title": "Obtain the result range of a query table from a workbook saved in the default XLSX format."
     },
