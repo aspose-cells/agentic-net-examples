@@ -1221,6 +1221,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-then-export-it-to-html-preserving-worksheet-headings-in-th.cs",
+      "title": "Load an XLSX workbook, then export it to HTML preserving worksheet headings in the generated output."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-xlsx-spreadsheets-as-a-supported-input-format-for-processing-preserving-wor.cs",
       "title": "Load XLSX spreadsheets as a supported input format for processing, preserving worksheet integrity and cell data."
     },
