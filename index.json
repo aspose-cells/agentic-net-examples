@@ -1891,6 +1891,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs",
+      "title": "Activate the ContentCopyForAccessibility setting during Excel-to-PDF conversion to ensure accessible content can be copied."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-conversion-options-to-control-pdf-output-characteristics-such-as-page-.cs",
       "title": "Configure conversion options to control PDF output characteristics, such as page layout and image quality, during Excel-to-PDF transformation."
     },
