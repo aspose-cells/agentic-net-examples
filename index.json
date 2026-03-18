@@ -1201,6 +1201,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-html-load-options-to-import-html-content-and-export-it-as-an-xlsx-work.cs",
+      "title": "Configure HTML load options to import HTML content and export it as an XLSX workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-load-options-to-customize-how-an-xlsx-workbook-is-imported-controlling.cs",
       "title": "Configure load options to customize how an XLSX workbook is imported, controlling parsing behavior and data handling."
     },
