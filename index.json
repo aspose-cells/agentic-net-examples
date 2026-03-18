@@ -1206,6 +1206,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "identify-query-tables-and-list-objects-that-are-linked-to-external-data-connecti.cs",
+      "title": "Identify query tables and list objects that are linked to external data connections within an XLSX workbook."
+    },
+    {
+      "category": "working-with-tables",
       "file": "transform-a-data-collection-into-an-excel-listobject-by-loading-it-from-an-xlsx-.cs",
       "title": "Transform a data collection into an Excel ListObject by loading it from an XLSX workbook."
     },
