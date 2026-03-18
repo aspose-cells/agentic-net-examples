@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - import-data-from-custom-objects-into-an-xlsx-workbook-and-verify-the-merged-cell.cs
 - import-a-datatable-into-an-xlsx-workbook-mapping-rows-and-columns-to-correspondi.cs
 - import-data-from-a-dynamic-object-into-an-xlsx-workbook-using-it-as-the-data-sou.cs
+- import-a-datacolumn-into-an-xlsx-workbook-mapping-column-data-to-corresponding-e.cs
