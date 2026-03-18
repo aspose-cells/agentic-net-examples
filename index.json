@@ -1246,6 +1246,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "transform-a-spreadsheet-table-into-a-cell-range-with-configurable-options-in-an-.cs",
+      "title": "Transform a spreadsheet table into a cell range with configurable options in an XLSX workbook."
+    },
+    {
+      "category": "working-with-tables",
       "file": "transform-a-worksheet-table-within-an-xlsx-file-into-an-ods-document-and-persist.cs",
       "title": "Transform a worksheet table within an XLSX file into an ODS document and persist the output as ODS."
     }
