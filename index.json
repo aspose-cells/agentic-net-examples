@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-div-layout-is-retained-when-importing-html-content-and-exporting-to-xlsx-.cs",
+      "title": "Ensure DIV layout is retained when importing HTML content and exporting to XLSX files."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-cell-comments-are-retained-in-the-generated-html-when-loading-an-xls.cs",
       "title": "Ensure that cell comments are retained in the generated HTML when loading an XLSX workbook and saving it as HTML."
     },
