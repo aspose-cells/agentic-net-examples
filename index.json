@@ -1901,6 +1901,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-xlsm-workbook-to-json-format-employing-the-default-conversion-options.cs",
+      "title": "Convert an XLSM workbook to JSON format employing the default conversion options provided, without additional configuration."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-an-xlsm-workbook-to-json-format-preserving-all-cell-data-formulas-and-fo.cs",
       "title": "Convert an XLSM workbook to JSON format, preserving all cell data, formulas, and formatting structure."
     },
