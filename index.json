@@ -1591,6 +1591,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-configure-export-settings-to-omit-hidden-rows-columns-and-.cs",
+      "title": "Load an XLSX workbook, configure export settings to omit hidden rows, columns, and worksheets, then save as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-configure-html-export-options-to-embed-metadata-and-save-t.cs",
       "title": "Load an XLSX workbook, configure HTML export options to embed metadata, and save the result as HTML."
     },
