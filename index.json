@@ -193,6 +193,11 @@
       "category": "document-properties",
       "file": "remove-all-custom-document-properties-from-an-xlsx-workbook-programmatically-usi.cs",
       "title": "Remove all custom document properties from an XLSX workbook programmatically using the DocumentPropertyCollection API."
+    },
+    {
+      "category": "document-properties",
+      "file": "set-retrieve-and-modify-metadata-properties-of-an-xlsx-workbook-including-custom.cs",
+      "title": "Set, retrieve, and modify metadata properties of an XLSX workbook, including custom and built\u2011in attributes, programmatically."
     }
   ]
 }
