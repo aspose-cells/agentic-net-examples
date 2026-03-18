@@ -2236,6 +2236,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xltx-workbook-into-a-json-representation-while-preserving-cell-data.cs",
+      "title": "Transform an XLTX workbook into a JSON representation while preserving cell data and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xml-workbook-into-a-json-representation-preserving-all-data-structu.cs",
       "title": "Transform an XML workbook into a JSON representation, preserving all data structures and metadata."
     },
