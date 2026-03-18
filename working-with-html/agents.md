@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-export-it-as-html-preserving-cell-tooltips-in-the-resu.cs
 - load-the-xlsx-workbook-and-save-it-as-html-with-htmlsaveoptionsexportcommentsast.cs
 - when-converting-an-xlsx-workbook-to-html-enable-htmlsaveoptionsexportcommentsast.cs
+- include-cell-tooltip-information-in-the-html-generated-when-converting-an-xlsx-w.cs
