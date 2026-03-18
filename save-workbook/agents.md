@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - persist-the-workbook-as-an-xlsx-file-on-disk-ensuring-compliance-with-the-open-x.cs
 - write-the-workbooks-contents-directly-to-an-in-memory-stream-in-the-xlsx-file-fo.cs
 - serialize-the-workbook-into-an-xlsx-byte-array-for-in-memory-processing-or-trans.cs
+- write-the-workbook-to-an-http-response-stream-as-an-xlsx-file-ensuring-proper-he.cs
