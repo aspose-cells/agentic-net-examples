@@ -1206,6 +1206,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "assign-a-comment-to-a-table-or-list-object-within-a-worksheet-of-an-xlsx-workboo.cs",
+      "title": "Assign a comment to a table or list object within a worksheet of an XLSX workbook."
+    },
+    {
+      "category": "working-with-tables",
       "file": "generate-a-data-table-from-the-contents-of-an-xlsx-workbook-preserving-cell-form.cs",
       "title": "Generate a data table from the contents of an XLSX workbook, preserving cell formatting and structural hierarchy."
     },
