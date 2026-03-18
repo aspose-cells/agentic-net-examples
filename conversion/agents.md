@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - transform-an-xlsx-workbook-into-a-pptx-presentation-generating-a-powerpoint-file.cs
 - transform-an-xlsx-workbook-into-an-ods-file-ensuring-data-fidelity-and-format-co.cs
 - transform-an-xlsx-workbook-into-csv-tsv-and-txt-files-generating-each-output-for.cs
+- transform-an-xlsx-workbook-into-a-csv-file-removing-any-leading-empty-rows-and-c.cs
