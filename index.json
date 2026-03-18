@@ -1208,6 +1208,11 @@
       "category": "working-with-tables",
       "file": "transform-a-data-collection-into-an-excel-listobject-by-loading-it-from-an-xlsx-.cs",
       "title": "Transform a data collection into an Excel ListObject by loading it from an XLSX workbook."
+    },
+    {
+      "category": "working-with-tables",
+      "file": "transform-a-worksheet-table-within-an-xlsx-file-into-an-ods-document-and-persist.cs",
+      "title": "Transform a worksheet table within an XLSX file into an ODS document and persist the output as ODS."
     }
   ]
 }
