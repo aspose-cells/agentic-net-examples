@@ -11,6 +11,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-an-xlsx-workbook-to-csv-format-preserving-delimiter-placeholders-for-emp.cs",
+      "title": "Convert an XLSX workbook to CSV format, preserving delimiter placeholders for empty rows while ensuring proper row alignment."
+    },
+    {
+      "category": "conversion",
       "file": "transform-a-workbook-in-xlsx-format-into-an-xml-file-using-the-librarys-conversi.cs",
       "title": "Transform a workbook in XLSX format into an XML file using the library\u2019s conversion capabilities."
     },
