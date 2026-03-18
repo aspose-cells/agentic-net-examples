@@ -341,6 +341,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "execute-the-provided-code-to-localize-subtotal-and-grand-total-labels-in-an-xlsx.cs",
+      "title": "Execute the provided code to localize subtotal and grand total labels in an XLSX workbook."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "identify-and-demonstrate-formulalocal-localization-scenarios-on-a-workbook-loade.cs",
       "title": "Identify and demonstrate FormulaLocal localization scenarios on a workbook loaded from an XLSX file."
     },
