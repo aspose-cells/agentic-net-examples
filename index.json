@@ -2136,6 +2136,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-excel-workbook-containing-json-data-into-a-json-output-while-preser.cs",
+      "title": "Transform an Excel workbook containing JSON data into a JSON output while preserving cell values and structures."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-html-workbook-into-a-json-representation-preserving-cell-data-forma.cs",
       "title": "Transform an HTML workbook into a JSON representation, preserving cell data, formatting metadata, and structure."
     },
