@@ -1926,6 +1926,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "transfer-workbook-custom-properties-into-a-pdf-output-during-conversion-while-re.cs",
+      "title": "Transfer workbook custom properties into a PDF output during conversion while retaining their metadata values."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "transform-an-excel-workbook-into-a-pdf-document-by-applying-the-standard-workboo.cs",
       "title": "Transform an Excel workbook into a PDF document by applying the standard workbook\u2011to\u2011PDF conversion routine."
     },
