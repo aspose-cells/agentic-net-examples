@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - transform-an-htmlformatted-json-file-into-a-csv-dataset-preserving-field-mapping.cs
 - transform-an-mht-formatted-json-file-into-a-csv-dataset-while-maintaining-field-.cs
 - convert-an-mhtml-json-file-into-csv-format-while-maintaining-data-integrity-and-.cs
+- transform-data-from-an-xml-or-json-source-file-into-a-csv-file-preserving-field-.cs
