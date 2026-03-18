@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - ensure-div-layout-is-retained-when-importing-html-content-and-exporting-to-xlsx-.cs
 - configure-html-load-options-to-import-html-content-and-export-it-as-an-xlsx-work.cs
 - load-an-html-document-and-convert-it-to-an-xlsx-workbook-while-preserving-cell-d.cs
+- export-an-xlsx-workbook-to-html-preserving-righttoleft-text-expansion-during-the.cs
