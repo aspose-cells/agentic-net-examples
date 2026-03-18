@@ -1521,6 +1521,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-file-and-export-it-to-html-applying-the-presentationpreference-sett.cs",
+      "title": "Load an XLSX file and export it to HTML applying the PresentationPreference setting for improved layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-file-and-export-it-to-html-extracting-styles-into-an-external-css-s.cs",
       "title": "Load an XLSX file and export it to HTML, extracting styles into an external CSS stylesheet."
     },
