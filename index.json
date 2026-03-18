@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-xlsx-workbook-to-html-enabling-htmlsaveoptionsexportdocumentpropertie.cs",
+      "title": "Convert an XLSX workbook to HTML, enabling HtmlSaveOptions.ExportDocumentProperties to include document, workbook, and worksheet metadata."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-downlevel-revealed-comments-during-the-conversion-of-an-xlsx-workbook-fi.cs",
       "title": "Disable downlevel-revealed comments during the conversion of an XLSX workbook file to HTML format."
     },
