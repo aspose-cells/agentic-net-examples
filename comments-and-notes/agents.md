@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - invoke-a-context-menu-on-the-target-cell-of-an-opened-xlsx-workbook-to-add-a-com.cs
 - implement-threaded-comments-functionality-within-a-workbook-loaded-from-an-xlsx-.cs
 - insert-threaded-comments-into-an-xlsx-workbook-after-loading-it-enabling-collabo.cs
+- retrieve-threaded-comments-from-an-xlsx-workbook-loaded-into-memory-preserving-c.cs
