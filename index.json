@@ -1076,6 +1076,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "persist-a-workbook-to-xlsx-using-various-supported-saving-techniques-ensuring-da.cs",
+      "title": "Persist a workbook to XLSX using various supported saving techniques, ensuring data integrity and format compliance."
+    },
+    {
+      "category": "save-workbook",
       "file": "persist-the-workbook-as-an-xlsx-file-on-disk-ensuring-compliance-with-the-open-x.cs",
       "title": "Persist the workbook as an XLSX file on disk, ensuring compliance with the Open XML format."
     },
