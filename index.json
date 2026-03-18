@@ -141,6 +141,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-from-custom-objects-into-an-xlsx-workbook-and-verify-the-merged-cell.cs",
+      "title": "Import data from custom objects into an XLSX workbook and verify the merged cell regions programmatically."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-from-custom-objects-into-an-xlsx-workbook-programmatically-mapping-o.cs",
       "title": "Import data from custom objects into an XLSX workbook programmatically, mapping object properties to worksheet cells."
     },
