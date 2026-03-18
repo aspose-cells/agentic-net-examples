@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - convert-an-odsformatted-json-file-into-an-xlsx-workbook-preserving-data-types-an.cs
 - transform-a-csv-or-json-data-file-into-an-xlsx-workbook-preserving-data-types-an.cs
 - transform-a-tsvformatted-json-file-into-an-excel-workbook-preserving-the-origina.cs
+- transform-a-txt-json-file-into-an-excel-workbook-mapping-json-structures-to-corr.cs
