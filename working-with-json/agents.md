@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - transform-an-xltx-csv-document-into-json-format-using-the-provided-default-conve.cs
 - transform-an-xls-spreadsheet-into-a-json-representation-preserving-data-fidelity.cs
 - transform-an-xlsx-workbook-into-a-json-representation-preserving-cell-data-types.cs
+- transform-an-xlsm-workbook-into-a-json-representation-preserving-cell-data-formu.cs
