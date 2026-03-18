@@ -1111,6 +1111,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "save-a-workbook-to-xlsx-format-while-applying-compression-settings-to-efficientl.cs",
+      "title": "Save a workbook to XLSX format while applying compression settings to efficiently minimize file size."
+    },
+    {
+      "category": "save-workbook",
       "file": "save-the-workbook-as-a-strict-open-xml-xlsx-file-using-saveoptions-to-ensure-com.cs",
       "title": "Save the workbook as a Strict Open XML XLSX file using SaveOptions to ensure compliance."
     },
