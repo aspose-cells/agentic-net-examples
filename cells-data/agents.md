@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - retrieve-or-manipulate-individual-cells-within-an-xlsx-worksheet-programmaticall.cs
 - retrieve-and-manipulate-individual-cells-within-an-xlsx-workbook-using-the-provi.cs
 - retrieve-the-worksheets-full-display-range-from-an-xlsx-file-returning-the-maxim.cs
+- retrieve-a-cell-object-by-its-named-reference-from-an-xlsx-worksheet-within-the-.cs
