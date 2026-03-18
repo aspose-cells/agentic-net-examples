@@ -1281,6 +1281,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-automatic-row-fitting-when-loading-html-by-setting-htmlloadoptionsautofit.cs",
+      "title": "Enable automatic row fitting when loading HTML by setting HtmlLoadOptions.AutoFitRows to true, then convert the document to XLSX."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-comment-export-by-setting-htmlsaveoptionsexportcomments-to-true-when-load.cs",
       "title": "Enable comment export by setting HtmlSaveOptions.ExportComments to true when loading an XLSX file and saving as HTML."
     },
