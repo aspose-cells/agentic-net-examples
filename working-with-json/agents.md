@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - transform-a-txt-json-file-into-an-excel-workbook-mapping-json-structures-to-corr.cs
 - transform-an-htmlformatted-json-file-into-an-excel-workbook-mapping-data-to-appr.cs
 - transform-an-mht-json-file-into-an-excel-workbook-while-retaining-data-fidelity-.cs
+- transform-a-numbers-json-export-into-an-xlsx-workbook-preserving-data-types-and-.cs
