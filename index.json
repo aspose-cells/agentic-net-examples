@@ -1296,6 +1296,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-document-and-convert-it-to-an-xlsx-workbook-while-preserving-cell-d.cs",
+      "title": "Load an HTML document and convert it to an XLSX workbook while preserving cell data and formatting."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-html-file-into-a-workbook-enable-htmlloadoptionspreservedivlayout-and-sa.cs",
       "title": "Load an HTML file into a workbook, enable HtmlLoadOptions.PreserveDivLayout, and save the result as XLSX."
     },
