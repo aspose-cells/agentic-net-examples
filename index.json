@@ -1226,6 +1226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-htmlsaveoptionsexcludeunusedstyles-during-xlsx-loading-and-html-export-to.cs",
+      "title": "Enable HtmlSaveOptions.ExcludeUnusedStyles during XLSX loading and HTML export to omit the unused CSS definitions."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsexportheadings-before-converting-an-xlsx-workbook-to-html-.cs",
       "title": "Enable HtmlSaveOptions.ExportHeadings before converting an XLSX workbook to HTML to retain the worksheet headings."
     },
