@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-extract-its-defined-print-area-and-generate-an-html-repres.cs
 - export-the-worksheets-defined-print-area-to-html-by-setting-htmlsaveoptionsexpor.cs
 - configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs
+- load-an-xlsx-workbook-specify-a-print-area-and-export-that-region-to-html-format.cs
