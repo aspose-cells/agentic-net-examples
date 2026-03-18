@@ -21,6 +21,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-data-validation-rules-to-xlsx-worksheets-using-the-provided-net-api-for-ce.cs",
+      "title": "Apply data validation rules to XLSX worksheets using the provided .NET API for cell constraints."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs",
       "title": "Apply filtering criteria to data within an XLSX spreadsheet to display rows that meet specified conditions."
     },
