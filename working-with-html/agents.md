@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - ensure-that-cell-comments-are-retained-in-the-generated-html-when-loading-an-xls.cs
 - load-an-xlsx-workbook-and-export-it-to-html-format-preserving-gridlines-in-the-r.cs
 - load-an-xlsx-worksheet-and-save-it-as-html-using-htmlsaveoptionsexportgridlines-.cs
+- load-an-xlsx-workbook-enable-htmlsaveoptionsexportgridlines-and-save-the-file-as.cs
