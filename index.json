@@ -811,6 +811,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "implement-functionality-to-add-new-contenttypeproperties-or-modify-existing-ones.cs",
+      "title": "Implement functionality to add new ContentTypeProperties or modify existing ones within the file\u2019s metadata."
+    },
+    {
+      "category": "manage-workbook",
       "file": "insert-a-custom-xml-part-into-the-workbook-to-store-additional-metadata-alongsid.cs",
       "title": "Insert a custom XML part into the workbook to store additional metadata alongside the spreadsheet content."
     },
