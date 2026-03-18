@@ -2006,6 +2006,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-mht-formatted-json-file-into-a-csv-dataset-while-maintaining-field-.cs",
+      "title": "Transform an MHT-formatted JSON file into a CSV dataset while maintaining field mappings and data types."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-ods-workbook-into-a-json-representation-preserving-cell-data-and-wo.cs",
       "title": "Transform an ODS workbook into a JSON representation, preserving cell data and worksheet hierarchy."
     },
