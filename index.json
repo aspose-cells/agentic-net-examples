@@ -191,6 +191,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-the-cells-string-content-from-an-xlsx-worksheet-both-with-its-original-.cs",
+      "title": "Retrieve the cell's string content from an XLSX worksheet both with its original formatting and as plain text."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-the-worksheets-full-display-range-from-an-xlsx-file-returning-the-maxim.cs",
       "title": "Retrieve the worksheet's full display range from an XLSX file, returning the maximal cell boundaries."
     },
