@@ -101,6 +101,11 @@
     },
     {
       "category": "cells-data",
+      "file": "sort-rows-in-an-xlsx-workbook-based-on-cell-background-color-while-maintaining-d.cs",
+      "title": "Sort rows in an XLSX workbook based on cell background color while maintaining data integrity."
+    },
+    {
+      "category": "cells-data",
       "file": "sort-spreadsheet-data-programmatically-when-working-with-xlsx-files-maintaining-.cs",
       "title": "Sort spreadsheet data programmatically when working with XLSX files, maintaining original formatting and data types."
     },
