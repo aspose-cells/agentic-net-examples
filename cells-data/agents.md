@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - enumerate-and-describe-the-supported-data-validation-types-applicable-to-workshe.cs
 - generate-an-xlsx-file-by-exporting-worksheet-data-using-net-apis-while-preservin.cs
 - provide-a-concise-overview-of-the-librarys-features-presented-in-an-xlsx-workboo.cs
+- export-excel-data-using-c-to-generate-an-xlsx-file-while-maintaining-worksheet-f.cs
