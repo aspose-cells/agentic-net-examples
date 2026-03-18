@@ -336,6 +336,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "apply-localization-to-a-spreadsheet-by-configuring-globalizationsettings-to-cust.cs",
+      "title": "Apply localization to a spreadsheet by configuring GlobalizationSettings to customize subtotal and pie chart labels in an XLSX workbook."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "execute-the-cellformulalocal-sample-on-an-xlsx-workbook-to-apply-localespecific-.cs",
       "title": "Execute the Cell.FormulaLocal sample on an XLSX workbook to apply locale\u2011specific formulas throughout the spreadsheet."
     },
