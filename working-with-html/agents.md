@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - render-spreadsheet-gridlines-during-conversion-of-an-xlsx-workbook-to-html-outpu.cs
 - include-document-workbook-and-worksheet-metadata-during-xlsx-to-html-conversion-.cs
 - convert-an-xlsx-workbook-to-html-enabling-htmlsaveoptionsexportdocumentpropertie.cs
+- enable-htmlsaveoptionsexportdocumentproperties-when-converting-an-xlsx-workbook-.cs
