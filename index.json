@@ -1986,6 +1986,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-prn-json-file-into-csv-format-preserving-data-fidelity-and-appropria.cs",
+      "title": "Transform a PRN JSON file into CSV format, preserving data fidelity and appropriate field mapping."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-prn-workbook-into-a-json-representation-preserving-data-fidelity-and.cs",
       "title": "Transform a PRN workbook into a JSON representation, preserving data fidelity and structure for further processing."
     },
