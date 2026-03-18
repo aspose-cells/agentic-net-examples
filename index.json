@@ -1796,6 +1796,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "specify-a-default-typeface-when-loading-an-xlsx-workbook-and-exporting-it-to-htm.cs",
+      "title": "Specify a default typeface when loading an XLSX workbook and exporting it to HTML output."
+    },
+    {
+      "category": "working-with-html",
       "file": "specify-cross-string-handling-behavior-when-loading-an-xlsx-workbook-and-saving-.cs",
       "title": "Specify cross-string handling behavior when loading an XLSX workbook and saving it as HTML output."
     },
