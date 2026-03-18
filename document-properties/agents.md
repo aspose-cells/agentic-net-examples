@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - remove-all-custom-document-properties-from-an-xlsx-workbook-programmatically-usi.cs
 - set-retrieve-and-modify-metadata-properties-of-an-xlsx-workbook-including-custom.cs
 - inspect-and-retrieve-metadata-properties-from-an-xlsx-workbook-programmatically-.cs
+- create-read-update-and-delete-workbook-document-properties-within-an-xlsx-file-u.cs
