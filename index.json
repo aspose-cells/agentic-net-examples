@@ -1211,6 +1211,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-downlevel-revealed-comments-during-the-conversion-of-an-xlsx-workbook-fi.cs",
+      "title": "Disable downlevel-revealed comments during the conversion of an XLSX workbook file to HTML format."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsexportheadings-before-converting-an-xlsx-workbook-to-html-.cs",
       "title": "Enable HtmlSaveOptions.ExportHeadings before converting an XLSX workbook to HTML to retain the worksheet headings."
     },
