@@ -1976,6 +1976,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-txt-json-file-into-csv-format-while-preserving-data-integrity-and-ma.cs",
+      "title": "Transform a TXT JSON file into CSV format while preserving data integrity and maintaining field mappings."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-txt-workbook-into-a-json-representation-preserving-all-data-fidelity.cs",
       "title": "Transform a TXT workbook into a JSON representation, preserving all data fidelity and structural hierarchy."
     },
