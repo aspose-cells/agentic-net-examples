@@ -236,6 +236,11 @@
     },
     {
       "category": "document-properties",
+      "file": "implement-custom-datetime-properties-within-an-xlsx-workbook-using-the-apis-prop.cs",
+      "title": "Implement custom DateTime properties within an XLSX workbook using the API's property collection features."
+    },
+    {
+      "category": "document-properties",
       "file": "insert-custom-document-properties-into-an-xlsx-workbook-to-store-additional-meta.cs",
       "title": "Insert custom document properties into an XLSX workbook to store additional metadata for downstream processing."
     },
