@@ -1371,6 +1371,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-document-into-memory-and-export-it-directly-as-a-pdf-file-while-pre.cs",
+      "title": "Load an HTML document into memory and export it directly as a PDF file while preserving layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-html-document-using-htmlloadoptions-and-convert-it-directly-to-a-pdf-fil.cs",
       "title": "Load an HTML document using HtmlLoadOptions and convert it directly to a PDF file."
     },
