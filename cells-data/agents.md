@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - retrieve-a-comprehensive-list-of-documentation-articles-associated-with-a-workbo.cs
 - load-data-from-an-xlsx-file-into-a-worksheet-mapping-cells-to-the-appropriate-da.cs
 - import-data-into-a-worksheet-from-an-xlsx-file-programmatically-mapping-cells-to.cs
+- import-data-into-an-xlsx-workbook-via-the-icellsdatatable-interface-mapping-colu.cs
