@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - load-an-xlsx-file-and-export-it-to-html-applying-the-presentationpreference-sett.cs
 - apply-presentationpreference-settings-when-loading-an-xlsx-workbook-and-exportin.cs
 - export-an-xlsx-worksheet-to-html-configuring-htmlsaveoptionslinktarget_blank-so-.cs
+- load-an-xlsx-workbook-configure-htmlsaveoptions-with-linktarget-set-to-_blank-an.cs
