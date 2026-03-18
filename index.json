@@ -261,6 +261,11 @@
     },
     {
       "category": "document-properties",
+      "file": "set-the-workbooks-language-programmatically-via-its-builtin-document-properties-.cs",
+      "title": "Set the workbook's language programmatically via its built\u2011in document properties in the XLSX file."
+    },
+    {
+      "category": "document-properties",
       "file": "set-up-a-custom-property-named-link-to-content-within-an-xlsx-workbook-using-the.cs",
       "title": "Set up a custom property named \u201clink to content\u201d within an XLSX workbook using the API."
     }
