@@ -1611,6 +1611,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-save-it-as-html-with-css-custom-properties-enabled-via.cs",
+      "title": "Load an XLSX workbook and save it as HTML with CSS custom properties enabled via HtmlSaveOptions.EnableCssCustomProperties."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-save-it-as-html-without-explicitly-including-css-style.cs",
       "title": "Load an XLSX workbook and save it as HTML without explicitly including CSS styles."
     },
