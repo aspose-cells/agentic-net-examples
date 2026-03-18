@@ -2051,6 +2051,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-json-representation-of-xlsx-data-into-a-fully-compatible-native-exce.cs",
+      "title": "Transform a JSON representation of XLSX data into a fully compatible native Excel workbook file."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-numbers-generated-csv-file-into-a-json-document-preserving-data-type.cs",
       "title": "Transform a Numbers-generated CSV file into a JSON document, preserving data types and column structure."
     },
