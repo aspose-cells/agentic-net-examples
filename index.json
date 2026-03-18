@@ -1226,6 +1226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-worksheet-and-save-it-as-html-enabling-htmlsaveoptionsexportheading.cs",
+      "title": "Load an XLSX worksheet and save it as HTML, enabling HtmlSaveOptions.ExportHeadings to retain headings."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-xlsx-spreadsheets-as-a-supported-input-format-for-processing-preserving-wor.cs",
       "title": "Load XLSX spreadsheets as a supported input format for processing, preserving worksheet integrity and cell data."
     },
