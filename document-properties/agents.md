@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - programmatically-delete-all-custom-document-properties-from-an-xlsx-workbook-to-.cs
 - remove-all-custom-document-properties-from-an-xlsx-workbook-programmatically-usi.cs
+- set-retrieve-and-modify-metadata-properties-of-an-xlsx-workbook-including-custom.cs
