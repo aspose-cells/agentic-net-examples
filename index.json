@@ -271,6 +271,11 @@
     },
     {
       "category": "document-properties",
+      "file": "mark-all-hyperlinks-as-uptodate-by-setting-the-linksuptodate-property-to-true-in.cs",
+      "title": "Mark all hyperlinks as up\u2011to\u2011date by setting the LinksUpToDate property to TRUE in an XLSX workbook."
+    },
+    {
+      "category": "document-properties",
       "file": "programmatically-delete-all-custom-document-properties-from-an-xlsx-workbook-to-.cs",
       "title": "Programmatically delete all custom document properties from an XLSX workbook to clean its metadata thoroughly."
     },
