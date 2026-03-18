@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - run-sample-localization-code-to-translate-error-messages-and-boolean-values-in-a.cs
 - execute-the-provided-code-to-localize-subtotal-and-grand-total-labels-in-an-xlsx.cs
 - apply-localization-to-a-spreadsheet-by-configuring-globalizationsettings-to-cust.cs
+- apply-globalization-settings-to-localize-subtotal-and-pie-chart-labels-in-an-xls.cs
