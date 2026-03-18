@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - when-converting-an-xlsx-workbook-to-html-enable-htmlsaveoptionsexportcommentsast.cs
 - include-cell-tooltip-information-in-the-html-generated-when-converting-an-xlsx-w.cs
 - when-converting-an-xlsx-workbook-to-html-ensure-hidden-worksheet-elements-are-ex.cs
+- load-an-xlsx-workbook-and-export-it-to-html-with-htmlsaveoptionsexporthiddenelem.cs
