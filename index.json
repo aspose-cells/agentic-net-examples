@@ -2031,6 +2031,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-tab-delimited-csv-file-into-a-json-representation-preserving-data-ty.cs",
+      "title": "Transform a tab-delimited CSV file into a JSON representation, preserving data types and hierarchical structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-tab-workbook-into-a-json-representation-preserving-cell-data-types-a.cs",
       "title": "Transform a TAB workbook into a JSON representation, preserving cell data types and worksheet hierarchy."
     },
