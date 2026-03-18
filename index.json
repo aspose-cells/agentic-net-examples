@@ -1416,6 +1416,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-document-into-a-workbook-enable-column-and-row-autofit-via-htmlload.cs",
+      "title": "Load an HTML document into a workbook, enable column and row AutoFit via HtmlLoadOptions, then save the result as an XLSX file."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-html-document-into-memory-and-export-it-directly-as-a-pdf-file-while-pre.cs",
       "title": "Load an HTML document into memory and export it directly as a PDF file while preserving layout."
     },
