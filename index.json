@@ -5,6 +5,11 @@
   "framework": ".NET",
   "examples": [
     {
+      "category": "comments-and-notes",
+      "file": "delete-all-threaded-comments-from-an-xlsx-workbook-after-loading-the-file-into-m.cs",
+      "title": "Delete all threaded comments from an XLSX workbook after loading the file into memory."
+    },
+    {
       "category": "conversion",
       "file": "convert-an-xlsx-workbook-to-a-tiff-image-file-preserving-visual-fidelity-and-lay.cs",
       "title": "Convert an XLSX workbook to a TIFF image file, preserving visual fidelity and layout."
