@@ -1101,6 +1101,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "save-a-workbook-in-strict-open-xml-xlsx-format-utilizing-the-provided-example-co.cs",
+      "title": "Save a workbook in Strict Open XML XLSX format utilizing the provided example code."
+    },
+    {
+      "category": "save-workbook",
       "file": "save-a-workbook-to-various-file-formats-using-default-settings-specifying-xlsx-a.cs",
       "title": "Save a workbook to various file formats using default settings, specifying XLSX as the output format."
     },
