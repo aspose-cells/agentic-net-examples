@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - modify-a-threaded-comment-within-an-xlsx-workbook-programmatically-using-the-exc.cs
 - modify-a-threaded-comment-in-an-xlsx-workbook-programmatically-using-the-net-spr.cs
 - provide-sample-code-demonstrating-operations-on-a-workbook-opened-from-an-xlsx-f.cs
+- read-an-xlsx-workbook-and-write-its-contents-to-the-console-output-preserving-ce.cs
