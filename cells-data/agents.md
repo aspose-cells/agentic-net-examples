@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - implement-data-validation-rules-on-cells-within-an-xlsx-workbook-using-net-apis-.cs
 - implement-various-data-validation-types-in-xlsx-files-and-execute-them-programma.cs
 - determine-whether-a-cells-data-validation-in-an-xlsx-workbook-is-configured-as-a.cs
+- enhance-the-current-xlsx-validation-by-incorporating-a-cellarea-definition-into-.cs
