@@ -1126,6 +1126,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "save-the-workbook-to-xlsx-format-while-configuring-a-custom-compression-level-fo.cs",
+      "title": "Save the workbook to XLSX format while configuring a custom compression level for optimized file size."
+    },
+    {
+      "category": "save-workbook",
       "file": "serialize-the-workbook-into-a-byte-array-using-default-options-producing-an-xlsx.cs",
       "title": "Serialize the workbook into a byte array using default options, producing an XLSX file representation."
     },
