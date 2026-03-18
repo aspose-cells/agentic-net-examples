@@ -941,6 +941,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs",
+      "title": "Create or inspect data connections within an XLSX workbook through the API\u2019s default handling mechanisms."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs",
       "title": "Obtain the SQL connection details from a workbook saved in the default XLSX format."
     },
