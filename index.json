@@ -1211,6 +1211,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-presentationpreference-settings-when-loading-an-xlsx-workbook-and-exportin.cs",
+      "title": "Apply PresentationPreference settings when loading an XLSX workbook and exporting to HTML to enhance layout rendering."
+    },
+    {
+      "category": "working-with-html",
       "file": "approximate-unsupported-cell-borders-when-converting-an-xlsx-workbook-to-html-ou.cs",
       "title": "Approximate unsupported cell borders when converting an XLSX workbook to HTML output to maintain visual fidelity."
     },
