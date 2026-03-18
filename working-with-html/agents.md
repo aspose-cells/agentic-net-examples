@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-export-it-to-html-with-htmlsaveoptionsexporthiddenelem.cs
 - load-an-xlsx-workbook-configure-export-settings-to-omit-hidden-rows-columns-and-.cs
 - transform-an-xlsx-workbook-into-html-using-htmlsaveoptions-with-presentationpref.cs
+- load-an-xlsx-workbook-configure-htmlsaveoptionspresentationpreference-to-bestfit.cs
