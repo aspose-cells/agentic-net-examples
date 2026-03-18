@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - apply-worksheet-protection-to-an-xlsx-file-to-prevent-unintended-row-and-column-.cs
 - transform-a-worksheet-table-within-an-xlsx-file-into-an-ods-document-and-persist.cs
 - identify-query-tables-and-list-objects-that-are-linked-to-external-data-connecti.cs
+- generate-a-data-table-from-the-contents-of-an-xlsx-workbook-preserving-cell-form.cs
