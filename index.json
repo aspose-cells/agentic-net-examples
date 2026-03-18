@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "conversion",
+      "file": "convert-an-xlsx-workbook-to-a-tiff-image-file-preserving-visual-fidelity-and-lay.cs",
+      "title": "Convert an XLSX workbook to a TIFF image file, preserving visual fidelity and layout."
+    },
+    {
+      "category": "conversion",
       "file": "transform-a-workbook-in-xlsx-format-into-an-xml-file-using-the-librarys-conversi.cs",
       "title": "Transform a workbook in XLSX format into an XML file using the library\u2019s conversion capabilities."
     },
