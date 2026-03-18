@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - access-the-document-information-panel-of-an-xlsx-workbook-to-display-its-custom-.cs
 - configure-the-scalecrop-built-in-property-for-an-xlsx-workbook-to-adjust-its-sca.cs
 - update-the-linksuptodate-builtin-property-of-an-xlsx-workbook-to-reflect-its-cur.cs
+- activate-thumbnail-scaling-in-an-xlsx-workbook-by-configuring-the-scalecrop-prop.cs
