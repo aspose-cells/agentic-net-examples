@@ -211,6 +211,11 @@
     },
     {
       "category": "document-properties",
+      "file": "identify-and-document-various-scenarios-for-configuring-the-language-property-wi.cs",
+      "title": "Identify and document various scenarios for configuring the language property within an XLSX workbook."
+    },
+    {
+      "category": "document-properties",
       "file": "identify-relevant-usage-scenarios-for-configuring-the-document-version-property-.cs",
       "title": "Identify relevant usage scenarios for configuring the document version property within an XLSX workbook."
     },
