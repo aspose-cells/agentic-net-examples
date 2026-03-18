@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - programmatically-generate-row-level-subtotals-in-an-xlsx-worksheet-by-applying-s.cs
 - create-and-manipulate-excel-workbooks-programmatically-storing-all-data-in-the-x.cs
 - employ-the-net-api-to-programmatically-read-modify-and-generate-spreadsheet-data.cs
+- apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs
