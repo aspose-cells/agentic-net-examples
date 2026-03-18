@@ -2091,6 +2091,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-data-from-an-xml-or-json-source-file-into-a-csv-file-preserving-field-.cs",
+      "title": "Transform data from an XML or JSON source file into a CSV file, preserving field integrity."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-ods-json-data-into-csv-format-preserving-field-mappings-and-ensuring-p.cs",
       "title": "Transform ODS JSON data into CSV format, preserving field mappings and ensuring proper encoding."
     },
