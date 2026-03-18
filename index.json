@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "cells-data",
+      "file": "retrieve-and-manipulate-individual-cells-within-an-xlsx-workbook-using-the-provi.cs",
+      "title": "Retrieve and manipulate individual cells within an XLSX workbook using the provided API methods."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-or-manipulate-individual-cells-within-an-xlsx-worksheet-programmaticall.cs",
       "title": "Retrieve or manipulate individual cells within an XLSX worksheet programmatically via the .NET API."
     },
