@@ -2196,6 +2196,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-data-from-an-sxc-csv-file-into-a-json-representation-preserving-all-fi.cs",
+      "title": "Transform data from an SXC CSV file into a JSON representation, preserving all field values accurately."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-data-from-an-xls-csv-file-into-json-format-preserving-all-rows-and-col.cs",
       "title": "Transform data from an XLS CSV file into JSON format, preserving all rows and column values."
     },
