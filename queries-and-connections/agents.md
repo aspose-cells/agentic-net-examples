@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs
 - programmatically-open-an-xlsx-workbook-retrieve-its-data-connections-and-apply-m.cs
 - retrieve-source-and-output-excel-files-load-the-source-xlsx-workbook-then-export.cs
+- create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs
