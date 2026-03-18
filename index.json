@@ -1271,6 +1271,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "trim-unnecessary-whitespace-following-line-breaks-during-csv-import-to-ensure-cl.cs",
+      "title": "Trim unnecessary whitespace following line breaks during CSV import to ensure clean data parsing."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-loading-an-xlsx-file-configure-the-required-custom-culture-settings-to-ensu.cs",
       "title": "When loading an XLSX file, configure the required custom culture settings to ensure correct data parsing."
     },
