@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - develop-a-class-implementing-ifilepathprovider-overriding-getfilepath-to-load-xl.cs
 - specify-custom-output-locations-when-loading-an-xlsx-workbook-and-exporting-it-a.cs
 - load-an-xlsx-workbook-into-memory-and-export-it-as-an-html-document-while-preser.cs
+- when-converting-an-xlsx-worksheet-to-html-generate-the-stylesheet-as-a-distinct-.cs
