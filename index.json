@@ -236,6 +236,11 @@
     },
     {
       "category": "document-properties",
+      "file": "provide-example-code-to-assign-a-language-identifier-to-an-xlsx-workbook-program.cs",
+      "title": "Provide example code to assign a language identifier to an XLSX workbook programmatically using the .NET API."
+    },
+    {
+      "category": "document-properties",
       "file": "provide-sample-code-that-configures-the-workbooks-document-version-property-for-.cs",
       "title": "Provide sample code that configures the workbook's document version property for an XLSX file."
     },
