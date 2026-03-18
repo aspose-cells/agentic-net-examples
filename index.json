@@ -1076,6 +1076,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "compress-an-xlsx-workbook-using-the-highest-compression-level-to-minimize-result.cs",
+      "title": "Compress an XLSX workbook using the highest compression level to minimize resulting file size."
+    },
+    {
+      "category": "save-workbook",
       "file": "configure-the-workbook-to-use-the-highest-compression-setting-when-saving-as-an-.cs",
       "title": "Configure the workbook to use the highest compression setting when saving as an XLSX file."
     },
