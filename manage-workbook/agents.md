@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - generate-a-shared-workbook-allowing-concurrent-editing-and-synchronization-acros.cs
 - examine-and-verify-all-prerequisite-conditions-system-requirements-and-dependenc.cs
 - open-a-workbook-file-in-the-net-environment-to-access-its-worksheets-and-data.cs
+- enable-shared-mode-for-the-workbook-allowing-multiple-users-to-edit-the-file-sim.cs
