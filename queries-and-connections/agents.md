@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - update-a-power-query-formula-item-in-an-xlsx-workbook-using-the-default-xlsx-for.cs
 - determine-whether-an-xlsx-workbook-includes-any-hidden-external-hyperlinks-when-.cs
 - identify-and-document-potential-use-cases-for-hidden-external-hyperlinks-in-the-.cs
+- retrieve-example-code-that-detects-hidden-external-hyperlinks-in-xlsx-files-usin.cs
