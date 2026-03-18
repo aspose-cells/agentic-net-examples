@@ -1211,6 +1211,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "generate-a-listobject-in-an-xlsx-worksheet-programmatically-using-the-net-api-wi.cs",
+      "title": "Generate a ListObject in an XLSX worksheet programmatically using the .NET API with appropriate cell range specification."
+    },
+    {
+      "category": "working-with-tables",
       "file": "identify-query-tables-and-list-objects-that-are-linked-to-external-data-connecti.cs",
       "title": "Identify query tables and list objects that are linked to external data connections within an XLSX workbook."
     },
