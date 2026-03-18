@@ -1336,6 +1336,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-css-custom-properties-during-conversion-of-an-xlsx-workbook-to-html-prese.cs",
+      "title": "Enable CSS custom properties during conversion of an XLSX workbook to HTML, preserving styling consistency."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsexcludeunusedstyles-during-xlsx-loading-and-html-export-to.cs",
       "title": "Enable HtmlSaveOptions.ExcludeUnusedStyles during XLSX loading and HTML export to omit the unused CSS definitions."
     },
