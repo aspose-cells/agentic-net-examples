@@ -1901,6 +1901,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xlsb-workbook-into-a-json-representation-preserving-cell-data-types.cs",
+      "title": "Transform an XLSB workbook into a JSON representation, preserving cell data types and worksheet structures."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsx-workbook-into-a-json-representation-mapping-sheets-and-cells-t.cs",
       "title": "Transform an XLSX workbook into a JSON representation, mapping sheets and cells to hierarchical objects."
     },
