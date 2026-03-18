@@ -1906,6 +1906,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-an-image-watermark-to-each-pdf-generated-during-the-conversion-of-an-excel.cs",
+      "title": "Apply an image watermark to each PDF generated during the conversion of an Excel workbook."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-conversion-options-to-control-pdf-output-characteristics-such-as-page-.cs",
       "title": "Configure conversion options to control PDF output characteristics, such as page layout and image quality, during Excel-to-PDF transformation."
     },
