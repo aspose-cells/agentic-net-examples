@@ -141,6 +141,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-a-dataview-into-an-xlsx-workbook-programmatically-mapping-columns-to-work.cs",
+      "title": "Import a DataView into an XLSX workbook programmatically, mapping columns to worksheet cells and preserving data types."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-from-a-dynamic-object-into-an-xlsx-workbook-using-it-as-the-data-sou.cs",
       "title": "Import data from a dynamic object into an XLSX workbook using it as the data source."
     },
