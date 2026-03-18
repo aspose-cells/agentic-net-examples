@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "cells-data",
+      "file": "convert-textformatted-numeric-cells-to-true-numeric-values-in-an-excel-worksheet.cs",
+      "title": "Convert text\u2011formatted numeric cells to true numeric values in an Excel worksheet and save the result as an XLSX file."
+    },
+    {
+      "category": "cells-data",
       "file": "identify-typical-application-scenarios-where-the-xlsx-format-can-be-utilized-wit.cs",
       "title": "Identify typical application scenarios where the XLSX format can be utilized within .NET solutions."
     },
