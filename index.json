@@ -56,6 +56,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "retrieve-all-threaded-comments-from-an-xlsx-workbook-programmatically-using-the-.cs",
+      "title": "Retrieve all threaded comments from an XLSX workbook programmatically using the .NET spreadsheet API."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "retrieve-threaded-comments-from-an-excel-workbook-that-has-been-loaded-in-xlsx-f.cs",
       "title": "Retrieve threaded comments from an Excel workbook that has been loaded in XLSX format."
     },
