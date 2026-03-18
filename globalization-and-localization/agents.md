@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - execute-the-provided-code-to-localize-subtotal-and-grand-total-labels-in-an-xlsx.cs
 - apply-localization-to-a-spreadsheet-by-configuring-globalizationsettings-to-cust.cs
 - apply-globalization-settings-to-localize-subtotal-and-pie-chart-labels-in-an-xls.cs
+- review-the-globalizationsettings-class-introduction-to-configure-localization-fo.cs
