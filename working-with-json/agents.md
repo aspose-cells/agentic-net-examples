@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - transform-a-spreadsheetml-excel-file-into-json-format-preserving-cell-data-types.cs
 - convert-a-numbers-excel-file-to-json-while-preserving-the-original-data-hierarch.cs
 - transform-a-fods-spreadsheet-into-a-json-representation-preserving-data-types-an.cs
+- convert-a-dif-spreadsheet-into-json-format-preserving-all-cell-data-types-and-wo.cs
