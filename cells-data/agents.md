@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - retrieve-the-cells-string-content-from-an-xlsx-worksheet-both-with-its-original-.cs
 - insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs
 - retrieve-a-comprehensive-list-of-documentation-articles-associated-with-a-workbo.cs
+- load-data-from-an-xlsx-file-into-a-worksheet-mapping-cells-to-the-appropriate-da.cs
