@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - transform-a-tabseparated-values-workbook-into-a-json-representation-preserving-c.cs
 - transform-a-txt-workbook-into-a-json-representation-preserving-all-data-fidelity.cs
 - transform-a-tab-workbook-into-a-json-representation-preserving-cell-data-types-a.cs
+- transform-an-html-workbook-into-a-json-representation-preserving-cell-data-forma.cs
