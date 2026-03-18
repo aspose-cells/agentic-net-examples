@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - identify-and-delete-any-style-definitions-in-the-workbook-that-are-not-applied-t.cs
 - invoke-the-removeunusedstyles-method-to-eliminate-any-styles-that-are-not-refere.cs
 - instantiate-a-customxmlpart-object-and-populate-it-with-the-specified-xml-string.cs
+- access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs
