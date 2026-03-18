@@ -55,6 +55,11 @@
       "title": "Retrieve the worksheet's full display range from an XLSX file, returning the maximal cell boundaries."
     },
     {
+      "category": "cells-data",
+      "file": "transform-numeric-strings-in-a-worksheet-to-true-numeric-types-and-save-the-work.cs",
+      "title": "Transform numeric strings in a worksheet to true numeric types and save the workbook as an XLSX file using .NET."
+    },
+    {
       "category": "comments-and-notes",
       "file": "activate-the-new-comment-button-on-a-workbook-loaded-in-xlsx-format-to-insert-a-.cs",
       "title": "Activate the New Comment button on a workbook loaded in XLSX format to insert a comment."
