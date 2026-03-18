@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - retrieve-a-cell-object-from-the-worksheets-cells-collection-using-its-zerobased-.cs
 - parse-stringbased-numeric-values-convert-them-to-numeric-types-and-generate-an-x.cs
 - implement-c-logic-that-parses-numeric-strings-into-numeric-types-and-writes-the-.cs
+- identify-typical-application-scenarios-where-the-xlsx-format-can-be-utilized-wit.cs
