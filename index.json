@@ -1911,6 +1911,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-dbf-workbook-into-json-format-preserving-data-integrity-and-structur.cs",
+      "title": "Transform a DBF workbook into JSON format, preserving data integrity and structure for downstream processing."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-dif-workbook-into-a-json-representation-preserving-cell-data-types-a.cs",
       "title": "Transform a DIF workbook into a JSON representation, preserving cell data types and overall structure."
     },
