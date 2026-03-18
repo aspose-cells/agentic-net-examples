@@ -1121,6 +1121,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "write-the-workbook-to-an-http-response-as-an-xlsx-file-using-default-serializati.cs",
+      "title": "Write the workbook to an HTTP response as an XLSX file using default serialization settings."
+    },
+    {
+      "category": "save-workbook",
       "file": "write-the-workbook-to-an-http-response-stream-as-an-xlsx-file-ensuring-proper-he.cs",
       "title": "Write the workbook to an HTTP response stream as an XLSX file, ensuring proper headers and content type."
     },
