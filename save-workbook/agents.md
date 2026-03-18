@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - save-the-workbook-as-an-xlsx-file-using-the-highest-possible-available-compressi.cs
 - save-the-workbook-to-xlsx-format-while-configuring-a-custom-compression-level-fo.cs
 - save-a-workbook-to-xlsx-format-while-applying-compression-settings-to-efficientl.cs
+- configure-the-workbook-to-use-the-highest-compression-setting-when-saving-as-an-.cs
