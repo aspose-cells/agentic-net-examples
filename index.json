@@ -1696,6 +1696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "specify-cross-string-handling-behavior-when-loading-an-xlsx-workbook-and-saving-.cs",
+      "title": "Specify cross-string handling behavior when loading an XLSX workbook and saving it as HTML output."
+    },
+    {
+      "category": "working-with-html",
       "file": "specify-custom-output-locations-when-loading-an-xlsx-workbook-and-exporting-it-a.cs",
       "title": "Specify custom output locations when loading an XLSX workbook and exporting it as HTML."
     },
