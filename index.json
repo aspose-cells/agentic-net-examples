@@ -766,6 +766,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "copy-a-worksheet-to-another-location-within-the-same-workbook-or-transfer-it-to-.cs",
+      "title": "Copy a worksheet to another location within the same workbook or transfer it to a different workbook."
+    },
+    {
+      "category": "manage-workbook",
       "file": "define-the-target-workbook-when-performing-copy-or-move-operations-between-separ.cs",
       "title": "Define the target workbook when performing copy or move operations between separate workbooks in code."
     },
