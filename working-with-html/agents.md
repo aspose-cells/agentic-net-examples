@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - when-loading-an-xlsx-file-and-saving-as-html-set-htmlsaveoptionsexportconditiona.cs
 - load-an-xlsx-workbook-and-export-it-to-html-while-retaining-all-conditional-form.cs
 - when-converting-an-xlsx-workbook-to-html-include-all-cell-comments-in-the-genera.cs
+- load-an-xlsx-workbook-enable-htmlsaveoptionsexportcomments-and-save-it-as-html-t.cs
