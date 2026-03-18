@@ -1091,6 +1091,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "save-a-workbook-to-various-file-formats-using-default-settings-specifying-xlsx-a.cs",
+      "title": "Save a workbook to various file formats using default settings, specifying XLSX as the output format."
+    },
+    {
+      "category": "save-workbook",
       "file": "serialize-the-workbook-into-a-byte-array-using-default-options-producing-an-xlsx.cs",
       "title": "Serialize the workbook into a byte array using default options, producing an XLSX file representation."
     },
