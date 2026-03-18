@@ -1246,6 +1246,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-an-xlsx-worksheet-to-html-with-databar-colorscale-and-iconset-conditional.cs",
+      "title": "Export an XLSX worksheet to HTML with DataBar, ColorScale, and IconSet conditional formatting by enabling HtmlSaveOptions.ExportConditionalFormatting."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-csv-file-with-loadoptionsnumberformat-to-retain-large-numeric-values-in-f.cs",
       "title": "Load a CSV file with LoadOptions.NumberFormat to retain large numeric values in full precision, avoiding exponential notation."
     },
