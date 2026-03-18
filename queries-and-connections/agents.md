@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - retrieve-example-code-that-detects-hidden-external-hyperlinks-in-xlsx-files-usin.cs
 - validate-hidden-external-links-in-an-xlsx-workbook-and-output-the-findings-to-a-.cs
 - preserve-the-ribbon-xml-within-an-xlsx-file-without-parsing-the-default-workbook.cs
+- modify-the-default-xlsx-workbook-to-customize-its-ribbon-xml-configuration-for-t.cs
