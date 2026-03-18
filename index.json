@@ -1906,6 +1906,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xltm-workbook-into-a-json-representation-preserving-cell-data-and-w.cs",
+      "title": "Transform an XLTM workbook into a JSON representation, preserving cell data and workbook structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xltx-workbook-into-a-json-representation-preserving-cell-data-and-f.cs",
       "title": "Transform an XLTX workbook into a JSON representation, preserving cell data and formatting details."
     },
