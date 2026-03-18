@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - obtain-the-result-range-of-a-query-table-from-a-workbook-saved-in-the-default-xl.cs
 - load-an-xlsx-workbook-execute-a-query-table-and-stream-the-results-to-the-consol.cs
 - retrieve-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs
+- obtain-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-format.cs
