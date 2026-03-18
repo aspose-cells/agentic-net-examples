@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - transform-an-xlsm-workbook-into-a-json-representation-preserving-cell-data-formu.cs
 - transform-an-xltx-workbook-into-a-json-representation-while-preserving-cell-data.cs
 - transform-an-xltm-workbook-into-a-json-representation-preserving-data-types-and-.cs
+- transform-an-xlsb-workbook-into-a-json-representation-preserving-cell-values-and.cs
