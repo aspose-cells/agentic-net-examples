@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - programmatically-delete-all-threaded-comments-from-an-xlsx-workbook-after-loadin.cs
 - activate-the-new-comment-button-on-a-workbook-loaded-in-xlsx-format-to-insert-a-.cs
 - trigger-the-new-comment-feature-on-an-opened-xlsx-workbook-to-add-a-comment-to-a.cs
+- programmatically-select-the-review-tab-on-the-ribbon-of-a-workbook-that-has-been.cs
