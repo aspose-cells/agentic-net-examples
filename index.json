@@ -201,6 +201,11 @@
     },
     {
       "category": "document-properties",
+      "file": "read-modify-or-create-document-properties-in-an-xlsx-workbook-via-the-net-api.cs",
+      "title": "Read, modify, or create document properties in an XLSX workbook via the .NET API."
+    },
+    {
+      "category": "document-properties",
       "file": "remove-all-custom-document-properties-from-an-xlsx-workbook-programmatically-usi.cs",
       "title": "Remove all custom document properties from an XLSX workbook programmatically using the DocumentPropertyCollection API."
     },
