@@ -191,6 +191,11 @@
     },
     {
       "category": "document-properties",
+      "file": "add-user-defined-properties-to-an-xlsx-workbook-so-they-appear-in-the-document-i.cs",
+      "title": "Add user-defined properties to an XLSX workbook so they appear in the Document Information Panel."
+    },
+    {
+      "category": "document-properties",
       "file": "analyze-how-the-language-property-is-managed-within-an-xlsx-workbook-and-ensure-.cs",
       "title": "Analyze how the language property is managed within an XLSX workbook and ensure correct localization behavior."
     },
