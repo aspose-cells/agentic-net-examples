@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - persist-a-workbook-to-xlsx-using-various-supported-saving-techniques-ensuring-da.cs
 - persist-the-workbook-to-an-xlsx-file-employing-default-configuration-settings-wi.cs
 - write-the-workbook-to-a-stream-in-xlsx-format-utilizing-the-default-serializatio.cs
+- serialize-the-workbook-into-a-byte-array-using-default-options-producing-an-xlsx.cs
