@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - convert-a-numbers-excel-file-to-json-while-preserving-the-original-data-hierarch.cs
 - transform-a-fods-spreadsheet-into-a-json-representation-preserving-data-types-an.cs
 - convert-a-dif-spreadsheet-into-json-format-preserving-all-cell-data-types-and-wo.cs
+- transform-a-dbf-excel-file-into-a-json-document-preserving-data-types-and-struct.cs
