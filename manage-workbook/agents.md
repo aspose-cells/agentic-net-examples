@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - retrieve-a-custom-xml-part-from-the-document-by-specifying-its-unique-id-value.cs
 - define-the-target-workbook-when-performing-copy-or-move-operations-between-separ.cs
 - copy-a-worksheet-to-another-location-within-the-same-workbook-or-transfer-it-to-.cs
+- copy-a-worksheet-to-another-location-within-the-same-workbook-while-preserving-i.cs
