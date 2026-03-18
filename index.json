@@ -1906,6 +1906,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-tabdelimited-excel-workbook-to-json-format-preserving-column-headers-a.cs",
+      "title": "Convert a TAB\u2011delimited Excel workbook to JSON format, preserving column headers and data types accurately."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-tsv-json-file-into-a-csv-document-while-maintaining-original-data-stru.cs",
       "title": "Convert a TSV JSON file into a CSV document while maintaining original data structure and encoding."
     },
