@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - load-an-xlsx-worksheet-and-save-it-as-html-enabling-htmlsaveoptionsexportheading.cs
 - enable-htmlsaveoptionsexportheadings-before-converting-an-xlsx-workbook-to-html-.cs
 - set-htmlsaveoptionsheadinglevel-to-define-the-resulting-heading-hierarchy-while-.cs
+- load-an-xlsx-workbook-and-export-it-to-html-using-configurable-html-save-options.cs
