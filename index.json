@@ -961,6 +961,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-xls-and-xlsb-workbooks-then-load-an-xlsx-workbook-and-persist-it-back-as-xl.cs",
+      "title": "Load XLS and XLSB workbooks, then load an XLSX workbook and persist it back as XLSX."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-a-sample-implementation-illustrating-odata-connection-retrieval-for-gener.cs",
       "title": "Obtain a sample implementation illustrating OData connection retrieval for generating files in the default XLSX format."
     },
