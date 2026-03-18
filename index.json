@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "comments-and-notes",
+      "file": "activate-the-new-comment-button-on-a-workbook-loaded-in-xlsx-format-to-insert-a-.cs",
+      "title": "Activate the New Comment button on a workbook loaded in XLSX format to insert a comment."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "delete-all-threaded-comments-from-an-xlsx-workbook-after-loading-the-file-into-m.cs",
       "title": "Delete all threaded comments from an XLSX workbook after loading the file into memory."
     },
