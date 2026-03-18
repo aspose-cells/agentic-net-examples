@@ -201,6 +201,11 @@
     },
     {
       "category": "document-properties",
+      "file": "insert-custom-document-properties-into-an-xlsx-workbook-to-store-additional-meta.cs",
+      "title": "Insert custom document properties into an XLSX workbook to store additional metadata for downstream processing."
+    },
+    {
+      "category": "document-properties",
       "file": "inspect-and-retrieve-metadata-properties-from-an-xlsx-workbook-programmatically-.cs",
       "title": "Inspect and retrieve metadata properties from an XLSX workbook programmatically using the available API."
     },
