@@ -826,6 +826,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "identify-and-delete-any-style-definitions-in-the-workbook-that-are-not-applied-t.cs",
+      "title": "Identify and delete any style definitions in the workbook that are not applied to any cells."
+    },
+    {
+      "category": "manage-workbook",
       "file": "implement-a-using-block-to-ensure-deterministic-disposal-of-unmanaged-resources-.cs",
       "title": "Implement a using block to ensure deterministic disposal of unmanaged resources within your code after execution."
     },
