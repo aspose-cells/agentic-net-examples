@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptions-to-assign-the-tablecssid-value-myprefix_-when-converti.cs",
+      "title": "Configure HtmlSaveOptions to assign the TableCssId value 'myPrefix_' when converting an XLSX file to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-export-css-separately-load-an-xlsx-workbook-and-sav.cs",
       "title": "Configure HtmlSaveOptions to export CSS separately, load an XLSX workbook, and save it as HTML."
     },
