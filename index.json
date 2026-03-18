@@ -311,6 +311,11 @@
     },
     {
       "category": "document-properties",
+      "file": "set-the-linksuptodate-property-to-false-in-an-xlsx-workbook-to-flag-its-hyperlin.cs",
+      "title": "Set the LinksUpToDate property to FALSE in an XLSX workbook to flag its hyperlinks as outdated."
+    },
+    {
+      "category": "document-properties",
       "file": "set-the-workbooks-builtin-document-property-to-define-the-xlsx-files-version-pro.cs",
       "title": "Set the workbook's built\u2011in document property to define the XLSX file's version programmatically via the API."
     },
