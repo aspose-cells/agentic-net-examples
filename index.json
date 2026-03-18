@@ -1911,6 +1911,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "serialize-the-workbook-to-a-pdfacompliant-pdf-preserving-formatting-fonts-and-me.cs",
+      "title": "Serialize the workbook to a PDF/A\u2011compliant PDF, preserving formatting, fonts, and metadata according to PDF/A standards."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "transform-an-excel-workbook-into-a-pdf-document-by-applying-the-standard-workboo.cs",
       "title": "Transform an Excel workbook into a PDF document by applying the standard workbook\u2011to\u2011PDF conversion routine."
     },
