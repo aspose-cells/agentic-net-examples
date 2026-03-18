@@ -831,6 +831,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "instantiate-a-regular-expression-object-efficiently-using-the-specified-pattern-.cs",
+      "title": "Instantiate a regular expression object efficiently using the specified pattern for subsequent matching operations."
+    },
+    {
+      "category": "manage-workbook",
       "file": "instantiate-the-workbook-class-to-load-an-xlsx-workbook-into-memory-for-further-.cs",
       "title": "Instantiate the Workbook class to load an XLSX workbook into memory for further manipulation."
     },
