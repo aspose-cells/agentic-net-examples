@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs
 - apply-an-autofilter-to-a-worksheet-in-an-xlsx-workbook-to-enable-dynamic-data-fi.cs
 - apply-an-autofilter-to-an-xlsx-worksheet-programmatically-to-enable-dynamic-data.cs
+- apply-and-configure-various-filter-types-on-xlsx-worksheets-to-control-data-visi.cs
