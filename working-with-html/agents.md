@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - create-an-istreamprovider-implementation-that-handles-html-input-loading-and-xls.cs
 - load-an-html-document-into-the-library-then-export-the-content-as-an-xlsx-workbo.cs
 - load-an-xlsx-workbook-and-export-it-to-html-by-implementing-a-custom-istreamprov.cs
+- create-an-istreamprovider-implementation-to-handle-output-streams-for-loading-xl.cs
