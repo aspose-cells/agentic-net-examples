@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs
 - update-an-existing-sql-data-connection-within-a-default-xlsx-workbook-using-the-.cs
 - load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs
+- retrieve-the-result-range-address-of-a-query-table-from-an-xlsx-workbook-using-t.cs
