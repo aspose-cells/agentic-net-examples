@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - manipulate-spreadsheet-data-programmatically-with-full-xlsx-format-support-enabl.cs
 - retrieve-the-cells-string-content-from-an-xlsx-worksheet-both-with-its-original-.cs
 - insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs
+- retrieve-a-comprehensive-list-of-documentation-articles-associated-with-a-workbo.cs
