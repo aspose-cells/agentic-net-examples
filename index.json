@@ -1081,6 +1081,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "serialize-the-workbook-into-an-xlsx-byte-array-for-in-memory-processing-or-trans.cs",
+      "title": "Serialize the workbook into an XLSX byte array for in-memory processing or transmission without writing to disk."
+    },
+    {
+      "category": "save-workbook",
       "file": "write-the-workbooks-contents-directly-to-an-in-memory-stream-in-the-xlsx-file-fo.cs",
       "title": "Write the workbook's contents directly to an in-memory stream in the XLSX file format."
     }
