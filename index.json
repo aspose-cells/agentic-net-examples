@@ -1891,6 +1891,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-an-excel-workbook-directly-to-a-pdf-document-preserving-formatting-layou.cs",
+      "title": "Convert an Excel workbook directly to a PDF document, preserving formatting, layout, and without intermediate processing."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-excel-workbook-from-any-supported-input-format-into-a-resulting-pdf-f.cs",
       "title": "Convert an Excel workbook from any supported input format into a resulting PDF file."
     },
