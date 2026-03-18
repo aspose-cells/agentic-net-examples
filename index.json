@@ -776,6 +776,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-regular-expression-that-matches-the-specified-pattern-according-to-the-.cs",
+      "title": "Create a regular expression that matches the specified pattern according to the provided criteria."
+    },
+    {
+      "category": "manage-workbook",
       "file": "define-the-target-workbook-when-performing-copy-or-move-operations-between-separ.cs",
       "title": "Define the target workbook when performing copy or move operations between separate workbooks in code."
     },
