@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-it-to-html-while-retaining-all-conditional-form.cs",
+      "title": "Load an XLSX workbook and export it to HTML while retaining all conditional formatting rules."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-its-contents-to-an-html-file-while-preserving-f.cs",
       "title": "Load an XLSX workbook and export its contents to an HTML file while preserving formatting."
     },
