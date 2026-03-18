@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - provide-sample-code-demonstrating-operations-on-a-workbook-opened-from-an-xlsx-f.cs
 - read-an-xlsx-workbook-and-write-its-contents-to-the-console-output-preserving-ce.cs
 - modify-the-comment-text-orientation-within-an-xlsx-workbook-after-loading-it-pro.cs
+- modify-the-comment-font-color-within-an-xlsx-workbook-by-accessing-its-comment-s.cs
