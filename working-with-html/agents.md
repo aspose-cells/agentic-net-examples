@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - export-an-xlsx-worksheet-to-html-with-databar-colorscale-and-iconset-conditional.cs
 - when-loading-an-xlsx-file-and-saving-as-html-set-htmlsaveoptionsexportconditiona.cs
 - load-an-xlsx-workbook-and-export-it-to-html-while-retaining-all-conditional-form.cs
+- when-converting-an-xlsx-workbook-to-html-include-all-cell-comments-in-the-genera.cs
