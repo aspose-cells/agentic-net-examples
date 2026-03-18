@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - load-an-xlsx-worksheet-and-export-it-to-html-configuring-htmlsaveoptionstablecss.cs
 - configure-htmlsaveoptions-to-assign-the-tablecssid-value-myprefix_-when-converti.cs
 - when-converting-an-xlsx-workbook-to-html-apply-the-htmlsaveoptionstablecssid-pre.cs
+- load-an-xlsx-workbook-and-prepend-a-specified-prefix-to-generated-html-table-css.cs
