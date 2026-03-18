@@ -1966,6 +1966,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-csvformatted-txt-file-into-a-json-structure-preserving-all-field-val.cs",
+      "title": "Transform a CSV\u2011formatted TXT file into a JSON structure, preserving all field values and data types."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-dbf-json-file-into-a-csv-document-preserving-field-integrity-and-dat.cs",
       "title": "Transform a DBF JSON file into a CSV document, preserving field integrity and data types."
     },
