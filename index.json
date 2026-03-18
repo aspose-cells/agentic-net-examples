@@ -1201,6 +1201,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-autofit-to-columns-when-importing-html-content-and-exporting-the-workbook-.cs",
+      "title": "Apply AutoFit to columns when importing HTML content and exporting the workbook as an XLSX file."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-gradient-fill-rendering-to-wordart-objects-when-converting-xlsx-spreadshee.cs",
       "title": "Apply gradient fill rendering to WordArt objects when converting XLSX spreadsheets to HTML output."
     },
