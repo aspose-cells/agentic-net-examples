@@ -2176,6 +2176,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-data-from-an-mhtformatted-csv-source-into-a-json-representation-while-.cs",
+      "title": "Transform data from an MHT\u2011formatted CSV source into a JSON representation while preserving field mappings."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-data-from-an-xls-csv-file-into-json-format-preserving-all-rows-and-col.cs",
       "title": "Transform data from an XLS CSV file into JSON format, preserving all rows and column values."
     },
