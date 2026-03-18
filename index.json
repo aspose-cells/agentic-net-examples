@@ -793,6 +793,11 @@
       "category": "manage-workbook",
       "file": "open-a-workbook-file-in-the-net-environment-to-access-its-worksheets-and-data.cs",
       "title": "Open a workbook file in the .NET environment to access its worksheets and data."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "persist-the-currently-loaded-workbook-to-a-file-in-its-native-format-ensuring-al.cs",
+      "title": "Persist the currently loaded workbook to a file in its native format, ensuring all changes are stored."
     }
   ]
 }
