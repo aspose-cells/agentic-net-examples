@@ -176,6 +176,11 @@
     },
     {
       "category": "cells-data",
+      "file": "search-and-locate-specific-data-within-an-xlsx-workbook-returning-matching-cell-.cs",
+      "title": "Search and locate specific data within an XLSX workbook, returning matching cell references and values."
+    },
+    {
+      "category": "cells-data",
       "file": "sort-rows-in-an-xlsx-workbook-based-on-cell-background-color-while-maintaining-d.cs",
       "title": "Sort rows in an XLSX workbook based on cell background color while maintaining data integrity."
     },
