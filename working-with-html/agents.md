@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - configure-html-load-options-to-import-html-content-and-export-it-as-an-xlsx-work.cs
 - load-an-html-document-and-convert-it-to-an-xlsx-workbook-while-preserving-cell-d.cs
 - export-an-xlsx-workbook-to-html-preserving-righttoleft-text-expansion-during-the.cs
+- export-the-xlsx-worksheet-with-righttoleft-text-to-html-enabling-the-expandrtlte.cs
