@@ -1616,6 +1616,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "parse-html-containing-selfclosing-tags-then-export-the-content-to-an-xlsx-workbo.cs",
+      "title": "Parse HTML containing self\u2011closing tags, then export the content to an XLSX workbook preserving tag integrity."
+    },
+    {
+      "category": "working-with-html",
       "file": "preserve-div-tag-layout-when-importing-html-into-an-excel-workbook-and-exporting.cs",
       "title": "Preserve DIV tag layout when importing HTML into an Excel workbook and exporting the result as XLSX."
     },
