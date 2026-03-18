@@ -1241,6 +1241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-an-istreamprovider-implementation-that-handles-html-input-loading-and-xls.cs",
+      "title": "Create an IStreamProvider implementation that handles HTML input loading and XLSX output saving via streams."
+    },
+    {
+      "category": "working-with-html",
       "file": "develop-a-class-implementing-ifilepathprovider-overriding-getfilepath-to-load-xl.cs",
       "title": "Develop a class implementing IFilePathProvider, overriding GetFilePath to load XLSX files and output HTML."
     },
