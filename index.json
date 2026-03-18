@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "cells-data",
+      "file": "apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs",
+      "title": "Apply filtering criteria to data within an XLSX spreadsheet to display rows that meet specified conditions."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-textformatted-numeric-cells-to-true-numeric-values-in-an-excel-worksheet.cs",
       "title": "Convert text\u2011formatted numeric cells to true numeric values in an Excel worksheet and save the result as an XLSX file."
     },
