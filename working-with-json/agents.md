@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - transform-an-mhtmlformatted-csv-file-into-a-json-representation-preserving-data-.cs
 - transform-an-xmlformatted-csv-file-into-an-equivalent-json-representation-preser.cs
 - transform-a-numbers-generated-csv-file-into-a-json-document-preserving-data-type.cs
+- transform-data-from-an-sxc-csv-file-into-a-json-representation-preserving-all-fi.cs
