@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "during-xlsx-to-html-conversion-omit-any-styles-not-referenced-in-the-workbook-to.cs",
+      "title": "During XLSX to HTML conversion, omit any styles not referenced in the workbook to reduce output size."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsexportheadings-before-converting-an-xlsx-workbook-to-html-.cs",
       "title": "Enable HtmlSaveOptions.ExportHeadings before converting an XLSX workbook to HTML to retain the worksheet headings."
     },
