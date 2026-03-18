@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - convert-an-xlsm-excel-workbook-to-json-format-employing-the-default-conversion-s.cs
 - convert-an-xltx-excel-file-to-a-json-document-employing-the-librarys-default-con.cs
 - transform-a-json-representation-of-xlsx-data-into-a-fully-compatible-native-exce.cs
+- transform-a-json-representation-of-an-xlsm-workbook-into-a-native-excel-file-whi.cs
