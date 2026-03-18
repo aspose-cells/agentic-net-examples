@@ -1036,6 +1036,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "update-a-power-query-formula-item-in-an-xlsx-workbook-using-the-default-xlsx-for.cs",
+      "title": "Update a Power Query formula item in an XLSX workbook using the default XLSX format."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-an-existing-sql-data-connection-within-a-default-xlsx-workbook-using-the-.cs",
       "title": "Update an existing SQL data connection within a default XLSX workbook using the library\u2019s API."
     }
