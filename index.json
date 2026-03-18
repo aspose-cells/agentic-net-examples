@@ -763,6 +763,11 @@
       "category": "globalization-and-localization",
       "file": "verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs",
       "title": "Verify localized formulas by examining console output of the Cell.FormulaLocal implementation with an XLSX workbook."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "instantiate-the-workbook-class-to-load-an-xlsx-workbook-into-memory-for-further-.cs",
+      "title": "Instantiate the Workbook class to load an XLSX workbook into memory for further manipulation."
     }
   ]
 }
