@@ -1896,6 +1896,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-numbers-excel-file-to-json-while-preserving-the-original-data-hierarch.cs",
+      "title": "Convert a NUMBERS Excel file to JSON while preserving the original data hierarchy and types."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-numbers-json-file-into-csv-format-preserving-data-fidelity-and-appropr.cs",
       "title": "Convert a NUMBERS JSON file into CSV format, preserving data fidelity and appropriate column mapping."
     },
