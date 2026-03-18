@@ -1936,6 +1936,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "insert-pdf-bookmarks-referencing-named-destinations-into-pdfs-generated-from-exc.cs",
+      "title": "Insert PDF bookmarks referencing named destinations into PDFs generated from Excel worksheets to enable navigation."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "serialize-the-workbook-to-a-pdfacompliant-pdf-preserving-formatting-fonts-and-me.cs",
       "title": "Serialize the workbook to a PDF/A\u2011compliant PDF, preserving formatting, fonts, and metadata according to PDF/A standards."
     },
