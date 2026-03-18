@@ -136,6 +136,11 @@
     },
     {
       "category": "cells-data",
+      "file": "load-data-from-an-xlsx-file-into-a-worksheet-mapping-cells-to-the-appropriate-da.cs",
+      "title": "Load data from an XLSX file into a worksheet, mapping cells to the appropriate data structures."
+    },
+    {
+      "category": "cells-data",
       "file": "locate-cells-in-an-xlsx-workbook-that-match-a-given-string-or-numeric-value.cs",
       "title": "Locate cells in an XLSX workbook that match a given string or numeric value."
     },
