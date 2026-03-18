@@ -2046,6 +2046,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-data-from-an-xltx-json-source-into-a-csv-file-preserving-all-field-val.cs",
+      "title": "Transform data from an XLTX JSON source into a CSV file, preserving all field values."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-the-content-of-an-xlsm-json-file-into-csv-format-while-preserving-all-.cs",
       "title": "Transform the content of an XLSM JSON file into CSV format while preserving all cell data."
     },
