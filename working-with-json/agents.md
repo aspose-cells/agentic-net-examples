@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - transform-an-xltx-workbook-into-a-json-representation-preserving-cell-data-and-f.cs
 - transform-an-xltm-workbook-into-a-json-representation-preserving-cell-data-and-w.cs
 - transform-an-xlsb-workbook-into-a-json-representation-preserving-cell-data-types.cs
+- transform-an-ods-workbook-into-a-json-representation-preserving-cell-data-and-wo.cs
