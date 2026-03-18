@@ -1101,6 +1101,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "serialize-the-workbook-into-an-xlsx-response-object-utilizing-default-configurat.cs",
+      "title": "Serialize the workbook into an XLSX response object, utilizing default configuration parameters and preserving original formatting."
+    },
+    {
+      "category": "save-workbook",
       "file": "write-the-workbook-to-a-stream-in-xlsx-format-utilizing-the-default-serializatio.cs",
       "title": "Write the workbook to a stream in XLSX format utilizing the default serialization options."
     },
