@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - strip-leading-and-trailing-whitespace-from-fields-when-loading-csv-data-to-ensur.cs
 - configure-load-options-to-customize-how-an-xlsx-workbook-is-imported-controlling.cs
 - load-the-xlsx-workbook-and-save-it-as-html-while-disabling-downlevel-revealed-co.cs
+- enable-the-htmlsaveoptionsdisabledownlevelrevealedcomments-property-when-loading.cs
