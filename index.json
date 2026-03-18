@@ -191,6 +191,11 @@
     },
     {
       "category": "document-properties",
+      "file": "add-untyped-custom-properties-to-an-xlsx-workbook-to-store-metadata-without-spec.cs",
+      "title": "Add untyped custom properties to an XLSX workbook to store metadata without specifying a data type."
+    },
+    {
+      "category": "document-properties",
       "file": "add-user-defined-properties-to-an-xlsx-workbook-so-they-appear-in-the-document-i.cs",
       "title": "Add user-defined properties to an XLSX workbook so they appear in the Document Information Panel."
     },
