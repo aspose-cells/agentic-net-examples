@@ -806,6 +806,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "instantiate-a-new-workbook-object-to-begin-constructing-a-spreadsheet-for-data-m.cs",
+      "title": "Instantiate a new workbook object to begin constructing a spreadsheet for data manipulation and analysis."
+    },
+    {
+      "category": "manage-workbook",
       "file": "instantiate-the-workbook-class-to-load-an-xlsx-workbook-into-memory-for-further-.cs",
       "title": "Instantiate the Workbook class to load an XLSX workbook into memory for further manipulation."
     },
