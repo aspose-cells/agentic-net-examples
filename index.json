@@ -2071,6 +2071,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-htmlformatted-csv-file-into-a-json-representation-mapping-each-row-.cs",
+      "title": "Transform an HTML\u2011formatted CSV file into a JSON representation, mapping each row to a corresponding object."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-htmlformatted-json-file-into-a-csv-dataset-preserving-field-mapping.cs",
       "title": "Transform an HTML\u2011formatted JSON file into a CSV dataset, preserving field mappings and data integrity."
     },
