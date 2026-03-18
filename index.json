@@ -1091,6 +1091,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "serialize-the-workbook-into-a-byte-array-using-default-options-producing-an-xlsx.cs",
+      "title": "Serialize the workbook into a byte array using default options, producing an XLSX file representation."
+    },
+    {
+      "category": "save-workbook",
       "file": "serialize-the-workbook-into-an-xlsx-byte-array-for-in-memory-processing-or-trans.cs",
       "title": "Serialize the workbook into an XLSX byte array for in-memory processing or transmission without writing to disk."
     },
