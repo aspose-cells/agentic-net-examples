@@ -131,6 +131,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-into-a-worksheet-from-an-xlsx-file-programmatically-mapping-cells-to.cs",
+      "title": "Import data into a worksheet from an XLSX file, programmatically mapping cells to their corresponding ranges."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs",
       "title": "Insert HTML\u2011formatted rich text into a worksheet cell when programmatically generating an XLSX file."
     },
