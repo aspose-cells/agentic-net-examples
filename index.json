@@ -951,6 +951,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "obtain-the-result-range-of-a-query-table-from-a-workbook-saved-in-the-default-xl.cs",
+      "title": "Obtain the result range of a query table from a workbook saved in the default XLSX format."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs",
       "title": "Obtain the SQL connection details from a workbook saved in the default XLSX format."
     },
