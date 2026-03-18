@@ -2101,6 +2101,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-excel-file-in-xml-format-into-a-json-representation-preserving-data.cs",
+      "title": "Transform an Excel file in XML format into a JSON representation, preserving data integrity and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-excel-file-saved-as-tsv-into-a-json-representation-while-preserving.cs",
       "title": "Transform an Excel file saved as TSV into a JSON representation while preserving data fidelity."
     },
