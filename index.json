@@ -1586,6 +1586,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-it-to-html-with-all-css-disabled-via-htmlsaveop.cs",
+      "title": "Load an XLSX workbook and export it to HTML with all CSS disabled via HtmlSaveOptions.DisableCss."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-it-to-html-with-htmlsaveoptionsexporthiddenelem.cs",
       "title": "Load an XLSX workbook and export it to HTML with HtmlSaveOptions.ExportHiddenElements disabled to omit hidden content."
     },
