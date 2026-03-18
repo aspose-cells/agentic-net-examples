@@ -1976,6 +1976,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-spreadsheetmlformatted-json-document-into-a-csv-file-preserving-cell.cs",
+      "title": "Transform a SpreadsheetML\u2011formatted JSON document into a CSV file, preserving cell data and layout."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-tab-workbook-into-a-json-representation-preserving-cell-data-types-a.cs",
       "title": "Transform a TAB workbook into a JSON representation, preserving cell data types and worksheet hierarchy."
     },
