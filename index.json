@@ -2236,6 +2236,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-data-from-an-xps-csv-file-into-json-format-while-maintaining-field-int.cs",
+      "title": "Transform data from an XPS CSV file into JSON format while maintaining field integrity."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-ods-json-data-into-csv-format-preserving-field-mappings-and-ensuring-p.cs",
       "title": "Transform ODS JSON data into CSV format, preserving field mappings and ensuring proper encoding."
     },
