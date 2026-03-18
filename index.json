@@ -2336,6 +2336,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xltmformatted-json-file-into-an-excel-workbook-while-preserving-dat.cs",
+      "title": "Transform an XLTM\u2011formatted JSON file into an Excel workbook while preserving data fidelity and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xltx-csv-document-into-json-format-using-the-provided-default-conve.cs",
       "title": "Transform an XLTX CSV document into JSON format using the provided default conversion settings."
     },
