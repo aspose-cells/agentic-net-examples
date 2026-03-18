@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-xlsx-spreadsheets-as-a-supported-input-format-for-processing-preserving-wor.cs",
+      "title": "Load XLSX spreadsheets as a supported input format for processing, preserving worksheet integrity and cell data."
+    },
+    {
+      "category": "working-with-html",
       "file": "prevent-automatic-numeric-conversion-during-csv-import-for-the-operation-by-sett.cs",
       "title": "Prevent automatic numeric conversion during CSV import for the operation by setting LoadOptions.ConvertNumericData to false."
     },
