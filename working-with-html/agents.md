@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - parse-html-containing-selfclosing-tags-then-export-the-content-to-an-xlsx-workbo.cs
 - export-an-xlsx-worksheet-to-html-configuring-column-widths-in-em-or-percent-via-.cs
 - configure-htmlsaveoptionscolumnwidthunit-to-em-or-percent-when-loading-an-xlsx-w.cs
+- configure-column-widths-in-loaded-xlsx-files-to-use-scalable-units-such-as-em-or.cs
