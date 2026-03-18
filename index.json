@@ -56,6 +56,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "retrieve-threaded-comments-from-an-excel-workbook-that-has-been-loaded-in-xlsx-f.cs",
+      "title": "Retrieve threaded comments from an Excel workbook that has been loaded in XLSX format."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "retrieve-threaded-comments-from-an-xlsx-workbook-loaded-into-memory-preserving-c.cs",
       "title": "Retrieve threaded comments from an XLSX workbook loaded into memory, preserving comment hierarchy and metadata."
     },
