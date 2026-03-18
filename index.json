@@ -1201,6 +1201,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
+      "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-worksheet-protection-to-an-xlsx-file-to-prevent-unintended-row-and-column-.cs",
       "title": "Apply worksheet protection to an XLSX file to prevent unintended row and column deletions."
     },
