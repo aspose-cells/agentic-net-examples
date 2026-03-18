@@ -1058,6 +1058,11 @@
       "category": "queries-and-connections",
       "file": "update-an-existing-sql-data-connection-within-a-default-xlsx-workbook-using-the-.cs",
       "title": "Update an existing SQL data connection within a default XLSX workbook using the library\u2019s API."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "validate-hidden-external-links-in-an-xlsx-workbook-and-output-the-findings-to-a-.cs",
+      "title": "Validate hidden external links in an XLSX workbook and output the findings to a TXT file via console."
     }
   ]
 }
