@@ -191,6 +191,11 @@
     },
     {
       "category": "document-properties",
+      "file": "analyze-how-the-language-property-is-managed-within-an-xlsx-workbook-and-ensure-.cs",
+      "title": "Analyze how the language property is managed within an XLSX workbook and ensure correct localization behavior."
+    },
+    {
+      "category": "document-properties",
       "file": "create-read-update-and-delete-workbook-document-properties-within-an-xlsx-file-u.cs",
       "title": "Create, read, update, and delete workbook document properties within an XLSX file using the .NET API."
     },
