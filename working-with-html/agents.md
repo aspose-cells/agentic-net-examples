@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - during-xlsx-to-html-conversion-omit-any-styles-not-referenced-in-the-workbook-to.cs
 - convert-an-xlsx-workbook-to-html-activating-htmlsaveoptionsexcludeunusedstyles-t.cs
 - enable-htmlsaveoptionsexcludeunusedstyles-during-xlsx-loading-and-html-export-to.cs
+- load-an-xlsx-workbook-discard-unused-styles-and-export-the-content-to-html-forma.cs
