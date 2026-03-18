@@ -11,6 +11,11 @@
     },
     {
       "category": "conversion",
+      "file": "transform-an-xlsx-workbook-into-an-mhtml-file-while-preserving-all-data-and-form.cs",
+      "title": "Transform an XLSX workbook into an MHTML file while preserving all data and formatting."
+    },
+    {
+      "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-an-xps-document-preserving-data-fidelity-and-lay.cs",
       "title": "Transform an XLSX workbook into an XPS document, preserving data fidelity and layout during conversion."
     },
