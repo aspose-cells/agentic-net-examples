@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - write-the-workbook-to-an-http-response-as-an-xlsx-file-using-default-serializati.cs
 - write-the-workbook-to-an-http-response-stream-as-an-xlsx-file-using-the-provided.cs
 - export-the-workbook-as-a-strict-open-xml-spreadsheet-generating-an-xlsx-file-com.cs
+- export-the-workbook-to-a-strict-open-xml-spreadsheet-xlsx-using-default-formatti.cs
