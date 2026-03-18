@@ -956,6 +956,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "obtain-a-sample-implementation-illustrating-odata-connection-retrieval-for-gener.cs",
+      "title": "Obtain a sample implementation illustrating OData connection retrieval for generating files in the default XLSX format."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-format.cs",
       "title": "Obtain OData connection details from a workbook saved in the default XLSX format using the provided API."
     },
