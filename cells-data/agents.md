@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - convert-textformatted-numeric-cells-to-true-numeric-values-in-an-excel-worksheet.cs
 - transform-numeric-strings-in-a-worksheet-to-true-numeric-types-and-save-the-work.cs
 - programmatically-generate-row-level-subtotals-in-an-xlsx-worksheet-by-applying-s.cs
+- create-and-manipulate-excel-workbooks-programmatically-storing-all-data-in-the-x.cs
