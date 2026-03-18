@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs
+- programmatically-open-an-xlsx-workbook-retrieve-its-data-connections-and-apply-m.cs
