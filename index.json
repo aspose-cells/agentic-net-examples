@@ -226,6 +226,11 @@
     },
     {
       "category": "document-properties",
+      "file": "provide-sample-code-that-configures-the-workbooks-document-version-property-for-.cs",
+      "title": "Provide sample code that configures the workbook's document version property for an XLSX file."
+    },
+    {
+      "category": "document-properties",
       "file": "read-modify-or-create-document-properties-in-an-xlsx-workbook-via-the-net-api.cs",
       "title": "Read, modify, or create document properties in an XLSX workbook via the .NET API."
     },
