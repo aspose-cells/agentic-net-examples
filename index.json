@@ -1226,6 +1226,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "read-from-and-write-to-an-xlsx-file-using-a-query-table-data-source-for-tabular-.cs",
+      "title": "Read from and write to an XLSX file using a query table data source for tabular operations."
+    },
+    {
+      "category": "working-with-tables",
       "file": "transform-a-data-collection-into-an-excel-listobject-by-loading-it-from-an-xlsx-.cs",
       "title": "Transform a data collection into an Excel ListObject by loading it from an XLSX workbook."
     },
