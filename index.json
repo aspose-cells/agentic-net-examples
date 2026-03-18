@@ -1078,6 +1078,11 @@
       "category": "save-workbook",
       "file": "persist-the-workbook-as-an-xlsx-file-on-disk-ensuring-compliance-with-the-open-x.cs",
       "title": "Persist the workbook as an XLSX file on disk, ensuring compliance with the Open XML format."
+    },
+    {
+      "category": "save-workbook",
+      "file": "write-the-workbooks-contents-directly-to-an-in-memory-stream-in-the-xlsx-file-fo.cs",
+      "title": "Write the workbook's contents directly to an in-memory stream in the XLSX file format."
     }
   ]
 }
