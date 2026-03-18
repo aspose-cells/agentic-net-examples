@@ -1076,6 +1076,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "export-the-workbook-as-a-strict-open-xml-spreadsheet-generating-an-xlsx-file-com.cs",
+      "title": "Export the workbook as a Strict Open XML Spreadsheet, generating an XLSX file compliant with the standard."
+    },
+    {
+      "category": "save-workbook",
       "file": "persist-a-workbook-to-xlsx-using-various-supported-saving-techniques-ensuring-da.cs",
       "title": "Persist a workbook to XLSX using various supported saving techniques, ensuring data integrity and format compliance."
     },
