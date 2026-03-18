@@ -938,6 +938,11 @@
       "category": "manage-workbook",
       "file": "traverse-each-worksheet-cell-and-perform-a-regular-expression-replacement-on-its.cs",
       "title": "Traverse each worksheet cell and perform a regular expression replacement on its string value."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs",
+      "title": "Obtain the SQL connection details from a workbook saved in the default XLSX format."
     }
   ]
 }
