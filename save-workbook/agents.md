@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - serialize-the-workbook-into-a-byte-array-using-default-options-producing-an-xlsx.cs
 - serialize-the-workbook-into-an-xlsx-response-object-utilizing-default-configurat.cs
 - save-a-workbook-to-various-file-formats-using-default-settings-specifying-xlsx-a.cs
+- stream-the-workbook-as-an-xlsx-file-directly-in-the-http-response-setting-approp.cs
