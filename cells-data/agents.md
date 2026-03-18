@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - enhance-the-current-xlsx-validation-by-incorporating-a-cellarea-definition-into-.cs
 - implement-data-validation-in-xlsx-spreadsheets-following-microsoft-excel-specifi.cs
 - apply-data-validation-rules-to-xlsx-worksheets-using-the-provided-net-api-for-ce.cs
+- define-and-apply-data-validation-constraints-within-an-xlsx-workbook-to-enforce-.cs
