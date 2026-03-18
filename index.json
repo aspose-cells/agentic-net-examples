@@ -1236,6 +1236,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptionscolumnwidthunit-to-em-or-percent-when-loading-an-xlsx-w.cs",
+      "title": "Configure HtmlSaveOptions.ColumnWidthUnit to Em or Percent when loading an XLSX workbook and exporting it as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs",
       "title": "Configure HtmlSaveOptions.ExportPrintAreaOnly to true when loading an XLSX workbook and exporting it as HTML."
     },
