@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-configure-html-export-options-to-embed-metadata-and-save-t.cs
 - load-an-html-file-into-a-workbook-enable-htmlloadoptionspreservedivlayout-and-sa.cs
 - enable-preservedivlayout-on-htmlloadoptions-when-importing-html-then-export-the-.cs
+- preserve-div-tag-layout-when-importing-html-into-an-excel-workbook-and-exporting.cs
