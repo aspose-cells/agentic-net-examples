@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - import-data-from-a-net-arraylist-into-an-xlsx-workbook-mapping-collection-elemen.cs
 - import-data-from-custom-objects-into-an-xlsx-workbook-programmatically-mapping-o.cs
 - import-data-from-custom-objects-into-an-xlsx-workbook-and-verify-the-merged-cell.cs
+- import-a-datatable-into-an-xlsx-workbook-mapping-rows-and-columns-to-correspondi.cs
