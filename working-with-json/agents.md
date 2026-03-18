@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - transform-a-prn-workbook-into-a-json-representation-preserving-data-fidelity-and.cs
 - transform-an-xps-workbook-into-a-json-representation-preserving-all-worksheet-da.cs
 - transform-an-oxps-workbook-into-a-json-representation-preserving-data-fidelity-a.cs
+- transform-a-pdf-workbook-into-a-json-representation-preserving-data-fidelity-and.cs
