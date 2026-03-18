@@ -943,6 +943,11 @@
       "category": "queries-and-connections",
       "file": "obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs",
       "title": "Obtain the SQL connection details from a workbook saved in the default XLSX format."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "programmatically-open-an-xlsx-workbook-retrieve-its-data-connections-and-apply-m.cs",
+      "title": "Programmatically open an XLSX workbook, retrieve its data connections, and apply modifications as required."
     }
   ]
 }
