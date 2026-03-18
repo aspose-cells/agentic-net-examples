@@ -1211,6 +1211,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-xlsx-workbook-to-html-activating-htmlsaveoptionsexcludeunusedstyles-t.cs",
+      "title": "Convert an XLSX workbook to HTML, activating HtmlSaveOptions.ExcludeUnusedStyles to omit unused CSS definitions during conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-downlevel-revealed-comments-during-the-conversion-of-an-xlsx-workbook-fi.cs",
       "title": "Disable downlevel-revealed comments during the conversion of an XLSX workbook file to HTML format."
     },
