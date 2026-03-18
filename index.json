@@ -1891,6 +1891,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-json-file-with-tabdelimited-structure-to-csv-format-preserving-data-in.cs",
+      "title": "Convert a JSON file with TAB\u2011delimited structure to CSV format, preserving data integrity and field mapping."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-tsv-json-file-into-a-csv-document-while-maintaining-original-data-stru.cs",
       "title": "Convert a TSV JSON file into a CSV document while maintaining original data structure and encoding."
     },
