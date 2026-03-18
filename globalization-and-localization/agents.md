@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - implement-cellformulalocal-to-localize-formulas-in-an-xlsx-workbook-mirroring-ex.cs
 - identify-and-demonstrate-formulalocal-localization-scenarios-on-a-workbook-loade.cs
 - execute-the-cellformulalocal-sample-on-an-xlsx-workbook-to-apply-localespecific-.cs
+- verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs
