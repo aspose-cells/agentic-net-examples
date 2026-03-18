@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - import-html-formatted-data-into-an-xlsx-workbook-converting-web-content-into-str.cs
 - import-json-data-into-an-xlsx-workbook-mapping-json-structures-to-corresponding-.cs
 - provide-sample-net-code-illustrating-creation-manipulation-and-saving-of-workboo.cs
+- utilize-enumerators-to-iterate-over-workbook-elements-in-xlsx-files-applying-the.cs
