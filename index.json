@@ -188,6 +188,11 @@
       "category": "document-properties",
       "file": "programmatically-delete-all-custom-document-properties-from-an-xlsx-workbook-to-.cs",
       "title": "Programmatically delete all custom document properties from an XLSX workbook to clean its metadata thoroughly."
+    },
+    {
+      "category": "document-properties",
+      "file": "remove-all-custom-document-properties-from-an-xlsx-workbook-programmatically-usi.cs",
+      "title": "Remove all custom document properties from an XLSX workbook programmatically using the DocumentPropertyCollection API."
     }
   ]
 }
