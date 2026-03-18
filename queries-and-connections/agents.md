@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - identify-and-document-potential-use-cases-for-external-data-connections-within-s.cs
 - load-an-xlsx-workbook-process-its-external-connections-for-xlsxlsb-files-and-sav.cs
 - retrieve-sample-code-that-demonstrates-reading-and-writing-external-connections-.cs
+- load-an-xlsx-workbook-perform-external-connection-tasks-and-output-results-to-a-.cs
