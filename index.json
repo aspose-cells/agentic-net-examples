@@ -1246,6 +1246,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-that-cell-comments-are-retained-in-the-generated-html-when-loading-an-xls.cs",
+      "title": "Ensure that cell comments are retained in the generated HTML when loading an XLSX workbook and saving it as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-numeric-values-parsed-from-csv-files-retain-full-precision-without-c.cs",
       "title": "Ensure that numeric values parsed from CSV files retain full precision without converting to exponential notation."
     },
