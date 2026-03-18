@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - transform-an-xmlformatted-csv-file-into-an-equivalent-json-representation-preser.cs
 - transform-a-numbers-generated-csv-file-into-a-json-document-preserving-data-type.cs
 - transform-data-from-an-sxc-csv-file-into-a-json-representation-preserving-all-fi.cs
+- transform-a-fods-csv-file-into-a-json-representation-preserving-all-data-fields-.cs
