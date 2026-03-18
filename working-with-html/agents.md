@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - set-htmlsaveoptionsheadinglevel-to-define-the-resulting-heading-hierarchy-while-.cs
 - load-an-xlsx-workbook-and-export-it-to-html-using-configurable-html-save-options.cs
 - load-an-xlsx-workbook-and-export-its-contents-to-an-html-file-while-preserving-f.cs
+- trim-unnecessary-whitespace-following-line-breaks-during-csv-import-to-ensure-cl.cs
