@@ -1366,6 +1366,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-output-from-an-xlsx-workbook-while-suppressing-any-overlaid-elemen.cs",
+      "title": "Generate HTML output from an XLSX workbook while suppressing any overlaid elements during conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-a-custom-istreamprovider-to-load-an-html-document-and-export-it-direct.cs",
       "title": "Implement a custom IStreamProvider to load an HTML document and export it directly to an XLSX workbook."
     },
