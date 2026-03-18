@@ -1306,6 +1306,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-worksheet-from-an-xlsx-file-to-html-storing-css-in-separate-files-by-en.cs",
+      "title": "Export a worksheet from an XLSX file to HTML, storing CSS in separate files by enabling HtmlSaveOptions.ExportCssSeparately."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-an-xlsx-workbook-to-html-preserving-righttoleft-text-expansion-during-the.cs",
       "title": "Export an XLSX workbook to HTML preserving right\u2011to\u2011left text expansion during the conversion process."
     },
