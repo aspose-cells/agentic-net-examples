@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - import-a-datatable-into-an-xlsx-workbook-mapping-rows-and-columns-to-correspondi.cs
 - import-data-from-a-dynamic-object-into-an-xlsx-workbook-using-it-as-the-data-sou.cs
 - import-a-datacolumn-into-an-xlsx-workbook-mapping-column-data-to-corresponding-e.cs
+- import-a-dataview-into-an-xlsx-workbook-programmatically-mapping-columns-to-work.cs
