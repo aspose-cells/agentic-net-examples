@@ -16,6 +16,11 @@
     },
     {
       "category": "cells-data",
+      "file": "employ-the-net-api-to-programmatically-read-modify-and-generate-spreadsheet-data.cs",
+      "title": "Employ the .NET API to programmatically read, modify, and generate spreadsheet data in XLSX format."
+    },
+    {
+      "category": "cells-data",
       "file": "identify-typical-application-scenarios-where-the-xlsx-format-can-be-utilized-wit.cs",
       "title": "Identify typical application scenarios where the XLSX format can be utilized within .NET solutions."
     },
