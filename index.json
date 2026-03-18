@@ -1361,6 +1361,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-document-and-generate-an-equivalent-pdf-file-while-preserving-its-l.cs",
+      "title": "Load an HTML document and generate an equivalent PDF file while preserving its layout and styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-html-file-into-a-workbook-enable-htmlloadoptionspreservedivlayout-and-sa.cs",
       "title": "Load an HTML file into a workbook, enable HtmlLoadOptions.PreserveDivLayout, and save the result as XLSX."
     },
