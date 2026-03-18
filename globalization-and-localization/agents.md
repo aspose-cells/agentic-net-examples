@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - investigate-error-and-boolean-value-localization-scenarios-within-a-workbook-loa.cs
 - run-sample-localization-code-to-translate-error-messages-and-boolean-values-in-a.cs
 - execute-the-provided-code-to-localize-subtotal-and-grand-total-labels-in-an-xlsx.cs
+- apply-localization-to-a-spreadsheet-by-configuring-globalizationsettings-to-cust.cs
