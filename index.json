@@ -1301,6 +1301,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-the-crosshideright-option-when-converting-an-xlsx-workbook-to-html-by-set.cs",
+      "title": "Enable the CrossHideRight option when converting an XLSX workbook to HTML by setting HtmlSaveOptions.CrossHideRight to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-htmlsaveoptionsdisabledownlevelrevealedcomments-property-when-loading.cs",
       "title": "Enable the HtmlSaveOptions.DisableDownlevelRevealedComments property when loading an XLSX workbook and exporting output as HTML."
     },
