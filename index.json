@@ -2016,6 +2016,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-fods-spreadsheet-into-a-json-representation-preserving-data-types-an.cs",
+      "title": "Transform a FODS spreadsheet into a JSON representation, preserving data types and structural hierarchy for programmatic use."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-fods-workbook-into-a-json-representation-ensuring-all-cell-values-fo.cs",
       "title": "Transform a FODS workbook into a JSON representation, ensuring all cell values, formulas, and formatting are accurately captured."
     },
