@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - transform-a-prn-json-file-into-csv-format-preserving-data-fidelity-and-appropria.cs
 - transform-an-xps-json-file-into-a-csv-format-preserving-data-fidelity-and-column.cs
 - transform-an-oxps-json-file-into-csv-format-mapping-json-elements-to-correspondi.cs
+- convert-a-pdf-json-representation-into-a-csv-file-maintaining-field-mappings-and.cs
