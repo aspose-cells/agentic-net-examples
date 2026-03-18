@@ -1251,6 +1251,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-htmlsaveoptionsheadinglevel-to-define-the-resulting-heading-hierarchy-while-.cs",
+      "title": "Set HtmlSaveOptions.HeadingLevel to define the resulting heading hierarchy while converting an XLSX workbook to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-loadoptionsconvertnumericdata-to-false-when-loading-csv-files-to-disable-aut.cs",
       "title": "Set LoadOptions.ConvertNumericData to false when loading CSV files to disable automatic numeric type conversion."
     },
