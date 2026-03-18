@@ -766,6 +766,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "apply-the-net-dispose-pattern-to-guarantee-proper-cleanup-of-resources-within-th.cs",
+      "title": "Apply the .NET dispose pattern to guarantee proper cleanup of resources within the component."
+    },
+    {
+      "category": "manage-workbook",
       "file": "copy-a-worksheet-to-another-location-within-the-same-workbook-or-transfer-it-to-.cs",
       "title": "Copy a worksheet to another location within the same workbook or transfer it to a different workbook."
     },
