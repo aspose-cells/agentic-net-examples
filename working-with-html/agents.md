@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - enable-htmlsaveoptionssimulateunsupportedborders-when-converting-an-xlsx-workboo.cs
 - approximate-unsupported-cell-borders-when-converting-an-xlsx-workbook-to-html-ou.cs
 - load-an-xlsx-workbook-and-export-it-to-an-iecompatible-mhtml-file-preserving-for.cs
+- load-an-xlsx-workbook-and-save-it-as-mhtml-enabling-internet-explorer-compatibil.cs
