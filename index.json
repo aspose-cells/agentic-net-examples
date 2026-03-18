@@ -811,6 +811,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "implement-a-using-block-to-ensure-deterministic-disposal-of-unmanaged-resources-.cs",
+      "title": "Implement a using block to ensure deterministic disposal of unmanaged resources within your code after execution."
+    },
+    {
+      "category": "manage-workbook",
       "file": "implement-functionality-to-add-new-contenttypeproperties-or-modify-existing-ones.cs",
       "title": "Implement functionality to add new ContentTypeProperties or modify existing ones within the file\u2019s metadata."
     },
