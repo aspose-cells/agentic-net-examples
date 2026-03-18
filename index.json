@@ -301,6 +301,11 @@
     },
     {
       "category": "cells-data",
+      "file": "utilize-enumerators-to-iterate-over-workbook-elements-in-xlsx-files-applying-the.cs",
+      "title": "Utilize enumerators to iterate over workbook elements in XLSX files, applying them within worksheets, rows, and cells."
+    },
+    {
+      "category": "cells-data",
       "file": "utilize-findoptions-to-search-for-specific-cell-values-or-formulas-within-an-xls.cs",
       "title": "Utilize FindOptions to search for specific cell values or formulas within an XLSX workbook."
     },
