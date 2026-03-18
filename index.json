@@ -1891,6 +1891,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-mht-workbook-file-into-a-json-structure-maintaining-all-worksheet-dat.cs",
+      "title": "Convert an MHT workbook file into a JSON structure, maintaining all worksheet data and formatting attributes."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-an-xls-workbook-into-a-json-document-maintaining-worksheet-structures-ce.cs",
       "title": "Convert an XLS workbook into a JSON document, maintaining worksheet structures, cell data types, and formatting details."
     },
