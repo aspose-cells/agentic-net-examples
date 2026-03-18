@@ -2221,6 +2221,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-mht-json-file-into-an-excel-workbook-while-retaining-data-fidelity-.cs",
+      "title": "Transform an MHT JSON file into an Excel workbook while retaining data fidelity and preserving formatting."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-mhtml-formatted-excel-workbook-into-a-json-representation-while-pre.cs",
       "title": "Transform an MHTML-formatted Excel workbook into a JSON representation while preserving cell data and structure."
     },
