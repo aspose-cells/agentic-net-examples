@@ -21,6 +21,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "insert-threaded-comments-into-an-xlsx-workbook-after-loading-it-enabling-collabo.cs",
+      "title": "Insert threaded comments into an XLSX workbook after loading it, enabling collaborative annotations across multiple users."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "invoke-a-context-menu-on-the-target-cell-of-an-opened-xlsx-workbook-to-add-a-com.cs",
       "title": "Invoke a context menu on the target cell of an opened XLSX workbook to add a comment."
     },
