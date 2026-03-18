@@ -1376,6 +1376,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-an-xlsx-worksheet-to-html-configuring-column-widths-in-em-or-percent-via-.cs",
+      "title": "Export an XLSX worksheet to HTML, configuring column widths in em or percent via HtmlSaveOptions.ColumnWidthUnit."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-an-xlsx-worksheet-to-html-with-databar-colorscale-and-iconset-conditional.cs",
       "title": "Export an XLSX worksheet to HTML with DataBar, ColorScale, and IconSet conditional formatting by enabling HtmlSaveOptions.ExportConditionalFormatting."
     },
