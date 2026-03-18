@@ -1821,6 +1821,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "when-converting-an-xlsx-workbook-to-html-configure-htmlsaveoptions-to-enable-css.cs",
+      "title": "When converting an XLSX workbook to HTML, configure HtmlSaveOptions to enable CSS custom properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-converting-an-xlsx-workbook-to-html-enable-htmlsaveoptionsexportcommentsast.cs",
       "title": "When converting an XLSX workbook to HTML, enable HtmlSaveOptions.ExportCommentsAsTooltips to render comments as tooltips."
     },
