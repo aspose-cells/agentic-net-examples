@@ -51,6 +51,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-sorting-functionality-for-data-within-an-xlsx-workbook-applying-excels.cs",
+      "title": "Implement sorting functionality for data within an XLSX workbook, applying Excel\u2019s native sorting capabilities."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-sorting-of-data-within-an-xlsx-workbook-applying-specified-criteria-an.cs",
       "title": "Implement sorting of data within an XLSX workbook, applying specified criteria and preserving cell formatting."
     },
