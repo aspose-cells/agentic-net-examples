@@ -1890,6 +1890,11 @@
       "title": "When loading an XLSX workbook and exporting to HTML, suppress downlevel\u2011revealed comments in the generated output."
     },
     {
+      "category": "working-with-json",
+      "file": "convert-an-xls-workbook-into-a-json-document-maintaining-worksheet-structures-ce.cs",
+      "title": "Convert an XLS workbook into a JSON document, maintaining worksheet structures, cell data types, and formatting details."
+    },
+    {
       "category": "working-with-pdf",
       "file": "activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs",
       "title": "Activate the ContentCopyForAccessibility setting during Excel-to-PDF conversion to ensure accessible content can be copied."
