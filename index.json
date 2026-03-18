@@ -1221,6 +1221,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-it-to-html-using-configurable-html-save-options.cs",
+      "title": "Load an XLSX workbook and export it to HTML using configurable HTML save options."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs",
       "title": "Load an XLSX workbook into memory for programmatic manipulation and data extraction via the API."
     },
