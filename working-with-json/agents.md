@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - transform-data-from-an-xml-or-json-source-file-into-a-csv-file-preserving-field-.cs
 - transform-a-spreadsheetmlformatted-json-document-into-a-csv-file-preserving-cell.cs
 - convert-a-numbers-json-file-into-csv-format-preserving-data-fidelity-and-appropr.cs
+- transform-an-sxcformatted-json-file-into-a-csv-file-preserving-data-fidelity-and.cs
