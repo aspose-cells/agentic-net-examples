@@ -956,6 +956,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "identify-and-document-potential-use-cases-for-hidden-external-hyperlinks-in-the-.cs",
+      "title": "Identify and document potential use cases for hidden external hyperlinks in the default XLSX workbook format."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "load-an-xlsx-workbook-execute-a-query-table-and-stream-the-results-to-the-consol.cs",
       "title": "Load an XLSX workbook, execute a query table, and stream the results to the console as TXT output."
     },
