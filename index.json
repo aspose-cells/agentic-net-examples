@@ -1286,6 +1286,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-loaded-xlsx-worksheet-to-html-using-htmlsaveoptionssimulateunsupportedb.cs",
+      "title": "Export a loaded XLSX worksheet to HTML using HtmlSaveOptions.SimulateUnsupportedBorders to emulate unsupported browser borders."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-an-xlsx-workbook-to-html-preserving-righttoleft-text-expansion-during-the.cs",
       "title": "Export an XLSX workbook to HTML preserving right\u2011to\u2011left text expansion during the conversion process."
     },
