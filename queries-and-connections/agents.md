@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - retrieve-sample-code-that-demonstrates-reading-and-writing-external-connections-.cs
 - load-an-xlsx-workbook-perform-external-connection-tasks-and-output-results-to-a-.cs
 - update-a-power-query-formula-item-in-an-xlsx-workbook-using-the-default-xlsx-for.cs
+- determine-whether-an-xlsx-workbook-includes-any-hidden-external-hyperlinks-when-.cs
