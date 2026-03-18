@@ -1926,6 +1926,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "determine-applicable-scenarios-for-utilizing-pdf-bookmarks-with-named-destinatio.cs",
+      "title": "Determine applicable scenarios for utilizing PDF bookmarks with named destinations when converting Excel worksheets to PDF files."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "execute-advanced-excel-to-pdf-conversion-preserving-formatting-formulas-charts-a.cs",
       "title": "Execute advanced Excel-to-PDF conversion, preserving formatting, formulas, charts, and layout fidelity across all worksheets."
     },
