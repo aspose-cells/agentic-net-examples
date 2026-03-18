@@ -796,6 +796,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "insert-custom-xml-parts-into-a-workbook-and-retrieve-specific-parts-using-their-.cs",
+      "title": "Insert custom XML parts into a workbook and retrieve specific parts using their unique IDs."
+    },
+    {
+      "category": "manage-workbook",
       "file": "instantiate-a-customxmlpart-object-to-manage-custom-xml-data-within-workbook-str.cs",
       "title": "Instantiate a CustomXmlPart object to manage custom XML data within workbook structures and enable advanced data integration."
     },
