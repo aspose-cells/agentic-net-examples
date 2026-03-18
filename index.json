@@ -766,6 +766,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
+      "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-the-net-dispose-pattern-to-guarantee-proper-cleanup-of-resources-within-th.cs",
       "title": "Apply the .NET dispose pattern to guarantee proper cleanup of resources within the component."
     },
