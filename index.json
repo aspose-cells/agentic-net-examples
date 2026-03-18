@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs",
+      "title": "Load an XLSX workbook into memory for programmatic manipulation and data extraction via the API."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-xlsx-spreadsheets-as-a-supported-input-format-for-processing-preserving-wor.cs",
       "title": "Load XLSX spreadsheets as a supported input format for processing, preserving worksheet integrity and cell data."
     },
