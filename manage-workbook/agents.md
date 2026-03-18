@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - manipulate-contenttypeproperties-to-retrieve-add-or-modify-cell-content-type-met.cs
 - retrieve-and-manipulate-the-contenttypeproperties-of-a-worksheet-to-read-or-set-.cs
 - implement-functionality-to-add-new-contenttypeproperties-or-modify-existing-ones.cs
+- implement-a-using-block-to-ensure-deterministic-disposal-of-unmanaged-resources-.cs
