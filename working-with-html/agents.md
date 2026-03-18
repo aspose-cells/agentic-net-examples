@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - alter-the-html-hyperlink-target-type-when-converting-an-xlsx-workbook-to-html-ou.cs
 - specify-the-hyperlink-target-when-converting-a-loaded-xlsx-workbook-to-an-html-f.cs
 - load-an-xlsx-workbook-and-export-it-to-html-with-all-css-disabled-via-htmlsaveop.cs
+- configure-htmlsaveoptionsdisablecss-to-true-when-converting-an-xlsx-workbook-to-.cs
