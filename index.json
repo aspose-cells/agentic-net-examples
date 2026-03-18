@@ -1446,6 +1446,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-cell-tooltip-information-in-the-html-generated-when-converting-an-xlsx-w.cs",
+      "title": "Include cell tooltip information in the HTML generated when converting an XLSX workbook to HTML format."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-document-workbook-and-worksheet-metadata-during-xlsx-to-html-conversion-.cs",
       "title": "Include document, workbook, and worksheet metadata during XLSX to HTML conversion, preserving all property information."
     },
