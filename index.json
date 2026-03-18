@@ -1616,6 +1616,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-save-it-as-html-using-htmlsaveoptionsdefaultfont-for-t.cs",
+      "title": "Load an XLSX workbook and save it as HTML using HtmlSaveOptions.DefaultFont for the default font."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-save-it-as-html-with-css-custom-properties-enabled-via.cs",
       "title": "Load an XLSX workbook and save it as HTML with CSS custom properties enabled via HtmlSaveOptions.EnableCssCustomProperties."
     },
