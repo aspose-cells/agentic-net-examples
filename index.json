@@ -1231,6 +1231,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "manipulate-table-structures-within-an-xlsx-workbook-using-net-apis-including-add.cs",
+      "title": "Manipulate table structures within an XLSX workbook using .NET APIs, including adding, modifying, and deleting rows and columns as needed."
+    },
+    {
+      "category": "working-with-tables",
       "file": "read-from-and-write-to-an-xlsx-file-using-a-query-table-data-source-for-tabular-.cs",
       "title": "Read from and write to an XLSX file using a query table data source for tabular operations."
     },
