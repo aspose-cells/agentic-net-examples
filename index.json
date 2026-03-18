@@ -1026,6 +1026,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "retrieve-example-code-that-detects-hidden-external-hyperlinks-in-xlsx-files-usin.cs",
+      "title": "Retrieve example code that detects hidden external hyperlinks in XLSX files using the default workbook format."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs",
       "title": "Retrieve OData connection details from a workbook saved in the default XLSX format for further processing."
     },
