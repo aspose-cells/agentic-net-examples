@@ -2136,6 +2136,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-mhtml-formatted-excel-workbook-into-a-json-representation-while-pre.cs",
+      "title": "Transform an MHTML-formatted Excel workbook into a JSON representation while preserving cell data and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-mhtmlformatted-csv-file-into-a-json-representation-preserving-data-.cs",
       "title": "Transform an MHTML\u2011formatted CSV file into a JSON representation, preserving data integrity and field mappings."
     },
