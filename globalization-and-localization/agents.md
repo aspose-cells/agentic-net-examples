@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - apply-globalization-settings-to-localize-subtotal-and-pie-chart-labels-in-an-xls.cs
 - review-the-globalizationsettings-class-introduction-to-configure-localization-fo.cs
 - apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs
+- configure-globalizationsettings-to-assign-custom-text-to-a-pie-charts-other-labe.cs
