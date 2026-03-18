@@ -21,6 +21,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "insert-a-threaded-comment-into-an-xlsx-workbook-that-has-been-loaded-programmati.cs",
+      "title": "Insert a threaded comment into an XLSX workbook that has been loaded programmatically using the API."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "insert-threaded-comments-into-an-xlsx-workbook-after-loading-it-enabling-collabo.cs",
       "title": "Insert threaded comments into an XLSX workbook after loading it, enabling collaborative annotations across multiple users."
     },
