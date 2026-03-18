@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-discard-unused-styles-and-export-the-content-to-html-forma.cs",
+      "title": "Load an XLSX workbook, discard unused styles, and export the content to HTML format."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs",
       "title": "Load an XLSX workbook into memory for programmatic manipulation and data extraction via the API."
     },
