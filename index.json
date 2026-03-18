@@ -1251,6 +1251,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-preservedivlayout-on-htmlloadoptions-when-importing-html-then-export-the-.cs",
+      "title": "Enable PreserveDivLayout on HtmlLoadOptions when importing HTML, then export the workbook to XLSX format."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-htmlsaveoptionsdisabledownlevelrevealedcomments-property-when-loading.cs",
       "title": "Enable the HtmlSaveOptions.DisableDownlevelRevealedComments property when loading an XLSX workbook and exporting output as HTML."
     },
