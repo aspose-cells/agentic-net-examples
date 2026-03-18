@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - write-the-workbook-to-the-http-response-stream-as-a-pdf-document-setting-appropr.cs
 - write-the-workbook-to-an-http-response-stream-in-xlsx-format-utilizing-default-c.cs
 - write-the-workbook-to-an-http-response-as-an-xlsx-file-using-default-serializati.cs
+- write-the-workbook-to-an-http-response-stream-as-an-xlsx-file-using-the-provided.cs
