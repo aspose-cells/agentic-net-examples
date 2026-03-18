@@ -2021,6 +2021,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xltm-formatted-json-file-into-a-csv-document-preserving-all-data-fi.cs",
+      "title": "Transform an XLTM-formatted JSON file into a CSV document, preserving all data fields and data integrity."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xltm-workbook-into-a-json-representation-preserving-cell-data-and-w.cs",
       "title": "Transform an XLTM workbook into a JSON representation, preserving cell data and workbook structure."
     },
