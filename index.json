@@ -1461,6 +1461,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-enable-htmlloadoptionsrecognizeselfclosingtags.cs",
+      "title": "Load an HTML file into a workbook, enable HtmlLoadOptions.RecognizeSelfClosingTags, and save the result as XLSX."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-html-file-using-htmlloadoptions-then-export-the-workbook-and-generate-a-.cs",
       "title": "Load an HTML file using HtmlLoadOptions, then export the workbook and generate a PDF document preserving layout."
     },
