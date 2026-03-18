@@ -56,6 +56,11 @@
     },
     {
       "category": "cells-data",
+      "file": "employ-enumerators-to-iterate-through-worksheets-rows-and-cells-within-an-xlsx-w.cs",
+      "title": "Employ enumerators to iterate through worksheets, rows, and cells within an XLSX workbook efficiently."
+    },
+    {
+      "category": "cells-data",
       "file": "employ-the-net-api-to-programmatically-read-modify-and-generate-spreadsheet-data.cs",
       "title": "Employ the .NET API to programmatically read, modify, and generate spreadsheet data in XLSX format."
     },
