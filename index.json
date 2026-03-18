@@ -856,6 +856,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "instantiate-a-customxmlpart-object-and-populate-it-with-the-specified-xml-string.cs",
+      "title": "Instantiate a CustomXmlPart object and populate it with the specified XML string as its content."
+    },
+    {
+      "category": "manage-workbook",
       "file": "instantiate-a-customxmlpart-object-to-manage-custom-xml-data-within-workbook-str.cs",
       "title": "Instantiate a CustomXmlPart object to manage custom XML data within workbook structures and enable advanced data integration."
     },
