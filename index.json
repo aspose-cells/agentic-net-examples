@@ -1211,6 +1211,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptions-to-export-css-separately-load-an-xlsx-workbook-and-sav.cs",
+      "title": "Configure HtmlSaveOptions to export CSS separately, load an XLSX workbook, and save it as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs",
       "title": "Configure HtmlSaveOptions.ExportPrintAreaOnly to true when loading an XLSX workbook and exporting it as HTML."
     },
