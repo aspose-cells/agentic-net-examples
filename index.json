@@ -51,6 +51,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-sorting-of-data-within-an-xlsx-workbook-applying-specified-criteria-an.cs",
+      "title": "Implement sorting of data within an XLSX workbook, applying specified criteria and preserving cell formatting."
+    },
+    {
+      "category": "cells-data",
       "file": "parse-stringbased-numeric-values-convert-them-to-numeric-types-and-generate-an-x.cs",
       "title": "Parse string\u2011based numeric values, convert them to numeric types, and generate an XLSX workbook containing the data."
     },
