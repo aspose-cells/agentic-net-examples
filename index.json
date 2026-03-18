@@ -1201,6 +1201,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-loadoptionsnumberformat-to-0-to-ensure-csv-data-loads-as-plain-numeric.cs",
+      "title": "Configure LoadOptions.NumberFormat to \"0\" to ensure CSV data loads as plain numeric values during import."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-numeric-values-parsed-from-csv-files-retain-full-precision-without-c.cs",
       "title": "Ensure that numeric values parsed from CSV files retain full precision without converting to exponential notation."
     },
