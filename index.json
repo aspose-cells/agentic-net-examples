@@ -1916,6 +1916,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-xltx-workbook-to-a-json-file-using-the-default-conversion-settings-wi.cs",
+      "title": "Convert an XLTX workbook to a JSON file using the default conversion settings without additional parameters."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-csv-workbook-into-a-json-representation-preserving-data-types-and-st.cs",
       "title": "Transform a CSV workbook into a JSON representation, preserving data types and structure accurately."
     },
