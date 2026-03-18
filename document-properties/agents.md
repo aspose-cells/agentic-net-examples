@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - retrieve-and-manipulate-document-properties-of-an-xlsx-workbook-programmatically.cs
 - add-or-delete-custom-document-properties-in-an-xlsx-workbook-programmatically-vi.cs
 - insert-custom-document-properties-into-an-xlsx-workbook-to-store-additional-meta.cs
+- set-up-a-custom-property-named-link-to-content-within-an-xlsx-workbook-using-the.cs
