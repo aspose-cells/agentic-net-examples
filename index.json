@@ -56,6 +56,11 @@
     },
     {
       "category": "conversion",
+      "file": "transform-an-xlsx-workbook-into-csv-tsv-and-txt-files-generating-each-output-for.cs",
+      "title": "Transform an XLSX workbook into CSV, TSV, and TXT files, generating each output format from the source data."
+    },
+    {
+      "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-ods-sxc-and-fods-formats-while-preserving-data-i.cs",
       "title": "Transform an XLSX workbook into ODS, SXC, and FODS formats while preserving data integrity and layout."
     }
