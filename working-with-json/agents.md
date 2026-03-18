@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - convert-a-numbers-json-file-into-csv-format-preserving-data-fidelity-and-appropr.cs
 - transform-an-sxcformatted-json-file-into-a-csv-file-preserving-data-fidelity-and.cs
 - transform-a-fodsformatted-json-file-into-a-csv-file-preserving-data-fidelity-and.cs
+- transform-a-dif-json-data-file-into-a-csv-format-while-preserving-data-fidelity-.cs
