@@ -1246,6 +1246,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptionscrossstringtype-to-htmlcrosstypestrikethrough-when-load.cs",
+      "title": "Configure HtmlSaveOptions.CrossStringType to HtmlCrossType.Strikethrough when loading an XLSX workbook and exporting it to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs",
       "title": "Configure HtmlSaveOptions.ExportPrintAreaOnly to true when loading an XLSX workbook and exporting it as HTML."
     },
