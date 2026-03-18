@@ -1371,6 +1371,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-file-and-export-it-to-html-extracting-styles-into-an-external-css-s.cs",
+      "title": "Load an XLSX file and export it to HTML, extracting styles into an external CSS stylesheet."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-it-as-an-iecompatible-mhtml-file-while-preservi.cs",
       "title": "Load an XLSX workbook and export it as an IE\u2011compatible MHTML file while preserving formatting."
     },
