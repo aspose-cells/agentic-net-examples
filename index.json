@@ -1341,6 +1341,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "render-spreadsheet-gridlines-during-conversion-of-an-xlsx-workbook-to-html-outpu.cs",
+      "title": "Render spreadsheet gridlines during conversion of an XLSX workbook to HTML output, ensuring visual consistency with the original worksheet."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptionsheadinglevel-to-define-the-resulting-heading-hierarchy-while-.cs",
       "title": "Set HtmlSaveOptions.HeadingLevel to define the resulting heading hierarchy while converting an XLSX workbook to HTML."
     },
