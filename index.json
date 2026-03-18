@@ -2051,6 +2051,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-json-file-generated-from-an-xlsb-workbook-into-a-native-excel-spread.cs",
+      "title": "Transform a JSON file generated from an XLSB workbook into a native Excel spreadsheet format."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-json-representation-of-an-xlsm-workbook-into-a-native-excel-file-whi.cs",
       "title": "Transform a JSON representation of an XLSM workbook into a native Excel file while preserving all macros and data."
     },
