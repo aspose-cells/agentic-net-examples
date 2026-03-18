@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - configure-htmlsaveoptionsdisablecss-to-true-when-converting-an-xlsx-workbook-to-.cs
 - load-an-xlsx-workbook-and-save-it-as-html-without-generating-any-css-styles.cs
 - load-an-xlsx-workbook-and-save-it-as-html-without-explicitly-including-css-style.cs
+- load-an-xlsx-workbook-and-save-it-as-html-with-css-custom-properties-enabled-via.cs
