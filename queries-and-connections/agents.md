@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-process-its-external-connections-for-xlsxlsb-files-and-sav.cs
 - retrieve-sample-code-that-demonstrates-reading-and-writing-external-connections-.cs
 - load-an-xlsx-workbook-perform-external-connection-tasks-and-output-results-to-a-.cs
+- update-a-power-query-formula-item-in-an-xlsx-workbook-using-the-default-xlsx-for.cs
