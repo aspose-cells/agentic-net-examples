@@ -181,6 +181,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-html-formatted-data-into-an-xlsx-workbook-converting-web-content-into-str.cs",
+      "title": "Import HTML-formatted data into an XLSX workbook, converting web content into structured spreadsheet cells."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs",
       "title": "Insert HTML\u2011formatted rich text into a worksheet cell when programmatically generating an XLSX file."
     },
