@@ -1896,6 +1896,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-numbers-json-file-into-csv-format-preserving-data-fidelity-and-appropr.cs",
+      "title": "Convert a NUMBERS JSON file into CSV format, preserving data fidelity and appropriate column mapping."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-tsv-json-file-into-a-csv-document-while-maintaining-original-data-stru.cs",
       "title": "Convert a TSV JSON file into a CSV document while maintaining original data structure and encoding."
     },
