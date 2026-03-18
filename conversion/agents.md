@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - transform-a-workbook-in-xlsx-format-into-an-xml-file-using-the-librarys-conversi.cs
 - convert-an-xlsx-workbook-to-a-tiff-image-file-preserving-visual-fidelity-and-lay.cs
 - transform-an-xlsx-workbook-into-a-docx-document-preserving-cell-data-and-formatt.cs
+- transform-an-xlsx-workbook-into-a-pptx-presentation-generating-a-powerpoint-file.cs
