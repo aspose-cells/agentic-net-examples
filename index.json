@@ -1300,6 +1300,11 @@
       "title": "When loading an XLSX file, configure the required custom culture settings to ensure correct data parsing."
     },
     {
+      "category": "working-with-html",
+      "file": "when-loading-an-xlsx-workbook-and-exporting-to-html-suppress-downlevelrevealed-c.cs",
+      "title": "When loading an XLSX workbook and exporting to HTML, suppress downlevel\u2011revealed comments in the generated output."
+    },
+    {
       "category": "working-with-tables",
       "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
       "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
