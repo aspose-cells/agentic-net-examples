@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - save-a-workbook-in-strict-open-xml-xlsx-format-utilizing-the-provided-example-co.cs
 - save-the-workbook-as-an-xlsx-file-using-the-highest-possible-available-compressi.cs
 - save-the-workbook-to-xlsx-format-while-configuring-a-custom-compression-level-fo.cs
+- save-a-workbook-to-xlsx-format-while-applying-compression-settings-to-efficientl.cs
