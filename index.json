@@ -1281,6 +1281,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-an-xlsx-workbook-to-html-preserving-righttoleft-text-expansion-during-the.cs",
+      "title": "Export an XLSX workbook to HTML preserving right\u2011to\u2011left text expansion during the conversion process."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-an-xlsx-worksheet-to-html-with-databar-colorscale-and-iconset-conditional.cs",
       "title": "Export an XLSX worksheet to HTML with DataBar, ColorScale, and IconSet conditional formatting by enabling HtmlSaveOptions.ExportConditionalFormatting."
     },
