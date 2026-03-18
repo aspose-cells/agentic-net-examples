@@ -131,6 +131,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-a-datatable-into-an-xlsx-workbook-mapping-rows-and-columns-to-correspondi.cs",
+      "title": "Import a DataTable into an XLSX workbook, mapping rows and columns to corresponding spreadsheet cells."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-from-a-net-arraylist-into-an-xlsx-workbook-mapping-collection-elemen.cs",
       "title": "Import data from a .NET ArrayList into an XLSX workbook, mapping collection elements to worksheet cells."
     },
