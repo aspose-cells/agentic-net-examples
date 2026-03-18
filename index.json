@@ -1211,6 +1211,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-modify-and-query-tables-and-cell-ranges-within-an-xlsx-workbook-using-the.cs",
+      "title": "Create, modify, and query tables and cell ranges within an XLSX workbook using the provided API functions."
+    },
+    {
+      "category": "working-with-tables",
       "file": "generate-a-data-table-from-the-contents-of-an-xlsx-workbook-preserving-cell-form.cs",
       "title": "Generate a data table from the contents of an XLSX workbook, preserving cell formatting and structural hierarchy."
     },
