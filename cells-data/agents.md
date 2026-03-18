@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - implement-data-validation-in-xlsx-spreadsheets-following-microsoft-excel-specifi.cs
 - apply-data-validation-rules-to-xlsx-worksheets-using-the-provided-net-api-for-ce.cs
 - define-and-apply-data-validation-constraints-within-an-xlsx-workbook-to-enforce-.cs
+- enumerate-and-describe-the-supported-data-validation-types-applicable-to-workshe.cs
