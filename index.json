@@ -2146,6 +2146,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-tsvformatted-json-file-into-an-excel-workbook-preserving-the-origina.cs",
+      "title": "Transform a TSV\u2011formatted JSON file into an Excel workbook, preserving the original data structure and types."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-txt-json-file-into-csv-format-while-preserving-data-integrity-and-ma.cs",
       "title": "Transform a TXT JSON file into CSV format while preserving data integrity and maintaining field mappings."
     },
