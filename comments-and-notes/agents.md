@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - activate-the-new-comment-button-on-a-workbook-loaded-in-xlsx-format-to-insert-a-.cs
 - trigger-the-new-comment-feature-on-an-opened-xlsx-workbook-to-add-a-comment-to-a.cs
 - programmatically-select-the-review-tab-on-the-ribbon-of-a-workbook-that-has-been.cs
+- invoke-a-context-menu-on-the-target-cell-of-an-opened-xlsx-workbook-to-add-a-com.cs
