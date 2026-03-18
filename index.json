@@ -1216,6 +1216,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "identify-all-querytables-and-listobjects-linked-to-a-specific-external-data-conn.cs",
+      "title": "Identify all QueryTables and ListObjects linked to a specific external data connection within an XLSX workbook."
+    },
+    {
+      "category": "working-with-tables",
       "file": "identify-query-tables-and-list-objects-that-are-linked-to-external-data-connecti.cs",
       "title": "Identify query tables and list objects that are linked to external data connections within an XLSX workbook."
     },
