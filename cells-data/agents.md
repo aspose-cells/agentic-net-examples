@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - parse-stringbased-numeric-values-convert-them-to-numeric-types-and-generate-an-x.cs
 - implement-c-logic-that-parses-numeric-strings-into-numeric-types-and-writes-the-.cs
 - identify-typical-application-scenarios-where-the-xlsx-format-can-be-utilized-wit.cs
+- convert-textformatted-numeric-cells-to-true-numeric-values-in-an-excel-worksheet.cs
