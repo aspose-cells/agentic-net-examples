@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - insert-custom-document-properties-into-an-xlsx-workbook-to-store-additional-meta.cs
 - set-up-a-custom-property-named-link-to-content-within-an-xlsx-workbook-using-the.cs
 - delete-all-custom-document-properties-from-an-xlsx-workbook-programmatically-ens.cs
+- set-the-workbooks-builtin-document-property-to-define-the-xlsx-files-version-pro.cs
