@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs
 - retrieve-the-result-range-address-of-a-query-table-from-an-xlsx-workbook-using-t.cs
 - read-and-write-a-query-table-within-a-worksheet-using-the-default-xlsx-format.cs
+- obtain-the-result-range-of-a-query-table-from-a-workbook-saved-in-the-default-xl.cs
