@@ -2041,6 +2041,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-sxcformatted-json-file-into-a-csv-file-preserving-data-fidelity-and.cs",
+      "title": "Transform an SXC\u2011formatted JSON file into a CSV file, preserving data fidelity and column mapping."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xls-workbook-into-a-json-representation-using-the-default-conversio.cs",
       "title": "Transform an XLS workbook into a JSON representation using the default conversion settings provided."
     },
