@@ -1271,6 +1271,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "strip-leading-and-trailing-whitespace-from-fields-when-loading-csv-data-to-ensur.cs",
+      "title": "Strip leading and trailing whitespace from fields when loading CSV data to ensure a clean dataset."
+    },
+    {
+      "category": "working-with-html",
       "file": "trim-unnecessary-whitespace-following-line-breaks-during-csv-import-to-ensure-cl.cs",
       "title": "Trim unnecessary whitespace following line breaks during CSV import to ensure clean data parsing."
     },
