@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - transform-an-xlsb-workbook-into-a-json-representation-preserving-cell-data-types.cs
 - transform-an-ods-workbook-into-a-json-representation-preserving-cell-data-and-wo.cs
 - transform-a-csv-workbook-into-a-json-representation-preserving-data-types-and-st.cs
+- transform-a-tabseparated-values-workbook-into-a-json-representation-preserving-c.cs
