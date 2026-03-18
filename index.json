@@ -1991,6 +1991,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-difformatted-csv-dataset-into-a-json-document-ensuring-all-fields-an.cs",
+      "title": "Transform a DIF\u2011formatted CSV dataset into a JSON document, ensuring all fields and data types are preserved accurately."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-fods-csv-file-into-a-json-representation-preserving-all-data-fields-.cs",
       "title": "Transform a FODS CSV file into a JSON representation, preserving all data fields and structures."
     },
