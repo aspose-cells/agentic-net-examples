@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - load-xls-and-xlsb-workbooks-then-load-an-xlsx-workbook-and-persist-it-back-as-xl.cs
 - load-an-xlsx-workbook-manage-external-connections-of-xlsxlsb-files-and-save-the-.cs
 - identify-and-document-potential-use-cases-for-external-data-connections-within-s.cs
+- load-an-xlsx-workbook-process-its-external-connections-for-xlsxlsb-files-and-sav.cs
