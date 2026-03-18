@@ -876,6 +876,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "invoke-the-removeunusedstyles-method-to-eliminate-any-styles-that-are-not-refere.cs",
+      "title": "Invoke the RemoveUnusedStyles method to eliminate any styles that are not referenced within the workbook."
+    },
+    {
+      "category": "manage-workbook",
       "file": "manipulate-contenttypeproperties-to-retrieve-add-or-modify-cell-content-type-met.cs",
       "title": "Manipulate ContentTypeProperties to retrieve, add, or modify cell content type metadata across spreadsheet worksheets."
     },
