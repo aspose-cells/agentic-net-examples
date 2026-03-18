@@ -36,6 +36,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "modify-a-threaded-comment-in-an-xlsx-workbook-programmatically-using-the-net-spr.cs",
+      "title": "Modify a threaded comment in an XLSX workbook programmatically using the .NET spreadsheet library."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "modify-a-threaded-comment-within-an-xlsx-workbook-programmatically-using-the-exc.cs",
       "title": "Modify a threaded comment within an XLSX workbook programmatically using the Excel library's comment management API."
     },
