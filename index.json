@@ -2186,6 +2186,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-the-contents-of-a-csv-file-into-a-json-representation-preserving-data-.cs",
+      "title": "Transform the contents of a CSV file into a JSON representation, preserving data types and hierarchical structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-the-input-json-file-into-a-csv-format-mapping-each-object-property-to-.cs",
       "title": "Transform the input JSON file into a CSV format, mapping each object property to corresponding columns."
     },
