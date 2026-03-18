@@ -356,6 +356,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "investigate-error-and-boolean-value-localization-scenarios-within-a-workbook-loa.cs",
+      "title": "Investigate error and Boolean value localization scenarios within a workbook loaded from an XLSX file."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs",
       "title": "Verify localized formulas by examining console output of the Cell.FormulaLocal implementation with an XLSX workbook."
     }
