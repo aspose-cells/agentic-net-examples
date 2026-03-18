@@ -1200,6 +1200,11 @@
       "title": "Write the workbook's contents directly to an in-memory stream in the XLSX file format."
     },
     {
+      "category": "working-with-html",
+      "file": "ensure-that-numeric-values-parsed-from-csv-files-retain-full-precision-without-c.cs",
+      "title": "Ensure that numeric values parsed from CSV files retain full precision without converting to exponential notation."
+    },
+    {
       "category": "working-with-tables",
       "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
       "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
