@@ -61,6 +61,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-data-validation-in-xlsx-spreadsheets-following-microsoft-excel-specifi.cs",
+      "title": "Implement data validation in XLSX spreadsheets following Microsoft\u202fExcel specifications, including custom formulas and list constraints."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-data-validation-rules-on-cells-within-an-xlsx-workbook-using-net-apis-.cs",
       "title": "Implement data validation rules on cells within an XLSX workbook using .NET APIs programmatically."
     },
