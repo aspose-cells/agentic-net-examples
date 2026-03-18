@@ -1296,6 +1296,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-enable-htmlsaveoptionsexportgridlines-and-save-the-file-as.cs",
+      "title": "Load an XLSX workbook, enable HtmlSaveOptions.ExportGridLines, and save the file as HTML with grid lines rendered."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs",
       "title": "Load an XLSX workbook into memory for programmatic manipulation and data extraction via the API."
     },
