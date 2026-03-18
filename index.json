@@ -246,6 +246,11 @@
     },
     {
       "category": "cells-data",
+      "file": "maintain-a-leading-singlequote-prefix-for-cell-values-or-ranges-when-exporting-t.cs",
+      "title": "Maintain a leading single\u2011quote prefix for cell values or ranges when exporting to XLSX files."
+    },
+    {
+      "category": "cells-data",
       "file": "manipulate-spreadsheet-data-programmatically-with-full-xlsx-format-support-enabl.cs",
       "title": "Manipulate spreadsheet data programmatically with full XLSX format support, enabling reading, writing, and editing capabilities."
     },
