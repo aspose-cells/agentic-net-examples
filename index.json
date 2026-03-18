@@ -1321,6 +1321,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "implement-ifilepathprovider-load-an-xlsx-workbook-and-use-htmlsaveoptions-to-exp.cs",
+      "title": "Implement IFilePathProvider, load an XLSX workbook, and use HtmlSaveOptions to export HTML with custom file paths."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-ifilepathprovider-to-supply-the-html-output-path-when-loading-an-xlsx-.cs",
       "title": "Implement IFilePathProvider to supply the HTML output path when loading an XLSX workbook and saving it as HTML."
     },
