@@ -1291,6 +1291,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-the-xlsx-worksheet-with-righttoleft-text-to-html-enabling-the-expandrtlte.cs",
+      "title": "Export the XLSX worksheet with right\u2011to\u2011left text to HTML, enabling the ExpandRtlText option for expanded text."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-document-workbook-and-worksheet-metadata-during-xlsx-to-html-conversion-.cs",
       "title": "Include document, workbook, and worksheet metadata during XLSX to HTML conversion, preserving all property information."
     },
