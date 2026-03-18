@@ -1226,6 +1226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlcrosstype-to-apply-string-crossing-when-converting-a-loaded-xlsx-w.cs",
+      "title": "Configure HtmlCrossType to apply string crossing when converting a loaded XLSX workbook to HTML output."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlloadoptionsautofitcolumns-to-true-when-loading-html-then-export-as.cs",
       "title": "Configure HtmlLoadOptions.AutoFitColumns to true when loading HTML, then export as an XLSX workbook."
     },
