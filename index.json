@@ -111,6 +111,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-an-enumerator-to-iterate-over-cells-in-an-xlsx-workbook-programmatical.cs",
+      "title": "Implement an enumerator to iterate over cells in an XLSX workbook programmatically, supporting row and column traversal."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-c-logic-that-parses-numeric-strings-into-numeric-types-and-writes-the-.cs",
       "title": "Implement C# logic that parses numeric strings into numeric types and writes the results to an XLSX file."
     },
