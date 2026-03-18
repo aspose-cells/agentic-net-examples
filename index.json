@@ -1201,6 +1201,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-worksheet-protection-to-an-xlsx-file-to-prevent-unintended-row-and-column-.cs",
+      "title": "Apply worksheet protection to an XLSX file to prevent unintended row and column deletions."
+    },
+    {
+      "category": "working-with-tables",
       "file": "transform-a-data-collection-into-an-excel-listobject-by-loading-it-from-an-xlsx-.cs",
       "title": "Transform a data collection into an Excel ListObject by loading it from an XLSX workbook."
     }
