@@ -233,6 +233,11 @@
       "category": "document-properties",
       "file": "set-retrieve-and-modify-metadata-properties-of-an-xlsx-workbook-including-custom.cs",
       "title": "Set, retrieve, and modify metadata properties of an XLSX workbook, including custom and built\u2011in attributes, programmatically."
+    },
+    {
+      "category": "document-properties",
+      "file": "set-up-a-custom-property-named-link-to-content-within-an-xlsx-workbook-using-the.cs",
+      "title": "Set up a custom property named \u201clink to content\u201d within an XLSX workbook using the API."
     }
   ]
 }
