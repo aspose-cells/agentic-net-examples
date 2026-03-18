@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - load-an-xlsx-file-apply-column-widths-using-scalable-units-and-export-the-workbo.cs
 - convert-an-xlsx-worksheet-to-html-while-rendering-strikethrough-text-by-appropri.cs
 - configure-htmlsaveoptionscrossstringtype-to-htmlcrosstypestrikethrough-when-load.cs
+- configure-htmlcrosstype-to-apply-string-crossing-when-converting-a-loaded-xlsx-w.cs
