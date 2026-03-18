@@ -1206,6 +1206,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-htmlsaveoptionsexportheadings-before-converting-an-xlsx-workbook-to-html-.cs",
+      "title": "Enable HtmlSaveOptions.ExportHeadings before converting an XLSX workbook to HTML to retain the worksheet headings."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-numeric-values-parsed-from-csv-files-retain-full-precision-without-c.cs",
       "title": "Ensure that numeric values parsed from CSV files retain full precision without converting to exponential notation."
     },
