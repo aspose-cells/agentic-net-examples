@@ -1396,6 +1396,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "identify-and-correctly-handle-selfclosing-html-tags-during-html-import-and-subse.cs",
+      "title": "Identify and correctly handle self\u2011closing HTML tags during HTML import and subsequent XLSX export."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-a-custom-istreamprovider-to-load-an-html-document-and-export-it-direct.cs",
       "title": "Implement a custom IStreamProvider to load an HTML document and export it directly to an XLSX workbook."
     },
