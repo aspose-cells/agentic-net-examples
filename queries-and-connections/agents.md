@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - retrieve-source-and-output-excel-files-load-the-source-xlsx-workbook-then-export.cs
 - create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs
 - update-an-existing-sql-data-connection-within-a-default-xlsx-workbook-using-the-.cs
+- load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs
