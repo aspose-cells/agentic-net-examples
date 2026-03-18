@@ -2396,6 +2396,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-data-from-an-xltx-json-file-into-an-excel-workbook-while-maintaining-c.cs",
+      "title": "Transform data from an XLTX JSON file into an Excel workbook while maintaining cell formatting."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-data-from-an-xltx-json-source-into-a-csv-file-preserving-all-field-val.cs",
       "title": "Transform data from an XLTX JSON source into a CSV file, preserving all field values."
     },
