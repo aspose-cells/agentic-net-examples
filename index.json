@@ -876,6 +876,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "retrieve-and-manipulate-the-contenttypeproperties-of-a-worksheet-to-read-or-set-.cs",
+      "title": "Retrieve and manipulate the ContentTypeProperties of a worksheet to read or set document metadata."
+    },
+    {
+      "category": "manage-workbook",
       "file": "transfer-a-worksheet-from-the-current-workbook-to-a-different-workbook-maintaini.cs",
       "title": "Transfer a worksheet from the current workbook to a different workbook, maintaining all cell data, formatting, and formulas."
     },
