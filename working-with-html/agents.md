@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-export-it-to-html-by-implementing-a-custom-istreamprov.cs
 - create-an-istreamprovider-implementation-to-handle-output-streams-for-loading-xl.cs
 - apply-gradient-fill-rendering-to-wordart-objects-when-converting-xlsx-spreadshee.cs
+- ensure-wordart-shapes-retain-their-gradient-fill-when-converting-an-xlsx-workboo.cs
