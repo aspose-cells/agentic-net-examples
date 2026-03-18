@@ -2026,6 +2026,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-pdfembedded-csv-dataset-into-json-format-preserving-data-fidelity-an.cs",
+      "title": "Transform a PDF\u2011embedded CSV dataset into JSON format, preserving data fidelity and column metadata throughout the conversion."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-prn-json-file-into-csv-format-preserving-data-fidelity-and-appropria.cs",
       "title": "Transform a PRN JSON file into CSV format, preserving data fidelity and appropriate field mapping."
     },
