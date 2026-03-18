@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "cells-data",
+      "file": "apply-an-autofilter-to-a-worksheet-in-an-xlsx-workbook-to-enable-dynamic-data-fi.cs",
+      "title": "Apply an AutoFilter to a worksheet in an XLSX workbook to enable dynamic data filtering."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs",
       "title": "Apply filtering criteria to data within an XLSX spreadsheet to display rows that meet specified conditions."
     },
