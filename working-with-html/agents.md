@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - export-a-worksheet-from-an-xlsx-file-to-html-storing-css-in-separate-files-by-en.cs
 - configure-htmlsaveoptions-to-export-css-separately-load-an-xlsx-workbook-and-sav.cs
 - load-an-xlsx-file-and-export-it-to-html-extracting-styles-into-an-external-css-s.cs
+- load-an-html-document-and-generate-an-equivalent-pdf-file-while-preserving-its-l.cs
