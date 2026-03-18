@@ -191,6 +191,11 @@
     },
     {
       "category": "document-properties",
+      "file": "activate-thumbnail-scaling-in-an-xlsx-workbook-by-configuring-the-scalecrop-prop.cs",
+      "title": "Activate thumbnail scaling in an XLSX workbook by configuring the ScaleCrop property to TRUE."
+    },
+    {
+      "category": "document-properties",
       "file": "add-or-delete-custom-document-properties-in-an-xlsx-workbook-programmatically-vi.cs",
       "title": "Add or delete custom document properties in an XLSX workbook programmatically via the API."
     },
