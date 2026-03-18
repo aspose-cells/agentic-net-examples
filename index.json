@@ -1311,6 +1311,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-worksheet-and-save-it-as-html-using-htmlsaveoptionsexportgridlines-.cs",
+      "title": "Load an XLSX worksheet and save it as HTML using HtmlSaveOptions.ExportGridLines to display gridlines."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-the-xlsx-workbook-and-save-it-as-html-while-disabling-downlevel-revealed-co.cs",
       "title": "Load the XLSX workbook and save it as HTML while disabling downlevel revealed comments via HtmlSaveOptions.DisableDownlevelRevealedComments."
     },
