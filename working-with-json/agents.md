@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - transform-a-dbf-excel-file-into-a-json-document-preserving-data-types-and-struct.cs
 - transform-an-xps-excel-file-into-a-json-representation-while-preserving-cell-dat.cs
 - transform-an-oxps-spreadsheet-file-into-a-json-representation-preserving-cell-da.cs
+- transform-an-excel-workbook-containing-json-data-into-a-json-output-while-preser.cs
