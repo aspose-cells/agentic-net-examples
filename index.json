@@ -131,6 +131,11 @@
     },
     {
       "category": "cells-data",
+      "file": "insert-htmlformatted-rich-text-into-a-worksheet-cell-when-programmatically-gener.cs",
+      "title": "Insert HTML\u2011formatted rich text into a worksheet cell when programmatically generating an XLSX file."
+    },
+    {
+      "category": "cells-data",
       "file": "locate-cells-in-an-xlsx-workbook-that-match-a-given-string-or-numeric-value.cs",
       "title": "Locate cells in an XLSX workbook that match a given string or numeric value."
     },
