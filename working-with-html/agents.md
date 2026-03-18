@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - load-an-xlsx-worksheet-and-save-it-as-html-using-htmlsaveoptionsexportgridlines-.cs
 - load-an-xlsx-workbook-enable-htmlsaveoptionsexportgridlines-and-save-the-file-as.cs
 - render-spreadsheet-gridlines-during-conversion-of-an-xlsx-workbook-to-html-outpu.cs
+- include-document-workbook-and-worksheet-metadata-during-xlsx-to-html-conversion-.cs
