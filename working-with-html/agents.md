@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - configure-htmlsaveoptionsexportprintareaonly-to-true-when-loading-an-xlsx-workbo.cs
 - load-an-xlsx-workbook-specify-a-print-area-and-export-that-region-to-html-format.cs
 - when-converting-an-xlsx-to-html-substitute-unsupported-cell-border-styles-with-v.cs
+- export-a-loaded-xlsx-worksheet-to-html-using-htmlsaveoptionssimulateunsupportedb.cs
