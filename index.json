@@ -1106,6 +1106,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "save-the-workbook-in-strict-open-xml-xlsx-format-to-guarantee-fully-standards-co.cs",
+      "title": "Save the workbook in Strict Open XML XLSX format to guarantee fully standards compliance."
+    },
+    {
+      "category": "save-workbook",
       "file": "serialize-the-workbook-into-a-byte-array-using-default-options-producing-an-xlsx.cs",
       "title": "Serialize the workbook into a byte array using default options, producing an XLSX file representation."
     },
