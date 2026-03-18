@@ -1411,6 +1411,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-an-xlsx-worksheet-to-html-configuring-htmlsaveoptionslinktarget_blank-so-.cs",
+      "title": "Export an XLSX worksheet to HTML, configuring HtmlSaveOptions.LinkTarget=\"_blank\" so all hyperlinks open in new windows."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-an-xlsx-worksheet-to-html-with-databar-colorscale-and-iconset-conditional.cs",
       "title": "Export an XLSX worksheet to HTML with DataBar, ColorScale, and IconSet conditional formatting by enabling HtmlSaveOptions.ExportConditionalFormatting."
     },
