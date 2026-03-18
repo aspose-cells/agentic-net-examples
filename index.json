@@ -1331,6 +1331,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "when-converting-an-xlsx-workbook-to-html-include-all-cell-comments-in-the-genera.cs",
+      "title": "When converting an XLSX workbook to HTML, include all cell comments in the generated output."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-loading-an-xlsx-file-and-saving-as-html-set-htmlsaveoptionsexportconditiona.cs",
       "title": "When loading an XLSX file and saving as HTML, set HtmlSaveOptions.ExportConditionalFormatting to true to include conditional formatting."
     },
