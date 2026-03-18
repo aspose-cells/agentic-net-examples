@@ -801,6 +801,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "ensure-explicit-release-of-all-allocated-resources-such-as-file-handles-and-memo.cs",
+      "title": "Ensure explicit release of all allocated resources, such as file handles and memory, after operations complete."
+    },
+    {
+      "category": "manage-workbook",
       "file": "examine-and-verify-all-prerequisite-conditions-system-requirements-and-dependenc.cs",
       "title": "Examine and verify all prerequisite conditions, system requirements, and dependencies before proceeding with implementation steps."
     },
