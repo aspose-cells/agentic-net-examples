@@ -1116,6 +1116,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "save-the-workbook-as-an-xlsx-file-using-the-highest-possible-available-compressi.cs",
+      "title": "Save the workbook as an XLSX file using the highest possible available compression setting."
+    },
+    {
+      "category": "save-workbook",
       "file": "save-the-workbook-in-strict-open-xml-xlsx-format-to-guarantee-fully-standards-co.cs",
       "title": "Save the workbook in Strict Open XML XLSX format to guarantee fully standards compliance."
     },
