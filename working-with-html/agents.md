@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - transform-an-xlsx-workbook-into-html-using-htmlsaveoptions-with-presentationpref.cs
 - load-an-xlsx-workbook-configure-htmlsaveoptionspresentationpreference-to-bestfit.cs
 - load-an-xlsx-file-and-export-it-to-html-applying-the-presentationpreference-sett.cs
+- apply-presentationpreference-settings-when-loading-an-xlsx-workbook-and-exportin.cs
