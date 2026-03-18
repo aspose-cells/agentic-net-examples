@@ -1761,6 +1761,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "specify-the-hyperlink-target-when-converting-a-loaded-xlsx-workbook-to-an-html-f.cs",
+      "title": "Specify the hyperlink target when converting a loaded XLSX workbook to an HTML file output."
+    },
+    {
+      "category": "working-with-html",
       "file": "strip-leading-and-trailing-whitespace-from-fields-when-loading-csv-data-to-ensur.cs",
       "title": "Strip leading and trailing whitespace from fields when loading CSV data to ensure a clean dataset."
     },
