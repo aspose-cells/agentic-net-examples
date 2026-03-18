@@ -1131,6 +1131,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "write-the-workbook-to-an-http-response-stream-as-an-xlsx-file-using-the-provided.cs",
+      "title": "Write the workbook to an HTTP response stream as an XLSX file using the provided code snippet."
+    },
+    {
+      "category": "save-workbook",
       "file": "write-the-workbook-to-an-http-response-stream-in-xlsx-format-utilizing-default-c.cs",
       "title": "Write the workbook to an HTTP response stream in XLSX format utilizing default configuration."
     },
