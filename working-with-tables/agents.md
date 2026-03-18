@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - generate-a-data-table-from-the-contents-of-an-xlsx-workbook-preserving-cell-form.cs
 - generate-a-listobject-in-an-xlsx-worksheet-programmatically-using-the-net-api-wi.cs
 - identify-all-querytables-and-listobjects-linked-to-a-specific-external-data-conn.cs
+- read-from-and-write-to-an-xlsx-file-using-a-query-table-data-source-for-tabular-.cs
