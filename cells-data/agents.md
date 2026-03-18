@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - retrieve-a-cell-object-by-its-named-reference-from-an-xlsx-worksheet-within-the-.cs
 - retrieve-a-cell-object-from-an-xlsx-worksheet-by-specifying-its-row-and-column-i.cs
 - retrieve-a-cell-object-from-the-worksheets-cells-collection-using-its-zerobased-.cs
+- parse-stringbased-numeric-values-convert-them-to-numeric-types-and-generate-an-x.cs
