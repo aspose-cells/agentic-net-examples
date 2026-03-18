@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - define-the-target-workbook-when-performing-copy-or-move-operations-between-separ.cs
 - copy-a-worksheet-to-another-location-within-the-same-workbook-or-transfer-it-to-.cs
 - copy-a-worksheet-to-another-location-within-the-same-workbook-while-preserving-i.cs
+- relocate-a-worksheet-to-a-different-position-within-the-same-workbook-updating-r.cs
