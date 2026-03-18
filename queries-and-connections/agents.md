@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - retrieve-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs
 - obtain-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-format.cs
 - obtain-a-sample-implementation-illustrating-odata-connection-retrieval-for-gener.cs
+- load-an-xlsx-workbook-retrieve-its-odata-metadata-and-output-the-information-to-.cs
