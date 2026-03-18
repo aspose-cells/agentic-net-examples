@@ -1906,6 +1906,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-tab-workbook-into-a-json-representation-preserving-cell-data-types-a.cs",
+      "title": "Transform a TAB workbook into a JSON representation, preserving cell data types and worksheet hierarchy."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-tabseparated-values-workbook-into-a-json-representation-preserving-c.cs",
       "title": "Transform a tab\u2011separated values workbook into a JSON representation, preserving cell data and structure."
     },
