@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - transform-a-difformatted-csv-dataset-into-a-json-document-ensuring-all-fields-an.cs
 - transform-a-prnformatted-csv-file-into-a-json-representation-preserving-data-typ.cs
 - transform-data-from-an-xps-csv-file-into-json-format-while-maintaining-field-int.cs
+- transform-an-oxps-csv-file-into-a-json-document-maintaining-data-fidelity-and-pr.cs
