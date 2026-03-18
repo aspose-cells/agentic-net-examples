@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - provide-sample-code-that-configures-the-workbooks-document-version-property-for-.cs
 - examine-how-the-version-property-is-managed-within-an-xlsx-workbook-and-ensure-c.cs
 - set-the-workbooks-language-programmatically-via-its-builtin-document-properties-.cs
+- identify-and-document-various-scenarios-for-configuring-the-language-property-wi.cs
