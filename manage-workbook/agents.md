@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - traverse-each-worksheet-cell-and-perform-a-regular-expression-replacement-on-its.cs
 - perform-a-regularexpression-based-searchandreplace-operation-on-all-cell-values-.cs
 - create-a-regular-expression-that-matches-the-specified-pattern-according-to-the-.cs
+- manipulate-contenttypeproperties-to-retrieve-add-or-modify-cell-content-type-met.cs
