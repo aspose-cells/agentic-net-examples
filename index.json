@@ -236,6 +236,11 @@
     },
     {
       "category": "cells-data",
+      "file": "provide-sample-net-code-illustrating-creation-manipulation-and-saving-of-workboo.cs",
+      "title": "Provide sample .NET code illustrating creation, manipulation, and saving of workbook data in XLSX format."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cell-object-by-its-named-reference-from-an-xlsx-worksheet-within-the-.cs",
       "title": "Retrieve a cell object by its named reference from an XLSX worksheet within the workbook."
     },
