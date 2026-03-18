@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-export-it-to-html-with-all-css-disabled-via-htmlsaveop.cs
 - configure-htmlsaveoptionsdisablecss-to-true-when-converting-an-xlsx-workbook-to-.cs
 - load-an-xlsx-workbook-and-save-it-as-html-without-generating-any-css-styles.cs
+- load-an-xlsx-workbook-and-save-it-as-html-without-explicitly-including-css-style.cs
