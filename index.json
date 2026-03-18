@@ -1901,6 +1901,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-pdf-json-representation-into-a-csv-file-maintaining-field-mappings-and.cs",
+      "title": "Convert a PDF JSON representation into a CSV file, maintaining field mappings and data integrity throughout the process."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-tsv-json-file-into-a-csv-document-while-maintaining-original-data-stru.cs",
       "title": "Convert a TSV JSON file into a CSV document while maintaining original data structure and encoding."
     },
