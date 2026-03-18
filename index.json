@@ -1601,6 +1601,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-configure-htmlsaveoptionspresentationpreference-to-bestfit.cs",
+      "title": "Load an XLSX workbook, configure\u202fHtmlSaveOptions.PresentationPreference\u202fto\u202fBestFit, and export it as HTML format."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-discard-unused-styles-and-export-the-content-to-html-forma.cs",
       "title": "Load an XLSX workbook, discard unused styles, and export the content to HTML format."
     },
