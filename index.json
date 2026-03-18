@@ -16,6 +16,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "invoke-a-context-menu-on-the-target-cell-of-an-opened-xlsx-workbook-to-add-a-com.cs",
+      "title": "Invoke a context menu on the target cell of an opened XLSX workbook to add a comment."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "programmatically-delete-all-threaded-comments-from-an-xlsx-workbook-after-loadin.cs",
       "title": "Programmatically delete all threaded comments from an XLSX workbook after loading it with the Excel library."
     },
