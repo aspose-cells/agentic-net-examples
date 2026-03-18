@@ -131,6 +131,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-concurrent-reading-of-cell-values-from-an-xlsx-workbook-using-multi-th.cs",
+      "title": "Implement concurrent reading of cell values from an XLSX workbook using multi-threaded access efficiently."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-data-validation-in-xlsx-spreadsheets-following-microsoft-excel-specifi.cs",
       "title": "Implement data validation in XLSX spreadsheets following Microsoft\u202fExcel specifications, including custom formulas and list constraints."
     },
