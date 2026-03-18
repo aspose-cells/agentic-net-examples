@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - apply-the-net-dispose-pattern-to-guarantee-proper-cleanup-of-resources-within-th.cs
 - ensure-explicit-release-of-all-allocated-resources-such-as-file-handles-and-memo.cs
 - identify-and-delete-any-style-definitions-in-the-workbook-that-are-not-applied-t.cs
+- invoke-the-removeunusedstyles-method-to-eliminate-any-styles-that-are-not-refere.cs
