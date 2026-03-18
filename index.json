@@ -8,6 +8,11 @@
       "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-a-pdf-document-preserving-formatting-layout-and-.cs",
       "title": "Transform an XLSX workbook into a PDF document, preserving formatting, layout, and pagination for accurate rendering."
+    },
+    {
+      "category": "conversion",
+      "file": "transform-an-xlsx-workbook-into-an-xps-document-preserving-data-fidelity-and-lay.cs",
+      "title": "Transform an XLSX workbook into an XPS document, preserving data fidelity and layout during conversion."
     }
   ]
 }
