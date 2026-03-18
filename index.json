@@ -1895,6 +1895,11 @@
       "title": "Convert an XLS workbook into a JSON document, maintaining worksheet structures, cell data types, and formatting details."
     },
     {
+      "category": "working-with-json",
+      "file": "transform-an-xlsx-workbook-into-a-json-representation-mapping-sheets-and-cells-t.cs",
+      "title": "Transform an XLSX workbook into a JSON representation, mapping sheets and cells to hierarchical objects."
+    },
+    {
       "category": "working-with-pdf",
       "file": "activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs",
       "title": "Activate the ContentCopyForAccessibility setting during Excel-to-PDF conversion to ensure accessible content can be copied."
