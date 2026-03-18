@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - prevent-automatic-numeric-conversion-during-csv-import-for-the-operation-by-sett.cs
 - configure-loadoptionsnumberformat-to-0-to-ensure-csv-data-loads-as-plain-numeric.cs
 - set-loadoptionsconvertnumericdata-to-false-when-loading-csv-files-to-disable-aut.cs
+- when-loading-an-xlsx-file-configure-the-required-custom-culture-settings-to-ensu.cs
