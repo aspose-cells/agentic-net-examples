@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-document-workbook-and-worksheet-metadata-during-xlsx-to-html-conversion-.cs",
+      "title": "Include document, workbook, and worksheet metadata during XLSX to HTML conversion, preserving all property information."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-csv-file-with-loadoptionsnumberformat-to-retain-large-numeric-values-in-f.cs",
       "title": "Load a CSV file with LoadOptions.NumberFormat to retain large numeric values in full precision, avoiding exponential notation."
     },
