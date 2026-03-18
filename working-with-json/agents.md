@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - transform-the-contents-of-a-csv-file-into-a-json-representation-preserving-data-.cs
 - transform-a-tsv-csv-file-into-a-json-document-preserving-data-types-and-structur.cs
 - transform-a-csvformatted-txt-file-into-a-json-structure-preserving-all-field-val.cs
+- transform-a-tab-delimited-csv-file-into-a-json-representation-preserving-data-ty.cs
