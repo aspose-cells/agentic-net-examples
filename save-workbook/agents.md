@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - export-the-workbook-to-a-strict-open-xml-spreadsheet-xlsx-using-default-formatti.cs
 - save-the-workbook-in-strict-open-xml-xlsx-format-to-guarantee-fully-standards-co.cs
 - save-the-workbook-as-a-strict-open-xml-xlsx-file-using-saveoptions-to-ensure-com.cs
+- save-a-workbook-in-strict-open-xml-xlsx-format-utilizing-the-provided-example-co.cs
