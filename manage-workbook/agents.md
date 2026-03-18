@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - implement-a-using-block-to-ensure-deterministic-disposal-of-unmanaged-resources-.cs
 - dispose-the-workbook-properly-to-free-all-associated-unmanaged-resources-and-pre.cs
 - apply-the-net-dispose-pattern-to-guarantee-proper-cleanup-of-resources-within-th.cs
+- ensure-explicit-release-of-all-allocated-resources-such-as-file-handles-and-memo.cs
