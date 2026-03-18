@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - load-the-xlsx-workbook-and-save-it-as-html-while-disabling-downlevel-revealed-co.cs
 - enable-the-htmlsaveoptionsdisabledownlevelrevealedcomments-property-when-loading.cs
 - when-loading-an-xlsx-workbook-and-exporting-to-html-suppress-downlevelrevealed-c.cs
+- disable-downlevel-revealed-comments-during-the-conversion-of-an-xlsx-workbook-fi.cs
