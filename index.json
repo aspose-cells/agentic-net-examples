@@ -1205,6 +1205,11 @@
       "title": "Ensure that numeric values parsed from CSV files retain full precision without converting to exponential notation."
     },
     {
+      "category": "working-with-html",
+      "file": "load-a-csv-file-with-loadoptionsnumberformat-to-retain-large-numeric-values-in-f.cs",
+      "title": "Load a CSV file with LoadOptions.NumberFormat to retain large numeric values in full precision, avoiding exponential notation."
+    },
+    {
       "category": "working-with-tables",
       "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
       "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
