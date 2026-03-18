@@ -1751,6 +1751,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "when-converting-an-xlsx-workbook-to-html-ensure-hidden-worksheet-elements-are-ex.cs",
+      "title": "When converting an XLSX workbook to HTML, ensure hidden worksheet elements are excluded from the resulting output."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-converting-an-xlsx-workbook-to-html-include-all-cell-comments-in-the-genera.cs",
       "title": "When converting an XLSX workbook to HTML, include all cell comments in the generated output."
     },
