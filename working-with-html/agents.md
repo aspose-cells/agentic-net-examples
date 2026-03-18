@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - utilize-css-custom-properties-to-style-the-html-output-generated-from-loading-an.cs
 - load-an-xlsx-workbook-and-save-it-as-html-using-htmlsaveoptionsdefaultfont-for-t.cs
 - configure-htmlsaveoptionsdefaultfont-to-arial-when-loading-an-xlsx-workbook-and-.cs
+- specify-a-default-font-when-converting-an-xlsx-workbook-to-html-output-during-re.cs
