@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - include-document-workbook-and-worksheet-metadata-during-xlsx-to-html-conversion-.cs
 - convert-an-xlsx-workbook-to-html-enabling-htmlsaveoptionsexportdocumentpropertie.cs
 - enable-htmlsaveoptionsexportdocumentproperties-when-converting-an-xlsx-workbook-.cs
+- load-an-xlsx-workbook-configure-html-export-options-to-embed-metadata-and-save-t.cs
