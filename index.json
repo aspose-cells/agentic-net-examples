@@ -2151,6 +2151,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-data-from-an-xls-csv-file-into-json-format-preserving-all-rows-and-col.cs",
+      "title": "Transform data from an XLS CSV file into JSON format, preserving all rows and column values."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-data-from-an-xls-json-source-into-a-csv-format-while-preserving-column.cs",
       "title": "Transform data from an XLS JSON source into a CSV format while preserving column integrity."
     },
