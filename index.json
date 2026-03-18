@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "conversion",
+      "file": "transform-a-workbook-in-xlsx-format-into-an-xml-file-using-the-librarys-conversi.cs",
+      "title": "Transform a workbook in XLSX format into an XML file using the library\u2019s conversion capabilities."
+    },
+    {
+      "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-a-json-file-preserving-worksheet-data-cell-types.cs",
       "title": "Transform an XLSX workbook into a JSON file, preserving worksheet data, cell types, and hierarchy."
     },
