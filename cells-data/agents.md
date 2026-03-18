@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - identify-and-list-all-worksheet-cells-that-contain-formulas-within-an-xlsx-workb.cs
 - utilize-findoptions-to-search-for-specific-cell-values-or-formulas-within-an-xls.cs
 - locate-cells-in-an-xlsx-workbook-that-match-a-given-string-or-numeric-value.cs
+- manipulate-spreadsheet-data-programmatically-with-full-xlsx-format-support-enabl.cs
