@@ -91,6 +91,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-a-concluding-workbook-in-xlsx-format-that-summarizes-the-processed-data.cs",
+      "title": "Generate a concluding workbook in XLSX format that summarizes the processed data and key metrics."
+    },
+    {
+      "category": "cells-data",
       "file": "generate-an-xlsx-file-by-exporting-worksheet-data-using-net-apis-while-preservin.cs",
       "title": "Generate an XLSX file by exporting worksheet data using .NET APIs while preserving cell values and formatting."
     },
