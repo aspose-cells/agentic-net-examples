@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - create-and-manipulate-excel-workbooks-programmatically-storing-all-data-in-the-x.cs
 - employ-the-net-api-to-programmatically-read-modify-and-generate-spreadsheet-data.cs
 - apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs
+- apply-an-autofilter-to-a-worksheet-in-an-xlsx-workbook-to-enable-dynamic-data-fi.cs
