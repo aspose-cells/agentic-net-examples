@@ -308,6 +308,11 @@
       "category": "document-properties",
       "file": "set-up-a-custom-property-named-link-to-content-within-an-xlsx-workbook-using-the.cs",
       "title": "Set up a custom property named \u201clink to content\u201d within an XLSX workbook using the API."
+    },
+    {
+      "category": "document-properties",
+      "file": "update-the-linksuptodate-builtin-property-of-an-xlsx-workbook-to-reflect-its-cur.cs",
+      "title": "Update the LinksUpToDate built\u2011in property of an XLSX workbook to reflect its current link status."
     }
   ]
 }
