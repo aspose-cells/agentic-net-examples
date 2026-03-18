@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs
 - load-an-xlsx-workbook-then-export-it-to-html-preserving-worksheet-headings-in-th.cs
 - load-an-xlsx-worksheet-and-save-it-as-html-enabling-htmlsaveoptionsexportheading.cs
+- enable-htmlsaveoptionsexportheadings-before-converting-an-xlsx-workbook-to-html-.cs
