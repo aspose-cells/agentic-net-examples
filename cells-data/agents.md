@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - emit-spreadsheet-data-to-the-console-using-xlsx-format-ensuring-compatibility-wi.cs
 - access-and-modify-specific-rich-text-segments-within-a-cell-programmatically-in-.cs
 - implement-c-functionality-to-retrieve-and-modify-specific-richtext-fragments-wit.cs
+- capture-and-present-the-console-output-produced-when-the-sample-code-processes-a.cs
