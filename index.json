@@ -101,6 +101,11 @@
     },
     {
       "category": "cells-data",
+      "file": "sort-spreadsheet-data-programmatically-when-working-with-xlsx-files-maintaining-.cs",
+      "title": "Sort spreadsheet data programmatically when working with XLSX files, maintaining original formatting and data types."
+    },
+    {
+      "category": "cells-data",
       "file": "transform-numeric-strings-in-a-worksheet-to-true-numeric-types-and-save-the-work.cs",
       "title": "Transform numeric strings in a worksheet to true numeric types and save the workbook as an XLSX file using .NET."
     },
