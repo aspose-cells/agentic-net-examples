@@ -241,6 +241,11 @@
     },
     {
       "category": "document-properties",
+      "file": "set-the-workbooks-builtin-document-property-to-define-the-xlsx-files-version-pro.cs",
+      "title": "Set the workbook's built\u2011in document property to define the XLSX file's version programmatically via the API."
+    },
+    {
+      "category": "document-properties",
       "file": "set-up-a-custom-property-named-link-to-content-within-an-xlsx-workbook-using-the.cs",
       "title": "Set up a custom property named \u201clink to content\u201d within an XLSX workbook using the API."
     }
