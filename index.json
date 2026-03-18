@@ -1986,6 +1986,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xls-workbook-into-a-json-representation-using-the-default-conversio.cs",
+      "title": "Transform an XLS workbook into a JSON representation using the default conversion settings provided."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsb-workbook-into-a-json-representation-preserving-cell-data-types.cs",
       "title": "Transform an XLSB workbook into a JSON representation, preserving cell data types and worksheet structures."
     },
