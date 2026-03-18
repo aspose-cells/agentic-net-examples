@@ -16,6 +16,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-a-cell-object-from-the-worksheets-cells-collection-using-its-zerobased-.cs",
+      "title": "Retrieve a cell object from the worksheet's cells collection using its zero\u2011based index in an XLSX file."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-and-manipulate-individual-cells-within-an-xlsx-workbook-using-the-provi.cs",
       "title": "Retrieve and manipulate individual cells within an XLSX workbook using the provided API methods."
     },
