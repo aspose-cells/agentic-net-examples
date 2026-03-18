@@ -336,6 +336,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "execute-the-cellformulalocal-sample-on-an-xlsx-workbook-to-apply-localespecific-.cs",
+      "title": "Execute the Cell.FormulaLocal sample on an XLSX workbook to apply locale\u2011specific formulas throughout the spreadsheet."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "identify-and-demonstrate-formulalocal-localization-scenarios-on-a-workbook-loade.cs",
       "title": "Identify and demonstrate FormulaLocal localization scenarios on a workbook loaded from an XLSX file."
     },
