@@ -1995,6 +1995,11 @@
       "title": "Transform an XML workbook into a JSON representation, preserving all data structures and metadata."
     },
     {
+      "category": "working-with-json",
+      "file": "transform-an-xps-workbook-into-a-json-representation-preserving-all-worksheet-da.cs",
+      "title": "Transform an XPS workbook into a JSON representation, preserving all worksheet data and formatting details."
+    },
+    {
       "category": "working-with-pdf",
       "file": "activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs",
       "title": "Activate the ContentCopyForAccessibility setting during Excel-to-PDF conversion to ensure accessible content can be copied."
