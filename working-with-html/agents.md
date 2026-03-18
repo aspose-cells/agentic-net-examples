@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - apply-gradient-fill-rendering-to-wordart-objects-when-converting-xlsx-spreadshee.cs
 - ensure-wordart-shapes-retain-their-gradient-fill-when-converting-an-xlsx-workboo.cs
 - export-a-spreadsheet-worksheet-to-html-with-overlaid-objects-hidden-by-activatin.cs
+- enable-the-crosshideright-option-when-converting-an-xlsx-workbook-to-html-by-set.cs
