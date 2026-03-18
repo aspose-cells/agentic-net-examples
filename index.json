@@ -1073,6 +1073,11 @@
       "category": "queries-and-connections",
       "file": "validate-hidden-external-links-in-an-xlsx-workbook-and-output-the-findings-to-a-.cs",
       "title": "Validate hidden external links in an XLSX workbook and output the findings to a TXT file via console."
+    },
+    {
+      "category": "save-workbook",
+      "file": "persist-the-workbook-as-an-xlsx-file-on-disk-ensuring-compliance-with-the-open-x.cs",
+      "title": "Persist the workbook as an XLSX file on disk, ensuring compliance with the Open XML format."
     }
   ]
 }
