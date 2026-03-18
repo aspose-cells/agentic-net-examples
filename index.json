@@ -1225,6 +1225,11 @@
       "title": "Set LoadOptions.ConvertNumericData to false when loading CSV files to disable automatic numeric type conversion."
     },
     {
+      "category": "working-with-html",
+      "file": "when-loading-an-xlsx-file-configure-the-required-custom-culture-settings-to-ensu.cs",
+      "title": "When loading an XLSX file, configure the required custom culture settings to ensure correct data parsing."
+    },
+    {
       "category": "working-with-tables",
       "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
       "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
