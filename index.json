@@ -1291,6 +1291,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-the-worksheets-defined-print-area-to-html-by-setting-htmlsaveoptionsexpor.cs",
+      "title": "Export the worksheet's defined print area to HTML by setting HtmlSaveOptions.ExportPrintAreaOnly after loading an XLSX file."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-the-xlsx-worksheet-with-righttoleft-text-to-html-enabling-the-expandrtlte.cs",
       "title": "Export the XLSX worksheet with right\u2011to\u2011left text to HTML, enabling the ExpandRtlText option for expanded text."
     },
