@@ -846,6 +846,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "manipulate-contenttypeproperties-to-retrieve-add-or-modify-cell-content-type-met.cs",
+      "title": "Manipulate ContentTypeProperties to retrieve, add, or modify cell content type metadata across spreadsheet worksheets."
+    },
+    {
+      "category": "manage-workbook",
       "file": "open-a-workbook-file-in-the-net-environment-to-access-its-worksheets-and-data.cs",
       "title": "Open a workbook file in the .NET environment to access its worksheets and data."
     },
