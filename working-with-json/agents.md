@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - transform-a-txt-workbook-into-a-json-representation-preserving-all-data-fidelity.cs
 - transform-a-tab-workbook-into-a-json-representation-preserving-cell-data-types-a.cs
 - transform-an-html-workbook-into-a-json-representation-preserving-cell-data-forma.cs
+- convert-an-mht-workbook-file-into-a-json-structure-maintaining-all-worksheet-dat.cs
