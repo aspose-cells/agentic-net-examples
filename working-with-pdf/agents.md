@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - transform-an-excel-workbook-into-a-pdf-document-by-applying-the-standard-workboo.cs
 - convert-an-excel-workbook-directly-to-a-pdf-document-preserving-formatting-layou.cs
 - execute-advanced-excel-to-pdf-conversion-preserving-formatting-formulas-charts-a.cs
+- configure-conversion-options-to-control-pdf-output-characteristics-such-as-page-.cs
