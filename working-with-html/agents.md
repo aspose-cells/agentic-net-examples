@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-prepend-a-specified-prefix-to-generated-html-table-css.cs
 - load-an-html-document-into-a-workbook-enable-column-and-row-autofit-via-htmlload.cs
 - configure-htmlloadoptionsautofitcolumns-to-true-when-loading-html-then-export-as.cs
+- enable-automatic-row-fitting-when-loading-html-by-setting-htmlloadoptionsautofit.cs
