@@ -1946,6 +1946,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-xltx-json-file-to-csv-format-utilizing-the-librarys-default-conversio.cs",
+      "title": "Convert an XLTX JSON file to CSV format utilizing the library's default conversion options and preserving data integrity."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-an-xltx-workbook-to-a-json-file-using-the-default-conversion-settings-wi.cs",
       "title": "Convert an XLTX workbook to a JSON file using the default conversion settings without additional parameters."
     },
