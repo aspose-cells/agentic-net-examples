@@ -136,6 +136,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-from-a-dynamic-object-into-an-xlsx-workbook-using-it-as-the-data-sou.cs",
+      "title": "Import data from a dynamic object into an XLSX workbook using it as the data source."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-from-a-net-arraylist-into-an-xlsx-workbook-mapping-collection-elemen.cs",
       "title": "Import data from a .NET ArrayList into an XLSX workbook, mapping collection elements to worksheet cells."
     },
