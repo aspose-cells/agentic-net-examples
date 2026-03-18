@@ -846,6 +846,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "perform-a-regularexpression-based-searchandreplace-operation-on-all-cell-values-.cs",
+      "title": "Perform a regular\u2011expression based search\u2011and\u2011replace operation on all cell values within the workbook document."
+    },
+    {
+      "category": "manage-workbook",
       "file": "persist-the-currently-loaded-workbook-to-a-file-in-its-native-format-ensuring-al.cs",
       "title": "Persist the currently loaded workbook to a file in its native format, ensuring all changes are stored."
     },
