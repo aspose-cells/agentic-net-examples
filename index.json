@@ -5,6 +5,11 @@
   "framework": ".NET",
   "examples": [
     {
+      "category": "cells-data",
+      "file": "retrieve-or-manipulate-individual-cells-within-an-xlsx-worksheet-programmaticall.cs",
+      "title": "Retrieve or manipulate individual cells within an XLSX worksheet programmatically via the .NET API."
+    },
+    {
       "category": "comments-and-notes",
       "file": "activate-the-new-comment-button-on-a-workbook-loaded-in-xlsx-format-to-insert-a-.cs",
       "title": "Activate the New Comment button on a workbook loaded in XLSX format to insert a comment."
