@@ -16,6 +16,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-and-configure-various-filter-types-on-xlsx-worksheets-to-control-data-visi.cs",
+      "title": "Apply and configure various filter types on XLSX worksheets to control data visibility and retrieval."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-filtering-criteria-to-data-within-an-xlsx-spreadsheet-to-display-rows-that.cs",
       "title": "Apply filtering criteria to data within an XLSX spreadsheet to display rows that meet specified conditions."
     },
