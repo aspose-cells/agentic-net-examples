@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - identify-and-document-various-scenarios-for-configuring-the-language-property-wi.cs
 - provide-example-code-to-assign-a-language-identifier-to-an-xlsx-workbook-program.cs
 - analyze-how-the-language-property-is-managed-within-an-xlsx-workbook-and-ensure-.cs
+- add-user-defined-properties-to-an-xlsx-workbook-so-they-appear-in-the-document-i.cs
