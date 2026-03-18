@@ -186,6 +186,11 @@
     },
     {
       "category": "document-properties",
+      "file": "add-or-delete-custom-document-properties-in-an-xlsx-workbook-programmatically-vi.cs",
+      "title": "Add or delete custom document properties in an XLSX workbook programmatically via the API."
+    },
+    {
+      "category": "document-properties",
       "file": "create-read-update-and-delete-workbook-document-properties-within-an-xlsx-file-u.cs",
       "title": "Create, read, update, and delete workbook document properties within an XLSX file using the .NET API."
     },
