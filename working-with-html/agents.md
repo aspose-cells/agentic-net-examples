@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - load-an-xlsx-file-and-export-it-to-html-extracting-styles-into-an-external-css-s.cs
 - load-an-html-document-and-generate-an-equivalent-pdf-file-while-preserving-its-l.cs
 - load-an-html-file-using-htmlloadoptions-then-export-the-workbook-and-generate-a-.cs
+- load-an-html-document-using-htmlloadoptions-and-convert-it-directly-to-a-pdf-fil.cs
