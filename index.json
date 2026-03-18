@@ -131,6 +131,11 @@
     },
     {
       "category": "cells-data",
+      "file": "locate-cells-in-an-xlsx-workbook-that-match-a-given-string-or-numeric-value.cs",
+      "title": "Locate cells in an XLSX workbook that match a given string or numeric value."
+    },
+    {
+      "category": "cells-data",
       "file": "locate-cells-in-an-xlsx-workbook-that-match-the-provided-data-criteria-across-al.cs",
       "title": "Locate cells in an XLSX workbook that match the provided data criteria across all worksheets."
     },
