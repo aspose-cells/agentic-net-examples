@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - transform-a-dif-workbook-into-a-json-representation-preserving-cell-data-types-a.cs
 - transform-a-dbf-workbook-into-json-format-preserving-data-integrity-and-structur.cs
 - transform-a-prn-workbook-into-a-json-representation-preserving-data-fidelity-and.cs
+- transform-an-xps-workbook-into-a-json-representation-preserving-all-worksheet-da.cs
