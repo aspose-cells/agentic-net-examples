@@ -1991,6 +1991,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-csv-or-json-data-file-into-an-xlsx-workbook-preserving-data-types-an.cs",
+      "title": "Transform a CSV or JSON data file into an XLSX workbook, preserving data types and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-csv-workbook-into-a-json-representation-preserving-data-types-and-st.cs",
       "title": "Transform a CSV workbook into a JSON representation, preserving data types and structure accurately."
     },
