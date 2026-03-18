@@ -1611,6 +1611,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-save-it-as-html-without-explicitly-including-css-style.cs",
+      "title": "Load an XLSX workbook and save it as HTML without explicitly including CSS styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-save-it-as-html-without-generating-any-css-styles.cs",
       "title": "Load an XLSX workbook and save it as HTML without generating any CSS styles."
     },
