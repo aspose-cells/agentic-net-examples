@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - identify-typical-application-scenarios-where-the-xlsx-format-can-be-utilized-wit.cs
 - convert-textformatted-numeric-cells-to-true-numeric-values-in-an-excel-worksheet.cs
 - transform-numeric-strings-in-a-worksheet-to-true-numeric-types-and-save-the-work.cs
+- programmatically-generate-row-level-subtotals-in-an-xlsx-worksheet-by-applying-s.cs
