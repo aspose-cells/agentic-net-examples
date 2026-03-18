@@ -1076,6 +1076,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "configure-the-workbook-to-use-the-highest-compression-setting-when-saving-as-an-.cs",
+      "title": "Configure the workbook to use the highest compression setting when saving as an XLSX file."
+    },
+    {
+      "category": "save-workbook",
       "file": "export-the-workbook-as-a-strict-open-xml-spreadsheet-generating-an-xlsx-file-com.cs",
       "title": "Export the workbook as a Strict Open XML Spreadsheet, generating an XLSX file compliant with the standard."
     },
