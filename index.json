@@ -2181,6 +2181,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xlsx-or-csv-source-file-into-a-json-representation-using-default-co.cs",
+      "title": "Transform an XLSX or CSV source file into a JSON representation using default conversion settings."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsx-workbook-into-a-json-representation-mapping-sheets-and-cells-t.cs",
       "title": "Transform an XLSX workbook into a JSON representation, mapping sheets and cells to hierarchical objects."
     },
