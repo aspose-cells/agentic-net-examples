@@ -951,6 +951,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xlsx-workbook-manage-external-connections-of-xlsxlsb-files-and-save-the-.cs",
+      "title": "Load an XLSX workbook, manage external connections of XLS/XLSB files, and save the result back as XLSX."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs",
       "title": "Load an XLSX workbook, process its contents, and emit the results to the console and a TXT file."
     },
