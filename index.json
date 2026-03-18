@@ -946,6 +946,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "identify-and-document-potential-use-cases-for-external-data-connections-within-s.cs",
+      "title": "Identify and document potential use cases for external data connections within standard XLSX workbooks."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "load-an-xlsx-workbook-execute-a-query-table-and-stream-the-results-to-the-consol.cs",
       "title": "Load an XLSX workbook, execute a query table, and stream the results to the console as TXT output."
     },
