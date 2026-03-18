@@ -1111,6 +1111,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "stream-the-workbook-as-an-xlsx-file-directly-in-the-http-response-setting-approp.cs",
+      "title": "Stream the workbook as an XLSX file directly in the HTTP response, setting appropriate content headers."
+    },
+    {
+      "category": "save-workbook",
       "file": "write-the-workbook-to-a-stream-in-xlsx-format-utilizing-the-default-serializatio.cs",
       "title": "Write the workbook to a stream in XLSX format utilizing the default serialization options."
     },
