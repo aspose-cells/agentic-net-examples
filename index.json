@@ -1911,6 +1911,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-dif-workbook-into-a-json-representation-preserving-cell-data-types-a.cs",
+      "title": "Transform a DIF workbook into a JSON representation, preserving cell data types and overall structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-fods-workbook-into-a-json-representation-ensuring-all-cell-values-fo.cs",
       "title": "Transform a FODS workbook into a JSON representation, ensuring all cell values, formulas, and formatting are accurately captured."
     },
