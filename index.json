@@ -1741,6 +1741,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "when-converting-an-xlsx-workbook-to-html-enable-htmlsaveoptionsexportcommentsast.cs",
+      "title": "When converting an XLSX workbook to HTML, enable HtmlSaveOptions.ExportCommentsAsTooltips to render comments as tooltips."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-converting-an-xlsx-workbook-to-html-include-all-cell-comments-in-the-genera.cs",
       "title": "When converting an XLSX workbook to HTML, include all cell comments in the generated output."
     },
