@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - when-converting-an-xlsx-to-html-substitute-unsupported-cell-border-styles-with-v.cs
 - export-a-loaded-xlsx-worksheet-to-html-using-htmlsaveoptionssimulateunsupportedb.cs
 - enable-htmlsaveoptionssimulateunsupportedborders-when-converting-an-xlsx-workboo.cs
+- approximate-unsupported-cell-borders-when-converting-an-xlsx-workbook-to-html-ou.cs
