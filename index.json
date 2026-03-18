@@ -1906,6 +1906,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-tabseparated-values-workbook-into-a-json-representation-preserving-c.cs",
+      "title": "Transform a tab\u2011separated values workbook into a JSON representation, preserving cell data and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-ods-workbook-into-a-json-representation-preserving-cell-data-and-wo.cs",
       "title": "Transform an ODS workbook into a JSON representation, preserving cell data and worksheet hierarchy."
     },
