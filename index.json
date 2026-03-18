@@ -1466,6 +1466,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "programmatically-load-an-xlsx-workbook-then-convert-and-save-it-as-an-mhtml-docu.cs",
+      "title": "Programmatically load an XLSX workbook, then convert and save it as an MHTML document preserving formatting."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-spreadsheet-gridlines-during-conversion-of-an-xlsx-workbook-to-html-outpu.cs",
       "title": "Render spreadsheet gridlines during conversion of an XLSX workbook to HTML output, ensuring visual consistency with the original worksheet."
     },
