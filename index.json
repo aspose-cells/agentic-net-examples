@@ -2156,6 +2156,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xls-or-csv-file-into-json-using-the-librarys-default-conversion-set.cs",
+      "title": "Transform an XLS or CSV file into JSON using the library\u2019s default conversion settings."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xls-workbook-into-a-json-representation-using-the-default-conversio.cs",
       "title": "Transform an XLS workbook into a JSON representation using the default conversion settings provided."
     },
