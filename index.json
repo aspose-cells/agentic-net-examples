@@ -1266,6 +1266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-it-to-html-format-preserving-gridlines-in-the-r.cs",
+      "title": "Load an XLSX workbook and export it to HTML format preserving gridlines in the resulting output."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-it-to-html-using-configurable-html-save-options.cs",
       "title": "Load an XLSX workbook and export it to HTML using configurable HTML save options."
     },
