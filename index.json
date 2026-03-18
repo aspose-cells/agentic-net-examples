@@ -946,6 +946,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "determine-whether-an-xlsx-workbook-includes-any-hidden-external-hyperlinks-when-.cs",
+      "title": "Determine whether an XLSX workbook includes any hidden external hyperlinks when loaded with default settings."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "identify-and-document-potential-use-cases-for-external-data-connections-within-s.cs",
       "title": "Identify and document potential use cases for external data connections within standard XLSX workbooks."
     },
