@@ -111,6 +111,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-an-enumerator-that-iterates-through-columns-of-an-xlsx-worksheet-expos.cs",
+      "title": "Implement an enumerator that iterates through columns of an XLSX worksheet, exposing each column\u2019s data sequentially."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-an-enumerator-to-iterate-over-cells-in-an-xlsx-workbook-programmatical.cs",
       "title": "Implement an enumerator to iterate over cells in an XLSX workbook programmatically, supporting row and column traversal."
     },
