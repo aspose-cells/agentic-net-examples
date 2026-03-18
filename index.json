@@ -36,6 +36,11 @@
     },
     {
       "category": "cells-data",
+      "file": "capture-and-present-the-console-output-produced-when-the-sample-code-processes-a.cs",
+      "title": "Capture and present the console output produced when the sample code processes an XLSX workbook."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-a-datatable-into-an-xlsx-workbook-using-the-net-spreadsheet-api-preservi.cs",
       "title": "Convert a DataTable into an XLSX workbook using the .NET spreadsheet API, preserving column types and formatting."
     },
