@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - convert-an-xlsx-worksheet-to-html-while-rendering-strikethrough-text-by-appropri.cs
 - configure-htmlsaveoptionscrossstringtype-to-htmlcrosstypestrikethrough-when-load.cs
 - configure-htmlcrosstype-to-apply-string-crossing-when-converting-a-loaded-xlsx-w.cs
+- specify-cross-string-handling-behavior-when-loading-an-xlsx-workbook-and-saving-.cs
