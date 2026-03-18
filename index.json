@@ -2181,6 +2181,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xlsb-workbook-into-a-json-representation-preserving-cell-values-and.cs",
+      "title": "Transform an XLSB workbook into a JSON representation, preserving cell values and the spreadsheet\u2019s structural hierarchy."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsm-csv-file-into-json-format-using-the-provided-default-conversio.cs",
       "title": "Transform an XLSM CSV file into JSON format using the provided default conversion settings."
     },
