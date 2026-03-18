@@ -1321,6 +1321,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-selfclosing-tag-recognition-in-htmlloadoptions-then-load-html-content-and.cs",
+      "title": "Enable self\u2011closing tag recognition in HtmlLoadOptions, then load HTML content and export it as an XLSX workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-crosshideright-option-when-converting-an-xlsx-workbook-to-html-by-set.cs",
       "title": "Enable the CrossHideRight option when converting an XLSX workbook to HTML by setting HtmlSaveOptions.CrossHideRight to true."
     },
