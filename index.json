@@ -2161,6 +2161,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xls-spreadsheet-into-a-json-representation-preserving-data-fidelity.cs",
+      "title": "Transform an XLS spreadsheet into a JSON representation, preserving data fidelity, cell types, and worksheet hierarchy."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xls-workbook-into-a-json-representation-using-the-default-conversio.cs",
       "title": "Transform an XLS workbook into a JSON representation using the default conversion settings provided."
     },
