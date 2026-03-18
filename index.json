@@ -1406,6 +1406,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "process-an-xlsx-workbook-containing-rtl-text-and-export-it-to-html-ensuring-prop.cs",
+      "title": "Process an XLSX workbook containing RTL text and export it to HTML, ensuring proper text expansion."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-spreadsheet-gridlines-during-conversion-of-an-xlsx-workbook-to-html-outpu.cs",
       "title": "Render spreadsheet gridlines during conversion of an XLSX workbook to HTML output, ensuring visual consistency with the original worksheet."
     },
