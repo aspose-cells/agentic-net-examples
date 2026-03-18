@@ -2001,6 +2001,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-htmlformatted-json-file-into-a-csv-dataset-preserving-field-mapping.cs",
+      "title": "Transform an HTML\u2011formatted JSON file into a CSV dataset, preserving field mappings and data integrity."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-ods-workbook-into-a-json-representation-preserving-cell-data-and-wo.cs",
       "title": "Transform an ODS workbook into a JSON representation, preserving cell data and worksheet hierarchy."
     },
