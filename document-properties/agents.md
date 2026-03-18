@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - delete-all-custom-document-properties-from-an-xlsx-workbook-programmatically-ens.cs
 - set-the-workbooks-builtin-document-property-to-define-the-xlsx-files-version-pro.cs
 - identify-relevant-usage-scenarios-for-configuring-the-document-version-property-.cs
+- provide-sample-code-that-configures-the-workbooks-document-version-property-for-.cs
