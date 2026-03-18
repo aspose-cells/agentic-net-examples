@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - transform-an-xlsb-json-file-into-csv-format-ensuring-accurate-data-conversion-an.cs
 - transform-ods-json-data-into-csv-format-preserving-field-mappings-and-ensuring-p.cs
 - convert-a-tsv-json-file-into-a-csv-document-while-maintaining-original-data-stru.cs
+- transform-a-txt-json-file-into-csv-format-while-preserving-data-integrity-and-ma.cs
