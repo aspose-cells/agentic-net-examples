@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-htmlsaveoptionssimulateunsupportedborders-when-converting-an-xlsx-workboo.cs",
+      "title": "Enable HtmlSaveOptions.SimulateUnsupportedBorders when converting an XLSX workbook to HTML to accurately preserve border rendering."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-preservedivlayout-on-htmlloadoptions-when-importing-html-then-export-the-.cs",
       "title": "Enable PreserveDivLayout on HtmlLoadOptions when importing HTML, then export the workbook to XLSX format."
     },
