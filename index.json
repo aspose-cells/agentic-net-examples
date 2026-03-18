@@ -1106,6 +1106,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "save-the-workbook-as-a-strict-open-xml-xlsx-file-using-saveoptions-to-ensure-com.cs",
+      "title": "Save the workbook as a Strict Open XML XLSX file using SaveOptions to ensure compliance."
+    },
+    {
+      "category": "save-workbook",
       "file": "save-the-workbook-in-strict-open-xml-xlsx-format-to-guarantee-fully-standards-co.cs",
       "title": "Save the workbook in Strict Open XML XLSX format to guarantee fully standards compliance."
     },
