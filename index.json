@@ -1241,6 +1241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-htmlsaveoptionsexportdocumentproperties-when-converting-an-xlsx-workbook-.cs",
+      "title": "Enable HtmlSaveOptions.ExportDocumentProperties when converting an XLSX workbook to HTML to include the document metadata."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsexportheadings-before-converting-an-xlsx-workbook-to-html-.cs",
       "title": "Enable HtmlSaveOptions.ExportHeadings before converting an XLSX workbook to HTML to retain the worksheet headings."
     },
