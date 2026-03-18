@@ -1566,6 +1566,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-it-to-html-with-htmlsaveoptionsexporthiddenelem.cs",
+      "title": "Load an XLSX workbook and export it to HTML with HtmlSaveOptions.ExportHiddenElements disabled to omit hidden content."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-its-contents-to-an-html-file-while-preserving-f.cs",
       "title": "Load an XLSX workbook and export its contents to an HTML file while preserving formatting."
     },
