@@ -31,6 +31,11 @@
     },
     {
       "category": "conversion",
+      "file": "transform-an-xlsx-workbook-into-a-pptx-presentation-generating-a-powerpoint-file.cs",
+      "title": "Transform an XLSX workbook into a PPTX presentation, generating a PowerPoint file from the Excel source."
+    },
+    {
+      "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-an-html-document-preserving-cell-formatting-and-.cs",
       "title": "Transform an XLSX workbook into an HTML document, preserving cell formatting and content accurately."
     },
