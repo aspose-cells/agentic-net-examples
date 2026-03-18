@@ -183,6 +183,11 @@
       "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-ods-sxc-and-fods-formats-while-preserving-data-i.cs",
       "title": "Transform an XLSX workbook into ODS, SXC, and FODS formats while preserving data integrity and layout."
+    },
+    {
+      "category": "document-properties",
+      "file": "programmatically-delete-all-custom-document-properties-from-an-xlsx-workbook-to-.cs",
+      "title": "Programmatically delete all custom document properties from an XLSX workbook to clean its metadata thoroughly."
     }
   ]
 }
