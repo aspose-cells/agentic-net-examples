@@ -1226,6 +1226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-comment-export-by-setting-htmlsaveoptionsexportcomments-to-true-when-load.cs",
+      "title": "Enable comment export by setting HtmlSaveOptions.ExportComments to true when loading an XLSX file and saving as HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsexcludeunusedstyles-during-xlsx-loading-and-html-export-to.cs",
       "title": "Enable HtmlSaveOptions.ExcludeUnusedStyles during XLSX loading and HTML export to omit the unused CSS definitions."
     },
