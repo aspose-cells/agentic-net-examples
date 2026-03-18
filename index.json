@@ -1961,6 +1961,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-fodsformatted-json-file-into-a-csv-file-preserving-data-fidelity-and.cs",
+      "title": "Transform a FODS\u2011formatted JSON file into a CSV file, preserving data fidelity and column alignment."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-numbers-workbook-into-a-json-representation-preserving-cell-data-for.cs",
       "title": "Transform a NUMBERS workbook into a JSON representation preserving cell data, formulas, and worksheet structures."
     },
