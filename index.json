@@ -1956,6 +1956,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-data-from-an-xlsx-or-csv-spreadsheet-into-a-json-formatted-output-preser.cs",
+      "title": "Convert data from an XLSX or CSV spreadsheet into a JSON-formatted output preserving cell values."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-csv-workbook-into-a-json-representation-preserving-data-types-and-st.cs",
       "title": "Transform a CSV workbook into a JSON representation, preserving data types and structure accurately."
     },
