@@ -131,6 +131,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-from-a-net-arraylist-into-an-xlsx-workbook-mapping-collection-elemen.cs",
+      "title": "Import data from a .NET ArrayList into an XLSX workbook, mapping collection elements to worksheet cells."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-from-an-in-memory-array-into-an-xlsx-workbook-preserving-data-types-.cs",
       "title": "Import data from an in-memory array into an XLSX workbook, preserving data types and cell formatting."
     },
