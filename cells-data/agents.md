@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - import-data-into-an-xlsx-workbook-via-the-icellsdatatable-interface-mapping-colu.cs
 - import-data-from-an-in-memory-array-into-an-xlsx-workbook-preserving-data-types-.cs
 - import-data-from-a-net-arraylist-into-an-xlsx-workbook-mapping-collection-elemen.cs
+- import-data-from-custom-objects-into-an-xlsx-workbook-programmatically-mapping-o.cs
