@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - export-a-loaded-xlsx-worksheet-to-html-using-htmlsaveoptionssimulateunsupportedb.cs
 - enable-htmlsaveoptionssimulateunsupportedborders-when-converting-an-xlsx-workboo.cs
 - approximate-unsupported-cell-borders-when-converting-an-xlsx-workbook-to-html-ou.cs
+- load-an-xlsx-workbook-and-export-it-to-an-iecompatible-mhtml-file-preserving-for.cs
