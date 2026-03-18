@@ -946,6 +946,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xlsx-workbook-execute-a-query-table-and-stream-the-results-to-the-consol.cs",
+      "title": "Load an XLSX workbook, execute a query table, and stream the results to the console as TXT output."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs",
       "title": "Load an XLSX workbook, process its contents, and emit the results to the console and a TXT file."
     },
