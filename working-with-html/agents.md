@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-save-it-as-html-using-htmlsaveoptionsdefaultfont-for-t.cs
 - configure-htmlsaveoptionsdefaultfont-to-arial-when-loading-an-xlsx-workbook-and-.cs
 - specify-a-default-font-when-converting-an-xlsx-workbook-to-html-output-during-re.cs
+- specify-a-default-typeface-when-loading-an-xlsx-workbook-and-exporting-it-to-htm.cs
