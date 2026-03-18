@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - retrieve-all-threaded-comments-from-an-xlsx-workbook-programmatically-using-the-.cs
 - modify-a-threaded-comment-within-an-xlsx-workbook-programmatically-using-the-exc.cs
 - modify-a-threaded-comment-in-an-xlsx-workbook-programmatically-using-the-net-spr.cs
+- provide-sample-code-demonstrating-operations-on-a-workbook-opened-from-an-xlsx-f.cs
