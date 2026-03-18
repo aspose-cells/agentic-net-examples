@@ -1281,6 +1281,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-enable-htmlloadoptionspreservedivlayout-and-sa.cs",
+      "title": "Load an HTML file into a workbook, enable HtmlLoadOptions.PreserveDivLayout, and save the result as XLSX."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-it-to-html-format-preserving-gridlines-in-the-r.cs",
       "title": "Load an XLSX workbook and export it to HTML format preserving gridlines in the resulting output."
     },
