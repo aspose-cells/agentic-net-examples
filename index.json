@@ -336,6 +336,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs",
+      "title": "Apply custom subtotal labels to a localized spreadsheet by configuring GlobalizationSettings on an XLSX workbook."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "apply-globalization-settings-to-localize-subtotal-and-pie-chart-labels-in-an-xls.cs",
       "title": "Apply globalization settings to localize subtotal and pie chart labels in an XLSX workbook, demonstrating applicable scenarios."
     },
