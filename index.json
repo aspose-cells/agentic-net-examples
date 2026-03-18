@@ -783,6 +783,11 @@
       "category": "manage-workbook",
       "file": "instantiate-the-workbook-class-to-load-an-xlsx-workbook-into-memory-for-further-.cs",
       "title": "Instantiate the Workbook class to load an XLSX workbook into memory for further manipulation."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "open-a-workbook-file-in-the-net-environment-to-access-its-worksheets-and-data.cs",
+      "title": "Open a workbook file in the .NET environment to access its worksheets and data."
     }
   ]
 }
