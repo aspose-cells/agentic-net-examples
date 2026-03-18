@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - transfer-workbook-custom-properties-into-a-pdf-output-during-conversion-while-re.cs
 - apply-a-watermark-to-the-pdf-generated-from-an-excel-workbook-during-the-convers.cs
 - apply-a-text-watermark-to-the-resulting-pdf-automatically-during-the-excel-to-pd.cs
+- apply-an-image-watermark-to-each-pdf-generated-during-the-conversion-of-an-excel.cs
