@@ -2121,6 +2121,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-htmlformatted-spreadsheet-into-a-json-representation-preserving-cel.cs",
+      "title": "Transform an HTML\u2011formatted spreadsheet into a JSON representation preserving cell data, formatting, and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-input-json-file-into-a-new-json-output-applying-any-required-schema.cs",
       "title": "Transform an input JSON file into a new JSON output, applying any required schema or formatting adjustments."
     },
