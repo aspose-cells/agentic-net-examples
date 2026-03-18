@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - enable-selfclosing-tag-recognition-in-htmlloadoptions-then-load-html-content-and.cs
 - identify-and-correctly-handle-selfclosing-html-tags-during-html-import-and-subse.cs
 - parse-html-containing-selfclosing-tags-then-export-the-content-to-an-xlsx-workbo.cs
+- export-an-xlsx-worksheet-to-html-configuring-column-widths-in-em-or-percent-via-.cs
