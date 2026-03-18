@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - transform-data-from-an-xls-json-source-into-a-csv-format-while-preserving-column.cs
 - transform-an-xlsxderived-json-dataset-into-a-commaseparated-values-csv-file-whil.cs
 - transform-the-content-of-an-xlsm-json-file-into-csv-format-while-preserving-all-.cs
+- transform-data-from-an-xltx-json-source-into-a-csv-file-preserving-all-field-val.cs
