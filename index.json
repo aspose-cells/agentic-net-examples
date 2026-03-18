@@ -1506,6 +1506,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-file-apply-column-widths-using-scalable-units-and-export-the-workbo.cs",
+      "title": "Load an XLSX file, apply column widths using scalable units, and export the workbook to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-it-as-an-iecompatible-mhtml-file-while-preservi.cs",
       "title": "Load an XLSX workbook and export it as an IE\u2011compatible MHTML file while preserving formatting."
     },
