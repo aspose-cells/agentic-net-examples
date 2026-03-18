@@ -26,6 +26,11 @@
     },
     {
       "category": "cells-data",
+      "file": "programmatically-generate-row-level-subtotals-in-an-xlsx-worksheet-by-applying-s.cs",
+      "title": "Programmatically generate row-level subtotals in an XLSX worksheet by applying spreadsheet aggregation functions to grouped data."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cell-object-by-its-named-reference-from-an-xlsx-worksheet-within-the-.cs",
       "title": "Retrieve a cell object by its named reference from an XLSX worksheet within the workbook."
     },
