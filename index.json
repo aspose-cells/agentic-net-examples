@@ -2036,6 +2036,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-tsv-csv-file-into-a-json-document-preserving-data-types-and-structur.cs",
+      "title": "Transform a TSV CSV file into a JSON document, preserving data types and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-txt-json-file-into-csv-format-while-preserving-data-integrity-and-ma.cs",
       "title": "Transform a TXT JSON file into CSV format while preserving data integrity and maintaining field mappings."
     },
