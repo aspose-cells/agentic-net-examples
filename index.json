@@ -1236,6 +1236,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "develop-a-class-implementing-ifilepathprovider-overriding-getfilepath-to-load-xl.cs",
+      "title": "Develop a class implementing IFilePathProvider, overriding GetFilePath to load XLSX files and output HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-downlevel-revealed-comments-during-the-conversion-of-an-xlsx-workbook-fi.cs",
       "title": "Disable downlevel-revealed comments during the conversion of an XLSX workbook file to HTML format."
     },
