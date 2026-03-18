@@ -846,6 +846,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "relocate-a-worksheet-to-a-different-position-within-the-same-workbook-updating-r.cs",
+      "title": "Relocate a worksheet to a different position within the same workbook, updating references accordingly."
+    },
+    {
+      "category": "manage-workbook",
       "file": "retrieve-a-custom-xml-part-from-the-document-by-specifying-its-unique-id-value.cs",
       "title": "Retrieve a custom XML part from the document by specifying its unique ID value."
     }
