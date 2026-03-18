@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - convert-a-pdf-json-representation-into-a-csv-file-maintaining-field-mappings-and.cs
 - transform-the-input-json-file-into-a-csv-format-mapping-each-object-property-to-.cs
 - transform-an-xls-json-file-into-csv-format-using-the-default-conversion-paramete.cs
+- transform-an-xlsx-json-file-into-csv-format-using-the-default-conversion-options.cs
