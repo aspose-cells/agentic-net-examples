@@ -1896,6 +1896,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-xlsm-workbook-to-json-format-preserving-all-cell-data-formulas-and-fo.cs",
+      "title": "Convert an XLSM workbook to JSON format, preserving all cell data, formulas, and formatting structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsx-workbook-into-a-json-representation-mapping-sheets-and-cells-t.cs",
       "title": "Transform an XLSX workbook into a JSON representation, mapping sheets and cells to hierarchical objects."
     },
