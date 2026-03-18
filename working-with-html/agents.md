@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - export-an-xlsx-worksheet-to-html-configuring-column-widths-in-em-or-percent-via-.cs
 - configure-htmlsaveoptionscolumnwidthunit-to-em-or-percent-when-loading-an-xlsx-w.cs
 - configure-column-widths-in-loaded-xlsx-files-to-use-scalable-units-such-as-em-or.cs
+- load-an-xlsx-file-apply-column-widths-using-scalable-units-and-export-the-workbo.cs
