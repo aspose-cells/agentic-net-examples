@@ -1321,6 +1321,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-wordart-shapes-retain-their-gradient-fill-when-converting-an-xlsx-workboo.cs",
+      "title": "Ensure WordArt shapes retain their gradient fill when converting an XLSX workbook to HTML output."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-loaded-xlsx-worksheet-to-html-using-htmlsaveoptionssimulateunsupportedb.cs",
       "title": "Export a loaded XLSX worksheet to HTML using HtmlSaveOptions.SimulateUnsupportedBorders to emulate unsupported browser borders."
     },
