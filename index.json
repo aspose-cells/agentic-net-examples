@@ -51,6 +51,11 @@
     },
     {
       "category": "cells-data",
+      "file": "determine-the-maximum-occupied-row-and-column-indices-in-an-xlsx-worksheet-using.cs",
+      "title": "Determine the maximum occupied row and column indices in an XLSX worksheet using MaxDataRow and MaxDataColumn."
+    },
+    {
+      "category": "cells-data",
       "file": "determine-whether-a-cells-data-validation-in-an-xlsx-workbook-is-configured-as-a.cs",
       "title": "Determine whether a cell's data validation in an XLSX workbook is configured as a drop\u2011down list."
     },
