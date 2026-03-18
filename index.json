@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "cells-data",
+      "file": "implement-c-logic-that-parses-numeric-strings-into-numeric-types-and-writes-the-.cs",
+      "title": "Implement C# logic that parses numeric strings into numeric types and writes the results to an XLSX file."
+    },
+    {
+      "category": "cells-data",
       "file": "parse-stringbased-numeric-values-convert-them-to-numeric-types-and-generate-an-x.cs",
       "title": "Parse string\u2011based numeric values, convert them to numeric types, and generate an XLSX workbook containing the data."
     },
