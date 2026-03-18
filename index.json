@@ -1086,6 +1086,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "persist-the-workbook-to-an-xlsx-file-employing-default-configuration-settings-wi.cs",
+      "title": "Persist the workbook to an XLSX file employing default configuration settings without additional options."
+    },
+    {
+      "category": "save-workbook",
       "file": "serialize-the-workbook-into-an-xlsx-byte-array-for-in-memory-processing-or-trans.cs",
       "title": "Serialize the workbook into an XLSX byte array for in-memory processing or transmission without writing to disk."
     },
