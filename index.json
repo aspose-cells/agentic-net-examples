@@ -216,6 +216,11 @@
     },
     {
       "category": "document-properties",
+      "file": "retrieve-and-manipulate-document-properties-of-an-xlsx-workbook-programmatically.cs",
+      "title": "Retrieve and manipulate document properties of an XLSX workbook programmatically via the provided API."
+    },
+    {
+      "category": "document-properties",
       "file": "set-retrieve-and-modify-metadata-properties-of-an-xlsx-workbook-including-custom.cs",
       "title": "Set, retrieve, and modify metadata properties of an XLSX workbook, including custom and built\u2011in attributes, programmatically."
     }
