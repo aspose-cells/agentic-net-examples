@@ -1210,6 +1210,11 @@
       "title": "Load a CSV file with LoadOptions.NumberFormat to retain large numeric values in full precision, avoiding exponential notation."
     },
     {
+      "category": "working-with-html",
+      "file": "prevent-automatic-numeric-conversion-during-csv-import-for-the-operation-by-sett.cs",
+      "title": "Prevent automatic numeric conversion during CSV import for the operation by setting LoadOptions.ConvertNumericData to false."
+    },
+    {
       "category": "working-with-tables",
       "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
       "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
