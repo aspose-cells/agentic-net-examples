@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - enable-the-crosshideright-option-when-converting-an-xlsx-workbook-to-html-by-set.cs
 - load-an-xlsx-workbook-apply-crosshideright-to-conceal-overlaid-cells-and-export-.cs
 - generate-html-output-from-an-xlsx-workbook-while-suppressing-any-overlaid-elemen.cs
+- load-an-xlsx-worksheet-and-export-it-to-html-configuring-htmlsaveoptionstablecss.cs
