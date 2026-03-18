@@ -46,6 +46,11 @@
     },
     {
       "category": "conversion",
+      "file": "transform-an-xlsx-workbook-into-an-ods-file-ensuring-data-fidelity-and-format-co.cs",
+      "title": "Transform an XLSX workbook into an ODS file, ensuring data fidelity and format compliance throughout the conversion."
+    },
+    {
+      "category": "conversion",
       "file": "transform-an-xlsx-workbook-into-an-xps-document-preserving-data-fidelity-and-lay.cs",
       "title": "Transform an XLSX workbook into an XPS document, preserving data fidelity and layout during conversion."
     },
