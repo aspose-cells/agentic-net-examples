@@ -1371,6 +1371,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-file-using-htmlloadoptions-then-export-the-workbook-and-generate-a-.cs",
+      "title": "Load an HTML file using HtmlLoadOptions, then export the workbook and generate a PDF document preserving layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-file-and-configure-save-options-to-export-the-workbook-as-an-mhtml-.cs",
       "title": "Load an XLSX file and configure save options to export the workbook as an MHTML document."
     },
