@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - transform-a-data-collection-into-an-excel-listobject-by-loading-it-from-an-xlsx-.cs
+- apply-worksheet-protection-to-an-xlsx-file-to-prevent-unintended-row-and-column-.cs
