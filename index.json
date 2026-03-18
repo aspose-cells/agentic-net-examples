@@ -1890,6 +1890,11 @@
       "title": "When loading an XLSX workbook and exporting to HTML, suppress downlevel\u2011revealed comments in the generated output."
     },
     {
+      "category": "working-with-pdf",
+      "file": "convert-an-excel-workbook-from-any-supported-input-format-into-a-resulting-pdf-f.cs",
+      "title": "Convert an Excel workbook from any supported input format into a resulting PDF file."
+    },
+    {
       "category": "working-with-tables",
       "file": "analyze-the-supplied-sample-that-demonstrates-processing-of-an-xlsx-workbook-usi.cs",
       "title": "Analyze the supplied sample that demonstrates processing of an XLSX workbook using the library\u2019s API."
