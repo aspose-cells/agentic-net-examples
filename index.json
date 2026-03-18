@@ -1611,6 +1611,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-save-it-as-html-without-generating-any-css-styles.cs",
+      "title": "Load an XLSX workbook and save it as HTML without generating any CSS styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-save-it-as-mhtml-enabling-internet-explorer-compatibil.cs",
       "title": "Load an XLSX workbook and save it as MHTML, enabling Internet Explorer compatibility via MhtmlSaveOptions.IeCompatible."
     },
