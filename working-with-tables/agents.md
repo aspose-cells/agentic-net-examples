@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - read-from-and-write-to-an-xlsx-file-using-a-query-table-data-source-for-tabular-.cs
 - assign-a-comment-to-a-table-or-list-object-within-a-worksheet-of-an-xlsx-workboo.cs
 - manipulate-table-structures-within-an-xlsx-workbook-using-net-apis-including-add.cs
+- transform-a-spreadsheet-table-into-a-cell-range-with-configurable-options-in-an-.cs
