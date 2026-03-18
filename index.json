@@ -1891,6 +1891,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-conversion-options-to-control-pdf-output-characteristics-such-as-page-.cs",
+      "title": "Configure conversion options to control PDF output characteristics, such as page layout and image quality, during Excel-to-PDF transformation."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-excel-workbook-directly-to-a-pdf-document-preserving-formatting-layou.cs",
       "title": "Convert an Excel workbook directly to a PDF document, preserving formatting, layout, and without intermediate processing."
     },
