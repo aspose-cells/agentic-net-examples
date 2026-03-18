@@ -126,6 +126,11 @@
     },
     {
       "category": "cells-data",
+      "file": "process-xlsx-columns-that-contain-nonstrongly-typed-data-preserving-original-val.cs",
+      "title": "Process XLSX columns that contain non\u2011strongly typed data, preserving original values during import and manipulation."
+    },
+    {
+      "category": "cells-data",
       "file": "programmatically-generate-row-level-subtotals-in-an-xlsx-worksheet-by-applying-s.cs",
       "title": "Programmatically generate row-level subtotals in an XLSX worksheet by applying spreadsheet aggregation functions to grouped data."
     },
