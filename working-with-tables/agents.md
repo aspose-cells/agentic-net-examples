@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - transform-a-worksheet-table-within-an-xlsx-file-into-an-ods-document-and-persist.cs
 - identify-query-tables-and-list-objects-that-are-linked-to-external-data-connecti.cs
 - generate-a-data-table-from-the-contents-of-an-xlsx-workbook-preserving-cell-form.cs
+- generate-a-listobject-in-an-xlsx-worksheet-programmatically-using-the-net-api-wi.cs
