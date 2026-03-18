@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - activate-thumbnail-scaling-in-an-xlsx-workbook-by-configuring-the-scalecrop-prop.cs
 - disable-thumbnail-cropping-in-an-xlsx-workbook-by-configuring-the-scalecrop-prop.cs
 - mark-all-hyperlinks-as-uptodate-by-setting-the-linksuptodate-property-to-true-in.cs
+- set-the-linksuptodate-property-to-false-in-an-xlsx-workbook-to-flag-its-hyperlin.cs
