@@ -1276,6 +1276,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-enable-htmlsaveoptionsexportcomments-and-save-it-as-html-t.cs",
+      "title": "Load an XLSX workbook, enable HtmlSaveOptions.ExportComments, and save it as HTML to retain cell comments."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-into-memory-for-programmatic-manipulation-and-data-extract.cs",
       "title": "Load an XLSX workbook into memory for programmatic manipulation and data extraction via the API."
     },
