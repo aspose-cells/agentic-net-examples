@@ -1906,6 +1906,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-mhtml-json-file-into-csv-format-while-maintaining-data-integrity-and-.cs",
+      "title": "Convert an MHTML JSON file into CSV format while maintaining data integrity and consistent field mapping."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-an-xls-workbook-into-a-json-document-maintaining-worksheet-structures-ce.cs",
       "title": "Convert an XLS workbook into a JSON document, maintaining worksheet structures, cell data types, and formatting details."
     },
