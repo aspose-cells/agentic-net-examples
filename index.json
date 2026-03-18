@@ -116,6 +116,11 @@
     },
     {
       "category": "cells-data",
+      "file": "provide-a-concise-overview-of-the-librarys-features-presented-in-an-xlsx-workboo.cs",
+      "title": "Provide a concise overview of the library's features presented in an XLSX workbook for developers."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cell-object-by-its-named-reference-from-an-xlsx-worksheet-within-the-.cs",
       "title": "Retrieve a cell object by its named reference from an XLSX worksheet within the workbook."
     },
