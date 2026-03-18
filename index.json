@@ -1816,6 +1816,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "utilize-css-custom-properties-to-style-the-html-output-generated-from-loading-an.cs",
+      "title": "Utilize CSS custom properties to style the HTML output generated from loading an XLSX workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-converting-an-xlsx-to-html-substitute-unsupported-cell-border-styles-with-v.cs",
       "title": "When converting an XLSX to HTML, substitute unsupported cell border styles with visually similar alternatives."
     },
