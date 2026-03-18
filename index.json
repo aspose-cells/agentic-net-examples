@@ -46,6 +46,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "modify-the-comment-font-color-within-an-xlsx-workbook-by-accessing-its-comment-s.cs",
+      "title": "Modify the comment font color within an XLSX workbook by accessing its comment style and setting the desired color."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "modify-the-comment-text-orientation-within-an-xlsx-workbook-after-loading-it-pro.cs",
       "title": "Modify the comment text orientation within an XLSX workbook after loading it programmatically in memory."
     },
