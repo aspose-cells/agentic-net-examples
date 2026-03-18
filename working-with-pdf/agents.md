@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - apply-a-watermark-to-the-pdf-generated-from-an-excel-workbook-during-the-convers.cs
 - apply-a-text-watermark-to-the-resulting-pdf-automatically-during-the-excel-to-pd.cs
 - apply-an-image-watermark-to-each-pdf-generated-during-the-conversion-of-an-excel.cs
+- insert-hierarchical-pdf-bookmarks-into-the-pdf-generated-from-an-excel-workbook-.cs
