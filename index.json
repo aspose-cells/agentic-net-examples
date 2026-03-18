@@ -2236,6 +2236,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xls-spreadsheet-into-json-format-using-the-default-provided-convers.cs",
+      "title": "Transform an XLS spreadsheet into JSON format using the default provided conversion settings of the API."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xls-workbook-into-a-json-representation-using-the-default-conversio.cs",
       "title": "Transform an XLS workbook into a JSON representation using the default conversion settings provided."
     },
