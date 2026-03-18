@@ -2106,6 +2106,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-input-json-file-into-a-new-json-output-applying-any-required-schema.cs",
+      "title": "Transform an input JSON file into a new JSON output, applying any required schema or formatting adjustments."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-mht-formatted-json-file-into-a-csv-dataset-while-maintaining-field-.cs",
       "title": "Transform an MHT-formatted JSON file into a CSV dataset while maintaining field mappings and data types."
     },
