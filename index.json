@@ -1426,6 +1426,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-it-to-html-by-implementing-a-custom-istreamprov.cs",
+      "title": "Load an XLSX workbook and export it to HTML by implementing a custom IStreamProvider to manage the output stream."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-and-export-it-to-html-format-preserving-gridlines-in-the-r.cs",
       "title": "Load an XLSX workbook and export it to HTML format preserving gridlines in the resulting output."
     },
