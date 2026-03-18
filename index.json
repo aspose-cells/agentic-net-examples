@@ -956,6 +956,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xlsx-workbook-retrieve-its-odata-metadata-and-output-the-information-to-.cs",
+      "title": "Load an XLSX workbook, retrieve its OData metadata, and output the information to the console as a TXT file."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "obtain-a-sample-implementation-illustrating-odata-connection-retrieval-for-gener.cs",
       "title": "Obtain a sample implementation illustrating OData connection retrieval for generating files in the default XLSX format."
     },
