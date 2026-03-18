@@ -786,6 +786,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "dispose-the-workbook-properly-to-free-all-associated-unmanaged-resources-and-pre.cs",
+      "title": "Dispose the workbook properly to free all associated unmanaged resources and prevent memory leaks."
+    },
+    {
+      "category": "manage-workbook",
       "file": "enable-shared-mode-for-the-workbook-allowing-multiple-users-to-edit-the-file-sim.cs",
       "title": "Enable shared mode for the workbook, allowing multiple users to edit the file simultaneously."
     },
