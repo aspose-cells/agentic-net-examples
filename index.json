@@ -966,6 +966,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "retrieve-the-result-range-address-of-a-query-table-from-an-xlsx-workbook-using-t.cs",
+      "title": "Retrieve the result range address of a query table from an XLSX workbook using the default format."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-an-existing-sql-data-connection-within-a-default-xlsx-workbook-using-the-.cs",
       "title": "Update an existing SQL data connection within a default XLSX workbook using the library\u2019s API."
     }
