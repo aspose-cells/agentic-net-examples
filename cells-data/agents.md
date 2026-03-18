@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - process-xlsx-columns-that-contain-nonstrongly-typed-data-preserving-original-val.cs
 - export-a-defined-cell-range-including-its-header-row-to-an-xlsx-file-while-prese.cs
 - search-and-locate-specific-data-within-an-xlsx-workbook-returning-matching-cell-.cs
+- locate-cells-in-an-xlsx-workbook-that-match-the-provided-data-criteria-across-al.cs
