@@ -863,6 +863,11 @@
       "category": "manage-workbook",
       "file": "transfer-a-worksheet-from-the-current-workbook-to-a-different-workbook-maintaini.cs",
       "title": "Transfer a worksheet from the current workbook to a different workbook, maintaining all cell data, formatting, and formulas."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "traverse-each-worksheet-cell-and-perform-a-regular-expression-replacement-on-its.cs",
+      "title": "Traverse each worksheet cell and perform a regular expression replacement on its string value."
     }
   ]
 }
