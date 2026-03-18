@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - generate-a-concluding-workbook-in-xlsx-format-that-summarizes-the-processed-data.cs
 - implement-an-enumerator-to-iterate-over-cells-in-an-xlsx-workbook-programmatical.cs
 - implement-an-enumerator-that-iterates-through-columns-of-an-xlsx-worksheet-expos.cs
+- determine-the-maximum-occupied-row-and-column-indices-in-an-xlsx-worksheet-using.cs
