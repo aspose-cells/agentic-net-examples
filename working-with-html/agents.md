@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-export-it-to-an-iecompatible-mhtml-file-preserving-for.cs
 - load-an-xlsx-workbook-and-save-it-as-mhtml-enabling-internet-explorer-compatibil.cs
 - load-an-xlsx-workbook-and-export-it-as-an-iecompatible-mhtml-file-while-preservi.cs
+- load-an-xlsx-file-and-configure-save-options-to-export-the-workbook-as-an-mhtml-.cs
