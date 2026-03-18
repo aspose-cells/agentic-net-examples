@@ -348,6 +348,11 @@
       "category": "globalization-and-localization",
       "file": "implement-cellformulalocal-to-localize-formulas-in-an-xlsx-workbook-mirroring-ex.cs",
       "title": "Implement Cell.FormulaLocal to localize formulas in an XLSX workbook, mirroring Excel VBA Range.FormulaLocal behavior."
+    },
+    {
+      "category": "globalization-and-localization",
+      "file": "verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs",
+      "title": "Verify localized formulas by examining console output of the Cell.FormulaLocal implementation with an XLSX workbook."
     }
   ]
 }
