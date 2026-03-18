@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - execute-the-cellformulalocal-sample-on-an-xlsx-workbook-to-apply-localespecific-.cs
 - verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs
 - implement-localization-of-error-messages-and-boolean-values-in-an-xlsx-workbook-.cs
+- investigate-error-and-boolean-value-localization-scenarios-within-a-workbook-loa.cs
