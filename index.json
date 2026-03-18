@@ -1991,6 +1991,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-fods-csv-file-into-a-json-representation-preserving-all-data-fields-.cs",
+      "title": "Transform a FODS CSV file into a JSON representation, preserving all data fields and structures."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-fods-workbook-into-a-json-representation-ensuring-all-cell-values-fo.cs",
       "title": "Transform a FODS workbook into a JSON representation, ensuring all cell values, formulas, and formatting are accurately captured."
     },
