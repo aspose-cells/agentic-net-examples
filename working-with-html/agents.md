@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - create-an-istreamprovider-implementation-to-handle-output-streams-for-loading-xl.cs
 - apply-gradient-fill-rendering-to-wordart-objects-when-converting-xlsx-spreadshee.cs
 - ensure-wordart-shapes-retain-their-gradient-fill-when-converting-an-xlsx-workboo.cs
+- export-a-spreadsheet-worksheet-to-html-with-overlaid-objects-hidden-by-activatin.cs
