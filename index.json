@@ -1016,6 +1016,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "preserve-the-ribbon-xml-within-an-xlsx-file-without-parsing-the-default-workbook.cs",
+      "title": "Preserve the Ribbon XML within an XLSX file without parsing the default workbook structure."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "programmatically-open-an-xlsx-workbook-retrieve-its-data-connections-and-apply-m.cs",
       "title": "Programmatically open an XLSX workbook, retrieve its data connections, and apply modifications as required."
     },
