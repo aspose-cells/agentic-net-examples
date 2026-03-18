@@ -205,6 +205,11 @@
       "title": "Transform numeric strings in a worksheet to true numeric types and save the workbook as an XLSX file using .NET."
     },
     {
+      "category": "cells-data",
+      "file": "utilize-findoptions-to-search-for-specific-cell-values-or-formulas-within-an-xls.cs",
+      "title": "Utilize FindOptions to search for specific cell values or formulas within an XLSX workbook."
+    },
+    {
       "category": "comments-and-notes",
       "file": "activate-the-new-comment-button-on-a-workbook-loaded-in-xlsx-format-to-insert-a-.cs",
       "title": "Activate the New Comment button on a workbook loaded in XLSX format to insert a comment."
