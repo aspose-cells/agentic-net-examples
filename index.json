@@ -1961,6 +1961,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-workbook-defined-in-json-into-a-json-output-while-preserving-data-in.cs",
+      "title": "Transform a workbook defined in JSON into a JSON output while preserving data integrity and structure."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-html-workbook-into-a-json-representation-preserving-cell-data-forma.cs",
       "title": "Transform an HTML workbook into a JSON representation, preserving cell data, formatting metadata, and structure."
     },
