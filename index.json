@@ -16,6 +16,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "implement-threaded-comments-functionality-within-a-workbook-loaded-from-an-xlsx-.cs",
+      "title": "Implement threaded comments functionality within a workbook loaded from an XLSX file, supporting reply threading and metadata."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "invoke-a-context-menu-on-the-target-cell-of-an-opened-xlsx-workbook-to-add-a-com.cs",
       "title": "Invoke a context menu on the target cell of an opened XLSX workbook to add a comment."
     },
