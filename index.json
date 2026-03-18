@@ -1456,6 +1456,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "when-converting-an-xlsx-to-html-substitute-unsupported-cell-border-styles-with-v.cs",
+      "title": "When converting an XLSX to HTML, substitute unsupported cell border styles with visually similar alternatives."
+    },
+    {
+      "category": "working-with-html",
       "file": "when-converting-an-xlsx-workbook-to-html-include-all-cell-comments-in-the-genera.cs",
       "title": "When converting an XLSX workbook to HTML, include all cell comments in the generated output."
     },
