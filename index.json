@@ -796,6 +796,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-password-protection-to-an-excel-workbooks-vba-project-sourcing-the-passwor.cs",
+      "title": "Apply password protection to an Excel workbook's VBA project, sourcing the password from a CSV file."
+    },
+    {
+      "category": "macro-project",
       "file": "convert-the-existing-vba-macro-to-c-code-that-reads-and-writes-data-using-the-di.cs",
       "title": "Convert the existing VBA macro to C# code that reads and writes data using the DIF format."
     },
