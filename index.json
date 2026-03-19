@@ -2861,6 +2861,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-and-manipulate-named-ranges-in-an-xlsx-workbook-providing-access-and-enab.cs",
+      "title": "Create and manipulate named ranges in an XLSX workbook, providing access and enabling copying between worksheets."
+    },
+    {
+      "category": "managing-ranges",
       "file": "implement-range-management-functionality-by-reviewing-and-adapting-the-provided-.cs",
       "title": "Implement range management functionality by reviewing and adapting the provided XLSX sample code demonstrating relevant operations."
     },
