@@ -1071,6 +1071,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-within-a-workbook-is-digitally-signed-and-outp.cs",
+      "title": "Determine whether the VBA project within a workbook is digitally signed and output the status to a TXT file."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-workbooks-vba-project-is-digitally-signed-and-report-the-s.cs",
       "title": "Determine whether the workbook\u2019s VBA project is digitally signed and report the status in CSV format."
     },
