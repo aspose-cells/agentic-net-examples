@@ -263,3 +263,4 @@ Output files are written to the working directory.
 - validate-the-digital-signature-of-vba-code-within-an-fods-file-and-report-the-ve.cs
 - validate-the-vba-codes-digital-signature-within-a-dif-file-to-confirm-its-authen.cs
 - validate-the-digital-signature-of-vba-code-embedded-within-a-dbf-file-and-report.cs
+- validate-the-digital-signature-of-vba-code-provided-in-prn-format-and-return-its.cs
