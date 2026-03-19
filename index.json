@@ -2206,6 +2206,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "examine-the-provided-sample-code-to-determine-the-maximum-sharedformula-row-limi.cs",
+      "title": "Examine the provided sample code to determine the maximum shared\u2011formula row limit when loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "handle-duplicate-specify-maximum-rows-of-shared-formula-headings-when-loading-an.cs",
       "title": "Handle duplicate \u201cSpecify Maximum Rows of Shared Formula\u201d headings when loading an XLSX workbook."
     },
