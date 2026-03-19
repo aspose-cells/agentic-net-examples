@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - programmatically-conceal-selected-rows-and-columns-within-a-worksheet-to-prevent.cs
 - configure-scroll-bar-visibility-for-worksheet-windows-to-show-hide-or-auto-adjus.cs
 - configure-the-viewer-to-display-horizontal-and-vertical-scroll-bars-when-content.cs
+- configure-the-rendering-component-to-suppress-vertical-and-horizontal-scrollbars.cs
