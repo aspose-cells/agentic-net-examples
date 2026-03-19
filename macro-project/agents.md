@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - insert-a-txtformatted-library-reference-into-the-vba-project-of-a-workbook-to-en.cs
 - include-an-htmlformatted-library-reference-in-an-excel-vba-project-to-enable-ext.cs
 - add-a-library-reference-to-an-excel-vba-project-by-importing-the-mht-formatted-r.cs
+- include-an-external-library-reference-in-an-excel-vba-project-by-importing-the-m.cs
