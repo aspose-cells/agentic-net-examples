@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - set-the-workbook-author-metadata-concurrently-with-applying-write-protection-to-.cs
 - identify-typical-use-cases-for-processing-xlsx-worksheets-within-net-application.cs
 - provide-example-source-code-illustrating-creation-and-manipulation-of-xlsx-sprea.cs
+- encrypt-an-xlsx-workbook-file-using-microsoft-excels-standard-encryption-to-prot.cs
