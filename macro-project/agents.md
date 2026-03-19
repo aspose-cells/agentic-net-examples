@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - add-edit-or-remove-vba-modules-in-an-xlsm-workbook-programmatically-using-the-pr.cs
+- manipulate-the-vba-modules-of-an-excel-macro-enabled-workbook-while-operating-wi.cs
