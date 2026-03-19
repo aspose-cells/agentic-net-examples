@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - divide-a-worksheet-into-multiple-scrollable-sections-by-configuring-pane-split-p.cs
 - programmatically-switch-between-workbook-view-modes-such-as-normal-page-layout-a.cs
 - implement-functionality-to-programmatically-open-edit-and-save-microsoft-excel-w.cs
+- set-or-get-the-worksheets-zoom-factor-to-modify-the-spreadsheets-visual-display-.cs
