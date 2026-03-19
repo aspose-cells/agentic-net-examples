@@ -2321,6 +2321,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xls-json-representation-into-an-excel-workbook-programmatically-usi.cs",
+      "title": "Transform an XLS JSON representation into an Excel workbook programmatically using default conversion settings."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xls-or-csv-file-into-json-using-the-librarys-default-conversion-set.cs",
       "title": "Transform an XLS or CSV file into JSON using the library\u2019s default conversion settings."
     },
