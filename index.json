@@ -2171,6 +2171,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-the-setting-formulas-notice-for-nonenglish-users-configuration-when-loadin.cs",
+      "title": "Apply the \u201cSetting Formulas - Notice for Non\u2011English Users\u201d configuration when loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs",
       "title": "Customize the Excel menu, UI components, API references, plugins, FAQ, and AI documentation when loading an XLSX workbook."
     },
