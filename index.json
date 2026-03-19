@@ -4723,6 +4723,11 @@
       "category": "xml-maps",
       "file": "load-an-xml-schema-file-to-import-its-xml-map-into-the-target-workbook.cs",
       "title": "Load an XML schema file to import its XML map into the target workbook."
+    },
+    {
+      "category": "xml-maps",
+      "file": "validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs",
+      "title": "Validate all necessary prerequisites and configuration settings before initiating the import of an XML map."
     }
   ]
 }
