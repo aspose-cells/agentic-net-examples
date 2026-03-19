@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - implement-functionality-to-apply-and-remove-protection-on-shared-xlsx-workbooks-.cs
 - determine-whether-an-xlsx-workbook-is-passwordprotected-for-modifications-and-va.cs
 - apply-password-protection-to-an-xlsx-workbook-to-encrypt-its-contents-and-restri.cs
+- decrypt-an-xlsx-workbook-using-the-librarys-decryption-api-while-maintaining-dat.cs
