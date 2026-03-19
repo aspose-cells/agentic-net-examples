@@ -2171,6 +2171,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-the-nonenglish-user-notice-when-loading-an-xlsx-workbook-to-ensure-correct.cs",
+      "title": "Apply the non\u2011English user notice when loading an XLSX workbook to ensure correct localization handling."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-the-setting-formulas-notice-for-nonenglish-users-configuration-when-loadin.cs",
       "title": "Apply the \u201cSetting Formulas - Notice for Non\u2011English Users\u201d configuration when loading an XLSX workbook."
     },
