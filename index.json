@@ -4796,6 +4796,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "validate-all-required-conditions-and-dependencies-prior-to-obtaining-the-xml-map.cs",
+      "title": "Validate all required conditions and dependencies prior to obtaining the XML map's root element name."
+    },
+    {
+      "category": "xml-maps",
       "file": "verify-all-required-conditions-and-prerequisites-before-attaching-an-xml-map-to-.cs",
       "title": "Verify all required conditions and prerequisites before attaching an XML map to a workbook."
     },
