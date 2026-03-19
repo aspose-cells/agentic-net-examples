@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-insert-the-required-formulas-and-compute-their-results-imm.cs
 - enable-direct-formula-evaluation-during-xlsx-workbook-loading-to-compute-cell-va.cs
 - recalculate-workbook-formulas-iteratively-during-xlsx-file-loading-to-ensure-all.cs
+- investigate-advanced-loading-options-for-xlsx-workbooks-including-custom-data-ha.cs
