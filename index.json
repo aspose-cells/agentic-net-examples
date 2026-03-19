@@ -2296,6 +2296,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "recalculate-workbook-formulas-iteratively-during-xlsx-file-loading-to-ensure-all.cs",
+      "title": "Recalculate workbook formulas iteratively during XLSX file loading to ensure all dependent cells update correctly."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-the-limit-for-rows-using-a-shared-formula-when-loading-an-xlsx-workbook.cs",
       "title": "Set the limit for rows using a shared formula when loading an XLSX workbook."
     },
