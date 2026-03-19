@@ -2861,6 +2861,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "implement-range-management-functionality-by-reviewing-and-adapting-the-provided-.cs",
+      "title": "Implement range management functionality by reviewing and adapting the provided XLSX sample code demonstrating relevant operations."
+    },
+    {
+      "category": "managing-ranges",
       "file": "paste-a-defined-cell-range-into-an-xlsx-worksheet-using-advanced-configurable-pa.cs",
       "title": "Paste a defined cell range into an XLSX worksheet using advanced configurable paste options."
     },
