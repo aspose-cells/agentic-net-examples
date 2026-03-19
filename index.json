@@ -1616,6 +1616,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-whether-the-vba-code-within-a-workbook-is-digitally-signed-using-the-ts.cs",
+      "title": "Validate whether the VBA code within a workbook is digitally signed using the TSV file format."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-vba-macros-are-digitally-signed-in-an-ods-workbook-using-the-pr.cs",
       "title": "Validate whether VBA macros are digitally signed in an ODS workbook using the provided API."
     },
