@@ -4806,6 +4806,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "retrieve-the-xml-map-from-the-opened-workbook-prior-to-establishing-any-cell-lin.cs",
+      "title": "Retrieve the XML map from the opened workbook prior to establishing any cell links."
+    },
+    {
+      "category": "xml-maps",
       "file": "retrieve-the-xml-map-from-the-opened-workbook-prior-to-properly-performing-data-.cs",
       "title": "Retrieve the XML map from the opened workbook prior to properly performing data export."
     },
