@@ -4715,6 +4715,11 @@
       "title": "Programmatically insert additional worksheets into a designer spreadsheet, ensuring proper initialization and integration with existing data."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "retrieve-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-enabling-direc.cs",
+      "title": "Retrieve a worksheet from a workbook by specifying its sheet name, enabling direct interaction with that sheet."
+    },
+    {
       "category": "xml-maps",
       "file": "add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs",
       "title": "Add an XML map to a workbook by specifying the schema and linking it to worksheet data."
