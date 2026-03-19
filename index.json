@@ -4766,6 +4766,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-a-workbook-from-any-supported-spreadsheet-format-to-retrieve-and-manipulate.cs",
+      "title": "Load a workbook from any supported spreadsheet format to retrieve and manipulate its XML map."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-an-xml-schema-file-to-import-its-xml-map-into-the-target-workbook.cs",
       "title": "Load an XML schema file to import its XML map into the target workbook."
     },
