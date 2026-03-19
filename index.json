@@ -741,6 +741,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-protection-to-a-worksheet-within-the-provided-xlsx-file-restricting-editin.cs",
+      "title": "Apply protection to a worksheet within the provided XLSX file, restricting editing and formatting operations."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-protection-to-the-workbook-structure-of-an-input-xlsx-file-to-prevent-unau.cs",
       "title": "Apply protection to the workbook structure of an input XLSX file to prevent unauthorized modifications."
     },
