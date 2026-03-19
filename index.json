@@ -1286,6 +1286,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-file-or-stream-in-xps-format-preserving-its-integr.cs",
+      "title": "Export a VBA certificate to a file or stream in XPS format, preserving its integrity and ensuring compatibility."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-either-a-file-or-a-stream-in-c-employing-tab-formatt.cs",
       "title": "Export a VBA certificate to either a file or a stream in C# employing TAB formatting."
     },
