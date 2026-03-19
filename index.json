@@ -1226,6 +1226,11 @@
     },
     {
       "category": "macro-project",
+      "file": "include-a-library-reference-in-the-workbooks-vba-project-utilizing-the-sxc-file-.cs",
+      "title": "Include a library reference in the workbook's VBA project utilizing the SXC file format."
+    },
+    {
+      "category": "macro-project",
       "file": "include-an-external-library-reference-in-an-excel-vba-project-by-importing-the-m.cs",
       "title": "Include an external library reference in an Excel VBA project by importing the MHTML reference file."
     },
