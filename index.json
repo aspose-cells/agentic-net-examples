@@ -1216,6 +1216,11 @@
     },
     {
       "category": "macro-project",
+      "file": "insert-a-txtformatted-library-reference-into-the-vba-project-of-a-workbook-to-en.cs",
+      "title": "Insert a TXT\u2011formatted library reference into the VBA project of a workbook to enable external functionality."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-vba-module-into-a-workbook-programmatically-via-c-ensuring-code-indenta.cs",
       "title": "Insert a VBA module into a workbook programmatically via C#, ensuring code indentation uses TAB characters."
     },
