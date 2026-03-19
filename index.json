@@ -4768,6 +4768,11 @@
       "category": "xml-maps",
       "file": "verify-the-implemented-xml-map-import-workflow-for-overall-correctness-and-compl.cs",
       "title": "Verify the implemented XML map import workflow for overall correctness and compliance with specifications."
+    },
+    {
+      "category": "xml-maps",
+      "file": "write-the-xml-mapassociated-data-from-an-opened-workbook-to-an-external-xml-file.cs",
+      "title": "Write the XML map\u2011associated data from an opened workbook to an external XML file."
     }
   ]
 }
