@@ -736,6 +736,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-password-protection-to-worksheets-in-an-xlsx-workbook-and-later-remove-it-.cs",
+      "title": "Apply password protection to worksheets in an XLSX workbook and later remove it programmatically."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-protection-to-the-workbook-structure-of-an-input-xlsx-file-to-prevent-unau.cs",
       "title": "Apply protection to the workbook structure of an input XLSX file to prevent unauthorized modifications."
     },
