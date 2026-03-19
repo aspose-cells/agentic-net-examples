@@ -846,6 +846,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-embedded-in-an-xlsx-format-workbook-is-passwor.cs",
+      "title": "Determine whether the VBA project embedded in an XLSX format workbook is password\u2011protected and cannot be edited."
+    },
+    {
+      "category": "macro-project",
       "file": "handle-vba-modules-within-an-excel-macro-enabled-workbook-when-exporting-to-or-i.cs",
       "title": "Handle VBA modules within an Excel macro-enabled workbook when exporting to or importing from ODS format."
     },
