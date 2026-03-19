@@ -4791,6 +4791,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-visibility-of-worksheet-tabs-in-the-workbook-view-to-allow-user-navigatio.cs",
+      "title": "Enable visibility of worksheet tabs in the workbook view to allow user navigation within the application."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-functionality-to-programmatically-insert-modify-or-remove-page-breaks-.cs",
       "title": "Implement functionality to programmatically insert, modify, or remove page breaks within a spreadsheet document."
     },
