@@ -2786,6 +2786,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-an-additional-cell-range-within-an-xlsx-workbook-to-facilitate-advanced-r.cs",
+      "title": "Create an additional cell range within an XLSX workbook to facilitate advanced range management operations."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-an-xlsx-workbook-and-define-cell-ranges-to-manage-data-segmentation-and-m.cs",
       "title": "Create an XLSX workbook and define cell ranges to manage data segmentation and manipulation programmatically."
     },
