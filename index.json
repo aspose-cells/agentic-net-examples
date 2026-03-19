@@ -2281,6 +2281,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-circular-references-during-the-loading-of-an-xlsx-workbook-as-described.cs",
+      "title": "Identify circular references during the loading of an XLSX workbook as described in the \u201cDetecting Circular Reference\u201d guidelines."
+    },
+    {
+      "category": "manage-formulas",
       "file": "implement-calculation-of-excel-2016-minifs-and-maxifs-functions-when-loading-an-.cs",
       "title": "Implement calculation of Excel\u202f2016 MINIFS and MAXIFS functions when loading an XLSX workbook."
     },
