@@ -1021,6 +1021,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-contained-within-an-xltx-workbook-has-a-valid-.cs",
+      "title": "Determine whether the VBA project contained within an XLTX workbook has a valid digital signature."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-embedded-in-an-xlsm-workbook-is-passwordprotec.cs",
       "title": "Determine whether the VBA project embedded in an XLSM workbook is password\u2011protected and cannot be edited."
     },
