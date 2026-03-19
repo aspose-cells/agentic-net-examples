@@ -4706,6 +4706,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-freeze-pane-to-keep-selected-rows-and-columns-fixed-during-spreadsheet-s.cs",
+      "title": "Apply a freeze pane to keep selected rows and columns fixed during spreadsheet scrolling operations."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-new-workbook-and-programmatically-insert-additional-worksheets-specifyi.cs",
       "title": "Create a new workbook and programmatically insert additional worksheets, specifying their names and positions as required."
     },
