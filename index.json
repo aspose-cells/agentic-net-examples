@@ -781,6 +781,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-a-password-to-secure-the-vba-project-of-an-excel-workbook-saved-in-xltx-fo.cs",
+      "title": "Apply a password to secure the VBA project of an Excel workbook saved in XLTX format."
+    },
+    {
+      "category": "macro-project",
       "file": "convert-the-existing-vba-macro-to-c-code-that-reads-and-writes-data-using-the-di.cs",
       "title": "Convert the existing VBA macro to C# code that reads and writes data using the DIF format."
     },
