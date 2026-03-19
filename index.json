@@ -1601,6 +1601,11 @@
     },
     {
       "category": "macro-project",
+      "file": "render-document-content-as-oxps-and-write-the-resulting-data-directly-to-the-con.cs",
+      "title": "Render document content as OXPS and write the resulting data directly to the console output stream."
+    },
+    {
+      "category": "macro-project",
       "file": "secure-the-vba-project-of-an-excel-workbook-with-a-password-and-generate-a-pdf-r.cs",
       "title": "Secure the VBA project of an Excel workbook with a password and generate a PDF representation."
     },
