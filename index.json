@@ -906,6 +906,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-within-an-xltx-workbook-is-protected-and-locked-.cs",
+      "title": "Determine whether a VBA project within an XLTX workbook is protected and locked for viewing."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-embedded-in-an-xlsm-workbook-is-passwordprotec.cs",
       "title": "Determine whether the VBA project embedded in an XLSM workbook is password\u2011protected and cannot be edited."
     },
