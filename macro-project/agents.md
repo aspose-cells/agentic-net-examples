@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - associate-a-macro-with-a-form-control-programmatically-via-c-code-targeting-xps-.cs
 - bind-a-c-macro-to-a-form-control-within-an-oxps-document-programmatically-using-.cs
 - bind-a-macro-to-a-form-control-within-a-pdf-document-to-enable-automated-interac.cs
+- map-a-macro-to-a-form-control-through-a-json-configuration-enabling-programmatic.cs
