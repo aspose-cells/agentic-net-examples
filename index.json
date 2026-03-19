@@ -876,6 +876,11 @@
     },
     {
       "category": "macro-project",
+      "file": "provide-example-code-demonstrating-how-to-read-and-write-data-using-the-dbf-file.cs",
+      "title": "Provide example code demonstrating how to read and write data using the DBF file format."
+    },
+    {
+      "category": "macro-project",
       "file": "provide-example-code-demonstrating-how-to-work-with-the-numbers-format-in-the-li.cs",
       "title": "Provide example code demonstrating how to work with the NUMBERS format in the library."
     },
