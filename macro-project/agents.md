@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - implement-advanced-pdf-format-operations-including-custom-encryption-incremental.cs
 - implement-advanced-json-based-functionalities-enabling-complex-data-manipulation.cs
 - implement-advanced-functionality-for-handling-xlsx-files-within-net-applications.cs
+- apply-a-password-to-protect-the-vba-project-inside-an-xlsx-workbook-ensuring-res.cs
