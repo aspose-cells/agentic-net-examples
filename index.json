@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-a-worksheet-to-display-its-formulas-instead-of-calculated-values-durin.cs",
+      "title": "Configure a worksheet to display its formulas instead of calculated values during data rendering."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-scroll-bar-visibility-for-worksheet-windows-to-show-hide-or-auto-adjus.cs",
       "title": "Configure scroll bar visibility for worksheet windows to show, hide, or auto-adjust based on content."
     },
