@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - populate-cells-in-the-first-worksheet-using-the-provided-xlsx-example-to-define-.cs
 - apply-specified-style-formatting-to-a-defined-cell-range-in-an-xlsx-workbook-acc.cs
 - copy-data-from-a-source-range-to-a-target-range-in-an-xlsx-file-according-to-the.cs
+- create-and-manipulate-a-cell-range-in-an-xlsx-workbook-according-to-the-provided.cs
