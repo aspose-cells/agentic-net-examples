@@ -2271,6 +2271,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-sxc-json-file-into-an-excel-workbook-while-preserving-data-structur.cs",
+      "title": "Transform an SXC JSON file into an Excel workbook while preserving data structure and fidelity."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-sxc-workbook-file-into-json-format-mapping-spreadsheet-data-to-stru.cs",
       "title": "Transform an SXC workbook file into JSON format, mapping spreadsheet data to structured JSON objects."
     },
