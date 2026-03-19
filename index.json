@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "duplicate-or-relocate-worksheet-objects-within-a-workbook-maintaining-cell-data-.cs",
+      "title": "Duplicate or relocate worksheet objects within a workbook, maintaining cell data, formatting, and references."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "duplicate-selected-worksheets-within-a-workbook-preserving-formulas-formatting-a.cs",
       "title": "Duplicate selected worksheets within a workbook, preserving formulas, formatting, and data integrity, including charts, named ranges, and conditional formatting."
     },
