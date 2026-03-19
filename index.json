@@ -810,6 +810,11 @@
       "title": "Programmatically insert a VBA module into a workbook using C# and the SpreadsheetML file format."
     },
     {
+      "category": "macro-project",
+      "file": "refactor-the-existing-vba-macro-into-c-code-implementing-the-specified-numbers-f.cs",
+      "title": "Refactor the existing VBA macro into C# code, implementing the specified NUMBERS formatting conventions."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
