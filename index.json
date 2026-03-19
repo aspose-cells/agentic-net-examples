@@ -4701,6 +4701,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs",
+      "title": "Add an XML map to a workbook by specifying the schema and linking it to worksheet data."
+    },
+    {
+      "category": "xml-maps",
       "file": "add-an-xml-map-to-the-opened-workbook-by-invoking-xmlmapcollectionadd-with-the-p.cs",
       "title": "Add an XML map to the opened workbook by invoking\u202fXmlMapCollection.Add\u202fwith the provided schema file."
     },
