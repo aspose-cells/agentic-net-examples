@@ -4816,6 +4816,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-or-get-the-worksheets-zoom-factor-to-control-displayed-scaling-of-the-workbo.cs",
+      "title": "Set or get the worksheet's zoom factor to control displayed scaling of the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "transfer-selected-worksheets-from-one-workbook-to-another-workbook-maintaining-c.cs",
       "title": "Transfer selected worksheets from one workbook to another workbook, maintaining cell data, formulas, and formatting."
     },
