@@ -2660,6 +2660,11 @@
       "title": "Traverse each worksheet cell and perform a regular expression replacement on its string value."
     },
     {
+      "category": "managing-ranges",
+      "file": "copy-row-height-attributes-from-the-source-range-to-the-target-range-within-an-x.cs",
+      "title": "Copy row height attributes from the source range to the target range within an XLSX worksheet."
+    },
+    {
       "category": "queries-and-connections",
       "file": "create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs",
       "title": "Create or inspect data connections within an XLSX workbook through the API\u2019s default handling mechanisms."
