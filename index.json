@@ -2171,6 +2171,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-shared-formula-during-xlsx-workbook-loading-to-ensure-formula-consistenc.cs",
+      "title": "Apply a shared formula during XLSX workbook loading to ensure formula consistency across cells."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-the-nonenglish-user-notice-when-loading-an-xlsx-workbook-to-ensure-correct.cs",
       "title": "Apply the non\u2011English user notice when loading an XLSX workbook to ensure correct localization handling."
     },
