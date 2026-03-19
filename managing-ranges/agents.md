@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - copy-row-height-attributes-from-the-source-range-to-the-target-range-within-an-x.cs
+- copy-a-source-cell-range-to-a-target-range-within-an-xlsx-workbook-preserving-da.cs
