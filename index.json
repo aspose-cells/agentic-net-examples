@@ -936,6 +936,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "validate-the-password-of-an-encrypted-xlsx-workbook-and-report-whether-decryptio.cs",
+      "title": "Validate the password of an encrypted XLSX workbook and report whether decryption is successful."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-the-password-of-encrypted-xlsx-and-ods-workbooks-confirming-access-righ.cs",
       "title": "Validate the password of encrypted XLSX and ODS workbooks, confirming access rights before processing."
     },
