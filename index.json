@@ -946,6 +946,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "programmatically-protect-the-workbook-structure-of-an-xlsx-file-using-the-net-ap.cs",
+      "title": "Programmatically protect the workbook structure of an XLSX file using the .NET API to prevent unauthorized modifications."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "provide-example-source-code-illustrating-creation-and-manipulation-of-xlsx-sprea.cs",
       "title": "Provide example source code illustrating creation and manipulation of XLSX spreadsheets using the .NET API."
     },
