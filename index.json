@@ -881,6 +881,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-is-protected-and-return-the-result-in-json-forma.cs",
+      "title": "Determine whether a VBA Project is protected and return the result in JSON format."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-is-protected-by-analyzing-its-xml-representation.cs",
       "title": "Determine whether a VBA project is protected by analyzing its XML representation using C#."
     },
