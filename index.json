@@ -2796,6 +2796,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-workbook-populate-it-with-data-then-copy-only-the-style-of-a-specified-.cs",
+      "title": "Create a workbook, populate it with data, then copy only the style of a specified range into an XLSX file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-an-additional-cell-range-within-an-xlsx-workbook-to-facilitate-advanced-r.cs",
       "title": "Create an additional cell range within an XLSX workbook to facilitate advanced range management operations."
     },
