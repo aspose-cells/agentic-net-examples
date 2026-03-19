@@ -841,6 +841,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-an-ods-workbook-by-loading-it-assigning-workbooksettingspassword-then-sa.cs",
+      "title": "Encrypt an ODS workbook by loading it, assigning WorkbookSettings.Password, then saving the file as XLSX."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-xlsx-workbook-using-a-password-to-protect-its-contents-from-unauthori.cs",
       "title": "Encrypt an XLSX workbook using a password to protect its contents from unauthorized access."
     },
