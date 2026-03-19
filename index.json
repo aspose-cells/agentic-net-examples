@@ -2666,6 +2666,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-specified-style-formatting-to-a-defined-cell-range-within-an-xlsx-workbook.cs",
+      "title": "Apply specified style formatting to a defined cell range within an XLSX workbook programmatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-cell-range-and-paste-it-into-an-xlsx-worksheet-with-specified-paste-optio.cs",
       "title": "Copy a cell range and paste it into an XLSX worksheet with specified paste options."
     },
