@@ -1256,6 +1256,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-file-or-stream-in-the-numbers-spreadsheet-format.cs",
+      "title": "Export a VBA certificate to a file or stream in the NUMBERS spreadsheet format."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-file-or-stream-in-xls-format-preserving-certificat.cs",
       "title": "Export a VBA certificate to a file or stream in XLS format, preserving certificate integrity."
     },
