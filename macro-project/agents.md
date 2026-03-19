@@ -248,3 +248,4 @@ Output files are written to the working directory.
 - generate-console-output-by-exporting-data-to-an-xlsx-file-ensuring-proper-worksh.cs
 - validate-the-digital-signature-of-vba-code-embedded-in-an-xls-workbook-to-ensure.cs
 - verify-the-validity-of-a-vba-codes-digital-signature-within-an-xlsx-workbook-fil.cs
+- validate-the-digital-signature-of-vba-code-embedded-in-an-xlsm-workbook-to-ensur.cs
