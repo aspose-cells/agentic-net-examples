@@ -766,6 +766,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-specified-in-numbers-format-to-the-vba-project-embedded-.cs",
+      "title": "Add a library reference, specified in NUMBERS format, to the VBA project embedded within the workbook."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-library-reference-to-a-vba-project-inside-an-xltx-workbook-using-the-net-a.cs",
       "title": "Add a library reference to a VBA project inside an XLTX workbook using the .NET API."
     },
