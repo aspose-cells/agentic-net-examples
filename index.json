@@ -1386,6 +1386,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-detailed-console-output-adhering-to-the-sxc-format-specifications-for-s.cs",
+      "title": "Generate detailed console output adhering to the SXC format specifications for structured data representation and logging."
+    },
+    {
+      "category": "macro-project",
       "file": "handle-vba-modules-within-an-excel-macro-enabled-workbook-when-exporting-to-or-i.cs",
       "title": "Handle VBA modules within an Excel macro-enabled workbook when exporting to or importing from ODS format."
     },
