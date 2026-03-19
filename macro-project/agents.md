@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - map-a-macro-to-a-form-control-through-a-json-configuration-enabling-programmatic.cs
 - associate-a-macro-with-a-form-control-in-c-by-defining-the-mapping-in-json-forma.cs
 - programmatically-determine-whether-the-vba-project-embedded-in-an-xls-workbook-i.cs
+- determine-whether-the-vba-project-embedded-in-an-xlsx-workbook-is-digitally-sign.cs
