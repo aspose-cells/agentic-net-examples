@@ -891,6 +891,11 @@
     },
     {
       "category": "macro-project",
+      "file": "provide-sample-code-demonstrating-how-to-read-and-write-data-using-the-dif-file-.cs",
+      "title": "Provide sample code demonstrating how to read and write data using the DIF file format."
+    },
+    {
+      "category": "macro-project",
       "file": "refactor-the-existing-vba-macro-into-c-code-implementing-the-specified-numbers-f.cs",
       "title": "Refactor the existing VBA macro into C# code, implementing the specified NUMBERS formatting conventions."
     },
