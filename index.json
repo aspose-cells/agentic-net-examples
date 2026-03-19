@@ -2226,6 +2226,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-the-workbooks-formula-calculation-mode-to-a-specific-setting-during-lo.cs",
+      "title": "Configure the workbook's formula calculation mode to a specific setting during loading of an XLSX file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs",
       "title": "Customize the Excel menu, UI components, API references, plugins, FAQ, and AI documentation when loading an XLSX workbook."
     },
