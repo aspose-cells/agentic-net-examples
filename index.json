@@ -731,6 +731,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-write-protection-to-a-shared-xlsx-workbook-to-restrict-modifications-while.cs",
+      "title": "Apply write protection to a shared XLSX workbook to restrict modifications while preserving sharing settings."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-write-protection-to-an-input-xlsx-workbook-while-setting-the-author-metada.cs",
       "title": "Apply write protection to an input XLSX workbook while setting the author metadata property."
     },
