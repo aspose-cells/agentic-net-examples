@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - set-a-specific-worksheet-as-active-and-programmatically-define-the-active-cell-w.cs
 - activate-a-worksheet-and-set-a-specific-cell-as-the-current-selection-within-the.cs
 - programmatically-duplicate-or-relocate-worksheets-within-an-excel-workbook-using.cs
+- duplicate-selected-worksheets-within-a-workbook-preserving-formulas-formatting-a.cs
