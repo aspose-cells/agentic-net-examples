@@ -2371,6 +2371,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "when-loading-an-xlsx-workbook-programmatically-add-specified-cells-to-the-excel-.cs",
+      "title": "When loading an XLSX workbook, programmatically add specified cells to the Excel formula watch window, handling duplicates appropriately."
+    },
+    {
+      "category": "manage-formulas",
       "file": "when-loading-an-xlsx-workbook-verify-that-all-function-parameters-are-delimited-.cs",
       "title": "When loading an XLSX workbook, verify that all function parameters are delimited by commas."
     },
