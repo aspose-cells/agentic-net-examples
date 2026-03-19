@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - set-or-get-the-worksheets-zoom-factor-to-modify-the-spreadsheets-visual-display-.cs
 - apply-freeze-panes-to-keep-selected-rows-and-columns-visible-during-worksheet-sc.cs
 - activate-normal-view-for-a-worksheet-to-display-cells-without-page-layout-or-pag.cs
+- activate-the-page-break-preview-mode-in-a-worksheet-to-visualize-page-boundaries.cs
