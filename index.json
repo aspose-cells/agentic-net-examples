@@ -921,6 +921,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-is-protected-and-viewlocked-returning-the-status.cs",
+      "title": "Determine whether a VBA project is protected and view\u2011locked, returning the status in JSON format."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-is-protected-by-analyzing-its-xml-representation.cs",
       "title": "Determine whether a VBA project is protected by analyzing its XML representation using C#."
     },
