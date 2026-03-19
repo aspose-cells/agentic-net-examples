@@ -1041,6 +1041,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-embedded-in-an-xltm-workbook-is-digitally-sign.cs",
+      "title": "Determine whether the VBA project embedded in an XLTM workbook is digitally signed by a certificate."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-in-an-xls-workbook-is-protected-and-locked-for.cs",
       "title": "Determine whether the VBA project in an XLS workbook is protected and locked for viewing."
     },
