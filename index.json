@@ -4781,6 +4781,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "review-essential-considerations-and-constraints-that-must-be-understood-before-u.cs",
+      "title": "Review essential considerations and constraints that must be understood before utilizing the library's functionality."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-a-specific-worksheet-as-active-and-programmatically-define-the-active-cell-w.cs",
       "title": "Set a specific worksheet as active and programmatically define the active cell within it."
     },
