@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - configure-external-references-in-formula-cells-according-to-the-defined-rules-wh.cs
 - assign-a-formula-to-a-named-range-during-the-loading-process-of-an-xlsx-workbook.cs
 - assign-a-duplicate-named-range-a-formula-during-xlsx-workbook-loading-using-the-.cs
+- assign-a-simple-formula-to-a-named-range-programmatically-when-loading-an-xlsx-w.cs
