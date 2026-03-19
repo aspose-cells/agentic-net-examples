@@ -1631,6 +1631,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-whether-the-vba-code-is-digitally-signed-by-inspecting-its-corresponding-.cs",
+      "title": "Verify whether the VBA code is digitally signed by inspecting its corresponding TXT signature file."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-whether-the-workbooks-vba-project-is-digitally-signed-correctly-using-the.cs",
       "title": "Verify whether the workbook's VBA project is digitally signed correctly using the TAB format."
     },
