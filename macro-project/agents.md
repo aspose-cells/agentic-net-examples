@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - integrate-a-vba-module-into-a-c-solution-by-providing-its-definition-in-xml-form.cs
 - programmatically-insert-a-vba-module-into-a-workbook-using-c-and-the-spreadsheet.cs
 - refactor-the-existing-vba-macro-into-c-code-implementing-the-specified-numbers-f.cs
+- convert-the-existing-vba-macro-to-c-code-that-reads-and-writes-data-using-the-di.cs
