@@ -4826,6 +4826,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-toggle-the-visibility-of-worksheets-and-their-corresponding-tab.cs",
+      "title": "Programmatically toggle the visibility of worksheets and their corresponding tabs within a workbook environment."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs",
       "title": "Remove every page break from the worksheet to ensure continuous printing without pagination interruptions."
     },
