@@ -826,6 +826,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-an-ods-spreadsheet-using-the-net-api-applying-password-protection-to-sec.cs",
+      "title": "Encrypt an ODS spreadsheet using the .NET API, applying password protection to secure the file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-xlsx-workbook-using-a-password-to-protect-its-contents-from-unauthori.cs",
       "title": "Encrypt an XLSX workbook using a password to protect its contents from unauthorized access."
     },
