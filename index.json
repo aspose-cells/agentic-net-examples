@@ -841,6 +841,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-programmatically-at-runtime-whether-the-vba-project-embedded-within-an.cs",
+      "title": "Determine programmatically at runtime whether the VBA project embedded within an XLS workbook is protected."
+    },
+    {
+      "category": "macro-project",
       "file": "handle-vba-modules-within-an-excel-macro-enabled-workbook-when-exporting-to-or-i.cs",
       "title": "Handle VBA modules within an Excel macro-enabled workbook when exporting to or importing from ODS format."
     },
