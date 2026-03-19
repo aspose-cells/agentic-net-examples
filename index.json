@@ -2206,6 +2206,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "handle-duplicate-specify-maximum-rows-of-shared-formula-headings-when-loading-an.cs",
+      "title": "Handle duplicate \u201cSpecify Maximum Rows of Shared Formula\u201d headings when loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "initialize-the-api-load-an-xlsx-workbook-perform-file-operations-and-save-the-wo.cs",
       "title": "Initialize the API, load an XLSX workbook, perform file operations, and save the workbook back to disk."
     },
