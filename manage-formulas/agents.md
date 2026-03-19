@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - during-xlsx-workbook-loading-compute-and-record-cell-precedents-and-dependents-a.cs
 - provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs
 - trace-precedent-and-dependent-cells-when-loading-an-xlsx-workbook-following-exce.cs
+- identify-and-navigate-precedent-and-dependent-cells-when-loading-an-xlsx-workboo.cs
