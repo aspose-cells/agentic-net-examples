@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - determine-whether-the-vba-project-embedded-in-an-xlsx-workbook-is-digitally-sign.cs
 - determine-whether-the-vba-project-contained-within-an-xltx-workbook-has-a-valid-.cs
 - determine-whether-the-vba-project-embedded-in-an-xltm-workbook-is-digitally-sign.cs
+- determine-whether-the-workbooks-vba-project-is-digitally-signed-and-report-the-s.cs
