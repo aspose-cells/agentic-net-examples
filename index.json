@@ -1186,6 +1186,11 @@
     },
     {
       "category": "macro-project",
+      "file": "include-a-library-reference-in-the-vba-project-of-an-xlsm-workbook-to-enable-ext.cs",
+      "title": "Include a library reference in the VBA project of an XLSM workbook to enable external functionality."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-vba-module-into-a-workbook-programmatically-via-c-ensuring-code-indenta.cs",
       "title": "Insert a VBA module into a workbook programmatically via C#, ensuring code indentation uses TAB characters."
     },
