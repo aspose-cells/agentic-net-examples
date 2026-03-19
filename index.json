@@ -871,6 +871,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "select-the-desired-encryption-algorithm-for-an-xlsx-workbook-and-validate-the-pr.cs",
+      "title": "Select the desired encryption algorithm for an XLSX workbook and validate the provided password before saving."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "set-up-signature-line-attributes-for-an-input-xlsx-workbook-including-signer-det.cs",
       "title": "Set up signature line attributes for an input XLSX workbook, including signer details and visual appearance."
     },
