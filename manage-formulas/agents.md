@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - retrieve-the-provided-runtime-sample-and-load-the-corresponding-workbook-using-t.cs
 - add-specified-cells-to-the-excel-formula-watch-window-during-xlsx-workbook-loadi.cs
 - apply-the-listed-usage-scenarios-while-programmatically-loading-a-workbook-from-.cs
+- when-loading-an-xlsx-workbook-programmatically-add-specified-cells-to-the-excel-.cs
