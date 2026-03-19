@@ -2881,6 +2881,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "retrieve-a-ranges-address-cell-count-offset-full-column-and-full-row-information.cs",
+      "title": "Retrieve a range's address, cell count, offset, full column and full row information for XLSX worksheets."
+    },
+    {
+      "category": "managing-ranges",
       "file": "review-the-introduction-sheet-of-an-xlsx-workbook-to-configure-and-manipulate-ce.cs",
       "title": "Review the introduction sheet of an XLSX workbook to configure and manipulate cell ranges accordingly."
     },
