@@ -2286,6 +2286,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "implement-excel-2016-minifs-and-maxifs-function-evaluation-while-loading-an-xlsx.cs",
+      "title": "Implement Excel 2016 MINIFS and MAXIFS function evaluation while loading an XLSX workbook, handling duplicates appropriately."
+    },
+    {
+      "category": "manage-formulas",
       "file": "implement-ifna-function-evaluation-by-loading-an-xlsx-workbook-and-processing-th.cs",
       "title": "Implement IFNA function evaluation by loading an XLSX workbook and processing the formula programmatically."
     },
