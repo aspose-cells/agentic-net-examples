@@ -906,6 +906,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-console-output-saved-as-a-pdf-document-preserving-formatting-layout-and.cs",
+      "title": "Generate console output saved as a PDF document, preserving formatting, layout, and content integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "handle-vba-modules-within-an-excel-macro-enabled-workbook-when-exporting-to-or-i.cs",
       "title": "Handle VBA modules within an Excel macro-enabled workbook when exporting to or importing from ODS format."
     },
