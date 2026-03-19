@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - create-a-union-range-to-manage-multiple-cell-ranges-simultaneously-within-an-xls.cs
 - retrieve-a-ranges-address-cell-count-offset-full-column-and-full-row-information.cs
 - implement-range-management-functionality-by-reviewing-and-adapting-the-provided-.cs
+- merge-or-unmerge-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-.cs
