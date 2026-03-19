@@ -721,6 +721,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-and-remove-protection-on-the-workbook-structure-of-an-xlsx-file-using-appr.cs",
+      "title": "Apply and remove protection on the workbook structure of an XLSX file using appropriate API calls."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-and-remove-worksheet-protection-in-an-xlsx-file-using-the-provided-api-met.cs",
       "title": "Apply and remove worksheet protection in an XLSX file using the provided API methods."
     },
