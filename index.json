@@ -861,6 +861,11 @@
     },
     {
       "category": "macro-project",
+      "file": "bind-a-macro-to-a-form-control-via-c-code-utilizing-the-numbers-number-format-fo.cs",
+      "title": "Bind a macro to a form control via C# code, utilizing the NUMBERS number format for the assignment."
+    },
+    {
+      "category": "macro-project",
       "file": "bind-a-macro-to-a-form-control-via-html-markup-enabling-the-control-to-trigger-t.cs",
       "title": "Bind a macro to a form control via HTML markup, enabling the control to trigger the macro."
     },
