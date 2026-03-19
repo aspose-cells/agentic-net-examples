@@ -771,6 +771,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-modify-or-delete-vba-modules-and-procedures-within-an-xlsb-macroenabled-work.cs",
+      "title": "Add, modify, or delete VBA modules and procedures within an XLSB macro\u2011enabled workbook using the API."
+    },
+    {
+      "category": "macro-project",
       "file": "create-edit-and-extract-vba-modules-in-an-xltm-workbook-programmatically-using-n.cs",
       "title": "Create, edit, and extract VBA modules in an XLTM workbook programmatically using .NET APIs."
     },
