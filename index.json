@@ -4700,6 +4700,11 @@
       "title": "Transform a worksheet table within an XLSX file into an ODS document and persist the output as ODS."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "delete-one-or-more-worksheets-from-a-workbook-by-specifying-their-zerobased-shee.cs",
+      "title": "Delete one or more worksheets from a workbook by specifying their zero\u2011based sheet index positions."
+    },
+    {
       "category": "xml-maps",
       "file": "add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs",
       "title": "Add an XML map to a workbook by specifying the schema and linking it to worksheet data."
