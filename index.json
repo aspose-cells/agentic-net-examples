@@ -841,6 +841,11 @@
     },
     {
       "category": "macro-project",
+      "file": "associate-a-macro-with-a-form-control-programmatically-via-c-code-targeting-xps-.cs",
+      "title": "Associate a macro with a form control programmatically via C# code, targeting XPS output."
+    },
+    {
+      "category": "macro-project",
       "file": "associate-a-vba-macro-with-a-form-control-element-within-an-ods-spreadsheet-file.cs",
       "title": "Associate a VBA macro with a form control element within an ODS spreadsheet file programmatically."
     },
