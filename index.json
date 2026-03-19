@@ -781,6 +781,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-reference-to-an-external-library-within-the-vba-project-of-an-ods-workbook.cs",
+      "title": "Add a reference to an external library within the VBA project of an ODS workbook."
+    },
+    {
+      "category": "macro-project",
       "file": "add-edit-or-remove-vba-modules-in-an-xlsm-workbook-programmatically-using-the-pr.cs",
       "title": "Add, edit, or remove VBA modules in an XLSM workbook programmatically using the provided API."
     },
