@@ -886,6 +886,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-in-an-mht-file-is-protected-and-locked-for-viewi.cs",
+      "title": "Determine whether a VBA project in an MHT file is protected and locked for viewing using C#."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-is-password-protected-and-view-locked-via-c-empl.cs",
       "title": "Determine whether a VBA project is password-protected and view-locked via C# employing the TAB file format."
     },
