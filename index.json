@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "check-whether-a-vba-project-is-passwordprotected-using-c-and-the-tab-file-format.cs",
+      "title": "Check whether a VBA project is password\u2011protected using C# and the TAB file format."
+    },
+    {
+      "category": "macro-project",
       "file": "convert-the-existing-vba-macro-to-c-code-that-reads-and-writes-data-using-the-di.cs",
       "title": "Convert the existing VBA macro to C# code that reads and writes data using the DIF format."
     },
