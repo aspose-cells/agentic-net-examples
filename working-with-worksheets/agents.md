@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - configure-scroll-bar-visibility-for-worksheet-windows-to-show-hide-or-auto-adjus.cs
 - configure-the-viewer-to-display-horizontal-and-vertical-scroll-bars-when-content.cs
 - configure-the-rendering-component-to-suppress-vertical-and-horizontal-scrollbars.cs
+- configure-a-worksheet-to-display-its-formulas-instead-of-calculated-values-durin.cs
