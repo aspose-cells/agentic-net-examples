@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - determine-if-the-supplied-xlsx-file-conforms-to-the-encrypted-ooxml-specificatio.cs
 - verify-the-modification-password-of-an-input-xlsx-file-to-ensure-authorized-edit.cs
 - identify-the-format-of-an-input-xlsx-file-and-determine-whether-it-is-encrypted.cs
+- identify-and-verify-the-file-format-of-a-supplied-xlsx-workbook-using-the-api.cs
