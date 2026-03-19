@@ -736,6 +736,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "configure-and-apply-a-strong-encryption-algorithm-to-protect-an-input-xlsx-workb.cs",
+      "title": "Configure and apply a strong encryption algorithm to protect an input XLSX workbook file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs",
       "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
     },
