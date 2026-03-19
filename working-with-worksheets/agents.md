@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - duplicate-or-relocate-worksheet-objects-within-a-workbook-maintaining-cell-data-.cs
 - move-or-copy-worksheets-within-or-between-workbooks-through-excel-automation-whi.cs
 - duplicate-selected-worksheets-within-an-existing-workbook-preserving-all-formatt.cs
+- delete-the-targeted-page-break-within-the-document-updating-layout-without-affec.cs
