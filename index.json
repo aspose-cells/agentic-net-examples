@@ -2736,6 +2736,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-and-define-a-cell-range-within-an-xlsx-workbook-for-subsequent-manipulati.cs",
+      "title": "Create and define a cell range within an XLSX workbook for subsequent manipulation or calculation."
+    },
+    {
+      "category": "managing-ranges",
       "file": "paste-a-defined-cell-range-into-an-xlsx-worksheet-using-advanced-configurable-pa.cs",
       "title": "Paste a defined cell range into an XLSX worksheet using advanced configurable paste options."
     },
