@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - retrieve-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-enabling-direc.cs
 - delete-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-ensuring-associa.cs
 - delete-worksheets-from-a-workbook-by-specifying-their-zerobased-sheet-index-posi.cs
+- set-a-specific-worksheet-as-active-and-programmatically-define-the-active-cell-w.cs
