@@ -1536,6 +1536,11 @@
     },
     {
       "category": "macro-project",
+      "file": "serialize-a-vba-certificate-to-a-file-or-stream-in-json-format-for-further-proce.cs",
+      "title": "Serialize a VBA certificate to a file or stream in JSON format for further processing."
+    },
+    {
+      "category": "macro-project",
       "file": "set-a-password-on-an-excel-workbooks-vba-project-programmatically-in-c-employing.cs",
       "title": "Set a password on an Excel workbook\u2019s VBA project programmatically in C# employing the TAB format."
     },
