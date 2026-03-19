@@ -1381,6 +1381,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-console-output-in-dif-format-to-efficiently-represent-spreadsheet-data-.cs",
+      "title": "Generate console output in DIF format to efficiently represent spreadsheet data for downstream processing accurately."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-console-output-in-fods-format-representing-the-spreadsheet-data-accurat.cs",
       "title": "Generate console output in FODS format representing the spreadsheet data accurately for downstream processing."
     },
