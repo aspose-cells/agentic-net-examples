@@ -4730,6 +4730,11 @@
       "title": "Retrieve a worksheet from a workbook by specifying its sheet name, enabling direct interaction with that sheet."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "set-a-specific-worksheet-as-active-and-programmatically-define-the-active-cell-w.cs",
+      "title": "Set a specific worksheet as active and programmatically define the active cell within it."
+    },
+    {
       "category": "xml-maps",
       "file": "add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs",
       "title": "Add an XML map to a workbook by specifying the schema and linking it to worksheet data."
