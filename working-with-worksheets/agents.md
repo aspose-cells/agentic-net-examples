@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - eliminate-all-split-panes-from-the-worksheet-to-restore-a-single-continuous-view.cs
 - render-a-preview-of-worksheet-page-breaks-to-visualize-pagination-and-layout-adj.cs
 - set-or-get-the-worksheets-zoom-factor-to-control-displayed-scaling-of-the-workbo.cs
+- apply-a-freeze-pane-to-keep-selected-rows-and-columns-fixed-during-spreadsheet-s.cs
