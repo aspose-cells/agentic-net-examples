@@ -4751,6 +4751,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-a-workbook-from-a-supported-format-and-retrieve-the-xml-maps-root-element-n.cs",
+      "title": "Load a workbook from a supported format and retrieve the XML map's root element name."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-a-workbook-from-any-supported-file-format-to-enable-subsequent-xml-map-impo.cs",
       "title": "Load a workbook from any supported file format to enable subsequent XML map import operations."
     },
