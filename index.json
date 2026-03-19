@@ -891,6 +891,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "specify-a-modification-password-for-an-xlsx-workbook-to-restrict-unauthorized-ed.cs",
+      "title": "Specify a modification password for an XLSX workbook to restrict unauthorized editing and enforce security."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-the-digital-signature-of-an-xlsx-workbook-before-processing-to-ensure-i.cs",
       "title": "Validate the digital signature of an XLSX workbook before processing to ensure integrity and authenticity."
     },
