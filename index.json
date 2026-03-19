@@ -731,6 +731,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-write-protection-to-an-xlsx-file-and-assign-the-specified-author-to-the-pr.cs",
+      "title": "Apply write protection to an XLSX file and assign the specified author to the protection settings."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs",
       "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
     },
