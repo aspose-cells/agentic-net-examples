@@ -1031,6 +1031,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-verify-whether-a-vba-project-is-protected-and-locked-for-viewin.cs",
+      "title": "Programmatically verify whether a VBA project is protected and locked for viewing using C# and XML."
+    },
+    {
+      "category": "macro-project",
       "file": "provide-a-jsonformatted-code-snippet-illustrating-the-required-functionality-and.cs",
       "title": "Provide a JSON\u2011formatted code snippet illustrating the required functionality and usage patterns for developers."
     },
