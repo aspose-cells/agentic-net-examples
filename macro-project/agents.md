@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - determine-programmatically-in-c-whether-a-workbooks-vba-project-is-signed-utiliz.cs
 - determine-in-c-whether-a-workbooks-vba-project-is-digitally-signed-when-processi.cs
 - determine-whether-a-workbooks-vba-project-is-digitally-signed-using-c-and-the-di.cs
+- determine-whether-a-workbooks-vba-project-is-digitally-signed-using-c-and-the-pr.cs
