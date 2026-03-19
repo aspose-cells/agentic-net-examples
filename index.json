@@ -4736,6 +4736,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "persist-the-workbook-in-the-chosen-output-format-after-successfully-importing-th.cs",
+      "title": "Persist the workbook in the chosen output format after successfully importing the XML map."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs",
       "title": "Validate all necessary prerequisites and configuration settings before initiating the import of an XML map."
     }
