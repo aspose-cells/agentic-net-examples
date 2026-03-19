@@ -820,6 +820,11 @@
       "title": "Refactor the existing VBA macro into C# code, implementing the specified NUMBERS formatting conventions."
     },
     {
+      "category": "macro-project",
+      "file": "update-the-c-macro-to-manipulate-dbf-files-by-integrating-or-converting-the-exis.cs",
+      "title": "Update the C# macro to manipulate DBF files by integrating or converting the existing VBA logic accordingly."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
