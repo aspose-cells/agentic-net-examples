@@ -1401,6 +1401,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-spreadsheet-data-in-xls-format-and-write-it-to-the-console-stream-for-d.cs",
+      "title": "Generate spreadsheet data in XLS format and write it to the console stream for downstream processing."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-xps-formatted-output-from-the-console-application-and-write-it-to-the-s.cs",
       "title": "Generate XPS formatted output from the console application and write it to the specified file."
     },
