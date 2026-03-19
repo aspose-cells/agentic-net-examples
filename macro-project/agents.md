@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - provide-example-code-demonstrating-how-to-work-with-oxps-files-in-a-net-environm.cs
 - secure-the-vba-project-of-an-excel-workbook-with-a-password-and-generate-a-pdf-r.cs
 - apply-a-password-to-an-excel-workbooks-vba-project-by-providing-the-credentials-.cs
+- apply-a-password-to-the-vba-project-of-an-excel-workbook-using-c-and-output-the-.cs
