@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - create-an-additional-cell-range-within-an-xlsx-workbook-to-facilitate-advanced-r.cs
 - create-an-xlsx-workbook-and-configure-its-ranges-according-to-the-specified-guid.cs
 - populate-a-range-of-cells-in-the-first-worksheet-of-an-xlsx-file-with-the-specif.cs
+- copy-range-data-along-with-its-formatting-between-worksheets-in-an-xlsx-workbook.cs
