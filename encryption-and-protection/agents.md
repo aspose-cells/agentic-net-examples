@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - apply-protection-to-the-workbook-structure-of-an-input-xlsx-file-to-prevent-unau.cs
 - apply-password-protection-to-worksheets-in-an-xlsx-workbook-and-later-remove-it-.cs
 - apply-protection-to-a-worksheet-within-the-provided-xlsx-file-restricting-editin.cs
+- remove-worksheet-protection-from-the-specified-input-xlsx-file-allowing-subseque.cs
