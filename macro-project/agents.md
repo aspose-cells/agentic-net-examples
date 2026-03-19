@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - add-modify-or-delete-vba-modules-and-procedures-within-an-xlsb-macroenabled-work.cs
 - handle-vba-modules-within-an-excel-macro-enabled-workbook-when-exporting-to-or-i.cs
 - maintain-and-edit-the-vba-modules-of-an-excel-macroenabled-workbook-by-importing.cs
+- insert-a-vba-module-into-a-workbook-programmatically-via-c-ensuring-code-indenta.cs
