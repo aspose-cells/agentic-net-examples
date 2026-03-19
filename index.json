@@ -1096,6 +1096,11 @@
     },
     {
       "category": "macro-project",
+      "file": "map-a-macro-to-a-form-control-through-a-json-configuration-enabling-programmatic.cs",
+      "title": "Map a macro to a form control through a JSON configuration, enabling programmatic interaction."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-attach-a-macro-to-a-form-control-in-c-when-working-with-sxc-fil.cs",
       "title": "Programmatically attach a macro to a form control in C# when working with SXC files."
     },
