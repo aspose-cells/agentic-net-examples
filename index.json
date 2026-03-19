@@ -2436,6 +2436,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xltx-json-file-into-an-excel-workbook-using-the-default-conversion-.cs",
+      "title": "Transform an XLTX JSON file into an Excel workbook using the default conversion settings."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xltx-workbook-into-a-json-representation-preserving-cell-data-and-f.cs",
       "title": "Transform an XLTX workbook into a JSON representation, preserving cell data and formatting details."
     },
