@@ -2291,6 +2291,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "observe-the-considerations-outlined-in-important-to-know-for-formulas-when-loadi.cs",
+      "title": "Observe the considerations outlined in \u201cImportant to Know for Formulas\u201d when loading a workbook from an XLSX file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs",
       "title": "Provide a comprehensive overview of formula tracing capabilities activated during the loading of an XLSX workbook."
     },
