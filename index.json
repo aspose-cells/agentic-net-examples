@@ -4756,6 +4756,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-the-workbook-extract-data-bound-to-its-xml-map-and-save-the-resulting-xml-o.cs",
+      "title": "Load the workbook, extract data bound to its XML map, and save the resulting XML output."
+    },
+    {
+      "category": "xml-maps",
       "file": "persist-the-workbook-in-the-chosen-output-format-after-successfully-importing-th.cs",
       "title": "Persist the workbook in the chosen output format after successfully importing the XML map."
     },
