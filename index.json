@@ -1686,6 +1686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-embedded-within-a-dbf-file-and-report.cs",
+      "title": "Validate the digital signature of VBA code embedded within a DBF file and report its verification status."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-embedded-within-an-xltx-workbook-to-e.cs",
       "title": "Validate the digital signature of VBA code embedded within an XLTX workbook to ensure authenticity and integrity."
     },
