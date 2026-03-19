@@ -711,6 +711,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-aes-encryption-and-assign-a-password-to-xlsx-workbooks-to-restrict-unautho.cs",
+      "title": "Apply AES encryption and assign a password to XLSX workbooks to restrict unauthorized access."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-and-remove-worksheet-protection-in-an-xlsx-file-using-the-provided-api-met.cs",
       "title": "Apply and remove worksheet protection in an XLSX file using the provided API methods."
     },
