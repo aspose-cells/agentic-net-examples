@@ -781,6 +781,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-to-the-vba-project-in-a-workbook-using-fods-format.cs",
+      "title": "Add a library reference to the VBA project in a workbook using FODS format."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-reference-to-an-external-library-within-a-vba-project-embedded-in-an-xlsx-.cs",
       "title": "Add a reference to an external library within a VBA project embedded in an XLSX workbook."
     },
