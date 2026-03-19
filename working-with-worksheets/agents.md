@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - display-worksheet-rows-and-columns-programmatically-enabling-developers-to-acces.cs
 - programmatically-conceal-specified-rows-and-columns-within-a-worksheet-ensuring-.cs
 - programmatically-conceal-selected-rows-and-columns-within-a-worksheet-to-prevent.cs
+- configure-scroll-bar-visibility-for-worksheet-windows-to-show-hide-or-auto-adjus.cs
