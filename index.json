@@ -4741,6 +4741,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "reorder-worksheets-inside-a-workbook-by-moving-specified-sheets-to-new-positions.cs",
+      "title": "Reorder worksheets inside a workbook by moving specified sheets to new positions within the same file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-enabling-direc.cs",
       "title": "Retrieve a worksheet from a workbook by specifying its sheet name, enabling direct interaction with that sheet."
     },
