@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - identify-the-format-of-an-input-xlsx-file-and-determine-whether-it-is-encrypted.cs
 - identify-and-verify-the-file-format-of-a-supplied-xlsx-workbook-using-the-api.cs
 - determine-whether-the-supplied-xlsx-workbook-is-encrypted-and-retrieve-its-encry.cs
+- apply-password-protection-to-an-xlsx-workbook-and-subsequently-remove-it-to-allo.cs
