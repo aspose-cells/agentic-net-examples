@@ -1731,6 +1731,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-codes-digital-signature-within-a-dif-file-to-confirm-its-authen.cs",
+      "title": "Validate the VBA code's digital signature within a DIF file to confirm its authenticity and integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs",
       "title": "Validate whether a VBA project is password-protected and view-locked by analyzing its CSV representation."
     },
