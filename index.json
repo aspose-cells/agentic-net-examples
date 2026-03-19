@@ -781,6 +781,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "determine-whether-the-supplied-xlsx-workbook-is-encrypted-and-retrieve-its-encry.cs",
+      "title": "Determine whether the supplied XLSX workbook is encrypted and retrieve its encryption status programmatically."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-input-xlsx-file-by-assigning-a-password-to-protect-its-contents-secur.cs",
       "title": "Encrypt an input XLSX file by assigning a password to protect its contents securely."
     },
