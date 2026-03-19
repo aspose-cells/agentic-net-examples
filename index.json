@@ -4801,6 +4801,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "retrieve-the-xml-maps-root-element-name-from-the-currently-loaded-workbook-objec.cs",
+      "title": "Retrieve the XML map\u2019s root element name from the currently loaded workbook object in memory."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs",
       "title": "Validate all necessary prerequisites and configuration settings before initiating the import of an XML map."
     },
