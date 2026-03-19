@@ -916,6 +916,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-in-an-xls-workbook-is-protected-and-locked-for.cs",
+      "title": "Determine whether the VBA project in an XLS workbook is protected and locked for viewing."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-console-output-saved-as-a-pdf-document-preserving-formatting-layout-and.cs",
       "title": "Generate console output saved as a PDF document, preserving formatting, layout, and content integrity."
     },
