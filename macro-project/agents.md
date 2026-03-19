@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - insert-a-vba-module-into-a-workbook-programmatically-via-c-ensuring-code-indenta.cs
 - integrate-a-vba-module-into-a-c-solution-by-providing-its-definition-in-xml-form.cs
 - programmatically-insert-a-vba-module-into-a-workbook-using-c-and-the-spreadsheet.cs
+- refactor-the-existing-vba-macro-into-c-code-implementing-the-specified-numbers-f.cs
