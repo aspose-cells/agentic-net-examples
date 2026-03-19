@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - determine-whether-a-vba-project-within-an-ods-file-is-protected-and-locked-for-v.cs
 - validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs
 - determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-and-ou.cs
+- determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-while-.cs
