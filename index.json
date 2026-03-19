@@ -4711,6 +4711,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "activate-the-page-break-preview-mode-in-a-worksheet-to-visualize-page-boundaries.cs",
+      "title": "Activate the page break preview mode in a worksheet to visualize page boundaries before printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-freeze-pane-to-keep-selected-rows-and-columns-fixed-during-spreadsheet-s.cs",
       "title": "Apply a freeze pane to keep selected rows and columns fixed during spreadsheet scrolling operations."
     },
