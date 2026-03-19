@@ -233,3 +233,4 @@ Output files are written to the working directory.
 - validate-whether-vba-code-embedded-in-an-mhtml-file-is-digitally-signed-using-c.cs
 - validate-whether-vba-code-is-digitally-signed-in-c-by-parsing-its-xml-representa.cs
 - verify-whether-vba-code-embedded-in-a-spreadsheetml-file-is-digitally-signed-usi.cs
+- display-numeric-values-to-the-console-using-the-predefined-numbers-formatting-st.cs
