@@ -2661,6 +2661,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-source-cell-range-to-a-target-range-within-an-xlsx-workbook-preserving-da.cs",
+      "title": "Copy a source cell range to a target range within an XLSX workbook, preserving data and formatting."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-row-height-attributes-from-the-source-range-to-the-target-range-within-an-x.cs",
       "title": "Copy row height attributes from the source range to the target range within an XLSX worksheet."
     },
