@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - include-a-library-reference-in-the-workbooks-vba-project-utilizing-the-sxc-file-.cs
 - add-a-library-reference-to-the-vba-project-in-a-workbook-using-fods-format.cs
 - add-a-reference-to-a-library-in-the-workbooks-vba-project-by-importing-a-difform.cs
+- add-a-library-reference-to-the-workbooks-vba-project-while-handling-the-dbf-file.cs
