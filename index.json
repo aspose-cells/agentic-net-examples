@@ -2296,6 +2296,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "when-loading-an-xlsx-workbook-enable-dependent-tracing-according-to-the-tracing-.cs",
+      "title": "When loading an XLSX workbook, enable dependent tracing according to the Tracing Dependents specifications."
+    },
+    {
+      "category": "manage-formulas",
       "file": "when-loading-an-xlsx-workbook-enable-tracing-of-cell-precedents-according-to-the.cs",
       "title": "When loading an XLSX workbook, enable tracing of cell precedents according to the Tracing\u202fPrecedents specification."
     },
