@@ -776,6 +776,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-a-password-to-protect-the-vba-project-inside-an-xlsx-workbook-ensuring-res.cs",
+      "title": "Apply a password to protect the VBA project inside an XLSX workbook, ensuring restricted access to code."
+    },
+    {
+      "category": "macro-project",
       "file": "convert-the-existing-vba-macro-to-c-code-that-reads-and-writes-data-using-the-di.cs",
       "title": "Convert the existing VBA macro to C# code that reads and writes data using the DIF format."
     },
