@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - determine-whether-the-vba-project-embedded-in-an-xlsm-workbook-is-passwordprotec.cs
 - implement-a-routine-to-programmatically-check-if-the-vba-project-embedded-in-an-.cs
 - determine-programmatically-whether-the-vba-project-embedded-in-an-xlsb-workbook-.cs
+- determine-programmatically-whether-the-vba-project-embedded-in-an-ods-spreadshee.cs
