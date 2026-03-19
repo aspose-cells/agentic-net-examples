@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - implement-encryption-and-decryption-functionality-for-xlsx-workbooks-ensuring-se.cs
 - implement-functionality-to-apply-password-protection-to-an-xlsx-workbook-and-sub.cs
 - apply-and-remove-worksheet-protection-in-an-xlsx-file-using-the-provided-api-met.cs
+- implement-functionality-to-apply-and-remove-protection-on-shared-xlsx-workbooks-.cs
