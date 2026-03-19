@@ -2706,6 +2706,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-data-from-a-source-range-to-a-target-range-in-an-xlsx-file-according-to-the.cs",
+      "title": "Copy data from a source range to a target range in an XLSX file according to the specified example."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-data-from-a-source-range-to-a-target-range-within-an-xlsx-worksheet-preserv.cs",
       "title": "Copy data from a source range to a target range within an XLSX worksheet, preserving cell formatting and values."
     },
