@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - provide-sample-code-demonstrating-how-to-read-and-write-data-using-the-dif-file-.cs
 - provide-example-code-demonstrating-how-to-read-and-write-data-using-the-dbf-file.cs
 - provide-sample-code-demonstrating-how-to-generate-output-in-prn-format-using-the.cs
+- provide-demonstrative-code-snippets-illustrating-how-to-create-read-and-manipula.cs
