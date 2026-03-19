@@ -886,6 +886,11 @@
     },
     {
       "category": "macro-project",
+      "file": "provide-a-jsonformatted-code-snippet-illustrating-the-required-functionality-and.cs",
+      "title": "Provide a JSON\u2011formatted code snippet illustrating the required functionality and usage patterns for developers."
+    },
+    {
+      "category": "macro-project",
       "file": "provide-demonstrative-code-snippets-illustrating-how-to-create-read-and-manipula.cs",
       "title": "Provide demonstrative code snippets illustrating how to create, read, and manipulate documents in XPS format."
     },
