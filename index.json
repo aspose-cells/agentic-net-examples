@@ -830,6 +830,11 @@
       "title": "Update the C# macro to manipulate DBF files by integrating or converting the existing VBA logic accordingly."
     },
     {
+      "category": "macro-project",
+      "file": "update-the-existing-vba-macro-or-c-script-to-generate-manipulate-and-output-xps-.cs",
+      "title": "Update the existing VBA macro or C# script to generate, manipulate, and output XPS files in accordance with the new specifications."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
