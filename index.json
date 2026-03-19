@@ -4826,6 +4826,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-hide-worksheet-tabs-in-a-workbook-to-prevent-user-navigation-an.cs",
+      "title": "Programmatically hide worksheet tabs in a workbook to prevent user navigation and maintain a clean interface."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-insert-additional-worksheets-into-a-designer-spreadsheet-ensuri.cs",
       "title": "Programmatically insert additional worksheets into a designer spreadsheet, ensuring proper initialization and integration with existing data."
     },
