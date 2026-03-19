@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - export-the-xml-data-associated-with-the-defined-xml-map-to-an-output-file-as-ste.cs
 - load-the-workbook-extract-data-bound-to-its-xml-map-and-save-the-resulting-xml-o.cs
 - export-the-workbooks-linked-xml-data-to-an-external-file-while-preserving-data-i.cs
+- open-a-workbook-using-any-supported-file-format-to-enable-subsequent-xml-data-ex.cs
