@@ -1271,6 +1271,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-file-or-stream-in-pdf-format-ensuring-proper-seria.cs",
+      "title": "Export a VBA certificate to a file or stream in PDF format, ensuring proper serialization and compatibility."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-file-or-stream-in-sxc-format-preserving-its-integr.cs",
       "title": "Export a VBA certificate to a file or stream in SXC format, preserving its integrity."
     },
