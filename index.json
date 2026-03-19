@@ -2191,6 +2191,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-a-shared-formula-during-loading-of-an-xlsx-workbook-according-to-the-s.cs",
+      "title": "Configure a shared formula during loading of an XLSX workbook according to the specified shared formula guidelines."
+    },
+    {
+      "category": "manage-formulas",
       "file": "customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs",
       "title": "Customize the Excel menu, UI components, API references, plugins, FAQ, and AI documentation when loading an XLSX workbook."
     },
