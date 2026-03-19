@@ -4831,6 +4831,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "retrieve-xml-map-paths-by-accessing-a-worksheet-within-the-current-loaded-workbo.cs",
+      "title": "Retrieve XML map paths by accessing a worksheet within the current loaded workbook instance."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs",
       "title": "Validate all necessary prerequisites and configuration settings before initiating the import of an XML map."
     },
