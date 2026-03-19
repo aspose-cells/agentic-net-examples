@@ -1046,6 +1046,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-workbooks-vba-project-is-digitally-signed-using-c-and-the-di.cs",
+      "title": "Determine whether a workbook's VBA project is digitally signed using C# and the DIF file format."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-workbooks-vba-project-is-digitally-signed-when-using-the-spr.cs",
       "title": "Determine whether a workbook's VBA project is digitally signed when using the SpreadsheetML format."
     },
