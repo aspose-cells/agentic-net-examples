@@ -1211,6 +1211,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-embedded-in-an-xltm-workbook-has-a-valid-digit.cs",
+      "title": "Determine whether the VBA project embedded in an XLTM workbook has a valid digital signature."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-embedded-in-an-xltm-workbook-is-digitally-sign.cs",
       "title": "Determine whether the VBA project embedded in an XLTM workbook is digitally signed by a certificate."
     },
