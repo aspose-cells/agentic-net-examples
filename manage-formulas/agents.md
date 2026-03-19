@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-trace-both-precedent-and-dependent-cells-following-the.cs
 - evaluate-all-cell-formulas-automatically-during-xlsx-workbook-loading-according-.cs
 - load-an-xlsx-workbook-insert-the-required-formulas-and-compute-their-results-imm.cs
+- enable-direct-formula-evaluation-during-xlsx-workbook-loading-to-compute-cell-va.cs
