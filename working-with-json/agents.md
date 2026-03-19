@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - transform-a-prnformatted-json-file-into-an-xlsx-workbook-mapping-data-fields-to-.cs
 - transform-an-oxps-json-file-into-an-excel-workbook-preserving-data-structure-and.cs
 - transform-a-pdfderived-json-payload-into-a-fully-formatted-excel-workbook-with-p.cs
+- transform-a-json-file-into-an-excel-workbook-mapping-data-structures-to-spreadsh.cs
