@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - apply-a-password-to-an-excel-workbooks-vba-project-in-c-retrieving-the-password-.cs
 - apply-a-password-to-an-excel-workbooks-vba-project-in-c-using-a-txt-file-for-the.cs
 - set-a-password-on-an-excel-workbooks-vba-project-programmatically-in-c-employing.cs
+- apply-a-password-to-an-excel-workbooks-vba-project-in-c-utilizing-the-xml-format.cs
