@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - determine-via-c-whether-a-workbooks-vba-project-is-digitally-signed-when-the-fil.cs
 - determine-whether-a-workbooks-vba-project-is-digitally-signed-using-c-and-output.cs
 - include-a-library-reference-in-the-vba-project-of-an-xls-workbook-to-enable-exte.cs
+- add-a-reference-to-an-external-library-within-a-vba-project-embedded-in-an-xlsx-.cs
