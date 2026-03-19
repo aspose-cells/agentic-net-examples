@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - implement-a-c-routine-that-evaluates-a-vba-projects-protection-status-and-locked.cs
 - associate-a-vba-macro-with-a-specific-form-control-in-an-xls-workbook-to-enable-.cs
 - associate-a-vba-macro-with-a-form-control-in-an-xltx-workbook-to-enable-automate.cs
+- bind-a-vba-macro-to-a-form-control-in-an-xltm-workbook-to-enable-interactive-fun.cs
