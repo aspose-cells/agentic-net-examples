@@ -2866,6 +2866,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-or-unmerge-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-.cs",
+      "title": "Merge or unmerge specified cell ranges within an XLSX worksheet to control cell grouping behavior."
+    },
+    {
+      "category": "managing-ranges",
       "file": "paste-a-defined-cell-range-into-an-xlsx-worksheet-using-advanced-configurable-pa.cs",
       "title": "Paste a defined cell range into an XLSX worksheet using advanced configurable paste options."
     },
