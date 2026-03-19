@@ -2231,6 +2231,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "during-xlsx-workbook-loading-compute-and-record-cell-precedents-and-dependents-a.cs",
+      "title": "During XLSX workbook loading, compute and record cell precedents and dependents according to the defined methodology."
+    },
+    {
+      "category": "manage-formulas",
       "file": "examine-the-provided-sample-code-to-determine-the-maximum-sharedformula-row-limi.cs",
       "title": "Examine the provided sample code to determine the maximum shared\u2011formula row limit when loading an XLSX workbook."
     },
