@@ -2846,6 +2846,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-worksheetscoped-named-range-in-an-xlsx-workbook-to-manage-cell-collecti.cs",
+      "title": "Create a worksheet\u2011scoped named range in an XLSX workbook to manage cell collections programmatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-access-and-duplicate-named-ranges-in-xlsx-files-according-to-the-formats-.cs",
       "title": "Create, access, and duplicate named ranges in XLSX files according to the format\u2019s defined specifications."
     },
