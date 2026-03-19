@@ -4791,6 +4791,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "render-a-preview-of-worksheet-page-breaks-to-visualize-pagination-and-layout-adj.cs",
+      "title": "Render a preview of worksheet page breaks to visualize pagination and layout adjustments before printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "reorder-worksheets-inside-a-workbook-by-moving-specified-sheets-to-new-positions.cs",
       "title": "Reorder worksheets inside a workbook by moving specified sheets to new positions within the same file."
     },
