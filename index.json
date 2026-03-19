@@ -4703,6 +4703,11 @@
       "category": "xml-maps",
       "file": "import-an-xml-map-into-a-workbook-loading-the-workbook-from-a-supported-format.cs",
       "title": "Import an XML map into a workbook, loading the workbook from a supported format."
+    },
+    {
+      "category": "xml-maps",
+      "file": "load-an-xml-schema-file-to-import-its-xml-map-into-the-target-workbook.cs",
+      "title": "Load an XML schema file to import its XML map into the target workbook."
     }
   ]
 }
