@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-an-external-library-reference-to-an-excel-vba-project-using-the-spreadsheetm.cs",
+      "title": "Add an external library reference to an Excel VBA project using the SpreadsheetML file format."
+    },
+    {
+      "category": "macro-project",
       "file": "add-edit-or-remove-vba-modules-in-an-xlsm-workbook-programmatically-using-the-pr.cs",
       "title": "Add, edit, or remove VBA modules in an XLSM workbook programmatically using the provided API."
     },
