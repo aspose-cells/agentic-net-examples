@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - determine-programmatically-whether-the-vba-project-embedded-in-an-ods-spreadshee.cs
 - detect-whether-a-vba-project-is-protected-by-inspecting-its-csv-representation-a.cs
 - determine-vba-project-protection-status-in-c-and-output-the-result-using-tsv-for.cs
+- determine-programmatically-via-c-whether-a-vba-project-is-passwordprotected-usin.cs
