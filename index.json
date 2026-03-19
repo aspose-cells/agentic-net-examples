@@ -2686,6 +2686,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-style-formatting-to-specified-cell-ranges-mirroring-the-formatting-demonst.cs",
+      "title": "Apply style formatting to specified cell ranges, mirroring the formatting demonstrated in the XLSX file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-cell-range-and-paste-it-into-an-xlsx-worksheet-with-specified-paste-optio.cs",
       "title": "Copy a cell range and paste it into an XLSX worksheet with specified paste options."
     },
