@@ -1686,6 +1686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-embedded-in-an-xps-file-to-ensure-its.cs",
+      "title": "Validate the digital signature of VBA code embedded in an XPS file to ensure its integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-embedded-within-a-dbf-file-and-report.cs",
       "title": "Validate the digital signature of VBA code embedded within a DBF file and report its verification status."
     },
