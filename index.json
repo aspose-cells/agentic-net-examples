@@ -2431,6 +2431,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "terminate-or-suspend-worksheet-formula-evaluation-when-loading-an-xlsx-workbook-.cs",
+      "title": "Terminate or suspend worksheet formula evaluation when loading an XLSX workbook, following the specified interruption behavior."
+    },
+    {
+      "category": "manage-formulas",
       "file": "trace-precedent-and-dependent-cells-when-loading-an-xlsx-workbook-following-exce.cs",
       "title": "Trace precedent and dependent cells when loading an XLSX workbook, following Excel's tracing conventions."
     },
