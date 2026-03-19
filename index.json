@@ -1036,6 +1036,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-embedded-in-a-workbook-is-digitally-signed-out.cs",
+      "title": "Determine whether the VBA project embedded in a workbook is digitally signed, outputting the result in HTML."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-embedded-in-an-xlsm-workbook-is-passwordprotec.cs",
       "title": "Determine whether the VBA project embedded in an XLSM workbook is password\u2011protected and cannot be edited."
     },
