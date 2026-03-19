@@ -1266,6 +1266,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-file-or-stream-in-oxps-format-preserving-its-integ.cs",
+      "title": "Export a VBA certificate to a file or stream in OXPS format, preserving its integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-file-or-stream-in-sxc-format-preserving-its-integr.cs",
       "title": "Export a VBA certificate to a file or stream in SXC format, preserving its integrity."
     },
