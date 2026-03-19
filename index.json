@@ -4841,6 +4841,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "validate-required-conditions-prior-to-retrieving-cell-ranges-associated-with-a-s.cs",
+      "title": "Validate required conditions prior to retrieving cell ranges associated with a specified XML map path."
+    },
+    {
+      "category": "xml-maps",
       "file": "verify-all-required-conditions-and-prerequisites-before-attaching-an-xml-map-to-.cs",
       "title": "Verify all required conditions and prerequisites before attaching an XML map to a workbook."
     },
