@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - add-a-reference-to-an-external-library-within-the-vba-project-of-an-ods-workbook.cs
 - include-a-library-reference-in-a-workbooks-vba-project-by-importing-the-referenc.cs
 - insert-a-library-reference-in-tsv-format-into-a-workbooks-vba-project-to-enable-.cs
+- insert-a-txtformatted-library-reference-into-the-vba-project-of-a-workbook-to-en.cs
