@@ -218,3 +218,4 @@ Output files are written to the working directory.
 - serialize-a-vba-certificate-to-a-file-or-stream-in-json-format-for-further-proce.cs
 - export-a-vba-certificate-to-a-pdf-file-or-stream-using-c-with-appropriate-serial.cs
 - serialize-a-vba-certificate-to-json-and-write-it-to-a-file-or-stream-using-c.cs
+- determine-whether-the-vba-macro-code-embedded-in-an-xls-workbook-is-digitally-si.cs
