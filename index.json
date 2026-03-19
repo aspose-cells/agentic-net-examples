@@ -2831,6 +2831,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-and-handle-a-cell-range-in-an-xlsx-workbook-according-to-the-specified-la.cs",
+      "title": "Create and handle a cell range in an XLSX workbook according to the specified layout."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-and-manipulate-a-cell-range-in-an-xlsx-workbook-according-to-the-provided.cs",
       "title": "Create and manipulate a cell range in an XLSX workbook according to the provided example."
     },
