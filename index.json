@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "associate-a-macro-with-a-form-control-by-specifying-the-mapping-in-a-tsv-file.cs",
+      "title": "Associate a macro with a form control by specifying the mapping in a TSV file."
+    },
+    {
+      "category": "macro-project",
       "file": "associate-a-vba-macro-with-a-form-control-element-within-an-ods-spreadsheet-file.cs",
       "title": "Associate a VBA macro with a form control element within an ODS spreadsheet file programmatically."
     },
