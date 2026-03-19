@@ -786,6 +786,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-to-an-excel-vba-project-using-json-format-for-automated-.cs",
+      "title": "Add a library reference to an Excel VBA project using JSON format for automated assembly integration."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-library-reference-to-the-vba-project-in-a-workbook-using-fods-format.cs",
       "title": "Add a library reference to the VBA project in a workbook using FODS format."
     },
