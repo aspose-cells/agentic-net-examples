@@ -1301,6 +1301,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-pdf-file-or-stream-using-c-with-appropriate-serial.cs",
+      "title": "Export a VBA certificate to a PDF file or stream using C# with appropriate serialization."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-either-a-file-or-a-stream-in-c-employing-tab-formatt.cs",
       "title": "Export a VBA certificate to either a file or a stream in C# employing TAB formatting."
     },
