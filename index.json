@@ -2261,6 +2261,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs",
+      "title": "Provide a comprehensive overview of formula tracing capabilities activated during the loading of an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-two-guidelines-for-nonenglish-users-to-correctly-create-formulas-when-lo.cs",
       "title": "Provide two guidelines for non\u2011English users to correctly create formulas when loading an XLSX workbook."
     },
