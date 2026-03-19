@@ -746,6 +746,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-password-protection-to-an-xlsx-workbook-to-encrypt-its-contents-and-restri.cs",
+      "title": "Apply password protection to an XLSX workbook to encrypt its contents and restrict unauthorized access."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-password-protection-to-an-xlsx-workbook-to-restrict-editing-opening-or-for.cs",
       "title": "Apply password protection to an XLSX workbook to restrict editing, opening, or formatting operations."
     },
