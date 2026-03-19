@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - programmatically-add-or-remove-password-protection-on-a-shared-xlsx-workbook-to-.cs
 - create-a-workbook-apply-protection-with-sharing-enabled-and-save-the-result-as-a.cs
 - apply-and-remove-protection-on-the-workbook-structure-of-an-xlsx-file-using-appr.cs
+- apply-or-remove-workbook-structural-protection-on-xlsx-files-programmatically-us.cs
