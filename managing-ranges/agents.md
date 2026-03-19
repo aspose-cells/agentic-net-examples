@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - review-the-introduction-sheet-of-an-xlsx-workbook-to-configure-and-manipulate-ce.cs
 - copy-specified-cell-ranges-within-an-xlsx-workbook-programmatically-to-manage-da.cs
 - copy-a-specified-cell-range-within-an-xlsx-workbook-to-a-target-location-while-p.cs
+- paste-a-defined-cell-range-into-an-xlsx-worksheet-using-advanced-configurable-pa.cs
