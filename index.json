@@ -2806,6 +2806,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-union-range-to-manage-multiple-cell-ranges-simultaneously-within-an-xls.cs",
+      "title": "Create a union range to manage multiple cell ranges simultaneously within an XLSX workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-workbook-in-xlsx-format-and-configure-cell-ranges-according-to-the-prov.cs",
       "title": "Create a workbook in XLSX format and configure cell ranges according to the provided example."
     },
