@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - add-or-remove-password-protection-on-an-xlsx-workbook-programmatically-using-app.cs
+- apply-password-protection-to-an-xlsx-workbook-to-restrict-editing-opening-or-for.cs
