@@ -891,6 +891,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-and-ht.cs",
+      "title": "Determine whether a VBA project is protected and locked for viewing via C# and HTML output."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-and-ou.cs",
       "title": "Determine whether a VBA project is protected and locked for viewing via C# and output the results in TSV format."
     },
