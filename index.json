@@ -2421,6 +2421,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-a-range-of-calculated-values-using-abstractcalculationengine-while-prog.cs",
+      "title": "Retrieve a range of calculated values using AbstractCalculationEngine while programmatically loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-provided-runtime-sample-and-load-the-corresponding-workbook-using-t.cs",
       "title": "Retrieve the provided runtime sample and load the corresponding workbook using the XLSX file format."
     },
