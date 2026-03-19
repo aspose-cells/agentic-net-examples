@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - configure-the-viewer-to-display-horizontal-and-vertical-scroll-bars-when-content.cs
 - configure-the-rendering-component-to-suppress-vertical-and-horizontal-scrollbars.cs
 - configure-a-worksheet-to-display-its-formulas-instead-of-calculated-values-durin.cs
+- programmatically-enable-or-disable-the-display-of-worksheet-gridlines-and-rowcol.cs
