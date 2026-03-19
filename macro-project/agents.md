@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - implement-a-routine-to-programmatically-check-if-the-vba-project-embedded-in-an-.cs
 - determine-programmatically-whether-the-vba-project-embedded-in-an-xlsb-workbook-.cs
 - determine-programmatically-whether-the-vba-project-embedded-in-an-ods-spreadshee.cs
+- detect-whether-a-vba-project-is-protected-by-inspecting-its-csv-representation-a.cs
