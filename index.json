@@ -2751,6 +2751,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-range-data-along-with-its-formatting-between-worksheets-in-an-xlsx-workbook.cs",
+      "title": "Copy range data along with its formatting between worksheets in an XLSX workbook, preserving style attributes."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-row-height-attributes-from-the-source-range-to-the-target-range-within-an-x.cs",
       "title": "Copy row height attributes from the source range to the target range within an XLSX worksheet."
     },
