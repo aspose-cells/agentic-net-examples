@@ -4710,6 +4710,11 @@
       "title": "Delete one or more worksheets from a workbook by specifying their zero\u2011based sheet index positions."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "programmatically-insert-additional-worksheets-into-a-designer-spreadsheet-ensuri.cs",
+      "title": "Programmatically insert additional worksheets into a designer spreadsheet, ensuring proper initialization and integration with existing data."
+    },
+    {
       "category": "xml-maps",
       "file": "add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs",
       "title": "Add an XML map to a workbook by specifying the schema and linking it to worksheet data."
