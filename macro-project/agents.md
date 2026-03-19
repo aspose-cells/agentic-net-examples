@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - add-a-library-reference-to-an-excel-vba-project-using-json-format-for-automated-.cs
 - add-a-reference-to-a-library-in-the-workbooks-vba-project-and-export-the-workboo.cs
 - add-a-library-reference-to-the-workbooks-vba-project-using-a-json-configuration-.cs
+- export-a-vba-certificate-to-a-file-or-stream-in-xls-format-preserving-certificat.cs
