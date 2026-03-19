@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - encrypt-an-ods-workbook-by-loading-it-assigning-workbooksettingspassword-then-sa.cs
 - validate-the-password-protecting-an-encrypted-xlsx-workbook-and-confirm-whether-.cs
 - validate-the-password-of-an-encrypted-xlsx-workbook-and-report-whether-decryptio.cs
+- set-the-workbook-author-metadata-concurrently-with-applying-write-protection-to-.cs
