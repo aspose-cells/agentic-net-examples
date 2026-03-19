@@ -806,6 +806,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-workbook-apply-protection-with-sharing-enabled-and-save-the-result-as-a.cs",
+      "title": "Create a workbook, apply protection with sharing enabled, and save the result as an XLSX file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "decrypt-an-encrypted-ods-file-using-net-and-convert-the-output-to-xlsx-format.cs",
       "title": "Decrypt an encrypted ODS file using\u202f.NET and convert the output to XLSX format."
     },
