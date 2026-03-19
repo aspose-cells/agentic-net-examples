@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - set-a-password-on-an-excel-workbooks-vba-project-programmatically-in-c-employing.cs
 - apply-a-password-to-an-excel-workbooks-vba-project-in-c-utilizing-the-xml-format.cs
 - apply-a-password-to-the-vba-project-of-an-excel-workbook-using-c-and-the-spreads.cs
+- provide-example-code-demonstrating-how-to-work-with-the-numbers-format-in-the-li.cs
