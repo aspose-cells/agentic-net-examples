@@ -2246,6 +2246,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "display-the-introductory-information-defined-in-the-introduction-section-when-op.cs",
+      "title": "Display the introductory information defined in the Introduction section when opening an XLSX workbook using the API."
+    },
+    {
+      "category": "manage-formulas",
       "file": "during-xlsx-workbook-loading-compute-and-record-cell-precedents-and-dependents-a.cs",
       "title": "During XLSX workbook loading, compute and record cell precedents and dependents according to the defined methodology."
     },
