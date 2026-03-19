@@ -1671,6 +1671,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-embedded-in-an-xlsm-workbook-to-ensur.cs",
+      "title": "Validate the digital signature of VBA code embedded in an XLSM workbook to ensure authenticity and integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs",
       "title": "Validate whether a VBA project is password-protected and view-locked by analyzing its CSV representation."
     },
