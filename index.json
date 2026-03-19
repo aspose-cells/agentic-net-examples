@@ -791,6 +791,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "determine-whether-an-xlsx-workbook-is-passwordprotected-for-modifications-and-va.cs",
+      "title": "Determine whether an XLSX workbook is password\u2011protected for modifications and validate the provided password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "determine-whether-the-supplied-xlsx-workbook-is-encrypted-and-retrieve-its-encry.cs",
       "title": "Determine whether the supplied XLSX workbook is encrypted and retrieve its encryption status programmatically."
     },
