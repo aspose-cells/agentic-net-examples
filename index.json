@@ -735,6 +735,11 @@
       "title": "Validate the password of encrypted XLSX and ODS workbooks, confirming access rights before processing."
     },
     {
+      "category": "encryption-and-protection",
+      "file": "validate-the-provided-password-for-an-incoming-xlsx-workbook-to-ensure-authorize.cs",
+      "title": "Validate the provided password for an incoming XLSX workbook to ensure authorized access and proper decryption."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs",
       "title": "Apply custom subtotal labels to a localized spreadsheet by configuring GlobalizationSettings on an XLSX workbook."
