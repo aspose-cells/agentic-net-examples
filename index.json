@@ -771,6 +771,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-an-input-xlsx-file-by-assigning-a-password-to-protect-its-contents-secur.cs",
+      "title": "Encrypt an input XLSX file by assigning a password to protect its contents securely."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-xlsx-workbook-using-a-password-to-protect-its-contents-from-unauthori.cs",
       "title": "Encrypt an XLSX workbook using a password to protect its contents from unauthorized access."
     },
