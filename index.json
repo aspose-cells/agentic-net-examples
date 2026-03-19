@@ -730,6 +730,11 @@
       "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
     },
     {
+      "category": "encryption-and-protection",
+      "file": "validate-the-password-of-encrypted-xlsx-and-ods-workbooks-confirming-access-righ.cs",
+      "title": "Validate the password of encrypted XLSX and ODS workbooks, confirming access rights before processing."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs",
       "title": "Apply custom subtotal labels to a localized spreadsheet by configuring GlobalizationSettings on an XLSX workbook."
