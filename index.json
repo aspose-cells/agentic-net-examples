@@ -4706,6 +4706,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "activate-normal-view-for-a-worksheet-to-display-cells-without-page-layout-or-pag.cs",
+      "title": "Activate Normal view for a worksheet to display cells without page layout or page break previews."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-freeze-pane-to-keep-selected-rows-and-columns-fixed-during-spreadsheet-s.cs",
       "title": "Apply a freeze pane to keep selected rows and columns fixed during spreadsheet scrolling operations."
     },
