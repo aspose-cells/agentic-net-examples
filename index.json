@@ -1061,6 +1061,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-whether-a-vba-project-in-an-xlsm-workbook-is-protected-and-locked-for-vie.cs",
+      "title": "Verify whether a VBA project in an XLSM workbook is protected and locked for viewing."
+    },
+    {
+      "category": "macro-project",
       "file": "write-data-to-the-console-serialized-as-a-jsonformatted-string-ensuring-the-outp.cs",
       "title": "Write data to the console serialized as a JSON\u2011formatted string, ensuring the output conforms to valid JSON syntax."
     },
