@@ -821,6 +821,11 @@
     },
     {
       "category": "macro-project",
+      "file": "refactor-the-existing-vba-macro-into-c-code-that-processes-files-in-prn-format.cs",
+      "title": "Refactor the existing VBA macro into C# code that processes files in PRN format."
+    },
+    {
+      "category": "macro-project",
       "file": "update-the-c-macro-to-manipulate-dbf-files-by-integrating-or-converting-the-exis.cs",
       "title": "Update the C# macro to manipulate DBF files by integrating or converting the existing VBA logic accordingly."
     },
