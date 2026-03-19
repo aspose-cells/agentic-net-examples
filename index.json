@@ -1256,6 +1256,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-certificate-to-a-file-or-stream-using-txt-format-for-downstream-p.cs",
+      "title": "Export the VBA certificate to a file or stream using TXT format for downstream processing."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vba-project-certificate-programmatically-to-a-file-or-stream-in-xltm-.cs",
       "title": "Export the VBA project certificate programmatically to a file or stream in XLTM format."
     },
