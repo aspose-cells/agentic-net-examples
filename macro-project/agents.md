@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - determine-whether-a-vba-project-is-protected-via-c-and-output-the-result-in-json.cs
 - determine-whether-the-vba-project-in-an-xls-workbook-is-protected-and-locked-for.cs
 - determine-whether-the-vba-project-in-an-xlsx-workbook-is-protected-and-locked-fo.cs
+- verify-whether-a-vba-project-in-an-xlsm-workbook-is-protected-and-locked-for-vie.cs
