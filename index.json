@@ -1966,6 +1966,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-an-xlsx-json-file-into-a-native-excel-workbook-employing-the-default-con.cs",
+      "title": "Convert an XLSX JSON file into a native Excel workbook employing the default conversion parameters."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-an-xlsx-workbook-to-json-using-the-default-conversion-settings-preservin.cs",
       "title": "Convert an XLSX workbook to JSON using the default conversion settings, preserving worksheet data structures and cell types."
     },
