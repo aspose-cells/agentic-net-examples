@@ -2841,6 +2841,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-and-manipulate-a-secondary-cell-range-within-an-xlsx-worksheet-to-manage-.cs",
+      "title": "Create and manipulate a secondary cell range within an XLSX worksheet to manage data segmentation."
+    },
+    {
+      "category": "managing-ranges",
       "file": "paste-a-defined-cell-range-into-an-xlsx-worksheet-using-advanced-configurable-pa.cs",
       "title": "Paste a defined cell range into an XLSX worksheet using advanced configurable paste options."
     },
