@@ -4736,6 +4736,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "duplicate-selected-worksheets-within-an-existing-workbook-preserving-all-formatt.cs",
+      "title": "Duplicate selected worksheets within an existing workbook, preserving all formatting, formulas, and cell references."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-or-copy-worksheets-within-or-between-workbooks-through-excel-automation-whi.cs",
       "title": "Move or copy worksheets within or between workbooks through Excel automation while preserving formulas and formatting."
     },
