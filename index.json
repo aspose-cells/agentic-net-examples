@@ -711,6 +711,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-and-remove-worksheet-protection-in-an-xlsx-file-using-the-provided-api-met.cs",
+      "title": "Apply and remove worksheet protection in an XLSX file using the provided API methods."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-encryption-to-an-xlsx-workbook-and-subsequently-decrypt-it-ensuring-data-i.cs",
       "title": "Apply encryption to an XLSX workbook and subsequently decrypt it, ensuring data integrity throughout the process."
     },
