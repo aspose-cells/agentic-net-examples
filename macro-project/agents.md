@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - serialize-a-vba-certificate-to-json-and-write-it-to-a-file-or-stream-using-c.cs
 - determine-whether-the-vba-macro-code-embedded-in-an-xls-workbook-is-digitally-si.cs
 - determine-whether-the-vba-project-embedded-in-an-xlsm-workbook-is-digitally-sign.cs
+- determine-whether-vba-macros-within-an-xltx-workbook-are-digitally-signed-and-re.cs
