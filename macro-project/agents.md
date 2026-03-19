@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - add-a-reference-to-a-vba-project-within-a-workbook-using-a-prn-formatted-library.cs
 - add-a-library-reference-to-a-workbooks-vba-project-and-export-the-result-as-an-x.cs
 - add-a-library-reference-to-the-workbooks-vba-project-when-processing-oxps-files-.cs
+- add-a-pdf-library-reference-to-the-vba-project-within-the-workbook-to-enable-pdf.cs
