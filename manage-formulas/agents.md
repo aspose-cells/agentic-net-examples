@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - when-loading-an-xlsx-workbook-delimit-all-function-parameters-with-commas-to-ens.cs
+- customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs
