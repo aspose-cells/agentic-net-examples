@@ -1121,6 +1121,11 @@
     },
     {
       "category": "macro-project",
+      "file": "using-c-verify-whether-a-vba-project-embedded-in-a-pdf-is-protected-and-locked-f.cs",
+      "title": "Using C#, verify whether a VBA project embedded in a PDF is protected and locked for viewing."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs",
       "title": "Validate whether a VBA project is password-protected and view-locked by analyzing its CSV representation."
     },
