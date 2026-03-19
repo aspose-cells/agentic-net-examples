@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - set-the-worksheets-visibility-property-to-hide-it-programmatically-from-the-work.cs
 - enable-visibility-of-worksheet-tabs-in-the-workbook-view-to-allow-user-navigatio.cs
 - programmatically-hide-worksheet-tabs-in-a-workbook-to-prevent-user-navigation-an.cs
+- set-or-retrieve-the-worksheet-tab-bar-width-to-customize-spreadsheet-navigation-.cs
