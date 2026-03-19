@@ -846,6 +846,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-an-xlsx-workbook-file-using-microsoft-excels-standard-encryption-to-prot.cs",
+      "title": "Encrypt an XLSX workbook file using Microsoft Excel\u2019s standard encryption to protect its contents."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-xlsx-workbook-using-a-password-to-protect-its-contents-from-unauthori.cs",
       "title": "Encrypt an XLSX workbook using a password to protect its contents from unauthorized access."
     },
