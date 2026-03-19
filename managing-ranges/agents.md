@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - add-data-to-cells-within-defined-ranges-on-the-first-worksheet-of-an-xlsx-workbo.cs
 - apply-specified-style-formatting-to-a-defined-cell-range-within-an-xlsx-workbook.cs
 - copy-data-from-a-source-range-to-a-target-range-within-an-xlsx-worksheet-preserv.cs
+- create-and-define-a-cell-range-within-an-xlsx-workbook-for-subsequent-manipulati.cs
