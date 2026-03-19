@@ -1671,6 +1671,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-embedded-in-an-sxc-file-to-ensure-its.cs",
+      "title": "Validate the digital signature of VBA code embedded in an SXC file to ensure its authenticity."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-embedded-in-an-xls-workbook-to-ensure.cs",
       "title": "Validate the digital signature of VBA code embedded in an XLS workbook to ensure its authenticity."
     },
