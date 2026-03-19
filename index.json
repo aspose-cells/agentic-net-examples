@@ -876,6 +876,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-is-protected-using-c-and-generate-the-status-as-.cs",
+      "title": "Determine whether a VBA project is protected using C# and generate the status as an HTML report."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-embedded-in-an-xlsm-workbook-is-passwordprotec.cs",
       "title": "Determine whether the VBA project embedded in an XLSM workbook is password\u2011protected and cannot be edited."
     },
