@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - assign-a-simple-formula-to-a-named-range-programmatically-when-loading-an-xlsx-w.cs
 - assign-a-complex-formula-to-a-named-range-during-the-loading-of-an-xlsx-workbook.cs
 - during-xlsx-workbook-loading-compute-and-record-cell-precedents-and-dependents-a.cs
+- provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs
