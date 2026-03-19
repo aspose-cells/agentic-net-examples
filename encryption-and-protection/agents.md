@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - apply-password-protection-to-an-xlsx-workbook-using-openoffice-calc-to-restrict-.cs
 - encrypt-an-ods-spreadsheet-using-the-net-api-applying-password-protection-to-sec.cs
 - decrypt-an-encrypted-ods-file-using-net-and-convert-the-output-to-xlsx-format.cs
+- invoke-save-as-and-enable-the-save-with-password-option-when-exporting-to-xlsx-f.cs
