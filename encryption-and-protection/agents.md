@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - select-the-desired-encryption-algorithm-for-an-xlsx-workbook-and-validate-the-pr.cs
 - apply-aes-encryption-and-assign-a-password-to-xlsx-workbooks-to-restrict-unautho.cs
 - programmatically-generate-read-and-modify-microsoft-excel-xlsx-workbooks-using-t.cs
+- specify-a-modification-password-for-an-xlsx-workbook-to-restrict-unauthorized-ed.cs
