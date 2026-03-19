@@ -4746,6 +4746,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-functionality-to-programmatically-insert-modify-or-remove-page-breaks-.cs",
+      "title": "Implement functionality to programmatically insert, modify, or remove page breaks within a spreadsheet document."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-or-copy-worksheets-within-or-between-workbooks-through-excel-automation-whi.cs",
       "title": "Move or copy worksheets within or between workbooks through Excel automation while preserving formulas and formatting."
     },
