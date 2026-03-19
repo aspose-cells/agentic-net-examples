@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - insert-an-xmlbased-library-reference-into-an-excel-vba-project-to-enable-externa.cs
 - add-an-external-library-reference-to-an-excel-vba-project-using-the-spreadsheetm.cs
 - add-a-library-reference-specified-in-numbers-format-to-the-vba-project-embedded-.cs
+- include-a-library-reference-in-the-workbooks-vba-project-utilizing-the-sxc-file-.cs
