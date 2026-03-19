@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - determine-vba-project-protection-status-in-c-and-output-the-result-using-tsv-for.cs
 - determine-programmatically-via-c-whether-a-vba-project-is-passwordprotected-usin.cs
 - check-whether-a-vba-project-is-passwordprotected-using-c-and-the-tab-file-format.cs
+- determine-whether-a-vba-project-is-protected-using-c-and-generate-the-status-as-.cs
