@@ -791,6 +791,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "identify-and-verify-the-file-format-of-a-supplied-xlsx-workbook-using-the-api.cs",
+      "title": "Identify and verify the file format of a supplied XLSX workbook using the API."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "identify-the-format-of-an-input-xlsx-file-and-determine-whether-it-is-encrypted.cs",
       "title": "Identify the format of an input XLSX file and determine whether it is encrypted."
     },
