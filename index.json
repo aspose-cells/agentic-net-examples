@@ -770,6 +770,11 @@
       "title": "Add, edit, or remove VBA modules in an XLSM workbook programmatically using the provided API."
     },
     {
+      "category": "macro-project",
+      "file": "manipulate-the-vba-modules-of-an-excel-macro-enabled-workbook-while-operating-wi.cs",
+      "title": "Manipulate the VBA modules of an Excel macro-enabled workbook while operating with XLTX template files."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
