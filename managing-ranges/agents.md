@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - copy-only-the-cell-data-from-specified-ranges-and-save-the-result-as-an-xlsx-wor.cs
 - add-data-to-cells-within-defined-ranges-on-the-first-worksheet-of-an-xlsx-workbo.cs
 - apply-specified-style-formatting-to-a-defined-cell-range-within-an-xlsx-workbook.cs
+- copy-data-from-a-source-range-to-a-target-range-within-an-xlsx-worksheet-preserv.cs
