@@ -1711,6 +1711,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-within-an-fods-file-and-report-the-ve.cs",
+      "title": "Validate the digital signature of VBA code within an FODS file and report the verification result."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-within-an-xlsb-workbook-to-ensure-aut.cs",
       "title": "Validate the digital signature of VBA code within an XLSB workbook to ensure authenticity."
     },
