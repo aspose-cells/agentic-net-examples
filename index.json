@@ -4796,6 +4796,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-switch-between-workbook-view-modes-such-as-normal-page-layout-a.cs",
+      "title": "Programmatically switch between workbook view modes such as Normal, Page Layout, and Page Break Preview."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs",
       "title": "Remove every page break from the worksheet to ensure continuous printing without pagination interruptions."
     },
