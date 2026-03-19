@@ -700,6 +700,11 @@
       "title": "Update the LinksUpToDate built\u2011in property of an XLSX workbook to reflect its current link status."
     },
     {
+      "category": "encryption-and-protection",
+      "file": "add-or-remove-password-protection-on-an-xlsx-workbook-programmatically-using-app.cs",
+      "title": "Add or remove password protection on an XLSX workbook programmatically using appropriate .NET APIs."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs",
       "title": "Apply custom subtotal labels to a localized spreadsheet by configuring GlobalizationSettings on an XLSX workbook."
