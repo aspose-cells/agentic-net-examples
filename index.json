@@ -1666,6 +1666,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-embedded-vba-code-in-a-pdf-document-using-c.cs",
+      "title": "Validate the digital signature of embedded VBA code in a PDF document using C#."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-and-report-its-status-in-a-txt-file.cs",
       "title": "Validate the digital signature of VBA code and report its status in a TXT file."
     },
