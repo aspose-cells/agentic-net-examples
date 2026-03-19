@@ -2106,6 +2106,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-pdfderived-json-payload-into-a-fully-formatted-excel-workbook-with-p.cs",
+      "title": "Transform a PDF\u2011derived JSON payload into a fully formatted Excel workbook with preserved data structures."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-pdfembedded-csv-dataset-into-json-format-preserving-data-fidelity-an.cs",
       "title": "Transform a PDF\u2011embedded CSV dataset into JSON format, preserving data fidelity and column metadata throughout the conversion."
     },
