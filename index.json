@@ -4751,6 +4751,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "eliminate-all-split-panes-from-the-worksheet-to-restore-a-single-continuous-view.cs",
+      "title": "Eliminate all split panes from the worksheet to restore a single continuous view of the grid."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-functionality-to-programmatically-insert-modify-or-remove-page-breaks-.cs",
       "title": "Implement functionality to programmatically insert, modify, or remove page breaks within a spreadsheet document."
     },
