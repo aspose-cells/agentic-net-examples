@@ -851,6 +851,11 @@
     },
     {
       "category": "macro-project",
+      "file": "bind-a-macro-to-a-form-control-using-the-tab-format-to-enable-automated-interact.cs",
+      "title": "Bind a macro to a form control using the TAB format to enable automated interaction."
+    },
+    {
+      "category": "macro-project",
       "file": "bind-a-vba-macro-to-a-form-control-in-an-xltm-workbook-to-enable-interactive-fun.cs",
       "title": "Bind a VBA macro to a form control in an XLTM workbook to enable interactive functionality."
     },
