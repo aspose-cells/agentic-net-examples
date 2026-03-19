@@ -716,6 +716,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-or-remove-workbook-structure-protection-on-an-xlsx-file-programmatically-e.cs",
+      "title": "Apply or remove workbook structure protection on an XLSX file programmatically, ensuring structural integrity and edit permissions."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-password-protection-to-an-input-xlsx-workbook-using-encryption-to-secure-i.cs",
       "title": "Apply password protection to an input XLSX workbook using encryption to secure its contents."
     },
