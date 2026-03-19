@@ -4776,6 +4776,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "retrieve-the-xml-map-from-the-opened-workbook-prior-to-properly-performing-data-.cs",
+      "title": "Retrieve the XML map from the opened workbook prior to properly performing data export."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs",
       "title": "Validate all necessary prerequisites and configuration settings before initiating the import of an XML map."
     },
