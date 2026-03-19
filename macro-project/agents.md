@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - apply-a-password-to-securely-protect-the-vba-project-within-an-xltm-workbook-pre.cs
 - apply-a-password-to-secure-the-vba-project-within-an-xlsb-workbook-restricting-u.cs
 - apply-password-protection-to-an-excel-workbooks-vba-project-sourcing-the-passwor.cs
+- apply-a-password-to-an-excel-workbooks-vba-project-in-c-retrieving-the-password-.cs
