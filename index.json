@@ -761,6 +761,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-password-protection-to-an-xlsx-workbook-using-openoffice-calc-to-restrict-.cs",
+      "title": "Apply password protection to an XLSX workbook using OpenOffice Calc to restrict unauthorized access."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-password-protection-to-worksheets-in-an-xlsx-workbook-and-later-remove-it-.cs",
       "title": "Apply password protection to worksheets in an XLSX workbook and later remove it programmatically."
     },
