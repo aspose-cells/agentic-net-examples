@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - identify-circular-references-during-the-loading-of-an-xlsx-workbook-as-described.cs
 - display-the-introductory-information-defined-in-the-introduction-section-when-op.cs
 - perform-direct-calculation-of-a-custom-function-during-xlsx-workbook-loading-wit.cs
+- perform-direct-evaluation-of-a-custom-function-during-xlsx-workbook-load-without.cs
