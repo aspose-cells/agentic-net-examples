@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - programmatically-hide-worksheet-tabs-in-a-workbook-to-prevent-user-navigation-an.cs
 - set-or-retrieve-the-worksheet-tab-bar-width-to-customize-spreadsheet-navigation-.cs
 - implement-functionality-to-programmatically-toggle-visibility-of-specific-rows-c.cs
+- programmatically-toggle-the-visibility-of-horizontal-and-vertical-scroll-bars-wi.cs
