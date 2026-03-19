@@ -4831,6 +4831,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-conceal-selected-rows-and-columns-within-a-worksheet-to-prevent.cs",
+      "title": "Programmatically conceal selected rows and columns within a worksheet to prevent their display during runtime."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-conceal-specified-rows-and-columns-within-a-worksheet-ensuring-.cs",
       "title": "Programmatically conceal specified rows and columns within a worksheet, ensuring data integrity and layout consistency."
     },
