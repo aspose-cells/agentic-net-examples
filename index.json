@@ -4721,6 +4721,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-a-workbook-from-any-supported-file-format-to-enable-subsequent-xml-map-impo.cs",
+      "title": "Load a workbook from any supported file format to enable subsequent XML map import operations."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-an-xml-schema-file-to-import-its-xml-map-into-the-target-workbook.cs",
       "title": "Load an XML schema file to import its XML map into the target workbook."
     },
