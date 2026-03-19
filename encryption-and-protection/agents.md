@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - apply-write-protection-to-a-shared-xlsx-workbook-to-restrict-modifications-while.cs
 - apply-or-remove-workbook-structure-protection-on-an-xlsx-file-programmatically-e.cs
 - apply-protection-to-the-workbook-structure-of-an-input-xlsx-file-to-prevent-unau.cs
+- apply-password-protection-to-worksheets-in-an-xlsx-workbook-and-later-remove-it-.cs
