@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-any-supported-spreadsheet-format-to-retrieve-and-manipulate.cs
 - obtain-the-loaded-workbooks-xml-map-and-extract-the-root-element-name-from-it.cs
 - retrieve-the-xml-maps-root-element-name-from-the-currently-loaded-workbook-objec.cs
+- load-the-workbook-retrieve-its-xml-map-and-associate-specific-cells-with-the-cor.cs
