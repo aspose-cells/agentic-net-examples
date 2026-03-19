@@ -4846,6 +4846,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-toggle-the-visibility-of-horizontal-and-vertical-scroll-bars-wi.cs",
+      "title": "Programmatically toggle the visibility of horizontal and vertical scroll bars within the spreadsheet rendering interface."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-toggle-the-visibility-of-worksheets-and-their-corresponding-tab.cs",
       "title": "Programmatically toggle the visibility of worksheets and their corresponding tabs within a workbook environment."
     },
