@@ -1716,6 +1716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-the-validity-of-a-vba-codes-digital-signature-within-an-xlsx-workbook-fil.cs",
+      "title": "Verify the validity of a VBA code's digital signature within an XLSX workbook file."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-whether-a-vba-project-in-an-xlsm-workbook-is-protected-and-locked-for-vie.cs",
       "title": "Verify whether a VBA project in an XLSM workbook is protected and locked for viewing."
     },
