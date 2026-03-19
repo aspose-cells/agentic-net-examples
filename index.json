@@ -2701,6 +2701,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-data-from-a-source-range-to-a-target-range-within-an-xlsx-worksheet-preserv.cs",
+      "title": "Copy data from a source range to a target range within an XLSX worksheet, preserving cell formatting and values."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-only-the-cell-data-from-specified-ranges-and-save-the-result-as-an-xlsx-wor.cs",
       "title": "Copy only the cell data from specified ranges and save the result as an XLSX workbook."
     },
