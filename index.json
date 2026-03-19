@@ -2691,6 +2691,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-the-formatting-of-a-source-cell-range-to-a-target-range-within-an-xlsx-wor.cs",
+      "title": "Apply the formatting of a source cell range to a target range within an XLSX workbook programmatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-cell-range-and-paste-it-into-an-xlsx-worksheet-with-specified-paste-optio.cs",
       "title": "Copy a cell range and paste it into an XLSX worksheet with specified paste options."
     },
