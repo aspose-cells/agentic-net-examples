@@ -2181,6 +2181,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-shared-formula-to-a-workbook-loaded-from-an-xlsx-file-during-its-initial.cs",
+      "title": "Apply a shared formula to a workbook loaded from an XLSX file during its initialization."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-the-nonenglish-user-notice-when-loading-an-xlsx-workbook-to-ensure-correct.cs",
       "title": "Apply the non\u2011English user notice when loading an XLSX workbook to ensure correct localization handling."
     },
