@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "duplicate-selected-worksheets-within-a-workbook-preserving-formulas-formatting-a.cs",
+      "title": "Duplicate selected worksheets within a workbook, preserving formulas, formatting, and data integrity, including charts, named ranges, and conditional formatting."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-duplicate-or-relocate-worksheets-within-an-excel-workbook-using.cs",
       "title": "Programmatically duplicate or relocate worksheets within an Excel workbook using the .NET API while preserving data integrity."
     },
