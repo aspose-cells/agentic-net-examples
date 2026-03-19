@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - write-data-to-the-console-serialized-as-a-jsonformatted-string-ensuring-the-outp.cs
 - programmatically-detect-whether-the-vba-project-embedded-within-a-pdf-document-i.cs
 - determine-whether-a-vba-project-is-protected-and-return-the-result-in-json-forma.cs
+- determine-whether-a-vba-project-is-protected-via-c-and-output-the-result-in-json.cs
