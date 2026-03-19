@@ -4711,6 +4711,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "delete-a-designated-page-break-from-a-worksheet-while-maintaining-surrounding-ce.cs",
+      "title": "Delete a designated page break from a worksheet while maintaining surrounding cell formatting and layout integrity."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-ensuring-associa.cs",
       "title": "Delete a worksheet from a workbook by specifying its sheet name, ensuring associated data is removed."
     },
