@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-duplicate-or-relocate-worksheets-within-an-excel-workbook-using.cs",
+      "title": "Programmatically duplicate or relocate worksheets within an Excel workbook using the .NET API while preserving data integrity."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-insert-additional-worksheets-into-a-designer-spreadsheet-ensuri.cs",
       "title": "Programmatically insert additional worksheets into a designer spreadsheet, ensuring proper initialization and integration with existing data."
     },
