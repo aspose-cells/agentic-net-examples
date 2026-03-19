@@ -1716,6 +1716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-codes-digital-signature-in-c-by-parsing-and-evaluating-the-corr.cs",
+      "title": "Validate the VBA code\u2019s digital signature in C# by parsing and evaluating the corresponding XML data."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs",
       "title": "Validate whether a VBA project is password-protected and view-locked by analyzing its CSV representation."
     },
