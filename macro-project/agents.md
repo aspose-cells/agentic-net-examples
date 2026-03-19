@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - bind-a-macro-to-a-form-control-using-the-tab-format-to-enable-automated-interact.cs
 - bind-a-macro-to-a-form-control-via-html-markup-enabling-the-control-to-trigger-t.cs
 - associate-a-macro-with-a-form-control-by-embedding-spreadsheetml-markup-within-t.cs
+- bind-a-macro-to-a-form-control-via-c-code-utilizing-the-numbers-number-format-fo.cs
