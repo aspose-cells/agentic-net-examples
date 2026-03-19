@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - after-loading-a-workbook-obtain-the-root-element-name-of-its-associated-xml-map.cs
 - validate-all-required-conditions-and-dependencies-prior-to-obtaining-the-xml-map.cs
 - load-a-workbook-from-any-supported-spreadsheet-format-to-retrieve-and-manipulate.cs
+- obtain-the-loaded-workbooks-xml-map-and-extract-the-root-element-name-from-it.cs
