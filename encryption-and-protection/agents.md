@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs
 - apply-password-protection-to-an-ods-workbook-generated-from-an-input-xlsx-file-u.cs
 - validate-the-password-of-encrypted-xlsx-and-ods-workbooks-confirming-access-righ.cs
+- validate-the-provided-password-for-an-incoming-xlsx-workbook-to-ensure-authorize.cs
