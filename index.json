@@ -956,6 +956,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-detect-whether-the-vba-project-embedded-within-a-pdf-document-i.cs",
+      "title": "Programmatically detect whether the VBA project embedded within a PDF document is protected by encryption."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-insert-a-vba-module-into-a-workbook-using-c-and-the-spreadsheet.cs",
       "title": "Programmatically insert a VBA module into a workbook using C# and the SpreadsheetML file format."
     },
