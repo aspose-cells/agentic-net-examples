@@ -246,3 +246,4 @@ Output files are written to the working directory.
 - implement-a-c-routine-that-verifies-vba-code-signatures-and-returns-the-result-i.cs
 - generate-spreadsheet-data-in-xls-format-and-write-it-to-the-console-stream-for-d.cs
 - generate-console-output-by-exporting-data-to-an-xlsx-file-ensuring-proper-worksh.cs
+- validate-the-digital-signature-of-vba-code-embedded-in-an-xls-workbook-to-ensure.cs
