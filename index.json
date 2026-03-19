@@ -911,6 +911,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-within-an-ods-file-is-protected-and-locked-for-v.cs",
+      "title": "Determine whether a VBA project within an ODS file is protected and locked for viewing."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-within-an-xltx-workbook-is-protected-and-locked-.cs",
       "title": "Determine whether a VBA project within an XLTX workbook is protected and locked for viewing."
     },
