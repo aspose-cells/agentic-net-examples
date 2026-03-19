@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - validate-the-password-of-encrypted-xlsx-and-ods-workbooks-confirming-access-righ.cs
 - validate-the-provided-password-for-an-incoming-xlsx-workbook-to-ensure-authorize.cs
 - apply-write-protection-to-an-input-xlsx-workbook-while-setting-the-author-metada.cs
+- apply-write-protection-to-an-xlsx-file-and-assign-the-specified-author-to-the-pr.cs
