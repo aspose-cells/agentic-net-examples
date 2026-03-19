@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - reference-the-related-article-specified-in-related-article-when-programmatically.cs
 - implement-a-custom-calculation-engine-to-extend-the-default-engine-when-loading-.cs
 - integrate-a-custom-calculation-engine-during-the-loading-process-of-an-xlsx-work.cs
+- load-a-workbook-in-xlsx-format-and-produce-the-result-defined-in-the-result-spec.cs
