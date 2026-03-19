@@ -253,3 +253,4 @@ Output files are written to the working directory.
 - validate-the-digital-signature-of-vba-code-within-an-xlsb-workbook-to-ensure-aut.cs
 - validate-the-vba-codes-digital-signature-and-report-the-verification-result-in-c.cs
 - verify-the-validity-of-a-vba-codes-digital-signature-using-a-specified-tsv-file.cs
+- validate-the-digital-signature-of-vba-code-and-report-its-status-in-a-txt-file.cs
