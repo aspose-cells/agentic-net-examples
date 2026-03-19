@@ -4751,6 +4751,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-page-breaks-at-specified-locations-in-a-worksheet-to-control-pagination-w.cs",
+      "title": "Insert page breaks at specified locations in a worksheet to control pagination when exporting the document."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-or-copy-worksheets-within-or-between-workbooks-through-excel-automation-whi.cs",
       "title": "Move or copy worksheets within or between workbooks through Excel automation while preserving formulas and formatting."
     },
