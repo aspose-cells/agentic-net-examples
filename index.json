@@ -841,6 +841,11 @@
     },
     {
       "category": "macro-project",
+      "file": "detect-whether-a-vba-project-is-protected-by-inspecting-its-csv-representation-a.cs",
+      "title": "Detect whether a VBA project is protected by inspecting its CSV representation and reporting the protection status."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-programmatically-at-runtime-whether-the-vba-project-embedded-within-an.cs",
       "title": "Determine programmatically at runtime whether the VBA project embedded within an XLS workbook is protected."
     },
