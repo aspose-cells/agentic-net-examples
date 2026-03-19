@@ -2266,6 +2266,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "investigate-advanced-loading-options-for-xlsx-workbooks-including-custom-data-ha.cs",
+      "title": "Investigate advanced loading options for XLSX workbooks, including custom data handling, performance optimization, and extended feature support."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-xlsx-workbook-and-trace-both-precedent-and-dependent-cells-following-the.cs",
       "title": "Load an XLSX workbook and trace both precedent and dependent cells following the calculation chain rules."
     },
