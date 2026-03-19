@@ -2261,6 +2261,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "enable-interruption-or-cancellation-of-formula-evaluation-during-xlsx-workbook-l.cs",
+      "title": "Enable interruption or cancellation of formula evaluation during XLSX workbook loading to prevent unnecessary calculations."
+    },
+    {
+      "category": "manage-formulas",
       "file": "evaluate-all-cell-formulas-automatically-during-xlsx-workbook-loading-according-.cs",
       "title": "Evaluate all cell formulas automatically during XLSX workbook loading according to the defined calculation behavior."
     },
