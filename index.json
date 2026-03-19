@@ -2171,6 +2171,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs",
+      "title": "Customize the Excel menu, UI components, API references, plugins, FAQ, and AI documentation when loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "when-loading-an-xlsx-workbook-delimit-all-function-parameters-with-commas-to-ens.cs",
       "title": "When loading an XLSX workbook, delimit all function parameters with commas to ensure correct parsing."
     },
