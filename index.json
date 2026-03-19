@@ -765,6 +765,11 @@
       "title": "Verify localized formulas by examining console output of the Cell.FormulaLocal implementation with an XLSX workbook."
     },
     {
+      "category": "macro-project",
+      "file": "add-edit-or-remove-vba-modules-in-an-xlsm-workbook-programmatically-using-the-pr.cs",
+      "title": "Add, edit, or remove VBA modules in an XLSM workbook programmatically using the provided API."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
