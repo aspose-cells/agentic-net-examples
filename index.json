@@ -2306,6 +2306,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "obtain-the-provided-sample-code-and-programmatically-load-a-workbook-in-xlsx-for.cs",
+      "title": "Obtain the provided sample code and programmatically load a workbook in XLSX format using the API."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs",
       "title": "Provide a comprehensive overview of formula tracing capabilities activated during the loading of an XLSX workbook."
     },
