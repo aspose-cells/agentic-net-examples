@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - insert-a-signature-line-into-the-provided-xlsx-workbook-ensuring-correct-placeme.cs
 - set-up-signature-line-attributes-for-an-input-xlsx-workbook-including-signer-det.cs
 - determine-if-the-supplied-xlsx-file-conforms-to-the-encrypted-ooxml-specificatio.cs
+- verify-the-modification-password-of-an-input-xlsx-file-to-ensure-authorized-edit.cs
