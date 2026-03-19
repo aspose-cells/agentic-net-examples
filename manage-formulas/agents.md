@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - implement-a-code-sample-that-loads-a-workbook-in-xlsx-format-following-the-provi.cs
 - reference-the-related-article-specified-in-related-article-when-programmatically.cs
 - implement-a-custom-calculation-engine-to-extend-the-default-engine-when-loading-.cs
+- integrate-a-custom-calculation-engine-during-the-loading-process-of-an-xlsx-work.cs
