@@ -2736,6 +2736,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-object-with-defined-formatting-attributes-to-manage-ranges-within.cs",
+      "title": "Create a style object with defined formatting attributes to manage ranges within an XLSX workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-and-define-a-cell-range-within-an-xlsx-workbook-for-subsequent-manipulati.cs",
       "title": "Create and define a cell range within an XLSX workbook for subsequent manipulation or calculation."
     },
