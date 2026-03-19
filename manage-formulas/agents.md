@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs
 - utilize-the-provided-formulas-via-the-api-or-designer-spreadsheets-when-loading-.cs
 - initialize-the-api-load-an-xlsx-workbook-perform-file-operations-and-save-the-wo.cs
+- provide-two-guidelines-for-nonenglish-users-to-correctly-create-formulas-when-lo.cs
