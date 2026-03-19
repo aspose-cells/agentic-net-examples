@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - programmatically-generate-read-and-modify-microsoft-excel-xlsx-workbooks-using-t.cs
 - specify-a-modification-password-for-an-xlsx-workbook-to-restrict-unauthorized-ed.cs
 - implement-encryption-and-decryption-capabilities-for-ods-spreadsheet-files-suppo.cs
+- apply-password-protection-to-an-xlsx-workbook-using-openoffice-calc-to-restrict-.cs
