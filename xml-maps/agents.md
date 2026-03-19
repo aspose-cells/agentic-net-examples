@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - verify-the-implemented-xml-map-import-workflow-for-overall-correctness-and-compl.cs
 - load-a-workbook-and-an-xml-schema-file-then-create-and-associate-an-xml-map-with.cs
 - verify-all-required-conditions-and-prerequisites-before-attaching-an-xml-map-to-.cs
+- add-an-xml-map-to-the-opened-workbook-by-invoking-xmlmapcollectionadd-with-the-p.cs
