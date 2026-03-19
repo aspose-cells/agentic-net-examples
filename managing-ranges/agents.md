@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - copy-only-the-cell-data-of-a-specified-range-in-an-xlsx-workbook-preserving-no-f.cs
 - copy-and-manipulate-specified-cell-ranges-within-an-xlsx-workbook-to-manage-spre.cs
 - review-the-introduction-sheet-of-an-xlsx-workbook-to-configure-and-manipulate-ce.cs
+- copy-specified-cell-ranges-within-an-xlsx-workbook-programmatically-to-manage-da.cs
