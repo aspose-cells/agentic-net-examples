@@ -931,6 +931,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-in-an-xltm-file-is-passwordprotected-and-set-a.cs",
+      "title": "Determine whether the VBA project in an XLTM file is password\u2011protected and set as locked for viewing."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-console-output-saved-as-a-pdf-document-preserving-formatting-layout-and.cs",
       "title": "Generate console output saved as a PDF document, preserving formatting, layout, and content integrity."
     },
