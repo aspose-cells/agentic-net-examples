@@ -736,6 +736,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-protection-to-the-workbook-structure-of-an-input-xlsx-file-to-prevent-unau.cs",
+      "title": "Apply protection to the workbook structure of an input XLSX file to prevent unauthorized modifications."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-write-protection-to-a-shared-xlsx-workbook-to-restrict-modifications-while.cs",
       "title": "Apply write protection to a shared XLSX workbook to restrict modifications while preserving sharing settings."
     },
