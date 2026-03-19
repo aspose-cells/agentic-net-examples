@@ -4866,6 +4866,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-enable-or-disable-the-display-of-worksheet-gridlines-and-rowcol.cs",
+      "title": "Programmatically enable or disable the display of worksheet gridlines and row/column header labels as needed."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-hide-worksheet-tabs-in-a-workbook-to-prevent-user-navigation-an.cs",
       "title": "Programmatically hide worksheet tabs in a workbook to prevent user navigation and maintain a clean interface."
     },
