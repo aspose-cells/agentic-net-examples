@@ -4711,6 +4711,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-a-workbook-and-an-xml-schema-file-then-create-and-associate-an-xml-map-with.cs",
+      "title": "Load a workbook and an XML schema file, then create and associate an XML map within the workbook."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-a-workbook-and-import-the-xml-map-from-an-xml-schema-into-it.cs",
       "title": "Load a workbook and import the XML map from an XML schema into it."
     },
