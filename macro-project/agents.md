@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - export-a-vba-certificate-to-a-file-or-stream-in-oxps-format-preserving-its-integ.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-pdf-format-ensuring-proper-seria.cs
 - serialize-a-vba-certificate-to-a-file-or-stream-in-json-format-for-further-proce.cs
+- export-a-vba-certificate-to-a-pdf-file-or-stream-using-c-with-appropriate-serial.cs
