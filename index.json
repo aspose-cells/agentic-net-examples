@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-advanced-pdf-format-operations-including-custom-encryption-incremental.cs",
+      "title": "Implement advanced PDF format operations, including custom encryption, incremental updates, and detailed metadata manipulation."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-vba-module-into-a-workbook-programmatically-via-c-ensuring-code-indenta.cs",
       "title": "Insert a VBA module into a workbook programmatically via C#, ensuring code indentation uses TAB characters."
     },
