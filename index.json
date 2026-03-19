@@ -2716,6 +2716,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "paste-a-defined-cell-range-into-an-xlsx-worksheet-using-advanced-configurable-pa.cs",
+      "title": "Paste a defined cell range into an XLSX worksheet using advanced configurable paste options."
+    },
+    {
+      "category": "managing-ranges",
       "file": "review-the-introduction-sheet-of-an-xlsx-workbook-to-configure-and-manipulate-ce.cs",
       "title": "Review the introduction sheet of an XLSX workbook to configure and manipulate cell ranges accordingly."
     },
