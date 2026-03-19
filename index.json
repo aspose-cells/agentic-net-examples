@@ -776,6 +776,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-to-a-workbooks-vba-project-and-export-the-result-as-an-x.cs",
+      "title": "Add a library reference to a workbook's VBA project and export the result as an XPS document."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-library-reference-to-an-excel-vba-project-by-importing-the-mht-formatted-r.cs",
       "title": "Add a library reference to an Excel VBA project by importing the MHT-formatted reference file."
     },
