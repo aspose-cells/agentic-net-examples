@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-advanced-functionality-for-handling-xlsx-files-within-net-applications.cs",
+      "title": "Implement advanced functionality for handling XLSX files within .NET applications, covering complex features and optimization techniques."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-advanced-json-based-functionalities-enabling-complex-data-manipulation.cs",
       "title": "Implement advanced JSON-based functionalities, enabling complex data manipulation and configuration within the .NET library."
     },
