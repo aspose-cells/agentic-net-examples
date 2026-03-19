@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - programmatically-verify-whether-a-vba-project-is-protected-and-locked-for-viewin.cs
 - determine-whether-a-vba-project-is-protected-and-marked-as-locked-for-viewing-us.cs
 - determine-whether-a-vba-project-is-protected-and-viewlocked-returning-the-status.cs
+- using-c-verify-whether-a-vba-project-embedded-in-a-pdf-is-protected-and-locked-f.cs
