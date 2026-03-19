@@ -791,6 +791,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "insert-a-digital-signature-line-into-an-xlsx-workbook-using-the-net-spreadsheet-.cs",
+      "title": "Insert a digital signature line into an XLSX workbook using the .NET spreadsheet library."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "remove-worksheet-protection-from-the-specified-input-xlsx-file-allowing-subseque.cs",
       "title": "Remove worksheet protection from the specified input XLSX file, allowing subsequent modifications via API."
     },
