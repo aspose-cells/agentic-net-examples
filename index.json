@@ -2126,6 +2126,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-prnformatted-json-file-into-an-xlsx-workbook-mapping-data-fields-to-.cs",
+      "title": "Transform a PRN\u2011formatted JSON file into an XLSX workbook, mapping data fields to corresponding spreadsheet cells."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-spreadsheetml-excel-file-into-json-format-preserving-cell-data-types.cs",
       "title": "Transform a SpreadsheetML Excel file into JSON format, preserving cell data types and workbook structure."
     },
