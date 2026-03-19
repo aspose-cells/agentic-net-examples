@@ -791,6 +791,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "decrypt-an-xlsx-workbook-using-the-librarys-decryption-api-while-maintaining-dat.cs",
+      "title": "Decrypt an XLSX workbook using the library's decryption API while maintaining data integrity and preserving original formatting."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "determine-if-the-supplied-xlsx-file-conforms-to-the-encrypted-ooxml-specificatio.cs",
       "title": "Determine if the supplied XLSX file conforms to the encrypted OOXML specification and report its encryption status."
     },
