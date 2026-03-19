@@ -2326,6 +2326,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-the-provided-runtime-sample-and-load-the-corresponding-workbook-using-t.cs",
+      "title": "Retrieve the provided runtime sample and load the corresponding workbook using the XLSX file format."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-the-limit-for-rows-using-a-shared-formula-when-loading-an-xlsx-workbook.cs",
       "title": "Set the limit for rows using a shared formula when loading an XLSX workbook."
     },
