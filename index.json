@@ -911,6 +911,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "provide-example-source-code-illustrating-creation-and-manipulation-of-xlsx-sprea.cs",
+      "title": "Provide example source code illustrating creation and manipulation of XLSX spreadsheets using the .NET API."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "remove-worksheet-protection-from-the-specified-input-xlsx-file-allowing-subseque.cs",
       "title": "Remove worksheet protection from the specified input XLSX file, allowing subsequent modifications via API."
     },
