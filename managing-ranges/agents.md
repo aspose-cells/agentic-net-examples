@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - merge-or-unmerge-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-.cs
 - merge-or-split-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-gr.cs
 - relocate-a-specified-cell-range-within-an-xlsx-worksheet-updating-references-and.cs
+- create-and-manipulate-named-ranges-in-an-xlsx-workbook-providing-access-and-enab.cs
