@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - set-or-get-the-worksheets-zoom-factor-to-control-displayed-scaling-of-the-workbo.cs
 - apply-a-freeze-pane-to-keep-selected-rows-and-columns-fixed-during-spreadsheet-s.cs
 - divide-a-worksheet-into-multiple-scrollable-sections-by-configuring-pane-split-p.cs
+- programmatically-switch-between-workbook-view-modes-such-as-normal-page-layout-a.cs
