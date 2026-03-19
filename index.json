@@ -2705,6 +2705,11 @@
       "title": "Copy row heights from a source range to a destination range when working with XLSX files."
     },
     {
+      "category": "managing-ranges",
+      "file": "review-the-introduction-sheet-of-an-xlsx-workbook-to-configure-and-manipulate-ce.cs",
+      "title": "Review the introduction sheet of an XLSX workbook to configure and manipulate cell ranges accordingly."
+    },
+    {
       "category": "queries-and-connections",
       "file": "create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs",
       "title": "Create or inspect data connections within an XLSX workbook through the API\u2019s default handling mechanisms."
