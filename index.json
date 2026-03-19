@@ -741,6 +741,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-or-remove-workbook-structural-protection-on-xlsx-files-programmatically-us.cs",
+      "title": "Apply or remove workbook structural protection on XLSX files programmatically using the provided API."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-or-remove-workbook-structure-protection-on-an-xlsx-file-programmatically-e.cs",
       "title": "Apply or remove workbook structure protection on an XLSX file programmatically, ensuring structural integrity and edit permissions."
     },
