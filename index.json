@@ -2206,6 +2206,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "assign-a-simple-formula-to-a-named-range-programmatically-when-loading-an-xlsx-w.cs",
+      "title": "Assign a simple formula to a named range programmatically when loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "configure-a-shared-formula-during-loading-of-an-xlsx-workbook-according-to-the-s.cs",
       "title": "Configure a shared formula during loading of an XLSX workbook according to the specified shared formula guidelines."
     },
