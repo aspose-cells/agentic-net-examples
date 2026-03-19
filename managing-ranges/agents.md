@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - create-a-workbook-populate-data-and-copy-only-the-style-of-a-specified-range-in-.cs
 - copy-only-the-formatting-of-a-specified-range-within-an-xlsx-workbook-without-al.cs
 - create-a-union-range-to-manage-multiple-cell-ranges-simultaneously-within-an-xls.cs
+- retrieve-a-ranges-address-cell-count-offset-full-column-and-full-row-information.cs
