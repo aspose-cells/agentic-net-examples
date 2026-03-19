@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - enable-direct-formula-evaluation-during-xlsx-workbook-loading-to-compute-cell-va.cs
 - recalculate-workbook-formulas-iteratively-during-xlsx-file-loading-to-ensure-all.cs
 - investigate-advanced-loading-options-for-xlsx-workbooks-including-custom-data-ha.cs
+- observe-the-considerations-outlined-in-important-to-know-for-formulas-when-loadi.cs
