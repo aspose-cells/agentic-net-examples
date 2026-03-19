@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - apply-password-protection-to-an-xlsx-workbook-to-restrict-editing-opening-or-for.cs
 - apply-encryption-to-an-xlsx-workbook-and-subsequently-decrypt-it-ensuring-data-i.cs
 - apply-password-protection-to-an-input-xlsx-workbook-using-encryption-to-secure-i.cs
+- implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs
