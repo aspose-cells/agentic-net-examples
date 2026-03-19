@@ -4716,6 +4716,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "delete-worksheets-from-a-workbook-by-specifying-their-zerobased-sheet-index-posi.cs",
+      "title": "Delete worksheets from a workbook by specifying their zero\u2011based sheet index positions, ensuring proper collection updates."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-insert-additional-worksheets-into-a-designer-spreadsheet-ensuri.cs",
       "title": "Programmatically insert additional worksheets into a designer spreadsheet, ensuring proper initialization and integration with existing data."
     },
