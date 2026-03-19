@@ -1236,6 +1236,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-project-certificate-programmatically-to-a-file-or-stream-in-xltm-.cs",
+      "title": "Export the VBA project certificate programmatically to a file or stream in XLTM format."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vba-project-certificate-to-a-file-or-stream-in-xlsm-format-preserving.cs",
       "title": "Export the VBA project certificate to a file or stream in XLSM format, preserving its integrity."
     },
