@@ -2200,6 +2200,11 @@
       "title": "When loading an XLSX workbook, delimit all function parameters with commas to ensure correct parsing."
     },
     {
+      "category": "manage-formulas",
+      "file": "when-loading-an-xlsx-workbook-verify-that-all-function-parameters-are-delimited-.cs",
+      "title": "When loading an XLSX workbook, verify that all function parameters are delimited by commas."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
