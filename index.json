@@ -4731,6 +4731,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-viewer-to-display-horizontal-and-vertical-scroll-bars-when-content.cs",
+      "title": "Configure the viewer to display horizontal and vertical scroll bars when content exceeds the visible area."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-worksheets-visibility-attribute-to-ensure-the-sheet-is-displayed-w.cs",
       "title": "Configure the worksheet's visibility attribute to ensure the sheet is displayed within the workbook."
     },
