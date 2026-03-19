@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - when-loading-an-xlsx-workbook-enable-tracing-of-cell-precedents-according-to-the.cs
 - when-loading-an-xlsx-workbook-enable-dependent-tracing-according-to-the-tracing-.cs
 - load-an-xlsx-workbook-and-trace-both-precedent-and-dependent-cells-following-the.cs
+- evaluate-all-cell-formulas-automatically-during-xlsx-workbook-loading-according-.cs
