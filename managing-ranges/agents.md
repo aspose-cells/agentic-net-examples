@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - copy-data-from-a-source-range-to-a-target-range-in-an-xlsx-file-according-to-the.cs
 - create-and-manipulate-a-cell-range-in-an-xlsx-workbook-according-to-the-provided.cs
 - create-a-workbook-in-xlsx-format-and-configure-cell-ranges-according-to-the-prov.cs
+- create-a-new-cell-range-based-on-an-existing-range-in-an-xlsx-workbook-following.cs
