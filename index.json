@@ -4751,6 +4751,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-add-delete-and-query-worksheet-page-breaks-to-control-paginatio.cs",
+      "title": "Programmatically add, delete, and query worksheet page breaks to control pagination during workbook processing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-duplicate-or-relocate-worksheets-within-an-excel-workbook-using.cs",
       "title": "Programmatically duplicate or relocate worksheets within an Excel workbook using the .NET API while preserving data integrity."
     },
