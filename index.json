@@ -886,6 +886,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-is-protected-by-analyzing-the-spreadsheetml-file.cs",
+      "title": "Determine whether a VBA project is protected by analyzing the SpreadsheetML file with C# code."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-is-protected-using-c-and-generate-the-status-as-.cs",
       "title": "Determine whether a VBA project is protected using C# and generate the status as an HTML report."
     },
