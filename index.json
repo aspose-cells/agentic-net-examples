@@ -1686,6 +1686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-programmatically-in-c-outputting-resu.cs",
+      "title": "Validate the digital signature of VBA code programmatically in C#, outputting results in TAB\u2011delimited format."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-within-an-xlsb-workbook-to-ensure-aut.cs",
       "title": "Validate the digital signature of VBA code within an XLSB workbook to ensure authenticity."
     },
