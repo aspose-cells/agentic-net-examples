@@ -245,3 +245,4 @@ Output files are written to the working directory.
 - implement-a-c-routine-to-determine-whether-vba-code-embedded-in-a-pdf-file-is-di.cs
 - implement-a-c-routine-that-verifies-vba-code-signatures-and-returns-the-result-i.cs
 - generate-spreadsheet-data-in-xls-format-and-write-it-to-the-console-stream-for-d.cs
+- generate-console-output-by-exporting-data-to-an-xlsx-file-ensuring-proper-worksh.cs
