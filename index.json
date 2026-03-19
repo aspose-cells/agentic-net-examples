@@ -811,6 +811,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "implement-encryption-and-decryption-functionality-for-xlsx-workbooks-ensuring-se.cs",
+      "title": "Implement encryption and decryption functionality for XLSX workbooks, ensuring secure handling of spreadsheet data."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs",
       "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
     },
