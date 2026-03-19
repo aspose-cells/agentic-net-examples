@@ -2666,6 +2666,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-a-defined-style-to-a-specific-data-range-within-an-xlsx-worksheet-to-contr.cs",
+      "title": "Apply a defined style to a specific data range within an XLSX worksheet to control its formatting."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-specified-style-formatting-to-a-defined-cell-range-in-an-xlsx-workbook-acc.cs",
       "title": "Apply specified style formatting to a defined cell range in an XLSX workbook according to the provided example."
     },
