@@ -941,6 +941,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "validate-the-password-protecting-an-encrypted-xlsx-workbook-and-confirm-whether-.cs",
+      "title": "Validate the password protecting an encrypted XLSX workbook and confirm whether access is authorized for processing."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-the-provided-password-for-an-incoming-xlsx-workbook-to-ensure-authorize.cs",
       "title": "Validate the provided password for an incoming XLSX workbook to ensure authorized access and proper decryption."
     },
