@@ -4701,6 +4701,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-new-workbook-and-programmatically-insert-additional-worksheets-specifyi.cs",
+      "title": "Create a new workbook and programmatically insert additional worksheets, specifying their names and positions as required."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-one-or-more-worksheets-from-a-workbook-by-specifying-their-zerobased-shee.cs",
       "title": "Delete one or more worksheets from a workbook by specifying their zero\u2011based sheet index positions."
     },
