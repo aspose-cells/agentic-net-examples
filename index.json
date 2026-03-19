@@ -1686,6 +1686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-codes-digital-signature-and-report-the-verification-result-in-c.cs",
+      "title": "Validate the VBA code's digital signature and report the verification result in CSV format."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs",
       "title": "Validate whether a VBA project is password-protected and view-locked by analyzing its CSV representation."
     },
