@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - bind-a-macro-to-a-form-control-via-c-code-utilizing-the-numbers-number-format-fo.cs
 - programmatically-attach-a-macro-to-a-form-control-in-c-when-working-with-sxc-fil.cs
 - associate-a-macro-with-a-form-control-programmatically-via-c-code-targeting-xps-.cs
+- bind-a-c-macro-to-a-form-control-within-an-oxps-document-programmatically-using-.cs
