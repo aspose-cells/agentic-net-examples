@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - evaluate-the-ifna-worksheet-function-on-a-loaded-xlsx-workbook-using-the-provide.cs
 - when-loading-an-xlsx-workbook-output-the-console-messages-defined-in-the-console.cs
 - implement-calculation-of-excel-2016-minifs-and-maxifs-functions-when-loading-an-.cs
+- implement-excel-2016-minifs-and-maxifs-function-evaluation-while-loading-an-xlsx.cs
