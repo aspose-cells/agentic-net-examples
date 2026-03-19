@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - load-a-workbook-and-import-the-xml-map-from-an-xml-schema-into-it.cs
 - persist-the-workbook-in-the-chosen-output-format-after-successfully-importing-th.cs
 - verify-the-implemented-xml-map-import-workflow-for-overall-correctness-and-compl.cs
+- load-a-workbook-and-an-xml-schema-file-then-create-and-associate-an-xml-map-with.cs
