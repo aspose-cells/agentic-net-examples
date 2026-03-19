@@ -776,6 +776,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "remove-worksheet-protection-from-the-specified-input-xlsx-file-allowing-subseque.cs",
+      "title": "Remove worksheet protection from the specified input XLSX file, allowing subsequent modifications via API."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "select-an-encryption-algorithm-for-an-xlsx-workbook-and-apply-it-during-file-sav.cs",
       "title": "Select an encryption algorithm for an XLSX workbook and apply it during file saving."
     },
