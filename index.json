@@ -1256,6 +1256,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-file-or-stream-in-sxc-format-preserving-its-integr.cs",
+      "title": "Export a VBA certificate to a file or stream in SXC format, preserving its integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-file-or-stream-in-the-numbers-spreadsheet-format.cs",
       "title": "Export a VBA certificate to a file or stream in the NUMBERS spreadsheet format."
     },
