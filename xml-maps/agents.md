@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - add-an-xml-map-to-the-opened-workbook-by-invoking-xmlmapcollectionadd-with-the-p.cs
 - add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs
 - write-the-xml-mapassociated-data-from-an-opened-workbook-to-an-external-xml-file.cs
+- export-the-xml-data-associated-with-the-defined-xml-map-to-an-output-file-as-ste.cs
