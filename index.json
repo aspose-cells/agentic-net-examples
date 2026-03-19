@@ -846,6 +846,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-programmatically-whether-the-vba-project-embedded-in-an-ods-spreadshee.cs",
+      "title": "Determine programmatically whether the VBA project embedded in an ODS spreadsheet is protected at runtime."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-programmatically-whether-the-vba-project-embedded-in-an-xlsb-workbook-.cs",
       "title": "Determine programmatically whether the VBA project embedded in an XLSB workbook is protected at runtime."
     },
