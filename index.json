@@ -861,6 +861,11 @@
     },
     {
       "category": "macro-project",
+      "file": "bind-a-c-macro-to-a-form-control-within-an-oxps-document-programmatically-using-.cs",
+      "title": "Bind a C# macro to a form control within an OXPS document programmatically using the API."
+    },
+    {
+      "category": "macro-project",
       "file": "bind-a-macro-to-a-form-control-using-the-tab-format-to-enable-automated-interact.cs",
       "title": "Bind a macro to a form control using the TAB format to enable automated interaction."
     },
