@@ -1621,6 +1621,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-whether-vba-code-is-digitally-signed-using-a-c-routine-that-processes-h.cs",
+      "title": "Validate whether VBA code is digitally signed using a C# routine that processes HTML\u2011formatted input."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-vba-code-is-digitally-signed-within-a-c-application-processing-.cs",
       "title": "Validate whether VBA code is digitally signed within a C# application, processing the source using TAB format."
     },
