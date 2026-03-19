@@ -1626,6 +1626,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-whether-vba-code-embedded-in-an-mhtml-file-is-digitally-signed-using-c.cs",
+      "title": "Validate whether VBA code embedded in an MHTML file is digitally signed using C#."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-vba-code-is-digitally-signed-using-a-c-routine-that-processes-h.cs",
       "title": "Validate whether VBA code is digitally signed using a C# routine that processes HTML\u2011formatted input."
     },
