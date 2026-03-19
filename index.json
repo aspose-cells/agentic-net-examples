@@ -720,6 +720,11 @@
       "title": "Apply password protection to an XLSX workbook to restrict editing, opening, or formatting operations."
     },
     {
+      "category": "encryption-and-protection",
+      "file": "implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs",
+      "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs",
       "title": "Apply custom subtotal labels to a localized spreadsheet by configuring GlobalizationSettings on an XLSX workbook."
