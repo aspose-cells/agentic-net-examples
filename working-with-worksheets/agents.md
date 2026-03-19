@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - delete-a-designated-page-break-from-a-worksheet-while-maintaining-surrounding-ce.cs
 - eliminate-all-split-panes-from-the-worksheet-to-restore-a-single-continuous-view.cs
 - render-a-preview-of-worksheet-page-breaks-to-visualize-pagination-and-layout-adj.cs
+- set-or-get-the-worksheets-zoom-factor-to-control-displayed-scaling-of-the-workbo.cs
