@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - implement-calculation-of-excel-2016-minifs-and-maxifs-functions-when-loading-an-.cs
 - implement-excel-2016-minifs-and-maxifs-function-evaluation-while-loading-an-xlsx.cs
 - optimize-the-cellcalculate-execution-speed-when-loading-an-xlsx-workbook-to-redu.cs
+- optimize-workbook-loading-in-xlsx-format-to-reduce-the-execution-time-of-the-cel.cs
