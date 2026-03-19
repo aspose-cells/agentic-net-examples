@@ -4721,6 +4721,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "delete-the-targeted-page-break-within-the-document-updating-layout-without-affec.cs",
+      "title": "Delete the targeted page break within the document, updating layout without affecting surrounding content."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-worksheets-from-a-workbook-by-specifying-their-zerobased-sheet-index-posi.cs",
       "title": "Delete worksheets from a workbook by specifying their zero\u2011based sheet index positions, ensuring proper collection updates."
     },
