@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "associate-a-macro-with-a-form-control-by-embedding-spreadsheetml-markup-within-t.cs",
+      "title": "Associate a macro with a form control by embedding SpreadsheetML markup within the workbook."
+    },
+    {
+      "category": "macro-project",
       "file": "associate-a-macro-with-a-form-control-by-specifying-the-mapping-in-a-tsv-file.cs",
       "title": "Associate a macro with a form control by specifying the mapping in a TSV file."
     },
