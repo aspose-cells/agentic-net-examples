@@ -1241,6 +1241,11 @@
     },
     {
       "category": "macro-project",
+      "file": "insert-an-xmlbased-library-reference-into-an-excel-vba-project-to-enable-externa.cs",
+      "title": "Insert an XML\u2011based library reference into an Excel VBA project to enable external functionality."
+    },
+    {
+      "category": "macro-project",
       "file": "integrate-a-vba-module-into-a-c-solution-by-providing-its-definition-in-xml-form.cs",
       "title": "Integrate a VBA module into a C# solution by providing its definition in XML format."
     },
