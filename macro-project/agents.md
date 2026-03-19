@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - validate-whether-vba-code-is-digitally-signed-within-a-c-application-processing-.cs
 - validate-whether-vba-code-is-digitally-signed-using-a-c-routine-that-processes-h.cs
 - validate-the-digital-signature-of-vba-code-embedded-in-an-mht-file-using-c.cs
+- validate-whether-vba-code-embedded-in-an-mhtml-file-is-digitally-signed-using-c.cs
