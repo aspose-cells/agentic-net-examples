@@ -796,6 +796,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-to-the-workbooks-vba-project-using-a-json-configuration-.cs",
+      "title": "Add a library reference to the workbook\u2019s VBA project using a JSON configuration payload."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-library-reference-to-the-workbooks-vba-project-when-processing-oxps-files-.cs",
       "title": "Add a library reference to the workbook's VBA project when processing OXPS files via the .NET API."
     },
