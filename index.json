@@ -2396,6 +2396,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "reference-the-related-article-specified-in-related-article-when-programmatically.cs",
+      "title": "Reference the related article specified in \u201cRelated Article\u201d when programmatically loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-provided-runtime-sample-and-load-the-corresponding-workbook-using-t.cs",
       "title": "Retrieve the provided runtime sample and load the corresponding workbook using the XLSX file format."
     },
