@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - determine-whether-vba-macros-within-an-xltx-workbook-are-digitally-signed-and-re.cs
 - determine-whether-the-vba-project-embedded-in-an-xltm-workbook-has-a-valid-digit.cs
 - determine-whether-the-vba-macros-embedded-within-an-xlsb-workbook-are-digitally-.cs
+- validate-whether-vba-macros-are-digitally-signed-in-an-ods-workbook-using-the-pr.cs
