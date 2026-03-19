@@ -2681,6 +2681,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-and-manipulate-specified-cell-ranges-within-an-xlsx-workbook-to-manage-spre.cs",
+      "title": "Copy and manipulate specified cell ranges within an XLSX workbook to manage spreadsheet data."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-only-the-cell-data-of-a-specified-range-in-an-xlsx-workbook-preserving-no-f.cs",
       "title": "Copy only the cell data of a specified range in an XLSX workbook, preserving no formatting or metadata."
     },
