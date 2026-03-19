@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - display-the-introductory-information-defined-in-the-introduction-section-when-op.cs
 - perform-direct-calculation-of-a-custom-function-during-xlsx-workbook-loading-wit.cs
 - perform-direct-evaluation-of-a-custom-function-during-xlsx-workbook-load-without.cs
+- implement-a-code-sample-that-loads-a-workbook-in-xlsx-format-following-the-provi.cs
