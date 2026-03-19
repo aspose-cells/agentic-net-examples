@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - transform-a-json-file-into-an-excel-workbook-mapping-data-structures-to-spreadsh.cs
 - transform-an-xls-json-representation-into-an-excel-workbook-programmatically-usi.cs
 - convert-an-xlsx-json-file-into-a-native-excel-workbook-employing-the-default-con.cs
+- transform-an-xlsm-json-payload-into-an-excel-workbook-using-default-conversion-s.cs
