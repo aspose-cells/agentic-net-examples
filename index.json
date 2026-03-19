@@ -2661,6 +2661,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "access-workbookscoped-named-ranges-from-any-worksheet-to-manage-ranges-within-an.cs",
+      "title": "Access workbook\u2011scoped named ranges from any worksheet to manage ranges within an XLSX workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "add-data-to-cells-within-defined-ranges-on-the-first-worksheet-of-an-xlsx-workbo.cs",
       "title": "Add data to cells within defined ranges on the first worksheet of an XLSX workbook."
     },
