@@ -4751,6 +4751,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "verify-all-required-conditions-and-prerequisites-before-attaching-an-xml-map-to-.cs",
+      "title": "Verify all required conditions and prerequisites before attaching an XML map to a workbook."
+    },
+    {
+      "category": "xml-maps",
       "file": "verify-the-implemented-xml-map-import-workflow-for-overall-correctness-and-compl.cs",
       "title": "Verify the implemented XML map import workflow for overall correctness and compliance with specifications."
     }
