@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - retrieve-a-ranges-address-cell-count-offset-full-column-and-full-row-information.cs
 - implement-range-management-functionality-by-reviewing-and-adapting-the-provided-.cs
 - merge-or-unmerge-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-.cs
+- merge-or-split-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-gr.cs
