@@ -4750,6 +4750,11 @@
       "title": "Set a specific worksheet as active and programmatically define the active cell within it."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "transfer-selected-worksheets-from-one-workbook-to-another-workbook-maintaining-c.cs",
+      "title": "Transfer selected worksheets from one workbook to another workbook, maintaining cell data, formulas, and formatting."
+    },
+    {
       "category": "xml-maps",
       "file": "add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs",
       "title": "Add an XML map to a workbook by specifying the schema and linking it to worksheet data."
