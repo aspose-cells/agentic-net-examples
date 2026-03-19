@@ -4711,6 +4711,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-data-binding-within.cs",
+      "title": "Load a workbook file and import an XML map into it to enable data binding within the spreadsheet."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-structured-data-bin.cs",
       "title": "Load a workbook file and import an XML map into it to enable structured data binding."
     },
