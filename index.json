@@ -4761,6 +4761,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "display-worksheet-rows-and-columns-programmatically-enabling-developers-to-acces.cs",
+      "title": "Display worksheet rows and columns programmatically, enabling developers to access cell coordinates and formatting details."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "divide-a-worksheet-into-multiple-scrollable-sections-by-configuring-pane-split-p.cs",
       "title": "Divide a worksheet into multiple scrollable sections by configuring pane split positions within the sheet programmatically."
     },
