@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-worksheets-visibility-attribute-to-ensure-the-sheet-is-displayed-w.cs",
+      "title": "Configure the worksheet's visibility attribute to ensure the sheet is displayed within the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-new-workbook-and-programmatically-insert-additional-worksheets-specifyi.cs",
       "title": "Create a new workbook and programmatically insert additional worksheets, specifying their names and positions as required."
     },
