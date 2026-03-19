@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - associate-a-macro-with-a-form-control-by-embedding-spreadsheetml-markup-within-t.cs
 - bind-a-macro-to-a-form-control-via-c-code-utilizing-the-numbers-number-format-fo.cs
 - programmatically-attach-a-macro-to-a-form-control-in-c-when-working-with-sxc-fil.cs
+- associate-a-macro-with-a-form-control-programmatically-via-c-code-targeting-xps-.cs
