@@ -4711,6 +4711,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-a-workbook-and-import-the-xml-map-from-an-xml-schema-into-it.cs",
+      "title": "Load a workbook and import the XML map from an XML schema into it."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-data-binding-within.cs",
       "title": "Load a workbook file and import an XML map into it to enable data binding within the spreadsheet."
     },
