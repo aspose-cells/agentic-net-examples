@@ -2276,6 +2276,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "implement-ifna-function-evaluation-by-loading-an-xlsx-workbook-and-processing-th.cs",
+      "title": "Implement IFNA function evaluation by loading an XLSX workbook and processing the formula programmatically."
+    },
+    {
+      "category": "manage-formulas",
       "file": "initialize-the-api-load-an-xlsx-workbook-perform-file-operations-and-save-the-wo.cs",
       "title": "Initialize the API, load an XLSX workbook, perform file operations, and save the workbook back to disk."
     },
