@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - programmatically-toggle-worksheet-visibility-to-display-or-conceal-a-worksheet-w.cs
 - toggle-visibility-of-worksheet-tabs-in-a-workbook-programmatically-using-the-app.cs
 - configure-the-worksheets-visibility-attribute-to-ensure-the-sheet-is-displayed-w.cs
+- set-the-worksheets-visibility-property-to-hide-it-programmatically-from-the-work.cs
