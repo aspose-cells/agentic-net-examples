@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - copy-a-specified-cell-range-within-an-xlsx-workbook-to-a-target-location-while-p.cs
 - paste-a-defined-cell-range-into-an-xlsx-worksheet-using-advanced-configurable-pa.cs
 - copy-only-the-cell-data-from-specified-ranges-and-save-the-result-as-an-xlsx-wor.cs
+- add-data-to-cells-within-defined-ranges-on-the-first-worksheet-of-an-xlsx-workbo.cs
