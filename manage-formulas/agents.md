@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - load-a-workbook-in-xlsx-format-and-produce-the-result-defined-in-the-result-spec.cs
 - enable-interruption-or-cancellation-of-formula-evaluation-during-xlsx-workbook-l.cs
 - terminate-or-suspend-worksheet-formula-evaluation-when-loading-an-xlsx-workbook-.cs
+- retrieve-a-range-of-calculated-values-using-abstractcalculationengine-while-prog.cs
