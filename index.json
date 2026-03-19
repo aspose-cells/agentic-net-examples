@@ -1741,6 +1741,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-codes-digital-signature-and-output-the-verification-result-in-j.cs",
+      "title": "Validate the VBA code's digital signature and output the verification result in JSON format."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-vba-codes-digital-signature-and-report-the-verification-result-in-c.cs",
       "title": "Validate the VBA code's digital signature and report the verification result in CSV format."
     },
