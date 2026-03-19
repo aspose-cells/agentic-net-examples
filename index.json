@@ -1761,6 +1761,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-codes-digital-signature-in-c-outputting-the-result-as-a-jsonfor.cs",
+      "title": "Validate the VBA code's digital signature in C#, outputting the result as a JSON\u2011formatted response."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-vba-codes-digital-signature-within-a-dif-file-to-confirm-its-authen.cs",
       "title": "Validate the VBA code's digital signature within a DIF file to confirm its authenticity and integrity."
     },
