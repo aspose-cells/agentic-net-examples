@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - determine-whether-the-vba-project-embedded-in-a-workbook-is-digitally-signed-by-.cs
 - determine-whether-the-vba-project-within-a-workbook-is-digitally-signed-and-outp.cs
 - verify-whether-the-workbooks-vba-project-is-digitally-signed-correctly-using-the.cs
+- determine-whether-the-vba-project-embedded-in-a-workbook-is-digitally-signed-out.cs
