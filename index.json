@@ -4761,6 +4761,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "divide-worksheet-panes-into-separate-viewable-sections-to-enable-independent-smo.cs",
+      "title": "Divide worksheet panes into separate viewable sections to enable independent smooth scrolling and focus."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "duplicate-or-relocate-worksheet-objects-within-a-workbook-maintaining-cell-data-.cs",
       "title": "Duplicate or relocate worksheet objects within a workbook, maintaining cell data, formatting, and references."
     },
