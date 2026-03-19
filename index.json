@@ -2341,6 +2341,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "optimize-the-cellcalculate-execution-speed-when-loading-an-xlsx-workbook-to-redu.cs",
+      "title": "Optimize the Cell.Calculate execution speed when loading an XLSX workbook to reduce calculation latency."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs",
       "title": "Provide a comprehensive overview of formula tracing capabilities activated during the loading of an XLSX workbook."
     },
