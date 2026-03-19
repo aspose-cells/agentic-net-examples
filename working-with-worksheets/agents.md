@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - delete-worksheets-from-a-workbook-by-specifying-their-zerobased-sheet-index-posi.cs
 - set-a-specific-worksheet-as-active-and-programmatically-define-the-active-cell-w.cs
 - activate-a-worksheet-and-set-a-specific-cell-as-the-current-selection-within-the.cs
+- programmatically-duplicate-or-relocate-worksheets-within-an-excel-workbook-using.cs
