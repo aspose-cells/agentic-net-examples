@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - divide-worksheet-panes-into-separate-viewable-sections-to-enable-independent-smo.cs
 - programmatically-toggle-the-visibility-of-worksheets-and-their-corresponding-tab.cs
 - programmatically-toggle-worksheet-visibility-to-display-or-conceal-a-worksheet-w.cs
+- toggle-visibility-of-worksheet-tabs-in-a-workbook-programmatically-using-the-app.cs
