@@ -1246,6 +1246,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-certificate-to-a-file-or-stream-in-tsv-format-preserving-certific.cs",
+      "title": "Export the VBA certificate to a file or stream in TSV format, preserving certificate data integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vba-certificate-to-a-file-or-stream-in-xlsx-format-while-preserving-i.cs",
       "title": "Export the VBA certificate to a file or stream in XLSX format while preserving its integrity."
     },
