@@ -1666,6 +1666,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-whether-vba-code-embedded-in-a-spreadsheetml-file-is-digitally-signed-usi.cs",
+      "title": "Verify whether VBA code embedded in a SpreadsheetML file is digitally signed using C#."
+    },
+    {
+      "category": "macro-project",
       "file": "write-data-to-the-console-serialized-as-a-jsonformatted-string-ensuring-the-outp.cs",
       "title": "Write data to the console serialized as a JSON\u2011formatted string, ensuring the output conforms to valid JSON syntax."
     },
