@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - access-workbookscoped-named-ranges-from-any-worksheet-in-an-xlsx-workbook-by-ref.cs
 - define-workbook-and-worksheetscoped-named-ranges-within-an-xlsx-file-to-control-.cs
 - create-a-worksheetscoped-named-range-in-an-xlsx-workbook-to-manage-cell-collecti.cs
+- search-within-an-xlsx-worksheet-range-and-replace-matching-data-according-to-spe.cs
