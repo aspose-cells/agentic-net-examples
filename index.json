@@ -2866,6 +2866,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-or-split-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-gr.cs",
+      "title": "Merge or split specified cell ranges within an XLSX worksheet to control cell grouping and layout."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-or-unmerge-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-.cs",
       "title": "Merge or unmerge specified cell ranges within an XLSX worksheet to control cell grouping behavior."
     },
