@@ -846,6 +846,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-programmatically-whether-the-vba-project-embedded-in-an-xlsb-workbook-.cs",
+      "title": "Determine programmatically whether the VBA project embedded in an XLSB workbook is protected at runtime."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-embedded-in-an-xlsm-workbook-is-passwordprotec.cs",
       "title": "Determine whether the VBA project embedded in an XLSM workbook is password\u2011protected and cannot be edited."
     },
