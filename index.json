@@ -2680,6 +2680,11 @@
       "title": "Copy row height attributes from the source range to the target range within an XLSX worksheet."
     },
     {
+      "category": "managing-ranges",
+      "file": "copy-row-heights-from-a-source-range-to-a-destination-range-when-working-with-xl.cs",
+      "title": "Copy row heights from a source range to a destination range when working with XLSX files."
+    },
+    {
       "category": "queries-and-connections",
       "file": "create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs",
       "title": "Create or inspect data connections within an XLSX workbook through the API\u2019s default handling mechanisms."
