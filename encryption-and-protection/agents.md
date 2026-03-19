@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - select-an-encryption-algorithm-for-an-xlsx-workbook-and-apply-it-during-file-sav.cs
 - apply-or-remove-password-protection-on-a-shared-xlsx-workbook-to-control-access-.cs
 - apply-write-protection-to-a-shared-xlsx-workbook-to-restrict-modifications-while.cs
+- apply-or-remove-workbook-structure-protection-on-an-xlsx-file-programmatically-e.cs
