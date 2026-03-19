@@ -701,6 +701,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "add-an-extra-digital-signature-to-the-provided-xlsx-workbook-preserving-existing.cs",
+      "title": "Add an extra digital signature to the provided XLSX workbook, preserving existing content and formatting."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "add-or-remove-password-protection-on-an-xlsx-workbook-programmatically-using-app.cs",
       "title": "Add or remove password protection on an XLSX workbook programmatically using appropriate .NET APIs."
     },
