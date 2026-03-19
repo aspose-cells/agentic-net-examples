@@ -801,6 +801,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-pdf-library-reference-to-the-vba-project-within-the-workbook-to-enable-pdf.cs",
+      "title": "Add a PDF library reference to the VBA project within the workbook to enable PDF functionality."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-reference-to-a-library-in-the-workbooks-vba-project-by-importing-a-difform.cs",
       "title": "Add a reference to a library in the workbook's VBA project by importing a DIF\u2011formatted file."
     },
