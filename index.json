@@ -771,6 +771,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-to-an-excel-vba-project-by-importing-the-mht-formatted-r.cs",
+      "title": "Add a library reference to an Excel VBA project by importing the MHT-formatted reference file."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-reference-to-an-external-library-within-a-vba-project-embedded-in-an-xlsx-.cs",
       "title": "Add a reference to an external library within a VBA project embedded in an XLSX workbook."
     },
