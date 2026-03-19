@@ -2226,6 +2226,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-the-limit-for-rows-using-a-shared-formula-when-loading-an-xlsx-workbook.cs",
+      "title": "Set the limit for rows using a shared formula when loading an XLSX workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "utilize-the-provided-formulas-via-the-api-or-designer-spreadsheets-when-loading-.cs",
       "title": "Utilize the provided formulas via the API or designer spreadsheets when loading an XLSX workbook."
     },
