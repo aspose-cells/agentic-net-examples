@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-scroll-bar-visibility-for-worksheet-windows-to-show-hide-or-auto-adjus.cs",
+      "title": "Configure scroll bar visibility for worksheet windows to show, hide, or auto-adjust based on content."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-worksheets-visibility-attribute-to-ensure-the-sheet-is-displayed-w.cs",
       "title": "Configure the worksheet's visibility attribute to ensure the sheet is displayed within the workbook."
     },
