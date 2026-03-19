@@ -2291,6 +2291,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "implement-a-code-sample-that-loads-a-workbook-in-xlsx-format-following-the-provi.cs",
+      "title": "Implement a code sample that loads a workbook in XLSX format following the provided programming sample."
+    },
+    {
+      "category": "manage-formulas",
       "file": "implement-calculation-of-excel-2016-minifs-and-maxifs-functions-when-loading-an-.cs",
       "title": "Implement calculation of Excel\u202f2016 MINIFS and MAXIFS functions when loading an XLSX workbook."
     },
