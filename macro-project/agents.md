@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - include-a-library-reference-in-the-vba-project-of-an-xls-workbook-to-enable-exte.cs
 - add-a-reference-to-an-external-library-within-a-vba-project-embedded-in-an-xlsx-.cs
 - include-a-library-reference-in-the-vba-project-of-an-xlsm-workbook-to-enable-ext.cs
+- add-a-library-reference-to-a-vba-project-inside-an-xltx-workbook-using-the-net-a.cs
