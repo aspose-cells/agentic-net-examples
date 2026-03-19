@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - secure-the-vba-project-of-an-excel-workbook-with-a-password-and-generate-a-pdf-r.cs
 - apply-a-password-to-an-excel-workbooks-vba-project-by-providing-the-credentials-.cs
 - apply-a-password-to-the-vba-project-of-an-excel-workbook-using-c-and-output-the-.cs
+- provide-a-jsonformatted-code-snippet-illustrating-the-required-functionality-and.cs
