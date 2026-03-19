@@ -1256,6 +1256,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-file-or-stream-in-fods-format-while-preserving-its.cs",
+      "title": "Export a VBA certificate to a file or stream in FODS format while preserving its integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-file-or-stream-in-sxc-format-preserving-its-integr.cs",
       "title": "Export a VBA certificate to a file or stream in SXC format, preserving its integrity."
     },
