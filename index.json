@@ -846,6 +846,11 @@
     },
     {
       "category": "macro-project",
+      "file": "detect-whether-a-vba-project-embedded-in-an-mhtml-file-is-protected-using-c.cs",
+      "title": "Detect whether a VBA project embedded in an MHTML file is protected using C#."
+    },
+    {
+      "category": "macro-project",
       "file": "detect-whether-a-vba-project-is-protected-by-inspecting-its-csv-representation-a.cs",
       "title": "Detect whether a VBA project is protected by inspecting its CSV representation and reporting the protection status."
     },
