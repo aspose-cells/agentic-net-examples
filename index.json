@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-advanced-json-based-functionalities-enabling-complex-data-manipulation.cs",
+      "title": "Implement advanced JSON-based functionalities, enabling complex data manipulation and configuration within the .NET library."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-advanced-pdf-format-operations-including-custom-encryption-incremental.cs",
       "title": "Implement advanced PDF format operations, including custom encryption, incremental updates, and detailed metadata manipulation."
     },
