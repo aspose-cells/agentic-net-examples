@@ -4711,6 +4711,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-the-xml-data-associated-with-the-defined-xml-map-to-an-output-file-as-ste.cs",
+      "title": "Export the XML data associated with the defined XML map to an output file as step three."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-into-a-workbook-loading-the-workbook-from-a-supported-format.cs",
       "title": "Import an XML map into a workbook, loading the workbook from a supported format."
     },
