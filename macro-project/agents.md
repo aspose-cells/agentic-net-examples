@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - add-a-reference-to-a-library-in-the-workbooks-vba-project-by-importing-a-difform.cs
 - add-a-library-reference-to-the-workbooks-vba-project-while-handling-the-dbf-file.cs
 - add-a-reference-to-a-vba-project-within-a-workbook-using-a-prn-formatted-library.cs
+- add-a-library-reference-to-a-workbooks-vba-project-and-export-the-result-as-an-x.cs
