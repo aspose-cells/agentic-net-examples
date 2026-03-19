@@ -891,6 +891,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-while-.cs",
+      "title": "Determine whether a VBA project is protected and locked for viewing via C# while processing a TXT file."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-is-protected-and-return-the-result-in-json-forma.cs",
       "title": "Determine whether a VBA Project is protected and return the result in JSON format."
     },
