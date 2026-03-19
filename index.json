@@ -1606,6 +1606,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-embedded-in-an-mht-file-using-c.cs",
+      "title": "Validate the digital signature of VBA code embedded in an MHT file using C#."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs",
       "title": "Validate whether a VBA project is password-protected and view-locked by analyzing its CSV representation."
     },
