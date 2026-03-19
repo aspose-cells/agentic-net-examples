@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - determine-whether-the-vba-project-in-an-xlsx-workbook-is-protected-and-locked-fo.cs
 - verify-whether-a-vba-project-in-an-xlsm-workbook-is-protected-and-locked-for-vie.cs
 - determine-whether-a-vba-project-within-an-xltx-workbook-is-protected-and-locked-.cs
+- determine-whether-the-vba-project-in-an-xltm-file-is-passwordprotected-and-set-a.cs
