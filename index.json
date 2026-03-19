@@ -2756,6 +2756,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-workbook-in-xlsx-format-and-configure-cell-ranges-according-to-the-prov.cs",
+      "title": "Create a workbook in XLSX format and configure cell ranges according to the provided example."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-an-xlsx-workbook-and-define-cell-ranges-to-manage-data-segmentation-and-m.cs",
       "title": "Create an XLSX workbook and define cell ranges to manage data segmentation and manipulation programmatically."
     },
