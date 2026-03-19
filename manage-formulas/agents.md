@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - when-loading-an-xlsx-workbook-delimit-all-function-parameters-with-commas-to-ens.cs
 - customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs
+- utilize-the-provided-formulas-via-the-api-or-designer-spreadsheets-when-loading-.cs
