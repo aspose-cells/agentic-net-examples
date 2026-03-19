@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - perform-direct-evaluation-of-a-custom-function-during-xlsx-workbook-load-without.cs
 - implement-a-code-sample-that-loads-a-workbook-in-xlsx-format-following-the-provi.cs
 - reference-the-related-article-specified-in-related-article-when-programmatically.cs
+- implement-a-custom-calculation-engine-to-extend-the-default-engine-when-loading-.cs
