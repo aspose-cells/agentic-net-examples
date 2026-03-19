@@ -835,6 +835,11 @@
       "title": "Validate the provided password for an incoming XLSX workbook to ensure authorized access and proper decryption."
     },
     {
+      "category": "encryption-and-protection",
+      "file": "verify-the-modification-password-of-an-input-xlsx-file-to-ensure-authorized-edit.cs",
+      "title": "Verify the modification password of an input XLSX file to ensure authorized editing permissions."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs",
       "title": "Apply custom subtotal labels to a localized spreadsheet by configuring GlobalizationSettings on an XLSX workbook."
