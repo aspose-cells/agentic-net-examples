@@ -4716,6 +4716,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "associate-a-specified-cell-range-with-an-xml-element-by-invoking-xmlmapadd-on-th.cs",
+      "title": "Associate a specified cell range with an XML element by invoking XmlMap.Add on the loaded workbook."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-the-workbooks-linked-xml-data-to-an-external-file-while-preserving-data-i.cs",
       "title": "Export the workbook's linked XML data to an external file while preserving data integrity and relationships."
     },
