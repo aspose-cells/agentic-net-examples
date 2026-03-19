@@ -2666,6 +2666,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "access-workbookscoped-named-ranges-from-any-worksheet-in-an-xlsx-workbook-by-ref.cs",
+      "title": "Access workbook\u2011scoped named ranges from any worksheet in an XLSX workbook by referencing their names."
+    },
+    {
+      "category": "managing-ranges",
       "file": "access-workbookscoped-named-ranges-from-any-worksheet-to-manage-ranges-within-an.cs",
       "title": "Access workbook\u2011scoped named ranges from any worksheet to manage ranges within an XLSX workbook."
     },
