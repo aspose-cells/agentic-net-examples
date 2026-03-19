@@ -876,6 +876,11 @@
     },
     {
       "category": "macro-project",
+      "file": "provide-demonstrative-code-snippets-illustrating-how-to-create-read-and-manipula.cs",
+      "title": "Provide demonstrative code snippets illustrating how to create, read, and manipulate documents in XPS format."
+    },
+    {
+      "category": "macro-project",
       "file": "provide-example-code-demonstrating-how-to-read-and-write-data-using-the-dbf-file.cs",
       "title": "Provide example code demonstrating how to read and write data using the DBF file format."
     },
