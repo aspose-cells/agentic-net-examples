@@ -200,3 +200,4 @@ Output files are written to the working directory.
 - export-the-vba-certificate-programmatically-to-a-file-or-stream-using-the-ods-fo.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-csv-format-preserving-required-d.cs
 - export-the-vba-certificate-to-a-file-or-stream-in-tsv-format-preserving-certific.cs
+- export-the-vba-certificate-to-a-file-or-stream-using-txt-format-for-downstream-p.cs
