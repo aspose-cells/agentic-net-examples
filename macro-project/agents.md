@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - determine-whether-a-vba-project-in-an-mht-file-is-protected-and-locked-for-viewi.cs
 - programmatically-verify-whether-a-vba-project-is-protected-and-locked-for-viewin.cs
 - determine-whether-a-vba-project-is-protected-and-marked-as-locked-for-viewing-us.cs
+- determine-whether-a-vba-project-is-protected-and-viewlocked-returning-the-status.cs
