@@ -2386,6 +2386,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "when-loading-an-xlsx-workbook-output-the-console-messages-defined-in-the-console.cs",
+      "title": "When loading an XLSX workbook, output the console messages defined in the Console Output specification."
+    },
+    {
+      "category": "manage-formulas",
       "file": "when-loading-an-xlsx-workbook-programmatically-add-specified-cells-to-the-excel-.cs",
       "title": "When loading an XLSX workbook, programmatically add specified cells to the Excel formula watch window, handling duplicates appropriately."
     },
