@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - set-or-retrieve-the-worksheet-tab-bar-width-to-customize-spreadsheet-navigation-.cs
 - implement-functionality-to-programmatically-toggle-visibility-of-specific-rows-c.cs
 - programmatically-toggle-the-visibility-of-horizontal-and-vertical-scroll-bars-wi.cs
+- display-worksheet-rows-and-columns-programmatically-enabling-developers-to-acces.cs
