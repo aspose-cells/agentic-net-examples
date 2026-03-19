@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - load-the-workbook-retrieve-its-xml-map-and-associate-specific-cells-with-the-cor.cs
 - load-a-workbook-in-any-supported-format-to-associate-its-cells-with-xml-map-elem.cs
 - retrieve-the-xml-map-from-the-opened-workbook-prior-to-establishing-any-cell-lin.cs
+- associate-a-specified-cell-range-with-an-xml-element-by-invoking-xmlmapadd-on-th.cs
