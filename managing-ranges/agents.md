@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - create-a-workbook-populate-it-with-data-then-copy-only-the-style-of-a-specified-.cs
 - apply-style-formatting-to-specified-cell-ranges-mirroring-the-formatting-demonst.cs
 - apply-the-formatting-of-a-source-cell-range-to-a-target-range-within-an-xlsx-wor.cs
+- create-and-handle-a-cell-range-in-an-xlsx-workbook-according-to-the-specified-la.cs
