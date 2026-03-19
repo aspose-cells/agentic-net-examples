@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - copy-row-heights-from-a-source-range-to-a-destination-range-when-working-with-xl.cs
 - copy-a-source-range-to-a-target-range-within-an-xlsx-workbook-managing-the-range.cs
 - copy-a-specified-worksheet-range-and-paste-it-into-another-location-using-define.cs
+- copy-only-the-cell-data-of-a-specified-range-in-an-xlsx-workbook-preserving-no-f.cs
