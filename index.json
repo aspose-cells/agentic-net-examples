@@ -2761,6 +2761,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "populate-cells-in-the-first-worksheet-using-the-provided-xlsx-example-to-define-.cs",
+      "title": "Populate cells in the first worksheet using the provided XLSX example to define and manage data ranges."
+    },
+    {
+      "category": "managing-ranges",
       "file": "review-the-introduction-sheet-of-an-xlsx-workbook-to-configure-and-manipulate-ce.cs",
       "title": "Review the introduction sheet of an XLSX workbook to configure and manipulate cell ranges accordingly."
     },
