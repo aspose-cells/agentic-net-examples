@@ -1251,6 +1251,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-vba-code-is-digitally-signed-and-export-the-verification-resul.cs",
+      "title": "Determine whether VBA code is digitally signed and export the verification results to a CSV file."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-vba-macros-within-an-xltx-workbook-are-digitally-signed-and-re.cs",
       "title": "Determine whether VBA macros within an XLTX workbook are digitally signed and report their signature status."
     },
