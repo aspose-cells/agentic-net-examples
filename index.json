@@ -896,6 +896,11 @@
     },
     {
       "category": "macro-project",
+      "file": "provide-sample-code-demonstrating-how-to-generate-output-in-prn-format-using-the.cs",
+      "title": "Provide sample code demonstrating how to generate output in PRN format using the library\u2019s API."
+    },
+    {
+      "category": "macro-project",
       "file": "provide-sample-code-demonstrating-how-to-read-and-write-data-using-the-dif-file-.cs",
       "title": "Provide sample code demonstrating how to read and write data using the DIF file format."
     },
