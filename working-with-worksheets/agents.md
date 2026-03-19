@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - activate-normal-view-for-a-worksheet-to-display-cells-without-page-layout-or-pag.cs
 - activate-the-page-break-preview-mode-in-a-worksheet-to-visualize-page-boundaries.cs
 - divide-worksheet-panes-into-separate-viewable-sections-to-enable-independent-smo.cs
+- programmatically-toggle-the-visibility-of-worksheets-and-their-corresponding-tab.cs
