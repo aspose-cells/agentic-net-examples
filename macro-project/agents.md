@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - export-a-vba-certificate-to-a-file-or-stream-in-sxc-format-preserving-its-integr.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-fods-format-while-preserving-its.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-dif-format-while-maintaining-dat.cs
+- programmatically-export-a-vba-certificate-to-a-file-or-stream-using-the-dbf-form.cs
