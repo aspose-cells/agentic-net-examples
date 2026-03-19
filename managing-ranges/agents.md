@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - create-an-xlsx-workbook-and-define-cell-ranges-to-manage-data-segmentation-and-m.cs
 - create-a-new-cell-range-within-an-xlsx-worksheet-to-manage-and-manipulate-specif.cs
 - populate-cells-in-the-first-worksheet-using-the-provided-xlsx-example-to-define-.cs
+- apply-specified-style-formatting-to-a-defined-cell-range-in-an-xlsx-workbook-acc.cs
