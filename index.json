@@ -4831,6 +4831,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-toggle-worksheet-visibility-to-display-or-conceal-a-worksheet-w.cs",
+      "title": "Programmatically toggle worksheet visibility to display or conceal a worksheet within a workbook at runtime."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs",
       "title": "Remove every page break from the worksheet to ensure continuous printing without pagination interruptions."
     },
