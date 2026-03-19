@@ -4771,6 +4771,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-a-workbook-in-any-supported-format-to-associate-its-cells-with-xml-map-elem.cs",
+      "title": "Load a workbook in any supported format to associate its cells with XML map elements."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-an-xml-schema-file-to-import-its-xml-map-into-the-target-workbook.cs",
       "title": "Load an XML schema file to import its XML map into the target workbook."
     },
