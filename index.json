@@ -1031,6 +1031,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-project-embedded-in-an-xlsx-workbook-is-digitally-sign.cs",
+      "title": "Determine whether the VBA project embedded in an XLSX workbook is digitally signed and validated."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-in-an-xls-workbook-is-protected-and-locked-for.cs",
       "title": "Determine whether the VBA project in an XLS workbook is protected and locked for viewing."
     },
