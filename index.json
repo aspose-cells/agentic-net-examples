@@ -4781,6 +4781,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-the-workbook-retrieve-its-xml-map-and-associate-specific-cells-with-the-cor.cs",
+      "title": "Load the workbook, retrieve its XML map, and associate specific cells with the corresponding XML map elements."
+    },
+    {
+      "category": "xml-maps",
       "file": "obtain-the-loaded-workbooks-xml-map-and-extract-the-root-element-name-from-it.cs",
       "title": "Obtain the loaded workbook's XML map and extract the root element name from it."
     },
