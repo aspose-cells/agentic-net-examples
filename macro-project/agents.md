@@ -238,3 +238,4 @@ Output files are written to the working directory.
 - generate-console-output-in-fods-format-representing-the-spreadsheet-data-accurat.cs
 - generate-console-output-in-dif-format-to-efficiently-represent-spreadsheet-data-.cs
 - render-data-to-the-console-using-the-dbf-file-format-ensuring-field-definitions-.cs
+- generate-xps-formatted-output-from-the-console-application-and-write-it-to-the-s.cs
