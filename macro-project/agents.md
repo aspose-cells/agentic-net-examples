@@ -249,3 +249,4 @@ Output files are written to the working directory.
 - validate-the-digital-signature-of-vba-code-embedded-in-an-xls-workbook-to-ensure.cs
 - verify-the-validity-of-a-vba-codes-digital-signature-within-an-xlsx-workbook-fil.cs
 - validate-the-digital-signature-of-vba-code-embedded-in-an-xlsm-workbook-to-ensur.cs
+- validate-the-digital-signature-of-vba-code-embedded-within-an-xltx-workbook-to-e.cs
