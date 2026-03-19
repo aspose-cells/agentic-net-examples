@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - decrypt-an-encrypted-ods-file-using-net-and-convert-the-output-to-xlsx-format.cs
 - invoke-save-as-and-enable-the-save-with-password-option-when-exporting-to-xlsx-f.cs
 - decrypt-an-ods-file-by-loading-it-with-loadoptionspassword-set-and-clearing-work.cs
+- encrypt-an-ods-workbook-by-loading-it-assigning-workbooksettingspassword-then-sa.cs
