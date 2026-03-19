@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - programmatically-export-a-vba-certificate-to-a-file-or-stream-using-the-dbf-form.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-xps-format-preserving-its-integr.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-oxps-format-preserving-its-integ.cs
+- export-a-vba-certificate-to-a-file-or-stream-in-pdf-format-ensuring-proper-seria.cs
