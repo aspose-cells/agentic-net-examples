@@ -971,6 +971,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-via-c-whether-a-workbooks-vba-project-is-digitally-signed-when-the-fil.cs",
+      "title": "Determine via C# whether a workbook\u2019s VBA project is digitally signed when the file is in PDF format."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-in-an-mht-file-is-protected-and-locked-for-viewi.cs",
       "title": "Determine whether a VBA project in an MHT file is protected and locked for viewing using C#."
     },
