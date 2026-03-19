@@ -826,6 +826,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "implement-functionality-to-apply-and-remove-protection-on-shared-xlsx-workbooks-.cs",
+      "title": "Implement functionality to apply and remove protection on shared XLSX workbooks using appropriate APIs."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-functionality-to-apply-password-protection-to-an-xlsx-workbook-and-sub.cs",
       "title": "Implement functionality to apply password protection to an XLSX workbook and subsequently remove it programmatically."
     },
