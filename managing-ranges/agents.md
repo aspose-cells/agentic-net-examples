@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - apply-the-formatting-of-a-source-cell-range-to-a-target-range-within-an-xlsx-wor.cs
 - create-and-handle-a-cell-range-in-an-xlsx-workbook-according-to-the-specified-la.cs
 - create-and-manipulate-a-secondary-cell-range-within-an-xlsx-worksheet-to-manage-.cs
+- create-a-workbook-populate-data-and-copy-only-the-style-of-a-specified-range-in-.cs
