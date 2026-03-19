@@ -776,6 +776,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "determine-if-the-supplied-xlsx-file-conforms-to-the-encrypted-ooxml-specificatio.cs",
+      "title": "Determine if the supplied XLSX file conforms to the encrypted OOXML specification and report its encryption status."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-input-xlsx-file-by-assigning-a-password-to-protect-its-contents-secur.cs",
       "title": "Encrypt an input XLSX file by assigning a password to protect its contents securely."
     },
