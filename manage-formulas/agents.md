@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - integrate-a-custom-calculation-engine-during-the-loading-process-of-an-xlsx-work.cs
 - load-a-workbook-in-xlsx-format-and-produce-the-result-defined-in-the-result-spec.cs
 - enable-interruption-or-cancellation-of-formula-evaluation-during-xlsx-workbook-l.cs
+- terminate-or-suspend-worksheet-formula-evaluation-when-loading-an-xlsx-workbook-.cs
