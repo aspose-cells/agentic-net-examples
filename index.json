@@ -2171,6 +2171,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-specified-cells-to-the-excel-formula-watch-window-during-xlsx-workbook-loadi.cs",
+      "title": "Add specified cells to the Excel formula watch window during XLSX workbook loading process."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-a-shared-formula-across-multiple-cells-when-loading-an-xlsx-workbook-to-en.cs",
       "title": "Apply a shared formula across multiple cells when loading an XLSX workbook to ensure consistent calculations."
     },
