@@ -1611,6 +1611,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-whether-vba-macros-are-digitally-signed-in-an-ods-workbook-using-the-pr.cs",
+      "title": "Validate whether VBA macros are digitally signed in an ODS workbook using the provided API."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-whether-a-vba-project-in-an-xlsm-workbook-is-protected-and-locked-for-vie.cs",
       "title": "Verify whether a VBA project in an XLSM workbook is protected and locked for viewing."
     },
