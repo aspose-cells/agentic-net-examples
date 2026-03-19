@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - encrypt-an-xlsx-workbook-using-a-password-to-protect-its-contents-from-unauthori.cs
 - encrypt-an-input-xlsx-file-by-assigning-a-password-to-protect-its-contents-secur.cs
 - validate-the-digital-signature-of-an-xlsx-workbook-before-processing-to-ensure-i.cs
+- add-an-extra-digital-signature-to-the-provided-xlsx-workbook-preserving-existing.cs
