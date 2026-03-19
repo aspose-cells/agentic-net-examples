@@ -736,6 +736,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-password-protection-to-an-xlsx-workbook-and-subsequently-remove-it-to-allo.cs",
+      "title": "Apply password protection to an XLSX workbook and subsequently remove it to allow unrestricted access."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-password-protection-to-an-xlsx-workbook-to-restrict-editing-opening-or-for.cs",
       "title": "Apply password protection to an XLSX workbook to restrict editing, opening, or formatting operations."
     },
