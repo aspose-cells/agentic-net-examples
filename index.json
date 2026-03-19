@@ -821,6 +821,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "implement-functionality-to-apply-password-protection-to-an-xlsx-workbook-and-sub.cs",
+      "title": "Implement functionality to apply password protection to an XLSX workbook and subsequently remove it programmatically."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "insert-a-digital-signature-line-into-an-xlsx-workbook-using-the-net-spreadsheet-.cs",
       "title": "Insert a digital signature line into an XLSX workbook using the .NET spreadsheet library."
     },
