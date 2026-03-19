@@ -2691,6 +2691,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-only-the-cell-data-from-specified-ranges-and-save-the-result-as-an-xlsx-wor.cs",
+      "title": "Copy only the cell data from specified ranges and save the result as an XLSX workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-only-the-cell-data-of-a-specified-range-in-an-xlsx-workbook-preserving-no-f.cs",
       "title": "Copy only the cell data of a specified range in an XLSX workbook, preserving no formatting or metadata."
     },
