@@ -2731,6 +2731,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-formatting-from-the-first-range-to-the-second-range-within-an-xlsx-workbook.cs",
+      "title": "Copy formatting from the first range to the second range within an XLSX workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-only-the-cell-data-from-specified-ranges-and-save-the-result-as-an-xlsx-wor.cs",
       "title": "Copy only the cell data from specified ranges and save the result as an XLSX workbook."
     },
