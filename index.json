@@ -2331,6 +2331,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-a-workbook-in-xlsx-format-and-produce-the-result-defined-in-the-result-spec.cs",
+      "title": "Load a workbook in XLSX format and produce the result defined in the \u201cResult\u201d specification."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-xlsx-workbook-and-trace-both-precedent-and-dependent-cells-following-the.cs",
       "title": "Load an XLSX workbook and trace both precedent and dependent cells following the calculation chain rules."
     },
