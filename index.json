@@ -4698,6 +4698,11 @@
       "category": "working-with-tables",
       "file": "transform-a-worksheet-table-within-an-xlsx-file-into-an-ods-document-and-persist.cs",
       "title": "Transform a worksheet table within an XLSX file into an ODS document and persist the output as ODS."
+    },
+    {
+      "category": "xml-maps",
+      "file": "import-an-xml-map-into-a-workbook-loading-the-workbook-from-a-supported-format.cs",
+      "title": "Import an XML map into a workbook, loading the workbook from a supported format."
     }
   ]
 }
