@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - apply-a-shared-formula-during-xlsx-workbook-loading-to-ensure-formula-consistenc.cs
 - apply-a-shared-formula-across-multiple-cells-when-loading-an-xlsx-workbook-to-en.cs
 - configure-a-shared-formula-during-loading-of-an-xlsx-workbook-according-to-the-s.cs
+- apply-a-shared-formula-to-a-workbook-loaded-from-an-xlsx-file-during-its-initial.cs
