@@ -1231,6 +1231,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-certificate-to-a-file-or-stream-in-xlsx-format-while-preserving-i.cs",
+      "title": "Export the VBA certificate to a file or stream in XLSX format while preserving its integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-console-output-saved-as-a-pdf-document-preserving-formatting-layout-and.cs",
       "title": "Generate console output saved as a PDF document, preserving formatting, layout, and content integrity."
     },
