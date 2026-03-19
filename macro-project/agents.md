@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - associate-a-vba-macro-with-a-form-control-in-an-xltx-workbook-to-enable-automate.cs
 - bind-a-vba-macro-to-a-form-control-in-an-xltm-workbook-to-enable-interactive-fun.cs
 - associate-a-vba-macro-with-a-form-control-element-within-an-ods-spreadsheet-file.cs
+- associate-a-macro-with-a-form-control-by-specifying-the-mapping-in-a-tsv-file.cs
