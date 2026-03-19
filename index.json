@@ -2326,6 +2326,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "provide-example-code-demonstrating-how-to-load-a-workbook-from-an-xlsx-file-usin.cs",
+      "title": "Provide example code demonstrating how to load a workbook from an XLSX file using the API."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-two-guidelines-for-nonenglish-users-to-correctly-create-formulas-when-lo.cs",
       "title": "Provide two guidelines for non\u2011English users to correctly create formulas when loading an XLSX workbook."
     },
