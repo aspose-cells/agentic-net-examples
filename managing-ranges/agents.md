@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - access-workbookscoped-named-ranges-from-any-worksheet-to-manage-ranges-within-an.cs
 - access-and-manipulate-worksheetscoped-named-ranges-within-an-xlsx-file-using-the.cs
 - create-access-and-duplicate-named-ranges-in-xlsx-files-according-to-the-formats-.cs
+- apply-formatting-and-modify-named-ranges-within-xlsx-files-according-to-specifie.cs
