@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - provide-demonstrative-code-snippets-illustrating-how-to-create-read-and-manipula.cs
 - provide-example-code-demonstrating-how-to-work-with-oxps-files-in-a-net-environm.cs
 - secure-the-vba-project-of-an-excel-workbook-with-a-password-and-generate-a-pdf-r.cs
+- apply-a-password-to-an-excel-workbooks-vba-project-by-providing-the-credentials-.cs
