@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - add-an-extra-digital-signature-to-the-provided-xlsx-workbook-preserving-existing.cs
 - insert-a-digital-signature-line-into-an-xlsx-workbook-using-the-net-spreadsheet-.cs
 - insert-a-signature-line-into-the-provided-xlsx-workbook-ensuring-correct-placeme.cs
+- set-up-signature-line-attributes-for-an-input-xlsx-workbook-including-signer-det.cs
