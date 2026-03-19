@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - determine-whether-a-vba-project-is-password-protected-and-view-locked-via-c-empl.cs
 - determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-and-ht.cs
 - determine-whether-a-vba-project-in-an-mht-file-is-protected-and-locked-for-viewi.cs
+- programmatically-verify-whether-a-vba-project-is-protected-and-locked-for-viewin.cs
