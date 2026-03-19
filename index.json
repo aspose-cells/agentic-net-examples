@@ -1161,6 +1161,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-the-vba-macros-embedded-within-an-xlsb-workbook-are-digitally-.cs",
+      "title": "Determine whether the VBA macros embedded within an XLSB workbook are digitally signed and validated."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-contained-within-an-xltx-workbook-has-a-valid-.cs",
       "title": "Determine whether the VBA project contained within an XLTX workbook has a valid digital signature."
     },
