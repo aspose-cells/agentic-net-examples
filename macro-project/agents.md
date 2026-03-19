@@ -242,3 +242,4 @@ Output files are written to the working directory.
 - render-document-content-as-oxps-and-write-the-resulting-data-directly-to-the-con.cs
 - verify-whether-vba-code-is-digitally-signed-by-inspecting-its-associated-pdf-sig.cs
 - validate-whether-vba-code-is-digitally-signed-and-return-the-verification-result.cs
+- implement-a-c-routine-to-determine-whether-vba-code-embedded-in-a-pdf-file-is-di.cs
