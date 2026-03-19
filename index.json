@@ -926,6 +926,11 @@
     },
     {
       "category": "macro-project",
+      "file": "secure-the-vba-project-of-an-excel-workbook-with-a-password-and-generate-a-pdf-r.cs",
+      "title": "Secure the VBA project of an Excel workbook with a password and generate a PDF representation."
+    },
+    {
+      "category": "macro-project",
       "file": "set-a-password-on-an-excel-workbooks-vba-project-programmatically-in-c-employing.cs",
       "title": "Set a password on an Excel workbook\u2019s VBA project programmatically in C# employing the TAB format."
     },
