@@ -1276,6 +1276,11 @@
     },
     {
       "category": "macro-project",
+      "file": "include-the-pdf-library-as-a-reference-in-the-excel-vba-project-to-enable-pdf-fu.cs",
+      "title": "Include the PDF library as a reference in the Excel VBA project to enable PDF functionality."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-library-reference-in-tsv-format-into-a-workbooks-vba-project-to-enable-.cs",
       "title": "Insert a library reference in TSV format into a workbook\u2019s VBA project to enable external functionality."
     },
