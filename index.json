@@ -881,6 +881,11 @@
     },
     {
       "category": "macro-project",
+      "file": "provide-example-source-code-illustrating-how-to-read-modify-and-save-spreadsheet.cs",
+      "title": "Provide example source code illustrating how to read, modify, and save spreadsheets in SXC format."
+    },
+    {
+      "category": "macro-project",
       "file": "refactor-the-existing-vba-macro-into-c-code-implementing-the-specified-numbers-f.cs",
       "title": "Refactor the existing VBA macro into C# code, implementing the specified NUMBERS formatting conventions."
     },
