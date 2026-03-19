@@ -4711,6 +4711,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "after-loading-a-workbook-obtain-the-root-element-name-of-its-associated-xml-map.cs",
+      "title": "After loading a workbook, obtain the root element name of its associated XML map."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-the-workbooks-linked-xml-data-to-an-external-file-while-preserving-data-i.cs",
       "title": "Export the workbook's linked XML data to an external file while preserving data integrity and relationships."
     },
