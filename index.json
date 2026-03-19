@@ -2955,6 +2955,11 @@
       "title": "Review the introduction sheet of an XLSX workbook to configure and manipulate cell ranges accordingly."
     },
     {
+      "category": "managing-ranges",
+      "file": "search-within-an-xlsx-worksheet-range-and-replace-matching-data-according-to-spe.cs",
+      "title": "Search within an XLSX worksheet range and replace matching data according to specified criteria."
+    },
+    {
       "category": "queries-and-connections",
       "file": "create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs",
       "title": "Create or inspect data connections within an XLSX workbook through the API\u2019s default handling mechanisms."
