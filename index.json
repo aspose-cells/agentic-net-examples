@@ -796,6 +796,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-reference-to-a-vba-project-within-a-workbook-using-a-prn-formatted-library.cs",
+      "title": "Add a reference to a VBA project within a workbook using a PRN-formatted library file."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-reference-to-an-external-library-within-a-vba-project-embedded-in-an-xlsx-.cs",
       "title": "Add a reference to an external library within a VBA project embedded in an XLSX workbook."
     },
