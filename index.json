@@ -1081,6 +1081,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-attach-a-macro-to-a-form-control-in-c-when-working-with-sxc-fil.cs",
+      "title": "Programmatically attach a macro to a form control in C# when working with SXC files."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-detect-whether-the-vba-project-embedded-within-a-pdf-document-i.cs",
       "title": "Programmatically detect whether the VBA project embedded within a PDF document is protected by encryption."
     },
