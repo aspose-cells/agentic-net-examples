@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - create-a-workbook-in-xlsx-format-and-configure-cell-ranges-according-to-the-prov.cs
 - create-a-new-cell-range-based-on-an-existing-range-in-an-xlsx-workbook-following.cs
 - copy-only-the-cell-data-of-defined-ranges-in-an-xlsx-workbook-without-transferri.cs
+- apply-a-defined-style-to-a-specific-data-range-within-an-xlsx-worksheet-to-contr.cs
