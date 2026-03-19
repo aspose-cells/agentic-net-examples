@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - insert-page-breaks-at-specified-locations-in-a-worksheet-to-control-pagination-w.cs
 - remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs
 - delete-a-designated-page-break-from-a-worksheet-while-maintaining-surrounding-ce.cs
+- eliminate-all-split-panes-from-the-worksheet-to-restore-a-single-continuous-view.cs
