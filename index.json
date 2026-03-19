@@ -1416,6 +1416,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-a-c-routine-that-verifies-vba-code-signatures-and-returns-the-result-i.cs",
+      "title": "Implement a C# routine that verifies VBA code signatures and returns the result in JSON format."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-a-c-routine-to-determine-whether-vba-code-embedded-in-a-pdf-file-is-di.cs",
       "title": "Implement a C# routine to determine whether VBA code embedded in a PDF file is digitally signed."
     },
