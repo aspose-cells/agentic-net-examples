@@ -1591,6 +1591,11 @@
     },
     {
       "category": "macro-project",
+      "file": "render-data-to-the-console-using-the-dbf-file-format-ensuring-field-definitions-.cs",
+      "title": "Render data to the console using the DBF file format, ensuring field definitions and records are correctly displayed."
+    },
+    {
+      "category": "macro-project",
       "file": "secure-the-vba-project-of-an-excel-workbook-with-a-password-and-generate-a-pdf-r.cs",
       "title": "Secure the VBA project of an Excel workbook with a password and generate a PDF representation."
     },
