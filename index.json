@@ -705,6 +705,11 @@
       "title": "Add or remove password protection on an XLSX workbook programmatically using appropriate .NET APIs."
     },
     {
+      "category": "encryption-and-protection",
+      "file": "apply-password-protection-to-an-xlsx-workbook-to-restrict-editing-opening-or-for.cs",
+      "title": "Apply password protection to an XLSX workbook to restrict editing, opening, or formatting operations."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs",
       "title": "Apply custom subtotal labels to a localized spreadsheet by configuring GlobalizationSettings on an XLSX workbook."
