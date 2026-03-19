@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - when-loading-an-xlsx-workbook-programmatically-add-specified-cells-to-the-excel-.cs
 - provide-example-code-demonstrating-how-to-load-a-workbook-from-an-xlsx-file-usin.cs
 - implement-ifna-function-evaluation-by-loading-an-xlsx-workbook-and-processing-th.cs
+- evaluate-the-ifna-worksheet-function-on-a-loaded-xlsx-workbook-using-the-provide.cs
