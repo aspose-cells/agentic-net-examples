@@ -716,6 +716,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-password-protection-to-an-ods-workbook-generated-from-an-input-xlsx-file-u.cs",
+      "title": "Apply password protection to an ODS workbook generated from an input XLSX file using .NET encryption APIs."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-password-protection-to-an-xlsx-workbook-to-restrict-editing-opening-or-for.cs",
       "title": "Apply password protection to an XLSX workbook to restrict editing, opening, or formatting operations."
     },
