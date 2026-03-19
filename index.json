@@ -1211,6 +1211,11 @@
     },
     {
       "category": "macro-project",
+      "file": "include-an-htmlformatted-library-reference-in-an-excel-vba-project-to-enable-ext.cs",
+      "title": "Include an HTML\u2011formatted library reference in an Excel VBA project to enable external component usage."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-library-reference-in-tsv-format-into-a-workbooks-vba-project-to-enable-.cs",
       "title": "Insert a library reference in TSV format into a workbook\u2019s VBA project to enable external functionality."
     },
