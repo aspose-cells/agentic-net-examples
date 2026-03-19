@@ -796,6 +796,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "insert-a-signature-line-into-the-provided-xlsx-workbook-ensuring-correct-placeme.cs",
+      "title": "Insert a signature line into the provided XLSX workbook, ensuring correct placement and formatting."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "remove-worksheet-protection-from-the-specified-input-xlsx-file-allowing-subseque.cs",
       "title": "Remove worksheet protection from the specified input XLSX file, allowing subsequent modifications via API."
     },
