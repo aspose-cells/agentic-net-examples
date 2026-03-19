@@ -2296,6 +2296,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "when-loading-an-xlsx-workbook-enable-tracing-of-cell-precedents-according-to-the.cs",
+      "title": "When loading an XLSX workbook, enable tracing of cell precedents according to the Tracing\u202fPrecedents specification."
+    },
+    {
+      "category": "manage-formulas",
       "file": "when-loading-an-xlsx-workbook-verify-that-all-function-parameters-are-delimited-.cs",
       "title": "When loading an XLSX workbook, verify that all function parameters are delimited by commas."
     },
