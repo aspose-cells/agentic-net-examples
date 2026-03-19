@@ -2271,6 +2271,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-oxps-json-file-into-an-excel-workbook-preserving-data-structure-and.cs",
+      "title": "Transform an OXPS JSON file into an Excel workbook, preserving data structure and content integrity."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-oxps-json-file-into-csv-format-mapping-json-elements-to-correspondi.cs",
       "title": "Transform an OXPS JSON file into CSV format, mapping JSON elements to corresponding comma\u2011separated values."
     },
