@@ -2686,6 +2686,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-formatting-and-modify-named-ranges-within-xlsx-files-according-to-specifie.cs",
+      "title": "Apply formatting and modify named ranges within XLSX files according to specified range management rules."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-specified-style-formatting-to-a-defined-cell-range-in-an-xlsx-workbook-acc.cs",
       "title": "Apply specified style formatting to a defined cell range in an XLSX workbook according to the provided example."
     },
