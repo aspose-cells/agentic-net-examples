@@ -1661,6 +1661,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-and-report-its-status-in-a-txt-file.cs",
+      "title": "Validate the digital signature of VBA code and report its status in a TXT file."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-embedded-in-an-mht-file-using-c.cs",
       "title": "Validate the digital signature of VBA code embedded in an MHT file using C#."
     },
