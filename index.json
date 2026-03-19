@@ -2346,6 +2346,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "optimize-workbook-loading-in-xlsx-format-to-reduce-the-execution-time-of-the-cel.cs",
+      "title": "Optimize workbook loading in XLSX format to reduce the execution time of the Cell.Calculate() method."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs",
       "title": "Provide a comprehensive overview of formula tracing capabilities activated during the loading of an XLSX workbook."
     },
