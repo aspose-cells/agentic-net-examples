@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - specify-a-modification-password-for-an-xlsx-workbook-to-restrict-unauthorized-ed.cs
 - implement-encryption-and-decryption-capabilities-for-ods-spreadsheet-files-suppo.cs
 - apply-password-protection-to-an-xlsx-workbook-using-openoffice-calc-to-restrict-.cs
+- encrypt-an-ods-spreadsheet-using-the-net-api-applying-password-protection-to-sec.cs
