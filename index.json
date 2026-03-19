@@ -2171,6 +2171,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-shared-formula-across-multiple-cells-when-loading-an-xlsx-workbook-to-en.cs",
+      "title": "Apply a shared formula across multiple cells when loading an XLSX workbook to ensure consistent calculations."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-a-shared-formula-during-xlsx-workbook-loading-to-ensure-formula-consistenc.cs",
       "title": "Apply a shared formula during XLSX workbook loading to ensure formula consistency across cells."
     },
