@@ -2746,6 +2746,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-new-cell-range-based-on-an-existing-range-in-an-xlsx-workbook-following.cs",
+      "title": "Create a new cell range based on an existing range in an XLSX workbook, following the provided example."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-new-cell-range-within-an-xlsx-worksheet-to-manage-and-manipulate-specif.cs",
       "title": "Create a new cell range within an XLSX worksheet to manage and manipulate specific groups of cells."
     },
