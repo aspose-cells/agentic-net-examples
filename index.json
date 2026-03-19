@@ -1401,6 +1401,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-xps-formatted-output-from-the-console-application-and-write-it-to-the-s.cs",
+      "title": "Generate XPS formatted output from the console application and write it to the specified file."
+    },
+    {
+      "category": "macro-project",
       "file": "handle-vba-modules-within-an-excel-macro-enabled-workbook-when-exporting-to-or-i.cs",
       "title": "Handle VBA modules within an Excel macro-enabled workbook when exporting to or importing from ODS format."
     },
