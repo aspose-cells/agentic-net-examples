@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - import-an-xml-map-into-a-workbook-loading-the-workbook-from-a-supported-format.cs
 - load-an-xml-schema-file-to-import-its-xml-map-into-the-target-workbook.cs
+- load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-structured-data-bin.cs
