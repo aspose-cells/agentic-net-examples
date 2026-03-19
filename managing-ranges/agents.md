@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - populate-a-range-of-cells-in-the-first-worksheet-of-an-xlsx-workbook-with-the-sp.cs
 - apply-a-specified-style-to-a-defined-data-range-within-an-xlsx-worksheet-to-cont.cs
 - create-an-additional-cell-range-within-an-xlsx-workbook-to-facilitate-advanced-r.cs
+- create-an-xlsx-workbook-and-configure-its-ranges-according-to-the-specified-guid.cs
