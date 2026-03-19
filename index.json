@@ -1301,6 +1301,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-whether-a-workbooks-vba-project-is-digitally-signed-and-return-the-resu.cs",
+      "title": "Validate whether a workbook's VBA project is digitally signed and return the result in JSON format."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-whether-a-vba-project-in-an-xlsm-workbook-is-protected-and-locked-for-vie.cs",
       "title": "Verify whether a VBA project in an XLSM workbook is protected and locked for viewing."
     },
