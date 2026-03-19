@@ -806,6 +806,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "decrypt-an-ods-file-by-loading-it-with-loadoptionspassword-set-and-clearing-work.cs",
+      "title": "Decrypt an ODS file by loading it with LoadOptions.Password set and clearing WorkbookSettings.Password (XLSX)."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "decrypt-an-xlsx-workbook-using-the-librarys-decryption-api-while-maintaining-dat.cs",
       "title": "Decrypt an XLSX workbook using the library's decryption API while maintaining data integrity and preserving original formatting."
     },
