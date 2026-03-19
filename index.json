@@ -786,6 +786,11 @@
     },
     {
       "category": "macro-project",
+      "file": "insert-a-vba-module-into-a-workbook-programmatically-via-c-ensuring-code-indenta.cs",
+      "title": "Insert a VBA module into a workbook programmatically via C#, ensuring code indentation uses TAB characters."
+    },
+    {
+      "category": "macro-project",
       "file": "maintain-and-edit-the-vba-modules-of-an-excel-macroenabled-workbook-by-importing.cs",
       "title": "Maintain and edit the VBA modules of an Excel macro\u2011enabled workbook by importing and exporting them in CSV format."
     },
