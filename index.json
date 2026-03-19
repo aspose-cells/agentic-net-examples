@@ -796,6 +796,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "validate-the-digital-signature-of-an-xlsx-workbook-before-processing-to-ensure-i.cs",
+      "title": "Validate the digital signature of an XLSX workbook before processing to ensure integrity and authenticity."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-the-password-of-encrypted-xlsx-and-ods-workbooks-confirming-access-righ.cs",
       "title": "Validate the password of encrypted XLSX and ODS workbooks, confirming access rights before processing."
     },
