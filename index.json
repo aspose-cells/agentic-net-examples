@@ -771,6 +771,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-edit-and-extract-vba-modules-in-an-xltm-workbook-programmatically-using-n.cs",
+      "title": "Create, edit, and extract VBA modules in an XLTM workbook programmatically using .NET APIs."
+    },
+    {
+      "category": "macro-project",
       "file": "manipulate-the-vba-modules-of-an-excel-macro-enabled-workbook-while-operating-wi.cs",
       "title": "Manipulate the VBA modules of an Excel macro-enabled workbook while operating with XLTX template files."
     },
