@@ -2661,6 +2661,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "access-and-manipulate-worksheetscoped-named-ranges-within-an-xlsx-file-using-the.cs",
+      "title": "Access and manipulate worksheet\u2011scoped named ranges within an XLSX file using the worksheet reference where they were defined."
+    },
+    {
+      "category": "managing-ranges",
       "file": "access-workbookscoped-named-ranges-from-any-worksheet-to-manage-ranges-within-an.cs",
       "title": "Access workbook\u2011scoped named ranges from any worksheet to manage ranges within an XLSX workbook."
     },
