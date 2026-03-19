@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - create-and-manipulate-a-secondary-cell-range-within-an-xlsx-worksheet-to-manage-.cs
 - create-a-workbook-populate-data-and-copy-only-the-style-of-a-specified-range-in-.cs
 - copy-only-the-formatting-of-a-specified-range-within-an-xlsx-workbook-without-al.cs
+- create-a-union-range-to-manage-multiple-cell-ranges-simultaneously-within-an-xls.cs
