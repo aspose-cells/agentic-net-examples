@@ -2261,6 +2261,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "evaluate-the-ifna-worksheet-function-on-a-loaded-xlsx-workbook-using-the-provide.cs",
+      "title": "Evaluate the IFNA worksheet function on a loaded XLSX workbook using the provided calculation API."
+    },
+    {
+      "category": "manage-formulas",
       "file": "examine-the-provided-sample-code-to-determine-the-maximum-sharedformula-row-limi.cs",
       "title": "Examine the provided sample code to determine the maximum shared\u2011formula row limit when loading an XLSX workbook."
     },
