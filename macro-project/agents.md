@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - add-a-reference-to-a-library-in-the-workbooks-vba-project-and-export-the-workboo.cs
 - add-a-library-reference-to-the-workbooks-vba-project-using-a-json-configuration-.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-xls-format-preserving-certificat.cs
+- export-the-vba-certificate-to-a-file-or-stream-in-xlsx-format-while-preserving-i.cs
