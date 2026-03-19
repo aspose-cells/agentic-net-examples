@@ -786,6 +786,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-reference-to-a-library-in-the-workbooks-vba-project-by-importing-a-difform.cs",
+      "title": "Add a reference to a library in the workbook's VBA project by importing a DIF\u2011formatted file."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-reference-to-an-external-library-within-a-vba-project-embedded-in-an-xlsx-.cs",
       "title": "Add a reference to an external library within a VBA project embedded in an XLSX workbook."
     },
