@@ -861,6 +861,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "identify-typical-use-cases-for-processing-xlsx-worksheets-within-net-application.cs",
+      "title": "Identify typical use cases for processing XLSX worksheets within .NET applications using the API."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-capabilities-for-ods-spreadsheet-files-suppo.cs",
       "title": "Implement encryption and decryption capabilities for ODS spreadsheet files, supporting the XLSX format as an alternative."
     },
