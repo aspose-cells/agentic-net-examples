@@ -2676,6 +2676,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-specified-worksheet-range-and-paste-it-into-another-location-using-define.cs",
+      "title": "Copy a specified worksheet range and paste it into another location using defined options in an XLSX file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-only-the-cell-values-of-a-specified-range-within-an-xlsx-workbook-preservin.cs",
       "title": "Copy only the cell values of a specified range within an XLSX workbook, preserving no formatting or formulas."
     },
