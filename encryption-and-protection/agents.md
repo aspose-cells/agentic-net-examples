@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - create-a-workbook-apply-protection-with-sharing-enabled-and-save-the-result-as-a.cs
 - apply-and-remove-protection-on-the-workbook-structure-of-an-xlsx-file-using-appr.cs
 - apply-or-remove-workbook-structural-protection-on-xlsx-files-programmatically-us.cs
+- programmatically-protect-the-workbook-structure-of-an-xlsx-file-using-the-net-ap.cs
