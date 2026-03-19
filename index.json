@@ -856,6 +856,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-an-xlsx-workbook-using-net-apis-specifying-password-protection-and-encry.cs",
+      "title": "Encrypt an XLSX workbook using .NET APIs, specifying password protection and encryption settings for the file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "identify-and-verify-the-file-format-of-a-supplied-xlsx-workbook-using-the-api.cs",
       "title": "Identify and verify the file format of a supplied XLSX workbook using the API."
     },
