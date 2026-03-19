@@ -1256,6 +1256,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-whether-the-workbooks-vba-project-is-digitally-signed-correctly-using-the.cs",
+      "title": "Verify whether the workbook's VBA project is digitally signed correctly using the TAB format."
+    },
+    {
+      "category": "macro-project",
       "file": "write-data-to-the-console-serialized-as-a-jsonformatted-string-ensuring-the-outp.cs",
       "title": "Write data to the console serialized as a JSON\u2011formatted string, ensuring the output conforms to valid JSON syntax."
     },
