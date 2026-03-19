@@ -236,3 +236,4 @@ Output files are written to the working directory.
 - display-numeric-values-to-the-console-using-the-predefined-numbers-formatting-st.cs
 - generate-detailed-console-output-adhering-to-the-sxc-format-specifications-for-s.cs
 - generate-console-output-in-fods-format-representing-the-spreadsheet-data-accurat.cs
+- generate-console-output-in-dif-format-to-efficiently-represent-spreadsheet-data-.cs
