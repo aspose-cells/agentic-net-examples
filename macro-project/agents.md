@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - create-edit-and-extract-vba-modules-in-an-xltm-workbook-programmatically-using-n.cs
 - add-modify-or-delete-vba-modules-and-procedures-within-an-xlsb-macroenabled-work.cs
 - handle-vba-modules-within-an-excel-macro-enabled-workbook-when-exporting-to-or-i.cs
+- maintain-and-edit-the-vba-modules-of-an-excel-macroenabled-workbook-by-importing.cs
