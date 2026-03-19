@@ -771,6 +771,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-an-xlsx-workbook-using-a-password-to-protect-its-contents-from-unauthori.cs",
+      "title": "Encrypt an XLSX workbook using a password to protect its contents from unauthorized access."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs",
       "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
     },
