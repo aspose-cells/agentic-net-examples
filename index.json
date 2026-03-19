@@ -921,6 +921,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "programmatically-add-or-remove-password-protection-on-a-shared-xlsx-workbook-to-.cs",
+      "title": "Programmatically add or remove password protection on a shared XLSX workbook to control access."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "programmatically-generate-read-and-modify-microsoft-excel-xlsx-workbooks-using-t.cs",
       "title": "Programmatically generate, read, and modify Microsoft Excel (XLSX) workbooks using the provided .NET API."
     },
