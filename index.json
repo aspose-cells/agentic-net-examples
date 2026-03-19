@@ -776,6 +776,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-reference-to-an-external-library-within-a-vba-project-of-an-xltm-workbook.cs",
+      "title": "Add a reference to an external library within a VBA project of an XLTM workbook."
+    },
+    {
+      "category": "macro-project",
       "file": "add-edit-or-remove-vba-modules-in-an-xlsm-workbook-programmatically-using-the-pr.cs",
       "title": "Add, edit, or remove VBA modules in an XLSM workbook programmatically using the provided API."
     },
