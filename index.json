@@ -786,6 +786,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-a-password-to-an-excel-workbooks-vba-project-in-c-utilizing-the-xml-format.cs",
+      "title": "Apply a password to an Excel workbook's VBA project in C# utilizing the XML format."
+    },
+    {
+      "category": "macro-project",
       "file": "apply-a-password-to-protect-the-vba-project-inside-an-xlsx-workbook-ensuring-res.cs",
       "title": "Apply a password to protect the VBA project inside an XLSX workbook, ensuring restricted access to code."
     },
