@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - configure-the-workbooks-formula-calculation-mode-to-a-specific-setting-during-lo.cs
 - obtain-the-provided-sample-code-and-programmatically-load-a-workbook-in-xlsx-for.cs
 - retrieve-the-provided-runtime-sample-and-load-the-corresponding-workbook-using-t.cs
+- add-specified-cells-to-the-excel-formula-watch-window-during-xlsx-workbook-loadi.cs
