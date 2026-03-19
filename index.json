@@ -2366,6 +2366,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "perform-direct-evaluation-of-a-custom-function-during-xlsx-workbook-load-without.cs",
+      "title": "Perform direct evaluation of a custom function during XLSX workbook load without embedding it in any worksheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs",
       "title": "Provide a comprehensive overview of formula tracing capabilities activated during the loading of an XLSX workbook."
     },
