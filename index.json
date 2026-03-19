@@ -2236,6 +2236,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "enable-direct-formula-evaluation-during-xlsx-workbook-loading-to-compute-cell-va.cs",
+      "title": "Enable direct formula evaluation during XLSX workbook loading to compute cell values immediately upon import."
+    },
+    {
+      "category": "manage-formulas",
       "file": "evaluate-all-cell-formulas-automatically-during-xlsx-workbook-loading-according-.cs",
       "title": "Evaluate all cell formulas automatically during XLSX workbook loading according to the defined calculation behavior."
     },
