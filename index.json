@@ -4806,6 +4806,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-functionality-to-programmatically-toggle-visibility-of-specific-rows-c.cs",
+      "title": "Implement functionality to programmatically toggle visibility of specific rows, columns, and worksheet scrollbars during runtime."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-page-breaks-at-specified-locations-in-a-worksheet-to-control-pagination-w.cs",
       "title": "Insert page breaks at specified locations in a worksheet to control pagination when exporting the document."
     },
