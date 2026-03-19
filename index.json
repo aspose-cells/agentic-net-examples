@@ -2196,6 +2196,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "assign-a-duplicate-named-range-a-formula-during-xlsx-workbook-loading-using-the-.cs",
+      "title": "Assign a duplicate named range a formula during XLSX workbook loading using the API."
+    },
+    {
+      "category": "manage-formulas",
       "file": "assign-a-formula-to-a-named-range-during-the-loading-process-of-an-xlsx-workbook.cs",
       "title": "Assign a formula to a named range during the loading process of an XLSX workbook."
     },
