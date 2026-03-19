@@ -2866,6 +2866,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "implement-nonsequential-range-management-for-the-ai-document-assistant-and-outpu.cs",
+      "title": "Implement non\u2011sequential range management for the AI Document Assistant and output results in XLSX format."
+    },
+    {
+      "category": "managing-ranges",
       "file": "implement-range-management-functionality-by-reviewing-and-adapting-the-provided-.cs",
       "title": "Implement range management functionality by reviewing and adapting the provided XLSX sample code demonstrating relevant operations."
     },
