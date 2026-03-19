@@ -791,6 +791,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "identify-the-format-of-an-input-xlsx-file-and-determine-whether-it-is-encrypted.cs",
+      "title": "Identify the format of an input XLSX file and determine whether it is encrypted."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs",
       "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
     },
