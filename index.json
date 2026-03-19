@@ -2706,6 +2706,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-specified-cell-ranges-within-an-xlsx-workbook-programmatically-to-manage-da.cs",
+      "title": "Copy specified cell ranges within an XLSX workbook programmatically to manage data organization efficiently."
+    },
+    {
+      "category": "managing-ranges",
       "file": "review-the-introduction-sheet-of-an-xlsx-workbook-to-configure-and-manipulate-ce.cs",
       "title": "Review the introduction sheet of an XLSX workbook to configure and manipulate cell ranges accordingly."
     },
