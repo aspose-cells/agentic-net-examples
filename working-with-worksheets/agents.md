@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - review-essential-considerations-and-constraints-that-must-be-understood-before-u.cs
 - insert-page-breaks-at-specified-locations-in-a-worksheet-to-control-pagination-w.cs
 - remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs
+- delete-a-designated-page-break-from-a-worksheet-while-maintaining-surrounding-ce.cs
