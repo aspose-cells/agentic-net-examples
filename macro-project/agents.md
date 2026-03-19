@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - add-a-pdf-library-reference-to-the-vba-project-within-the-workbook-to-enable-pdf.cs
 - include-the-pdf-library-as-a-reference-in-the-excel-vba-project-to-enable-pdf-fu.cs
 - add-a-library-reference-to-an-excel-vba-project-using-json-format-for-automated-.cs
+- add-a-reference-to-a-library-in-the-workbooks-vba-project-and-export-the-workboo.cs
