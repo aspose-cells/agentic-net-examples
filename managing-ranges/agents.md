@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - implement-range-management-functionality-by-reviewing-and-adapting-the-provided-.cs
 - merge-or-unmerge-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-.cs
 - merge-or-split-specified-cell-ranges-within-an-xlsx-worksheet-to-control-cell-gr.cs
+- relocate-a-specified-cell-range-within-an-xlsx-worksheet-updating-references-and.cs
