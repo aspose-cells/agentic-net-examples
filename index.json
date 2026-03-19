@@ -1026,6 +1026,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-workbooks-vba-project-is-digitally-signed-by-inspecting-its-.cs",
+      "title": "Determine whether a workbook's VBA project is digitally signed by inspecting its MHT representation."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-the-vba-project-contained-within-an-xltx-workbook-has-a-valid-.cs",
       "title": "Determine whether the VBA project contained within an XLTX workbook has a valid digital signature."
     },
