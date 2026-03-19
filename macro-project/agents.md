@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs
 - determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-and-ou.cs
 - determine-whether-a-vba-project-is-protected-and-locked-for-viewing-via-c-while-.cs
+- determine-whether-a-vba-project-is-password-protected-and-view-locked-via-c-empl.cs
