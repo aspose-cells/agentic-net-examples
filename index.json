@@ -1446,6 +1446,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-export-a-vba-certificate-to-a-file-or-stream-using-the-dbf-form.cs",
+      "title": "Programmatically export a VBA certificate to a file or stream using the DBF format."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-insert-a-vba-module-into-a-workbook-using-c-and-the-spreadsheet.cs",
       "title": "Programmatically insert a VBA module into a workbook using C# and the SpreadsheetML file format."
     },
