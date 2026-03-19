@@ -786,6 +786,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-to-the-workbooks-vba-project-while-handling-the-dbf-file.cs",
+      "title": "Add a library reference to the workbook's VBA project while handling the DBF file format."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-reference-to-a-library-in-the-workbooks-vba-project-by-importing-a-difform.cs",
       "title": "Add a reference to a library in the workbook's VBA project by importing a DIF\u2011formatted file."
     },
