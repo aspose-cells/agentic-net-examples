@@ -746,6 +746,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "select-an-encryption-algorithm-for-an-xlsx-workbook-and-apply-it-during-file-sav.cs",
+      "title": "Select an encryption algorithm for an XLSX workbook and apply it during file saving."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-the-password-of-encrypted-xlsx-and-ods-workbooks-confirming-access-righ.cs",
       "title": "Validate the password of encrypted XLSX and ODS workbooks, confirming access rights before processing."
     },
