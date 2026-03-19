@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - determine-whether-a-vba-project-is-protected-and-viewlocked-returning-the-status.cs
 - using-c-verify-whether-a-vba-project-embedded-in-a-pdf-is-protected-and-locked-f.cs
 - implement-a-c-routine-that-evaluates-a-vba-projects-protection-status-and-locked.cs
+- associate-a-vba-macro-with-a-specific-form-control-in-an-xls-workbook-to-enable-.cs
