@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-library-reference-to-the-workbooks-vba-project-when-processing-oxps-files-.cs",
+      "title": "Add a library reference to the workbook's VBA project when processing OXPS files via the .NET API."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-library-reference-to-the-workbooks-vba-project-while-handling-the-dbf-file.cs",
       "title": "Add a library reference to the workbook's VBA project while handling the DBF file format."
     },
