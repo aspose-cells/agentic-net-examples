@@ -4706,6 +4706,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "delete-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-ensuring-associa.cs",
+      "title": "Delete a worksheet from a workbook by specifying its sheet name, ensuring associated data is removed."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-one-or-more-worksheets-from-a-workbook-by-specifying-their-zerobased-shee.cs",
       "title": "Delete one or more worksheets from a workbook by specifying their zero\u2011based sheet index positions."
     },
