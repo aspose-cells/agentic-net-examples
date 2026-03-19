@@ -256,3 +256,4 @@ Output files are written to the working directory.
 - validate-the-digital-signature-of-vba-code-and-report-its-status-in-a-txt-file.cs
 - validate-the-digital-signature-of-vba-code-programmatically-in-c-outputting-resu.cs
 - validate-the-digital-signature-of-vba-code-using-c-and-output-the-verification-r.cs
+- validate-the-digital-signature-of-vba-code-in-c-programmatically-when-processing.cs
