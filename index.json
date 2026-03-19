@@ -836,6 +836,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "implement-encryption-and-decryption-capabilities-for-ods-spreadsheet-files-suppo.cs",
+      "title": "Implement encryption and decryption capabilities for ODS spreadsheet files, supporting the XLSX format as an alternative."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-functionality-for-xlsx-workbooks-ensuring-se.cs",
       "title": "Implement encryption and decryption functionality for XLSX workbooks, ensuring secure handling of spreadsheet data."
     },
