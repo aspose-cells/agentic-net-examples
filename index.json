@@ -921,6 +921,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-in-c-whether-a-workbooks-vba-project-is-digitally-signed-utilizing-the.cs",
+      "title": "Determine in C# whether a workbook\u2019s VBA project is digitally signed, utilizing the NUMBERS format."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-programmatically-at-runtime-whether-the-vba-project-embedded-within-an.cs",
       "title": "Determine programmatically at runtime whether the VBA project embedded within an XLS workbook is protected."
     },
