@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - implement-nonsequential-range-management-for-the-ai-document-assistant-and-outpu.cs
 - access-workbookscoped-named-ranges-from-any-worksheet-to-manage-ranges-within-an.cs
 - access-and-manipulate-worksheetscoped-named-ranges-within-an-xlsx-file-using-the.cs
+- create-access-and-duplicate-named-ranges-in-xlsx-files-according-to-the-formats-.cs
