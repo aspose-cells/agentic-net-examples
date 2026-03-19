@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - update-the-c-macro-to-manipulate-dbf-files-by-integrating-or-converting-the-exis.cs
 - refactor-the-existing-vba-macro-into-c-code-that-processes-files-in-prn-format.cs
 - update-the-existing-vba-macro-or-c-script-to-generate-manipulate-and-output-xps-.cs
+- implement-advanced-pdf-format-operations-including-custom-encryption-incremental.cs
