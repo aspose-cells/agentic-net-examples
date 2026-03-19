@@ -2836,6 +2836,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-access-and-duplicate-named-ranges-in-xlsx-files-according-to-the-formats-.cs",
+      "title": "Create, access, and duplicate named ranges in XLSX files according to the format\u2019s defined specifications."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-an-additional-cell-range-within-an-xlsx-workbook-to-facilitate-advanced-r.cs",
       "title": "Create an additional cell range within an XLSX workbook to facilitate advanced range management operations."
     },
