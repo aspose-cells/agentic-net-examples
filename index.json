@@ -921,6 +921,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "set-the-workbook-author-metadata-concurrently-with-applying-write-protection-to-.cs",
+      "title": "Set the workbook author metadata concurrently with applying write protection to an XLSX file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "set-up-signature-line-attributes-for-an-input-xlsx-workbook-including-signer-det.cs",
       "title": "Set up signature line attributes for an input XLSX workbook, including signer details and visual appearance."
     },
