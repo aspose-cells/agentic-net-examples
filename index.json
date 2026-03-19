@@ -811,6 +811,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-a-password-to-the-vba-project-of-an-excel-workbook-using-c-and-the-spreads.cs",
+      "title": "Apply a password to the VBA project of an Excel workbook using C# and the SpreadsheetML format."
+    },
+    {
+      "category": "macro-project",
       "file": "apply-password-protection-to-an-excel-workbooks-vba-project-sourcing-the-passwor.cs",
       "title": "Apply password protection to an Excel workbook's VBA project, sourcing the password from a CSV file."
     },
