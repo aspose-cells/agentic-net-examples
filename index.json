@@ -866,6 +866,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "programmatically-generate-read-and-modify-microsoft-excel-xlsx-workbooks-using-t.cs",
+      "title": "Programmatically generate, read, and modify Microsoft Excel (XLSX) workbooks using the provided .NET API."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "remove-worksheet-protection-from-the-specified-input-xlsx-file-allowing-subseque.cs",
       "title": "Remove worksheet protection from the specified input XLSX file, allowing subsequent modifications via API."
     },
