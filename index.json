@@ -876,6 +876,11 @@
     },
     {
       "category": "macro-project",
+      "file": "provide-example-code-demonstrating-how-to-work-with-the-numbers-format-in-the-li.cs",
+      "title": "Provide example code demonstrating how to work with the NUMBERS format in the library."
+    },
+    {
+      "category": "macro-project",
       "file": "refactor-the-existing-vba-macro-into-c-code-implementing-the-specified-numbers-f.cs",
       "title": "Refactor the existing VBA macro into C# code, implementing the specified NUMBERS formatting conventions."
     },
