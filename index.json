@@ -861,6 +861,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-a-routine-to-programmatically-check-if-the-vba-project-embedded-in-an-.cs",
+      "title": "Implement a routine to programmatically check if the VBA project embedded in an XLTX workbook is protected."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-advanced-functionality-for-handling-xlsx-files-within-net-applications.cs",
       "title": "Implement advanced functionality for handling XLSX files within .NET applications, covering complex features and optimization techniques."
     },
