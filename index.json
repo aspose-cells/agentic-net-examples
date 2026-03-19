@@ -1416,6 +1416,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-a-c-routine-to-determine-whether-vba-code-embedded-in-a-pdf-file-is-di.cs",
+      "title": "Implement a C# routine to determine whether VBA code embedded in a PDF file is digitally signed."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-a-routine-to-programmatically-check-if-the-vba-project-embedded-in-an-.cs",
       "title": "Implement a routine to programmatically check if the VBA project embedded in an XLTX workbook is protected."
     },
