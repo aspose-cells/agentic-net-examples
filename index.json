@@ -1711,6 +1711,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-vba-code-provided-in-prn-format-and-return-its.cs",
+      "title": "Validate the digital signature of VBA code provided in PRN format and return its verification status."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-vba-code-using-c-and-output-the-verification-r.cs",
       "title": "Validate the digital signature of VBA code using C# and output the verification result in HTML format."
     },
