@@ -4706,6 +4706,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "import-the-xml-map-into-the-workbook-by-loading-the-xml-schema-file-as-step-two.cs",
+      "title": "Import the XML map into the workbook by loading the XML schema file as step two."
+    },
+    {
+      "category": "xml-maps",
       "file": "load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-structured-data-bin.cs",
       "title": "Load a workbook file and import an XML map into it to enable structured data binding."
     },
