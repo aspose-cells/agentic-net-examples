@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - encrypt-an-xlsx-workbook-using-net-apis-specifying-password-protection-and-encry.cs
 - apply-a-robust-encryption-algorithm-to-protect-xlsx-files-ensuring-data-confiden.cs
 - programmatically-add-or-remove-password-protection-on-a-shared-xlsx-workbook-to-.cs
+- create-a-workbook-apply-protection-with-sharing-enabled-and-save-the-result-as-a.cs
