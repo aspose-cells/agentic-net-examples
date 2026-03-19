@@ -946,6 +946,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-programmatically-whether-the-vba-project-embedded-in-an-xlsb-workbook-.cs",
+      "title": "Determine programmatically whether the VBA project embedded in an XLSB workbook is digitally signed."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-vba-project-protection-status-in-c-and-output-the-result-using-tsv-for.cs",
       "title": "Determine VBA Project protection status in C# and output the result using TSV-formatted data."
     },
