@@ -2170,6 +2170,11 @@
       "title": "Write data to the console serialized as a JSON\u2011formatted string, ensuring the output conforms to valid JSON syntax."
     },
     {
+      "category": "manage-formulas",
+      "file": "when-loading-an-xlsx-workbook-delimit-all-function-parameters-with-commas-to-ens.cs",
+      "title": "When loading an XLSX workbook, delimit all function parameters with commas to ensure correct parsing."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
