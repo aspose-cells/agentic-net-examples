@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - handle-duplicate-specify-maximum-rows-of-shared-formula-headings-when-loading-an.cs
 - examine-the-provided-sample-code-to-determine-the-maximum-sharedformula-row-limi.cs
 - configure-external-references-in-formula-cells-according-to-the-defined-rules-wh.cs
+- assign-a-formula-to-a-named-range-during-the-loading-process-of-an-xlsx-workbook.cs
