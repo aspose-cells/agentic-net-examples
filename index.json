@@ -1381,6 +1381,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-console-output-in-fods-format-representing-the-spreadsheet-data-accurat.cs",
+      "title": "Generate console output in FODS format representing the spreadsheet data accurately for downstream processing."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-console-output-saved-as-a-pdf-document-preserving-formatting-layout-and.cs",
       "title": "Generate console output saved as a PDF document, preserving formatting, layout, and content integrity."
     },
