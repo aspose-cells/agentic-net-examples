@@ -4766,6 +4766,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "open-a-workbook-using-any-supported-file-format-to-enable-subsequent-xml-data-ex.cs",
+      "title": "Open a workbook using any supported file format to enable subsequent XML data export."
+    },
+    {
+      "category": "xml-maps",
       "file": "persist-the-workbook-in-the-chosen-output-format-after-successfully-importing-th.cs",
       "title": "Persist the workbook in the chosen output format after successfully importing the XML map."
     },
