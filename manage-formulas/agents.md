@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - configure-a-shared-formula-during-loading-of-an-xlsx-workbook-according-to-the-s.cs
 - apply-a-shared-formula-to-a-workbook-loaded-from-an-xlsx-file-during-its-initial.cs
 - set-the-limit-for-rows-using-a-shared-formula-when-loading-an-xlsx-workbook.cs
+- handle-duplicate-specify-maximum-rows-of-shared-formula-headings-when-loading-an.cs
