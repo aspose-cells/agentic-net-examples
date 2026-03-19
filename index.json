@@ -2736,6 +2736,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-new-cell-range-within-an-xlsx-worksheet-to-manage-and-manipulate-specif.cs",
+      "title": "Create a new cell range within an XLSX worksheet to manage and manipulate specific groups of cells."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-style-object-with-defined-formatting-attributes-to-manage-ranges-within.cs",
       "title": "Create a style object with defined formatting attributes to manage ranges within an XLSX workbook."
     },
