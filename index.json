@@ -2816,6 +2816,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "populate-a-range-of-cells-in-the-first-worksheet-of-an-xlsx-file-with-the-specif.cs",
+      "title": "Populate a range of cells in the first worksheet of an XLSX file with the specified data."
+    },
+    {
+      "category": "managing-ranges",
       "file": "populate-a-range-of-cells-in-the-first-worksheet-of-an-xlsx-workbook-with-the-sp.cs",
       "title": "Populate a range of cells in the first worksheet of an XLSX workbook with the specified data values."
     },
