@@ -726,6 +726,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-write-protection-to-an-input-xlsx-workbook-while-setting-the-author-metada.cs",
+      "title": "Apply write protection to an input XLSX workbook while setting the author metadata property."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs",
       "title": "Implement encryption and decryption of ODS files, accepting XLSX data as the source format."
     },
