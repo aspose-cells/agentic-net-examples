@@ -4876,6 +4876,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "toggle-visibility-of-worksheet-tabs-in-a-workbook-programmatically-using-the-app.cs",
+      "title": "Toggle visibility of worksheet tabs in a workbook programmatically using the appropriate API methods."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "transfer-selected-worksheets-from-one-workbook-to-another-workbook-maintaining-c.cs",
       "title": "Transfer selected worksheets from one workbook to another workbook, maintaining cell data, formulas, and formatting."
     },
