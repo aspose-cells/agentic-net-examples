@@ -4731,6 +4731,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-rendering-component-to-suppress-vertical-and-horizontal-scrollbars.cs",
+      "title": "Configure the rendering component to suppress vertical and horizontal scrollbars for a cleaner UI."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-viewer-to-display-horizontal-and-vertical-scroll-bars-when-content.cs",
       "title": "Configure the viewer to display horizontal and vertical scroll bars when content exceeds the visible area."
     },
