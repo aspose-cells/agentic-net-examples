@@ -786,6 +786,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-a-password-to-secure-the-vba-project-within-an-xlsb-workbook-restricting-u.cs",
+      "title": "Apply a password to secure the VBA project within an XLSB workbook, restricting unauthorized macro access."
+    },
+    {
+      "category": "macro-project",
       "file": "apply-a-password-to-securely-protect-the-vba-project-within-an-xltm-workbook-pre.cs",
       "title": "Apply a password to securely protect the VBA project within an XLTM workbook, preventing unauthorized access."
     },
