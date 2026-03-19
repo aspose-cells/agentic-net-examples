@@ -2371,6 +2371,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-an-xlsm-json-payload-into-an-excel-workbook-using-default-conversion-s.cs",
+      "title": "Transform an XLSM JSON payload into an Excel workbook using default conversion settings automatically."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-an-xlsm-workbook-into-a-json-representation-preserving-cell-data-formu.cs",
       "title": "Transform an XLSM workbook into a JSON representation, preserving cell data, formulas, and worksheet structure."
     },
