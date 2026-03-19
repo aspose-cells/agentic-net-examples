@@ -1081,6 +1081,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-whether-a-vba-project-is-password-protected-and-view-locked-by-analyzin.cs",
+      "title": "Validate whether a VBA project is password-protected and view-locked by analyzing its CSV representation."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-whether-a-vba-project-in-an-xlsm-workbook-is-protected-and-locked-for-vie.cs",
       "title": "Verify whether a VBA project in an XLSM workbook is protected and locked for viewing."
     },
