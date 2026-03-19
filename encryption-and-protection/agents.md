@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - identify-typical-use-cases-for-processing-xlsx-worksheets-within-net-application.cs
 - provide-example-source-code-illustrating-creation-and-manipulation-of-xlsx-sprea.cs
 - encrypt-an-xlsx-workbook-file-using-microsoft-excels-standard-encryption-to-prot.cs
+- encrypt-an-xlsx-workbook-using-net-apis-specifying-password-protection-and-encry.cs
