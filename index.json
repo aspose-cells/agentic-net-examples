@@ -4743,6 +4743,11 @@
       "category": "xml-maps",
       "file": "validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs",
       "title": "Validate all necessary prerequisites and configuration settings before initiating the import of an XML map."
+    },
+    {
+      "category": "xml-maps",
+      "file": "verify-the-implemented-xml-map-import-workflow-for-overall-correctness-and-compl.cs",
+      "title": "Verify the implemented XML map import workflow for overall correctness and compliance with specifications."
     }
   ]
 }
