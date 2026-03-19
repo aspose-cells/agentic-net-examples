@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-structured-data-bin.cs
 - import-the-xml-map-into-the-workbook-by-loading-the-xml-schema-file-as-step-two.cs
 - load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-data-binding-within.cs
+- validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs
