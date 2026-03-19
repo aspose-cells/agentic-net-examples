@@ -259,3 +259,4 @@ Output files are written to the working directory.
 - validate-the-digital-signature-of-vba-code-in-c-programmatically-when-processing.cs
 - validate-the-digital-signature-of-vba-code-in-c-correctly-when-processing-mhtml-.cs
 - validate-the-vba-codes-digital-signature-in-c-by-parsing-and-evaluating-the-corr.cs
+- validate-the-digital-signature-of-vba-code-embedded-in-an-sxc-file-to-ensure-its.cs
