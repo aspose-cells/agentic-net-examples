@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-data-binding-within.cs
 - validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs
 - load-a-workbook-from-any-supported-file-format-to-enable-subsequent-xml-map-impo.cs
+- load-a-workbook-and-import-the-xml-map-from-an-xml-schema-into-it.cs
