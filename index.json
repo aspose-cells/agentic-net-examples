@@ -2271,6 +2271,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-an-xlsx-workbook-insert-the-required-formulas-and-compute-their-results-imm.cs",
+      "title": "Load an XLSX workbook, insert the required formulas, and compute their results immediately upon loading."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-xlsx-workbook-using-english-formatted-formulas-such-as-sum-instead-of-lo.cs",
       "title": "Load an XLSX workbook using English-formatted formulas, such as\u202f=SUM(), instead of locale-specific function names."
     },
