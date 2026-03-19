@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - associate-a-specified-cell-range-with-an-xml-element-by-invoking-xmlmapadd-on-th.cs
 - perform-a-cell-area-query-using-a-specified-xml-map-path-after-loading-the-workb.cs
 - validate-required-conditions-prior-to-retrieving-cell-ranges-associated-with-a-s.cs
+- retrieve-xml-map-paths-by-accessing-a-worksheet-within-the-current-loaded-workbo.cs
