@@ -2671,6 +2671,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-source-range-to-a-target-range-within-an-xlsx-workbook-managing-the-range.cs",
+      "title": "Copy a source range to a target range within an XLSX workbook, managing the range operation programmatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-only-the-cell-values-of-a-specified-range-within-an-xlsx-workbook-preservin.cs",
       "title": "Copy only the cell values of a specified range within an XLSX workbook, preserving no formatting or formulas."
     },
