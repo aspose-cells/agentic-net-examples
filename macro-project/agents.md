@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - export-the-vba-certificate-to-a-file-or-stream-using-txt-format-for-downstream-p.cs
 - export-a-vba-certificate-to-either-a-file-or-a-stream-in-c-employing-tab-formatt.cs
 - export-a-vba-certificate-to-a-file-or-stream-in-c-utilizing-html-output-format.cs
+- export-a-vba-certificate-to-a-file-or-stream-in-c-using-the-mht-format.cs
