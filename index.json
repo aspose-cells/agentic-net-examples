@@ -1736,6 +1736,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-the-validity-of-a-vba-codes-digital-signature-using-a-specified-tsv-file.cs",
+      "title": "Verify the validity of a VBA code's digital signature using a specified TSV file."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-the-validity-of-a-vba-codes-digital-signature-within-an-xlsx-workbook-fil.cs",
       "title": "Verify the validity of a VBA code's digital signature within an XLSX workbook file."
     },
