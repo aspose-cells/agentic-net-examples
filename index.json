@@ -4781,6 +4781,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "obtain-the-loaded-workbooks-xml-map-and-extract-the-root-element-name-from-it.cs",
+      "title": "Obtain the loaded workbook's XML map and extract the root element name from it."
+    },
+    {
+      "category": "xml-maps",
       "file": "open-a-workbook-using-any-supported-file-format-to-enable-subsequent-xml-data-ex.cs",
       "title": "Open a workbook using any supported file format to enable subsequent XML data export."
     },
