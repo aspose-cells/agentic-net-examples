@@ -2076,6 +2076,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-json-file-into-an-excel-workbook-mapping-data-structures-to-spreadsh.cs",
+      "title": "Transform a JSON file into an Excel workbook, mapping data structures to spreadsheet rows and columns."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-json-representation-of-an-xlsm-workbook-into-a-native-excel-file-whi.cs",
       "title": "Transform a JSON representation of an XLSM workbook into a native Excel file while preserving all macros and data."
     },
