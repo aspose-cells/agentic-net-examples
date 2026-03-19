@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-and-programmatically-insert-additional-worksheets-specifyi.cs
 - programmatically-insert-additional-worksheets-into-a-designer-spreadsheet-ensuri.cs
 - retrieve-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-enabling-direc.cs
+- delete-a-worksheet-from-a-workbook-by-specifying-its-sheet-name-ensuring-associa.cs
