@@ -4711,6 +4711,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-the-workbooks-linked-xml-data-to-an-external-file-while-preserving-data-i.cs",
+      "title": "Export the workbook's linked XML data to an external file while preserving data integrity and relationships."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-the-xml-data-associated-with-the-defined-xml-map-to-an-output-file-as-ste.cs",
       "title": "Export the XML data associated with the defined XML map to an output file as step three."
     },
