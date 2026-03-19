@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - programmatically-switch-between-workbook-view-modes-such-as-normal-page-layout-a.cs
 - implement-functionality-to-programmatically-open-edit-and-save-microsoft-excel-w.cs
 - set-or-get-the-worksheets-zoom-factor-to-modify-the-spreadsheets-visual-display-.cs
+- apply-freeze-panes-to-keep-selected-rows-and-columns-visible-during-worksheet-sc.cs
