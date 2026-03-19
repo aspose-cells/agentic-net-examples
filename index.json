@@ -1226,6 +1226,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-file-or-stream-in-c-utilizing-html-output-format.cs",
+      "title": "Export a VBA certificate to a file or stream in C# utilizing HTML output format."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-file-or-stream-in-csv-format-preserving-required-d.cs",
       "title": "Export a VBA certificate to a file or stream in CSV format, preserving required data fields."
     },
