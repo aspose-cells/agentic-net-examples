@@ -811,6 +811,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "set-up-signature-line-attributes-for-an-input-xlsx-workbook-including-signer-det.cs",
+      "title": "Set up signature line attributes for an input XLSX workbook, including signer details and visual appearance."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-the-digital-signature-of-an-xlsx-workbook-before-processing-to-ensure-i.cs",
       "title": "Validate the digital signature of an XLSX workbook before processing to ensure integrity and authenticity."
     },
