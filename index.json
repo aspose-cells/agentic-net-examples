@@ -2026,6 +2026,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-a-dif-formatted-json-file-into-an-xlsx-workbook-while-preserving-all-c.cs",
+      "title": "Transform a DIF-formatted JSON file into an XLSX workbook while preserving all cell data fidelity."
+    },
+    {
+      "category": "working-with-json",
       "file": "transform-a-dif-json-data-file-into-a-csv-format-while-preserving-data-fidelity-.cs",
       "title": "Transform a DIF JSON data file into a CSV format while preserving data fidelity and column alignment."
     },
