@@ -805,6 +805,11 @@
       "title": "Manipulate the VBA modules of an Excel macro-enabled workbook while operating with XLTX template files."
     },
     {
+      "category": "macro-project",
+      "file": "programmatically-insert-a-vba-module-into-a-workbook-using-c-and-the-spreadsheet.cs",
+      "title": "Programmatically insert a VBA module into a workbook using C# and the SpreadsheetML file format."
+    },
+    {
       "category": "manage-workbook",
       "file": "access-the-custom-xml-part-in-the-spreadsheet-and-perform-required-modifications.cs",
       "title": "Access the custom XML part in the spreadsheet and perform required modifications programmatically as needed."
