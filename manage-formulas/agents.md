@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - investigate-advanced-loading-options-for-xlsx-workbooks-including-custom-data-ha.cs
 - observe-the-considerations-outlined-in-important-to-know-for-formulas-when-loadi.cs
 - observe-the-important-considerations-outlined-in-the-important-to-know-section-w.cs
+- configure-the-workbooks-formula-calculation-mode-to-a-specific-setting-during-lo.cs
