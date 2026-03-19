@@ -241,3 +241,4 @@ Output files are written to the working directory.
 - generate-xps-formatted-output-from-the-console-application-and-write-it-to-the-s.cs
 - render-document-content-as-oxps-and-write-the-resulting-data-directly-to-the-con.cs
 - verify-whether-vba-code-is-digitally-signed-by-inspecting-its-associated-pdf-sig.cs
+- validate-whether-vba-code-is-digitally-signed-and-return-the-verification-result.cs
