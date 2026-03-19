@@ -776,6 +776,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-a-password-to-an-excel-workbooks-vba-project-by-providing-the-credentials-.cs",
+      "title": "Apply a password to an Excel workbook\u2019s VBA project by providing the credentials in JSON format."
+    },
+    {
+      "category": "macro-project",
       "file": "apply-a-password-to-an-excel-workbooks-vba-project-in-c-retrieving-the-password-.cs",
       "title": "Apply a password to an Excel workbook\u2019s VBA project in C#, retrieving the password from a TSV\u2011formatted source."
     },
