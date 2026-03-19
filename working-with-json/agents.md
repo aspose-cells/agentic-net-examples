@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - transform-an-sxc-json-file-into-an-excel-workbook-while-preserving-data-structur.cs
 - transform-a-fods-formatted-json-file-into-an-xlsx-workbook-preserving-data-fidel.cs
 - transform-a-dif-formatted-json-file-into-an-xlsx-workbook-while-preserving-all-c.cs
+- transform-a-prnformatted-json-file-into-an-xlsx-workbook-mapping-data-fields-to-.cs
