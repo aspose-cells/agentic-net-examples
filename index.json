@@ -2766,6 +2766,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-only-the-formatting-of-a-specified-range-within-an-xlsx-workbook-without-al.cs",
+      "title": "Copy only the formatting of a specified range within an XLSX workbook without altering cell values."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-range-data-along-with-its-formatting-between-worksheets-in-an-xlsx-workbook.cs",
       "title": "Copy range data along with its formatting between worksheets in an XLSX workbook, preserving style attributes."
     },
