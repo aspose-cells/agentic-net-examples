@@ -2191,6 +2191,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-the-formulatext-function-to-evaluate-cell-formulas-when-loading-a-workbook.cs",
+      "title": "Apply the FormulaText function to evaluate cell formulas when loading a workbook in XLSX format."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-the-listed-usage-scenarios-while-programmatically-loading-a-workbook-from-.cs",
       "title": "Apply the listed usage scenarios while programmatically loading a workbook from an XLSX file."
     },
