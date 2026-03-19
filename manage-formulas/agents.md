@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-ensuring-that-all-formulas-are-expressed-using-english-us-.cs
 - when-loading-an-xlsx-workbook-verify-that-all-function-parameters-are-delimited-.cs
 - load-an-xlsx-workbook-using-english-formatted-formulas-such-as-sum-instead-of-lo.cs
+- apply-the-setting-formulas-notice-for-nonenglish-users-configuration-when-loadin.cs
