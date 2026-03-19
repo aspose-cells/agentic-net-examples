@@ -711,6 +711,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-a-robust-encryption-algorithm-to-protect-xlsx-files-ensuring-data-confiden.cs",
+      "title": "Apply a robust encryption algorithm to protect XLSX files, ensuring data confidentiality and integrity."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-aes-encryption-and-assign-a-password-to-xlsx-workbooks-to-restrict-unautho.cs",
       "title": "Apply AES encryption and assign a password to XLSX workbooks to restrict unauthorized access."
     },
