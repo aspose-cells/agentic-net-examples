@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - optimize-the-cellcalculate-execution-speed-when-loading-an-xlsx-workbook-to-redu.cs
 - optimize-workbook-loading-in-xlsx-format-to-reduce-the-execution-time-of-the-cel.cs
 - identify-circular-references-during-the-loading-of-an-xlsx-workbook-as-described.cs
+- display-the-introductory-information-defined-in-the-introduction-section-when-op.cs
