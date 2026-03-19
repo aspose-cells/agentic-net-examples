@@ -2661,6 +2661,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "add-data-to-cells-within-defined-ranges-on-the-first-worksheet-of-an-xlsx-workbo.cs",
+      "title": "Add data to cells within defined ranges on the first worksheet of an XLSX workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-cell-range-and-paste-it-into-an-xlsx-worksheet-with-specified-paste-optio.cs",
       "title": "Copy a cell range and paste it into an XLSX worksheet with specified paste options."
     },
