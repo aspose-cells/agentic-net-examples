@@ -886,6 +886,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "invoke-save-as-and-enable-the-save-with-password-option-when-exporting-to-xlsx-f.cs",
+      "title": "Invoke Save As and enable the Save With Password option when exporting to XLSX format."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "programmatically-generate-read-and-modify-microsoft-excel-xlsx-workbooks-using-t.cs",
       "title": "Programmatically generate, read, and modify Microsoft Excel (XLSX) workbooks using the provided .NET API."
     },
