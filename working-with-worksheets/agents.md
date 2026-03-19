@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - duplicate-selected-worksheets-within-a-workbook-preserving-formulas-formatting-a.cs
 - transfer-selected-worksheets-from-one-workbook-to-another-workbook-maintaining-c.cs
 - reorder-worksheets-inside-a-workbook-by-moving-specified-sheets-to-new-positions.cs
+- duplicate-or-relocate-worksheet-objects-within-a-workbook-maintaining-cell-data-.cs
