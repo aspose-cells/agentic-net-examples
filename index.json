@@ -801,6 +801,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "decrypt-an-encrypted-ods-file-using-net-and-convert-the-output-to-xlsx-format.cs",
+      "title": "Decrypt an encrypted ODS file using\u202f.NET and convert the output to XLSX format."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "decrypt-an-xlsx-workbook-using-the-librarys-decryption-api-while-maintaining-dat.cs",
       "title": "Decrypt an XLSX workbook using the library's decryption API while maintaining data integrity and preserving original formatting."
     },
