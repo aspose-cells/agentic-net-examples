@@ -2896,6 +2896,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "relocate-a-specified-cell-range-within-an-xlsx-worksheet-updating-references-and.cs",
+      "title": "Relocate a specified cell range within an XLSX worksheet, updating references and preserving worksheet integrity."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-a-ranges-address-cell-count-offset-full-column-and-full-row-information.cs",
       "title": "Retrieve a range's address, cell count, offset, full column and full row information for XLSX worksheets."
     },
