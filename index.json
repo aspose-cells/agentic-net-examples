@@ -1196,6 +1196,11 @@
     },
     {
       "category": "macro-project",
+      "file": "include-a-library-reference-in-a-workbooks-vba-project-by-importing-the-referenc.cs",
+      "title": "Include a library reference in a workbook\u2019s VBA project by importing the reference definition from a CSV file."
+    },
+    {
+      "category": "macro-project",
       "file": "include-a-library-reference-in-the-vba-project-of-an-xls-workbook-to-enable-exte.cs",
       "title": "Include a library reference in the VBA project of an XLS workbook to enable external functionality."
     },
