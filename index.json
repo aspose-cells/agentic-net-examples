@@ -2186,6 +2186,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-an-xlsx-workbook-using-english-formatted-formulas-such-as-sum-instead-of-lo.cs",
+      "title": "Load an XLSX workbook using English-formatted formulas, such as\u202f=SUM(), instead of locale-specific function names."
+    },
+    {
+      "category": "manage-formulas",
       "file": "provide-two-guidelines-for-nonenglish-users-to-correctly-create-formulas-when-lo.cs",
       "title": "Provide two guidelines for non\u2011English users to correctly create formulas when loading an XLSX workbook."
     },
