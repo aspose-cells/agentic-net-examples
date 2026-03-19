@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - decrypt-an-xlsx-workbook-using-the-librarys-decryption-api-while-maintaining-dat.cs
 - select-the-desired-encryption-algorithm-for-an-xlsx-workbook-and-validate-the-pr.cs
 - apply-aes-encryption-and-assign-a-password-to-xlsx-workbooks-to-restrict-unautho.cs
+- programmatically-generate-read-and-modify-microsoft-excel-xlsx-workbooks-using-t.cs
