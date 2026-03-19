@@ -4776,6 +4776,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs",
+      "title": "Remove every page break from the worksheet to ensure continuous printing without pagination interruptions."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "reorder-worksheets-inside-a-workbook-by-moving-specified-sheets-to-new-positions.cs",
       "title": "Reorder worksheets inside a workbook by moving specified sheets to new positions within the same file."
     },
