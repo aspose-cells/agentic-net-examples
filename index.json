@@ -4736,6 +4736,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "move-or-copy-worksheets-within-or-between-workbooks-through-excel-automation-whi.cs",
+      "title": "Move or copy worksheets within or between workbooks through Excel automation while preserving formulas and formatting."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-duplicate-or-relocate-worksheets-within-an-excel-workbook-using.cs",
       "title": "Programmatically duplicate or relocate worksheets within an Excel workbook using the .NET API while preserving data integrity."
     },
