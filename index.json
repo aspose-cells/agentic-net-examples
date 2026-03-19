@@ -911,6 +911,11 @@
     },
     {
       "category": "macro-project",
+      "file": "determine-whether-a-vba-project-is-protected-and-marked-as-locked-for-viewing-us.cs",
+      "title": "Determine whether a VBA project is protected and marked as locked for viewing using C# with SpreadsheetML."
+    },
+    {
+      "category": "macro-project",
       "file": "determine-whether-a-vba-project-is-protected-and-return-the-result-in-json-forma.cs",
       "title": "Determine whether a VBA Project is protected and return the result in JSON format."
     },
