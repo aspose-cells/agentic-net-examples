@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - copy-a-source-cell-range-to-a-target-range-within-an-xlsx-workbook-preserving-da.cs
 - copy-a-cell-range-and-paste-it-into-an-xlsx-worksheet-with-specified-paste-optio.cs
 - copy-only-the-cell-values-of-a-specified-range-within-an-xlsx-workbook-preservin.cs
+- copy-row-heights-from-a-source-range-to-a-destination-range-when-working-with-xl.cs
