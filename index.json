@@ -881,6 +881,11 @@
     },
     {
       "category": "macro-project",
+      "file": "bind-a-macro-to-a-form-control-within-a-pdf-document-to-enable-automated-interac.cs",
+      "title": "Bind a macro to a form control within a PDF document to enable automated interaction."
+    },
+    {
+      "category": "macro-project",
       "file": "bind-a-vba-macro-to-a-form-control-in-an-xltm-workbook-to-enable-interactive-fun.cs",
       "title": "Bind a VBA macro to a form control in an XLTM workbook to enable interactive functionality."
     },
