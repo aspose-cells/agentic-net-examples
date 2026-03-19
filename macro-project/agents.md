@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - export-the-vba-certificate-to-a-file-or-stream-in-xlsx-format-while-preserving-i.cs
 - export-the-vba-project-certificate-to-a-file-or-stream-in-xlsm-format-preserving.cs
 - export-the-vba-project-certificate-programmatically-to-a-file-or-stream-in-xltm-.cs
+- export-a-vba-certificate-to-a-file-or-stream-in-xlsb-format-preserving-its-integ.cs
