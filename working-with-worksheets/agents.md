@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - specify-the-initial-page-number-for-a-worksheets-print-layout-to-control-paginat.cs
 - configure-page-margins-for-a-worksheet-to-control-the-printable-area-spacing-and.cs
 - define-custom-top-bottom-left-and-right-margins-for-a-worksheets-printed-page-la.cs
+- center-the-selected-worksheet-or-range-on-the-printed-page-to-ensure-symmetrical.cs
