@@ -4906,6 +4906,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-print-area-for-a-worksheet-programmatically-specifying-cell-range-bound.cs",
+      "title": "Define a print area for a worksheet programmatically, specifying cell range boundaries for printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "define-a-scaling-factor-to-adjust-the-dimensions-of-exported-content-proportiona.cs",
       "title": "Define a scaling factor to adjust the dimensions of exported content proportionally during generation."
     },
