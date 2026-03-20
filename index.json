@@ -3556,6 +3556,11 @@
     },
     {
       "category": "slicer",
+      "file": "add-a-slicer-to-the-worksheet-and-export-the-workbook-to-xlsb-format-using-the-a.cs",
+      "title": "Add a slicer to the worksheet and export the workbook to XLSB format using the appropriate API."
+    },
+    {
+      "category": "slicer",
       "file": "add-a-slicer-to-the-worksheet-and-subsequently-save-the-workbook-as-an-xlsx-file.cs",
       "title": "Add a slicer to the worksheet and subsequently save the workbook as an XLSX file."
     },
