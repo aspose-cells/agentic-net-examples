@@ -3606,6 +3606,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-example-xlsx-workbook-and-programmatically-perform-slicer-creation-confi.cs",
+      "title": "Load an example XLSX workbook and programmatically perform slicer creation, configuration, and manipulation operations."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
