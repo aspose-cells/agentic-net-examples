@@ -5136,6 +5136,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-any-defined-print-area-from-the-workbook-to-revert-to-default-printing-bo.cs",
+      "title": "Remove any defined print area from the workbook to revert to default printing boundaries."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-any-existing-printersettings-configuration-from-all-worksheets-within-an-.cs",
       "title": "Remove any existing PrinterSettings configuration from all worksheets within an Excel workbook programmatically before further processing."
     },
