@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-render-its-slicer-elements-for-visualization-within-th.cs
 - load-an-xlsx-workbook-render-its-worksheet-slicer-and-export-the-result-as-an-im.cs
 - render-the-slicer-export-the-resulting-image-and-then-load-the-corresponding-xls.cs
+- refresh-a-slicer-by-programmatically-selecting-its-items-when-loading-an-xlsx-wo.cs
