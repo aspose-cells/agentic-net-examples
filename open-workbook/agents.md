@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-specified-local-file-path-assuming-the-default-xlsx-forma.cs
 - instantiate-a-workbook-by-reading-from-a-stream-interpreting-the-data-as-an-xlsx.cs
 - open-an-xlsx-workbook-using-loadoptions-configured-to-load-only-the-workbooks-da.cs
+- instantiate-a-workbook-loader-that-applies-a-custom-loadfilter-to-import-only-vi.cs
