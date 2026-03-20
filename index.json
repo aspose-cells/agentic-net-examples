@@ -3076,6 +3076,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-spreadsheet-file-while-excluding-all-chart-objects-from-the-workbook-duri.cs",
+      "title": "Load a spreadsheet file while excluding all chart objects from the workbook during import."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-and-apply-defined-name-filters-to-retrieve-specific-ranges-accor.cs",
       "title": "Load a workbook and apply defined-name filters to retrieve specific ranges according to usage scenarios."
     },
