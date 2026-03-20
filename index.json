@@ -2961,6 +2961,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "instantiate-a-workbook-by-reading-from-a-stream-interpreting-the-data-as-an-xlsx.cs",
+      "title": "Instantiate a workbook by reading from a stream, interpreting the data as an XLSX file using default settings."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-a-specified-local-file-path-assuming-the-default-xlsx-forma.cs",
       "title": "Load a workbook from a specified local file path, assuming the default XLSX format."
     },
