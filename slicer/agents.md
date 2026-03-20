@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-generate-a-pdf-rendering-of-its-slicer-using-provided-.cs
 - update-slicer-settings-in-a-loaded-xlsx-workbook-by-programmatically-changing-th.cs
 - adjust-slicer-settings-in-a-loaded-xlsx-workbook-to-demonstrate-various-usage-sc.cs
+- load-an-xlsx-workbook-and-programmatically-adjust-slicer-properties-using-the-pr.cs
