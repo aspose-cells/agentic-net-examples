@@ -3671,6 +3671,11 @@
     },
     {
       "category": "slicer",
+      "file": "modify-the-workbooks-slicer-export-the-workbook-to-an-xlsx-file-and-subsequently.cs",
+      "title": "Modify the workbook\u2019s slicer, export the workbook to an XLSX file, and subsequently reload the saved file."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
