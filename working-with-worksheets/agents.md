@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - document-the-various-error-types-that-may-be-raised-by-the-api-including-their-c.cs
 - identify-and-convert-numeric-values-stored-as-text-in-spreadsheet-cells-to-prope.cs
 - configure-worksheet-page-settings-including-orientation-margins-scaling-and-prin.cs
+- set-or-retrieve-the-page-orientation-portrait-or-landscape-for-worksheets-within.cs
