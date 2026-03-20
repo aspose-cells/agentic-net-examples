@@ -3615,6 +3615,11 @@
       "title": "Provide sample code that loads an XLSX workbook and adds a slicer to a worksheet."
     },
     {
+      "category": "slicer",
+      "file": "provide-sample-code-that-loads-an-xlsx-workbook-and-applies-formatting-to-its-sl.cs",
+      "title": "Provide sample code that loads an XLSX workbook and applies formatting to its slicer controls."
+    },
+    {
       "category": "working-with-html",
       "file": "alter-the-html-hyperlink-target-type-when-converting-an-xlsx-workbook-to-html-ou.cs",
       "title": "Alter the HTML hyperlink target type when converting an XLSX workbook to HTML output."
