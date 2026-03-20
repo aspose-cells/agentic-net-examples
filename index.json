@@ -4836,6 +4836,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-the-display-of-row-and-column-header-labels-in-the-worksheet-view-to-impr.cs",
+      "title": "Enable the display of row and column header labels in the worksheet view to improve navigation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-visibility-of-worksheet-tabs-in-the-workbook-view-to-allow-user-navigatio.cs",
       "title": "Enable visibility of worksheet tabs in the workbook view to allow user navigation within the application."
     },
