@@ -4816,6 +4816,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "document-the-various-error-types-that-may-be-raised-by-the-api-including-their-c.cs",
+      "title": "Document the various error types that may be raised by the API, including their causes and handling strategies."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "duplicate-or-relocate-worksheet-objects-within-a-workbook-maintaining-cell-data-.cs",
       "title": "Duplicate or relocate worksheet objects within a workbook, maintaining cell data, formatting, and references."
     },
