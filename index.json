@@ -4736,6 +4736,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "clear-all-printer-configurations-from-each-worksheet-in-an-excel-workbook-resett.cs",
+      "title": "Clear all printer configurations from each worksheet in an Excel workbook, resetting default print options."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-a-worksheet-to-display-its-formulas-instead-of-calculated-values-durin.cs",
       "title": "Configure a worksheet to display its formulas instead of calculated values during data rendering."
     },
