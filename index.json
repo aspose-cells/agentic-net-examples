@@ -5106,6 +5106,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "render-the-worksheet-to-a-printable-format-scaling-the-entire-sheet-to-fit-on-a-.cs",
+      "title": "Render the worksheet to a printable format, scaling the entire sheet to fit on a single page."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "reorder-worksheets-inside-a-workbook-by-moving-specified-sheets-to-new-positions.cs",
       "title": "Reorder worksheets inside a workbook by moving specified sheets to new positions within the same file."
     },
