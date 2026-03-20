@@ -4736,6 +4736,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-fittopages-options-to-scale-worksheet-output-to-a-specified-number.cs",
+      "title": "Configure the FitToPages options to scale worksheet output to a specified number of pages during rendering."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-rendering-component-to-suppress-vertical-and-horizontal-scrollbars.cs",
       "title": "Configure the rendering component to suppress vertical and horizontal scrollbars for a cleaner UI."
     },
