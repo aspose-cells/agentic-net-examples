@@ -2981,6 +2981,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-csv-file-into-a-workbook-ensuring-proper-handling-of-special-characters-a.cs",
+      "title": "Load a CSV file into a workbook, ensuring proper handling of special characters and correct encoding."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-legacy-excel-9550-workbook-in-xls-format-programmatically-by-configuring-.cs",
       "title": "Load a legacy Excel\u202f95/5.0 workbook in XLS format programmatically by configuring appropriate LoadOptions."
     },
