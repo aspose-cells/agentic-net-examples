@@ -4301,6 +4301,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "read-the-chart-collection-from-an-xlsx-workbook-and-generate-image-representatio.cs",
+      "title": "Read the chart collection from an XLSX workbook and generate image representations for each chart."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-worksheet-from-an-xlsx-file-as-an-image-preview-maintaining-cell-format.cs",
       "title": "Render a worksheet from an XLSX file as an image preview, maintaining cell formatting and layout."
     },
