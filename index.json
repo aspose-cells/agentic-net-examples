@@ -3166,6 +3166,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-using-memory-optimization-techniques-to-efficiently-handle-large.cs",
+      "title": "Load a workbook using memory optimization techniques to efficiently handle large data sets in .NET."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-an-excel-972003-workbook-in-xls-format-by-initializing-and-applying-appropr.cs",
       "title": "Load an Excel\u202f97\u20112003 workbook in XLS format by initializing and applying appropriate LoadOptions settings."
     },
