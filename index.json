@@ -3166,6 +3166,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-using-general-memoryoptimization-techniques-to-minimize-ram-usag.cs",
+      "title": "Load a workbook using general memory\u2011optimization techniques to minimize RAM usage during processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-using-memory-optimization-techniques-to-efficiently-handle-large.cs",
       "title": "Load a workbook using memory optimization techniques to efficiently handle large data sets in .NET."
     },
