@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - initialize-a-workbook-via-the-lightcells-api-using-an-eventdriven-approach-to-ef.cs
 - initialize-a-workbook-with-the-lightcells-api-to-efficiently-write-a-large-excel.cs
 - initialize-a-workbook-using-the-lightcells-api-to-efficiently-read-large-xlsx-fi.cs
+- instantiate-a-workbook-using-the-lightcells-api-to-efficiently-write-a-large-exc.cs
