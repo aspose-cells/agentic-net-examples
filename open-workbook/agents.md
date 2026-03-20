@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - convert-a-large-workbook-to-pdf-employing-the-interruptmonitor-to-handle-process.cs
 - cancel-a-workbook-conversion-operation-using-interruptmonitor-when-the-processin.cs
 - identify-scenarios-where-interruptmonitor-can-be-employed-to-abort-a-conversion-.cs
+- run-the-provided-sample-to-abort-a-conversion-operation-by-employing-the-interru.cs
