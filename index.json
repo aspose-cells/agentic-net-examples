@@ -3661,6 +3661,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-and-programmatically-adjust-slicer-properties-using-the-pr.cs",
+      "title": "Load an XLSX workbook and programmatically adjust slicer properties using the provided sample code."
+    },
+    {
+      "category": "slicer",
       "file": "load-an-xlsx-workbook-and-programmatically-detach-a-slicer-from-its-associated-p.cs",
       "title": "Load an XLSX workbook and programmatically detach a slicer from its associated pivot table."
     },
