@@ -4741,6 +4741,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-document-headers-and-footers-specifying-content-layout-formatting-page.cs",
+      "title": "Configure document headers and footers, specifying content, layout, formatting, page numbers, and dynamic fields for each section."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-page-margins-for-a-worksheet-to-control-the-printable-area-spacing-and.cs",
       "title": "Configure page margins for a worksheet to control the printable area, spacing, and overall layout appearance."
     },
