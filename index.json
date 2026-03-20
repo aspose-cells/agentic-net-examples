@@ -3031,6 +3031,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-collect-any-processing-warnings-and-export-it-to-an-xlsx-file.cs",
+      "title": "Load a workbook, collect any processing warnings, and export it to an XLSX file."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-directly-from-a-plain-text-file-interpreting-its-content-into-st.cs",
       "title": "Load a workbook directly from a plain text file, interpreting its content into structured worksheet data."
     },
