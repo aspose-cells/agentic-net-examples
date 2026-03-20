@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - load-a-workbook-collect-any-processing-warnings-and-export-it-to-an-xlsx-file.cs
 - retrieve-and-expose-load-time-warnings-generated-when-parsing-a-workbook-file-fo.cs
 - identify-scenarios-where-loading-a-workbook-may-generate-warnings-such-as-corrup.cs
+- provide-sample-code-that-retrieves-warnings-generated-while-loading-a-workbook-e.cs
