@@ -3761,6 +3761,11 @@
     },
     {
       "category": "slicer",
+      "file": "render-workbook-slicer-elements-into-the-pdf-output-when-converting-and-saving-t.cs",
+      "title": "Render workbook slicer elements into the PDF output when converting and saving the workbook as a PDF file."
+    },
+    {
+      "category": "slicer",
       "file": "unselect-slicer-items-automatically-when-loading-an-xlsx-workbook-to-refresh-the.cs",
       "title": "Unselect slicer items automatically when loading an XLSX workbook to refresh the slicer state."
     },
