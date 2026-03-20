@@ -3016,6 +3016,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-a-csv-source-then-cleanse-it-by-substituting-any-invalid-ch.cs",
+      "title": "Load a workbook from a CSV source, then cleanse it by substituting any invalid characters."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-a-delimited-text-file-using-a-specified-custom-separator-ch.cs",
       "title": "Load a workbook from a delimited text file using a specified custom separator character."
     },
