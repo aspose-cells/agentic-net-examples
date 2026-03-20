@@ -4931,6 +4931,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "place-a-specified-image-into-the-documents-header-or-footer-while-maintaining-la.cs",
+      "title": "Place a specified image into the document\u2019s header or footer while maintaining layout consistency."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-add-delete-and-query-worksheet-page-breaks-to-control-paginatio.cs",
       "title": "Programmatically add, delete, and query worksheet page breaks to control pagination during workbook processing."
     },
