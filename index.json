@@ -3116,6 +3116,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-while-loading-the-file-and-use-loaddatafilteroptionsdefinednames.cs",
+      "title": "Open a workbook while loading the file and use LoadDataFilterOptions.DefinedNames to filter defined names."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-using-loadoptions-configured-to-load-only-the-workbooks-da.cs",
       "title": "Open an XLSX workbook using LoadOptions configured to load only the workbook's data without formatting."
     },
