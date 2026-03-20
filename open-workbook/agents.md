@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - load-a-workbook-using-memory-optimization-techniques-to-efficiently-handle-large.cs
 - load-a-workbook-using-general-memoryoptimization-techniques-to-minimize-ram-usag.cs
 - open-a-workbook-applying-recommended-memoryoptimization-guidelines-to-minimize-r.cs
+- instantiate-a-workbook-in-readonly-mode-optimized-for-minimal-memory-usage-when-.cs
