@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - create-a-concise-overview-describing-the-librarys-core-capabilities-and-primary-.cs
 - explain-the-benefits-of-applying-fittopageswide-and-fittopagestall-settings-when.cs
 - configure-the-worksheets-print-settings-to-fit-the-content-within-a-specified-nu.cs
+- render-a-worksheet-so-that-it-prints-on-a-single-page-scaling-its-contents-appro.cs
