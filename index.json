@@ -3586,6 +3586,11 @@
     },
     {
       "category": "slicer",
+      "file": "demonstrate-how-to-load-an-xlsx-workbook-and-programmatically-update-its-slicer-.cs",
+      "title": "Demonstrate how to load an XLSX workbook and programmatically update its slicer settings using sample code."
+    },
+    {
+      "category": "slicer",
       "file": "demonstrate-possible-usage-scenarios-for-a-format-slicer-when-loading-an-xlsx-wo.cs",
       "title": "Demonstrate possible usage scenarios for a format slicer when loading an XLSX workbook in .NET."
     },
