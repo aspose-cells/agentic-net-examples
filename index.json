@@ -5006,6 +5006,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-or-query-a-worksheets-paper-size-to-control-printing-dimensions-for-generate.cs",
+      "title": "Set or query a worksheet\u2019s paper size to control printing dimensions for generated spreadsheet files."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-or-retrieve-the-page-orientation-portrait-or-landscape-for-worksheets-within.cs",
       "title": "Set or retrieve the page orientation (portrait or landscape) for worksheets within a spreadsheet file."
     },
