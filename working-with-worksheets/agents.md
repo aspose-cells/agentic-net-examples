@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - remove-any-existing-printersettings-configuration-from-all-worksheets-within-an-.cs
 - configure-a-worksheets-rendering-to-use-a-custom-paper-size-when-exporting-to-ou.cs
 - transfer-page-setup-configuration-from-a-source-worksheet-to-a-target-worksheet-.cs
+- check-whether-a-worksheets-paper-size-setting-is-configured-to-automatic-using-t.cs
