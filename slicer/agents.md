@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - generate-a-slicer-overlay-during-excel-to-pdf-conversion-ensuring-the-slicer-is-.cs
 - implement-functionality-to-load-an-xlsx-workbook-add-a-slicer-to-a-worksheet-and.cs
 - create-a-slicer-modify-its-settings-and-load-data-from-an-xlsx-workbook-into-the.cs
+- generate-a-slicer-control-for-a-workbook-by-loading-the-specified-xlsx-file-into.cs
