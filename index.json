@@ -4821,6 +4821,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-workbooks-print-settings-to-scale-the-sheet-to-fit-a-specific-numb.cs",
+      "title": "Configure the workbook's print settings to scale the sheet to fit a specific number of pages horizontally and vertically."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-worksheet-to-display-gridlines-in-the-document-view-ensuring-cells.cs",
       "title": "Configure the worksheet to display gridlines in the document view, ensuring cells are visually separated."
     },
