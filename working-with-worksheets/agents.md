@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - place-a-specified-image-into-the-documents-header-or-footer-while-maintaining-la.cs
 - configure-document-headers-and-footers-specifying-content-layout-formatting-page.cs
 - define-and-document-the-available-script-commands-for-automating-workbook-manipu.cs
+- configure-workbook-headers-and-footers-with-custom-text-page-numbers-and-formatt.cs
