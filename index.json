@@ -3031,6 +3031,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-numbers-spreadsheet-file-into-the-librarys-workbook-object-to-enable-furt.cs",
+      "title": "Load a Numbers spreadsheet file into the library's workbook object to enable further manipulation."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-and-apply-defined-name-filters-to-retrieve-specific-ranges-accor.cs",
       "title": "Load a workbook and apply defined-name filters to retrieve specific ranges according to usage scenarios."
     },
