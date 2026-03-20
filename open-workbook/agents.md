@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - load-a-workbook-programmatically-from-supported-formats-including-spreadsheetml-.cs
 - load-a-workbook-from-an-html-file-into-memory-enabling-subsequent-data-processin.cs
 - load-a-workbook-using-data-from-a-csv-file-initializing-the-spreadsheet-structur.cs
+- load-a-csv-file-into-a-workbook-ensuring-proper-handling-of-special-characters-a.cs
