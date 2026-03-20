@@ -4961,6 +4961,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-repeatable-row-and-column-headers-as-print-titles-for-a-worksheet-during-.cs",
+      "title": "Define repeatable row and column headers as print titles for a worksheet during printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-a-designated-page-break-from-a-worksheet-while-maintaining-surrounding-ce.cs",
       "title": "Delete a designated page break from a worksheet while maintaining surrounding cell formatting and layout integrity."
     },
