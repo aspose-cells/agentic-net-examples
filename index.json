@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-background-image-or-color-to-a-worksheet-programmatically-ensuring-it-di.cs",
+      "title": "Apply a background image or color to a worksheet programmatically, ensuring it displays correctly across all views."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-freeze-pane-to-keep-selected-rows-and-columns-fixed-during-spreadsheet-s.cs",
       "title": "Apply a freeze pane to keep selected rows and columns fixed during spreadsheet scrolling operations."
     },
