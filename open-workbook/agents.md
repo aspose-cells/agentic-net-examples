@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - open-a-modern-excel-workbook-xlsx-or-xlsb-from-a-file-path-using-loadoptions-con.cs
 - load-a-legacy-excel-9550-workbook-in-xls-format-programmatically-by-configuring-.cs
 - load-an-excel-972003-workbook-in-xls-format-by-initializing-and-applying-appropr.cs
+- load-a-workbook-file-compatible-with-multiple-microsoft-excel-versions-handling-.cs
