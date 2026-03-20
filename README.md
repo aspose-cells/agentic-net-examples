@@ -55,6 +55,7 @@ cd ExampleProject
 dotnet add package Aspose.Cells
 # Copy the example .cs file as Program.cs
 dotnet build
+
 dotnet run
 
 ## Code Patterns
