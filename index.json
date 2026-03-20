@@ -3651,6 +3651,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-and-generate-a-pdf-rendering-of-its-slicer-using-provided-.cs",
+      "title": "Load an XLSX workbook and generate a PDF rendering of its slicer using provided sample code."
+    },
+    {
+      "category": "slicer",
       "file": "load-an-xlsx-workbook-and-programmatically-detach-a-slicer-from-its-associated-p.cs",
       "title": "Load an XLSX workbook and programmatically detach a slicer from its associated pivot table."
     },
