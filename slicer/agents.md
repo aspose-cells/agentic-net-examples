@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - implement-an-advanced-slicer-by-loading-data-from-an-xlsx-workbook-for-interacti.cs
 - apply-custom-formatting-to-slicer-controls-automatically-during-the-loading-of-a.cs
 - remove-a-slicers-connection-to-its-pivot-table-when-loading-an-xlsx-workbook-pro.cs
+- load-an-xlsx-workbook-and-programmatically-detach-a-slicer-from-its-associated-p.cs
