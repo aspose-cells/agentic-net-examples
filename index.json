@@ -3016,6 +3016,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-a-delimited-text-file-using-a-specified-custom-separator-ch.cs",
+      "title": "Load a workbook from a delimited text file using a specified custom separator character."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-a-sample-source-file-by-utilizing-the-default-xlsx-format.cs",
       "title": "Load a workbook from a sample source file by utilizing the default XLSX format."
     },
