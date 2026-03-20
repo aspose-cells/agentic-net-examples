@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - write-data-to-the-console-ensuring-proper-formatting-encoding-and-readability-fo.cs
 - clear-all-printer-configurations-from-each-worksheet-in-an-excel-workbook-resett.cs
 - remove-any-existing-printersettings-configuration-from-all-worksheets-within-an-.cs
+- configure-a-worksheets-rendering-to-use-a-custom-paper-size-when-exporting-to-ou.cs
