@@ -3011,6 +3011,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-an-html-file-into-memory-enabling-subsequent-data-processin.cs",
+      "title": "Load a workbook from an HTML file into memory, enabling subsequent data processing and manipulation."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-an-input-stream-using-the-default-xlsx-file-format-for-proc.cs",
       "title": "Load a workbook from an input stream using the default XLSX file format for processing."
     },
