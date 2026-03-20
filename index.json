@@ -4891,6 +4891,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-worksheet-print-titles-to-repeat-specific-header-rows-or-columns-acros.cs",
+      "title": "Configure worksheet print titles to repeat specific header rows or columns across all printed pages."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-worksheet-print-titles-to-repeat-specified-rows-and-columns-on-each-pr.cs",
       "title": "Configure worksheet print titles to repeat specified rows and columns on each printed page."
     },
