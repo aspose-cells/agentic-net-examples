@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - center-the-selected-worksheet-or-range-on-the-printed-page-to-ensure-symmetrical.cs
 - adjust-the-margins-of-headers-and-footers-in-a-spreadsheet-document-to-control-s.cs
 - place-a-specified-image-into-the-documents-header-or-footer-while-maintaining-la.cs
+- configure-document-headers-and-footers-specifying-content-layout-formatting-page.cs
