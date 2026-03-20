@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - configure-worksheet-print-titles-to-repeat-specified-rows-and-columns-on-each-pr.cs
 - remove-existing-print-title-configurations-from-an-excel-worksheet-using-the-api.cs
 - configure-worksheet-print-titles-to-repeat-specific-header-rows-or-columns-acros.cs
+- remove-defined-print-titles-from-a-worksheet-programmatically-using-the-net-spre.cs
