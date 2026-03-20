@@ -3021,6 +3021,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-instance-directly-from-a-fods-file-initializing-the-spreadsheet-.cs",
+      "title": "Load a workbook instance directly from a FODS file, initializing the spreadsheet object for further processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-an-excel-972003-workbook-in-xls-format-by-initializing-and-applying-appropr.cs",
       "title": "Load an Excel\u202f97\u20112003 workbook in XLS format by initializing and applying appropriate LoadOptions settings."
     },
