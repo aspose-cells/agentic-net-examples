@@ -3696,6 +3696,11 @@
     },
     {
       "category": "slicer",
+      "file": "remove-slicer-objects-from-a-loaded-xlsx-workbook-to-adjust-interactive-filterin.cs",
+      "title": "Remove slicer objects from a loaded XLSX workbook to adjust interactive filtering elements programmatically."
+    },
+    {
+      "category": "slicer",
       "file": "remove-the-link-between-a-slicer-and-its-associated-pivot-table-in-a-loaded-xlsx.cs",
       "title": "Remove the link between a slicer and its associated pivot table in a loaded XLSX workbook."
     },
