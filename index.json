@@ -5141,6 +5141,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-any-defined-print-area-from-an-excel-worksheet-programmatically-to-reset-.cs",
+      "title": "Remove any defined print area from an Excel worksheet programmatically to reset printing settings."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-any-defined-print-area-from-an-excel-worksheet-to-enable-default-printing.cs",
       "title": "Remove any defined print area from an Excel worksheet to enable default printing behavior."
     },
