@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-an-sxc-spreadsheet-file-into-memory-enabling-programmatic-a.cs
 - load-a-workbook-from-an-fods-file-format-into-memory-using-the-api-for-further-m.cs
 - load-a-workbook-from-a-csv-source-then-cleanse-it-by-substituting-any-invalid-ch.cs
+- initialize-a-workbook-by-loading-a-csv-file-through-the-selected-parser-to-inter.cs
