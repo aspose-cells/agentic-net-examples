@@ -4921,6 +4921,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-specific-print-area-within-an-excel-worksheet-to-control-the-range-of-c.cs",
+      "title": "Define a specific print area within an Excel worksheet to control the range of cells included in printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "define-a-specific-print-range-for-a-spreadsheet-to-limit-output-to-designated-ce.cs",
       "title": "Define a specific print range for a spreadsheet to limit output to designated cells."
     },
