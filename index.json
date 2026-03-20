@@ -4971,6 +4971,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "generate-a-collection-of-relevant-documentation-articles-linked-to-the-current-f.cs",
+      "title": "Generate a collection of relevant documentation articles linked to the current feature for easy navigation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "identify-and-convert-numeric-values-stored-as-text-in-spreadsheet-cells-to-prope.cs",
       "title": "Identify and convert numeric values stored as text in spreadsheet cells to proper numeric data types."
     },
