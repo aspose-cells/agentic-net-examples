@@ -3011,6 +3011,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-excel-workbook-files-of-any-supported-version-by-supplying-the-file-path-to.cs",
+      "title": "Load Excel workbook files of any supported version by supplying the file path to the library's API."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-modern-excel-workbook-xlsx-or-xlsb-from-a-file-path-using-loadoptions-con.cs",
       "title": "Open a modern Excel workbook (XLSX or XLSB) from a file path using LoadOptions configured for XLSX format."
     },
