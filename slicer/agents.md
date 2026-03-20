@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - demonstrate-how-to-load-an-xlsx-workbook-and-manage-slicers-across-various-usage.cs
 - load-an-xlsx-workbook-associate-a-slicer-with-its-pivot-table-and-manage-the-sli.cs
 - provide-sample-code-for-programmatically-managing-slicers-after-loading-an-xlsx-.cs
+- implement-functionality-to-load-an-xlsx-workbook-generate-a-slicer-and-render-th.cs
