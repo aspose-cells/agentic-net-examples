@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - implement-functionality-to-load-an-xlsx-workbook-add-a-slicer-to-a-worksheet-and.cs
 - create-a-slicer-modify-its-settings-and-load-data-from-an-xlsx-workbook-into-the.cs
 - generate-a-slicer-control-for-a-workbook-by-loading-the-specified-xlsx-file-into.cs
+- add-a-slicer-to-the-worksheet-and-subsequently-save-the-workbook-as-an-xlsx-file.cs
