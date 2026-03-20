@@ -3566,6 +3566,11 @@
     },
     {
       "category": "slicer",
+      "file": "implement-functionality-to-load-an-xlsx-workbook-add-a-slicer-to-a-worksheet-and.cs",
+      "title": "Implement functionality to load an XLSX workbook, add a slicer to a worksheet, and subsequently remove the slicer."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
