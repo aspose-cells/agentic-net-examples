@@ -3006,6 +3006,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-a-sample-source-file-by-utilizing-the-default-xlsx-format.cs",
+      "title": "Load a workbook from a sample source file by utilizing the default XLSX format."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-a-specified-file-path-automatically-assuming-the-default-xl.cs",
       "title": "Load a workbook from a specified file path, automatically assuming the default XLSX format."
     },
