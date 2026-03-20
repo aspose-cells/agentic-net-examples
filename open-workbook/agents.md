@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - run-the-provided-sample-to-abort-a-conversion-operation-by-employing-the-interru.cs
 - open-a-workbook-using-a-warning-callback-to-retrieve-and-process-load-warnings-g.cs
 - load-a-workbook-collect-any-processing-warnings-and-export-it-to-an-xlsx-file.cs
+- retrieve-and-expose-load-time-warnings-generated-when-parsing-a-workbook-file-fo.cs
