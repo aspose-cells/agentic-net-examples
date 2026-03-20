@@ -3001,6 +3001,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-directly-from-a-plain-text-file-interpreting-its-content-into-st.cs",
+      "title": "Load a workbook directly from a plain text file, interpreting its content into structured worksheet data."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-directly-from-a-spreadsheetml-file-initializing-the-object-model.cs",
       "title": "Load a workbook directly from a SpreadsheetML file, initializing the object model for further manipulation."
     },
