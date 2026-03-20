@@ -2970,6 +2970,11 @@
       "title": "Load a workbook from a specified local file path, assuming the default XLSX format."
     },
     {
+      "category": "open-workbook",
+      "file": "open-an-xlsx-workbook-using-loadoptions-configured-to-load-only-the-workbooks-da.cs",
+      "title": "Open an XLSX workbook using LoadOptions configured to load only the workbook's data without formatting."
+    },
+    {
       "category": "queries-and-connections",
       "file": "create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs",
       "title": "Create or inspect data connections within an XLSX workbook through the API\u2019s default handling mechanisms."
