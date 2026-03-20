@@ -3141,6 +3141,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "terminate-the-workbooktopdf-conversion-operation-by-employing-the-interruptmonit.cs",
+      "title": "Terminate the Workbook\u2011to\u2011PDF conversion operation by employing the InterruptMonitor to abort processing when required."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-the-supplied-code-to-load-a-workbook-and-retrieve-only-defined-names-that-me.cs",
       "title": "Use the supplied code to load a workbook and retrieve only defined names that meet specific filter criteria."
     },
