@@ -3555,6 +3555,11 @@
       "title": "Write the workbook's contents directly to an in-memory stream in the XLSX file format."
     },
     {
+      "category": "slicer",
+      "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
+      "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
+    },
+    {
       "category": "working-with-html",
       "file": "alter-the-html-hyperlink-target-type-when-converting-an-xlsx-workbook-to-html-ou.cs",
       "title": "Alter the HTML hyperlink target type when converting an XLSX workbook to HTML output."
