@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - configure-distinct-headers-and-footers-for-each-worksheet-or-page-in-a-workbook-.cs
 - configure-workbook-print-settings-including-orientation-margins-and-page-scaling.cs
 - define-a-specific-print-range-for-a-spreadsheet-to-limit-output-to-designated-ce.cs
+- configure-worksheet-print-titles-to-repeat-specified-rows-or-columns-on-each-pri.cs
