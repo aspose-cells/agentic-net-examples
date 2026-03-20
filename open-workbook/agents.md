@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - identify-scenarios-where-loading-a-workbook-may-generate-warnings-such-as-corrup.cs
 - provide-sample-code-that-retrieves-warnings-generated-while-loading-a-workbook-e.cs
 - output-any-workbook-load-warnings-to-the-console-after-initializing-the-workbook.cs
+- load-a-numbers-spreadsheet-file-and-render-it-as-a-pdf-document-preserving-layou.cs
