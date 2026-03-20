@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - apply-custom-formatting-to-slicer-controls-automatically-during-the-loading-of-a.cs
 - remove-a-slicers-connection-to-its-pivot-table-when-loading-an-xlsx-workbook-pro.cs
 - load-an-xlsx-workbook-and-programmatically-detach-a-slicer-from-its-associated-p.cs
+- remove-the-link-between-a-slicer-and-its-associated-pivot-table-in-a-loaded-xlsx.cs
