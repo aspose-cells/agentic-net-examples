@@ -2986,6 +2986,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-microsoft-excel-972003-workbook-into-memory-for-further-processing-preser.cs",
+      "title": "Load a Microsoft Excel\u202f97\u20112003 workbook into memory for further processing, preserving its original formatting."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-file-compatible-with-multiple-microsoft-excel-versions-handling-.cs",
       "title": "Load a workbook file compatible with multiple Microsoft Excel versions, handling format variations programmatically."
     },
