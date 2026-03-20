@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - load-an-example-xlsx-workbook-and-programmatically-perform-slicer-creation-confi.cs
 - implement-slicer-management-save-the-workbook-to-an-xlsx-file-and-load-the-file-.cs
 - load-an-xlsx-workbook-add-a-pivot-table-connection-and-configure-the-associated-.cs
+- demonstrate-how-to-load-an-xlsx-workbook-and-manage-slicers-across-various-usage.cs
