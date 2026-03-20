@@ -4751,6 +4751,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-worksheet-to-suppress-the-visual-display-of-zero-valued-cells-whil.cs",
+      "title": "Configure the worksheet to suppress the visual display of zero-valued cells while preserving the underlying data."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-worksheets-visibility-attribute-to-ensure-the-sheet-is-displayed-w.cs",
       "title": "Configure the worksheet's visibility attribute to ensure the sheet is displayed within the workbook."
     },
