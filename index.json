@@ -4796,6 +4796,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-excel-workbook-to-print-with-both-width-and-height-scaled-to-fit-t.cs",
+      "title": "Configure the Excel workbook to print with both width and height scaled to fit the defined page count."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-fittopages-options-to-scale-worksheet-output-to-a-specified-number.cs",
       "title": "Configure the FitToPages options to scale worksheet output to a specified number of pages during rendering."
     },
