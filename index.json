@@ -3131,6 +3131,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-a-template-file-restricting-the-operation-to-retrieve-only-.cs",
+      "title": "Load a workbook from a template file restricting the operation to retrieve only shape objects."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-a-tsv-file-into-memory-preserving-cell-data-and-formatting.cs",
       "title": "Load a workbook from a TSV file into memory, preserving cell data and formatting."
     },
