@@ -3166,6 +3166,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "output-any-workbook-load-warnings-to-the-console-after-initializing-the-workbook.cs",
+      "title": "Output any workbook load warnings to the console after initializing the workbook instance for review."
+    },
+    {
+      "category": "open-workbook",
       "file": "programmatically-load-a-workbook-while-filtering-out-defined-names-using-the-loa.cs",
       "title": "Programmatically load a workbook while filtering out defined names using the LoadDataFilterOptions.DefinedNames option during initialization."
     },
