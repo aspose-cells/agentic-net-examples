@@ -5131,6 +5131,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "render-a-worksheet-so-that-it-prints-on-a-single-page-scaling-its-contents-appro.cs",
+      "title": "Render a worksheet so that it prints on a single page, scaling its contents appropriately."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "render-the-worksheet-to-a-printable-format-scaling-the-entire-sheet-to-fit-on-a-.cs",
       "title": "Render the worksheet to a printable format, scaling the entire sheet to fit on a single page."
     },
