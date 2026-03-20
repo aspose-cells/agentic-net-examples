@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - configure-the-workbooks-print-settings-to-scale-the-sheet-to-fit-a-specific-numb.cs
 - configure-the-excel-workbook-to-print-with-both-width-and-height-scaled-to-fit-t.cs
 - render-the-worksheet-to-a-printable-format-scaling-the-entire-sheet-to-fit-on-a-.cs
+- configure-a-worksheets-print-settings-to-fit-all-columns-onto-a-single-page-duri.cs
