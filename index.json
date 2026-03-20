@@ -5061,6 +5061,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "retrieve-the-paper-width-and-height-settings-from-a-worksheets-pagesetup-configu.cs",
+      "title": "Retrieve the paper width and height settings from a worksheet's page\u2011setup configuration using the available API."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "review-essential-considerations-and-constraints-that-must-be-understood-before-u.cs",
       "title": "Review essential considerations and constraints that must be understood before utilizing the library's functionality."
     },
