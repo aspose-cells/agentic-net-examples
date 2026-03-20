@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - enable-the-display-of-row-and-column-header-labels-in-the-worksheet-view-to-impr.cs
 - programmatically-hide-row-and-column-header-visibility-in-a-worksheet-when-rende.cs
 - configure-the-worksheet-to-suppress-the-visual-display-of-zero-valued-cells-whil.cs
+- document-the-various-error-types-that-may-be-raised-by-the-api-including-their-c.cs
