@@ -4746,6 +4746,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-a-worksheets-rendering-to-use-a-custom-paper-size-when-exporting-to-ou.cs",
+      "title": "Configure a worksheet\u2019s rendering to use a custom paper size when exporting to output formats."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-distinct-headers-and-footers-for-each-worksheet-or-page-in-a-workbook-.cs",
       "title": "Configure distinct headers and footers for each worksheet or page in a workbook using the .NET API."
     },
