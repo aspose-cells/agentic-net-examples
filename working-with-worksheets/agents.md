@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - configure-the-worksheet-to-display-gridlines-in-the-document-view-ensuring-cells.cs
 - disable-the-display-of-gridlines-in-the-worksheet-view-to-present-a-clean-layout.cs
 - enable-the-display-of-row-and-column-header-labels-in-the-worksheet-view-to-impr.cs
+- programmatically-hide-row-and-column-header-visibility-in-a-worksheet-when-rende.cs
