@@ -2976,6 +2976,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-any-supported-file-format-enabling-immediate-manipulation-w.cs",
+      "title": "Load a workbook from any supported file format, enabling immediate manipulation within the application."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-using-loadoptions-configured-to-load-only-the-workbooks-da.cs",
       "title": "Open an XLSX workbook using LoadOptions configured to load only the workbook's data without formatting."
     },
