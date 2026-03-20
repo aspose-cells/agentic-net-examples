@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - render-the-slicer-export-the-resulting-image-and-then-load-the-corresponding-xls.cs
 - refresh-a-slicer-by-programmatically-selecting-its-items-when-loading-an-xlsx-wo.cs
 - unselect-slicer-items-automatically-when-loading-an-xlsx-workbook-to-refresh-the.cs
+- update-the-slicer-refresh-its-state-and-load-the-xlsx-workbook-into-the-workshee.cs
