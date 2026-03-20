@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - demonstrate-how-to-load-an-xlsx-workbook-and-programmatically-update-its-slicer-.cs
 - render-slicer-objects-when-converting-an-excel-workbook-to-pdf-preserving-their-.cs
 - load-an-xlsx-workbook-render-its-slicer-visualizations-and-export-the-result-as-.cs
+- render-workbook-slicer-elements-into-the-pdf-output-when-converting-and-saving-t.cs
