@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - instantiate-a-workbook-via-provided-sample-code-that-applies-object-filters-to-l.cs
 - load-a-workbook-from-a-template-file-restricting-the-operation-to-retrieve-only-.cs
 - instantiate-a-workbook-while-skipping-chart-data-to-reduce-load-time-and-memory-.cs
+- load-a-spreadsheet-file-while-excluding-all-chart-objects-from-the-workbook-duri.cs
