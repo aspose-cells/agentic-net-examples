@@ -3636,6 +3636,11 @@
     },
     {
       "category": "slicer",
+      "file": "provide-sample-code-for-programmatically-managing-slicers-after-loading-an-xlsx-.cs",
+      "title": "Provide sample code for programmatically managing slicers after loading an XLSX workbook, including creating, modifying, and removing slicer elements."
+    },
+    {
+      "category": "slicer",
       "file": "provide-sample-code-that-loads-an-xlsx-workbook-and-adds-a-slicer-to-a-worksheet.cs",
       "title": "Provide sample code that loads an XLSX workbook and adds a slicer to a worksheet."
     },
