@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - demonstrate-possible-usage-scenarios-for-a-format-slicer-when-loading-an-xlsx-wo.cs
 - provide-sample-code-that-loads-an-xlsx-workbook-and-applies-formatting-to-its-sl.cs
 - load-an-example-xlsx-workbook-and-programmatically-perform-slicer-creation-confi.cs
+- implement-slicer-management-save-the-workbook-to-an-xlsx-file-and-load-the-file-.cs
