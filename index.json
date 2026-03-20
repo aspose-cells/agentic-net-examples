@@ -3056,6 +3056,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-an-sxc-spreadsheet-file-into-memory-enabling-programmatic-a.cs",
+      "title": "Load a workbook from an SXC spreadsheet file into memory, enabling programmatic access and manipulation of its contents."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-any-supported-file-format-enabling-immediate-manipulation-w.cs",
       "title": "Load a workbook from any supported file format, enabling immediate manipulation within the application."
     },
