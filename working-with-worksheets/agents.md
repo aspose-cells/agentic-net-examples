@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - explain-the-worksheet-behavior-and-default-printing-range-after-the-defined-prin.cs
 - define-a-print-area-for-a-worksheet-programmatically-specifying-cell-range-bound.cs
 - clear-any-defined-print-area-from-a-workbook-or-worksheet-using-the-net-api.cs
+- remove-defined-print-titles-from-an-excel-workbook-and-clear-associated-range-re.cs
