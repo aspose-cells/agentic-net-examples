@@ -4881,6 +4881,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-worksheet-print-settings-to-scale-the-entire-column-set-onto-a-single-.cs",
+      "title": "Configure worksheet print settings to scale the entire column set onto a single printed page."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-worksheet-print-titles-to-repeat-specified-rows-or-columns-on-each-pri.cs",
       "title": "Configure worksheet print titles to repeat specified rows or columns on each printed page."
     },
