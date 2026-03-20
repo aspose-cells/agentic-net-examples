@@ -4816,6 +4816,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-or-disable-gridline-visibility-within-worksheets-to-customize-cell-backgr.cs",
+      "title": "Enable or disable gridline visibility within worksheets to customize cell background display and user interface."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-visibility-of-worksheet-tabs-in-the-workbook-view-to-allow-user-navigatio.cs",
       "title": "Enable visibility of worksheet tabs in the workbook view to allow user navigation within the application."
     },
