@@ -1,104 +1,106 @@
-# Aspose.Cells for .NET – Agentic Code Examples
+# Aspose.Cells for .NET Examples
 
-This repository contains automatically generated **Aspose.Cells for .NET** code examples.
+AI-friendly repository containing validated C# examples for Aspose.Cells for .NET API.
 
-These examples are produced by the **Aspose.Cells Product Agent** as part of the **Professionalize Multi-Agent Network for Bulk Code Example Generation**.
+## Overview
 
-Only examples that **successfully build and run** are published.
-
-## Architecture
-
-The generation system consists of multiple agents:
-
-| Agent | Port | Responsibility |
-|------|------|------|
-| Task Browser Agent | 7001 | Provides categories and tasks |
-| Examples Super Agent | 7050 | Generates code examples |
-| Aspose.Cells Product Agent | Local | Builds, tests and publishes examples |
-
-## Example Generation Pipeline
-
-The Aspose.Cells Product Agent performs the following steps:
-
-1. Fetch categories from the **Task Browser Agent**
-2. Fetch tasks for each category
-3. Send tasks to the **Examples Super Agent**
-4. Generate code examples
-5. Build the example using `.NET`
-6. Execute the example
-7. Automatically fix errors using an LLM if needed
-8. Publish validated examples to GitHub
-
-Only **build-successful examples** are published.
+This repository provides working code examples demonstrating Aspose.Cells for .NET capabilities. All examples are automatically generated, compiled, and validated using the Aspose.Cells Examples Generator.
 
 ## Repository Structure
 
-Examples are organized by **category folders**.
+Examples are organized by feature category:
 
-agentic-net-examples
+- `cells-data/`
+- `comments-and-notes/`
+- `conversion/`
+- `document-properties/`
+- `encryption-and-protection/`
+- `globalization-and-localization/`
+- `macro-project/`
+- `manage-formulas/`
+- `manage-workbook/`
+- `managing-ranges/`
+- `open-workbook/`
+- `queries-and-connections/`
+- `save-workbook/`
+- `slicer/`
+- `smart-markers/`
+- `sparkline/`
+- `workbook-merger/`
+- `working-with-html/`
+- `working-with-images/`
+- `working-with-json/`
+- `working-with-pdf/`
+- `working-with-tables/`
+- `working-with-worksheets/`
+- `xml-maps/`
 
-├ LICENSE  
-├ README.md  
-├ agents.md  
-├ index.json  
+Each category contains standalone `.cs` files that can be compiled and run independently.
 
-├ worksheets  
-│   ├ create-a-workbook.cs  
-│   └ agents.md  
+## Getting Started
 
-├ conversion  
-│   ├ convert-xlsx-to-pdf.cs  
-│   └ agents.md  
+### Prerequisites
 
-Each category folder contains:
+- .NET SDK (net10.0 or compatible version)
+- Aspose.Cells for .NET NuGet package
+- Valid Aspose license (for production use)
 
-- C# example files
-- `agents.md` describing examples and usage patterns
+### Running Examples
 
-## Build and Run
+Each example is a self-contained C# file. To run an example:
 
-Each example is a simple **.NET console program**.
-
-Build:
-
+cd <CategoryFolder>
+dotnet new console -o ExampleProject
+cd ExampleProject
+dotnet add package Aspose.Cells
+# Copy the example .cs file as Program.cs
 dotnet build
-
-Run:
-
 dotnet run
 
-## Example File Naming Convention
+## Code Patterns
 
-All example files follow:
+### Loading a Workbook
 
-lowercase-with-hyphens.cs
+using (Workbook workbook = new Workbook("input.xlsx"))
+{
+    // Work with workbook
+}
 
-Examples:
+### Accessing Worksheets and Cells
 
-create-a-workbook.cs  
-convert-xlsx-to-pdf.cs  
-insert-column-chart.cs  
+Worksheet worksheet = workbook.Worksheets[0];
+Cell cell = worksheet.Cells["A1"];
+cell.PutValue("Hello World");
 
-## Generated Files
+### Saving a Workbook
 
-This repository automatically generates the following files:
+workbook.Save("output.xlsx");
 
-| File | Purpose |
-|-----|-----|
-| README.md | Repository overview |
-| agents.md | Instructions for AI coding agents |
-| index.json | Machine-readable index of examples |
-| category/agents.md | Category-specific guidance |
+### Important Notes
 
+- Zero-based indexing: Worksheets use 0-based indexing (Worksheets[0] = first worksheet)
+- Core object: Aspose.Cells works with Workbook instead of Document
+- Deterministic cleanup: Use using statements where applicable
 
-## Contribution Workflow
+## Contributing
 
-Examples are generated automatically by the **Aspose.Cells Product Agent**.
+Examples in this repository are automatically generated. To suggest new examples:
 
-The agent:
+1. Submit tasks to the Aspose.Cells Examples Generator
+2. Generated examples are validated via compilation
+3. Passing examples are included in repository updates
 
-1. Pushes examples to a category branch
-2. Creates a pull request
-3. Maintainers review and merge the PR
+## Related Resources
 
-Part of the **Professionalize Agent Network**.
+- [Aspose.Cells for .NET Documentation](https://docs.aspose.com/cells/net/)  
+- [API Reference](https://reference.aspose.com/cells/net/)  
+- [Aspose Forum](https://forum.aspose.com/c/cells/9)  
+- [AI Agent Guide (agents.md)](./agents.md)  
+
+## License
+
+All examples use Aspose.Cells for .NET and require a valid license for production use. See licensing page on Aspose website.
+
+---
+
+This repository is maintained by automated code generation. For AI-friendly guidance, see agents.md.

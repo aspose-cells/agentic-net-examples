@@ -4836,6 +4836,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-functionality-to-toggle-gridline-visibility-in-worksheets-allowing-use.cs",
+      "title": "Implement functionality to toggle gridline visibility in worksheets, allowing users to show or hide them dynamically."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-page-breaks-at-specified-locations-in-a-worksheet-to-control-pagination-w.cs",
       "title": "Insert page breaks at specified locations in a worksheet to control pagination when exporting the document."
     },
