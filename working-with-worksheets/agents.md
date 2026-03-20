@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - remove-any-defined-print-area-from-an-excel-worksheet-to-enable-default-printing.cs
 - define-a-worksheets-print-area-to-specify-the-range-of-cells-included-when-print.cs
 - remove-any-defined-print-area-from-the-workbook-to-revert-to-default-printing-bo.cs
+- define-a-specific-print-area-for-a-worksheet-to-control-the-range-of-cells-inclu.cs
