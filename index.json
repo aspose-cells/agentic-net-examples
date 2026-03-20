@@ -5136,6 +5136,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "transfer-page-setup-configuration-from-a-source-worksheet-to-a-target-worksheet-.cs",
+      "title": "Transfer page setup configuration from a source worksheet to a target worksheet, ensuring layout consistency."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "transfer-selected-worksheets-from-one-workbook-to-another-workbook-maintaining-c.cs",
       "title": "Transfer selected worksheets from one workbook to another workbook, maintaining cell data, formulas, and formatting."
     },
