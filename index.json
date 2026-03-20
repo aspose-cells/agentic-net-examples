@@ -3141,6 +3141,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-using-a-warning-callback-to-retrieve-and-process-load-warnings-g.cs",
+      "title": "Open a workbook using a warning callback to retrieve and process load warnings generated during loading."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-while-loading-the-file-and-use-loaddatafilteroptionsdefinednames.cs",
       "title": "Open a workbook while loading the file and use LoadDataFilterOptions.DefinedNames to filter defined names."
     },
