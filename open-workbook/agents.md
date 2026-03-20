@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - load-a-numbers-spreadsheet-file-into-the-librarys-workbook-object-to-enable-furt.cs
 - run-the-provided-sample-to-load-and-parse-a-numbers-spreadsheet-into-memory-for-.cs
 - programmatically-load-a-workbook-using-the-lightcells-api-to-enable-high-perform.cs
+- initialize-a-workbook-via-the-lightcells-api-using-an-eventdriven-approach-to-ef.cs
