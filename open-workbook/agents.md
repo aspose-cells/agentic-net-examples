@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-any-supported-file-format-enabling-immediate-manipulation-w.cs
 - load-a-workbook-from-a-specified-file-path-automatically-assuming-the-default-xl.cs
 - load-a-workbook-from-an-input-stream-using-the-default-xlsx-file-format-for-proc.cs
+- implement-a-custom-loadfilter-to-open-an-xlsx-workbook-while-loading-exclusively.cs
