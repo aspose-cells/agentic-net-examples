@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - identify-and-convert-numeric-values-stored-as-text-in-spreadsheet-cells-to-prope.cs
 - configure-worksheet-page-settings-including-orientation-margins-scaling-and-prin.cs
 - set-or-retrieve-the-page-orientation-portrait-or-landscape-for-worksheets-within.cs
+- define-a-scaling-factor-to-adjust-the-dimensions-of-exported-content-proportiona.cs
