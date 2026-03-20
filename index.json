@@ -4261,6 +4261,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-an-image-representation-of-a-chart-embedded-in-an-xlsx-workbook-while-p.cs",
+      "title": "Generate an image representation of a chart embedded in an XLSX workbook while preserving visual fidelity and formatting."
+    },
+    {
+      "category": "working-with-images",
       "file": "transform-an-xlsx-workbook-into-a-tiff-image-while-maintaining-visual-fidelity-a.cs",
       "title": "Transform an XLSX workbook into a TIFF image while maintaining visual fidelity and page layout."
     },
