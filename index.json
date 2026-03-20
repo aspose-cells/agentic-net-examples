@@ -3191,6 +3191,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-applying-recommended-memoryoptimization-guidelines-to-minimize-r.cs",
+      "title": "Open a workbook applying recommended memory\u2011optimization guidelines to minimize resource consumption and improve performance."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-using-a-warning-callback-to-retrieve-and-process-load-warnings-g.cs",
       "title": "Open a workbook using a warning callback to retrieve and process load warnings generated during loading."
     },
