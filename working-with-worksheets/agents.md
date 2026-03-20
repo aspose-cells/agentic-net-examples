@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - configure-worksheet-print-titles-to-repeat-specified-rows-or-columns-on-each-pri.cs
 - retrieve-the-paper-width-and-height-settings-from-a-worksheets-pagesetup-configu.cs
 - write-data-to-the-console-ensuring-proper-formatting-encoding-and-readability-fo.cs
+- clear-all-printer-configurations-from-each-worksheet-in-an-excel-workbook-resett.cs
