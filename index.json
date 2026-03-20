@@ -4791,6 +4791,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "disable-the-display-of-gridlines-in-the-worksheet-view-to-present-a-clean-layout.cs",
+      "title": "Disable the display of gridlines in the worksheet view to present a clean layout."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "display-worksheet-rows-and-columns-programmatically-enabling-developers-to-acces.cs",
       "title": "Display worksheet rows and columns programmatically, enabling developers to access cell coordinates and formatting details."
     },
