@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - initialize-a-workbook-by-loading-a-csv-file-through-the-selected-parser-to-inter.cs
 - open-a-workbook-while-loading-the-file-and-use-loaddatafilteroptionsdefinednames.cs
 - programmatically-load-a-workbook-while-filtering-out-defined-names-using-the-loa.cs
+- load-a-workbook-and-apply-defined-name-filters-to-retrieve-specific-ranges-accor.cs
