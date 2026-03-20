@@ -2981,6 +2981,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-an-input-stream-using-the-default-xlsx-file-format-for-proc.cs",
+      "title": "Load a workbook from an input stream using the default XLSX file format for processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-any-supported-file-format-enabling-immediate-manipulation-w.cs",
       "title": "Load a workbook from any supported file format, enabling immediate manipulation within the application."
     },
