@@ -3026,6 +3026,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-a-tabdelimited-file-preserving-cell-values-data-types-and-c.cs",
+      "title": "Load a workbook from a tab\u2011delimited file, preserving cell values, data types, and column alignment."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-an-html-file-into-memory-enabling-subsequent-data-processin.cs",
       "title": "Load a workbook from an HTML file into memory, enabling subsequent data processing and manipulation."
     },
