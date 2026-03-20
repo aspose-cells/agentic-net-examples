@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - determine-the-complete-set-of-supported-image-conversion-formats-that-can-be-gen.cs
 - show-detailed-image-conversion-progress-in-the-console-during-the-xlsx-workbook-.cs
 - transform-an-xlsx-worksheet-into-an-image-format-while-maintaining-visual-fideli.cs
+- render-an-xlsx-chart-to-an-image-file-applying-specified-attributes-such-as-size.cs
