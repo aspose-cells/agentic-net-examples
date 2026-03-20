@@ -5166,6 +5166,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-all-print-title-settings-from-a-workbook-to-prevent-repeated-header-rows-.cs",
+      "title": "Remove all print title settings from a workbook to prevent repeated header rows on printed pages."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-any-defined-print-area-from-an-excel-worksheet-programmatically-to-reset-.cs",
       "title": "Remove any defined print area from an Excel worksheet programmatically to reset printing settings."
     },
