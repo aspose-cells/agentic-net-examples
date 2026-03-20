@@ -4736,6 +4736,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "check-whether-a-worksheets-paper-size-setting-is-configured-to-automatic-using-t.cs",
+      "title": "Check whether a worksheet's paper size setting is configured to automatic using the API."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "clear-all-printer-configurations-from-each-worksheet-in-an-excel-workbook-resett.cs",
       "title": "Clear all printer configurations from each worksheet in an Excel workbook, resetting default print options."
     },
