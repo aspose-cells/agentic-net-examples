@@ -4796,6 +4796,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-custom-top-bottom-left-and-right-margins-for-a-worksheets-printed-page-la.cs",
+      "title": "Define custom top, bottom, left, and right margins for a worksheet's printed page layout."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-a-designated-page-break-from-a-worksheet-while-maintaining-surrounding-ce.cs",
       "title": "Delete a designated page break from a worksheet while maintaining surrounding cell formatting and layout integrity."
     },
