@@ -2966,6 +2966,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "initialize-a-workbook-object-to-load-an-excel-20072019-xlsx-file-for-further-pro.cs",
+      "title": "Initialize a workbook object to load an Excel 2007\u20112019 (XLSX) file for further processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-a-workbook-by-reading-from-a-stream-interpreting-the-data-as-an-xlsx.cs",
       "title": "Instantiate a workbook by reading from a stream, interpreting the data as an XLSX file using default settings."
     },
