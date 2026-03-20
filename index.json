@@ -4776,6 +4776,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-scaling-factor-to-adjust-the-dimensions-of-exported-content-proportiona.cs",
+      "title": "Define a scaling factor to adjust the dimensions of exported content proportionally during generation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-a-designated-page-break-from-a-worksheet-while-maintaining-surrounding-ce.cs",
       "title": "Delete a designated page break from a worksheet while maintaining surrounding cell formatting and layout integrity."
     },
