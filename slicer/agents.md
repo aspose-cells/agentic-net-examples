@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - implement-a-slicer-component-illustrating-usage-scenarios-by-loading-an-xlsx-wor.cs
 - add-a-slicer-to-a-pivot-table-in-an-xlsx-workbook-using-the-api.cs
 - provide-sample-code-that-loads-an-xlsx-workbook-and-adds-a-slicer-to-a-worksheet.cs
+- demonstrate-possible-usage-scenarios-for-a-format-slicer-when-loading-an-xlsx-wo.cs
