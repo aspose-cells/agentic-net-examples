@@ -5031,6 +5031,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "specify-the-initial-page-number-for-a-worksheets-print-layout-to-control-paginat.cs",
+      "title": "Specify the initial page number for a worksheet's print layout to control pagination in the output."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "toggle-visibility-of-row-and-column-headers-in-a-worksheet-allowing-them-to-be-s.cs",
       "title": "Toggle visibility of row and column headers in a worksheet, allowing them to be shown or hidden programmatically."
     },
