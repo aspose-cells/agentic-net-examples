@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - load-a-csv-file-into-a-workbook-ensuring-proper-handling-of-special-characters-a.cs
 - load-a-workbook-from-a-sample-source-file-by-utilizing-the-default-xlsx-format.cs
 - load-a-workbook-directly-from-a-spreadsheetml-file-initializing-the-object-model.cs
+- load-a-workbook-from-a-tabdelimited-file-preserving-cell-values-data-types-and-c.cs
