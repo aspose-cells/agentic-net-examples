@@ -4921,6 +4921,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-worksheets-print-area-to-specify-the-range-of-cells-included-when-print.cs",
+      "title": "Define a worksheet's print area to specify the range of cells included when printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "define-and-document-the-available-script-commands-for-automating-workbook-manipu.cs",
       "title": "Define and document the available script commands for automating workbook manipulation and data processing."
     },
