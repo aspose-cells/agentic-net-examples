@@ -4281,6 +4281,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-a-worksheet-from-an-xlsx-file-as-an-image-preview-maintaining-cell-format.cs",
+      "title": "Render a worksheet from an XLSX file as an image preview, maintaining cell formatting and layout."
+    },
+    {
+      "category": "working-with-images",
       "file": "transform-a-chart-from-an-xlsx-workbook-into-an-svg-image-while-maintaining-visu.cs",
       "title": "Transform a chart from an XLSX workbook into an SVG image while maintaining visual fidelity."
     },
