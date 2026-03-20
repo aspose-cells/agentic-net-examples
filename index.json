@@ -5046,6 +5046,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-any-existing-printersettings-configuration-from-all-worksheets-within-an-.cs",
+      "title": "Remove any existing PrinterSettings configuration from all worksheets within an Excel workbook programmatically before further processing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs",
       "title": "Remove every page break from the worksheet to ensure continuous printing without pagination interruptions."
     },
