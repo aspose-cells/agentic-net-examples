@@ -2996,6 +2996,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "initialize-a-workbook-using-the-lightcells-api-to-efficiently-read-large-xlsx-fi.cs",
+      "title": "Initialize a workbook using the LightCells API to efficiently read large XLSX files with minimal memory usage."
+    },
+    {
+      "category": "open-workbook",
       "file": "initialize-a-workbook-via-the-lightcells-api-using-an-eventdriven-approach-to-ef.cs",
       "title": "Initialize a workbook via the LightCells API using an event\u2011driven approach to efficiently process spreadsheet data."
     },
