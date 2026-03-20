@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - define-a-scaling-factor-to-adjust-the-dimensions-of-exported-content-proportiona.cs
 - configure-the-fittopages-options-to-scale-worksheet-output-to-a-specified-number.cs
 - set-or-query-a-worksheets-paper-size-to-control-printing-dimensions-for-generate.cs
+- configure-the-output-print-quality-setting-to-adjust-resolution-and-fidelity-of-.cs
