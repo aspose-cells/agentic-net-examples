@@ -4811,6 +4811,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-workbook-print-settings-including-orientation-margins-and-page-scaling.cs",
+      "title": "Configure workbook print settings, including orientation, margins, and page scaling, for XLSX files programmatically."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-worksheet-page-settings-including-orientation-margins-scaling-and-prin.cs",
       "title": "Configure worksheet page settings, including orientation, margins, scaling, and print areas, via the .NET API."
     },
