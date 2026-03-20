@@ -3651,6 +3651,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-and-programmatically-entirely-remove-the-specified-slicer-.cs",
+      "title": "Load an XLSX workbook and programmatically entirely remove the specified slicer from the worksheet."
+    },
+    {
+      "category": "slicer",
       "file": "load-an-xlsx-workbook-associate-a-slicer-with-its-pivot-table-and-manage-the-sli.cs",
       "title": "Load an XLSX workbook, associate a slicer with its pivot table, and manage the slicer programmatically."
     },
