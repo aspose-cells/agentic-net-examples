@@ -3556,6 +3556,11 @@
     },
     {
       "category": "slicer",
+      "file": "add-a-slicer-to-the-worksheet-and-subsequently-save-the-workbook-as-an-xlsx-file.cs",
+      "title": "Add a slicer to the worksheet and subsequently save the workbook as an XLSX file."
+    },
+    {
+      "category": "slicer",
       "file": "create-a-slicer-modify-its-settings-and-load-data-from-an-xlsx-workbook-into-the.cs",
       "title": "Create a slicer, modify its settings, and load data from an XLSX workbook into the slicer."
     },
