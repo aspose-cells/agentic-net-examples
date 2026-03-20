@@ -2981,6 +2981,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-microsoft-excel-9550-workbook-file-into-the-application-initializing-its-.cs",
+      "title": "Load a Microsoft Excel\u202f95/5.0 workbook file into the application, initializing its worksheets for further manipulation."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-file-compatible-with-multiple-microsoft-excel-versions-handling-.cs",
       "title": "Load a workbook file compatible with multiple Microsoft Excel versions, handling format variations programmatically."
     },
