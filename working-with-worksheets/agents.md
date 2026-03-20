@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - configure-the-worksheets-print-settings-to-fit-the-content-within-a-specified-nu.cs
 - render-a-worksheet-so-that-it-prints-on-a-single-page-scaling-its-contents-appro.cs
 - configure-worksheet-print-settings-to-scale-the-entire-column-set-onto-a-single-.cs
+- define-a-specific-print-area-within-an-excel-workbook-to-control-the-range-of-ce.cs
