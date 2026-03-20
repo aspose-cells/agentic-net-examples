@@ -4791,6 +4791,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-unique-header-and-footer-content-for-each-page-within-a-workbook-to-cu.cs",
+      "title": "Configure unique header and footer content for each page within a workbook to customize page-specific information."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-workbook-headers-and-footers-with-custom-text-page-numbers-and-formatt.cs",
       "title": "Configure workbook headers and footers with custom text, page numbers, and formatting options for each worksheet."
     },
