@@ -4886,6 +4886,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-concise-overview-describing-the-librarys-core-capabilities-and-primary-.cs",
+      "title": "Create a concise overview describing the library\u2019s core capabilities and primary usage scenarios for .NET developers."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-new-workbook-and-programmatically-insert-additional-worksheets-specifyi.cs",
       "title": "Create a new workbook and programmatically insert additional worksheets, specifying their names and positions as required."
     },
