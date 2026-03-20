@@ -4856,6 +4856,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "identify-and-convert-numeric-values-stored-as-text-in-spreadsheet-cells-to-prope.cs",
+      "title": "Identify and convert numeric values stored as text in spreadsheet cells to proper numeric data types."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-functionality-to-programmatically-insert-modify-or-remove-page-breaks-.cs",
       "title": "Implement functionality to programmatically insert, modify, or remove page breaks within a spreadsheet document."
     },
