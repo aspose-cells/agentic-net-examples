@@ -4746,6 +4746,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-worksheet-to-display-gridlines-in-the-document-view-ensuring-cells.cs",
+      "title": "Configure the worksheet to display gridlines in the document view, ensuring cells are visually separated."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-worksheets-visibility-attribute-to-ensure-the-sheet-is-displayed-w.cs",
       "title": "Configure the worksheet's visibility attribute to ensure the sheet is displayed within the workbook."
     },
