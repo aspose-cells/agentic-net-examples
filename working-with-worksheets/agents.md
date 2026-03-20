@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - configure-page-margins-for-a-worksheet-to-control-the-printable-area-spacing-and.cs
 - define-custom-top-bottom-left-and-right-margins-for-a-worksheets-printed-page-la.cs
 - center-the-selected-worksheet-or-range-on-the-printed-page-to-ensure-symmetrical.cs
+- adjust-the-margins-of-headers-and-footers-in-a-spreadsheet-document-to-control-s.cs
