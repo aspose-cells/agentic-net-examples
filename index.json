@@ -4836,6 +4836,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-specific-print-range-for-a-spreadsheet-to-limit-output-to-designated-ce.cs",
+      "title": "Define a specific print range for a spreadsheet to limit output to designated cells."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "define-and-document-the-available-script-commands-for-automating-workbook-manipu.cs",
       "title": "Define and document the available script commands for automating workbook manipulation and data processing."
     },
