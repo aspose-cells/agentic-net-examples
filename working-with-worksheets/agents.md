@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - configure-a-worksheets-background-image-or-pattern-programmatically-for-an-excel.cs
 - apply-a-background-image-or-color-to-a-worksheet-programmatically-ensuring-it-di.cs
 - generate-a-collection-of-relevant-documentation-articles-linked-to-the-current-f.cs
+- configure-the-workbooks-print-settings-to-fit-the-worksheet-onto-a-specified-num.cs
