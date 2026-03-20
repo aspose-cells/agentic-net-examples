@@ -3016,6 +3016,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "instantiate-a-workbook-in-readonly-mode-optimized-for-minimal-memory-usage-when-.cs",
+      "title": "Instantiate a workbook in read\u2011only mode optimized for minimal memory usage when processing large Excel files."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-a-workbook-loader-that-applies-a-custom-loadfilter-to-import-only-vi.cs",
       "title": "Instantiate a workbook loader that applies a custom LoadFilter to import only visible worksheets from an XLSX file."
     },
