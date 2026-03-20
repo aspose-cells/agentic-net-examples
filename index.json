@@ -3036,6 +3036,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "instantiate-a-workbook-via-provided-sample-code-that-applies-object-filters-to-l.cs",
+      "title": "Instantiate a workbook via provided sample code that applies object filters to load specific data."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-csv-file-into-a-workbook-ensuring-proper-handling-of-special-characters-a.cs",
       "title": "Load a CSV file into a workbook, ensuring proper handling of special characters and correct encoding."
     },
