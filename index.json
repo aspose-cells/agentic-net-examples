@@ -4756,6 +4756,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-a-worksheets-background-image-or-pattern-programmatically-for-an-excel.cs",
+      "title": "Configure a worksheet's background image or pattern programmatically for an Excel file using .NET APIs."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-a-worksheets-rendering-to-use-a-custom-paper-size-when-exporting-to-ou.cs",
       "title": "Configure a worksheet\u2019s rendering to use a custom paper size when exporting to output formats."
     },
