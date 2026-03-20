@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - set-or-query-a-worksheets-paper-size-to-control-printing-dimensions-for-generate.cs
 - configure-the-output-print-quality-setting-to-adjust-resolution-and-fidelity-of-.cs
 - specify-the-initial-page-number-for-a-worksheets-print-layout-to-control-paginat.cs
+- configure-page-margins-for-a-worksheet-to-control-the-printable-area-spacing-and.cs
