@@ -3611,6 +3611,11 @@
     },
     {
       "category": "slicer",
+      "file": "implement-functionality-to-load-an-xlsx-workbook-generate-a-slicer-and-render-th.cs",
+      "title": "Implement functionality to load an XLSX workbook, generate a slicer, and render the slicer within the document."
+    },
+    {
+      "category": "slicer",
       "file": "implement-slicer-management-save-the-workbook-to-an-xlsx-file-and-load-the-file-.cs",
       "title": "Implement slicer management, save the workbook to an XLSX file, and load the file back into memory."
     },
