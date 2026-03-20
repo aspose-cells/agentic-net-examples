@@ -3001,6 +3001,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-directly-from-a-spreadsheetml-file-initializing-the-object-model.cs",
+      "title": "Load a workbook directly from a SpreadsheetML file, initializing the object model for further manipulation."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-file-compatible-with-multiple-microsoft-excel-versions-handling-.cs",
       "title": "Load a workbook file compatible with multiple Microsoft Excel versions, handling format variations programmatically."
     },
