@@ -3021,6 +3021,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "instantiate-a-workbook-using-the-lightcells-api-to-efficiently-write-a-large-exc.cs",
+      "title": "Instantiate a workbook using the LightCells API to efficiently write a large Excel file in .NET."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-csv-file-into-a-workbook-ensuring-proper-handling-of-special-characters-a.cs",
       "title": "Load a CSV file into a workbook, ensuring proper handling of special characters and correct encoding."
     },
