@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - configure-worksheet-page-settings-including-orientation-margins-scaling-and-prin.cs
 - set-or-retrieve-the-page-orientation-portrait-or-landscape-for-worksheets-within.cs
 - define-a-scaling-factor-to-adjust-the-dimensions-of-exported-content-proportiona.cs
+- configure-the-fittopages-options-to-scale-worksheet-output-to-a-specified-number.cs
