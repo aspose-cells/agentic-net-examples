@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs
 - generate-a-slicer-in-an-xlsx-workbook-modify-its-attributes-and-load-the-spreads.cs
+- generate-a-slicer-overlay-during-excel-to-pdf-conversion-ensuring-the-slicer-is-.cs
