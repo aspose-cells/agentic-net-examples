@@ -4336,6 +4336,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "show-detailed-image-conversion-progress-in-the-console-during-the-xlsx-workbook-.cs",
+      "title": "Show detailed image conversion progress in the console during the XLSX workbook processing operation."
+    },
+    {
+      "category": "working-with-images",
       "file": "transform-a-chart-from-an-xlsx-workbook-into-an-svg-image-while-maintaining-visu.cs",
       "title": "Transform a chart from an XLSX workbook into an SVG image while maintaining visual fidelity."
     },
