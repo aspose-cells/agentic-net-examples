@@ -4811,6 +4811,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-and-document-the-available-script-commands-for-automating-workbook-manipu.cs",
+      "title": "Define and document the available script commands for automating workbook manipulation and data processing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "define-custom-top-bottom-left-and-right-margins-for-a-worksheets-printed-page-la.cs",
       "title": "Define custom top, bottom, left, and right margins for a worksheet's printed page layout."
     },
