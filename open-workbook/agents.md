@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - load-a-workbook-and-initialize-only-the-designated-worksheets-to-reduce-memory-u.cs
 - terminate-the-workbooktopdf-conversion-operation-by-employing-the-interruptmonit.cs
 - convert-a-large-workbook-to-pdf-employing-the-interruptmonitor-to-handle-process.cs
+- cancel-a-workbook-conversion-operation-using-interruptmonitor-when-the-processin.cs
