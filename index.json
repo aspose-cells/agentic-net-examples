@@ -3666,6 +3666,11 @@
     },
     {
       "category": "slicer",
+      "file": "programmatically-open-the-sample-xlsx-workbook-and-delete-the-targeted-slicer-fr.cs",
+      "title": "Programmatically open the sample XLSX workbook and delete the targeted slicer from its worksheet."
+    },
+    {
+      "category": "slicer",
       "file": "provide-sample-code-for-programmatically-managing-slicers-after-loading-an-xlsx-.cs",
       "title": "Provide sample code for programmatically managing slicers after loading an XLSX workbook, including creating, modifying, and removing slicer elements."
     },
