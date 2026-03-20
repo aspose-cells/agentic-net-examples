@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - programmatically-load-a-workbook-while-filtering-out-defined-names-using-the-loa.cs
 - load-a-workbook-and-apply-defined-name-filters-to-retrieve-specific-ranges-accor.cs
 - use-the-supplied-code-to-load-a-workbook-and-retrieve-only-defined-names-that-me.cs
+- load-a-workbook-and-initialize-only-the-designated-worksheets-to-reduce-memory-u.cs
