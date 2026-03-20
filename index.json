@@ -4756,6 +4756,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "clear-any-defined-print-area-from-a-workbook-or-worksheet-using-the-net-api.cs",
+      "title": "Clear any defined print area from a workbook or worksheet using the .NET API."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-a-worksheet-to-display-its-formulas-instead-of-calculated-values-durin.cs",
       "title": "Configure a worksheet to display its formulas instead of calculated values during data rendering."
     },
