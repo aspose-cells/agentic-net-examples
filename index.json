@@ -3626,6 +3626,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-associate-a-slicer-with-its-pivot-table-and-manage-the-sli.cs",
+      "title": "Load an XLSX workbook, associate a slicer with its pivot table, and manage the slicer programmatically."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
