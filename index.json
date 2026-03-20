@@ -2961,6 +2961,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "cancel-a-workbook-conversion-operation-using-interruptmonitor-when-the-processin.cs",
+      "title": "Cancel a workbook conversion operation using InterruptMonitor when the processing time surpasses the configured threshold."
+    },
+    {
+      "category": "open-workbook",
       "file": "convert-a-large-workbook-to-pdf-employing-the-interruptmonitor-to-handle-process.cs",
       "title": "Convert a large workbook to PDF, employing the InterruptMonitor to handle processing interruptions and ensure completion."
     },
