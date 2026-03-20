@@ -4896,6 +4896,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-worksheet-print-titles-to-repeat-specified-rows-or-columns-on-each-pri.cs",
+      "title": "Configure worksheet print titles to repeat specified rows or columns on each printed page in an Excel file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-worksheet-visibility-programmatically-to-hide-or-display-specific-work.cs",
       "title": "Configure worksheet visibility programmatically to hide or display specific worksheets within a workbook at runtime."
     },
