@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-render-its-slicer-visualizations-and-export-the-result-as-.cs
 - render-workbook-slicer-elements-into-the-pdf-output-when-converting-and-saving-t.cs
 - load-an-xlsx-workbook-and-generate-a-pdf-rendering-of-its-slicer-using-provided-.cs
+- update-slicer-settings-in-a-loaded-xlsx-workbook-by-programmatically-changing-th.cs
