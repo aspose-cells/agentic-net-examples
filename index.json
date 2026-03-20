@@ -4311,6 +4311,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "read-a-column-chart-from-an-xlsx-workbook-and-render-it-as-an-image-preview.cs",
+      "title": "Read a column chart from an XLSX workbook and render it as an image preview."
+    },
+    {
+      "category": "working-with-images",
       "file": "read-the-chart-collection-from-an-xlsx-workbook-and-generate-image-representatio.cs",
       "title": "Read the chart collection from an XLSX workbook and generate image representations for each chart."
     },
