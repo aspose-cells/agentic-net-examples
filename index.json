@@ -3166,6 +3166,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "retrieve-and-expose-load-time-warnings-generated-when-parsing-a-workbook-file-fo.cs",
+      "title": "Retrieve and expose load-time warnings generated when parsing a workbook file for handling issues."
+    },
+    {
+      "category": "open-workbook",
       "file": "run-the-provided-sample-to-abort-a-conversion-operation-by-employing-the-interru.cs",
       "title": "Run the provided sample to abort a conversion operation by employing the InterruptMonitor class."
     },
