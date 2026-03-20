@@ -4296,6 +4296,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "determine-the-complete-set-of-supported-image-conversion-formats-that-can-be-gen.cs",
+      "title": "Determine the complete set of supported image conversion formats that can be generated from an XLSX workbook."
+    },
+    {
+      "category": "working-with-images",
       "file": "generate-an-image-representation-of-a-chart-embedded-in-an-xlsx-workbook-while-p.cs",
       "title": "Generate an image representation of a chart embedded in an XLSX workbook while preserving visual fidelity and formatting."
     },
