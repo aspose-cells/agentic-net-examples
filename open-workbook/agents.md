@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - load-a-workbook-file-compatible-with-multiple-microsoft-excel-versions-handling-.cs
 - load-excel-workbook-files-of-any-supported-version-by-supplying-the-file-path-to.cs
 - load-a-microsoft-excel-9550-workbook-file-into-the-application-initializing-its-.cs
+- load-a-microsoft-excel-972003-workbook-into-memory-for-further-processing-preser.cs
