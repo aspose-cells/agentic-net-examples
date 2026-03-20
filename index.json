@@ -3211,6 +3211,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-while-excluding-specific-objects-such-as-charts-shapes-and-condi.cs",
+      "title": "Open a workbook while excluding specific objects such as charts, shapes, and conditional formatting."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-while-loading-the-file-and-use-loaddatafilteroptionsdefinednames.cs",
       "title": "Open a workbook while loading the file and use LoadDataFilterOptions.DefinedNames to filter defined names."
     },
