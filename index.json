@@ -3746,6 +3746,11 @@
     },
     {
       "category": "slicer",
+      "file": "render-slicer-objects-when-converting-an-excel-workbook-to-pdf-preserving-their-.cs",
+      "title": "Render slicer objects when converting an Excel workbook to PDF, preserving their appearance in the output file."
+    },
+    {
+      "category": "slicer",
       "file": "render-the-slicer-export-the-resulting-image-and-then-load-the-corresponding-xls.cs",
       "title": "Render the slicer, export the resulting image, and then load the corresponding XLSX workbook."
     },
