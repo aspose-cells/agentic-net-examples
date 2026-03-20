@@ -4791,6 +4791,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-workbook-headers-and-footers-with-custom-text-page-numbers-and-formatt.cs",
+      "title": "Configure workbook headers and footers with custom text, page numbers, and formatting options for each worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-worksheet-page-settings-including-orientation-margins-scaling-and-prin.cs",
       "title": "Configure worksheet page settings, including orientation, margins, scaling, and print areas, via the .NET API."
     },
