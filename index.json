@@ -3171,6 +3171,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "provide-sample-code-that-retrieves-warnings-generated-while-loading-a-workbook-e.cs",
+      "title": "Provide sample code that retrieves warnings generated while loading a workbook, enabling developers to handle potential issues programmatically."
+    },
+    {
+      "category": "open-workbook",
       "file": "retrieve-and-expose-load-time-warnings-generated-when-parsing-a-workbook-file-fo.cs",
       "title": "Retrieve and expose load-time warnings generated when parsing a workbook file for handling issues."
     },
