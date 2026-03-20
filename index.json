@@ -4291,6 +4291,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "load-a-chart-from-an-xlsx-workbook-and-render-it-to-an-image-format.cs",
+      "title": "Load a chart from an XLSX workbook and render it to an image format."
+    },
+    {
+      "category": "working-with-images",
       "file": "monitor-the-conversion-status-of-an-xlsx-workbook-to-a-tiff-image-providing-real.cs",
       "title": "Monitor the conversion status of an XLSX workbook to a TIFF image, providing real-time progress feedback."
     },
