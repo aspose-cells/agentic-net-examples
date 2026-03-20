@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - load-a-chart-from-an-xlsx-workbook-and-render-it-to-an-image-format.cs
 - read-the-chart-collection-from-an-xlsx-workbook-and-generate-image-representatio.cs
 - load-a-pie-chart-from-an-xlsx-workbook-and-render-it-as-an-image-preview.cs
+- determine-the-complete-set-of-supported-image-conversion-formats-that-can-be-gen.cs
