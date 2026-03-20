@@ -2961,6 +2961,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "convert-a-large-workbook-to-pdf-employing-the-interruptmonitor-to-handle-process.cs",
+      "title": "Convert a large workbook to PDF, employing the InterruptMonitor to handle processing interruptions and ensure completion."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-a-custom-loadfilter-to-open-an-xlsx-workbook-while-loading-exclusively.cs",
       "title": "Implement a custom LoadFilter to open an XLSX workbook while loading exclusively the visible worksheets."
     },
