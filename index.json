@@ -3686,6 +3686,11 @@
     },
     {
       "category": "slicer",
+      "file": "provide-sample-code-that-programmatically-loads-an-xlsx-workbook-and-removes-a-s.cs",
+      "title": "Provide sample code that programmatically loads an XLSX workbook and removes a specified slicer."
+    },
+    {
+      "category": "slicer",
       "file": "remove-a-slicer-from-a-workbook-save-the-workbook-as-an-xlsx-file-and-then-load-.cs",
       "title": "Remove a slicer from a workbook, save the workbook as an XLSX file, and then load it."
     },
