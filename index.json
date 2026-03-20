@@ -3571,6 +3571,11 @@
     },
     {
       "category": "slicer",
+      "file": "adjust-slicer-settings-in-a-loaded-xlsx-workbook-to-demonstrate-various-usage-sc.cs",
+      "title": "Adjust slicer settings in a loaded XLSX workbook to demonstrate various usage scenarios for data filtering."
+    },
+    {
+      "category": "slicer",
       "file": "apply-custom-formatting-to-slicer-controls-automatically-during-the-loading-of-a.cs",
       "title": "Apply custom formatting to slicer controls automatically during the loading of an XLSX workbook."
     },
