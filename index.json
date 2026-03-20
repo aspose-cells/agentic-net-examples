@@ -3561,6 +3561,11 @@
     },
     {
       "category": "slicer",
+      "file": "generate-a-slicer-overlay-during-excel-to-pdf-conversion-ensuring-the-slicer-is-.cs",
+      "title": "Generate a slicer overlay during Excel-to-PDF conversion, ensuring the slicer is rendered within the resulting PDF."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
