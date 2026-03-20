@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - configure-unique-header-and-footer-content-for-each-page-within-a-workbook-to-cu.cs
 - configure-distinct-headers-and-footers-for-individual-worksheets-within-an-excel.cs
 - configure-distinct-headers-and-footers-for-each-worksheet-or-page-in-a-workbook-.cs
+- configure-workbook-print-settings-including-orientation-margins-and-page-scaling.cs
