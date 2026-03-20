@@ -2961,6 +2961,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "implement-a-custom-loadfilter-to-open-an-xlsx-workbook-while-loading-exclusively.cs",
+      "title": "Implement a custom LoadFilter to open an XLSX workbook while loading exclusively the visible worksheets."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-a-workbook-by-reading-from-a-stream-interpreting-the-data-as-an-xlsx.cs",
       "title": "Instantiate a workbook by reading from a stream, interpreting the data as an XLSX file using default settings."
     },
