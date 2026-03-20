@@ -5125,6 +5125,11 @@
       "title": "Transfer selected worksheets from one workbook to another workbook, maintaining cell data, formulas, and formatting."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "write-data-to-the-console-ensuring-proper-formatting-encoding-and-readability-fo.cs",
+      "title": "Write data to the console, ensuring proper formatting, encoding, and readability for command-line display."
+    },
+    {
       "category": "xml-maps",
       "file": "add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs",
       "title": "Add an XML map to a workbook by specifying the schema and linking it to worksheet data."
