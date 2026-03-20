@@ -5001,6 +5001,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "explain-the-benefits-of-applying-fittopageswide-and-fittopagestall-settings-when.cs",
+      "title": "Explain the benefits of applying FitToPagesWide and FitToPagesTall settings when configuring worksheet print scaling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "generate-a-collection-of-relevant-documentation-articles-linked-to-the-current-f.cs",
       "title": "Generate a collection of relevant documentation articles linked to the current feature for easy navigation."
     },
