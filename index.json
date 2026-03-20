@@ -3001,6 +3001,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-an-excel-972003-workbook-in-xls-format-by-initializing-and-applying-appropr.cs",
+      "title": "Load an Excel\u202f97\u20112003 workbook in XLS format by initializing and applying appropriate LoadOptions settings."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-modern-excel-workbook-xlsx-or-xlsb-from-a-file-path-using-loadoptions-con.cs",
       "title": "Open a modern Excel workbook (XLSX or XLSB) from a file path using LoadOptions configured for XLSX format."
     },
