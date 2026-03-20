@@ -3576,6 +3576,11 @@
     },
     {
       "category": "slicer",
+      "file": "demonstrate-how-to-load-an-xlsx-workbook-and-manage-slicers-across-various-usage.cs",
+      "title": "Demonstrate how to load an XLSX workbook and manage slicers across various usage scenarios."
+    },
+    {
+      "category": "slicer",
       "file": "demonstrate-possible-usage-scenarios-for-a-format-slicer-when-loading-an-xlsx-wo.cs",
       "title": "Demonstrate possible usage scenarios for a format slicer when loading an XLSX workbook in .NET."
     },
