@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-a-workbook-from-a-specified-local-file-path-assuming-the-default-xlsx-forma.cs
+- instantiate-a-workbook-by-reading-from-a-stream-interpreting-the-data-as-an-xlsx.cs
