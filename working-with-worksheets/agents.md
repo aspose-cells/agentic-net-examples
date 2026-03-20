@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - explain-the-benefits-of-applying-fittopageswide-and-fittopagestall-settings-when.cs
 - configure-the-worksheets-print-settings-to-fit-the-content-within-a-specified-nu.cs
 - render-a-worksheet-so-that-it-prints-on-a-single-page-scaling-its-contents-appro.cs
+- configure-worksheet-print-settings-to-scale-the-entire-column-set-onto-a-single-.cs
