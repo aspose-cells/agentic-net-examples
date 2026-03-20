@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - configure-a-worksheet-to-display-its-formulas-instead-of-calculated-values-durin.cs
 - programmatically-enable-or-disable-the-display-of-worksheet-gridlines-and-rowcol.cs
 - implement-functionality-to-toggle-gridline-visibility-in-worksheets-allowing-use.cs
+- toggle-visibility-of-row-and-column-headers-in-a-worksheet-allowing-them-to-be-s.cs
