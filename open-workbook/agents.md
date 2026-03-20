@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - instantiate-a-workbook-using-the-lightcells-api-to-efficiently-write-a-large-exc.cs
 - load-a-workbook-using-memory-optimization-techniques-to-efficiently-handle-large.cs
 - load-a-workbook-using-general-memoryoptimization-techniques-to-minimize-ram-usag.cs
+- open-a-workbook-applying-recommended-memoryoptimization-guidelines-to-minimize-r.cs
