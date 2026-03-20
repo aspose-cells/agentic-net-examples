@@ -4816,6 +4816,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-print-settings-to-fit-an-excel-worksheet-within-specified-page-wid.cs",
+      "title": "Configure the print settings to fit an Excel worksheet within specified page width and height."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-rendering-component-to-suppress-vertical-and-horizontal-scrollbars.cs",
       "title": "Configure the rendering component to suppress vertical and horizontal scrollbars for a cleaner UI."
     },
