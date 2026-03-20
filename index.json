@@ -2976,6 +2976,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-legacy-excel-9550-workbook-in-xls-format-programmatically-by-configuring-.cs",
+      "title": "Load a legacy Excel\u202f95/5.0 workbook in XLS format programmatically by configuring appropriate LoadOptions."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-a-specified-file-path-automatically-assuming-the-default-xl.cs",
       "title": "Load a workbook from a specified file path, automatically assuming the default XLSX format."
     },
