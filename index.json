@@ -3201,6 +3201,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-and-filter-objects-within-a-specified-worksheet-returning-only-t.cs",
+      "title": "Open a workbook and filter objects within a specified worksheet, returning only the matching items."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-applying-recommended-memoryoptimization-guidelines-to-minimize-r.cs",
       "title": "Open a workbook applying recommended memory\u2011optimization guidelines to minimize resource consumption and improve performance."
     },
