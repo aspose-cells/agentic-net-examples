@@ -3711,6 +3711,11 @@
     },
     {
       "category": "slicer",
+      "file": "refresh-a-slicer-in-an-xlsx-workbook-by-loading-the-file-and-applying-updated-fi.cs",
+      "title": "Refresh a slicer in an XLSX workbook by loading the file and applying updated filter settings."
+    },
+    {
+      "category": "slicer",
       "file": "remove-a-slicer-from-a-workbook-save-the-workbook-as-an-xlsx-file-and-then-load-.cs",
       "title": "Remove a slicer from a workbook, save the workbook as an XLSX file, and then load it."
     },
