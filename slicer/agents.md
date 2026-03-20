@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-add-a-pivot-table-connection-and-configure-the-associated-.cs
 - demonstrate-how-to-load-an-xlsx-workbook-and-manage-slicers-across-various-usage.cs
 - load-an-xlsx-workbook-associate-a-slicer-with-its-pivot-table-and-manage-the-sli.cs
+- provide-sample-code-for-programmatically-managing-slicers-after-loading-an-xlsx-.cs
