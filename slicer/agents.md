@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-programmatically-entirely-remove-the-specified-slicer-.cs
 - programmatically-open-the-sample-xlsx-workbook-and-delete-the-targeted-slicer-fr.cs
 - remove-a-slicer-from-a-workbook-save-the-workbook-as-an-xlsx-file-and-then-load-.cs
+- remove-slicer-objects-from-a-loaded-xlsx-workbook-to-adjust-interactive-filterin.cs
