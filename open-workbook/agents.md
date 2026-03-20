@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - load-a-workbook-and-apply-defined-name-filters-to-retrieve-specific-ranges-accor.cs
 - use-the-supplied-code-to-load-a-workbook-and-retrieve-only-defined-names-that-me.cs
 - load-a-workbook-and-initialize-only-the-designated-worksheets-to-reduce-memory-u.cs
+- terminate-the-workbooktopdf-conversion-operation-by-employing-the-interruptmonit.cs
