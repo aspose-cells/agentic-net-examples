@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - configure-a-worksheets-print-settings-to-fit-all-columns-onto-a-single-page-duri.cs
 - configure-the-print-settings-to-fit-an-excel-worksheet-within-specified-page-wid.cs
 - create-a-concise-overview-describing-the-librarys-core-capabilities-and-primary-.cs
+- explain-the-benefits-of-applying-fittopageswide-and-fittopagestall-settings-when.cs
