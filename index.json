@@ -2971,6 +2971,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "identify-scenarios-where-interruptmonitor-can-be-employed-to-abort-a-conversion-.cs",
+      "title": "Identify scenarios where InterruptMonitor can be employed to abort a conversion or loading operation."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-a-custom-loadfilter-to-open-an-xlsx-workbook-while-loading-exclusively.cs",
       "title": "Implement a custom LoadFilter to open an XLSX workbook while loading exclusively the visible worksheets."
     },
