@@ -2966,6 +2966,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "initialize-a-workbook-by-loading-a-csv-file-through-the-selected-parser-to-inter.cs",
+      "title": "Initialize a workbook by loading a CSV file through the selected parser to interpret its data."
+    },
+    {
+      "category": "open-workbook",
       "file": "initialize-a-workbook-object-to-load-an-excel-20072019-xlsx-file-for-further-pro.cs",
       "title": "Initialize a workbook object to load an Excel 2007\u20112019 (XLSX) file for further processing."
     },
