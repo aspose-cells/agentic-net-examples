@@ -3611,6 +3611,11 @@
     },
     {
       "category": "slicer",
+      "file": "implement-an-advanced-slicer-by-loading-data-from-an-xlsx-workbook-for-interacti.cs",
+      "title": "Implement an advanced slicer by loading data from an XLSX workbook for interactive filtering."
+    },
+    {
+      "category": "slicer",
       "file": "implement-functionality-to-load-an-xlsx-workbook-add-a-slicer-to-a-worksheet-and.cs",
       "title": "Implement functionality to load an XLSX workbook, add a slicer to a worksheet, and subsequently remove the slicer."
     },
