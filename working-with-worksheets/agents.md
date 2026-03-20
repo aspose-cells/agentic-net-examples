@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - define-a-specific-print-area-within-an-excel-worksheet-to-control-the-range-of-c.cs
 - remove-any-defined-print-area-from-an-excel-worksheet-programmatically-to-reset-.cs
 - explain-the-worksheet-behavior-and-default-printing-range-after-the-defined-prin.cs
+- define-a-print-area-for-a-worksheet-programmatically-specifying-cell-range-bound.cs
