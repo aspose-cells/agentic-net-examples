@@ -4901,6 +4901,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-hide-row-and-column-header-visibility-in-a-worksheet-when-rende.cs",
+      "title": "Programmatically hide row and column header visibility in a worksheet when rendering to improve presentation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-hide-worksheet-tabs-in-a-workbook-to-prevent-user-navigation-an.cs",
       "title": "Programmatically hide worksheet tabs in a workbook to prevent user navigation and maintain a clean interface."
     },
