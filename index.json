@@ -3556,6 +3556,11 @@
     },
     {
       "category": "slicer",
+      "file": "add-a-slicer-to-a-pivot-table-in-an-xlsx-workbook-using-the-api.cs",
+      "title": "Add a slicer to a pivot table in an XLSX workbook using the API."
+    },
+    {
+      "category": "slicer",
       "file": "add-a-slicer-to-the-worksheet-and-export-the-workbook-to-xlsb-format-using-the-a.cs",
       "title": "Add a slicer to the worksheet and export the workbook to XLSB format using the appropriate API."
     },
