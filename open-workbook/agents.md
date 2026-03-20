@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-an-input-stream-using-the-default-xlsx-file-format-for-proc.cs
 - implement-a-custom-loadfilter-to-open-an-xlsx-workbook-while-loading-exclusively.cs
 - open-a-modern-excel-workbook-xlsx-or-xlsb-from-a-file-path-using-loadoptions-con.cs
+- load-a-legacy-excel-9550-workbook-in-xls-format-programmatically-by-configuring-.cs
