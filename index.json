@@ -3586,6 +3586,11 @@
     },
     {
       "category": "slicer",
+      "file": "implement-a-slicer-component-illustrating-usage-scenarios-by-loading-an-xlsx-wor.cs",
+      "title": "Implement a slicer component, illustrating usage scenarios by loading an XLSX workbook for data filtering."
+    },
+    {
+      "category": "slicer",
       "file": "implement-functionality-to-load-an-xlsx-workbook-add-a-slicer-to-a-worksheet-and.cs",
       "title": "Implement functionality to load an XLSX workbook, add a slicer to a worksheet, and subsequently remove the slicer."
     },
