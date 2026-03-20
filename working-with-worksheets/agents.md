@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - define-repeatable-row-and-column-headers-as-print-titles-for-a-worksheet-during-.cs
 - remove-all-print-title-settings-from-a-workbook-to-prevent-repeated-header-rows-.cs
 - configure-worksheet-print-titles-to-repeat-specified-rows-and-columns-on-each-pr.cs
+- remove-existing-print-title-configurations-from-an-excel-worksheet-using-the-api.cs
