@@ -4766,6 +4766,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-a-worksheets-print-settings-to-fit-all-columns-onto-a-single-page-duri.cs",
+      "title": "Configure a worksheet's print settings to fit all columns onto a single page during rendering."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-a-worksheets-rendering-to-use-a-custom-paper-size-when-exporting-to-ou.cs",
       "title": "Configure a worksheet\u2019s rendering to use a custom paper size when exporting to output formats."
     },
