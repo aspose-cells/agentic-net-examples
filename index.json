@@ -3056,6 +3056,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-files-in-supported-formats-eg-xlsx-csv-pdf-ods-for-further-.cs",
+      "title": "Load a workbook from files in supported formats (e.g., XLSX, CSV, PDF, ODS) for further manipulation."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-instance-directly-from-a-fods-file-initializing-the-spreadsheet-.cs",
       "title": "Load a workbook instance directly from a FODS file, initializing the spreadsheet object for further processing."
     },
