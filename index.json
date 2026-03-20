@@ -4851,6 +4851,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-worksheets-print-settings-to-fit-the-content-within-a-specified-nu.cs",
+      "title": "Configure the worksheet's print settings to fit the content within a specified number of pages both horizontally and vertically."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-worksheets-visibility-attribute-to-ensure-the-sheet-is-displayed-w.cs",
       "title": "Configure the worksheet's visibility attribute to ensure the sheet is displayed within the workbook."
     },
