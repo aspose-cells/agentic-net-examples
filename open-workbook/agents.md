@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - instantiate-a-workbook-in-readonly-mode-optimized-for-minimal-memory-usage-when-.cs
 - initialize-a-workbook-in-write-mode-for-handling-large-excel-files-while-optimiz.cs
 - open-a-workbook-while-excluding-specific-objects-such-as-charts-shapes-and-condi.cs
+- open-a-workbook-and-filter-objects-within-a-specified-worksheet-returning-only-t.cs
