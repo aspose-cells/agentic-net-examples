@@ -4761,6 +4761,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-worksheet-page-settings-including-orientation-margins-scaling-and-prin.cs",
+      "title": "Configure worksheet page settings, including orientation, margins, scaling, and print areas, via the .NET API."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-worksheet-visibility-programmatically-to-hide-or-display-specific-work.cs",
       "title": "Configure worksheet visibility programmatically to hide or display specific worksheets within a workbook at runtime."
     },
