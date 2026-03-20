@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - enable-or-disable-gridline-visibility-within-worksheets-to-customize-cell-backgr.cs
 - configure-worksheet-visibility-programmatically-to-hide-or-display-specific-work.cs
 - configure-the-worksheet-to-display-gridlines-in-the-document-view-ensuring-cells.cs
+- disable-the-display-of-gridlines-in-the-worksheet-view-to-present-a-clean-layout.cs
