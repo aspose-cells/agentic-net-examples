@@ -4346,6 +4346,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-an-xlsx-chart-to-an-image-file-applying-specified-attributes-such-as-size.cs",
+      "title": "Render an XLSX chart to an image file, applying specified attributes such as size, format, and resolution."
+    },
+    {
+      "category": "working-with-images",
       "file": "show-detailed-image-conversion-progress-in-the-console-during-the-xlsx-workbook-.cs",
       "title": "Show detailed image conversion progress in the console during the XLSX workbook processing operation."
     },
