@@ -3031,6 +3031,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-a-tsv-file-into-memory-preserving-cell-data-and-formatting.cs",
+      "title": "Load a workbook from a TSV file into memory, preserving cell data and formatting."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-an-html-file-into-memory-enabling-subsequent-data-processin.cs",
       "title": "Load a workbook from an HTML file into memory, enabling subsequent data processing and manipulation."
     },
