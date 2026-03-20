@@ -4741,6 +4741,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-output-print-quality-setting-to-adjust-resolution-and-fidelity-of-.cs",
+      "title": "Configure the output print quality setting to adjust resolution and fidelity of the generated printed document."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-rendering-component-to-suppress-vertical-and-horizontal-scrollbars.cs",
       "title": "Configure the rendering component to suppress vertical and horizontal scrollbars for a cleaner UI."
     },
