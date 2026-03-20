@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - provide-sample-code-for-programmatically-managing-slicers-after-loading-an-xlsx-.cs
 - implement-functionality-to-load-an-xlsx-workbook-generate-a-slicer-and-render-th.cs
 - generate-a-slicer-for-an-excel-table-by-loading-the-xlsx-workbook-and-applying-t.cs
+- implement-an-advanced-slicer-by-loading-data-from-an-xlsx-workbook-for-interacti.cs
