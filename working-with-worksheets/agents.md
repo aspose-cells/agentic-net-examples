@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - configure-document-headers-and-footers-specifying-content-layout-formatting-page.cs
 - define-and-document-the-available-script-commands-for-automating-workbook-manipu.cs
 - configure-workbook-headers-and-footers-with-custom-text-page-numbers-and-formatt.cs
+- configure-unique-header-and-footer-content-for-each-page-within-a-workbook-to-cu.cs
