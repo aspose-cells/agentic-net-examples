@@ -2996,6 +2996,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "initialize-a-workbook-via-the-lightcells-api-using-an-eventdriven-approach-to-ef.cs",
+      "title": "Initialize a workbook via the LightCells API using an event\u2011driven approach to efficiently process spreadsheet data."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-a-workbook-by-reading-from-a-stream-interpreting-the-data-as-an-xlsx.cs",
       "title": "Instantiate a workbook by reading from a stream, interpreting the data as an XLSX file using default settings."
     },
