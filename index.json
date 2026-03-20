@@ -5211,6 +5211,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-existing-print-title-configurations-from-an-excel-worksheet-using-the-api.cs",
+      "title": "Remove existing print title configurations from an Excel worksheet using the API to reset page\u2011setup options."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "render-a-preview-of-worksheet-page-breaks-to-visualize-pagination-and-layout-adj.cs",
       "title": "Render a preview of worksheet page breaks to visualize pagination and layout adjustments before printing."
     },
