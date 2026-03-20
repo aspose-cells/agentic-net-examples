@@ -3201,6 +3201,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "run-the-provided-sample-to-load-and-parse-a-numbers-spreadsheet-into-memory-for-.cs",
+      "title": "Run the provided sample to load and parse a Numbers spreadsheet into memory for further processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "terminate-the-workbooktopdf-conversion-operation-by-employing-the-interruptmonit.cs",
       "title": "Terminate the Workbook\u2011to\u2011PDF conversion operation by employing the InterruptMonitor to abort processing when required."
     },
