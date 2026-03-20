@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - add-a-slicer-to-the-worksheet-and-subsequently-save-the-workbook-as-an-xlsx-file.cs
 - add-a-slicer-to-the-worksheet-and-export-the-workbook-to-xlsb-format-using-the-a.cs
 - implement-a-slicer-component-illustrating-usage-scenarios-by-loading-an-xlsx-wor.cs
+- add-a-slicer-to-a-pivot-table-in-an-xlsx-workbook-using-the-api.cs
