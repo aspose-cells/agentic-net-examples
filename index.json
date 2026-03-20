@@ -2991,6 +2991,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "initialize-a-workbook-in-write-mode-for-handling-large-excel-files-while-optimiz.cs",
+      "title": "Initialize a workbook in write mode for handling large Excel files while optimizing memory usage."
+    },
+    {
+      "category": "open-workbook",
       "file": "initialize-a-workbook-object-to-load-an-excel-20072019-xlsx-file-for-further-pro.cs",
       "title": "Initialize a workbook object to load an Excel 2007\u20112019 (XLSX) file for further processing."
     },
