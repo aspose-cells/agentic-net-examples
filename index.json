@@ -2976,6 +2976,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "identify-scenarios-where-loading-a-workbook-may-generate-warnings-such-as-corrup.cs",
+      "title": "Identify scenarios where loading a workbook may generate warnings, such as corrupted files, unsupported features, or data inconsistencies."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-a-custom-loadfilter-to-open-an-xlsx-workbook-while-loading-exclusively.cs",
       "title": "Implement a custom LoadFilter to open an XLSX workbook while loading exclusively the visible worksheets."
     },
