@@ -4741,6 +4741,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-distinct-headers-and-footers-for-each-worksheet-or-page-in-a-workbook-.cs",
+      "title": "Configure distinct headers and footers for each worksheet or page in a workbook using the .NET API."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-distinct-headers-and-footers-for-individual-worksheets-within-an-excel.cs",
       "title": "Configure distinct headers and footers for individual worksheets within an Excel workbook using the API."
     },
