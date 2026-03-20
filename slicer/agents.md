@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - refresh-a-slicer-in-an-xlsx-workbook-by-loading-the-file-and-applying-updated-fi.cs
 - refresh-a-worksheet-slicer-after-loading-an-xlsx-workbook-to-accurately-reflect-.cs
 - demonstrate-how-to-load-an-xlsx-workbook-and-programmatically-update-its-slicer-.cs
+- render-slicer-objects-when-converting-an-excel-workbook-to-pdf-preserving-their-.cs
