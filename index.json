@@ -3001,6 +3001,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "initialize-a-workbook-with-the-lightcells-api-to-efficiently-write-a-large-excel.cs",
+      "title": "Initialize a workbook with the LightCells API to efficiently write a large Excel file."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-a-workbook-by-reading-from-a-stream-interpreting-the-data-as-an-xlsx.cs",
       "title": "Instantiate a workbook by reading from a stream, interpreting the data as an XLSX file using default settings."
     },
