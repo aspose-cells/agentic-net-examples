@@ -5206,6 +5206,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-defined-print-titles-from-a-worksheet-programmatically-using-the-net-spre.cs",
+      "title": "Remove defined print titles from a worksheet programmatically using the .NET spreadsheet API library."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-defined-print-titles-from-an-excel-workbook-and-clear-associated-range-re.cs",
       "title": "Remove defined print titles from an Excel workbook and clear associated range references to reset page settings."
     },
