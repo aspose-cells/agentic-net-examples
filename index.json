@@ -3576,6 +3576,11 @@
     },
     {
       "category": "slicer",
+      "file": "demonstrate-possible-usage-scenarios-for-a-format-slicer-when-loading-an-xlsx-wo.cs",
+      "title": "Demonstrate possible usage scenarios for a format slicer when loading an XLSX workbook in .NET."
+    },
+    {
+      "category": "slicer",
       "file": "generate-a-slicer-control-for-a-workbook-by-loading-the-specified-xlsx-file-into.cs",
       "title": "Generate a slicer control for a workbook by loading the specified XLSX file into memory."
     },
