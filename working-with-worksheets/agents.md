@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - define-a-specific-print-range-for-a-spreadsheet-to-limit-output-to-designated-ce.cs
 - configure-worksheet-print-titles-to-repeat-specified-rows-or-columns-on-each-pri.cs
 - retrieve-the-paper-width-and-height-settings-from-a-worksheets-pagesetup-configu.cs
+- write-data-to-the-console-ensuring-proper-formatting-encoding-and-readability-fo.cs
