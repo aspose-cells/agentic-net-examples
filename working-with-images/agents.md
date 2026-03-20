@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - transform-an-xlsx-workbook-into-a-tiff-image-while-maintaining-visual-fidelity-a.cs
 - transform-a-worksheet-from-an-xlsx-file-into-a-scalable-svg-graphic-while-preser.cs
 - generate-an-image-representation-of-a-chart-embedded-in-an-xlsx-workbook-while-p.cs
+- transform-a-chart-from-an-xlsx-workbook-into-an-svg-image-while-maintaining-visu.cs
