@@ -5036,6 +5036,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "explain-the-worksheet-behavior-and-default-printing-range-after-the-defined-prin.cs",
+      "title": "Explain the worksheet behavior and default printing range after the defined print area has been removed."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "generate-a-collection-of-relevant-documentation-articles-linked-to-the-current-f.cs",
       "title": "Generate a collection of relevant documentation articles linked to the current feature for easy navigation."
     },
