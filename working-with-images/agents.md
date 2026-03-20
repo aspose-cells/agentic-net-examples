@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - transform-a-chart-from-an-xlsx-workbook-into-an-svg-image-while-maintaining-visu.cs
 - monitor-the-conversion-status-of-an-xlsx-workbook-to-a-tiff-image-providing-real.cs
 - render-a-worksheet-from-an-xlsx-file-as-an-image-preview-maintaining-cell-format.cs
+- load-a-chart-from-an-xlsx-workbook-and-render-it-to-an-image-format.cs
