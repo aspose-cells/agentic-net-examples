@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-csv-source-then-cleanse-it-by-substituting-any-invalid-ch.cs
 - initialize-a-workbook-by-loading-a-csv-file-through-the-selected-parser-to-inter.cs
 - open-a-workbook-while-loading-the-file-and-use-loaddatafilteroptionsdefinednames.cs
+- programmatically-load-a-workbook-while-filtering-out-defined-names-using-the-loa.cs
