@@ -4716,6 +4716,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "adjust-the-margins-of-headers-and-footers-in-a-spreadsheet-document-to-control-s.cs",
+      "title": "Adjust the margins of headers and footers in a spreadsheet document to control spacing around page content."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-freeze-pane-to-keep-selected-rows-and-columns-fixed-during-spreadsheet-s.cs",
       "title": "Apply a freeze pane to keep selected rows and columns fixed during spreadsheet scrolling operations."
     },
