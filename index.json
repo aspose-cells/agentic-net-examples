@@ -3181,6 +3181,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "programmatically-load-a-workbook-using-the-lightcells-api-to-enable-high-perform.cs",
+      "title": "Programmatically load a workbook using the LightCells API to enable high-performance, low-memory worksheet processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "programmatically-load-a-workbook-while-filtering-out-defined-names-using-the-loa.cs",
       "title": "Programmatically load a workbook while filtering out defined names using the LoadDataFilterOptions.DefinedNames option during initialization."
     },
