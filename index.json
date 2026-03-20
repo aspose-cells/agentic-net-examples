@@ -3011,6 +3011,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-and-initialize-only-the-designated-worksheets-to-reduce-memory-u.cs",
+      "title": "Load a workbook and initialize only the designated worksheets to reduce memory usage and processing time."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-directly-from-a-plain-text-file-interpreting-its-content-into-st.cs",
       "title": "Load a workbook directly from a plain text file, interpreting its content into structured worksheet data."
     },
