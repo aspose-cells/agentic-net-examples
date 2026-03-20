@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - configure-worksheet-print-settings-to-scale-the-entire-column-set-onto-a-single-.cs
 - define-a-specific-print-area-within-an-excel-workbook-to-control-the-range-of-ce.cs
 - remove-any-defined-print-area-from-an-excel-worksheet-to-enable-default-printing.cs
+- define-a-worksheets-print-area-to-specify-the-range-of-cells-included-when-print.cs
