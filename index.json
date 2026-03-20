@@ -2996,6 +2996,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-modern-excel-workbook-xlsx-or-xlsb-from-a-file-path-using-loadoptions-con.cs",
+      "title": "Open a modern Excel workbook (XLSX or XLSB) from a file path using LoadOptions configured for XLSX format."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-using-loadoptions-configured-to-load-only-the-workbooks-da.cs",
       "title": "Open an XLSX workbook using LoadOptions configured to load only the workbook's data without formatting."
     },
