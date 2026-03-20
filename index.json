@@ -3125,6 +3125,11 @@
       "title": "Open an XLSX workbook using LoadOptions configured to load only the workbook's data without formatting."
     },
     {
+      "category": "open-workbook",
+      "file": "programmatically-load-a-workbook-while-filtering-out-defined-names-using-the-loa.cs",
+      "title": "Programmatically load a workbook while filtering out defined names using the LoadDataFilterOptions.DefinedNames option during initialization."
+    },
+    {
       "category": "queries-and-connections",
       "file": "create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs",
       "title": "Create or inspect data connections within an XLSX workbook through the API\u2019s default handling mechanisms."
