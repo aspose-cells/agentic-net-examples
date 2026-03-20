@@ -4996,6 +4996,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-or-retrieve-the-page-orientation-portrait-or-landscape-for-worksheets-within.cs",
+      "title": "Set or retrieve the page orientation (portrait or landscape) for worksheets within a spreadsheet file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-or-retrieve-the-worksheet-tab-bar-width-to-customize-spreadsheet-navigation-.cs",
       "title": "Set or retrieve the worksheet tab bar width to customize spreadsheet navigation appearance programmatically."
     },
