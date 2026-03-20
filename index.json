@@ -3716,6 +3716,11 @@
     },
     {
       "category": "slicer",
+      "file": "refresh-a-worksheet-slicer-after-loading-an-xlsx-workbook-to-accurately-reflect-.cs",
+      "title": "Refresh a worksheet slicer after loading an XLSX workbook to accurately reflect updated data."
+    },
+    {
+      "category": "slicer",
       "file": "remove-a-slicer-from-a-workbook-save-the-workbook-as-an-xlsx-file-and-then-load-.cs",
       "title": "Remove a slicer from a workbook, save the workbook as an XLSX file, and then load it."
     },
