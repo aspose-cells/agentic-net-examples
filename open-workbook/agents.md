@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - cancel-a-workbook-conversion-operation-using-interruptmonitor-when-the-processin.cs
 - identify-scenarios-where-interruptmonitor-can-be-employed-to-abort-a-conversion-.cs
 - run-the-provided-sample-to-abort-a-conversion-operation-by-employing-the-interru.cs
+- open-a-workbook-using-a-warning-callback-to-retrieve-and-process-load-warnings-g.cs
