@@ -2981,6 +2981,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-file-compatible-with-multiple-microsoft-excel-versions-handling-.cs",
+      "title": "Load a workbook file compatible with multiple Microsoft Excel versions, handling format variations programmatically."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-a-specified-file-path-automatically-assuming-the-default-xl.cs",
       "title": "Load a workbook from a specified file path, automatically assuming the default XLSX format."
     },
