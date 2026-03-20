@@ -3666,6 +3666,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-render-its-worksheet-slicer-and-export-the-result-as-an-im.cs",
+      "title": "Load an XLSX workbook, render its worksheet slicer, and export the result as an image file."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
