@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - adjust-the-margins-of-headers-and-footers-in-a-spreadsheet-document-to-control-s.cs
 - place-a-specified-image-into-the-documents-header-or-footer-while-maintaining-la.cs
 - configure-document-headers-and-footers-specifying-content-layout-formatting-page.cs
+- define-and-document-the-available-script-commands-for-automating-workbook-manipu.cs
