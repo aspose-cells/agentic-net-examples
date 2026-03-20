@@ -3656,6 +3656,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-and-render-its-slicer-elements-for-visualization-within-th.cs",
+      "title": "Load an XLSX workbook and render its slicer elements for visualization within the application."
+    },
+    {
+      "category": "slicer",
       "file": "load-an-xlsx-workbook-associate-a-slicer-with-its-pivot-table-and-manage-the-sli.cs",
       "title": "Load an XLSX workbook, associate a slicer with its pivot table, and manage the slicer programmatically."
     },
