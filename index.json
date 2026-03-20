@@ -5181,6 +5181,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-defined-print-titles-from-an-excel-workbook-and-clear-associated-range-re.cs",
+      "title": "Remove defined print titles from an Excel workbook and clear associated range references to reset page settings."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "remove-every-page-break-from-the-worksheet-to-ensure-continuous-printing-without.cs",
       "title": "Remove every page break from the worksheet to ensure continuous printing without pagination interruptions."
     },
