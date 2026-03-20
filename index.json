@@ -3556,6 +3556,11 @@
     },
     {
       "category": "slicer",
+      "file": "generate-a-slicer-in-an-xlsx-workbook-modify-its-attributes-and-load-the-spreads.cs",
+      "title": "Generate a slicer in an XLSX workbook, modify its attributes, and load the spreadsheet programmatically."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
