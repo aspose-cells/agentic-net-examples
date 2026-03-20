@@ -3041,6 +3041,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "instantiate-a-workbook-while-skipping-chart-data-to-reduce-load-time-and-memory-.cs",
+      "title": "Instantiate a workbook while skipping chart data to reduce load time and memory consumption."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-csv-file-into-a-workbook-ensuring-proper-handling-of-special-characters-a.cs",
       "title": "Load a CSV file into a workbook, ensuring proper handling of special characters and correct encoding."
     },
