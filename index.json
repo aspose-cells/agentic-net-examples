@@ -4726,6 +4726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "center-the-selected-worksheet-or-range-on-the-printed-page-to-ensure-symmetrical.cs",
+      "title": "Center the selected worksheet or range on the printed page to ensure symmetrical margins in the output."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-a-worksheet-to-display-its-formulas-instead-of-calculated-values-durin.cs",
       "title": "Configure a worksheet to display its formulas instead of calculated values during data rendering."
     },
