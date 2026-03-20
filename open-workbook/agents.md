@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-tabdelimited-file-preserving-cell-values-data-types-and-c.cs
 - load-a-workbook-from-a-tsv-file-into-memory-preserving-cell-data-and-formatting.cs
 - load-a-workbook-directly-from-a-plain-text-file-interpreting-its-content-into-st.cs
+- load-a-workbook-from-files-in-supported-formats-eg-xlsx-csv-pdf-ods-for-further-.cs
