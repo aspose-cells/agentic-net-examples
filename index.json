@@ -3671,6 +3671,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-render-its-slicer-visualizations-and-export-the-result-as-.cs",
+      "title": "Load an XLSX workbook, render its slicer visualizations, and export the result as a PDF document."
+    },
+    {
+      "category": "slicer",
       "file": "load-an-xlsx-workbook-render-its-worksheet-slicer-and-export-the-result-as-an-im.cs",
       "title": "Load an XLSX workbook, render its worksheet slicer, and export the result as an image file."
     },
