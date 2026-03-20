@@ -3616,6 +3616,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-add-a-pivot-table-connection-and-configure-the-associated-.cs",
+      "title": "Load an XLSX workbook, add a pivot table connection, and configure the associated slicer."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-load-an-xlsx-workbook-and-add-a-slicer-to-the-worksheet-for-dat.cs",
       "title": "Programmatically load an XLSX workbook and add a slicer to the worksheet for data filtering."
     },
