@@ -3646,6 +3646,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-and-programmatically-detach-a-slicer-from-its-associated-p.cs",
+      "title": "Load an XLSX workbook and programmatically detach a slicer from its associated pivot table."
+    },
+    {
+      "category": "slicer",
       "file": "load-an-xlsx-workbook-associate-a-slicer-with-its-pivot-table-and-manage-the-sli.cs",
       "title": "Load an XLSX workbook, associate a slicer with its pivot table, and manage the slicer programmatically."
     },
