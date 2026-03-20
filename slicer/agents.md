@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - unselect-slicer-items-automatically-when-loading-an-xlsx-workbook-to-refresh-the.cs
 - update-the-slicer-refresh-its-state-and-load-the-xlsx-workbook-into-the-workshee.cs
 - modify-the-workbooks-slicer-export-the-workbook-to-an-xlsx-file-and-subsequently.cs
+- refresh-a-slicer-in-an-xlsx-workbook-by-loading-the-file-and-applying-updated-fi.cs
