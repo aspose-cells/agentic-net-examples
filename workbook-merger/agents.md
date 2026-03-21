@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - validate-all-required-conditions-and-worksheet-compatibility-prior-to-merging-mu.cs
 - load-source-worksheets-into-the-workbook-to-enable-subsequent-data-manipulation-.cs
 - merge-multiple-worksheets-into-a-single-worksheet-while-preserving-data-integrit.cs
+- persist-the-combined-worksheet-to-an-xlsx-file-preserving-excel-compatibility-an.cs
