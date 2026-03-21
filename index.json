@@ -4201,6 +4201,11 @@
     },
     {
       "category": "sparkline",
+      "file": "generate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specified-cr.cs",
+      "title": "Generate a Sparkline group within an XLSX workbook according to the specified creation procedure."
+    },
+    {
+      "category": "sparkline",
       "file": "generate-sparklines-within-an-xlsx-workbook-by-following-the-defined-creation-gu.cs",
       "title": "Generate sparklines within an XLSX workbook by following the defined creation guidelines and settings."
     },
