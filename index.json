@@ -4191,6 +4191,11 @@
     },
     {
       "category": "sparkline",
+      "file": "insert-a-sparkline-into-an-existing-sparklinegroup-of-an-xlsx-workbook-by-invoki.cs",
+      "title": "Insert a sparkline into an existing SparklineGroup of an XLSX workbook by invoking SparklineGroup.Add."
+    },
+    {
+      "category": "sparkline",
       "file": "instantiate-a-sparklinegroup-in-an-xlsx-worksheet-by-invoking-the-worksheetspark.cs",
       "title": "Instantiate a SparklineGroup in an XLSX worksheet by invoking the Worksheet.SparklineGroups.Add method, specifying the target range and data series."
     },
