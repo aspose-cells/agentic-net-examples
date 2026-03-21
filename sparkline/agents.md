@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - create-a-duplicate-of-a-sparklinegroup-by-calling-its-copy-method-with-the-origi.cs
 - assign-a-new-data-range-to-a-duplicated-sparkline-within-an-xlsx-worksheet-docum.cs
 - assign-the-destination-cell-for-a-duplicated-sparkline-in-a-spreadsheet-file-suc.cs
+- in-an-xlsx-workbook-duplicate-a-sparklinegroup-and-modify-its-type-color-series-.cs
