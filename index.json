@@ -4206,6 +4206,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-the-sparkline-placement-within-an-xlsx-workbook-following-the-prescrib.cs",
+      "title": "Configure the Sparkline placement within an XLSX workbook following the prescribed Sparkline location settings."
+    },
+    {
+      "category": "sparkline",
       "file": "configure-the-sparkline-type-within-an-xlsx-workbook-as-specified-in-the-setting.cs",
       "title": "Configure the Sparkline type within an XLSX workbook as specified in the Setting Sparkline Type guidelines."
     },
