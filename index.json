@@ -4046,6 +4046,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "utilize-smart-markers-with-slicer-functionality-to-import-array-elements-while-l.cs",
+      "title": "Utilize smart markers with slicer functionality to import array elements while loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs",
       "title": "Utilize the RANGE parameter to create rows for each object in a collection when loading an XLSX file."
     },
