@@ -3901,6 +3901,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-notification-handling-during-data-merge-using-smart-markers-when-loadi.cs",
+      "title": "Implement notification handling during data merge using Smart Markers when loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-row-repetition-based-on-a-defined-range-during-the-process-of-loading-.cs",
       "title": "Implement row repetition based on a defined range during the process of loading the XLSX workbook."
     },
