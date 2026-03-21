@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - configure-sparkline-axis-parameters-within-an-xlsx-workbook-according-to-the-cus.cs
 - duplicate-a-sparklinegroup-in-an-xlsx-workbook-by-invoking-its-copy-method-with-.cs
 - assign-a-new-cell-range-to-the-datarange-property-of-the-duplicated-sparkline-in.cs
+- assign-the-destination-cell-for-a-copied-sparkline-within-an-xlsx-worksheet-to-d.cs
