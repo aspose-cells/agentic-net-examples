@@ -3881,6 +3881,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "instantiate-a-variable-named-varname-and-load-an-xlsx-workbook-into-it-using-the.cs",
+      "title": "Instantiate a variable named {{#varName}} and load an XLSX workbook into it using the appropriate API."
+    },
+    {
+      "category": "smart-markers",
       "file": "instantiate-an-anonymous-c-object-assign-it-via-workbookdesignersetdatasource-an.cs",
       "title": "Instantiate an anonymous C# object, assign it via WorkbookDesigner.SetDataSource, and fill smart markers in an XLSX template."
     },
