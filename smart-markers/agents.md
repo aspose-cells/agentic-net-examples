@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - instantiate-a-custom-object-that-loads-data-from-an-xlsx-workbook-for-further-pr.cs
 - populate-smart-markers-with-object-data-while-loading-an-xlsx-workbook-ensuring-.cs
 - implement-a-conditional-smart-marker-in-an-xlsx-file-that-displays-a-value-only-.cs
+- declare-a-template-variable-and-utilize-it-to-iterate-a-row-block-when-loading-a.cs
