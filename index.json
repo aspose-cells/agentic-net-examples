@@ -3876,6 +3876,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-smart-marker-processing-by-loading-an-xlsx-workbook-and-utilizing-the-.cs",
+      "title": "Implement Smart Marker processing by loading an XLSX workbook and utilizing the RANGE parameter to define data scopes."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-support-for-if-conditionendif-conditional-syntax-when-loading-xlsx-spr.cs",
       "title": "Implement support for {{IF condition}}\u2026{{ENDIF}} conditional syntax when loading XLSX spreadsheets, preserving cell formatting and data integrity."
     },
