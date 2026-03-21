@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - set-sparkline-axis-properties-via-the-sparklinegroupaxis-api-for-xlsx-spreadshee.cs
 - configure-sparkline-colors-in-an-xlsx-workbook-based-on-the-values-defined-under.cs
 - activate-sparkline-markers-in-an-xlsx-workbook-according-to-the-specified-enabli.cs
+- configure-sparkline-axis-parameters-within-an-xlsx-workbook-according-to-the-cus.cs
