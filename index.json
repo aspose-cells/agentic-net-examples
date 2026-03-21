@@ -4176,6 +4176,11 @@
     },
     {
       "category": "sparkline",
+      "file": "assign-the-sparklinetype-property-to-define-the-sparkline-style-line-column-or-w.cs",
+      "title": "Assign the Sparkline.Type property to define the sparkline style (Line, Column, or WinLoss) in an XLSX workbook."
+    },
+    {
+      "category": "sparkline",
       "file": "configure-a-sparklines-visual-representation-as-line-column-or-winloss-in-an-xls.cs",
       "title": "Configure a sparkline's visual representation as Line, Column, or WinLoss in an XLSX workbook via the Sparkline.Type property."
     },
