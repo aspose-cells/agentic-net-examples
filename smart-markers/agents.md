@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - utilize-smart-marker-techniques-for-importing-nested-objects-efficiently-when-lo.cs
 - bind-a-variablelength-array-to-a-smart-marker-range-block-to-dynamically-generat.cs
 - bind-the-array-to-the-designer-so-the-range-block-iterates-over-each-element-and.cs
+- utilize-smart-markers-to-import-variablelength-arrays-from-external-data-sources.cs
