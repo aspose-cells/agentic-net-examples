@@ -3866,6 +3866,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-if-parameters-and-variable-driven-smart-markers-to-load-data-from-an-x.cs",
+      "title": "Implement IF parameters and variable-driven Smart Markers to load data from an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-support-for-if-conditionendif-conditional-syntax-when-loading-xlsx-spr.cs",
       "title": "Implement support for {{IF condition}}\u2026{{ENDIF}} conditional syntax when loading XLSX spreadsheets, preserving cell formatting and data integrity."
     },
