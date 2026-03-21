@@ -3936,6 +3936,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-formula-parameter-handling-in-smart-marker-fields-during-xlsx-workbook.cs",
+      "title": "Implement formula parameter handling in Smart Marker fields during XLSX workbook loading to enable dynamic data population."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-if-parameters-and-variable-driven-smart-markers-to-load-data-from-an-x.cs",
       "title": "Implement IF parameters and variable-driven Smart Markers to load data from an XLSX workbook."
     },
