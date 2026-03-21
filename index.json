@@ -4466,6 +4466,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "load-source-worksheets-into-the-workbook-to-enable-subsequent-data-manipulation-.cs",
+      "title": "Load source worksheets into the workbook to enable subsequent data manipulation and processing operations."
+    },
+    {
+      "category": "workbook-merger",
       "file": "merge-multiple-workbook-files-into-a-single-workbook-while-maintaining-cell-form.cs",
       "title": "Merge multiple workbook files into a single workbook while maintaining cell formatting and formulas."
     },
