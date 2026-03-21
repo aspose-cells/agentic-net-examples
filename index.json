@@ -3811,6 +3811,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-numeric-formatting-using-field_name000-pattern-when-importing-data-from-an.cs",
+      "title": "Apply numeric formatting using {{field_name:0.00}} pattern when importing data from an XLSX Excel workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-smart-markers-techniques-to-load-data-from-xlsx-files-for-dynamic-spreadsh.cs",
       "title": "Apply Smart Markers techniques to load data from XLSX files for dynamic spreadsheet generation."
     },
