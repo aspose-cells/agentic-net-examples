@@ -4176,6 +4176,11 @@
     },
     {
       "category": "sparkline",
+      "file": "activate-threedimensional-sparklines-by-assigning-true-to-the-sparklinegroupis3d.cs",
+      "title": "Activate three\u2011dimensional sparklines by assigning true to the SparklineGroup.Is3D property in supported XLSX workbooks."
+    },
+    {
+      "category": "sparkline",
       "file": "add-a-sparklinegroup-to-an-xlsx-workbook-by-invoking-the-worksheetsparklinegroup.cs",
       "title": "Add a SparklineGroup to an XLSX workbook by invoking the Worksheet.SparklineGroups.Add method with appropriate parameters."
     },
