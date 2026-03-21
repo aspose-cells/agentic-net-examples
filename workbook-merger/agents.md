@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - combine-multiple-source-files-into-a-single-output-document-maintaining-original.cs
 - identify-and-list-all-file-formats-that-can-be-combined-when-merging-workbooks-i.cs
 - combine-multiple-workbook-files-into-a-single-workbook-following-the-specified-m.cs
+- combine-multiple-worksheets-into-a-single-workbook-according-to-the-specified-wo.cs
