@@ -4416,6 +4416,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbook-objects-into-a-single-workbook-and-persist-the-result-.cs",
+      "title": "Combine multiple workbook objects into a single workbook and persist the result as an XLSX file."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbooks-by-loading-each-workbook-and-adding-it-to-a-workbookc.cs",
       "title": "Combine multiple workbooks by loading each workbook and adding it to a WorkbookCollection in XLSX format."
     },
