@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - evaluate-the-provided-code-samples-for-loading-xlsx-files-to-ensure-correct-usag.cs
 - utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs
 - terminate-the-range-block-using-the-endrange-token-when-loading-an-xlsx-file-in-.cs
+- implement-smart-marker-processing-by-loading-an-xlsx-workbook-and-utilizing-the-.cs
