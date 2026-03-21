@@ -4211,6 +4211,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-sparkline-colors-in-an-xlsx-workbook-based-on-the-values-defined-under.cs",
+      "title": "Configure sparkline colors in an XLSX workbook based on the values defined under the \u201cSetting Sparkline Colors\u201d heading."
+    },
+    {
+      "category": "sparkline",
       "file": "configure-sparklinegroup-properties-to-adjust-style-markers-and-colors-of-sparkl.cs",
       "title": "Configure SparklineGroup properties to adjust style, markers, and colors of sparklines within an XLSX workbook."
     },
