@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - deserialize-json-into-a-net-object-and-fill-an-xlsx-template-using-smart-markers.cs
 - load-an-xlsx-workbook-using-smart-markers-to-import-json-data-according-to-the-d.cs
 - generate-a-masterdetail-report-by-configuring-master-and-detail-range-blocks-wit.cs
+- create-a-master-range-named-range-mastercollection-by-loading-an-xlsx-workbook-i.cs
