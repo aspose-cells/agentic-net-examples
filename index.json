@@ -4206,6 +4206,11 @@
     },
     {
       "category": "sparkline",
+      "file": "assign-a-new-data-range-to-a-duplicated-sparkline-within-an-xlsx-worksheet-docum.cs",
+      "title": "Assign a new data range to a duplicated sparkline within an XLSX worksheet document."
+    },
+    {
+      "category": "sparkline",
       "file": "assign-sparklinegroupcolorseries-to-define-the-sparkline-series-color-in-support.cs",
       "title": "Assign\u202fSparklineGroup.ColorSeries\u202fto define the sparkline series color in supported spreadsheet files such\u202fas\u202fXLSX."
     },
