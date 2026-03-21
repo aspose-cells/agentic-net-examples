@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - activate-threedimensional-sparklines-by-assigning-true-to-the-sparklinegroupis3d.cs
 - assign-sparklinegroupcolorseries-to-define-the-sparkline-series-color-in-support.cs
 - activate-sparkline-markers-by-assigning-true-to-sparklinegroupshowmarkers-within.cs
+- set-sparkline-axis-properties-via-the-sparklinegroupaxis-api-for-xlsx-spreadshee.cs
