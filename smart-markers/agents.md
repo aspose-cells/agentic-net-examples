@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - instantiate-an-anonymous-object-populated-with-data-extracted-from-an-xlsx-workb.cs
 - instantiate-a-custom-object-that-loads-data-from-an-xlsx-workbook-for-further-pr.cs
 - populate-smart-markers-with-object-data-while-loading-an-xlsx-workbook-ensuring-.cs
+- implement-a-conditional-smart-marker-in-an-xlsx-file-that-displays-a-value-only-.cs
