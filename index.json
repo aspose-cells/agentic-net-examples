@@ -3941,6 +3941,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "import-array-elements-satisfying-a-condition-into-an-xlsx-file-using-a-smart-mar.cs",
+      "title": "Import array elements satisfying a condition into an XLSX file using a smart marker slicer expression."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-smart-markers-into-an-xlsx-template-and-fill-them-from-a-net-datatable-us.cs",
       "title": "Insert smart markers into an XLSX template and fill them from a .NET DataTable using WorkbookDesigner."
     },
