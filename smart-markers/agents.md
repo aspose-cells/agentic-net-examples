@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - define-a-person-class-with-name-and-age-properties-and-map-data-from-an-xlsx-spr.cs
 - assign-an-xlsx-data-source-to-the-designer-object-by-calling-the-designersetdata.cs
 - integrate-an-anonymous-or-custom-object-as-a-data-source-for-smart-markers-when-.cs
+- instantiate-an-anonymous-object-populated-with-data-extracted-from-an-xlsx-workb.cs
