@@ -3796,6 +3796,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "add-a-smart-marker-formatted-as-field_name-to-a-target-cell-while-loading-an-xls.cs",
+      "title": "Add a smart marker formatted as {{field_name}} to a target cell while loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs",
       "title": "Implement conditional smart marker expressions to render data selectively when loading an XLSX workbook."
     },
