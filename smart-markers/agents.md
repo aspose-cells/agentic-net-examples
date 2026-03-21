@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - use-the-range-parameter-to-duplicate-rows-for-each-collection-element-while-impo.cs
 - specify-the-range-parameter-when-loading-an-xlsx-file-to-restrict-import-to-a-de.cs
 - access-a-specific-array-element-using-its-zerobased-index-within-a-smart-marker-.cs
+- utilize-smart-markers-to-import-an-array-element-by-its-index-while-loading-an-x.cs
