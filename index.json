@@ -4386,6 +4386,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "read-and-load-the-source-workbook-files-into-memory-preparing-them-for-further-m.cs",
+      "title": "Read and load the source workbook files into memory, preparing them for further manipulation and analysis."
+    },
+    {
+      "category": "workbook-merger",
       "file": "validate-that-all-necessary-prerequisites-are-met-before-initiating-any-workbook.cs",
       "title": "Validate that all necessary prerequisites are met before initiating any workbook merging process in the application."
     },
