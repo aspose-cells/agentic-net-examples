@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - configure-the-data-range-for-a-sparkline-within-an-xlsx-workbook-using-the-api.cs
 - configure-the-sparkline-placement-within-an-xlsx-workbook-following-the-prescrib.cs
 - modify-the-visual-properties-of-sparklines-in-an-xlsx-workbook-according-to-the-.cs
+- modify-the-depth-property-of-3d-sparklines-via-the-sparklinegroupdepth-attribute.cs
