@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - consolidate-several-workbook-files-into-one-workbook-preserving-worksheets-style.cs
 - combine-multiple-workbooks-into-a-single-workbook-after-validating-that-all-requ.cs
 - load-multiple-xlsx-workbooks-and-merge-them-into-a-single-workbook-while-preserv.cs
+- combine-multiple-workbook-files-into-a-single-workbook-while-preserving-sheet-st.cs
