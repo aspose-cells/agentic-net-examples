@@ -3816,6 +3816,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs",
+      "title": "Determine the Smart Markers definition present in an XLSX workbook file upon loading it."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs",
       "title": "Implement conditional smart marker expressions to render data selectively when loading an XLSX workbook."
     },
