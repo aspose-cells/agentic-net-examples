@@ -4201,6 +4201,11 @@
     },
     {
       "category": "sparkline",
+      "file": "assign-a-new-cell-range-to-the-datarange-property-of-the-duplicated-sparkline-in.cs",
+      "title": "Assign a new cell range to the DataRange property of the duplicated Sparkline in the XLSX workbook."
+    },
+    {
+      "category": "sparkline",
       "file": "assign-sparklinegroupcolorseries-to-define-the-sparkline-series-color-in-support.cs",
       "title": "Assign\u202fSparklineGroup.ColorSeries\u202fto define the sparkline series color in supported spreadsheet files such\u202fas\u202fXLSX."
     },
