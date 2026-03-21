@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - configure-sparklinegroup-properties-to-customize-sparkline-styles-markers-and-co.cs
 - generate-sparklines-within-an-xlsx-workbook-by-following-the-defined-creation-gu.cs
 - analyze-an-xlsx-workbook-to-extract-and-report-sparkline-properties-according-to.cs
+- generate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specified-cr.cs
