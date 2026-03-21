@@ -4036,6 +4036,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "utilize-smart-markers-to-import-an-array-element-by-its-index-while-loading-an-x.cs",
+      "title": "Utilize smart markers to import an array element by its index while loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs",
       "title": "Utilize the RANGE parameter to create rows for each object in a collection when loading an XLSX file."
     },
