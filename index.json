@@ -3891,6 +3891,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-the-range-parameter-syntax-to-load-xlsx-workbooks-with-selective-cell-.cs",
+      "title": "Implement the RANGE parameter syntax to load XLSX workbooks with selective cell range extraction."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-variable-substitution-in-smart-markers-when-loading-data-from-an-xlsx-.cs",
       "title": "Implement variable substitution in Smart Markers when loading data from an XLSX workbook file."
     },
