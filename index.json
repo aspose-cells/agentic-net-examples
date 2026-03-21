@@ -4211,6 +4211,11 @@
     },
     {
       "category": "sparkline",
+      "file": "insert-a-new-sparkline-into-an-existing-sparkline-group-within-an-xlsx-workbook-.cs",
+      "title": "Insert a new sparkline into an existing sparkline group within an XLSX workbook programmatically."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs",
       "title": "Insert a new sparkline into an existing SparklineGroup within an XLSX workbook by invoking SparklineGroup.Add."
     },
