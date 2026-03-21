@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - implement-smart-marker-processing-by-loading-an-xlsx-workbook-and-utilizing-the-.cs
 - implement-the-range-parameter-syntax-to-load-xlsx-workbooks-with-selective-cell-.cs
 - implement-row-repetition-based-on-a-defined-range-during-the-process-of-loading-.cs
+- validate-the-example-demonstrating-loading-an-xlsx-workbook-and-ensure-it-operat.cs
