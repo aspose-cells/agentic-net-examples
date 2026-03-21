@@ -3986,6 +3986,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-a-formula-into-a-smartmarker-field-via-the-formula-parameter-while-loadin.cs",
+      "title": "Insert a formula into a smart\u2011marker field via the FORMULA parameter while loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-smart-markers-into-an-xlsx-template-and-fill-them-from-a-net-datatable-us.cs",
       "title": "Insert smart markers into an XLSX template and fill them from a .NET DataTable using WorkbookDesigner."
     },
