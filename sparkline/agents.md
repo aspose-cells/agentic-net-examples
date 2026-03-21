@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - add-a-sparklinegroup-to-an-xlsx-workbook-by-invoking-the-worksheetsparklinegroup.cs
+- insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs
