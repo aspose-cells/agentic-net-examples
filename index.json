@@ -4476,6 +4476,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "merge-multiple-worksheets-into-a-single-worksheet-while-preserving-data-integrit.cs",
+      "title": "Merge multiple worksheets into a single worksheet while preserving data integrity, formatting, and formulas across the workbook."
+    },
+    {
+      "category": "workbook-merger",
       "file": "persist-the-merged-workbook-to-an-xlsx-file-ensuring-proper-workbook-structure-a.cs",
       "title": "Persist the merged workbook to an XLSX file, ensuring proper workbook structure and data integrity."
     },
