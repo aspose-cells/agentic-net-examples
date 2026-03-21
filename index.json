@@ -3896,6 +3896,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-masterdetail-report-by-configuring-master-and-detail-range-blocks-wit.cs",
+      "title": "Generate a master\u2011detail report by configuring master and detail RANGE blocks within an XLSX template."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-conditional-smart-marker-in-an-xlsx-file-that-displays-a-value-only-.cs",
       "title": "Implement a conditional smart marker in an XLSX file that displays a value only when the condition is true."
     },
