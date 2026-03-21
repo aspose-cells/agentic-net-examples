@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs
 - load-an-xlsx-workbook-and-process-it-using-smart-marker-syntax-to-generate-the-d.cs
 - load-xlsx-files-utilizing-only-the-supported-smart-marker-types-to-ensure-correc.cs
+- create-a-basic-smart-marker-implementation-that-loads-an-xlsx-workbook-into-memo.cs
