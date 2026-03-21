@@ -3876,6 +3876,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-a-custom-data-source-for-the-workbook-designer-and-load-the-target-xls.cs",
+      "title": "Configure a custom data source for the workbook designer and load the target XLSX workbook accordingly."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-automatic-overflow-to-propagate-smart-marker-data-across-additional-wo.cs",
       "title": "Configure automatic overflow to propagate smart marker data across additional worksheets when loading large XLSX datasets."
     },
