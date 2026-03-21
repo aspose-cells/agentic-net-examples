@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - add-a-sparklinegroup-to-an-xlsx-workbook-by-invoking-the-worksheetsparklinegroup.cs
 - insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs
 - configure-a-sparklines-visual-representation-as-line-column-or-winloss-in-an-xls.cs
+- set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs
