@@ -4291,6 +4291,11 @@
     },
     {
       "category": "sparkline",
+      "file": "in-an-xlsx-workbook-duplicate-a-sparklinegroup-and-modify-its-type-color-series-.cs",
+      "title": "In an XLSX workbook, duplicate a SparklineGroup and modify its type, color series, and markers as required."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-new-sparkline-into-an-existing-sparkline-group-within-an-xlsx-workbook-.cs",
       "title": "Insert a new sparkline into an existing sparkline group within an XLSX workbook programmatically."
     },
