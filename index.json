@@ -4271,6 +4271,11 @@
     },
     {
       "category": "sparkline",
+      "file": "copy-a-sparkline-by-defining-its-data-range-and-target-location-within-an-xlsx-w.cs",
+      "title": "Copy a sparkline by defining its data range and target location within an XLSX workbook."
+    },
+    {
+      "category": "sparkline",
       "file": "create-a-duplicate-of-a-sparklinegroup-by-calling-its-copy-method-with-the-origi.cs",
       "title": "Create a duplicate of a SparklineGroup by calling its Copy method with the original group in an XLSX spreadsheet."
     },
