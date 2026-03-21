@@ -3866,6 +3866,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "integrate-an-anonymous-or-custom-object-as-a-data-source-for-smart-markers-when-.cs",
+      "title": "Integrate an anonymous or custom object as a data source for smart markers when loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-xlsx-workbook-and-process-it-using-smart-marker-syntax-to-generate-the-d.cs",
       "title": "Load an XLSX workbook and process it using Smart Marker syntax to generate the desired output."
     },
