@@ -3881,6 +3881,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "define-a-detail-range-inside-the-master-range-using-range-detailcollection-when-.cs",
+      "title": "Define a detail range inside the master range using {{RANGE DetailCollection}} when loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-person-class-with-name-and-age-properties-and-map-data-from-an-xlsx-spr.cs",
       "title": "Define a Person class with Name and Age properties and map data from an XLSX spreadsheet into its instances."
     },
