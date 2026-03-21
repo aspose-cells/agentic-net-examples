@@ -4426,6 +4426,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbooks-into-a-single-workbook-after-validating-that-all-requ.cs",
+      "title": "Combine multiple workbooks into a single workbook after validating that all required prerequisites are satisfied."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbooks-into-a-single-workbook-and-output-the-result-in-xlsx-.cs",
       "title": "Combine multiple workbooks into a single workbook and output the result in XLSX format."
     },
