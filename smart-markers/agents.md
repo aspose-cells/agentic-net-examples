@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - import-array-elements-satisfying-a-condition-into-an-xlsx-file-using-a-smart-mar.cs
 - utilize-smart-markers-with-slicer-functionality-to-import-array-elements-while-l.cs
 - deserialize-json-into-a-net-object-and-fill-an-xlsx-template-using-smart-markers.cs
+- load-an-xlsx-workbook-using-smart-markers-to-import-json-data-according-to-the-d.cs
