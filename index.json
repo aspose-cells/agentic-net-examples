@@ -4446,6 +4446,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "develop-a-sample-demonstrating-how-to-combine-multiple-workbooks-into-a-single-w.cs",
+      "title": "Develop a sample demonstrating how to combine multiple workbooks into a single workbook programmatically."
+    },
+    {
+      "category": "workbook-merger",
       "file": "identify-and-list-all-file-formats-that-can-be-combined-when-merging-workbooks-i.cs",
       "title": "Identify and list all file formats that can be combined when merging workbooks in the .NET API."
     },
