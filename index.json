@@ -4021,6 +4021,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-range-parameter-to-duplicate-rows-for-each-collection-element-while-impo.cs",
+      "title": "Use the RANGE parameter to duplicate rows for each collection element while importing an XLSX file."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs",
       "title": "Utilize the RANGE parameter to create rows for each object in a collection when loading an XLSX file."
     },
