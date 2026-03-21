@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - consolidate-several-worksheets-into-one-worksheet-merging-their-data-and-preserv.cs
 - validate-all-required-conditions-and-worksheet-compatibility-prior-to-merging-mu.cs
 - load-source-worksheets-into-the-workbook-to-enable-subsequent-data-manipulation-.cs
+- merge-multiple-worksheets-into-a-single-worksheet-while-preserving-data-integrit.cs
