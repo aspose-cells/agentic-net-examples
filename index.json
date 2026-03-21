@@ -3876,6 +3876,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-the-if-parameter-syntax-during-the-loading-process-of-an-xlsx-workbook.cs",
+      "title": "Implement the IF parameter syntax during the loading process of an XLSX workbook to evaluate conditional expressions correctly."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-smart-markers-into-an-xlsx-template-and-fill-them-from-a-net-datatable-us.cs",
       "title": "Insert smart markers into an XLSX template and fill them from a .NET DataTable using WorkbookDesigner."
     },
