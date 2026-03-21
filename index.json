@@ -3926,6 +3926,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-masterdetail-smart-markers-by-loading-an-xlsx-workbook-and-populating-.cs",
+      "title": "Implement master\u2011detail smart markers by loading an XLSX workbook and populating data accordingly using the appropriate API."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-notification-handling-during-data-merge-using-smart-markers-when-loadi.cs",
       "title": "Implement notification handling during data merge using Smart Markers when loading an XLSX workbook."
     },
