@@ -3946,6 +3946,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-xlsx-workbook-apply-a-date-smart-marker-formatted-as-mmddyyyy-and-render.cs",
+      "title": "Load an XLSX workbook, apply a date smart marker formatted as MM/dd/yyyy, and render the dates accordingly."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-xlsx-files-utilizing-only-the-supported-smart-marker-types-to-ensure-correc.cs",
       "title": "Load XLSX files utilizing only the supported Smart Marker types to ensure correct data parsing."
     },
