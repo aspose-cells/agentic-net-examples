@@ -4391,6 +4391,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-source-files-into-a-single-output-document-maintaining-original.cs",
+      "title": "Combine multiple source files into a single output document, maintaining original data integrity and format compatibility."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbook-files-into-a-single-workbook-while-preserving-cell-dat.cs",
       "title": "Combine multiple workbook files into a single workbook while preserving cell data and formatting."
     },
