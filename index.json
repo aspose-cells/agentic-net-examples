@@ -4381,6 +4381,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-chart-objects-into-a-single-composite-chart-following-the-defin.cs",
+      "title": "Combine multiple chart objects into a single composite chart following the defined merging strategy."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-complete-workbooks-into-one-consolidated-workbook-while-maintai.cs",
       "title": "Combine multiple complete workbooks into one consolidated workbook while maintaining all worksheets and data."
     },
