@@ -3861,6 +3861,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-master-range-named-range-mastercollection-by-loading-an-xlsx-workbook-i.cs",
+      "title": "Create a master range named {{RANGE MasterCollection}} by loading an XLSX workbook into memory."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-smart-marker-using-conditional-logic-while-loading-data-from-an-xlsx-sp.cs",
       "title": "Create a smart marker using conditional logic while loading data from an XLSX spreadsheet."
     },
