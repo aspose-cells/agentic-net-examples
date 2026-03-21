@@ -4396,6 +4396,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbook-files-into-a-single-workbook-following-the-specified-m.cs",
+      "title": "Combine multiple workbook files into a single workbook following the specified merging workflow process."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbook-files-into-a-single-workbook-while-preserving-cell-dat.cs",
       "title": "Combine multiple workbook files into a single workbook while preserving cell data and formatting."
     },
