@@ -3821,6 +3821,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-custom-number-format-field_name-409000-to-cells-during-xlsx-workbook-l.cs",
+      "title": "Apply the custom number format {{field_name:[$-409]#,##0.00}} to cells during XLSX workbook loading process, ensuring correct regional formatting."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-range-parameter-to-duplicate-a-row-block-for-each-collection-element-d.cs",
       "title": "Apply the RANGE parameter to duplicate a row block for each collection element during XLSX loading."
     },
