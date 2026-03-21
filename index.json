@@ -3836,6 +3836,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "define-a-person-class-with-name-and-age-properties-and-map-data-from-an-xlsx-spr.cs",
+      "title": "Define a Person class with Name and Age properties and map data from an XLSX spreadsheet into its instances."
+    },
+    {
+      "category": "smart-markers",
       "file": "determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs",
       "title": "Determine the Smart Markers definition present in an XLSX workbook file upon loading it."
     },
