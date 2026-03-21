@@ -4486,6 +4486,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "validate-all-required-conditions-and-worksheet-compatibility-prior-to-merging-mu.cs",
+      "title": "Validate all required conditions and worksheet compatibility prior to merging multiple worksheets into a single workbook."
+    },
+    {
+      "category": "workbook-merger",
       "file": "validate-that-all-necessary-prerequisites-are-met-before-initiating-any-workbook.cs",
       "title": "Validate that all necessary prerequisites are met before initiating any workbook merging process in the application."
     },
