@@ -4006,6 +4006,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-xlsx-workbook-using-smart-markers-to-import-json-data-according-to-the-d.cs",
+      "title": "Load an XLSX workbook using Smart Markers to import JSON data according to the described methodology."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-xlsx-files-utilizing-only-the-supported-smart-marker-types-to-ensure-correc.cs",
       "title": "Load XLSX files utilizing only the supported Smart Marker types to ensure correct data parsing."
     },
