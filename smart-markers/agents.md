@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - declare-a-template-variable-and-utilize-it-to-iterate-a-row-block-when-loading-a.cs
 - implement-support-for-if-conditionendif-conditional-syntax-when-loading-xlsx-spr.cs
 - instantiate-a-variable-named-varname-and-load-an-xlsx-workbook-into-it-using-the.cs
+- reference-the-variable-varname-when-programmatically-loading-an-xlsx-workbook-in.cs
