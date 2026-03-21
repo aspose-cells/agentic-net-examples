@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - apply-number-formatting-to-cells-after-loading-an-xlsx-workbook-to-ensure-proper.cs
 - apply-appropriate-date-formatting-to-all-relevant-cells-during-the-loading-proce.cs
 - load-an-xlsx-workbook-and-apply-custom-formatting-to-its-cells-and-worksheets-pr.cs
+- register-for-the-smartmarkerprocessing-event-to-get-notifications-during-data-me.cs
