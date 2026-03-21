@@ -4176,6 +4176,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-a-sparklines-visual-representation-as-line-column-or-winloss-in-an-xls.cs",
+      "title": "Configure a sparkline's visual representation as Line, Column, or WinLoss in an XLSX workbook via the Sparkline.Type property."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs",
       "title": "Insert a new sparkline into an existing SparklineGroup within an XLSX workbook by invoking SparklineGroup.Add."
     },
