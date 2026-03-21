@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs
 - utilize-the-range-parameter-to-dynamically-create-rows-from-an-object-collection.cs
 - add-a-smart-marker-formatted-as-field_name-to-a-target-cell-while-loading-an-xls.cs
+- apply-conditional-logic-using-the-if-parameter-syntax-if-field_namevalue-when-lo.cs
