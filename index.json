@@ -3961,6 +3961,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-xlsx-workbook-and-apply-custom-formatting-to-its-cells-and-worksheets-pr.cs",
+      "title": "Load an XLSX workbook and apply custom formatting to its cells and worksheets programmatically."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-xlsx-workbook-and-apply-the-field_namemmddyyyy-date-format-to-designated.cs",
       "title": "Load an XLSX workbook and apply the {{field_name:MM/dd/yyyy}} date format to designated cells appropriately."
     },
