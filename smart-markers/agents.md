@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - insert-smart-markers-into-an-xlsx-template-and-fill-them-from-a-net-datatable-us.cs
+- implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs
