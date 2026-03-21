@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - implement-the-if-parameter-syntax-during-the-loading-process-of-an-xlsx-workbook.cs
 - implement-variable-substitution-in-smart-markers-when-loading-data-from-an-xlsx-.cs
 - evaluate-the-provided-code-samples-for-loading-xlsx-files-to-ensure-correct-usag.cs
+- utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs
