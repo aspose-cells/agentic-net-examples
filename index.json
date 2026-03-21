@@ -3951,6 +3951,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-getvaluestring-name-to-retrieve-marker-specific-data-by-loading-the-xl.cs",
+      "title": "Implement GetValue(string name) to retrieve marker-specific data by loading the XLSX workbook file into memory."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-if-parameters-and-variable-driven-smart-markers-to-load-data-from-an-x.cs",
       "title": "Implement IF parameters and variable-driven Smart Markers to load data from an XLSX workbook."
     },
