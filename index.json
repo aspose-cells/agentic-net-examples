@@ -3916,6 +3916,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "reference-the-variable-varname-when-programmatically-loading-an-xlsx-workbook-in.cs",
+      "title": "Reference the variable {{varName}} when programmatically loading an XLSX workbook into memory for processing."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-dynamically-create-rows-from-an-object-collection.cs",
       "title": "Utilize the RANGE parameter to dynamically create rows from an object collection while loading an XLSX file."
     },
