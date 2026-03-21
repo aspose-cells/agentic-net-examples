@@ -4191,6 +4191,11 @@
     },
     {
       "category": "sparkline",
+      "file": "instantiate-a-sparklinegroup-in-an-xlsx-worksheet-by-invoking-the-worksheetspark.cs",
+      "title": "Instantiate a SparklineGroup in an XLSX worksheet by invoking the Worksheet.SparklineGroups.Add method, specifying the target range and data series."
+    },
+    {
+      "category": "sparkline",
       "file": "set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs",
       "title": "Set the Sparkline.DataRange property to specify the data range for a sparkline within an XLSX workbook."
     },
