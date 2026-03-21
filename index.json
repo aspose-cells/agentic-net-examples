@@ -4375,6 +4375,11 @@
       "title": "Combine multiple workbooks into a single workbook and output the result in XLSX format."
     },
     {
+      "category": "workbook-merger",
+      "file": "import-workbooks-from-any-supported-format-and-combine-them-into-a-single-newly-.cs",
+      "title": "Import workbooks from any supported format and combine them into a single newly created workbook."
+    },
+    {
       "category": "working-with-html",
       "file": "alter-the-html-hyperlink-target-type-when-converting-an-xlsx-workbook-to-html-ou.cs",
       "title": "Alter the HTML hyperlink target type when converting an XLSX workbook to HTML output."
