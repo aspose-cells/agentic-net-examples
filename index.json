@@ -3971,6 +3971,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "validate-the-example-demonstrating-loading-an-xlsx-workbook-and-ensure-it-operat.cs",
+      "title": "Validate the example demonstrating loading an XLSX workbook and ensure it operates correctly within the library."
+    },
+    {
+      "category": "smart-markers",
       "file": "when-loading-an-xlsx-file-apply-field-formatting-via-the-specified-field_namefor.cs",
       "title": "When loading an XLSX file, apply field formatting via the specified {{field_name:FORMAT}} parameter syntax."
     },
