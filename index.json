@@ -3941,6 +3941,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "terminate-the-range-block-using-the-endrange-token-when-loading-an-xlsx-file-in-.cs",
+      "title": "Terminate the range block using the {{ENDRANGE}} token when loading an XLSX file in the process."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs",
       "title": "Utilize the RANGE parameter to create rows for each object in a collection when loading an XLSX file."
     },
