@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - apply-conditional-logic-using-the-if-parameter-syntax-if-field_namevalue-when-lo.cs
 - apply-the-range-parameter-to-duplicate-a-row-block-for-each-collection-element-d.cs
 - when-loading-an-xlsx-file-apply-field-formatting-via-the-specified-field_namefor.cs
+- apply-smart-markers-techniques-to-load-data-from-xlsx-files-for-dynamic-spreadsh.cs
