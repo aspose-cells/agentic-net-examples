@@ -3996,6 +3996,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "register-for-the-smartmarkerprocessing-event-to-get-notifications-during-data-me.cs",
+      "title": "Register for the SmartMarkerProcessing event to get notifications during data merging into an XLSX Excel template."
+    },
+    {
+      "category": "smart-markers",
       "file": "terminate-the-range-block-using-the-endrange-token-when-loading-an-xlsx-file-in-.cs",
       "title": "Terminate the range block using the {{ENDRANGE}} token when loading an XLSX file in the process."
     },
