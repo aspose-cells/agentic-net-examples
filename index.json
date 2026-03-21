@@ -3801,6 +3801,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-conditional-logic-using-the-if-parameter-syntax-if-field_namevalue-when-lo.cs",
+      "title": "Apply conditional logic using the IF parameter syntax {{IF field_name='value'}} when loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs",
       "title": "Implement conditional smart marker expressions to render data selectively when loading an XLSX workbook."
     },
