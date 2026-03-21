@@ -3846,6 +3846,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "instantiate-an-anonymous-c-object-assign-it-via-workbookdesignersetdatasource-an.cs",
+      "title": "Instantiate an anonymous C# object, assign it via WorkbookDesigner.SetDataSource, and fill smart markers in an XLSX template."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-xlsx-workbook-and-process-it-using-smart-marker-syntax-to-generate-the-d.cs",
       "title": "Load an XLSX workbook and process it using Smart Marker syntax to generate the desired output."
     },
