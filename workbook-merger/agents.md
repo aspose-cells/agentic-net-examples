@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - demonstrate-how-to-merge-multiple-worksheets-into-a-single-worksheet-within-a-wo.cs
 - combine-multiple-workbooks-by-loading-each-workbook-and-adding-it-to-a-workbookc.cs
 - combine-multiple-workbook-objects-into-a-single-workbook-and-persist-the-result-.cs
+- consolidate-several-workbook-files-into-one-workbook-preserving-worksheets-style.cs
