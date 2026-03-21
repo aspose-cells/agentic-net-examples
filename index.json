@@ -4101,6 +4101,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "render-a-leading-apostrophe-in-an-xlsx-cell-by-prefixing-the-value-with-an-apost.cs",
+      "title": "Render a leading apostrophe in an XLSX cell by prefixing the value with an apostrophe and applying Text cell formatting."
+    },
+    {
+      "category": "smart-markers",
       "file": "specify-the-range-parameter-when-loading-an-xlsx-file-to-restrict-import-to-a-de.cs",
       "title": "Specify the RANGE parameter when loading an XLSX file to restrict import to a defined worksheet region."
     },
