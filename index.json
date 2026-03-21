@@ -4456,6 +4456,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "consolidate-several-workbook-files-into-one-workbook-preserving-worksheets-style.cs",
+      "title": "Consolidate several workbook files into one workbook, preserving worksheets, styles, data integrity, and formulas."
+    },
+    {
+      "category": "workbook-merger",
       "file": "consolidate-several-worksheets-into-one-worksheet-merging-their-data-and-preserv.cs",
       "title": "Consolidate several worksheets into one worksheet, merging their data and preserving cell formatting and structures."
     },
