@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - add-a-smart-marker-formatted-as-field_name-to-a-target-cell-while-loading-an-xls.cs
 - apply-conditional-logic-using-the-if-parameter-syntax-if-field_namevalue-when-lo.cs
 - apply-the-range-parameter-to-duplicate-a-row-block-for-each-collection-element-d.cs
+- when-loading-an-xlsx-file-apply-field-formatting-via-the-specified-field_namefor.cs
