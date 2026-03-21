@@ -3836,6 +3836,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-xlsx-files-utilizing-only-the-supported-smart-marker-types-to-ensure-correc.cs",
+      "title": "Load XLSX files utilizing only the supported Smart Marker types to ensure correct data parsing."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-dynamically-create-rows-from-an-object-collection.cs",
       "title": "Utilize the RANGE parameter to dynamically create rows from an object collection while loading an XLSX file."
     },
