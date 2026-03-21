@@ -4431,6 +4431,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "identify-and-list-all-file-formats-that-can-be-combined-when-merging-workbooks-i.cs",
+      "title": "Identify and list all file formats that can be combined when merging workbooks in the .NET API."
+    },
+    {
+      "category": "workbook-merger",
       "file": "import-workbooks-from-any-supported-format-and-combine-them-into-a-single-newly-.cs",
       "title": "Import workbooks from any supported format and combine them into a single newly created workbook."
     },
