@@ -4201,6 +4201,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-the-data-range-for-a-sparkline-within-an-xlsx-workbook-using-the-api.cs",
+      "title": "Configure the data range for a sparkline within an XLSX workbook using the API."
+    },
+    {
+      "category": "sparkline",
       "file": "configure-the-sparkline-type-within-an-xlsx-workbook-as-specified-in-the-setting.cs",
       "title": "Configure the Sparkline type within an XLSX workbook as specified in the Setting Sparkline Type guidelines."
     },
