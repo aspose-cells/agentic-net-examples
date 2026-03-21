@@ -3796,6 +3796,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "account-for-smart-marker-constraints-when-loading-xlsx-workbooks-to-ensure-marke.cs",
+      "title": "Account for Smart Marker constraints when loading XLSX workbooks to ensure marker processing behaves as expected."
+    },
+    {
+      "category": "smart-markers",
       "file": "add-a-smart-marker-formatted-as-field_name-to-a-target-cell-while-loading-an-xls.cs",
       "title": "Add a smart marker formatted as {{field_name}} to a target cell while loading an XLSX workbook."
     },
