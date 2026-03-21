@@ -3866,6 +3866,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "instantiate-an-anonymous-object-populated-with-data-extracted-from-an-xlsx-workb.cs",
+      "title": "Instantiate an anonymous object populated with data extracted from an XLSX workbook for subsequent processing."
+    },
+    {
+      "category": "smart-markers",
       "file": "integrate-an-anonymous-or-custom-object-as-a-data-source-for-smart-markers-when-.cs",
       "title": "Integrate an anonymous or custom object as a data source for smart markers when loading an XLSX workbook."
     },
