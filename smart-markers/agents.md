@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - account-for-smart-marker-constraints-when-loading-xlsx-workbooks-to-ensure-marke.cs
 - instantiate-an-anonymous-c-object-assign-it-via-workbookdesignersetdatasource-an.cs
 - declare-var-data-as-a-new-anonymous-object-with-namejohn-and-age30-then-load-an-.cs
+- define-a-person-class-with-name-and-age-properties-and-map-data-from-an-xlsx-spr.cs
