@@ -3856,6 +3856,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "evaluate-the-provided-code-samples-for-loading-xlsx-files-to-ensure-correct-usag.cs",
+      "title": "Evaluate the provided code samples for loading XLSX files to ensure correct usage and functionality."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-conditional-smart-marker-in-an-xlsx-file-that-displays-a-value-only-.cs",
       "title": "Implement a conditional smart marker in an XLSX file that displays a value only when the condition is true."
     },
