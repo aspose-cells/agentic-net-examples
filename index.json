@@ -3856,6 +3856,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "assign-a-custom-data-source-to-the-designer-via-setdatasourcecustomsource-while-.cs",
+      "title": "Assign a custom data source to the designer via\u202fSetDataSource(customSource) while loading an\u202fXLSX file."
+    },
+    {
+      "category": "smart-markers",
       "file": "assign-an-xlsx-data-source-to-the-designer-object-by-calling-the-designersetdata.cs",
       "title": "Assign an XLSX data source to the designer object by calling the designer.SetDataSource(data) method at runtime."
     },
