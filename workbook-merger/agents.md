@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - combine-selected-worksheets-from-several-workbooks-into-a-single-workbook-mainta.cs
 - combine-charts-from-several-workbooks-into-one-consolidated-workbook-maintaining.cs
 - combine-several-excel-worksheets-into-a-single-workbook-maintaining-data-integri.cs
+- combine-multiple-source-files-into-a-single-output-document-maintaining-original.cs
