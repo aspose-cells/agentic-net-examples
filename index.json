@@ -3946,6 +3946,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-xlsx-workbook-and-apply-the-field_namemmddyyyy-date-format-to-designated.cs",
+      "title": "Load an XLSX workbook and apply the {{field_name:MM/dd/yyyy}} date format to designated cells appropriately."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-xlsx-workbook-and-process-it-using-smart-marker-syntax-to-generate-the-d.cs",
       "title": "Load an XLSX workbook and process it using Smart Marker syntax to generate the desired output."
     },
