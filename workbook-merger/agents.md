@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - merge-multiple-worksheets-into-a-single-worksheet-while-preserving-data-integrit.cs
 - persist-the-combined-worksheet-to-an-xlsx-file-preserving-excel-compatibility-an.cs
 - demonstrate-how-to-merge-multiple-worksheets-into-a-single-worksheet-within-a-wo.cs
+- combine-multiple-workbooks-by-loading-each-workbook-and-adding-it-to-a-workbookc.cs
