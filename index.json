@@ -4491,6 +4491,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "load-multiple-xlsx-workbooks-and-merge-them-into-a-single-workbook-while-preserv.cs",
+      "title": "Load multiple XLSX workbooks and merge them into a single workbook while preserving data integrity."
+    },
+    {
+      "category": "workbook-merger",
       "file": "load-source-worksheets-into-the-workbook-to-enable-subsequent-data-manipulation-.cs",
       "title": "Load source worksheets into the workbook to enable subsequent data manipulation and processing operations."
     },
