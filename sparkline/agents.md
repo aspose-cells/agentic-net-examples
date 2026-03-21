@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - assign-sparklinegroupcolorseries-to-define-the-sparkline-series-color-in-support.cs
 - activate-sparkline-markers-by-assigning-true-to-sparklinegroupshowmarkers-within.cs
 - set-sparkline-axis-properties-via-the-sparklinegroupaxis-api-for-xlsx-spreadshee.cs
+- configure-sparkline-colors-in-an-xlsx-workbook-based-on-the-values-defined-under.cs
