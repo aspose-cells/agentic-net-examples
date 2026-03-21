@@ -3966,6 +3966,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-xlsx-file-group-records-by-a-designated-field-using-the-group-parameter-.cs",
+      "title": "Load an XLSX file, group records by a designated field using the GROUP parameter, then apply the RANGE parameter."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-xlsx-workbook-and-apply-custom-formatting-to-its-cells-and-worksheets-pr.cs",
       "title": "Load an XLSX workbook and apply custom formatting to its cells and worksheets programmatically."
     },
