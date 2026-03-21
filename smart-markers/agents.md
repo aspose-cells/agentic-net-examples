@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - access-nested-object-attributes-via-dot-notation-within-smart-markers-when-loadi.cs
 - utilize-smart-marker-techniques-for-importing-nested-objects-efficiently-when-lo.cs
 - bind-a-variablelength-array-to-a-smart-marker-range-block-to-dynamically-generat.cs
+- bind-the-array-to-the-designer-so-the-range-block-iterates-over-each-element-and.cs
