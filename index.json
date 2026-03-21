@@ -3821,6 +3821,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-smart-marker-using-conditional-logic-while-loading-data-from-an-xlsx-sp.cs",
+      "title": "Create a smart marker using conditional logic while loading data from an XLSX spreadsheet."
+    },
+    {
+      "category": "smart-markers",
       "file": "determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs",
       "title": "Determine the Smart Markers definition present in an XLSX workbook file upon loading it."
     },
