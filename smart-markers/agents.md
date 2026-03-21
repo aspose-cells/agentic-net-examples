@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - generate-a-masterdetail-report-by-configuring-master-and-detail-range-blocks-wit.cs
 - create-a-master-range-named-range-mastercollection-by-loading-an-xlsx-workbook-i.cs
 - define-a-detail-range-inside-the-master-range-using-range-detailcollection-when-.cs
+- implement-masterdetail-smart-markers-by-loading-an-xlsx-workbook-and-populating-.cs
