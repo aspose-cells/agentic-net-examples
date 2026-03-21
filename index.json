@@ -4191,6 +4191,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-sparklinegroup-properties-to-customize-sparkline-styles-markers-and-co.cs",
+      "title": "Configure SparklineGroup properties to customize sparkline styles, markers, and colors in compatible XLSX spreadsheets."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs",
       "title": "Insert a new sparkline into an existing SparklineGroup within an XLSX workbook by invoking SparklineGroup.Add."
     },
