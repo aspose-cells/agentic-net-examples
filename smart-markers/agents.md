@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - integrate-an-anonymous-or-custom-object-as-a-data-source-for-smart-markers-when-.cs
 - instantiate-an-anonymous-object-populated-with-data-extracted-from-an-xlsx-workb.cs
 - instantiate-a-custom-object-that-loads-data-from-an-xlsx-workbook-for-further-pr.cs
+- populate-smart-markers-with-object-data-while-loading-an-xlsx-workbook-ensuring-.cs
