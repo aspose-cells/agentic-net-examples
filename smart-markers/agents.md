@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs
 - terminate-the-range-block-using-the-endrange-token-when-loading-an-xlsx-file-in-.cs
 - implement-smart-marker-processing-by-loading-an-xlsx-workbook-and-utilizing-the-.cs
+- implement-the-range-parameter-syntax-to-load-xlsx-workbooks-with-selective-cell-.cs
