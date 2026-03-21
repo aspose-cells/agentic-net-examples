@@ -3866,6 +3866,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-support-for-if-conditionendif-conditional-syntax-when-loading-xlsx-spr.cs",
+      "title": "Implement support for {{IF condition}}\u2026{{ENDIF}} conditional syntax when loading XLSX spreadsheets, preserving cell formatting and data integrity."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-smart-markers-into-an-xlsx-template-and-fill-them-from-a-net-datatable-us.cs",
       "title": "Insert smart markers into an XLSX template and fill them from a .NET DataTable using WorkbookDesigner."
     },
