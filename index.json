@@ -3836,6 +3836,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "declare-a-template-variable-and-utilize-it-to-iterate-a-row-block-when-loading-a.cs",
+      "title": "Declare a template variable and utilize it to iterate a row block when loading an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "declare-var-data-as-a-new-anonymous-object-with-namejohn-and-age30-then-load-an-.cs",
       "title": "Declare\u202fvar\u202fdata\u202fas a new anonymous object with\u202fName=\"John\"\u202fand\u202fAge=30, then load an\u202fXLSX\u202ffile."
     },
