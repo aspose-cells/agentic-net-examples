@@ -4221,6 +4221,11 @@
     },
     {
       "category": "sparkline",
+      "file": "assign-the-destination-cell-for-a-duplicated-sparkline-in-a-spreadsheet-file-suc.cs",
+      "title": "Assign the destination cell for a duplicated sparkline in a spreadsheet file such as XLSX."
+    },
+    {
+      "category": "sparkline",
       "file": "assign-the-sparklinetype-property-to-define-the-sparkline-style-line-column-or-w.cs",
       "title": "Assign the Sparkline.Type property to define the sparkline style (Line, Column, or WinLoss) in an XLSX workbook."
     },
