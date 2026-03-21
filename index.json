@@ -3816,6 +3816,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-basic-smart-marker-implementation-that-loads-an-xlsx-workbook-into-memo.cs",
+      "title": "Create a basic smart marker implementation that loads an XLSX workbook into memory for data processing."
+    },
+    {
+      "category": "smart-markers",
       "file": "determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs",
       "title": "Determine the Smart Markers definition present in an XLSX workbook file upon loading it."
     },
