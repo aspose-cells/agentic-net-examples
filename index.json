@@ -4251,6 +4251,11 @@
     },
     {
       "category": "sparkline",
+      "file": "duplicate-a-sparklinegroup-in-an-xlsx-workbook-by-invoking-its-copy-method-with-.cs",
+      "title": "Duplicate a SparklineGroup in an XLSX workbook by invoking its Copy method with the source group."
+    },
+    {
+      "category": "sparkline",
       "file": "generate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specified-cr.cs",
       "title": "Generate a Sparkline group within an XLSX workbook according to the specified creation procedure."
     },
