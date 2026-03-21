@@ -4281,6 +4281,11 @@
     },
     {
       "category": "sparkline",
+      "file": "define-the-target-range-for-a-copied-sparkline-within-an-xlsx-workbook-following.cs",
+      "title": "Define the target range for a copied sparkline within an XLSX workbook following the specified location guidelines."
+    },
+    {
+      "category": "sparkline",
       "file": "duplicate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specificati.cs",
       "title": "Duplicate a sparkline group within an XLSX workbook according to the specifications described in the Copying a Sparkline Group section."
     },
