@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - combine-charts-from-several-workbooks-into-one-consolidated-workbook-maintaining.cs
 - combine-several-excel-worksheets-into-a-single-workbook-maintaining-data-integri.cs
 - combine-multiple-source-files-into-a-single-output-document-maintaining-original.cs
+- identify-and-list-all-file-formats-that-can-be-combined-when-merging-workbooks-i.cs
