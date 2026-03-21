@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - instantiate-a-sparklinegroup-in-an-xlsx-worksheet-by-invoking-the-worksheetspark.cs
 - insert-a-sparkline-into-an-existing-sparklinegroup-of-an-xlsx-workbook-by-invoki.cs
 - assign-the-sparklinetype-property-to-define-the-sparkline-style-line-column-or-w.cs
+- set-the-sparklinelocation-property-to-precisely-position-a-sparkline-at-the-desi.cs
