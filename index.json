@@ -3881,6 +3881,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "deserialize-json-into-a-net-object-and-fill-an-xlsx-template-using-smart-markers.cs",
+      "title": "Deserialize JSON into a .NET object and fill an XLSX template using smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs",
       "title": "Determine the Smart Markers definition present in an XLSX workbook file upon loading it."
     },
