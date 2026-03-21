@@ -3806,6 +3806,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-smart-markers-techniques-to-load-data-from-xlsx-files-for-dynamic-spreadsh.cs",
+      "title": "Apply Smart Markers techniques to load data from XLSX files for dynamic spreadsheet generation."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-range-parameter-to-duplicate-a-row-block-for-each-collection-element-d.cs",
       "title": "Apply the RANGE parameter to duplicate a row block for each collection element during XLSX loading."
     },
