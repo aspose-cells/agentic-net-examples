@@ -3876,6 +3876,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-row-repetition-based-on-a-defined-range-during-the-process-of-loading-.cs",
+      "title": "Implement row repetition based on a defined range during the process of loading the XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-smart-marker-processing-by-loading-an-xlsx-workbook-and-utilizing-the-.cs",
       "title": "Implement Smart Marker processing by loading an XLSX workbook and utilizing the RANGE parameter to define data scopes."
     },
