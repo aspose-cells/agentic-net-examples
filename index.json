@@ -3941,6 +3941,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs",
+      "title": "Utilize the RANGE parameter to create rows for each object in a collection when loading an XLSX file."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-dynamically-create-rows-from-an-object-collection.cs",
       "title": "Utilize the RANGE parameter to dynamically create rows from an object collection while loading an XLSX file."
     },
