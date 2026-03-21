@@ -4175,6 +4175,11 @@
       "title": "Add a SparklineGroup to an XLSX workbook by invoking the Worksheet.SparklineGroups.Add method with appropriate parameters."
     },
     {
+      "category": "sparkline",
+      "file": "insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs",
+      "title": "Insert a new sparkline into an existing SparklineGroup within an XLSX workbook by invoking SparklineGroup.Add."
+    },
+    {
       "category": "working-with-html",
       "file": "alter-the-html-hyperlink-target-type-when-converting-an-xlsx-workbook-to-html-ou.cs",
       "title": "Alter the HTML hyperlink target type when converting an XLSX workbook to HTML output."
