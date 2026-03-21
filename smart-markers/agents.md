@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - implement-support-for-if-conditionendif-conditional-syntax-when-loading-xlsx-spr.cs
 - instantiate-a-variable-named-varname-and-load-an-xlsx-workbook-into-it-using-the.cs
 - reference-the-variable-varname-when-programmatically-loading-an-xlsx-workbook-in.cs
+- implement-if-parameters-and-variable-driven-smart-markers-to-load-data-from-an-x.cs
