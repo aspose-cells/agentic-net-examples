@@ -4261,6 +4261,11 @@
     },
     {
       "category": "sparkline",
+      "file": "set-sparkline-axis-properties-via-sparklinegroupaxis-in-an-xlsx-workbook-to-cont.cs",
+      "title": "Set sparkline axis properties via SparklineGroup.Axis in an XLSX workbook to control display parameters."
+    },
+    {
+      "category": "sparkline",
       "file": "set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs",
       "title": "Set the Sparkline.DataRange property to specify the data range for a sparkline within an XLSX workbook."
     },
