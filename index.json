@@ -4376,6 +4376,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-several-workbook-files-into-one-consolidated-workbook-preserving-workshe.cs",
+      "title": "Combine several workbook files into one consolidated workbook, preserving worksheets and data integrity throughout the process."
+    },
+    {
+      "category": "workbook-merger",
       "file": "import-workbooks-from-any-supported-format-and-combine-them-into-a-single-newly-.cs",
       "title": "Import workbooks from any supported format and combine them into a single newly created workbook."
     },
