@@ -3806,6 +3806,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-appropriate-date-formatting-to-all-relevant-cells-during-the-loading-proce.cs",
+      "title": "Apply appropriate date formatting to all relevant cells during the loading process of an XLSX workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-logic-using-the-if-parameter-syntax-if-field_namevalue-when-lo.cs",
       "title": "Apply conditional logic using the IF parameter syntax {{IF field_name='value'}} when loading an XLSX workbook."
     },
