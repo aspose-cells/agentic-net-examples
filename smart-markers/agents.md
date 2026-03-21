@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - access-a-specific-array-element-using-its-zerobased-index-within-a-smart-marker-.cs
 - utilize-smart-markers-to-import-an-array-element-by-its-index-while-loading-an-x.cs
 - import-array-elements-satisfying-a-condition-into-an-xlsx-file-using-a-smart-mar.cs
+- utilize-smart-markers-with-slicer-functionality-to-import-array-elements-while-l.cs
