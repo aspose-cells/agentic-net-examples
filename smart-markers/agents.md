@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - implement-the-range-parameter-syntax-to-load-xlsx-workbooks-with-selective-cell-.cs
 - implement-row-repetition-based-on-a-defined-range-during-the-process-of-loading-.cs
 - validate-the-example-demonstrating-loading-an-xlsx-workbook-and-ensure-it-operat.cs
+- apply-twodecimalplace-number-formatting-to-a-smart-marker-when-loading-an-xlsx-w.cs
