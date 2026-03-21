@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - declare-var-data-as-a-new-anonymous-object-with-namejohn-and-age30-then-load-an-.cs
 - define-a-person-class-with-name-and-age-properties-and-map-data-from-an-xlsx-spr.cs
 - assign-an-xlsx-data-source-to-the-designer-object-by-calling-the-designersetdata.cs
+- integrate-an-anonymous-or-custom-object-as-a-data-source-for-smart-markers-when-.cs
