@@ -4011,6 +4011,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "specify-the-range-parameter-when-loading-an-xlsx-file-to-restrict-import-to-a-de.cs",
+      "title": "Specify the RANGE parameter when loading an XLSX file to restrict import to a defined worksheet region."
+    },
+    {
+      "category": "smart-markers",
       "file": "subscribe-to-the-smartmarkerprocessing-event-to-receive-progress-updates-while-l.cs",
       "title": "Subscribe to the SmartMarkerProcessing event to receive progress updates while loading an XLSX file."
     },
