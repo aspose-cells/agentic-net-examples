@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs
 - set-the-sparklinelocation-property-to-explicitly-define-a-sparklines-position-wi.cs
 - configure-sparklinegroup-properties-to-adjust-style-markers-and-colors-of-sparkl.cs
+- instantiate-a-sparklinegroup-in-an-xlsx-worksheet-by-invoking-the-worksheetspark.cs
