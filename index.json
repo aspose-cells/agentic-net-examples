@@ -3821,6 +3821,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "assign-an-xlsx-data-source-to-the-designer-object-by-calling-the-designersetdata.cs",
+      "title": "Assign an XLSX data source to the designer object by calling the designer.SetDataSource(data) method at runtime."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-basic-smart-marker-implementation-that-loads-an-xlsx-workbook-into-memo.cs",
       "title": "Create a basic smart marker implementation that loads an XLSX workbook into memory for data processing."
     },
