@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - in-an-xlsx-workbook-duplicate-a-sparklinegroup-and-modify-its-type-color-series-.cs
 - duplicate-a-sparklinegroup-in-an-xlsx-workbook-then-modify-its-type-color-series.cs
 - copy-a-sparkline-by-defining-its-data-range-and-target-location-within-an-xlsx-w.cs
+- duplicate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specificati.cs
