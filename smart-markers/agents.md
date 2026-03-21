@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - create-a-master-range-named-range-mastercollection-by-loading-an-xlsx-workbook-i.cs
 - define-a-detail-range-inside-the-master-range-using-range-detailcollection-when-.cs
 - implement-masterdetail-smart-markers-by-loading-an-xlsx-workbook-and-populating-.cs
+- access-nested-object-attributes-via-dot-notation-within-smart-markers-when-loadi.cs
