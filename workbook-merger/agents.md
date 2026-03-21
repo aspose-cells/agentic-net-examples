@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - merge-multiple-workbook-files-into-a-single-workbook-while-maintaining-cell-form.cs
 - persist-the-merged-workbook-to-an-xlsx-file-ensuring-proper-workbook-structure-a.cs
 - combine-multiple-workbook-files-into-a-single-workbook-while-preserving-each-she.cs
+- combine-multiple-input-files-into-a-single-output-file-while-maintaining-origina.cs
