@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - define-a-detail-range-inside-the-master-range-using-range-detailcollection-when-.cs
 - implement-masterdetail-smart-markers-by-loading-an-xlsx-workbook-and-populating-.cs
 - access-nested-object-attributes-via-dot-notation-within-smart-markers-when-loadi.cs
+- utilize-smart-marker-techniques-for-importing-nested-objects-efficiently-when-lo.cs
