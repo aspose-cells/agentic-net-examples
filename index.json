@@ -3866,6 +3866,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "bind-the-array-to-the-designer-so-the-range-block-iterates-over-each-element-and.cs",
+      "title": "Bind the array to the designer so the RANGE block iterates over each element and loads the XLSX file."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-basic-smart-marker-implementation-that-loads-an-xlsx-workbook-into-memo.cs",
       "title": "Create a basic smart marker implementation that loads an XLSX workbook into memory for data processing."
     },
