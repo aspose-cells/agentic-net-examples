@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - create-a-basic-smart-marker-implementation-that-loads-an-xlsx-workbook-into-memo.cs
 - create-a-smart-marker-using-conditional-logic-while-loading-data-from-an-xlsx-sp.cs
 - account-for-smart-marker-constraints-when-loading-xlsx-workbooks-to-ensure-marke.cs
+- instantiate-an-anonymous-c-object-assign-it-via-workbookdesignersetdatasource-an.cs
