@@ -3811,6 +3811,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-number-formatting-to-cells-after-loading-an-xlsx-workbook-to-ensure-proper.cs",
+      "title": "Apply number formatting to cells after loading an XLSX workbook to ensure proper numeric display."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-numeric-formatting-using-field_name000-pattern-when-importing-data-from-an.cs",
       "title": "Apply numeric formatting using {{field_name:0.00}} pattern when importing data from an XLSX Excel workbook."
     },
