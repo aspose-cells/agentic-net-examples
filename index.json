@@ -3871,6 +3871,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-automatic-overflow-to-propagate-smart-marker-data-across-additional-wo.cs",
+      "title": "Configure automatic overflow to propagate smart marker data across additional worksheets when loading large XLSX datasets."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-basic-smart-marker-implementation-that-loads-an-xlsx-workbook-into-memo.cs",
       "title": "Create a basic smart marker implementation that loads an XLSX workbook into memory for data processing."
     },
