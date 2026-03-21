@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-using-smart-markers-to-import-json-data-according-to-the-d.cs
 - generate-a-masterdetail-report-by-configuring-master-and-detail-range-blocks-wit.cs
 - create-a-master-range-named-range-mastercollection-by-loading-an-xlsx-workbook-i.cs
+- define-a-detail-range-inside-the-master-range-using-range-detailcollection-when-.cs
