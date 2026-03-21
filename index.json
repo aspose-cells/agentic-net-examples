@@ -4196,6 +4196,11 @@
     },
     {
       "category": "sparkline",
+      "file": "generate-sparklines-within-an-xlsx-workbook-by-following-the-defined-creation-gu.cs",
+      "title": "Generate sparklines within an XLSX workbook by following the defined creation guidelines and settings."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs",
       "title": "Insert a new sparkline into an existing SparklineGroup within an XLSX workbook by invoking SparklineGroup.Add."
     },
