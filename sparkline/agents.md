@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - analyze-an-xlsx-workbook-to-extract-and-report-sparkline-properties-according-to.cs
 - generate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specified-cr.cs
 - insert-a-new-sparkline-into-an-existing-sparkline-group-within-an-xlsx-workbook-.cs
+- configure-the-sparkline-type-within-an-xlsx-workbook-as-specified-in-the-setting.cs
