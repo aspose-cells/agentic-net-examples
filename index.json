@@ -4076,6 +4076,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "utilize-smart-marker-techniques-for-importing-nested-objects-efficiently-when-lo.cs",
+      "title": "Utilize smart marker techniques for importing nested objects efficiently when loading an XLSX workbook into memory."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-smart-markers-to-import-an-array-element-by-its-index-while-loading-an-x.cs",
       "title": "Utilize smart markers to import an array element by its index while loading an XLSX workbook."
     },
