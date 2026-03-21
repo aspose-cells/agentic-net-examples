@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - load-an-xlsx-file-group-records-by-a-designated-field-using-the-group-parameter-.cs
 - use-the-range-parameter-to-duplicate-rows-for-each-collection-element-while-impo.cs
 - specify-the-range-parameter-when-loading-an-xlsx-file-to-restrict-import-to-a-de.cs
+- access-a-specific-array-element-using-its-zerobased-index-within-a-smart-marker-.cs
