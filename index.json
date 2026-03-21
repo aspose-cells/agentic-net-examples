@@ -3891,6 +3891,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "populate-smart-markers-with-object-data-while-loading-an-xlsx-workbook-ensuring-.cs",
+      "title": "Populate smart markers with object data while loading an XLSX workbook, ensuring correct data binding and rendering."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-dynamically-create-rows-from-an-object-collection.cs",
       "title": "Utilize the RANGE parameter to dynamically create rows from an object collection while loading an XLSX file."
     },
