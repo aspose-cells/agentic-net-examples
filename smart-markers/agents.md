@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-apply-custom-formatting-to-its-cells-and-worksheets-pr.cs
 - register-for-the-smartmarkerprocessing-event-to-get-notifications-during-data-me.cs
 - subscribe-to-the-smartmarkerprocessing-event-to-receive-progress-updates-while-l.cs
+- implement-notification-handling-during-data-merge-using-smart-markers-when-loadi.cs
