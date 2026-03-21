@@ -4246,6 +4246,11 @@
     },
     {
       "category": "sparkline",
+      "file": "modify-the-visual-properties-of-sparklines-in-an-xlsx-workbook-according-to-the-.cs",
+      "title": "Modify the visual properties of sparklines in an XLSX workbook according to the Customizing Sparkline Appearance guidelines."
+    },
+    {
+      "category": "sparkline",
       "file": "set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs",
       "title": "Set the Sparkline.DataRange property to specify the data range for a sparkline within an XLSX workbook."
     },
