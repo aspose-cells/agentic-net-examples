@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - combine-multiple-workbook-files-into-a-single-workbook-following-the-specified-m.cs
 - combine-multiple-worksheets-into-a-single-workbook-according-to-the-specified-wo.cs
 - combine-multiple-chart-objects-into-a-single-composite-chart-following-the-defin.cs
+- develop-a-sample-demonstrating-how-to-combine-multiple-workbooks-into-a-single-w.cs
