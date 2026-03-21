@@ -4451,6 +4451,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "demonstrate-how-to-merge-multiple-worksheets-into-a-single-worksheet-within-a-wo.cs",
+      "title": "Demonstrate how to merge multiple worksheets into a single worksheet within a workbook using the API."
+    },
+    {
+      "category": "workbook-merger",
       "file": "develop-a-sample-demonstrating-how-to-combine-multiple-workbooks-into-a-single-w.cs",
       "title": "Develop a sample demonstrating how to combine multiple workbooks into a single workbook programmatically."
     },
