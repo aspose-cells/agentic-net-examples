@@ -3796,6 +3796,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "access-a-specific-array-element-using-its-zerobased-index-within-a-smart-marker-.cs",
+      "title": "Access a specific array element using its zero\u2011based index within a smart marker while loading an XLSX file."
+    },
+    {
+      "category": "smart-markers",
       "file": "account-for-smart-marker-constraints-when-loading-xlsx-workbooks-to-ensure-marke.cs",
       "title": "Account for Smart Marker constraints when loading XLSX workbooks to ensure marker processing behaves as expected."
     },
