@@ -3921,6 +3921,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-the-continueonerror-setting-when-loading-an-xlsx-file-to-overflow-excess-.cs",
+      "title": "Enable the ContinueOnError setting when loading an XLSX file to overflow excess data onto new worksheets."
+    },
+    {
+      "category": "smart-markers",
       "file": "evaluate-the-provided-code-samples-for-loading-xlsx-files-to-ensure-correct-usag.cs",
       "title": "Evaluate the provided code samples for loading XLSX files to ensure correct usage and functionality."
     },
