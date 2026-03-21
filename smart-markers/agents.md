@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - implement-variable-substitution-in-smart-markers-when-loading-data-from-an-xlsx-.cs
 - evaluate-the-provided-code-samples-for-loading-xlsx-files-to-ensure-correct-usag.cs
 - utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs
+- terminate-the-range-block-using-the-endrange-token-when-loading-an-xlsx-file-in-.cs
