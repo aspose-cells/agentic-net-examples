@@ -3881,6 +3881,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-variable-substitution-in-smart-markers-when-loading-data-from-an-xlsx-.cs",
+      "title": "Implement variable substitution in Smart Markers when loading data from an XLSX workbook file."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-smart-markers-into-an-xlsx-template-and-fill-them-from-a-net-datatable-us.cs",
       "title": "Insert smart markers into an XLSX template and fill them from a .NET DataTable using WorkbookDesigner."
     },
