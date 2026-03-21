@@ -3825,6 +3825,11 @@
       "title": "Utilize the RANGE parameter to dynamically create rows from an object collection while loading an XLSX file."
     },
     {
+      "category": "smart-markers",
+      "file": "when-loading-an-xlsx-file-apply-field-formatting-via-the-specified-field_namefor.cs",
+      "title": "When loading an XLSX file, apply field formatting via the specified {{field_name:FORMAT}} parameter syntax."
+    },
+    {
       "category": "working-with-html",
       "file": "alter-the-html-hyperlink-target-type-when-converting-an-xlsx-workbook-to-html-ou.cs",
       "title": "Alter the HTML hyperlink target type when converting an XLSX workbook to HTML output."
