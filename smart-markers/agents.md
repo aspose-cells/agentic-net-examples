@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - validate-the-example-demonstrating-loading-an-xlsx-workbook-and-ensure-it-operat.cs
 - apply-twodecimalplace-number-formatting-to-a-smart-marker-when-loading-an-xlsx-w.cs
 - load-an-xlsx-workbook-apply-a-date-smart-marker-formatted-as-mmddyyyy-and-render.cs
+- apply-numeric-formatting-using-field_name000-pattern-when-importing-data-from-an.cs
