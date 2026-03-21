@@ -3801,6 +3801,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "access-nested-object-attributes-via-dot-notation-within-smart-markers-when-loadi.cs",
+      "title": "Access nested object attributes via dot notation within smart markers when loading an XLSX file."
+    },
+    {
+      "category": "smart-markers",
       "file": "account-for-smart-marker-constraints-when-loading-xlsx-workbooks-to-ensure-marke.cs",
       "title": "Account for Smart Marker constraints when loading XLSX workbooks to ensure marker processing behaves as expected."
     },
