@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - develop-a-sample-demonstrating-how-to-combine-multiple-workbooks-into-a-single-w.cs
 - persist-the-workbook-containing-the-combined-worksheet-to-an-xlsx-file-using-the.cs
 - consolidate-several-worksheets-into-one-worksheet-merging-their-data-and-preserv.cs
+- validate-all-required-conditions-and-worksheet-compatibility-prior-to-merging-mu.cs
