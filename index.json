@@ -4446,6 +4446,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "consolidate-several-worksheets-into-one-worksheet-merging-their-data-and-preserv.cs",
+      "title": "Consolidate several worksheets into one worksheet, merging their data and preserving cell formatting and structures."
+    },
+    {
+      "category": "workbook-merger",
       "file": "develop-a-sample-demonstrating-how-to-combine-multiple-workbooks-into-a-single-w.cs",
       "title": "Develop a sample demonstrating how to combine multiple workbooks into a single workbook programmatically."
     },
