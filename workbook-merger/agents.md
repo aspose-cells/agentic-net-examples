@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - combine-multiple-workbook-files-into-a-single-workbook-while-preserving-cell-dat.cs
 - combine-multiple-worksheets-within-a-workbook-into-a-single-worksheet-maintainin.cs
 - combine-multiple-chart-objects-into-a-single-chart-while-preserving-series-data-.cs
+- combine-multiple-complete-workbooks-into-one-consolidated-workbook-while-maintai.cs
