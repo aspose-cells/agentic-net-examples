@@ -4281,6 +4281,11 @@
     },
     {
       "category": "sparkline",
+      "file": "set-sparkline-axis-properties-via-the-sparklinegroupaxis-api-for-xlsx-spreadshee.cs",
+      "title": "Set sparkline axis properties via the SparklineGroup.Axis API for XLSX spreadsheets, ensuring accurate scaling and display."
+    },
+    {
+      "category": "sparkline",
       "file": "set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs",
       "title": "Set the Sparkline.DataRange property to specify the data range for a sparkline within an XLSX workbook."
     },
