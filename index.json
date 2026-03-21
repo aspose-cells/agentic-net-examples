@@ -4261,6 +4261,11 @@
     },
     {
       "category": "sparkline",
+      "file": "create-a-duplicate-of-a-sparklinegroup-by-calling-its-copy-method-with-the-origi.cs",
+      "title": "Create a duplicate of a SparklineGroup by calling its Copy method with the original group in an XLSX spreadsheet."
+    },
+    {
+      "category": "sparkline",
       "file": "duplicate-a-sparklinegroup-in-an-xlsx-workbook-by-invoking-its-copy-method-with-.cs",
       "title": "Duplicate a SparklineGroup in an XLSX workbook by invoking its Copy method with the source group."
     },
