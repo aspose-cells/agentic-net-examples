@@ -4216,6 +4216,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-sparkline-axis-parameters-within-an-xlsx-workbook-according-to-the-cus.cs",
+      "title": "Configure sparkline axis parameters within an XLSX workbook according to the Customizing Axis Settings specifications."
+    },
+    {
+      "category": "sparkline",
       "file": "configure-sparkline-colors-in-an-xlsx-workbook-based-on-the-values-defined-under.cs",
       "title": "Configure sparkline colors in an XLSX workbook based on the values defined under the \u201cSetting Sparkline Colors\u201d heading."
     },
