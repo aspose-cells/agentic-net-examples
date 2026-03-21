@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - apply-appropriate-date-formatting-to-all-relevant-cells-during-the-loading-proce.cs
 - load-an-xlsx-workbook-and-apply-custom-formatting-to-its-cells-and-worksheets-pr.cs
 - register-for-the-smartmarkerprocessing-event-to-get-notifications-during-data-me.cs
+- subscribe-to-the-smartmarkerprocessing-event-to-receive-progress-updates-while-l.cs
