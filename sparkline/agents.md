@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - assign-the-sparklinetype-property-to-define-the-sparkline-style-line-column-or-w.cs
 - set-the-sparklinelocation-property-to-precisely-position-a-sparkline-at-the-desi.cs
 - configure-sparklinegroup-properties-to-customize-sparkline-styles-markers-and-co.cs
+- generate-sparklines-within-an-xlsx-workbook-by-following-the-defined-creation-gu.cs
