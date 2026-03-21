@@ -3861,6 +3861,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "instantiate-a-custom-object-that-loads-data-from-an-xlsx-workbook-for-further-pr.cs",
+      "title": "Instantiate a custom object that loads data from an XLSX workbook for further processing."
+    },
+    {
+      "category": "smart-markers",
       "file": "instantiate-an-anonymous-c-object-assign-it-via-workbookdesignersetdatasource-an.cs",
       "title": "Instantiate an anonymous C# object, assign it via WorkbookDesigner.SetDataSource, and fill smart markers in an XLSX template."
     },
