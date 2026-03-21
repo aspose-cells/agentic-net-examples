@@ -4091,6 +4091,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "prefix-cell-contents-with-a-leading-apostrophe-when-loading-an-xlsx-workbook-to-.cs",
+      "title": "Prefix cell contents with a leading apostrophe when loading an XLSX workbook to preserve original formatting."
+    },
+    {
+      "category": "smart-markers",
       "file": "reference-the-variable-varname-when-programmatically-loading-an-xlsx-workbook-in.cs",
       "title": "Reference the variable {{varName}} when programmatically loading an XLSX workbook into memory for processing."
     },
