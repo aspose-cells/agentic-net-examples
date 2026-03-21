@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - subscribe-to-the-smartmarkerprocessing-event-to-receive-progress-updates-while-l.cs
 - implement-notification-handling-during-data-merge-using-smart-markers-when-loadi.cs
 - load-an-xlsx-file-group-records-by-a-designated-field-using-the-group-parameter-.cs
+- use-the-range-parameter-to-duplicate-rows-for-each-collection-element-while-impo.cs
