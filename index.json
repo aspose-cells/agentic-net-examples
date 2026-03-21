@@ -4481,6 +4481,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "persist-the-combined-worksheet-to-an-xlsx-file-preserving-excel-compatibility-an.cs",
+      "title": "Persist the combined worksheet to an XLSX file, preserving Excel compatibility and data integrity."
+    },
+    {
+      "category": "workbook-merger",
       "file": "persist-the-merged-workbook-to-an-xlsx-file-ensuring-proper-workbook-structure-a.cs",
       "title": "Persist the merged workbook to an XLSX file, ensuring proper workbook structure and data integrity."
     },
