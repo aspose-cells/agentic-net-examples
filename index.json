@@ -4191,6 +4191,11 @@
     },
     {
       "category": "sparkline",
+      "file": "assign-sparklinegroupcolorseries-to-define-the-sparkline-series-color-in-support.cs",
+      "title": "Assign\u202fSparklineGroup.ColorSeries\u202fto define the sparkline series color in supported spreadsheet files such\u202fas\u202fXLSX."
+    },
+    {
+      "category": "sparkline",
       "file": "assign-the-sparklinetype-property-to-define-the-sparkline-style-line-column-or-w.cs",
       "title": "Assign the Sparkline.Type property to define the sparkline style (Line, Column, or WinLoss) in an XLSX workbook."
     },
