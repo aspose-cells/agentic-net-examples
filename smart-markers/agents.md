@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - reference-the-variable-varname-when-programmatically-loading-an-xlsx-workbook-in.cs
 - implement-if-parameters-and-variable-driven-smart-markers-to-load-data-from-an-x.cs
 - implement-the-if-parameter-syntax-during-the-loading-process-of-an-xlsx-workbook.cs
+- implement-variable-substitution-in-smart-markers-when-loading-data-from-an-xlsx-.cs
