@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - configure-a-sparklines-visual-representation-as-line-column-or-winloss-in-an-xls.cs
 - set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs
 - set-the-sparklinelocation-property-to-explicitly-define-a-sparklines-position-wi.cs
+- configure-sparklinegroup-properties-to-adjust-style-markers-and-colors-of-sparkl.cs
