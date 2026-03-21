@@ -4416,6 +4416,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbook-files-into-a-single-workbook-while-preserving-sheet-st.cs",
+      "title": "Combine multiple workbook files into a single workbook while preserving sheet structures and data integrity."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbook-objects-into-a-single-workbook-and-persist-the-result-.cs",
       "title": "Combine multiple workbook objects into a single workbook and persist the result as an XLSX file."
     },
