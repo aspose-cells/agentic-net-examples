@@ -3831,6 +3831,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "declare-var-data-as-a-new-anonymous-object-with-namejohn-and-age30-then-load-an-.cs",
+      "title": "Declare\u202fvar\u202fdata\u202fas a new anonymous object with\u202fName=\"John\"\u202fand\u202fAge=30, then load an\u202fXLSX\u202ffile."
+    },
+    {
+      "category": "smart-markers",
       "file": "determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs",
       "title": "Determine the Smart Markers definition present in an XLSX workbook file upon loading it."
     },
