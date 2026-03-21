@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - bind-the-array-to-the-designer-so-the-range-block-iterates-over-each-element-and.cs
 - utilize-smart-markers-to-import-variablelength-arrays-from-external-data-sources.cs
 - insert-a-formula-into-a-smartmarker-field-via-the-formula-parameter-while-loadin.cs
+- implement-formula-parameter-handling-in-smart-marker-fields-during-xlsx-workbook.cs
