@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - implement-getvaluestring-name-to-retrieve-marker-specific-data-by-loading-the-xl.cs
 - assign-a-custom-data-source-to-the-designer-via-setdatasourcecustomsource-while-.cs
 - configure-a-custom-data-source-for-the-workbook-designer-and-load-the-target-xls.cs
+- render-a-leading-apostrophe-in-an-xlsx-cell-by-prefixing-the-value-with-an-apost.cs
