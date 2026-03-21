@@ -3806,6 +3806,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-range-parameter-to-duplicate-a-row-block-for-each-collection-element-d.cs",
+      "title": "Apply the RANGE parameter to duplicate a row block for each collection element during XLSX loading."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs",
       "title": "Implement conditional smart marker expressions to render data selectively when loading an XLSX workbook."
     },
