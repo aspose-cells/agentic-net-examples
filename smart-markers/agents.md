@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - configure-automatic-overflow-to-propagate-smart-marker-data-across-additional-wo.cs
 - enable-the-continueonerror-setting-when-loading-an-xlsx-file-to-overflow-excess-.cs
 - implement-getvaluestring-name-to-retrieve-marker-specific-data-by-loading-the-xl.cs
+- assign-a-custom-data-source-to-the-designer-via-setdatasourcecustomsource-while-.cs
