@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - bind-a-variablelength-array-to-a-smart-marker-range-block-to-dynamically-generat.cs
 - bind-the-array-to-the-designer-so-the-range-block-iterates-over-each-element-and.cs
 - utilize-smart-markers-to-import-variablelength-arrays-from-external-data-sources.cs
+- insert-a-formula-into-a-smartmarker-field-via-the-formula-parameter-while-loadin.cs
