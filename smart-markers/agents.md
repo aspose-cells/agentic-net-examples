@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - implement-a-conditional-smart-marker-in-an-xlsx-file-that-displays-a-value-only-.cs
 - declare-a-template-variable-and-utilize-it-to-iterate-a-row-block-when-loading-a.cs
 - implement-support-for-if-conditionendif-conditional-syntax-when-loading-xlsx-spr.cs
+- instantiate-a-variable-named-varname-and-load-an-xlsx-workbook-into-it-using-the.cs
