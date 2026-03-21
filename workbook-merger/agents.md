@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - combine-several-workbook-files-into-one-consolidated-workbook-preserving-workshe.cs
 - validate-that-all-necessary-prerequisites-are-met-before-initiating-any-workbook.cs
 - read-and-load-the-source-workbook-files-into-memory-preparing-them-for-further-m.cs
+- merge-multiple-workbook-files-into-a-single-workbook-while-maintaining-cell-form.cs
