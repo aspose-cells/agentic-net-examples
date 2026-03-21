@@ -4376,6 +4376,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-complete-workbooks-into-one-consolidated-workbook-while-maintai.cs",
+      "title": "Combine multiple complete workbooks into one consolidated workbook while maintaining all worksheets and data."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-input-files-into-a-single-output-file-while-maintaining-origina.cs",
       "title": "Combine multiple input files into a single output file while maintaining original format and data integrity."
     },
