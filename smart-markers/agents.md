@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - assign-an-xlsx-data-source-to-the-designer-object-by-calling-the-designersetdata.cs
 - integrate-an-anonymous-or-custom-object-as-a-data-source-for-smart-markers-when-.cs
 - instantiate-an-anonymous-object-populated-with-data-extracted-from-an-xlsx-workb.cs
+- instantiate-a-custom-object-that-loads-data-from-an-xlsx-workbook-for-further-pr.cs
