@@ -3831,6 +3831,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-xlsx-workbook-and-process-it-using-smart-marker-syntax-to-generate-the-d.cs",
+      "title": "Load an XLSX workbook and process it using Smart Marker syntax to generate the desired output."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-range-parameter-to-dynamically-create-rows-from-an-object-collection.cs",
       "title": "Utilize the RANGE parameter to dynamically create rows from an object collection while loading an XLSX file."
     },
