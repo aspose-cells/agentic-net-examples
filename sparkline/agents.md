@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - configure-sparkline-colors-in-an-xlsx-workbook-based-on-the-values-defined-under.cs
 - activate-sparkline-markers-in-an-xlsx-workbook-according-to-the-specified-enabli.cs
 - configure-sparkline-axis-parameters-within-an-xlsx-workbook-according-to-the-cus.cs
+- duplicate-a-sparklinegroup-in-an-xlsx-workbook-by-invoking-its-copy-method-with-.cs
