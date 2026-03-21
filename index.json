@@ -4371,6 +4371,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbook-files-into-a-single-workbook-while-preserving-each-she.cs",
+      "title": "Combine multiple workbook files into a single workbook while preserving each sheet\u2019s data and formatting."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbooks-into-a-single-workbook-and-output-the-result-in-xlsx-.cs",
       "title": "Combine multiple workbooks into a single workbook and output the result in XLSX format."
     },
