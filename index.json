@@ -4171,6 +4171,11 @@
     },
     {
       "category": "sparkline",
+      "file": "activate-sparkline-markers-by-assigning-true-to-sparklinegroupshowmarkers-within.cs",
+      "title": "Activate sparkline markers by assigning true to SparklineGroup.ShowMarkers within a compatible XLSX spreadsheet file."
+    },
+    {
+      "category": "sparkline",
       "file": "activate-sparkline-markers-in-an-xlsx-workbook-by-setting-the-sparklinegroupshow.cs",
       "title": "Activate sparkline markers in an XLSX workbook by setting the SparklineGroup.ShowMarkers property to true."
     },
