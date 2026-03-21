@@ -3851,6 +3851,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-conditional-smart-marker-in-an-xlsx-file-that-displays-a-value-only-.cs",
+      "title": "Implement a conditional smart marker in an XLSX file that displays a value only when the condition is true."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs",
       "title": "Implement conditional smart marker expressions to render data selectively when loading an XLSX workbook."
     },
