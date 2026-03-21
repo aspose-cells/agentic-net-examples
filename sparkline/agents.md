@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - modify-the-visual-properties-of-sparklines-in-an-xlsx-workbook-according-to-the-.cs
 - modify-the-depth-property-of-3d-sparklines-via-the-sparklinegroupdepth-attribute.cs
 - activate-sparkline-markers-in-an-xlsx-workbook-by-setting-the-sparklinegroupshow.cs
+- set-sparkline-axis-properties-via-sparklinegroupaxis-in-an-xlsx-workbook-to-cont.cs
