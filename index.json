@@ -4415,6 +4415,11 @@
       "title": "Insert a timeline into the spreadsheet using HTML-formatted markup, ensuring proper rendering and cross\u2011platform display."
     },
     {
+      "category": "timeline",
+      "file": "render-a-project-timeline-and-output-it-as-an-xltx-formatted-excel-workbook-temp.cs",
+      "title": "Render a project timeline and output it as an XLTX formatted Excel workbook template."
+    },
+    {
       "category": "workbook-merger",
       "file": "combine-charts-from-several-workbooks-into-one-consolidated-workbook-maintaining.cs",
       "title": "Combine charts from several workbooks into one consolidated workbook, maintaining data links and formatting."
