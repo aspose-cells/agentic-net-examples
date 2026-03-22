@@ -4470,6 +4470,11 @@
       "title": "Transform a timeline spreadsheet from XLS to XLSX format, ensuring data integrity and layout retention."
     },
     {
+      "category": "timeline",
+      "file": "transform-the-timeline-data-contained-in-an-xltx-template-into-an-xlsx-workbook-.cs",
+      "title": "Transform the timeline data contained in an XLTX template into an XLSX workbook, ensuring all content is retained."
+    },
+    {
       "category": "workbook-merger",
       "file": "combine-charts-from-several-workbooks-into-one-consolidated-workbook-maintaining.cs",
       "title": "Combine charts from several workbooks into one consolidated workbook, maintaining data links and formatting."
