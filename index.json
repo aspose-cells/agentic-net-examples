@@ -4401,6 +4401,11 @@
     },
     {
       "category": "timeline",
+      "file": "convert-a-timeline-worksheet-from-xlsb-to-xlsx-format-maintaining-data-integrity.cs",
+      "title": "Convert a timeline worksheet from XLSB to XLSX format, maintaining data integrity and cell formatting."
+    },
+    {
+      "category": "timeline",
       "file": "convert-timeline-data-from-one-xlsx-workbook-to-another-xlsx-workbook-while-pres.cs",
       "title": "Convert timeline data from one XLSX workbook to another XLSX workbook while preserving all formatting and cell relationships."
     },
