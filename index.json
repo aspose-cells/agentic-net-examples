@@ -4460,6 +4460,11 @@
       "title": "Render the timeline to an MHTML file, preserving layout, styling, and interactive elements for web\u2011friendly viewing."
     },
     {
+      "category": "timeline",
+      "file": "transform-a-timeline-spreadsheet-from-xls-to-xlsx-format-ensuring-data-integrity.cs",
+      "title": "Transform a timeline spreadsheet from XLS to XLSX format, ensuring data integrity and layout retention."
+    },
+    {
       "category": "workbook-merger",
       "file": "combine-charts-from-several-workbooks-into-one-consolidated-workbook-maintaining.cs",
       "title": "Combine charts from several workbooks into one consolidated workbook, maintaining data links and formatting."
