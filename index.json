@@ -4376,6 +4376,11 @@
     },
     {
       "category": "timeline",
+      "file": "add-a-sparkline-to-an-xlsb-workbook-programmatically-ensuring-correct-placement-.cs",
+      "title": "Add a sparkline to an XLSB workbook programmatically, ensuring correct placement and formatting within the worksheet."
+    },
+    {
+      "category": "timeline",
       "file": "add-a-sparkline-to-an-xlsm-workbook-ensuring-proper-macro-enabled-compatibility-.cs",
       "title": "Add a sparkline to an XLSM workbook, ensuring proper macro-enabled compatibility and accurate chart rendering."
     },
