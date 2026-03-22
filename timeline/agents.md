@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - add-a-sparkline-to-an-xlsm-workbook-ensuring-proper-macro-enabled-compatibility-.cs
 - add-a-sparkline-to-an-xltx-template-programmatically-ensuring-correct-rendering-.cs
 - add-a-sparkline-to-a-workbook-by-embedding-it-within-an-xltm-macroenabled-templa.cs
+- add-a-sparkline-to-an-xlsb-workbook-programmatically-ensuring-correct-placement-.cs
