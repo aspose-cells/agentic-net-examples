@@ -4476,6 +4476,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-several-excel-workbooks-into-a-single-file-by-invoking-the-librarys-work.cs",
+      "title": "Combine several Excel workbooks into a single file by invoking the library\u2019s workbook\u2011merging API."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-several-excel-worksheets-into-a-single-workbook-maintaining-data-integri.cs",
       "title": "Combine several Excel worksheets into a single workbook, maintaining data integrity, formatting, and cell references."
     },
