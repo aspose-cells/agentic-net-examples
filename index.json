@@ -4370,6 +4370,11 @@
       "title": "Set the Sparkline.Location property to precisely position a sparkline at the desired location within an XLSX worksheet."
     },
     {
+      "category": "timeline",
+      "file": "insert-a-timeline-into-the-spreadsheet-using-html-formatted-markup-ensuring-prop.cs",
+      "title": "Insert a timeline into the spreadsheet using HTML-formatted markup, ensuring proper rendering and cross\u2011platform display."
+    },
+    {
       "category": "workbook-merger",
       "file": "combine-charts-from-several-workbooks-into-one-consolidated-workbook-maintaining.cs",
       "title": "Combine charts from several workbooks into one consolidated workbook, maintaining data links and formatting."
