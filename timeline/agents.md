@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - insert-a-timeline-into-the-spreadsheet-using-html-formatted-markup-ensuring-prop.cs
 - embed-a-timeline-into-a-document-by-importing-mhtmlformatted-content-preserving-.cs
 - add-a-timeline-to-a-workbook-by-embedding-spreadsheetml-markup-adhering-to-the-a.cs
+- add-a-sparkline-to-an-xlsx-workbook-configuring-its-data-range-and-visual-proper.cs
