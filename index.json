@@ -4581,6 +4581,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "load-the-source-workbook-in-xlsx-format-and-merge-it-with-the-target-workbook-pr.cs",
+      "title": "Load the source workbook in XLSX format and merge it with the target workbook programmatically."
+    },
+    {
+      "category": "workbook-merger",
       "file": "merge-multiple-workbook-files-into-a-single-workbook-while-maintaining-cell-form.cs",
       "title": "Merge multiple workbook files into a single workbook while maintaining cell formatting and formulas."
     },
