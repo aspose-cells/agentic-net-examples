@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - utilize-the-workbookcollectioncombine-method-to-seamlessly-merge-multiple-workbo.cs
 - programmatically-and-efficiently-combine-selected-worksheets-from-multiple-workb.cs
 - combine-several-excel-workbooks-into-a-single-file-by-invoking-the-librarys-work.cs
+- combine-workbooks-by-consolidating-whole-workbooks-selected-worksheets-or-indivi.cs
