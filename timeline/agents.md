@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - render-a-project-timeline-and-output-it-as-an-xltx-formatted-excel-workbook-temp.cs
 - export-the-timeline-data-to-an-xlsb-workbook-ensuring-proper-cell-formatting-and.cs
 - implement-functionality-that-outputs-a-chronological-timeline-in-csv-format-ensu.cs
+- generate-a-timeline-output-serialized-in-tabseparated-values-tsv-format-for-cons.cs
