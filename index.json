@@ -4416,6 +4416,11 @@
     },
     {
       "category": "timeline",
+      "file": "generate-a-timeline-output-serialized-in-tabseparated-values-tsv-format-for-cons.cs",
+      "title": "Generate a timeline output serialized in tab\u2011separated values (TSV) format for consumption by downstream processes."
+    },
+    {
+      "category": "timeline",
       "file": "implement-functionality-that-outputs-a-chronological-timeline-in-csv-format-ensu.cs",
       "title": "Implement functionality that outputs a chronological timeline in CSV format, ensuring correct delimiter placement and appropriate header naming."
     },
