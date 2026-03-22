@@ -4440,6 +4440,11 @@
       "title": "Render a project timeline and output it as an XLTX formatted Excel workbook template."
     },
     {
+      "category": "timeline",
+      "file": "render-the-timeline-to-an-mhtml-file-preserving-layout-styling-and-interactive-e.cs",
+      "title": "Render the timeline to an MHTML file, preserving layout, styling, and interactive elements for web\u2011friendly viewing."
+    },
+    {
       "category": "workbook-merger",
       "file": "combine-charts-from-several-workbooks-into-one-consolidated-workbook-maintaining.cs",
       "title": "Combine charts from several workbooks into one consolidated workbook, maintaining data links and formatting."
