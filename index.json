@@ -4401,6 +4401,11 @@
     },
     {
       "category": "timeline",
+      "file": "convert-timeline-data-from-one-xlsx-workbook-to-another-xlsx-workbook-while-pres.cs",
+      "title": "Convert timeline data from one XLSX workbook to another XLSX workbook while preserving all formatting and cell relationships."
+    },
+    {
+      "category": "timeline",
       "file": "embed-a-timeline-into-a-document-by-importing-mhtmlformatted-content-preserving-.cs",
       "title": "Embed a timeline into a document by importing MHTML\u2011formatted content, preserving layout and interactivity."
     },
