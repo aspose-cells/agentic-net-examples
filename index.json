@@ -5531,6 +5531,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "transform-a-worksheet-from-an-xlsx-file-into-a-scalable-svg-graphic-while-preser.cs",
+      "title": "Transform a worksheet from an XLSX file into a scalable SVG graphic while preserving visual fidelity."
+    },
+    {
+      "category": "working-with-images",
       "file": "transform-an-xlsx-workbook-into-a-tiff-image-while-maintaining-visual-fidelity-a.cs",
       "title": "Transform an XLSX workbook into a TIFF image while maintaining visual fidelity and page layout."
     },
