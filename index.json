@@ -4406,6 +4406,11 @@
     },
     {
       "category": "timeline",
+      "file": "convert-a-timeline-stored-in-an-xltx-template-into-an-xlsx-workbook-while-retain.cs",
+      "title": "Convert a timeline stored in an XLTX template into an XLSX workbook while retaining all data."
+    },
+    {
+      "category": "timeline",
       "file": "convert-a-timeline-worksheet-from-xlsb-to-xlsx-format-maintaining-data-integrity.cs",
       "title": "Convert a timeline worksheet from XLSB to XLSX format, maintaining data integrity and cell formatting."
     },
