@@ -4446,6 +4446,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbooks-by-copying-cells-formats-and-worksheet-components-whi.cs",
+      "title": "Combine multiple workbooks by copying cells, formats, and worksheet components while maintaining the original structure."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbooks-by-integrating-their-worksheets-into-a-single-workboo.cs",
       "title": "Combine multiple workbooks by integrating their worksheets into a single workbook while maintaining data integrity."
     },
