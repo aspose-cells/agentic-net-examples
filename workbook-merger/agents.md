@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - combine-multiple-workbooks-into-a-single-workbook-and-export-the-merged-result-a.cs
 - combine-multiple-workbooks-into-a-single-workbook-utilizing-supported-formats-in.cs
 - combine-multiple-xlsx-workbooks-into-a-single-workbook-by-merging-the-specified-.cs
+- combine-multiple-workbook-files-by-populating-a-workbookcollection-and-invoking-.cs
