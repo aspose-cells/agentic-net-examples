@@ -4471,6 +4471,11 @@
     },
     {
       "category": "timeline",
+      "file": "transform-a-timeline-stored-in-an-xltm-template-into-an-xlsx-workbook-while-main.cs",
+      "title": "Transform a timeline stored in an XLTM template into an XLSX workbook while maintaining data integrity."
+    },
+    {
+      "category": "timeline",
       "file": "transform-the-timeline-data-contained-in-an-xltx-template-into-an-xlsx-workbook-.cs",
       "title": "Transform the timeline data contained in an XLTX template into an XLSX workbook, ensuring all content is retained."
     },
