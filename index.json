@@ -4446,6 +4446,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbooks-into-a-single-workbook-utilizing-supported-formats-in.cs",
+      "title": "Combine multiple workbooks into a single workbook utilizing supported formats, including XLSX, while maintaining data integrity and preserving worksheet structures."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-worksheets-into-a-single-workbook-according-to-the-specified-wo.cs",
       "title": "Combine multiple worksheets into a single workbook according to the specified worksheet merging procedure."
     },
