@@ -4371,6 +4371,11 @@
     },
     {
       "category": "timeline",
+      "file": "embed-a-timeline-into-a-document-by-importing-mhtmlformatted-content-preserving-.cs",
+      "title": "Embed a timeline into a document by importing MHTML\u2011formatted content, preserving layout and interactivity."
+    },
+    {
+      "category": "timeline",
       "file": "insert-a-timeline-into-the-spreadsheet-using-html-formatted-markup-ensuring-prop.cs",
       "title": "Insert a timeline into the spreadsheet using HTML-formatted markup, ensuring proper rendering and cross\u2011platform display."
     },
