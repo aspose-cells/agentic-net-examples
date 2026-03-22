@@ -4536,6 +4536,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "consolidate-multiple-worksheets-from-separate-workbooks-into-a-single-worksheet-.cs",
+      "title": "Consolidate multiple worksheets from separate workbooks into a single worksheet within a target workbook."
+    },
+    {
+      "category": "workbook-merger",
       "file": "consolidate-several-workbook-files-into-one-workbook-preserving-worksheets-style.cs",
       "title": "Consolidate several workbook files into one workbook, preserving worksheets, styles, data integrity, and formulas."
     },
