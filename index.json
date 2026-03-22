@@ -4371,6 +4371,11 @@
     },
     {
       "category": "timeline",
+      "file": "add-a-sparkline-to-an-xlsx-workbook-configuring-its-data-range-and-visual-proper.cs",
+      "title": "Add a sparkline to an XLSX workbook, configuring its data range and visual properties."
+    },
+    {
+      "category": "timeline",
       "file": "add-a-timeline-to-a-workbook-by-embedding-spreadsheetml-markup-adhering-to-the-a.cs",
       "title": "Add a timeline to a workbook by embedding SpreadsheetML markup adhering to the appropriate schema."
     },
