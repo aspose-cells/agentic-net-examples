@@ -4411,6 +4411,11 @@
     },
     {
       "category": "timeline",
+      "file": "export-the-timeline-data-to-an-xlsb-workbook-ensuring-proper-cell-formatting-and.cs",
+      "title": "Export the timeline data to an XLSB workbook, ensuring proper cell formatting and structure."
+    },
+    {
+      "category": "timeline",
       "file": "insert-a-timeline-into-the-spreadsheet-using-html-formatted-markup-ensuring-prop.cs",
       "title": "Insert a timeline into the spreadsheet using HTML-formatted markup, ensuring proper rendering and cross\u2011platform display."
     },
