@@ -4406,6 +4406,11 @@
     },
     {
       "category": "timeline",
+      "file": "convert-the-timeline-data-within-an-xls-workbook-into-an-xlsx-file-preserving-al.cs",
+      "title": "Convert the timeline data within an XLS workbook into an XLSX file, preserving all cells and formatting."
+    },
+    {
+      "category": "timeline",
       "file": "convert-timeline-data-from-one-xlsx-workbook-to-another-xlsx-workbook-while-pres.cs",
       "title": "Convert timeline data from one XLSX workbook to another XLSX workbook while preserving all formatting and cell relationships."
     },
