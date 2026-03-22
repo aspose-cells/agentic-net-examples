@@ -4441,6 +4441,11 @@
     },
     {
       "category": "timeline",
+      "file": "export-the-timeline-data-from-an-xltm-workbook-into-a-new-xlsx-file-while-preser.cs",
+      "title": "Export the timeline data from an XLTM workbook into a new XLSX file while preserving its content."
+    },
+    {
+      "category": "timeline",
       "file": "export-the-timeline-data-to-an-xlsb-workbook-ensuring-proper-cell-formatting-and.cs",
       "title": "Export the timeline data to an XLSB workbook, ensuring proper cell formatting and structure."
     },
