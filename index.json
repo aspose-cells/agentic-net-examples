@@ -5476,6 +5476,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-worksheet-from-an-xlsx-workbook-into-an-image-format-preserving-visual.cs",
+      "title": "Convert a worksheet from an XLSX workbook into an image format, preserving visual fidelity."
+    },
+    {
+      "category": "working-with-images",
       "file": "determine-the-complete-set-of-supported-image-conversion-formats-that-can-be-gen.cs",
       "title": "Determine the complete set of supported image conversion formats that can be generated from an XLSX workbook."
     },
