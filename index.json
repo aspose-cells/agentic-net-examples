@@ -4371,6 +4371,11 @@
     },
     {
       "category": "timeline",
+      "file": "add-a-sparkline-to-a-workbook-by-embedding-it-within-an-xltm-macroenabled-templa.cs",
+      "title": "Add a sparkline to a workbook by embedding it within an XLTM macro\u2011enabled template file."
+    },
+    {
+      "category": "timeline",
       "file": "add-a-sparkline-to-an-xlsm-workbook-ensuring-proper-macro-enabled-compatibility-.cs",
       "title": "Add a sparkline to an XLSM workbook, ensuring proper macro-enabled compatibility and accurate chart rendering."
     },
