@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - transform-the-timeline-data-contained-in-an-xltx-template-into-an-xlsx-workbook-.cs
 - transform-a-timeline-stored-in-an-xltm-template-into-an-xlsx-workbook-while-main.cs
 - convert-a-timeline-worksheet-from-xlsb-to-xlsx-format-maintaining-data-integrity.cs
+- convert-the-timeline-data-within-an-xls-workbook-into-an-xlsx-file-preserving-al.cs
