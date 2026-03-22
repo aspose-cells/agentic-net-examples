@@ -4416,6 +4416,11 @@
     },
     {
       "category": "timeline",
+      "file": "generate-a-chronological-timeline-representation-of-data-and-serialize-it-into-a.cs",
+      "title": "Generate a chronological timeline representation of data and serialize it into a SpreadsheetML formatted document."
+    },
+    {
+      "category": "timeline",
       "file": "generate-a-timeline-output-serialized-in-tabseparated-values-tsv-format-for-cons.cs",
       "title": "Generate a timeline output serialized in tab\u2011separated values (TSV) format for consumption by downstream processes."
     },
