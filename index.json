@@ -4551,6 +4551,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "programmatically-and-efficiently-combine-selected-worksheets-from-multiple-workb.cs",
+      "title": "Programmatically and efficiently combine selected worksheets from multiple workbooks into a single workbook using WorksheetCollection.Add."
+    },
+    {
+      "category": "workbook-merger",
       "file": "read-and-load-the-source-workbook-files-into-memory-preparing-them-for-further-m.cs",
       "title": "Read and load the source workbook files into memory, preparing them for further manipulation and analysis."
     },
