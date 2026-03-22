@@ -4436,6 +4436,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbook-files-programmatically-by-applying-the-provided-sample.cs",
+      "title": "Combine multiple workbook files programmatically by applying the provided sample code to achieve unified output."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbook-objects-into-a-single-workbook-and-persist-the-result-.cs",
       "title": "Combine multiple workbook objects into a single workbook and persist the result as an XLSX file."
     },
