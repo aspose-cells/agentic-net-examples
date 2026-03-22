@@ -4556,6 +4556,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "utilize-the-workbookcollectioncombine-method-to-seamlessly-merge-multiple-workbo.cs",
+      "title": "Utilize the WorkbookCollection.Combine method to seamlessly merge multiple workbook instances into a single workbook."
+    },
+    {
+      "category": "workbook-merger",
       "file": "validate-all-required-conditions-and-worksheet-compatibility-prior-to-merging-mu.cs",
       "title": "Validate all required conditions and worksheet compatibility prior to merging multiple worksheets into a single workbook."
     },
