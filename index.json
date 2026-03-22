@@ -4431,6 +4431,11 @@
     },
     {
       "category": "timeline",
+      "file": "render-a-chronological-timeline-into-html-markup-for-dynamic-integration-within-.cs",
+      "title": "Render a chronological timeline into HTML markup for dynamic integration within web application interfaces."
+    },
+    {
+      "category": "timeline",
       "file": "render-a-project-timeline-and-output-it-as-an-xltx-formatted-excel-workbook-temp.cs",
       "title": "Render a project timeline and output it as an XLTX formatted Excel workbook template."
     },
