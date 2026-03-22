@@ -4371,6 +4371,11 @@
     },
     {
       "category": "timeline",
+      "file": "add-a-timeline-to-a-workbook-by-embedding-spreadsheetml-markup-adhering-to-the-a.cs",
+      "title": "Add a timeline to a workbook by embedding SpreadsheetML markup adhering to the appropriate schema."
+    },
+    {
+      "category": "timeline",
       "file": "embed-a-timeline-into-a-document-by-importing-mhtmlformatted-content-preserving-.cs",
       "title": "Embed a timeline into a document by importing MHTML\u2011formatted content, preserving layout and interactivity."
     },
