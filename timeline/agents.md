@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - convert-a-timeline-worksheet-from-xlsb-to-xlsx-format-maintaining-data-integrity.cs
 - convert-the-timeline-data-within-an-xls-workbook-into-an-xlsx-file-preserving-al.cs
 - export-a-timeline-from-an-xlsx-workbook-into-a-new-xlsx-file-while-preserving-ce.cs
+- convert-a-timeline-stored-in-an-xlsm-workbook-to-an-xlsx-file-preserving-data-in.cs
