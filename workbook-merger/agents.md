@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - combine-several-excel-workbooks-into-a-single-file-by-invoking-the-librarys-work.cs
 - combine-workbooks-by-consolidating-whole-workbooks-selected-worksheets-or-indivi.cs
 - combine-multiple-workbook-files-into-a-single-workbook-adhering-to-all-supported.cs
+- combine-multiple-workbook-files-into-a-single-workbook-preserving-all-sheets-for.cs
