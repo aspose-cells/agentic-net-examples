@@ -4416,6 +4416,11 @@
     },
     {
       "category": "timeline",
+      "file": "implement-functionality-that-outputs-a-chronological-timeline-in-csv-format-ensu.cs",
+      "title": "Implement functionality that outputs a chronological timeline in CSV format, ensuring correct delimiter placement and appropriate header naming."
+    },
+    {
+      "category": "timeline",
       "file": "insert-a-timeline-into-the-spreadsheet-using-html-formatted-markup-ensuring-prop.cs",
       "title": "Insert a timeline into the spreadsheet using HTML-formatted markup, ensuring proper rendering and cross\u2011platform display."
     },
