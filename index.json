@@ -4371,6 +4371,11 @@
     },
     {
       "category": "timeline",
+      "file": "add-a-sparkline-to-an-xlsm-workbook-ensuring-proper-macro-enabled-compatibility-.cs",
+      "title": "Add a sparkline to an XLSM workbook, ensuring proper macro-enabled compatibility and accurate chart rendering."
+    },
+    {
+      "category": "timeline",
       "file": "add-a-sparkline-to-an-xlsx-workbook-configuring-its-data-range-and-visual-proper.cs",
       "title": "Add a sparkline to an XLSX workbook, configuring its data range and visual properties."
     },
