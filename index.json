@@ -5476,6 +5476,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-chart-from-an-xlsx-workbook-into-an-image-file-maintaining-visual-fide.cs",
+      "title": "Convert a chart from an XLSX workbook into an image file, maintaining visual fidelity."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-a-worksheet-from-an-xlsx-workbook-into-an-image-format-preserving-visual.cs",
       "title": "Convert a worksheet from an XLSX workbook into an image format, preserving visual fidelity."
     },
