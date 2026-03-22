@@ -4491,6 +4491,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-workbooks-by-consolidating-whole-workbooks-selected-worksheets-or-indivi.cs",
+      "title": "Combine workbooks by consolidating whole workbooks, selected worksheets, or individual chart objects into a single file."
+    },
+    {
+      "category": "workbook-merger",
       "file": "consolidate-several-workbook-files-into-one-workbook-preserving-worksheets-style.cs",
       "title": "Consolidate several workbook files into one workbook, preserving worksheets, styles, data integrity, and formulas."
     },
