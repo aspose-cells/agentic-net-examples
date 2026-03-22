@@ -5486,6 +5486,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-a-rendering-of-an-xlsx-worksheet-as-an-image-file-for-preview-or-testin.cs",
+      "title": "Generate a rendering of an XLSX worksheet as an image file for preview or testing purposes."
+    },
+    {
+      "category": "working-with-images",
       "file": "generate-an-image-representation-of-a-chart-embedded-in-an-xlsx-workbook-while-p.cs",
       "title": "Generate an image representation of a chart embedded in an XLSX workbook while preserving visual fidelity and formatting."
     },
