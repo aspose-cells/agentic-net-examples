@@ -4501,6 +4501,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-several-workbook-files-integrating-their-charts-into-a-unified-workbook-.cs",
+      "title": "Combine several workbook files, integrating their charts into a unified workbook while maintaining chart relationships."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-several-workbook-files-into-one-consolidated-workbook-preserving-workshe.cs",
       "title": "Combine several workbook files into one consolidated workbook, preserving worksheets and data integrity throughout the process."
     },
