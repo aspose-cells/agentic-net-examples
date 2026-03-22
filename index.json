@@ -4401,6 +4401,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbook-files-by-populating-a-workbookcollection-and-invoking-.cs",
+      "title": "Combine multiple workbook files by populating a WorkbookCollection and invoking its merge functionality programmatically."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbook-files-into-a-single-workbook-following-the-specified-m.cs",
       "title": "Combine multiple workbook files into a single workbook following the specified merging workflow process."
     },
