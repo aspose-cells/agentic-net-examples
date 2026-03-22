@@ -4406,6 +4406,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbook-files-into-a-single-workbook-adhering-to-all-supported.cs",
+      "title": "Combine multiple workbook files into a single workbook, adhering to all supported merging scenarios and constraints."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-workbook-files-into-a-single-workbook-following-the-specified-m.cs",
       "title": "Combine multiple workbook files into a single workbook following the specified merging workflow process."
     },
