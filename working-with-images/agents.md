@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - convert-a-worksheet-from-an-xlsx-workbook-into-an-image-format-preserving-visual.cs
 - read-a-column-chart-from-an-xlsx-workbook-and-render-it-as-an-image-preview.cs
 - implement-progress-monitoring-for-converting-an-xlsx-workbook-into-an-image-file.cs
+- generate-a-rendering-of-an-xlsx-worksheet-as-an-image-file-for-preview-or-testin.cs
