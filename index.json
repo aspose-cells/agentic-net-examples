@@ -5491,6 +5491,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "implement-progress-monitoring-for-converting-an-xlsx-workbook-into-an-image-file.cs",
+      "title": "Implement progress monitoring for converting an XLSX workbook into an image file during the conversion process."
+    },
+    {
+      "category": "working-with-images",
       "file": "load-a-chart-from-an-xlsx-workbook-and-render-it-to-an-image-format.cs",
       "title": "Load a chart from an XLSX workbook and render it to an image format."
     },
