@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - combine-workbooks-by-consolidating-whole-workbooks-selected-worksheets-or-indivi.cs
 - combine-multiple-workbook-files-into-a-single-workbook-adhering-to-all-supported.cs
 - combine-multiple-workbook-files-into-a-single-workbook-preserving-all-sheets-for.cs
+- combine-multiple-workbooks-by-integrating-their-worksheets-into-a-single-workboo.cs
