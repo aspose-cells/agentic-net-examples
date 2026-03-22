@@ -5555,6 +5555,11 @@
       "title": "Transform an XLSX workbook into a TIFF image while maintaining visual fidelity and page layout."
     },
     {
+      "category": "working-with-images",
+      "file": "transform-an-xlsx-worksheet-into-an-image-format-while-maintaining-visual-fideli.cs",
+      "title": "Transform an XLSX worksheet into an image format while maintaining visual fidelity and layout."
+    },
+    {
       "category": "working-with-json",
       "file": "convert-a-dif-spreadsheet-into-json-format-preserving-all-cell-data-types-and-wo.cs",
       "title": "Convert a DIF spreadsheet into JSON format, preserving all cell data, types, and workbook structure."
