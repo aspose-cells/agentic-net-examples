@@ -4481,6 +4481,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "combine-multiple-workbooks-into-a-single-workbook-with-merged-worksheets-and-per.cs",
+      "title": "Combine multiple workbooks into a single workbook with merged worksheets and persist the result as an XLSX file."
+    },
+    {
+      "category": "workbook-merger",
       "file": "combine-multiple-worksheets-into-a-single-workbook-according-to-the-specified-wo.cs",
       "title": "Combine multiple worksheets into a single workbook according to the specified worksheet merging procedure."
     },
