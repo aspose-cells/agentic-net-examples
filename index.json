@@ -5486,6 +5486,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-worksheet-into-an-image-file-preserving-layout-and-formatting-for-accu.cs",
+      "title": "Convert a worksheet into an image file, preserving layout and formatting for accurate visual representation."
+    },
+    {
+      "category": "working-with-images",
       "file": "determine-the-complete-set-of-supported-image-conversion-formats-that-can-be-gen.cs",
       "title": "Determine the complete set of supported image conversion formats that can be generated from an XLSX workbook."
     },
