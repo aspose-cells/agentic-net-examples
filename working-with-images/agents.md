@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - implement-progress-monitoring-for-converting-an-xlsx-workbook-into-an-image-file.cs
 - generate-a-rendering-of-an-xlsx-worksheet-as-an-image-file-for-preview-or-testin.cs
 - convert-a-chart-from-an-xlsx-workbook-into-an-image-file-maintaining-visual-fide.cs
+- convert-a-worksheet-into-an-image-file-preserving-layout-and-formatting-for-accu.cs
