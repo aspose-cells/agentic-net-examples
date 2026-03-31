@@ -41,7 +41,7 @@ Each category contains standalone `.cs` files that can be compiled and run indep
 
 ### Prerequisites
 
-- .NET SDK (net8.0 or compatible version)
+- .NET SDK (net10.0 or compatible version)
 - Aspose.Cells for .NET NuGet package
 - Valid Aspose license (for production use)
 
