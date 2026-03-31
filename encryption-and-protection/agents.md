@@ -1,119 +1,110 @@
-# Encryption and Protection Examples
+---
+category: encryption-and-protection
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Encryption and Protection
+You are a C# developer specializing in **encryption and protection features using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE protection or encryption feature.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (protect workbook, protect worksheet, set password, unprotect)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Encryption and Protection**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- workbook.Settings.Password
+- worksheet.Protect()
+- worksheet.Unprotect()
+- ProtectionType
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Protect worksheet
+worksheet.Protect(ProtectionType.All);
 
-Cells cells = sheet.Cells;
+// Set password
+workbook.Settings.Password = "1234";
 
+workbook.Save("output.xlsx");
 
-## Output
+---
 
-Examples may generate:
+# Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Use Protect() for worksheet protection
+- Use workbook.Settings.Password for workbook encryption
+- Use correct ProtectionType enum
+- One example = one operation
 
-Output files are written to the working directory.
-- add-or-remove-password-protection-on-an-xlsx-workbook-programmatically-using-app.cs
-- apply-password-protection-to-an-xlsx-workbook-to-restrict-editing-opening-or-for.cs
-- apply-encryption-to-an-xlsx-workbook-and-subsequently-decrypt-it-ensuring-data-i.cs
-- apply-password-protection-to-an-input-xlsx-workbook-using-encryption-to-secure-i.cs
-- implement-encryption-and-decryption-of-ods-files-accepting-xlsx-data-as-the-sour.cs
-- apply-password-protection-to-an-ods-workbook-generated-from-an-input-xlsx-file-u.cs
-- validate-the-password-of-encrypted-xlsx-and-ods-workbooks-confirming-access-righ.cs
-- validate-the-provided-password-for-an-incoming-xlsx-workbook-to-ensure-authorize.cs
-- apply-write-protection-to-an-input-xlsx-workbook-while-setting-the-author-metada.cs
-- apply-write-protection-to-an-xlsx-file-and-assign-the-specified-author-to-the-pr.cs
-- configure-and-apply-a-strong-encryption-algorithm-to-protect-an-input-xlsx-workb.cs
-- select-an-encryption-algorithm-for-an-xlsx-workbook-and-apply-it-during-file-sav.cs
-- apply-or-remove-password-protection-on-a-shared-xlsx-workbook-to-control-access-.cs
-- apply-write-protection-to-a-shared-xlsx-workbook-to-restrict-modifications-while.cs
-- apply-or-remove-workbook-structure-protection-on-an-xlsx-file-programmatically-e.cs
-- apply-protection-to-the-workbook-structure-of-an-input-xlsx-file-to-prevent-unau.cs
-- apply-password-protection-to-worksheets-in-an-xlsx-workbook-and-later-remove-it-.cs
-- apply-protection-to-a-worksheet-within-the-provided-xlsx-file-restricting-editin.cs
-- remove-worksheet-protection-from-the-specified-input-xlsx-file-allowing-subseque.cs
-- encrypt-an-xlsx-workbook-using-a-password-to-protect-its-contents-from-unauthori.cs
-- encrypt-an-input-xlsx-file-by-assigning-a-password-to-protect-its-contents-secur.cs
-- validate-the-digital-signature-of-an-xlsx-workbook-before-processing-to-ensure-i.cs
-- add-an-extra-digital-signature-to-the-provided-xlsx-workbook-preserving-existing.cs
-- insert-a-digital-signature-line-into-an-xlsx-workbook-using-the-net-spreadsheet-.cs
-- insert-a-signature-line-into-the-provided-xlsx-workbook-ensuring-correct-placeme.cs
-- set-up-signature-line-attributes-for-an-input-xlsx-workbook-including-signer-det.cs
-- determine-if-the-supplied-xlsx-file-conforms-to-the-encrypted-ooxml-specificatio.cs
-- verify-the-modification-password-of-an-input-xlsx-file-to-ensure-authorized-edit.cs
-- identify-the-format-of-an-input-xlsx-file-and-determine-whether-it-is-encrypted.cs
-- identify-and-verify-the-file-format-of-a-supplied-xlsx-workbook-using-the-api.cs
-- determine-whether-the-supplied-xlsx-workbook-is-encrypted-and-retrieve-its-encry.cs
-- apply-password-protection-to-an-xlsx-workbook-and-subsequently-remove-it-to-allo.cs
-- implement-encryption-and-decryption-functionality-for-xlsx-workbooks-ensuring-se.cs
-- implement-functionality-to-apply-password-protection-to-an-xlsx-workbook-and-sub.cs
-- apply-and-remove-worksheet-protection-in-an-xlsx-file-using-the-provided-api-met.cs
-- implement-functionality-to-apply-and-remove-protection-on-shared-xlsx-workbooks-.cs
-- determine-whether-an-xlsx-workbook-is-passwordprotected-for-modifications-and-va.cs
-- apply-password-protection-to-an-xlsx-workbook-to-encrypt-its-contents-and-restri.cs
-- decrypt-an-xlsx-workbook-using-the-librarys-decryption-api-while-maintaining-dat.cs
-- select-the-desired-encryption-algorithm-for-an-xlsx-workbook-and-validate-the-pr.cs
-- apply-aes-encryption-and-assign-a-password-to-xlsx-workbooks-to-restrict-unautho.cs
-- programmatically-generate-read-and-modify-microsoft-excel-xlsx-workbooks-using-t.cs
-- specify-a-modification-password-for-an-xlsx-workbook-to-restrict-unauthorized-ed.cs
-- implement-encryption-and-decryption-capabilities-for-ods-spreadsheet-files-suppo.cs
-- apply-password-protection-to-an-xlsx-workbook-using-openoffice-calc-to-restrict-.cs
-- encrypt-an-ods-spreadsheet-using-the-net-api-applying-password-protection-to-sec.cs
-- decrypt-an-encrypted-ods-file-using-net-and-convert-the-output-to-xlsx-format.cs
-- invoke-save-as-and-enable-the-save-with-password-option-when-exporting-to-xlsx-f.cs
-- decrypt-an-ods-file-by-loading-it-with-loadoptionspassword-set-and-clearing-work.cs
-- encrypt-an-ods-workbook-by-loading-it-assigning-workbooksettingspassword-then-sa.cs
-- validate-the-password-protecting-an-encrypted-xlsx-workbook-and-confirm-whether-.cs
-- validate-the-password-of-an-encrypted-xlsx-workbook-and-report-whether-decryptio.cs
-- set-the-workbook-author-metadata-concurrently-with-applying-write-protection-to-.cs
-- identify-typical-use-cases-for-processing-xlsx-worksheets-within-net-application.cs
-- provide-example-source-code-illustrating-creation-and-manipulation-of-xlsx-sprea.cs
-- encrypt-an-xlsx-workbook-file-using-microsoft-excels-standard-encryption-to-prot.cs
-- encrypt-an-xlsx-workbook-using-net-apis-specifying-password-protection-and-encry.cs
-- apply-a-robust-encryption-algorithm-to-protect-xlsx-files-ensuring-data-confiden.cs
-- programmatically-add-or-remove-password-protection-on-a-shared-xlsx-workbook-to-.cs
-- create-a-workbook-apply-protection-with-sharing-enabled-and-save-the-result-as-a.cs
-- apply-and-remove-protection-on-the-workbook-structure-of-an-xlsx-file-using-appr.cs
-- apply-or-remove-workbook-structural-protection-on-xlsx-files-programmatically-us.cs
-- programmatically-protect-the-workbook-structure-of-an-xlsx-file-using-the-net-ap.cs
+---
+
+# Input Strategy
+
+- Do NOT use external files
+- Create workbook programmatically
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created
+
+---
+
+# Common Tasks
+
+- Protect worksheet
+- Unprotect worksheet
+- Set password on workbook
+- Remove protection
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ worksheet.Protect();
+✅ worksheet.Protect(ProtectionType.All);
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid unnecessary complexity
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
