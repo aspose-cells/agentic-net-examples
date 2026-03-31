@@ -1,131 +1,120 @@
-# Smart markers Examples
+---
+category: smart-markers
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Smart markers
+You are a C# developer specializing in **Smart Markers using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE smart marker use case.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (apply smart markers, bind data, process templates)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Smart markers**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- WorkbookDesigner
+- WorkbookDesigner.SetDataSource()
+- WorkbookDesigner.Process()
+- Worksheet.Cells
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Add smart marker
+worksheet.Cells["A1"].PutValue("&=Data.Name");
 
-Cells cells = sheet.Cells;
+// Prepare data
+object[] data = new object[]
+{
+    new { Name = "John" },
+    new { Name = "Jane" }
+};
 
+// Process smart markers
+WorkbookDesigner designer = new WorkbookDesigner();
+designer.Workbook = workbook;
+designer.SetDataSource("Data", data);
+designer.Process();
 
-## Output
+workbook.Save("output.xlsx");
 
-Examples may generate:
+---
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+# Rules
 
-Output files are written to the working directory.
-- insert-smart-markers-into-an-xlsx-template-and-fill-them-from-a-net-datatable-us.cs
-- implement-conditional-smart-marker-expressions-to-render-data-selectively-when-l.cs
-- utilize-the-range-parameter-to-dynamically-create-rows-from-an-object-collection.cs
-- add-a-smart-marker-formatted-as-field_name-to-a-target-cell-while-loading-an-xls.cs
-- apply-conditional-logic-using-the-if-parameter-syntax-if-field_namevalue-when-lo.cs
-- apply-the-range-parameter-to-duplicate-a-row-block-for-each-collection-element-d.cs
-- when-loading-an-xlsx-file-apply-field-formatting-via-the-specified-field_namefor.cs
-- apply-smart-markers-techniques-to-load-data-from-xlsx-files-for-dynamic-spreadsh.cs
-- determine-the-smart-markers-definition-present-in-an-xlsx-workbook-file-upon-loa.cs
-- load-an-xlsx-workbook-and-process-it-using-smart-marker-syntax-to-generate-the-d.cs
-- load-xlsx-files-utilizing-only-the-supported-smart-marker-types-to-ensure-correc.cs
-- create-a-basic-smart-marker-implementation-that-loads-an-xlsx-workbook-into-memo.cs
-- create-a-smart-marker-using-conditional-logic-while-loading-data-from-an-xlsx-sp.cs
-- account-for-smart-marker-constraints-when-loading-xlsx-workbooks-to-ensure-marke.cs
-- instantiate-an-anonymous-c-object-assign-it-via-workbookdesignersetdatasource-an.cs
-- declare-var-data-as-a-new-anonymous-object-with-namejohn-and-age30-then-load-an-.cs
-- define-a-person-class-with-name-and-age-properties-and-map-data-from-an-xlsx-spr.cs
-- assign-an-xlsx-data-source-to-the-designer-object-by-calling-the-designersetdata.cs
-- integrate-an-anonymous-or-custom-object-as-a-data-source-for-smart-markers-when-.cs
-- instantiate-an-anonymous-object-populated-with-data-extracted-from-an-xlsx-workb.cs
-- instantiate-a-custom-object-that-loads-data-from-an-xlsx-workbook-for-further-pr.cs
-- populate-smart-markers-with-object-data-while-loading-an-xlsx-workbook-ensuring-.cs
-- implement-a-conditional-smart-marker-in-an-xlsx-file-that-displays-a-value-only-.cs
-- declare-a-template-variable-and-utilize-it-to-iterate-a-row-block-when-loading-a.cs
-- implement-support-for-if-conditionendif-conditional-syntax-when-loading-xlsx-spr.cs
-- instantiate-a-variable-named-varname-and-load-an-xlsx-workbook-into-it-using-the.cs
-- reference-the-variable-varname-when-programmatically-loading-an-xlsx-workbook-in.cs
-- implement-if-parameters-and-variable-driven-smart-markers-to-load-data-from-an-x.cs
-- implement-the-if-parameter-syntax-during-the-loading-process-of-an-xlsx-workbook.cs
-- implement-variable-substitution-in-smart-markers-when-loading-data-from-an-xlsx-.cs
-- evaluate-the-provided-code-samples-for-loading-xlsx-files-to-ensure-correct-usag.cs
-- utilize-the-range-parameter-to-create-rows-for-each-object-in-a-collection-when-.cs
-- terminate-the-range-block-using-the-endrange-token-when-loading-an-xlsx-file-in-.cs
-- implement-smart-marker-processing-by-loading-an-xlsx-workbook-and-utilizing-the-.cs
-- implement-the-range-parameter-syntax-to-load-xlsx-workbooks-with-selective-cell-.cs
-- implement-row-repetition-based-on-a-defined-range-during-the-process-of-loading-.cs
-- validate-the-example-demonstrating-loading-an-xlsx-workbook-and-ensure-it-operat.cs
-- apply-twodecimalplace-number-formatting-to-a-smart-marker-when-loading-an-xlsx-w.cs
-- load-an-xlsx-workbook-apply-a-date-smart-marker-formatted-as-mmddyyyy-and-render.cs
-- apply-numeric-formatting-using-field_name000-pattern-when-importing-data-from-an.cs
-- load-an-xlsx-workbook-and-apply-the-field_namemmddyyyy-date-format-to-designated.cs
-- apply-the-custom-number-format-field_name-409000-to-cells-during-xlsx-workbook-l.cs
-- apply-number-formatting-to-cells-after-loading-an-xlsx-workbook-to-ensure-proper.cs
-- apply-appropriate-date-formatting-to-all-relevant-cells-during-the-loading-proce.cs
-- load-an-xlsx-workbook-and-apply-custom-formatting-to-its-cells-and-worksheets-pr.cs
-- register-for-the-smartmarkerprocessing-event-to-get-notifications-during-data-me.cs
-- subscribe-to-the-smartmarkerprocessing-event-to-receive-progress-updates-while-l.cs
-- implement-notification-handling-during-data-merge-using-smart-markers-when-loadi.cs
-- load-an-xlsx-file-group-records-by-a-designated-field-using-the-group-parameter-.cs
-- use-the-range-parameter-to-duplicate-rows-for-each-collection-element-while-impo.cs
-- specify-the-range-parameter-when-loading-an-xlsx-file-to-restrict-import-to-a-de.cs
-- access-a-specific-array-element-using-its-zerobased-index-within-a-smart-marker-.cs
-- utilize-smart-markers-to-import-an-array-element-by-its-index-while-loading-an-x.cs
-- import-array-elements-satisfying-a-condition-into-an-xlsx-file-using-a-smart-mar.cs
-- utilize-smart-markers-with-slicer-functionality-to-import-array-elements-while-l.cs
-- deserialize-json-into-a-net-object-and-fill-an-xlsx-template-using-smart-markers.cs
-- load-an-xlsx-workbook-using-smart-markers-to-import-json-data-according-to-the-d.cs
-- generate-a-masterdetail-report-by-configuring-master-and-detail-range-blocks-wit.cs
-- create-a-master-range-named-range-mastercollection-by-loading-an-xlsx-workbook-i.cs
-- define-a-detail-range-inside-the-master-range-using-range-detailcollection-when-.cs
-- implement-masterdetail-smart-markers-by-loading-an-xlsx-workbook-and-populating-.cs
-- access-nested-object-attributes-via-dot-notation-within-smart-markers-when-loadi.cs
-- utilize-smart-marker-techniques-for-importing-nested-objects-efficiently-when-lo.cs
-- bind-a-variablelength-array-to-a-smart-marker-range-block-to-dynamically-generat.cs
-- bind-the-array-to-the-designer-so-the-range-block-iterates-over-each-element-and.cs
-- utilize-smart-markers-to-import-variablelength-arrays-from-external-data-sources.cs
-- insert-a-formula-into-a-smartmarker-field-via-the-formula-parameter-while-loadin.cs
-- implement-formula-parameter-handling-in-smart-marker-fields-during-xlsx-workbook.cs
-- configure-automatic-overflow-to-propagate-smart-marker-data-across-additional-wo.cs
-- enable-the-continueonerror-setting-when-loading-an-xlsx-file-to-overflow-excess-.cs
-- implement-getvaluestring-name-to-retrieve-marker-specific-data-by-loading-the-xl.cs
-- assign-a-custom-data-source-to-the-designer-via-setdatasourcecustomsource-while-.cs
-- configure-a-custom-data-source-for-the-workbook-designer-and-load-the-target-xls.cs
-- render-a-leading-apostrophe-in-an-xlsx-cell-by-prefixing-the-value-with-an-apost.cs
-- prefix-cell-contents-with-a-leading-apostrophe-when-loading-an-xlsx-workbook-to-.cs
+- Use WorkbookDesigner for smart marker processing
+- Always call Process() after setting data source
+- Use &= syntax for smart markers
+- One example = one operation
+
+---
+
+# Input Strategy
+
+- Do NOT rely on external template files
+- Create template programmatically
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created successfully
+
+---
+
+# Common Tasks
+
+- Bind data using smart markers
+- Process template with data
+- Use collections for repeated data
+- Generate reports
+
+---
+
+# Common Mistakes
+
+❌ designer.SetDataSource(data);
+✅ designer.SetDataSource("Data", data);
+
+❌ Missing Process() call
+✅ designer.Process();
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples minimal
+- Avoid complex data structures unless required
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
