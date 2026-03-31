@@ -1,119 +1,113 @@
-# Manage formulas Examples
+---
+category: manage-formulas
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Manage formulas
+You are a C# developer specializing in **working with formulas using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE formula-related operation.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (set formula, calculate, read result)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Manage formulas**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Cell.Formula
+- Workbook.CalculateFormula()
+- Cell.Value
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Set formula
+worksheet.Cells["A1"].PutValue(10);
+worksheet.Cells["A2"].PutValue(20);
+worksheet.Cells["A3"].Formula = "=A1+A2";
 
-Cells cells = sheet.Cells;
+// Calculate formulas
+workbook.CalculateFormula();
 
+object result = worksheet.Cells["A3"].Value;
 
-## Output
+workbook.Save("output.xlsx");
 
-Examples may generate:
+---
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+# Rules
 
-Output files are written to the working directory.
-- when-loading-an-xlsx-workbook-delimit-all-function-parameters-with-commas-to-ens.cs
-- customize-the-excel-menu-ui-components-api-references-plugins-faq-and-ai-documen.cs
-- utilize-the-provided-formulas-via-the-api-or-designer-spreadsheets-when-loading-.cs
-- initialize-the-api-load-an-xlsx-workbook-perform-file-operations-and-save-the-wo.cs
-- provide-two-guidelines-for-nonenglish-users-to-correctly-create-formulas-when-lo.cs
-- load-an-xlsx-workbook-ensuring-that-all-formulas-are-expressed-using-english-us-.cs
-- when-loading-an-xlsx-workbook-verify-that-all-function-parameters-are-delimited-.cs
-- load-an-xlsx-workbook-using-english-formatted-formulas-such-as-sum-instead-of-lo.cs
-- apply-the-setting-formulas-notice-for-nonenglish-users-configuration-when-loadin.cs
-- apply-the-nonenglish-user-notice-when-loading-an-xlsx-workbook-to-ensure-correct.cs
-- apply-a-shared-formula-during-xlsx-workbook-loading-to-ensure-formula-consistenc.cs
-- apply-a-shared-formula-across-multiple-cells-when-loading-an-xlsx-workbook-to-en.cs
-- configure-a-shared-formula-during-loading-of-an-xlsx-workbook-according-to-the-s.cs
-- apply-a-shared-formula-to-a-workbook-loaded-from-an-xlsx-file-during-its-initial.cs
-- set-the-limit-for-rows-using-a-shared-formula-when-loading-an-xlsx-workbook.cs
-- handle-duplicate-specify-maximum-rows-of-shared-formula-headings-when-loading-an.cs
-- examine-the-provided-sample-code-to-determine-the-maximum-sharedformula-row-limi.cs
-- configure-external-references-in-formula-cells-according-to-the-defined-rules-wh.cs
-- assign-a-formula-to-a-named-range-during-the-loading-process-of-an-xlsx-workbook.cs
-- assign-a-duplicate-named-range-a-formula-during-xlsx-workbook-loading-using-the-.cs
-- assign-a-simple-formula-to-a-named-range-programmatically-when-loading-an-xlsx-w.cs
-- assign-a-complex-formula-to-a-named-range-during-the-loading-of-an-xlsx-workbook.cs
-- during-xlsx-workbook-loading-compute-and-record-cell-precedents-and-dependents-a.cs
-- provide-a-comprehensive-overview-of-formula-tracing-capabilities-activated-durin.cs
-- trace-precedent-and-dependent-cells-when-loading-an-xlsx-workbook-following-exce.cs
-- identify-and-navigate-precedent-and-dependent-cells-when-loading-an-xlsx-workboo.cs
-- when-loading-an-xlsx-workbook-enable-tracing-of-cell-precedents-according-to-the.cs
-- when-loading-an-xlsx-workbook-enable-dependent-tracing-according-to-the-tracing-.cs
-- load-an-xlsx-workbook-and-trace-both-precedent-and-dependent-cells-following-the.cs
-- evaluate-all-cell-formulas-automatically-during-xlsx-workbook-loading-according-.cs
-- load-an-xlsx-workbook-insert-the-required-formulas-and-compute-their-results-imm.cs
-- enable-direct-formula-evaluation-during-xlsx-workbook-loading-to-compute-cell-va.cs
-- recalculate-workbook-formulas-iteratively-during-xlsx-file-loading-to-ensure-all.cs
-- investigate-advanced-loading-options-for-xlsx-workbooks-including-custom-data-ha.cs
-- observe-the-considerations-outlined-in-important-to-know-for-formulas-when-loadi.cs
-- observe-the-important-considerations-outlined-in-the-important-to-know-section-w.cs
-- configure-the-workbooks-formula-calculation-mode-to-a-specific-setting-during-lo.cs
-- obtain-the-provided-sample-code-and-programmatically-load-a-workbook-in-xlsx-for.cs
-- retrieve-the-provided-runtime-sample-and-load-the-corresponding-workbook-using-t.cs
-- add-specified-cells-to-the-excel-formula-watch-window-during-xlsx-workbook-loadi.cs
-- apply-the-listed-usage-scenarios-while-programmatically-loading-a-workbook-from-.cs
-- when-loading-an-xlsx-workbook-programmatically-add-specified-cells-to-the-excel-.cs
-- provide-example-code-demonstrating-how-to-load-a-workbook-from-an-xlsx-file-usin.cs
-- implement-ifna-function-evaluation-by-loading-an-xlsx-workbook-and-processing-th.cs
-- evaluate-the-ifna-worksheet-function-on-a-loaded-xlsx-workbook-using-the-provide.cs
-- when-loading-an-xlsx-workbook-output-the-console-messages-defined-in-the-console.cs
-- implement-calculation-of-excel-2016-minifs-and-maxifs-functions-when-loading-an-.cs
-- implement-excel-2016-minifs-and-maxifs-function-evaluation-while-loading-an-xlsx.cs
-- optimize-the-cellcalculate-execution-speed-when-loading-an-xlsx-workbook-to-redu.cs
-- optimize-workbook-loading-in-xlsx-format-to-reduce-the-execution-time-of-the-cel.cs
-- identify-circular-references-during-the-loading-of-an-xlsx-workbook-as-described.cs
-- display-the-introductory-information-defined-in-the-introduction-section-when-op.cs
-- perform-direct-calculation-of-a-custom-function-during-xlsx-workbook-loading-wit.cs
-- perform-direct-evaluation-of-a-custom-function-during-xlsx-workbook-load-without.cs
-- implement-a-code-sample-that-loads-a-workbook-in-xlsx-format-following-the-provi.cs
-- reference-the-related-article-specified-in-related-article-when-programmatically.cs
-- implement-a-custom-calculation-engine-to-extend-the-default-engine-when-loading-.cs
-- integrate-a-custom-calculation-engine-during-the-loading-process-of-an-xlsx-work.cs
-- load-a-workbook-in-xlsx-format-and-produce-the-result-defined-in-the-result-spec.cs
-- enable-interruption-or-cancellation-of-formula-evaluation-during-xlsx-workbook-l.cs
-- terminate-or-suspend-worksheet-formula-evaluation-when-loading-an-xlsx-workbook-.cs
-- retrieve-a-range-of-calculated-values-using-abstractcalculationengine-while-prog.cs
-- apply-the-formulatext-function-to-evaluate-cell-formulas-when-loading-a-workbook.cs
+- Always use Formula property to assign formulas
+- Call CalculateFormula() to evaluate formulas
+- Use Excel formula syntax (e.g., =A1+A2)
+- One example = one operation
+
+---
+
+# Input Strategy
+
+- Do NOT use external files
+- Create workbook programmatically
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created
+
+---
+
+# Common Tasks
+
+- Set formula in a cell
+- Calculate formulas
+- Read calculated values
+- Work with multiple formulas
+
+---
+
+# Common Mistakes
+
+❌ worksheet.Cells["A1"] = "=A1+A2";
+✅ worksheet.Cells["A1"].Formula = "=A1+A2";
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid unnecessary complexity
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
