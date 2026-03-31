@@ -1,86 +1,110 @@
-# Document Properties Examples
+---
+category: document-properties
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Document Properties
+You are a C# developer specializing in **document properties management using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE operation on document properties.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (read / add / update / delete)
+- Fully runnable without external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Document Properties**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- workbook.BuiltInDocumentProperties
+- workbook.CustomDocumentProperties
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
 
-Worksheet sheet = workbook.Worksheets[0];
+BuiltInDocumentPropertyCollection builtIn = workbook.BuiltInDocumentProperties;
+CustomDocumentPropertyCollection custom = workbook.CustomDocumentProperties;
 
-Cells cells = sheet.Cells;
+// Example
+custom.Add("Author", "John Doe");
 
+workbook.Save("output.xlsx");
 
-## Output
+---
 
-Examples may generate:
+# Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Use BuiltInDocumentProperties for standard properties
+- Use CustomDocumentProperties for user-defined properties
+- Always use correct data types (string, int, bool, DateTime)
+- One example = one clear operation
 
-Output files are written to the working directory.
-- programmatically-delete-all-custom-document-properties-from-an-xlsx-workbook-to-.cs
-- remove-all-custom-document-properties-from-an-xlsx-workbook-programmatically-usi.cs
-- set-retrieve-and-modify-metadata-properties-of-an-xlsx-workbook-including-custom.cs
-- inspect-and-retrieve-metadata-properties-from-an-xlsx-workbook-programmatically-.cs
-- create-read-update-and-delete-workbook-document-properties-within-an-xlsx-file-u.cs
-- read-modify-or-create-document-properties-in-an-xlsx-workbook-via-the-net-api.cs
-- examine-and-manipulate-advanced-workbook-property-features-within-an-xlsx-spread.cs
-- retrieve-and-manipulate-document-properties-of-an-xlsx-workbook-programmatically.cs
-- add-or-delete-custom-document-properties-in-an-xlsx-workbook-programmatically-vi.cs
-- insert-custom-document-properties-into-an-xlsx-workbook-to-store-additional-meta.cs
-- set-up-a-custom-property-named-link-to-content-within-an-xlsx-workbook-using-the.cs
-- delete-all-custom-document-properties-from-an-xlsx-workbook-programmatically-ens.cs
-- set-the-workbooks-builtin-document-property-to-define-the-xlsx-files-version-pro.cs
-- identify-relevant-usage-scenarios-for-configuring-the-document-version-property-.cs
-- provide-sample-code-that-configures-the-workbooks-document-version-property-for-.cs
-- examine-how-the-version-property-is-managed-within-an-xlsx-workbook-and-ensure-c.cs
-- set-the-workbooks-language-programmatically-via-its-builtin-document-properties-.cs
-- identify-and-document-various-scenarios-for-configuring-the-language-property-wi.cs
-- provide-example-code-to-assign-a-language-identifier-to-an-xlsx-workbook-program.cs
-- analyze-how-the-language-property-is-managed-within-an-xlsx-workbook-and-ensure-.cs
-- add-user-defined-properties-to-an-xlsx-workbook-so-they-appear-in-the-document-i.cs
-- add-untyped-custom-properties-to-an-xlsx-workbook-to-store-metadata-without-spec.cs
-- implement-custom-datetime-properties-within-an-xlsx-workbook-using-the-apis-prop.cs
-- access-the-document-information-panel-of-an-xlsx-workbook-to-display-its-custom-.cs
-- configure-the-scalecrop-built-in-property-for-an-xlsx-workbook-to-adjust-its-sca.cs
-- update-the-linksuptodate-builtin-property-of-an-xlsx-workbook-to-reflect-its-cur.cs
-- activate-thumbnail-scaling-in-an-xlsx-workbook-by-configuring-the-scalecrop-prop.cs
-- disable-thumbnail-cropping-in-an-xlsx-workbook-by-configuring-the-scalecrop-prop.cs
-- mark-all-hyperlinks-as-uptodate-by-setting-the-linksuptodate-property-to-true-in.cs
-- set-the-linksuptodate-property-to-false-in-an-xlsx-workbook-to-flag-its-hyperlin.cs
+---
+
+# Input Strategy
+
+- Do NOT load external files
+- Create workbook programmatically
+- Ensure example runs independently
+
+---
+
+# Output Rules
+
+- Always save workbook as output.xlsx
+- Ensure file is created successfully
+
+---
+
+# Common Tasks
+
+- Read built-in properties
+- Add custom property
+- Update property
+- Remove property
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ workbook.CustomDocumentProperties.Add("Version", "1");
+✅ workbook.CustomDocumentProperties.Add("Version", 1);
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code under ~30–40 lines
+- Avoid unnecessary loops or logic
+- Focus on clarity
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Error handling
+- Testing guide
