@@ -1,71 +1,108 @@
-# Working With PDF Examples
+---
+category: working-with-pdf
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Working With PDF
+You are a C# developer specializing in **working with PDF conversion using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE PDF-related operation.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (export to PDF, configure PDF options)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Working With PDF**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Workbook.Save()
+- SaveFormat.Pdf
+- PdfSaveOptions
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Add sample data
+worksheet.Cells["A1"].PutValue("Hello PDF");
 
-Cells cells = sheet.Cells;
+// Save as PDF
+workbook.Save("output.pdf", SaveFormat.Pdf);
 
+---
 
-## Output
+# Rules
 
-Examples may generate:
+- Always use SaveFormat.Pdf for PDF export
+- Use PdfSaveOptions when customization is required
+- Ensure workbook contains visible data before saving
+- One example = one operation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- convert-an-excel-workbook-from-any-supported-input-format-into-a-resulting-pdf-f.cs
-- transform-an-excel-workbook-into-a-pdf-document-by-applying-the-standard-workboo.cs
-- convert-an-excel-workbook-directly-to-a-pdf-document-preserving-formatting-layou.cs
-- execute-advanced-excel-to-pdf-conversion-preserving-formatting-formulas-charts-a.cs
-- configure-conversion-options-to-control-pdf-output-characteristics-such-as-page-.cs
-- serialize-the-workbook-to-a-pdfacompliant-pdf-preserving-formatting-fonts-and-me.cs
-- specify-the-pdf-creation-timestamp-while-converting-an-excel-workbook-to-a-pdf-f.cs
-- activate-the-contentcopyforaccessibility-setting-during-excel-to-pdf-conversion-.cs
-- transfer-workbook-custom-properties-into-a-pdf-output-during-conversion-while-re.cs
-- apply-a-watermark-to-the-pdf-generated-from-an-excel-workbook-during-the-convers.cs
-- apply-a-text-watermark-to-the-resulting-pdf-automatically-during-the-excel-to-pd.cs
-- apply-an-image-watermark-to-each-pdf-generated-during-the-conversion-of-an-excel.cs
-- insert-hierarchical-pdf-bookmarks-into-the-pdf-generated-from-an-excel-workbook-.cs
-- insert-pdf-bookmarks-referencing-named-destinations-into-pdfs-generated-from-exc.cs
-- determine-applicable-scenarios-for-utilizing-pdf-bookmarks-with-named-destinatio.cs
+# Input Strategy
+
+- Do NOT rely on external files
+- Create workbook programmatically
+
+---
+
+# Output Rules
+
+- Always generate output.pdf
+- Ensure file is created successfully
+
+---
+
+# Common Tasks
+
+- Export Excel to PDF
+- Customize PDF output
+- Control layout and rendering
+- Adjust page settings
+
+---
+
+# Common Mistakes
+
+❌ workbook.Save("output.pdf");
+✅ workbook.Save("output.pdf", SaveFormat.Pdf);
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid unnecessary configuration unless needed
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
