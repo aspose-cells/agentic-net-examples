@@ -1,96 +1,113 @@
-# Sparkline Examples
+---
+category: sparkline
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Sparkline
+You are a C# developer specializing in **working with sparklines using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE sparkline-related operation.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (create, configure, modify sparklines)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Sparkline**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- SparklineGroupCollection
+- SparklineCollection
+- worksheet.SparklineGroups.Add()
+- SparklineGroup
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Add sample data
+worksheet.Cells["A1"].PutValue(1);
+worksheet.Cells["A2"].PutValue(2);
+worksheet.Cells["A3"].PutValue(3);
 
-Cells cells = sheet.Cells;
+// Add sparkline
+int index = worksheet.SparklineGroups.Add(SparklineType.Line, "A1:A3", false, "B1");
+SparklineGroup group = worksheet.SparklineGroups[index];
 
+workbook.Save("output.xlsx");
 
-## Output
+---
 
-Examples may generate:
+# Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Use SparklineGroups.Add() to create sparklines
+- Provide valid data range and location
+- Use correct SparklineType (Line, Column, WinLoss)
+- One example = one operation
 
-Output files are written to the working directory.
-- add-a-sparklinegroup-to-an-xlsx-workbook-by-invoking-the-worksheetsparklinegroup.cs
-- insert-a-new-sparkline-into-an-existing-sparklinegroup-within-an-xlsx-workbook-b.cs
-- configure-a-sparklines-visual-representation-as-line-column-or-winloss-in-an-xls.cs
-- set-the-sparklinedatarange-property-to-specify-the-data-range-for-a-sparkline-wi.cs
-- set-the-sparklinelocation-property-to-explicitly-define-a-sparklines-position-wi.cs
-- configure-sparklinegroup-properties-to-adjust-style-markers-and-colors-of-sparkl.cs
-- instantiate-a-sparklinegroup-in-an-xlsx-worksheet-by-invoking-the-worksheetspark.cs
-- insert-a-sparkline-into-an-existing-sparklinegroup-of-an-xlsx-workbook-by-invoki.cs
-- assign-the-sparklinetype-property-to-define-the-sparkline-style-line-column-or-w.cs
-- set-the-sparklinelocation-property-to-precisely-position-a-sparkline-at-the-desi.cs
-- configure-sparklinegroup-properties-to-customize-sparkline-styles-markers-and-co.cs
-- generate-sparklines-within-an-xlsx-workbook-by-following-the-defined-creation-gu.cs
-- analyze-an-xlsx-workbook-to-extract-and-report-sparkline-properties-according-to.cs
-- generate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specified-cr.cs
-- insert-a-new-sparkline-into-an-existing-sparkline-group-within-an-xlsx-workbook-.cs
-- configure-the-sparkline-type-within-an-xlsx-workbook-as-specified-in-the-setting.cs
-- configure-the-data-range-for-a-sparkline-within-an-xlsx-workbook-using-the-api.cs
-- configure-the-sparkline-placement-within-an-xlsx-workbook-following-the-prescrib.cs
-- modify-the-visual-properties-of-sparklines-in-an-xlsx-workbook-according-to-the-.cs
-- modify-the-depth-property-of-3d-sparklines-via-the-sparklinegroupdepth-attribute.cs
-- activate-sparkline-markers-in-an-xlsx-workbook-by-setting-the-sparklinegroupshow.cs
-- set-sparkline-axis-properties-via-sparklinegroupaxis-in-an-xlsx-workbook-to-cont.cs
-- activate-threedimensional-sparklines-by-assigning-true-to-the-sparklinegroupis3d.cs
-- assign-sparklinegroupcolorseries-to-define-the-sparkline-series-color-in-support.cs
-- activate-sparkline-markers-by-assigning-true-to-sparklinegroupshowmarkers-within.cs
-- set-sparkline-axis-properties-via-the-sparklinegroupaxis-api-for-xlsx-spreadshee.cs
-- configure-sparkline-colors-in-an-xlsx-workbook-based-on-the-values-defined-under.cs
-- activate-sparkline-markers-in-an-xlsx-workbook-according-to-the-specified-enabli.cs
-- configure-sparkline-axis-parameters-within-an-xlsx-workbook-according-to-the-cus.cs
-- duplicate-a-sparklinegroup-in-an-xlsx-workbook-by-invoking-its-copy-method-with-.cs
-- assign-a-new-cell-range-to-the-datarange-property-of-the-duplicated-sparkline-in.cs
-- assign-the-destination-cell-for-a-copied-sparkline-within-an-xlsx-worksheet-to-d.cs
-- create-a-duplicate-of-a-sparklinegroup-by-calling-its-copy-method-with-the-origi.cs
-- assign-a-new-data-range-to-a-duplicated-sparkline-within-an-xlsx-worksheet-docum.cs
-- assign-the-destination-cell-for-a-duplicated-sparkline-in-a-spreadsheet-file-suc.cs
-- in-an-xlsx-workbook-duplicate-a-sparklinegroup-and-modify-its-type-color-series-.cs
-- duplicate-a-sparklinegroup-in-an-xlsx-workbook-then-modify-its-type-color-series.cs
-- copy-a-sparkline-by-defining-its-data-range-and-target-location-within-an-xlsx-w.cs
-- duplicate-a-sparkline-group-within-an-xlsx-workbook-according-to-the-specificati.cs
-- define-the-target-range-for-a-copied-sparkline-within-an-xlsx-workbook-following.cs
+---
+
+# Input Strategy
+
+- Do NOT rely on external files
+- Create workbook and sample data programmatically
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created successfully
+
+---
+
+# Common Tasks
+
+- Create sparkline
+- Configure sparkline type
+- Update sparkline data range
+- Customize sparkline appearance
+
+---
+
+# Common Mistakes
+
+❌ worksheet.SparklineGroups.Add("A1:A3");
+✅ worksheet.SparklineGroups.Add(SparklineType.Line, "A1:A3", false, "B1");
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid unnecessary complexity
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
