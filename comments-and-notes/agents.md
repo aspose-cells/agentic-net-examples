@@ -1,77 +1,108 @@
-# Comments and Notes Examples
+---
+category: comments-and-notes
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Comments and Notes
+You are a C# developer specializing in **working with comments and notes using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE operation related to comments or notes.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (add / read / update / delete comments or notes)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Comments and Notes**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- worksheet.Comments
+- Comment
+- CommentCollection
+- Comment.Note
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+int commentIndex = worksheet.Comments.Add("A1");
+Comment comment = worksheet.Comments[commentIndex];
+comment.Note = "This is a comment";
 
-Cells cells = sheet.Cells;
+workbook.Save("output.xlsx");
 
+---
 
-## Output
+# Rules
 
-Examples may generate:
+- Use worksheet.Comments.Add() to create comments
+- Access comments via CommentCollection
+- Use Note property to set text
+- One example = one operation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- delete-all-threaded-comments-from-an-xlsx-workbook-after-loading-the-file-into-m.cs
-- programmatically-delete-all-threaded-comments-from-an-xlsx-workbook-after-loadin.cs
-- activate-the-new-comment-button-on-a-workbook-loaded-in-xlsx-format-to-insert-a-.cs
-- trigger-the-new-comment-feature-on-an-opened-xlsx-workbook-to-add-a-comment-to-a.cs
-- programmatically-select-the-review-tab-on-the-ribbon-of-a-workbook-that-has-been.cs
-- invoke-a-context-menu-on-the-target-cell-of-an-opened-xlsx-workbook-to-add-a-com.cs
-- implement-threaded-comments-functionality-within-a-workbook-loaded-from-an-xlsx-.cs
-- insert-threaded-comments-into-an-xlsx-workbook-after-loading-it-enabling-collabo.cs
-- retrieve-threaded-comments-from-an-xlsx-workbook-loaded-into-memory-preserving-c.cs
-- modify-threaded-comments-within-an-xlsx-workbook-after-loading-it-into-memory-vi.cs
-- insert-a-threaded-comment-into-an-xlsx-workbook-that-has-been-loaded-programmati.cs
-- retrieve-threaded-comments-from-an-excel-workbook-that-has-been-loaded-in-xlsx-f.cs
-- retrieve-all-threaded-comments-from-an-xlsx-workbook-programmatically-using-the-.cs
-- modify-a-threaded-comment-within-an-xlsx-workbook-programmatically-using-the-exc.cs
-- modify-a-threaded-comment-in-an-xlsx-workbook-programmatically-using-the-net-spr.cs
-- provide-sample-code-demonstrating-operations-on-a-workbook-opened-from-an-xlsx-f.cs
-- read-an-xlsx-workbook-and-write-its-contents-to-the-console-output-preserving-ce.cs
-- modify-the-comment-text-orientation-within-an-xlsx-workbook-after-loading-it-pro.cs
-- modify-the-comment-font-color-within-an-xlsx-workbook-by-accessing-its-comment-s.cs
-- modify-the-background-color-of-a-comment-in-an-xlsx-workbook-after-loading-the-f.cs
-- change-the-color-of-an-excel-comment-in-a-loaded-xlsx-workbook-programmatically-.cs
+# Input Strategy
+
+- Do NOT use external files
+- Create workbook programmatically
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created
+
+---
+
+# Common Tasks
+
+- Add comment to a cell
+- Read comment text
+- Update comment
+- Remove comment
+
+---
+
+# Common Mistakes
+
+❌ worksheet.Cells["A1"].AddComment("Text");
+✅ int idx = worksheet.Comments.Add("A1");
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid unnecessary loops
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
