@@ -1,89 +1,108 @@
-# XML Maps Examples
+---
+category: xml-maps
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-XML Maps
+You are a C# developer specializing in **working with XML maps using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE XML mapping operation.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (create, import, export XML maps)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **XML Maps**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- workbook.Worksheets.XmlMaps
+- XmlMap
+- XmlMapCollection
+- worksheet.Cells.ImportXml()
+- worksheet.Cells.ExportXml()
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Sample XML data
+string xml = "<root><item><name>Test</name></item></root>";
 
-Cells cells = sheet.Cells;
+// Import XML
+worksheet.Cells.ImportXml(xml, "A1");
 
+workbook.Save("output.xlsx");
 
-## Output
+---
 
-Examples may generate:
+# Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Use XmlMapCollection to manage XML maps
+- Use ImportXml() to load XML into worksheet
+- Use ExportXml() when exporting XML
+- One example = one operation
 
-Output files are written to the working directory.
-- import-an-xml-map-into-a-workbook-loading-the-workbook-from-a-supported-format.cs
-- load-an-xml-schema-file-to-import-its-xml-map-into-the-target-workbook.cs
-- load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-structured-data-bin.cs
-- import-the-xml-map-into-the-workbook-by-loading-the-xml-schema-file-as-step-two.cs
-- load-a-workbook-file-and-import-an-xml-map-into-it-to-enable-data-binding-within.cs
-- validate-all-necessary-prerequisites-and-configuration-settings-before-initiatin.cs
-- load-a-workbook-from-any-supported-file-format-to-enable-subsequent-xml-map-impo.cs
-- load-a-workbook-and-import-the-xml-map-from-an-xml-schema-into-it.cs
-- persist-the-workbook-in-the-chosen-output-format-after-successfully-importing-th.cs
-- verify-the-implemented-xml-map-import-workflow-for-overall-correctness-and-compl.cs
-- load-a-workbook-and-an-xml-schema-file-then-create-and-associate-an-xml-map-with.cs
-- verify-all-required-conditions-and-prerequisites-before-attaching-an-xml-map-to-.cs
-- add-an-xml-map-to-the-opened-workbook-by-invoking-xmlmapcollectionadd-with-the-p.cs
-- add-an-xml-map-to-a-workbook-by-specifying-the-schema-and-linking-it-to-workshee.cs
-- write-the-xml-mapassociated-data-from-an-opened-workbook-to-an-external-xml-file.cs
-- export-the-xml-data-associated-with-the-defined-xml-map-to-an-output-file-as-ste.cs
-- load-the-workbook-extract-data-bound-to-its-xml-map-and-save-the-resulting-xml-o.cs
-- export-the-workbooks-linked-xml-data-to-an-external-file-while-preserving-data-i.cs
-- open-a-workbook-using-any-supported-file-format-to-enable-subsequent-xml-data-ex.cs
-- retrieve-the-xml-map-from-the-opened-workbook-prior-to-properly-performing-data-.cs
-- load-a-workbook-from-a-supported-format-and-retrieve-the-xml-maps-root-element-n.cs
-- after-loading-a-workbook-obtain-the-root-element-name-of-its-associated-xml-map.cs
-- validate-all-required-conditions-and-dependencies-prior-to-obtaining-the-xml-map.cs
-- load-a-workbook-from-any-supported-spreadsheet-format-to-retrieve-and-manipulate.cs
-- obtain-the-loaded-workbooks-xml-map-and-extract-the-root-element-name-from-it.cs
-- retrieve-the-xml-maps-root-element-name-from-the-currently-loaded-workbook-objec.cs
-- load-the-workbook-retrieve-its-xml-map-and-associate-specific-cells-with-the-cor.cs
-- load-a-workbook-in-any-supported-format-to-associate-its-cells-with-xml-map-elem.cs
-- retrieve-the-xml-map-from-the-opened-workbook-prior-to-establishing-any-cell-lin.cs
-- associate-a-specified-cell-range-with-an-xml-element-by-invoking-xmlmapadd-on-th.cs
-- perform-a-cell-area-query-using-a-specified-xml-map-path-after-loading-the-workb.cs
-- validate-required-conditions-prior-to-retrieving-cell-ranges-associated-with-a-s.cs
-- retrieve-xml-map-paths-by-accessing-a-worksheet-within-the-current-loaded-workbo.cs
+---
+
+# Input Strategy
+
+- Do NOT rely on external XML files
+- Use inline XML strings
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created successfully
+
+---
+
+# Common Tasks
+
+- Import XML into worksheet
+- Export worksheet data as XML
+- Create and manage XML maps
+- Bind XML data to cells
+
+---
+
+# Common Mistakes
+
+❌ Workbook workbook = new Workbook("input.xml");
+✅ Use inline XML string instead
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep XML small and readable
+- Avoid complex schemas unless necessary
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
