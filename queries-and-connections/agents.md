@@ -1,83 +1,107 @@
-# Queries and Connections Examples
+---
+category: queries-and-connections
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Queries and Connections
+You are a C# developer specializing in **working with data connections and queries using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE operation related to queries or connections.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (create, access, modify connections)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Queries and Connections**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- workbook.DataConnections
+- ExternalConnection
+- DBConnection
+- WebQueryConnection
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
 
-Worksheet sheet = workbook.Worksheets[0];
+// Example: access connections
+DataConnectionCollection connections = workbook.DataConnections;
 
-Cells cells = sheet.Cells;
+// Add or inspect connections (simplified example)
 
+workbook.Save("output.xlsx");
 
-## Output
+---
 
-Examples may generate:
+# Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Use workbook.DataConnections to manage connections
+- Use appropriate connection type (DBConnection, WebQueryConnection)
+- Keep examples simple and self-contained
+- One example = one operation
 
-Output files are written to the working directory.
-- obtain-the-sql-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs
-- programmatically-open-an-xlsx-workbook-retrieve-its-data-connections-and-apply-m.cs
-- retrieve-source-and-output-excel-files-load-the-source-xlsx-workbook-then-export.cs
-- create-or-inspect-data-connections-within-an-xlsx-workbook-through-the-apis-defa.cs
-- update-an-existing-sql-data-connection-within-a-default-xlsx-workbook-using-the-.cs
-- load-an-xlsx-workbook-process-its-contents-and-emit-the-results-to-the-console-a.cs
-- retrieve-the-result-range-address-of-a-query-table-from-an-xlsx-workbook-using-t.cs
-- read-and-write-a-query-table-within-a-worksheet-using-the-default-xlsx-format.cs
-- obtain-the-result-range-of-a-query-table-from-a-workbook-saved-in-the-default-xl.cs
-- load-an-xlsx-workbook-execute-a-query-table-and-stream-the-results-to-the-consol.cs
-- retrieve-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-form.cs
-- obtain-odata-connection-details-from-a-workbook-saved-in-the-default-xlsx-format.cs
-- obtain-a-sample-implementation-illustrating-odata-connection-retrieval-for-gener.cs
-- load-an-xlsx-workbook-retrieve-its-odata-metadata-and-output-the-information-to-.cs
-- load-xls-and-xlsb-workbooks-then-load-an-xlsx-workbook-and-persist-it-back-as-xl.cs
-- load-an-xlsx-workbook-manage-external-connections-of-xlsxlsb-files-and-save-the-.cs
-- identify-and-document-potential-use-cases-for-external-data-connections-within-s.cs
-- load-an-xlsx-workbook-process-its-external-connections-for-xlsxlsb-files-and-sav.cs
-- retrieve-sample-code-that-demonstrates-reading-and-writing-external-connections-.cs
-- load-an-xlsx-workbook-perform-external-connection-tasks-and-output-results-to-a-.cs
-- update-a-power-query-formula-item-in-an-xlsx-workbook-using-the-default-xlsx-for.cs
-- determine-whether-an-xlsx-workbook-includes-any-hidden-external-hyperlinks-when-.cs
-- identify-and-document-potential-use-cases-for-hidden-external-hyperlinks-in-the-.cs
-- retrieve-example-code-that-detects-hidden-external-hyperlinks-in-xlsx-files-usin.cs
-- validate-hidden-external-links-in-an-xlsx-workbook-and-output-the-findings-to-a-.cs
-- preserve-the-ribbon-xml-within-an-xlsx-file-without-parsing-the-default-workbook.cs
-- modify-the-default-xlsx-workbook-to-customize-its-ribbon-xml-configuration-for-t.cs
+---
+
+# Input Strategy
+
+- Do NOT rely on real external databases or URLs
+- Simulate or demonstrate structure only
+- Ensure example runs independently
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created
+
+---
+
+# Common Tasks
+
+- Access data connections
+- Add new connection
+- Modify connection properties
+- Remove connection
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid real external dependencies
+- Focus on structure, not live connections
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
