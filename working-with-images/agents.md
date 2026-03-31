@@ -1,75 +1,106 @@
-# Working With Images Examples
+---
+category: working-with-images
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Working With Images
+You are a C# developer specializing in **working with images using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE image-related operation.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (insert, modify, extract images)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Working With Images**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Picture
+- PictureCollection
+- worksheet.Pictures.Add()
+- worksheet.Pictures[index]
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Add image (using stream or placeholder)
+int index = worksheet.Pictures.Add(1, 1, "image.png");
+Picture pic = worksheet.Pictures[index];
 
-Cells cells = sheet.Cells;
+workbook.Save("output.xlsx");
 
+---
 
-## Output
+# Rules
 
-Examples may generate:
+- Use Pictures.Add() to insert images
+- Use Picture object to modify properties
+- Ensure valid image path or simulate if needed
+- One example = one operation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- transform-an-xlsx-workbook-into-a-tiff-image-while-maintaining-visual-fidelity-a.cs
-- transform-a-worksheet-from-an-xlsx-file-into-a-scalable-svg-graphic-while-preser.cs
-- generate-an-image-representation-of-a-chart-embedded-in-an-xlsx-workbook-while-p.cs
-- transform-a-chart-from-an-xlsx-workbook-into-an-svg-image-while-maintaining-visu.cs
-- monitor-the-conversion-status-of-an-xlsx-workbook-to-a-tiff-image-providing-real.cs
-- render-a-worksheet-from-an-xlsx-file-as-an-image-preview-maintaining-cell-format.cs
-- load-a-chart-from-an-xlsx-workbook-and-render-it-to-an-image-format.cs
-- read-the-chart-collection-from-an-xlsx-workbook-and-generate-image-representatio.cs
-- load-a-pie-chart-from-an-xlsx-workbook-and-render-it-as-an-image-preview.cs
-- determine-the-complete-set-of-supported-image-conversion-formats-that-can-be-gen.cs
-- show-detailed-image-conversion-progress-in-the-console-during-the-xlsx-workbook-.cs
-- transform-an-xlsx-worksheet-into-an-image-format-while-maintaining-visual-fideli.cs
-- render-an-xlsx-chart-to-an-image-file-applying-specified-attributes-such-as-size.cs
-- convert-a-worksheet-from-an-xlsx-workbook-into-an-image-format-preserving-visual.cs
-- read-a-column-chart-from-an-xlsx-workbook-and-render-it-as-an-image-preview.cs
-- implement-progress-monitoring-for-converting-an-xlsx-workbook-into-an-image-file.cs
-- generate-a-rendering-of-an-xlsx-worksheet-as-an-image-file-for-preview-or-testin.cs
-- convert-a-chart-from-an-xlsx-workbook-into-an-image-file-maintaining-visual-fide.cs
-- convert-a-worksheet-into-an-image-file-preserving-layout-and-formatting-for-accu.cs
+# Input Strategy
+
+- Avoid dependency on external image files
+- If required, mention placeholder or simulate image input
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created successfully
+
+---
+
+# Common Tasks
+
+- Insert image into worksheet
+- Resize or reposition image
+- Extract image
+- Modify image properties
+
+---
+
+# Common Mistakes
+
+❌ worksheet.Cells.AddPicture("image.png");
+✅ worksheet.Pictures.Add(row, column, "image.png");
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid unnecessary complexity
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
