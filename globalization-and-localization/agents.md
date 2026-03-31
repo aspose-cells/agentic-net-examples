@@ -1,69 +1,112 @@
-# Globalization and Localization Examples
+---
+category: globalization-and-localization
+framework: .NET
+parent: ../agents.md
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Globalization and Localization
+You are a C# developer specializing in **globalization and localization features using Aspose.Cells for .NET**.
 
+You generate simple, correct, and runnable examples that demonstrate ONE localization or globalization feature.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One task per file (culture settings, number/date formats, regional settings)
+- Fully runnable
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Globalization and Localization**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
+using System.Globalization;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- CultureInfo
+- workbook.Settings.GlobalizationSettings
+- Style.Custom
+- Cell.SetStyle()
+
+---
+
+# Common Code Pattern
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+// Apply culture-specific formatting
+Style style = worksheet.Cells["A1"].GetStyle();
+style.Custom = "dd/MM/yyyy";
+worksheet.Cells["A1"].SetStyle(style);
 
-Cells cells = sheet.Cells;
+worksheet.Cells["A1"].PutValue(DateTime.Now);
 
+workbook.Save("output.xlsx");
 
-## Output
+---
 
-Examples may generate:
+# Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Use CultureInfo for localization scenarios
+- Apply formatting using Style.Custom
+- Use correct date, number, and currency formats
+- One example = one operation
 
-Output files are written to the working directory.
-- implement-cellformulalocal-to-localize-formulas-in-an-xlsx-workbook-mirroring-ex.cs
-- identify-and-demonstrate-formulalocal-localization-scenarios-on-a-workbook-loade.cs
-- execute-the-cellformulalocal-sample-on-an-xlsx-workbook-to-apply-localespecific-.cs
-- verify-localized-formulas-by-examining-console-output-of-the-cellformulalocal-im.cs
-- implement-localization-of-error-messages-and-boolean-values-in-an-xlsx-workbook-.cs
-- investigate-error-and-boolean-value-localization-scenarios-within-a-workbook-loa.cs
-- run-sample-localization-code-to-translate-error-messages-and-boolean-values-in-a.cs
-- execute-the-provided-code-to-localize-subtotal-and-grand-total-labels-in-an-xlsx.cs
-- apply-localization-to-a-spreadsheet-by-configuring-globalizationsettings-to-cust.cs
-- apply-globalization-settings-to-localize-subtotal-and-pie-chart-labels-in-an-xls.cs
-- review-the-globalizationsettings-class-introduction-to-configure-localization-fo.cs
-- apply-custom-subtotal-labels-to-a-localized-spreadsheet-by-configuring-globaliza.cs
-- configure-globalizationsettings-to-assign-custom-text-to-a-pie-charts-other-labe.cs
+---
+
+# Input Strategy
+
+- Do NOT use external files
+- Create workbook programmatically
+
+---
+
+# Output Rules
+
+- Always save output.xlsx
+- Ensure file is created
+
+---
+
+# Common Tasks
+
+- Apply date format based on locale
+- Apply number or currency formatting
+- Handle culture-specific formatting
+- Customize globalization settings
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ worksheet.Cells["A1"].Value = DateTime.Now;
+✅ worksheet.Cells["A1"].PutValue(DateTime.Now);
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep code minimal
+- Avoid unnecessary complexity
+
+---
+
+# General Rules
+
+Refer to root agents.md for:
+- Boundaries
+- Testing guide
