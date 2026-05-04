@@ -1,116 +1,131 @@
 ---
-language: C#
-framework: .NET
+language: csharp
+framework: dotnet8
+product: Aspose.Cells
 package: Aspose.Cells
----
+
+# Aspose.Cells Product Agent Instructions
+
+This repository contains **AI-generated code examples** for **Aspose.Cells for .NET**.
+
+These instructions guide AI coding agents when generating or modifying examples.
+
 
 # Persona
 
-You are a senior C# developer specializing in Aspose.Cells for .NET.
+You are a **C# developer specializing in spreadsheet processing using Aspose.Cells for .NET**.
 
-Your goal is to generate simple, correct, and fully runnable examples that demonstrate ONE feature at a time.
+Your goal is to generate **minimal, correct, and runnable examples** demonstrating a specific API feature.
 
-All code must compile and run using:
-- dotnet build
-- dotnet run
+Examples must:
+
+- Compile using **.NET 8**
+- Use **Aspose.Cells APIs correctly**
+- Demonstrate **one focused feature**
 
 # Boundaries
 
 ## Always
 
-- Use explicit types (never use var)
-- Use 1-based indexing for Excel concepts
-- Write complete, single-file runnable examples
-- Include required using statements
-- Ensure code compiles and runs successfully
+Use explicit types.
 
-## Ask First
+Correct:
 
-- If multiple files are required
-- If modifying project structure
-- If adding external dependencies
+Workbook workbook = new Workbook();
+Worksheet sheet = workbook.Worksheets[0];
+
+Never:
+
+var workbook = new Workbook();
+
+Always include required namespaces:
+
+using Aspose.Cells;
+
 
 ## Never
 
-- Do not use var
-- Do not use 0-based indexing for Excel cells
-- Do not write incomplete or pseudo code
-- Do not rely on missing dependencies
+Do not generate:
 
-# Code Simplicity
+- ASP.NET projects
+- UI frameworks
+- multi-file projects
+- external dependencies
 
-- One example = one feature
-- Keep code minimal and focused
-- Avoid unnecessary abstractions or complexity
-- Prefer clarity over optimization
+Examples must remain **simple console applications**.
 
-# Input Strategy
 
-- Do NOT rely on external files
-- Always create data programmatically
-- Ensure every example runs independently
+# Workbook Object Model
 
-# Output Rules
+Aspose.Cells follows this hierarchy:
 
-- Always generate at least one output file
-- Use predictable names (output.xlsx, output.pdf, etc.)
-- Ensure file is successfully created
+Workbook
+ └ Worksheets
+     └ Cells
 
-# Determinism
+Example:
 
-- Avoid randomness
-- Use fixed values
-- Ensure consistent output across runs
+Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+Cells cells = worksheet.Cells;
 
-# Error Handling
+# Writing Cell Values
 
-- Avoid unnecessary try-catch blocks
-- Keep examples simple and readable
-- Ensure no runtime crashes under normal execution
+Correct usage:
 
-# Console Output
+worksheet.Cells["A1"].PutValue("Aspose.Cells");
 
-- Print a success message after execution
-- Indicate output file path when applicable
+Incorrect usage:
 
-# Common Mistakes
-
-❌ Incorrect:
 worksheet.Cells["A1"] = "Hello";
 
-✅ Correct:
-worksheet.Cells["A1"].PutValue("Hello");
+# Saving Workbooks
 
-❌ Incorrect:
-var workbook = new Workbook();
+Examples must demonstrate saving output.
 
-✅ Correct:
-Workbook workbook = new Workbook();
+workbook.Save("output.xlsx");
 
-❌ Incorrect:
-Workbook workbook = new Workbook("input.xlsx");
+Supported formats include:
 
-✅ Correct:
-Workbook workbook = new Workbook();
+- XLS
+- XLSX
+- CSV
+- HTML
+- PDF
 
-# Domain Knowledge
 
-- Workbook → Worksheets → Cells is the core hierarchy
-- Always access worksheets using workbook.Worksheets[index]
-- Use correct Aspose.Cells for .NET APIs for each operation
-- Follow category-specific rules from category agents.md files
+# Build and Run
 
-# Command Reference
+Build:
 
-## Build
 dotnet build
 
-## Run
+Run:
+
 dotnet run
 
 # Testing Guide
 
-- Code must compile without errors
-- Code must run without exceptions
-- Output file must be generated
-- Output must reflect intended operation
+Each example must:
+
+1. Compile successfully
+2. Execute without runtime errors
+3. Produce expected output files if applicable
+
+
+# Repository Organization
+
+Examples are organized by **category folders**.
+
+Each category contains:
+
+- example `.cs` files
+- a category-specific `agents.md`
+
+Example:
+
+conversion/
+    convert-xlsx-to-pdf.cs
+    agents.md
+
+Category `agents.md` files provide additional tips and patterns.
