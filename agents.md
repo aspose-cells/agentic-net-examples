@@ -1,8 +1,12 @@
 ---
-language: csharp
-framework: dotnet8
-product: Aspose.Cells
-package: Aspose.Cells
+language: `csharp`
+
+framework: `dotnet10`
+
+product: `Aspose.Cells for .NET`
+
+package: `Aspose.Cells`
+
 
 # Aspose.Cells Product Agent Instructions
 
@@ -19,7 +23,7 @@ Your goal is to generate **minimal, correct, and runnable examples** demonstrati
 
 Examples must:
 
-- Compile using **.NET 8**
+- Compile using **.NET 10**
 - Use **Aspose.Cells APIs correctly**
 - Demonstrate **one focused feature**
 
@@ -32,6 +36,7 @@ Use explicit types.
 Correct:
 
 Workbook workbook = new Workbook();
+
 Worksheet sheet = workbook.Worksheets[0];
 
 Never:
@@ -60,13 +65,16 @@ Examples must remain **simple console applications**.
 Aspose.Cells follows this hierarchy:
 
 Workbook
+
  └ Worksheets
-     └ Cells
+    └ Cells
 
 Example:
 
 Workbook workbook = new Workbook();
+
 Worksheet worksheet = workbook.Worksheets[0];
+
 Cells cells = worksheet.Cells;
 
 # Writing Cell Values
@@ -125,7 +133,9 @@ Each category contains:
 Example:
 
 conversion/
+
     convert-xlsx-to-pdf.cs
+
     agents.md
 
 Category `agents.md` files provide additional tips and patterns.
