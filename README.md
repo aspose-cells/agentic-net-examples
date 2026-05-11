@@ -104,4 +104,4 @@ All examples use Aspose.Cells for .NET and require a valid license for productio
 
 ---
 
-This repository is maintained by automated code generation. For AI-friendly guidance, see agents.md. Last updated: 2026-05-08
+This repository is maintained by automated code generation. For AI-friendly guidance, see agents.md.
