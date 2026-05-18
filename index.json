@@ -443,6 +443,11 @@
       "category": "working-with-json",
       "file": "specify-a-custom-date-format-in-jsonsaveoptions-before-exporting-workbook-to-json.cs",
       "title": "Specify a custom date format in JsonSaveOptions before exporting workbook to JSON."
+    },
+    {
+      "category": "working-with-json",
+      "file": "validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs",
+      "title": "Validate JSON structure against a predefined schema after loading with JsonUtility successfully."
     }
   ]
 }
