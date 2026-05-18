@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "timeline",
+      "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
+      "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
+    },
+    {
+      "category": "timeline",
       "file": "apply-a-dark-theme-to-a-timeline-change-axis-colors-and-render-the-result-to-a-pdf.cs",
       "title": "Apply a dark theme to a timeline, change axis colors, and render the result to a PDF."
     },

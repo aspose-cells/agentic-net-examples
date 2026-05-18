@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs
 - create-a-timeline-with-a-logarithmic-scale-for-dates-customize-tick-intervals-and-render-to-png.cs
 - export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs
+- add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs
