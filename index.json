@@ -386,6 +386,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "batch-process-a-folder-of-xls-files-converting-each-workbook-to-separate-json-files.cs",
+      "title": "Batch process a folder of XLS files, converting each workbook to separate JSON files."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-json-file-containing-tabular-data-to-csv-using-jsonutility-with-a-custom-delimiter.cs",
       "title": "Convert a JSON file containing tabular data to CSV using JsonUtility with a custom delimiter."
     },
