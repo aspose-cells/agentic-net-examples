@@ -436,6 +436,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "merge-multiple-json-files-into-a-single-workbook-creating-separate-worksheets-for-each-file.cs",
+      "title": "Merge multiple JSON files into a single workbook, creating separate worksheets for each file."
+    },
+    {
+      "category": "working-with-json",
       "file": "set-json-output-encoding-to-utf-8-within-jsonsaveoptions-before-saving-workbook-as-json.cs",
       "title": "Set JSON output encoding to UTF-8 within JsonSaveOptions before saving workbook as JSON."
     },
