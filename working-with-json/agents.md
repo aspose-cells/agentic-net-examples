@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - load-a-csv-file-into-memory-using-jsonutility-and-transform-it-into-json-format.cs
 - export-a-specific-cell-range-from-a-worksheet-to-json-using-exportrangetojsonoptions.cs
 - include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs
+- set-json-output-encoding-to-utf-8-within-jsonsaveoptions-before-saving-workbook-as-json.cs
