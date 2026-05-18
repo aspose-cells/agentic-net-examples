@@ -21,6 +21,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of comments in column G to blue using Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "compare-two-workbooks-by-extracting-their-threaded-comments-and-identifying-differences-in-author-attribution.cs",
       "title": "Compare two workbooks by extracting their threaded comments and identifying differences in author attribution."
     },
