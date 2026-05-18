@@ -551,6 +551,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-shape-that-incorporates-data-validation-rules-to-restrict-user-input-within-defined-limits.cs",
+      "title": "Add a shape that incorporates data validation rules to restrict user input within defined limits."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-with-custom-width-and-height-dimensions-anchored-to-a-designated-cell-range.cs",
       "title": "Add a shape with custom width and height dimensions anchored to a designated cell range."
     },
