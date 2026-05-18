@@ -526,6 +526,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "use-jsonutilityload-with-a-stream-to-read-json-data-from-a-network-source.cs",
+      "title": "Use JsonUtility.Load with a stream to read JSON data from a network source."
+    },
+    {
+      "category": "working-with-json",
       "file": "validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs",
       "title": "Validate JSON structure against a predefined schema after loading with JsonUtility successfully."
     },
