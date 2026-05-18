@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs
 - create-a-console-application-project-in-visual-studio-to-host-the-workbook-merging-code.cs
+- load-source-xls-workbooks-using-new-workbookfilepath-for-each-file-to-be-merged.cs
