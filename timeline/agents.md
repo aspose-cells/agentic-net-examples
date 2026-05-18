@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs
 - create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs
 - render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs
+- combine-two-separate-timelines-into-a-single-composite-view-and-save-the-merged-chart-as-an-svg-file.cs
