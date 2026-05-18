@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - add-a-shape-and-set-alternative-text-describing-its-purpose-for-accessibility-compliance.cs
 - insert-a-shape-and-assign-a-unique-name-property-to-reference-it-in-later-code.cs
 - place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs
+- add-a-shape-and-enable-its-locked-property-to-prevent-accidental-modifications.cs
