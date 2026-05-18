@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - add-a-picture-and-provide-alternative-text-describing-its-content-for-screen-reader-accessibility.cs
 - insert-a-picture-and-assign-a-descriptive-name-property-to-facilitate-later-retrieval-via-api.cs
 - add-a-picture-and-enable-aspect-ratio-lock-to-maintain-proportional-dimensions-during-resizing.cs
+- insert-a-picture-and-apply-background-removal-to-isolate-the-foreground-subject-from-its-backdrop.cs
