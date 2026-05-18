@@ -401,6 +401,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "export-a-specific-cell-range-from-a-worksheet-to-json-using-exportrangetojsonoptions.cs",
+      "title": "Export a specific cell range from a worksheet to JSON using ExportRangeToJsonOptions."
+    },
+    {
+      "category": "working-with-json",
       "file": "export-the-active-worksheet-of-the-loaded-workbook-to-json-using-default-saveformat-settings.cs",
       "title": "Export the active worksheet of the loaded workbook to JSON using default SaveFormat settings."
     },
