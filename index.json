@@ -386,6 +386,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "export-the-active-worksheet-of-the-loaded-workbook-to-json-using-default-saveformat-settings.cs",
+      "title": "Export the active worksheet of the loaded workbook to JSON using default SaveFormat settings."
+    },
+    {
+      "category": "working-with-json",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
       "title": "Load an XLSX workbook from a file path and verify successful initialization."
     }
