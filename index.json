@@ -21,6 +21,11 @@
     },
     {
       "category": "timeline",
+      "file": "batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs",
+      "title": "Batch convert Excel files, add a timeline to each, and save PDFs to an output directory."
+    },
+    {
+      "category": "timeline",
       "file": "batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs",
       "title": "Batch process multiple worksheets, creating individual timelines for each and saving them as separate PNG files."
     },
