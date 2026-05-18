@@ -571,6 +571,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-picture-from-a-local-file-path-and-position-it-at-a-specified-cell-coordinate.cs",
+      "title": "Insert a picture from a local file path and position it at a specified cell coordinate."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
       "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     },
