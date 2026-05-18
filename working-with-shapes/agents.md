@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - add-a-picture-and-overlay-a-semitransparent-watermark-to-protect-intellectual-property-rights.cs
 - create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs
 - configure-a-camera-shape-to-capture-the-target-range-with-defined-resolution-and-image-format-settings.cs
+- refresh-a-camera-shape-programmatically-using-the-api-method-to-ensure-current-range-content-is-shown.cs
