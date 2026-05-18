@@ -486,6 +486,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-numeric-values-to-strings-in-json-output-by-applying-a-custom-value-formatter.cs",
+      "title": "Transform numeric values to strings in JSON output by applying a custom value formatter."
+    },
+    {
+      "category": "working-with-json",
       "file": "validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs",
       "title": "Validate JSON structure against a predefined schema after loading with JsonUtility successfully."
     }
