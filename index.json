@@ -391,6 +391,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "define-a-semicolon-as-csv-delimiter-in-jsonlayoutoptions-before-converting-json-to-csv.cs",
+      "title": "Define a semicolon as CSV delimiter in JsonLayoutOptions before converting JSON to CSV."
+    },
+    {
+      "category": "working-with-json",
       "file": "exclude-empty-rows-from-json-output-by-setting-jsonsaveoptionsincludeemptyrows-to-false.cs",
       "title": "Exclude empty rows from JSON output by setting JsonSaveOptions.IncludeEmptyRows to false."
     },
