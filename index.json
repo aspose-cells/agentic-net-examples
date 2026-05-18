@@ -386,6 +386,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
+      "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."
+    },
+    {
+      "category": "working-with-json",
       "file": "batch-process-a-folder-of-xls-files-converting-each-workbook-to-separate-json-files.cs",
       "title": "Batch process a folder of XLS files, converting each workbook to separate JSON files."
     },
