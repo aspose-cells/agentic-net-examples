@@ -666,6 +666,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "extract-ole-object-data-decompress-if-necessary-and-save-the-original-file-format-to-a-specified-folder.cs",
+      "title": "Extract OLE object data, decompress if necessary, and save the original file format to a specified folder."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "extract-the-embedded-ole-object-stream-from-cell-j7-write-it-to-a-temporary-file-and-close-workbook.cs",
       "title": "Extract the embedded OLE object stream from cell J7, write it to a temporary file, and close workbook."
     },
