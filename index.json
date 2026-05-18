@@ -611,6 +611,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-linked-picture-from-an-image-url-set-islinked-true-and-ensure-image-data-is-not-embedded.cs",
+      "title": "Insert a linked picture from an image URL, set IsLinked true, and ensure image data is not embedded."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-picture-and-apply-background-removal-to-isolate-the-foreground-subject-from-its-backdrop.cs",
       "title": "Insert a picture and apply background removal to isolate the foreground subject from its backdrop."
     },
