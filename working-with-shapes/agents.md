@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs
 - refresh-all-linked-pictures-in-the-workbook-after-updating-source-images-on-the-web-server.cs
 - refresh-linked-pictures-after-modifying-source-images-on-a-local-file-system-ensuring-updated-visuals-appear.cs
+- refresh-linked-pictures-in-parallel-threads-to-improve-performance-when-updating-dozens-of-external-images.cs
