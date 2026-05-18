@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - add-a-picture-and-rotate-it-ninety-degrees-clockwise-to-align-with-column-orientation.cs
 - insert-a-picture-and-attach-a-hyperlink-that-opens-a-document-when-the-image-is-clicked.cs
 - add-a-picture-and-provide-alternative-text-describing-its-content-for-screen-reader-accessibility.cs
+- insert-a-picture-and-assign-a-descriptive-name-property-to-facilitate-later-retrieval-via-api.cs
