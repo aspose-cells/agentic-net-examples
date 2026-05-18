@@ -91,6 +91,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs",
+      "title": "Retrieve and display the total number of threaded comments present in a workbook."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs",
       "title": "Scan a workbook for empty comments and remove them to clean metadata."
     },
