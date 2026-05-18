@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - ensure-formulas-remain-intact-by-keeping-calculation-mode-set-to-automatic-before-and-after-merging.cs
 - maintain-original-cell-formatting-by-not-altering-style-settings-during-the-combine-operation.cs
 - verify-that-the-merged-workbook-contains-the-expected-number-of-worksheets-after-combination.cs
+- check-that-all-charts-from-source-workbooks-appear-correctly-in-the-combined-workbook.cs
