@@ -21,6 +21,11 @@
     },
     {
       "category": "timeline",
+      "file": "create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs",
+      "title": "Create a timeline using a custom template file, then replace placeholder text with dynamic project names."
+    },
+    {
+      "category": "timeline",
       "file": "draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs",
       "title": "Draw a timeline while converting the entire workbook to PDF, ensuring the timeline appears on each page."
     },
