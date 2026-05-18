@@ -25,6 +25,11 @@
       "title": "Load an existing workbook, retrieve all threaded comments from column B, and list their authors."
     },
     {
+      "category": "comments-and-notes",
+      "file": "remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs",
+      "title": "Remove a threaded comment from cell C3 using the Remove method on the comment object."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
