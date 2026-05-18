@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "workbook-merger",
+      "file": "add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs",
+      "title": "Add a timestamp worksheet indicating the exact date and time of the merge operation."
+    },
+    {
+      "category": "workbook-merger",
       "file": "add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs",
       "title": "Add the library reference to a .NET project via NuGet before implementing merge logic."
     },
