@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - add-a-shape-that-incorporates-data-validation-rules-to-restrict-user-input-within-defined-limits.cs
 - insert-a-picture-from-a-local-file-path-and-position-it-at-a-specified-cell-coordinate.cs
 - add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs
+- insert-a-picture-and-scale-its-dimensions-proportionally-to-fit-within-a-target-cell-range.cs
