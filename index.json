@@ -406,6 +406,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "create-a-batch-job-that-converts-all-json-files-in-a-directory-to-matching-csv-files.cs",
+      "title": "Create a batch job that converts all JSON files in a directory to matching CSV files."
+    },
+    {
+      "category": "working-with-json",
       "file": "create-a-console-application-that-prints-json-representation-of-the-first-worksheet-to-standard-output.cs",
       "title": "Create a console application that prints JSON representation of the first worksheet to standard output."
     },
