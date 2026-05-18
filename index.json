@@ -11,6 +11,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs",
+      "title": "Assign a descriptive Title property to the merged workbook reflecting the combined source files."
+    },
+    {
+      "category": "workbook-merger",
       "file": "attach-the-merged-workbook-file-to-an-email-using-systemnetmail-after-successful-combination.cs",
       "title": "Attach the merged workbook file to an email using System.Net.Mail after successful combination."
     },
