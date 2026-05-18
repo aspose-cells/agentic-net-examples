@@ -36,6 +36,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "encrypt-the-merged-workbook-with-a-password-before-saving-to-protect-confidential-data.cs",
+      "title": "Encrypt the merged workbook with a password before saving to protect confidential data."
+    },
+    {
+      "category": "workbook-merger",
       "file": "ensure-formulas-remain-intact-by-keeping-calculation-mode-set-to-automatic-before-and-after-merging.cs",
       "title": "Ensure formulas remain intact by keeping calculation mode set to automatic before and after merging."
     },
