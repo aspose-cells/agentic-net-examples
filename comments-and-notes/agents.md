@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-and-add-a-threaded-comment-to-cell-a1-with-author-john.cs
 - load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs
 - iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs
+- edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs
