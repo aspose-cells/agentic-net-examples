@@ -741,6 +741,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-a-workbook-add-a-conditional-icon-set-with-three-custom-png-icons-and-save-as-xlsx.cs",
+      "title": "Load a workbook, add a conditional icon set with three custom PNG icons, and save as XLSX."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-a-workbook-file-insert-a-picture-linked-to-cell-a1-and-save-as-xlsx.cs",
       "title": "Load a workbook file, insert a picture linked to cell A1, and save as XLSX."
     },
