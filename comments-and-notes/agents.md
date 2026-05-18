@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs
 - set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs
 - set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs
+- change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs
