@@ -596,6 +596,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-an-ole-object-for-a-powerpoint-slide-set-its-size-to-match-cell-g3-and-lock-it.cs",
+      "title": "Add an OLE object for a PowerPoint slide, set its size to match cell G3, and lock it."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-conditional-formatting-rule-using-an-icon-set-to-display-custom-emoji-icons-based-on-text-values.cs",
       "title": "Apply a conditional formatting rule using an icon set to display custom emoji icons based on text values."
     },
