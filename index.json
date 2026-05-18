@@ -91,6 +91,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "set-the-author-property-of-the-merged-workbook-to-the-current-user-name-after-merging.cs",
+      "title": "Set the Author property of the merged workbook to the current user name after merging."
+    },
+    {
+      "category": "workbook-merger",
       "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
     },
