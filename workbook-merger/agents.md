@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs
 - recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs
 - validate-that-no-ref-errors-exist-in-any-cell-after-merging-workbooks-with-formulas.cs
+- log-the-file-size-of-the-merged-workbook-after-saving-to-monitor-storage-impact-of-the-combine-process.cs
