@@ -21,6 +21,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs",
+      "title": "Create a workbook, add threaded comments to multiple cells, and save the file in XLSX format."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs",
       "title": "Edit a specific threaded comment by setting its Text property to a new string value."
     },
