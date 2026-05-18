@@ -771,6 +771,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-a-workbook-add-an-ole-object-for-a-csv-file-and-configure-it-to-open-with-application.cs",
+      "title": "Load a workbook, add an OLE object for a CSV file, and configure it to open with application."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-a-workbook-add-an-ole-object-for-a-pdf-set-its-display-mode-to-icon-and-save.cs",
       "title": "Load a workbook, add an OLE object for a PDF, set its display mode to icon, and save."
     },
