@@ -551,6 +551,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-shape-and-configure-a-linear-gradient-fill-transitioning-between-two-chosen-colors.cs",
+      "title": "Insert a shape and configure a linear gradient fill transitioning between two chosen colors."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "place-a-shape-and-set-its-rotation-angle-to-ninety-degrees-for-diagonal-orientation.cs",
       "title": "Place a shape and set its rotation angle to ninety degrees for diagonal orientation."
     }

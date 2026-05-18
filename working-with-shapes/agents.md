@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs
 - add-a-shape-with-custom-width-and-height-dimensions-anchored-to-a-designated-cell-range.cs
 - place-a-shape-and-set-its-rotation-angle-to-ninety-degrees-for-diagonal-orientation.cs
+- insert-a-shape-and-configure-a-linear-gradient-fill-transitioning-between-two-chosen-colors.cs
