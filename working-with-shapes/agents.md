@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - insert-a-linked-picture-from-an-image-url-set-islinked-true-and-ensure-image-data-is-not-embedded.cs
 - insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs
 - refresh-all-linked-pictures-in-the-workbook-after-updating-source-images-on-the-web-server.cs
+- refresh-linked-pictures-after-modifying-source-images-on-a-local-file-system-ensuring-updated-visuals-appear.cs
