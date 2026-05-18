@@ -48,6 +48,11 @@
       "category": "workbook-merger",
       "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "verify-that-the-merged-workbook-contains-the-expected-number-of-worksheets-after-combination.cs",
+      "title": "Verify that the merged workbook contains the expected number of worksheets after combination."
     }
   ]
 }
