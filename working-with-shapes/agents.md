@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - load-a-workbook-add-a-conditional-icon-set-that-shows-cell-values-and-save-file-as-xlsm-macro-enabled.cs
 - create-an-ole-object-from-a-pdf-file-embed-it-into-worksheet-at-cell-h4-and-set-size.cs
 - load-a-workbook-add-an-ole-object-for-a-pdf-set-its-display-mode-to-icon-and-save.cs
+- create-an-ole-object-for-a-pdf-set-its-icon-caption-to-report-and-embed-it-in-sheet.cs
