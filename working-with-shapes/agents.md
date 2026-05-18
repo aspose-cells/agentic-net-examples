@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - insert-a-shape-and-configure-a-linear-gradient-fill-transitioning-between-two-chosen-colors.cs
 - insert-a-shape-and-attach-a-hyperlink-directing-users-to-an-external-website-when-clicked.cs
 - create-a-shape-and-embed-a-comment-that-appears-as-a-tooltip-on-mouse-hover.cs
+- add-a-shape-and-set-alternative-text-describing-its-purpose-for-accessibility-compliance.cs
