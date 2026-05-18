@@ -436,6 +436,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "load-a-json-array-representing-multiple-tables-and-map-each-element-to-a-separate-worksheet.cs",
+      "title": "Load a JSON array representing multiple tables and map each element to a separate worksheet."
+    },
+    {
+      "category": "working-with-json",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
       "title": "Load an XLSX workbook from a file path and verify successful initialization."
     },
