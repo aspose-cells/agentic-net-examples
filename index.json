@@ -506,6 +506,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "set-jsonlayoutoptionsquoteallfields-to-true-to-ensure-every-csv-field-is-enclosed-in-quotes.cs",
+      "title": "Set JsonLayoutOptions.QuoteAllFields to true to ensure every CSV field is enclosed in quotes."
+    },
+    {
+      "category": "working-with-json",
       "file": "specify-a-custom-date-format-in-jsonsaveoptions-before-exporting-workbook-to-json.cs",
       "title": "Specify a custom date format in JsonSaveOptions before exporting workbook to JSON."
     },
