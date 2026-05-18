@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - configure-a-camera-shape-to-capture-the-target-range-with-defined-resolution-and-image-format-settings.cs
 - refresh-a-camera-shape-programmatically-using-the-api-method-to-ensure-current-range-content-is-shown.cs
 - load-a-workbook-file-insert-a-picture-linked-to-cell-a1-and-save-as-xlsx.cs
+- load-a-workbook-from-stream-attach-a-linked-picture-from-web-url-to-cell-g10-then-refresh-links.cs

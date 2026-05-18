@@ -671,6 +671,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-a-workbook-from-stream-attach-a-linked-picture-from-web-url-to-cell-g10-then-refresh-links.cs",
+      "title": "Load a workbook from stream, attach a linked picture from web URL to cell G10, then refresh links."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs",
       "title": "Place a shape and adjust its Z-order to bring it forward above other objects."
     },
