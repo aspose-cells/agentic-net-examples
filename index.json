@@ -56,6 +56,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "read-all-threaded-comments-from-a-worksheet-and-count-the-number-of-comments-per-author.cs",
+      "title": "Read all threaded comments from a worksheet and count the number of comments per author."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs",
       "title": "Remove a threaded comment from cell C3 using the Remove method on the comment object."
     },
