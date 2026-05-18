@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - generate-json-for-a-pivot-table-by-exporting-its-underlying-data-source-range.cs
 - apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs
 - create-a-batch-job-that-converts-all-json-files-in-a-directory-to-matching-csv-files.cs
+- load-an-xls-workbook-remove-empty-columns-then-export-the-cleaned-data-to-json.cs
