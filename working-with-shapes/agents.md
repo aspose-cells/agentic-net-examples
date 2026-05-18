@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - insert-a-picture-and-set-its-transparency-level-to-achieve-a-semitransparent-visual-effect.cs
 - add-a-picture-and-rotate-it-ninety-degrees-clockwise-to-align-with-column-orientation.cs
 - insert-a-picture-and-attach-a-hyperlink-that-opens-a-document-when-the-image-is-clicked.cs
+- add-a-picture-and-provide-alternative-text-describing-its-content-for-screen-reader-accessibility.cs
