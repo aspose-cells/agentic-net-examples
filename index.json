@@ -528,6 +528,11 @@
       "category": "working-with-json",
       "file": "validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs",
       "title": "Validate JSON structure against a predefined schema after loading with JsonUtility successfully."
+    },
+    {
+      "category": "working-with-json",
+      "file": "validate-that-exported-json-includes-expected-number-of-rows-by-comparing-with-original-worksheet-row-count.cs",
+      "title": "Validate that exported JSON includes expected number of rows by comparing with original worksheet row count."
     }
   ]
 }

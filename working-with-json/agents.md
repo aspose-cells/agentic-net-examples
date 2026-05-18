@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - load-an-xls-workbook-remove-empty-columns-then-export-the-cleaned-data-to-json.cs
 - set-jsonlayoutoptionsquoteallfields-to-true-to-ensure-every-csv-field-is-enclosed-in-quotes.cs
 - convert-a-json-file-containing-nested-objects-into-a-flattened-json-structure-before-saving.cs
+- validate-that-exported-json-includes-expected-number-of-rows-by-comparing-with-original-worksheet-row-count.cs
