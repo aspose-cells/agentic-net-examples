@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-picture-and-rotate-it-ninety-degrees-clockwise-to-align-with-column-orientation.cs",
+      "title": "Add a picture and rotate it ninety degrees clockwise to align with column orientation."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs",
       "title": "Add a picture loaded from a web URL and embed it directly into the worksheet."
     },

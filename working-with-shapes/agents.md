@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - insert-a-picture-and-scale-its-dimensions-proportionally-to-fit-within-a-target-cell-range.cs
 - add-a-picture-and-apply-cropping-parameters-to-display-only-the-central-portion-of-the-image.cs
 - insert-a-picture-and-set-its-transparency-level-to-achieve-a-semitransparent-visual-effect.cs
+- add-a-picture-and-rotate-it-ninety-degrees-clockwise-to-align-with-column-orientation.cs
