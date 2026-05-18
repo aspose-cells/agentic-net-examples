@@ -66,6 +66,11 @@
     },
     {
       "category": "timeline",
+      "file": "export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs",
+      "title": "Export a timeline directly to a memory stream in PDF format for further processing without disk I/O."
+    },
+    {
+      "category": "timeline",
       "file": "load-a-csv-file-containing-event-dates-convert-it-to-an-excel-worksheet-and-draw-a-timeline.cs",
       "title": "Load a CSV file containing event dates, convert it to an Excel worksheet, and draw a timeline."
     },
