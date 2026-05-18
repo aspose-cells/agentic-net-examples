@@ -126,6 +126,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs",
+      "title": "Set workbook calculation mode to automatic after merging to refresh dependent formulas instantly."
+    },
+    {
+      "category": "workbook-merger",
       "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
     },
