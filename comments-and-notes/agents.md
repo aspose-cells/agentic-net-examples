@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - compare-two-workbooks-by-extracting-their-threaded-comments-and-identifying-differences-in-author-attribution.cs
 - read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs
 - change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs
+- add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
