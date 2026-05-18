@@ -111,6 +111,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs",
+      "title": "Recalculate all formulas in the merged workbook by invoking the Calculate method post\u2011merge."
+    },
+    {
+      "category": "workbook-merger",
       "file": "save-the-merged-workbook-into-a-memory-stream-for-immediate-transmission-via-a-web-api.cs",
       "title": "Save the merged workbook into a memory stream for immediate transmission via a web API."
     },
