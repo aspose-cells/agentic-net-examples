@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs
+- add-a-shape-with-custom-width-and-height-dimensions-anchored-to-a-designated-cell-range.cs
