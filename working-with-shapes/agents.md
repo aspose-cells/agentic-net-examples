@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - apply-a-conditional-icon-set-for-range-b2b15-enable-showcellvalue-and-define-custom-icons-for-each-condition.cs
 - apply-an-icon-set-condition-to-cells-c3c12-replace-default-icons-with-text-labels-and-save-workbook.cs
 - apply-a-conditional-icon-set-with-custom-green-yellow-and-red-icons-to-a-range-of-sales-figures.cs
+- create-a-conditional-formatting-rule-using-an-icon-set-to-display-arrows-based-on-numeric-thresholds.cs
