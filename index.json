@@ -541,6 +541,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs",
+      "title": "Add a picture loaded from a web URL and embed it directly into the worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-and-enable-its-locked-property-to-prevent-accidental-modifications.cs",
       "title": "Add a shape and enable its locked property to prevent accidental modifications."
     },
