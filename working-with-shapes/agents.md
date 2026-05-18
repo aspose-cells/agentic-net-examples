@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - create-a-conditional-formatting-rule-using-an-icon-set-to-display-arrows-based-on-numeric-thresholds.cs
 - apply-a-conditional-formatting-rule-using-an-icon-set-to-display-custom-emoji-icons-based-on-text-values.cs
 - load-a-workbook-add-a-conditional-icon-set-with-three-custom-png-icons-and-save-as-xlsx.cs
+- load-a-workbook-add-a-conditional-icon-set-that-shows-cell-values-and-save-file-as-xlsm-macro-enabled.cs
