@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - export-each-worksheet-of-the-merged-workbook-to-csv-files-for-data-extraction-validation.cs
 - generate-an-html-representation-of-the-merged-workbook-to-inspect-content-in-a-web-browser.cs
 - save-the-merged-workbook-into-a-memory-stream-for-immediate-transmission-via-a-web-api.cs
+- attach-the-merged-workbook-file-to-an-email-using-systemnetmail-after-successful-combination.cs

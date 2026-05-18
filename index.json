@@ -11,6 +11,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "attach-the-merged-workbook-file-to-an-email-using-systemnetmail-after-successful-combination.cs",
+      "title": "Attach the merged workbook file to an email using System.Net.Mail after successful combination."
+    },
+    {
+      "category": "workbook-merger",
       "file": "check-that-all-charts-from-source-workbooks-appear-correctly-in-the-combined-workbook.cs",
       "title": "Check that all charts from source workbooks appear correctly in the combined workbook."
     },
