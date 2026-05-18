@@ -421,6 +421,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs",
+      "title": "Generate pretty\u2011printed JSON with indentation by setting JsonSaveOptions.PrettyPrint to true."
+    },
+    {
+      "category": "working-with-json",
       "file": "include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs",
       "title": "Include column names as keys in JSON output by enabling IncludeColumnNames option."
     },
