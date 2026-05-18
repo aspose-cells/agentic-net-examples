@@ -36,6 +36,11 @@
     },
     {
       "category": "timeline",
+      "file": "create-a-timeline-with-custom-date-format-ddmmmyyyy-and-export-the-chart-to-a-pdf-document.cs",
+      "title": "Create a timeline with custom date format (dd\u2011MMM\u2011yyyy) and export the chart to a PDF document."
+    },
+    {
+      "category": "timeline",
       "file": "draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs",
       "title": "Draw a timeline while converting the entire workbook to PDF, ensuring the timeline appears on each page."
     },
