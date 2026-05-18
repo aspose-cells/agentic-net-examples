@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - set-the-author-property-of-the-merged-workbook-to-the-current-user-name-after-merging.cs
 - assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs
 - add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs
+- insert-a-company-logo-image-on-the-first-worksheet-of-the-merged-workbook-after-combining-files.cs

@@ -71,6 +71,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "insert-a-company-logo-image-on-the-first-worksheet-of-the-merged-workbook-after-combining-files.cs",
+      "title": "Insert a company logo image on the first worksheet of the merged workbook after combining files."
+    },
+    {
+      "category": "workbook-merger",
       "file": "load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs",
       "title": "Load large XLS files with CellsHelper.MergeFiles by providing an array of file paths and output path."
     },
