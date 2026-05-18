@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-picture-and-enable-aspect-ratio-lock-to-maintain-proportional-dimensions-during-resizing.cs",
+      "title": "Add a picture and enable aspect ratio lock to maintain proportional dimensions during resizing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-picture-and-provide-alternative-text-describing-its-content-for-screen-reader-accessibility.cs",
       "title": "Add a picture and provide alternative text describing its content for screen reader accessibility."
     },
