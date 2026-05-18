@@ -591,6 +591,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
+      "title": "Create a camera shape for a specified range to capture its visual representation as an image."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs",
       "title": "Create a shape and apply conditional formatting that changes its fill based on cell values."
     },
