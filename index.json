@@ -31,6 +31,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "preserve-charts-and-images-during-merge-by-employing-default-workbookcombine-behavior-without-additional-options.cs",
+      "title": "Preserve charts and images during merge by employing default Workbook.Combine behavior without additional options."
+    },
+    {
+      "category": "workbook-merger",
       "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
     }
