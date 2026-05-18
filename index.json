@@ -71,6 +71,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "save-the-merged-workbook-into-a-memory-stream-for-immediate-transmission-via-a-web-api.cs",
+      "title": "Save the merged workbook into a memory stream for immediate transmission via a web API."
+    },
+    {
+      "category": "workbook-merger",
       "file": "save-the-merged-workbook-to-a-specified-output-path-using-workbooksave-method.cs",
       "title": "Save the merged workbook to a specified output path using workbook.Save method."
     },
