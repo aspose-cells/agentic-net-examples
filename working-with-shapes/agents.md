@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - create-an-ole-object-for-a-pdf-set-its-icon-caption-to-report-and-embed-it-in-sheet.cs
 - insert-an-ole-object-representing-a-visio-diagram-set-its-size-to-match-cell-dimensions-and-lock-it.cs
 - add-an-ole-object-for-a-powerpoint-slide-set-its-size-to-match-cell-g3-and-lock-it.cs
+- load-a-workbook-add-an-ole-object-for-a-csv-file-and-configure-it-to-open-with-application.cs
