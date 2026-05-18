@@ -11,6 +11,11 @@
     },
     {
       "category": "timeline",
+      "file": "apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs",
+      "title": "Apply conditional formatting to timeline bars based on performance thresholds and export the result as a PDF."
+    },
+    {
+      "category": "timeline",
       "file": "batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs",
       "title": "Batch process multiple worksheets, creating individual timelines for each and saving them as separate PNG files."
     },
