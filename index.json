@@ -621,6 +621,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-linked-picture-then-programmatically-change-its-source-url-to-a-new-image-and-refresh-it.cs",
+      "title": "Insert a linked picture, then programmatically change its source URL to a new image and refresh it."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-picture-and-apply-background-removal-to-isolate-the-foreground-subject-from-its-backdrop.cs",
       "title": "Insert a picture and apply background removal to isolate the foreground subject from its backdrop."
     },
