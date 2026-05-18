@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-picture-and-provide-alternative-text-describing-its-content-for-screen-reader-accessibility.cs",
+      "title": "Add a picture and provide alternative text describing its content for screen reader accessibility."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-picture-and-rotate-it-ninety-degrees-clockwise-to-align-with-column-orientation.cs",
       "title": "Add a picture and rotate it ninety degrees clockwise to align with column orientation."
     },
