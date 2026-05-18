@@ -21,6 +21,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs",
+      "title": "Apply AutoFit to all rows in the merged workbook to ensure proper row height for content."
+    },
+    {
+      "category": "workbook-merger",
       "file": "assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs",
       "title": "Assign a descriptive Title property to the merged workbook reflecting the combined source files."
     },

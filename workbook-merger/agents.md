@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs
 - insert-a-company-logo-image-on-the-first-worksheet-of-the-merged-workbook-after-combining-files.cs
 - apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs
+- apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
