@@ -601,6 +601,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-conditional-icon-set-with-custom-green-yellow-and-red-icons-to-a-range-of-sales-figures.cs",
+      "title": "Apply a conditional icon set with custom green, yellow, and red icons to a range of sales figures."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-an-icon-set-condition-to-cells-c3c12-replace-default-icons-with-text-labels-and-save-workbook.cs",
       "title": "Apply an icon set condition to cells C3:C12, replace default icons with text labels, and save workbook."
     },
