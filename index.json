@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-and-embed-a-comment-that-appears-as-a-tooltip-on-mouse-hover.cs",
+      "title": "Create a shape and embed a comment that appears as a tooltip on mouse hover."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
       "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     },
