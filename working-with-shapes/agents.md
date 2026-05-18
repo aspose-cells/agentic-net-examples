@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - insert-a-linked-picture-then-programmatically-change-its-source-url-to-a-new-image-and-refresh-it.cs
 - insert-a-picture-linked-to-cell-h12-then-programmatically-change-its-upperleftcell-to-i13-and-verify-position.cs
 - add-a-picture-linked-to-cell-c9-then-retrieve-its-absolute-x-and-y-coordinates-for-logging.cs
+- configure-a-picture-to-move-and-size-with-its-linked-cell-then-verify-resizing-cell-adjusts-picture.cs
