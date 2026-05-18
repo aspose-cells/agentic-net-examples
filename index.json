@@ -21,6 +21,11 @@
     },
     {
       "category": "timeline",
+      "file": "combine-two-separate-timelines-into-a-single-composite-view-and-save-the-merged-chart-as-an-svg-file.cs",
+      "title": "Combine two separate timelines into a single composite view and save the merged chart as an SVG file."
+    },
+    {
+      "category": "timeline",
       "file": "create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs",
       "title": "Create a timeline using a custom template file, then replace placeholder text with dynamic project names."
     },
