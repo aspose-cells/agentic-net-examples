@@ -46,6 +46,11 @@
     },
     {
       "category": "timeline",
+      "file": "create-a-timeline-with-a-logarithmic-scale-for-dates-customize-tick-intervals-and-render-to-png.cs",
+      "title": "Create a timeline with a logarithmic scale for dates, customize tick intervals, and render to PNG."
+    },
+    {
+      "category": "timeline",
       "file": "create-a-timeline-with-custom-date-format-ddmmmyyyy-and-export-the-chart-to-a-pdf-document.cs",
       "title": "Create a timeline with custom date format (dd\u2011MMM\u2011yyyy) and export the chart to a PDF document."
     },
