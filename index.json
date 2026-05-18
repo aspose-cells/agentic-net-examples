@@ -396,6 +396,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "create-a-console-application-that-prints-json-representation-of-the-first-worksheet-to-standard-output.cs",
+      "title": "Create a console application that prints JSON representation of the first worksheet to standard output."
+    },
+    {
+      "category": "working-with-json",
       "file": "define-a-semicolon-as-csv-delimiter-in-jsonlayoutoptions-before-converting-json-to-csv.cs",
       "title": "Define a semicolon as CSV delimiter in JsonLayoutOptions before converting JSON to CSV."
     },
