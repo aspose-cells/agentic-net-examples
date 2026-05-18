@@ -401,6 +401,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-json-file-containing-nested-objects-into-a-flattened-json-structure-before-saving.cs",
+      "title": "Convert a JSON file containing nested objects into a flattened JSON structure before saving."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-json-file-containing-tabular-data-to-csv-using-jsonutility-with-a-custom-delimiter.cs",
       "title": "Convert a JSON file containing tabular data to CSV using JsonUtility with a custom delimiter."
     },
