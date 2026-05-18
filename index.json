@@ -591,6 +591,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-a-camera-shape-to-capture-the-target-range-with-defined-resolution-and-image-format-settings.cs",
+      "title": "Configure a camera shape to capture the target range with defined resolution and image format settings."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
       "title": "Create a camera shape for a specified range to capture its visual representation as an image."
     },
