@@ -391,6 +391,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "export-the-entire-workbook-to-json-with-column-headers-included-via-jsonsaveoptions.cs",
+      "title": "Export the entire workbook to JSON with column headers included via JsonSaveOptions."
+    },
+    {
+      "category": "working-with-json",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
       "title": "Load an XLSX workbook from a file path and verify successful initialization."
     }
