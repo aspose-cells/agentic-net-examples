@@ -708,6 +708,11 @@
       "category": "working-with-shapes",
       "file": "refresh-linked-pictures-after-modifying-source-images-on-a-local-file-system-ensuring-updated-visuals-appear.cs",
       "title": "Refresh linked pictures after modifying source images on a local file system, ensuring updated visuals appear."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "refresh-linked-pictures-in-parallel-threads-to-improve-performance-when-updating-dozens-of-external-images.cs",
+      "title": "Refresh linked pictures in parallel threads to improve performance when updating dozens of external images."
     }
   ]
 }
