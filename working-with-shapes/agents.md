@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs
 - add-a-shape-and-enable-its-locked-property-to-prevent-accidental-modifications.cs
 - insert-a-shape-and-toggle-its-visibility-property-to-hide-it-from-the-worksheet-view.cs
+- create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs
