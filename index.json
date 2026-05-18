@@ -66,6 +66,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs",
+      "title": "Read the author of each threaded comment in a worksheet and output the list."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs",
       "title": "Remove a threaded comment from cell C3 using the Remove method on the comment object."
     },
