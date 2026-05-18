@@ -21,6 +21,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "compare-two-workbooks-by-extracting-their-threaded-comments-and-identifying-differences-in-author-attribution.cs",
+      "title": "Compare two workbooks by extracting their threaded comments and identifying differences in author attribution."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "copy-a-threaded-comment-from-cell-e5-to-cell-f6-while-preserving-its-author-and-text.cs",
       "title": "Copy a threaded comment from cell E5 to cell F6 while preserving its author and text."
     },
