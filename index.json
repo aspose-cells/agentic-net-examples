@@ -46,6 +46,11 @@
     },
     {
       "category": "timeline",
+      "file": "load-a-csv-file-containing-event-dates-convert-it-to-an-excel-worksheet-and-draw-a-timeline.cs",
+      "title": "Load a CSV file containing event dates, convert it to an Excel worksheet, and draw a timeline."
+    },
+    {
+      "category": "timeline",
       "file": "load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs",
       "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
     },
