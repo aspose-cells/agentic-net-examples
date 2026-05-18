@@ -391,6 +391,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs",
+      "title": "Configure JsonSaveOptions to exclude hidden rows and columns from the exported JSON data."
+    },
+    {
+      "category": "working-with-json",
       "file": "convert-a-json-file-containing-tabular-data-to-csv-using-jsonutility-with-a-custom-delimiter.cs",
       "title": "Convert a JSON file containing tabular data to CSV using JsonUtility with a custom delimiter."
     },
