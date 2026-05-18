@@ -36,6 +36,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs",
+      "title": "Load a workbook, modify comment font colors based on author, and save changes to a new file."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs",
       "title": "Load an existing workbook, retrieve all threaded comments from column B, and list their authors."
     },
