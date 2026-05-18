@@ -96,6 +96,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "log-the-file-size-of-the-merged-workbook-after-saving-to-monitor-storage-impact-of-the-combine-process.cs",
+      "title": "Log the file size of the merged workbook after saving to monitor storage impact of the combine process."
+    },
+    {
+      "category": "workbook-merger",
       "file": "maintain-original-cell-formatting-by-not-altering-style-settings-during-the-combine-operation.cs",
       "title": "Maintain original cell formatting by not altering style settings during the combine operation."
     },
