@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - insert-a-picture-set-its-z-order-to-bring-it-forward-behind-only-the-chart-shape-and-save.cs
 - send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs
 - retrieve-the-absolute-position-of-a-shape-anchored-at-cell-f5-and-log-its-x-and-y-coordinates.cs
+- link-a-shapes-text-to-cell-k3-so-the-shape-updates-automatically-when-the-cell-value-changes.cs
