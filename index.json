@@ -656,6 +656,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-picture-linked-to-cell-h12-then-programmatically-change-its-upperleftcell-to-i13-and-verify-position.cs",
+      "title": "Insert a picture linked to cell H12, then programmatically change its UpperLeftCell to I13 and verify position."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
       "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     },
