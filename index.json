@@ -538,6 +538,11 @@
       "category": "working-with-json",
       "file": "validate-that-exported-json-includes-expected-number-of-rows-by-comparing-with-original-worksheet-row-count.cs",
       "title": "Validate that exported JSON includes expected number of rows by comparing with original worksheet row count."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
+      "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     }
   ]
 }
