@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - add-a-picture-linked-to-cell-c9-then-retrieve-its-absolute-x-and-y-coordinates-for-logging.cs
 - configure-a-picture-to-move-and-size-with-its-linked-cell-then-verify-resizing-cell-adjusts-picture.cs
 - create-a-picture-object-set-upperleftcell-to-d5-enable-move-with-cell-and-add-to-worksheet.cs
+- insert-a-picture-set-its-height-to-200-points-and-maintain-aspect-ratio-automatically.cs

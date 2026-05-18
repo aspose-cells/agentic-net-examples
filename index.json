@@ -676,6 +676,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-picture-set-its-height-to-200-points-and-maintain-aspect-ratio-automatically.cs",
+      "title": "Insert a picture, set its height to 200 points, and maintain aspect ratio automatically."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
       "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     },
