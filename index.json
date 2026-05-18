@@ -141,6 +141,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "validate-that-no-ref-errors-exist-in-any-cell-after-merging-workbooks-with-formulas.cs",
+      "title": "Validate that no #REF! errors exist in any cell after merging workbooks with formulas."
+    },
+    {
+      "category": "workbook-merger",
       "file": "verify-that-the-merged-workbook-contains-the-expected-number-of-worksheets-after-combination.cs",
       "title": "Verify that the merged workbook contains the expected number of worksheets after combination."
     }

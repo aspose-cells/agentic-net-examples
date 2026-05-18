@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
 - set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs
 - recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs
+- validate-that-no-ref-errors-exist-in-any-cell-after-merging-workbooks-with-formulas.cs
