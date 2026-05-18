@@ -398,6 +398,11 @@
       "category": "working-with-json",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
       "title": "Load an XLSX workbook from a file path and verify successful initialization."
+    },
+    {
+      "category": "working-with-json",
+      "file": "specify-a-custom-date-format-in-jsonsaveoptions-before-exporting-workbook-to-json.cs",
+      "title": "Specify a custom date format in JsonSaveOptions before exporting workbook to JSON."
     }
   ]
 }
