@@ -436,6 +436,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "generate-json-for-a-pivot-table-by-exporting-its-underlying-data-source-range.cs",
+      "title": "Generate JSON for a pivot table by exporting its underlying data source range."
+    },
+    {
+      "category": "working-with-json",
       "file": "generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs",
       "title": "Generate pretty\u2011printed JSON with indentation by setting JsonSaveOptions.PrettyPrint to true."
     },

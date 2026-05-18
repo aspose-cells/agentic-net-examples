@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs
 - transform-numeric-values-to-strings-in-json-output-by-applying-a-custom-value-formatter.cs
 - read-a-json-file-encoded-in-utf16-and-convert-it-to-csv-with-utf8-encoding.cs
+- generate-json-for-a-pivot-table-by-exporting-its-underlying-data-source-range.cs
