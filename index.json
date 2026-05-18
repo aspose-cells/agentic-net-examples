@@ -10,6 +10,11 @@
       "title": "Create a new workbook and add a threaded comment to cell A1 with author John."
     },
     {
+      "category": "comments-and-notes",
+      "file": "load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs",
+      "title": "Load an existing workbook, retrieve all threaded comments from column B, and list their authors."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
