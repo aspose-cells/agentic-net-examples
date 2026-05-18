@@ -21,6 +21,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "ensure-formulas-remain-intact-by-keeping-calculation-mode-set-to-automatic-before-and-after-merging.cs",
+      "title": "Ensure formulas remain intact by keeping calculation mode set to automatic before and after merging."
+    },
+    {
+      "category": "workbook-merger",
       "file": "load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs",
       "title": "Load large XLS files with CellsHelper.MergeFiles by providing an array of file paths and output path."
     },
