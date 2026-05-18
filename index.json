@@ -41,6 +41,11 @@
     },
     {
       "category": "timeline",
+      "file": "render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs",
+      "title": "Render a timeline with shadow effects, adjust opacity, and output the image as a PNG with transparency."
+    },
+    {
+      "category": "timeline",
       "file": "update-an-existing-timeline-by-adding-a-new-data-series-and-rerender-it-to-a-pdf-with-annotations.cs",
       "title": "Update an existing timeline by adding a new data series and re\u2011render it to a PDF with annotations."
     },
