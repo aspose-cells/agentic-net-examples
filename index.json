@@ -56,6 +56,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "save-the-merged-workbook-to-a-specified-output-path-using-workbooksave-method.cs",
+      "title": "Save the merged workbook to a specified output path using workbook.Save method."
+    },
+    {
+      "category": "workbook-merger",
       "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
     },
