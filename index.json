@@ -86,6 +86,11 @@
     },
     {
       "category": "timeline",
+      "file": "render-a-timeline-with-a-3d-perspective-effect-adjust-depth-and-output-as-a-png-image.cs",
+      "title": "Render a timeline with a 3\u2011D perspective effect, adjust depth, and output as a PNG image."
+    },
+    {
+      "category": "timeline",
       "file": "render-a-timeline-with-data-labels-showing-percentages-adjust-label-font-size-and-save-as-png.cs",
       "title": "Render a timeline with data labels showing percentages, adjust label font size, and save as PNG."
     },

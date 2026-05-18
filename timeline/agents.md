@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - create-a-timeline-with-a-logarithmic-scale-for-dates-customize-tick-intervals-and-render-to-png.cs
 - export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs
 - add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs
+- render-a-timeline-with-a-3d-perspective-effect-adjust-depth-and-output-as-a-png-image.cs
