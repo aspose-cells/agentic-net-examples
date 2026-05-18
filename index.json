@@ -416,6 +416,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs",
+      "title": "Include column names as keys in JSON output by enabling IncludeColumnNames option."
+    },
+    {
+      "category": "working-with-json",
       "file": "load-a-csv-file-into-memory-using-jsonutility-and-transform-it-into-json-format.cs",
       "title": "Load a CSV file into memory using JsonUtility and transform it into JSON format."
     },
