@@ -698,6 +698,11 @@
       "category": "working-with-shapes",
       "file": "refresh-a-camera-shape-programmatically-using-the-api-method-to-ensure-current-range-content-is-shown.cs",
       "title": "Refresh a camera shape programmatically using the API method to ensure current range content is shown."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "refresh-all-linked-pictures-in-the-workbook-after-updating-source-images-on-the-web-server.cs",
+      "title": "Refresh all linked pictures in the workbook after updating source images on the web server."
     }
   ]
 }

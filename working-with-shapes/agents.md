@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-stream-attach-a-linked-picture-from-web-url-to-cell-g10-then-refresh-links.cs
 - insert-a-linked-picture-from-an-image-url-set-islinked-true-and-ensure-image-data-is-not-embedded.cs
 - insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs
+- refresh-all-linked-pictures-in-the-workbook-after-updating-source-images-on-the-web-server.cs
