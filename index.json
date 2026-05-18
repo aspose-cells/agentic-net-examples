@@ -16,6 +16,11 @@
     },
     {
       "category": "timeline",
+      "file": "apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs",
+      "title": "Apply a watermark text over a rendered timeline image and export the final picture as a PDF."
+    },
+    {
+      "category": "timeline",
       "file": "apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs",
       "title": "Apply conditional formatting to timeline bars based on performance thresholds and export the result as a PDF."
     },
