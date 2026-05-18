@@ -431,6 +431,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs",
+      "title": "Implement error handling to catch JsonUtility.Load exceptions when source JSON file is malformed."
+    },
+    {
+      "category": "working-with-json",
       "file": "include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs",
       "title": "Include column names as keys in JSON output by enabling IncludeColumnNames option."
     },
