@@ -611,6 +611,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-picture-object-set-upperleftcell-to-d5-enable-move-with-cell-and-add-to-worksheet.cs",
+      "title": "Create a picture object, set UpperLeftCell to D5, enable move with cell, and add to worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs",
       "title": "Create a shape and apply conditional formatting that changes its fill based on cell values."
     },
