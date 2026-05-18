@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
 - retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs
 - update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs
+- replace-the-background-picture-of-a-comment-with-a-semi-transparent-overlay-image.cs
