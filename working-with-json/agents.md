@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs
 - create-a-console-application-that-prints-json-representation-of-the-first-worksheet-to-standard-output.cs
 - configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs
+- transform-numeric-values-to-strings-in-json-output-by-applying-a-custom-value-formatter.cs
