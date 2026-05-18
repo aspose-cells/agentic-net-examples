@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - insert-an-ole-object-representing-a-visio-diagram-set-its-size-to-match-cell-dimensions-and-lock-it.cs
 - add-an-ole-object-for-a-powerpoint-slide-set-its-size-to-match-cell-g3-and-lock-it.cs
 - load-a-workbook-add-an-ole-object-for-a-csv-file-and-configure-it-to-open-with-application.cs
+- extract-the-embedded-ole-object-stream-from-cell-j7-write-it-to-a-temporary-file-and-close-workbook.cs
