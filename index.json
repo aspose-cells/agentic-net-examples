@@ -46,6 +46,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "generate-an-html-representation-of-the-merged-workbook-to-inspect-content-in-a-web-browser.cs",
+      "title": "Generate an HTML representation of the merged workbook to inspect content in a web browser."
+    },
+    {
+      "category": "workbook-merger",
       "file": "load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs",
       "title": "Load large XLS files with CellsHelper.MergeFiles by providing an array of file paths and output path."
     },
