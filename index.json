@@ -16,6 +16,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs",
+      "title": "Apply AutoFit to all columns in the merged workbook to improve readability of combined data."
+    },
+    {
+      "category": "workbook-merger",
       "file": "assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs",
       "title": "Assign a descriptive Title property to the merged workbook reflecting the combined source files."
     },
