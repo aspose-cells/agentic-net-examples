@@ -601,6 +601,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-a-picture-to-move-and-size-with-its-linked-cell-then-verify-resizing-cell-adjusts-picture.cs",
+      "title": "Configure a picture to move and size with its linked cell, then verify resizing cell adjusts picture."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
       "title": "Create a camera shape for a specified range to capture its visual representation as an image."
     },
