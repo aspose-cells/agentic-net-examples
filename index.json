@@ -1,0 +1,13 @@
+{
+  "product": "Aspose.Cells",
+  "agent": "Aspose.Cells Product Agent",
+  "language": "csharp",
+  "framework": ".NET",
+  "examples": [
+    {
+      "category": "workbook-merger",
+      "file": "add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs",
+      "title": "Add the library reference to a .NET project via NuGet before implementing merge logic."
+    }
+  ]
+}
