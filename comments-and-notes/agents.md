@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs
 - set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs
 - change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs
+- update-the-font-color-of-all-comments-authored-by-alice-to-green-using-shapetextbodyfontcolor.cs

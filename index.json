@@ -45,6 +45,11 @@
       "title": "Set the text direction of a comment's shape to TopToBottom for vertical annotation layout."
     },
     {
+      "category": "comments-and-notes",
+      "file": "update-the-font-color-of-all-comments-authored-by-alice-to-green-using-shapetextbodyfontcolor.cs",
+      "title": "Update the font color of all comments authored by Alice to green using Shape.TextBody.Font.Color."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
