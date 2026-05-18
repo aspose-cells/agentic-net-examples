@@ -748,6 +748,11 @@
       "category": "working-with-shapes",
       "file": "refresh-linked-pictures-in-parallel-threads-to-improve-performance-when-updating-dozens-of-external-images.cs",
       "title": "Refresh linked pictures in parallel threads to improve performance when updating dozens of external images."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs",
+      "title": "Send a chart shape backward so that a linked picture appears above it in the worksheet."
     }
   ]
 }
