@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - encrypt-the-generated-json-file-using-a-passwordprotected-stream-before-writing-to-disk.cs
 - implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs
 - create-a-console-application-that-prints-json-representation-of-the-first-worksheet-to-standard-output.cs
+- configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs
