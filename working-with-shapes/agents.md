@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs
 - add-a-shape-that-incorporates-data-validation-rules-to-restrict-user-input-within-defined-limits.cs
 - insert-a-picture-from-a-local-file-path-and-position-it-at-a-specified-cell-coordinate.cs
+- add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs
