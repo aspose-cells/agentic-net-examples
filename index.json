@@ -71,6 +71,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs",
+      "title": "Scan a workbook for empty comments and remove them to clean metadata."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs",
       "title": "Set the text direction of a comment's shape to RightToLeft for bidirectional language support."
     },
