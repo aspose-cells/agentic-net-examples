@@ -386,6 +386,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-json-file-containing-tabular-data-to-csv-using-jsonutility-with-a-custom-delimiter.cs",
+      "title": "Convert a JSON file containing tabular data to CSV using JsonUtility with a custom delimiter."
+    },
+    {
+      "category": "working-with-json",
       "file": "exclude-empty-rows-from-json-output-by-setting-jsonsaveoptionsincludeemptyrows-to-false.cs",
       "title": "Exclude empty rows from JSON output by setting JsonSaveOptions.IncludeEmptyRows to false."
     },
