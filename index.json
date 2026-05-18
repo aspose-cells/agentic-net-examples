@@ -25,6 +25,11 @@
       "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
     },
     {
+      "category": "timeline",
+      "file": "validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs",
+      "title": "Validate timeline date ranges against a predefined calendar and log any inconsistencies to a text file."
+    },
+    {
       "category": "workbook-merger",
       "file": "add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs",
       "title": "Add a timestamp worksheet indicating the exact date and time of the merge operation."
