@@ -476,6 +476,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "load-an-xls-workbook-remove-empty-columns-then-export-the-cleaned-data-to-json.cs",
+      "title": "Load an XLS workbook, remove empty columns, then export the cleaned data to JSON."
+    },
+    {
+      "category": "working-with-json",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
       "title": "Load an XLSX workbook from a file path and verify successful initialization."
     },
