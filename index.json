@@ -36,6 +36,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "export-the-combined-workbook-to-pdf-format-to-verify-visual-fidelity-of-charts-and-images.cs",
+      "title": "Export the combined workbook to PDF format to verify visual fidelity of charts and images."
+    },
+    {
+      "category": "workbook-merger",
       "file": "load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs",
       "title": "Load large XLS files with CellsHelper.MergeFiles by providing an array of file paths and output path."
     },
