@@ -5,6 +5,11 @@
   "framework": ".NET",
   "examples": [
     {
+      "category": "timeline",
+      "file": "load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs",
+      "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
+    },
+    {
       "category": "workbook-merger",
       "file": "add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs",
       "title": "Add a timestamp worksheet indicating the exact date and time of the merge operation."
