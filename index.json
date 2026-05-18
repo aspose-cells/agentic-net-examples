@@ -561,6 +561,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-shape-and-assign-a-unique-name-property-to-reference-it-in-later-code.cs",
+      "title": "Insert a shape and assign a unique name property to reference it in later code."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-shape-and-attach-a-hyperlink-directing-users-to-an-external-website-when-clicked.cs",
       "title": "Insert a shape and attach a hyperlink directing users to an external website when clicked."
     },
