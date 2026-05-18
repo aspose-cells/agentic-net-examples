@@ -401,6 +401,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "encrypt-the-generated-json-file-using-a-passwordprotected-stream-before-writing-to-disk.cs",
+      "title": "Encrypt the generated JSON file using a password\u2011protected stream before writing to disk."
+    },
+    {
+      "category": "working-with-json",
       "file": "exclude-empty-rows-from-json-output-by-setting-jsonsaveoptionsincludeemptyrows-to-false.cs",
       "title": "Exclude empty rows from JSON output by setting JsonSaveOptions.IncludeEmptyRows to false."
     },
