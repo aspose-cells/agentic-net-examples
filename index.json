@@ -611,6 +611,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs",
+      "title": "Insert a linked picture from a secure intranet URL, configure authentication headers, and handle access denied errors."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-linked-picture-from-an-image-url-set-islinked-true-and-ensure-image-data-is-not-embedded.cs",
       "title": "Insert a linked picture from an image URL, set IsLinked true, and ensure image data is not embedded."
     },
