@@ -66,6 +66,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs",
+      "title": "Remove all comments older than thirty days from a workbook based on their CreatedTime values."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs",
       "title": "Set the text direction of a comment's shape to RightToLeft for bidirectional language support."
     },
