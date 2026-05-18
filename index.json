@@ -566,6 +566,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-picture-linked-to-cell-c9-then-retrieve-its-absolute-x-and-y-coordinates-for-logging.cs",
+      "title": "Add a picture linked to cell C9, then retrieve its absolute X and Y coordinates for logging."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs",
       "title": "Add a picture loaded from a web URL and embed it directly into the worksheet."
     },
