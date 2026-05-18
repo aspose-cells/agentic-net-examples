@@ -556,6 +556,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs",
+      "title": "Create a shape and apply conditional formatting that changes its fill based on cell values."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-and-embed-a-comment-that-appears-as-a-tooltip-on-mouse-hover.cs",
       "title": "Create a shape and embed a comment that appears as a tooltip on mouse hover."
     },
