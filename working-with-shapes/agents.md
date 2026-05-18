@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - create-a-shape-and-embed-a-comment-that-appears-as-a-tooltip-on-mouse-hover.cs
 - add-a-shape-and-set-alternative-text-describing-its-purpose-for-accessibility-compliance.cs
 - insert-a-shape-and-assign-a-unique-name-property-to-reference-it-in-later-code.cs
+- place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs
