@@ -596,6 +596,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-conditional-icon-set-for-range-b2b15-enable-showcellvalue-and-define-custom-icons-for-each-condition.cs",
+      "title": "Apply a conditional icon set for range B2:B15, enable ShowCellValue, and define custom icons for each condition."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-a-camera-shape-to-capture-the-target-range-with-defined-resolution-and-image-format-settings.cs",
       "title": "Configure a camera shape to capture the target range with defined resolution and image format settings."
     },

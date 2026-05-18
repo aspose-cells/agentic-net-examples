@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs
 - retrieve-the-absolute-position-of-a-shape-anchored-at-cell-f5-and-log-its-x-and-y-coordinates.cs
 - link-a-shapes-text-to-cell-k3-so-the-shape-updates-automatically-when-the-cell-value-changes.cs
+- apply-a-conditional-icon-set-for-range-b2b15-enable-showcellvalue-and-define-custom-icons-for-each-condition.cs
