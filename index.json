@@ -586,6 +586,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-picture-and-attach-a-hyperlink-that-opens-a-document-when-the-image-is-clicked.cs",
+      "title": "Insert a picture and attach a hyperlink that opens a document when the image is clicked."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-picture-and-scale-its-dimensions-proportionally-to-fit-within-a-target-cell-range.cs",
       "title": "Insert a picture and scale its dimensions proportionally to fit within a target cell range."
     },
