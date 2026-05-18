@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - insert-a-picture-set-its-height-to-200-points-and-maintain-aspect-ratio-automatically.cs
 - insert-a-picture-set-its-z-order-to-bring-it-forward-behind-only-the-chart-shape-and-save.cs
 - send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs
+- retrieve-the-absolute-position-of-a-shape-anchored-at-cell-f5-and-log-its-x-and-y-coordinates.cs
