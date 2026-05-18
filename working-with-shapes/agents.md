@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - add-a-shape-and-enable-its-locked-property-to-prevent-accidental-modifications.cs
 - insert-a-shape-and-toggle-its-visibility-property-to-hide-it-from-the-worksheet-view.cs
 - create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs
+- add-a-shape-that-incorporates-data-validation-rules-to-restrict-user-input-within-defined-limits.cs
