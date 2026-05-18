@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - refresh-all-linked-pictures-in-the-workbook-after-updating-source-images-on-the-web-server.cs
 - refresh-linked-pictures-after-modifying-source-images-on-a-local-file-system-ensuring-updated-visuals-appear.cs
 - refresh-linked-pictures-in-parallel-threads-to-improve-performance-when-updating-dozens-of-external-images.cs
+- insert-a-linked-picture-then-programmatically-change-its-source-url-to-a-new-image-and-refresh-it.cs
