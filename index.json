@@ -441,6 +441,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "preserve-cell-formulas-during-json-conversion-by-configuring-jsonsaveoptionspreserveformulas-flag.cs",
+      "title": "Preserve cell formulas during JSON conversion by configuring JsonSaveOptions.PreserveFormulas flag."
+    },
+    {
+      "category": "working-with-json",
       "file": "set-json-output-encoding-to-utf-8-within-jsonsaveoptions-before-saving-workbook-as-json.cs",
       "title": "Set JSON output encoding to UTF-8 within JsonSaveOptions before saving workbook as JSON."
     },
