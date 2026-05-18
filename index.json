@@ -551,6 +551,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-shape-and-attach-a-hyperlink-directing-users-to-an-external-website-when-clicked.cs",
+      "title": "Insert a shape and attach a hyperlink directing users to an external website when clicked."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-shape-and-configure-a-linear-gradient-fill-transitioning-between-two-chosen-colors.cs",
       "title": "Insert a shape and configure a linear gradient fill transitioning between two chosen colors."
     },

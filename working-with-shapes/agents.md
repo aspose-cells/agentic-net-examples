@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - add-a-shape-with-custom-width-and-height-dimensions-anchored-to-a-designated-cell-range.cs
 - place-a-shape-and-set-its-rotation-angle-to-ninety-degrees-for-diagonal-orientation.cs
 - insert-a-shape-and-configure-a-linear-gradient-fill-transitioning-between-two-chosen-colors.cs
+- insert-a-shape-and-attach-a-hyperlink-directing-users-to-an-external-website-when-clicked.cs
