@@ -581,6 +581,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-shape-and-toggle-its-visibility-property-to-hide-it-from-the-worksheet-view.cs",
+      "title": "Insert a shape and toggle its visibility property to hide it from the worksheet view."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs",
       "title": "Place a shape and adjust its Z-order to bring it forward above other objects."
     },
