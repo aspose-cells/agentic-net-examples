@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs
 - load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs
 - batch-process-a-folder-of-workbooks-adding-a-standard-disclaimer-comment-to-each-worksheets-top-left-cell.cs
+- copy-a-threaded-comment-from-cell-e5-to-cell-f6-while-preserving-its-author-and-text.cs
