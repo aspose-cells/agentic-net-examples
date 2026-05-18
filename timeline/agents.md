@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs
 - update-an-existing-timeline-by-adding-a-new-data-series-and-rerender-it-to-a-pdf-with-annotations.cs
 - apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs
+- embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs

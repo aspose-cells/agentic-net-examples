@@ -26,6 +26,11 @@
     },
     {
       "category": "timeline",
+      "file": "embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs",
+      "title": "Embed a rendered timeline image into a PDF report header, aligning it with the document title."
+    },
+    {
+      "category": "timeline",
       "file": "load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs",
       "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
     },
