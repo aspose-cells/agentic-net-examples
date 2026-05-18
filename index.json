@@ -16,6 +16,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs",
+      "title": "Load large XLS files with CellsHelper.MergeFiles by providing an array of file paths and output path."
+    },
+    {
+      "category": "workbook-merger",
       "file": "load-source-xls-workbooks-using-new-workbookfilepath-for-each-file-to-be-merged.cs",
       "title": "Load source XLS workbooks using new Workbook(filePath) for each file to be merged."
     }
