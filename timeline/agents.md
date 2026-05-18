@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs
 - draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs
+- apply-a-gradient-background-to-a-timeline-adjust-label-rotation-and-render-it-to-a-bmp-image.cs
