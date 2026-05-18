@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - insert-a-picture-from-a-local-file-path-and-position-it-at-a-specified-cell-coordinate.cs
 - add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs
 - insert-a-picture-and-scale-its-dimensions-proportionally-to-fit-within-a-target-cell-range.cs
+- add-a-picture-and-apply-cropping-parameters-to-display-only-the-central-portion-of-the-image.cs

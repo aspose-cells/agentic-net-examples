@@ -541,6 +541,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-picture-and-apply-cropping-parameters-to-display-only-the-central-portion-of-the-image.cs",
+      "title": "Add a picture and apply cropping parameters to display only the central portion of the image."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs",
       "title": "Add a picture loaded from a web URL and embed it directly into the worksheet."
     },
