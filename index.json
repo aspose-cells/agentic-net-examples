@@ -576,6 +576,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-picture-and-scale-its-dimensions-proportionally-to-fit-within-a-target-cell-range.cs",
+      "title": "Insert a picture and scale its dimensions proportionally to fit within a target cell range."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-picture-from-a-local-file-path-and-position-it-at-a-specified-cell-coordinate.cs",
       "title": "Insert a picture from a local file path and position it at a specified cell coordinate."
     },
