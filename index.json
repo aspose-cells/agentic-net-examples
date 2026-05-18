@@ -591,6 +591,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-picture-and-assign-a-descriptive-name-property-to-facilitate-later-retrieval-via-api.cs",
+      "title": "Insert a picture and assign a descriptive name property to facilitate later retrieval via API."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-picture-and-attach-a-hyperlink-that-opens-a-document-when-the-image-is-clicked.cs",
       "title": "Insert a picture and attach a hyperlink that opens a document when the image is clicked."
     },
