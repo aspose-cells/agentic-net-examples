@@ -61,6 +61,11 @@
     },
     {
       "category": "timeline",
+      "file": "render-a-timeline-with-data-labels-showing-percentages-adjust-label-font-size-and-save-as-png.cs",
+      "title": "Render a timeline with data labels showing percentages, adjust label font size, and save as PNG."
+    },
+    {
+      "category": "timeline",
       "file": "render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs",
       "title": "Render a timeline with shadow effects, adjust opacity, and output the image as a PNG with transparency."
     },
