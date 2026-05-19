@@ -1346,6 +1346,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "update-an-activex-combobox-value-to-a-custom-string-and-verify-the-change-programmatically.cs",
+      "title": "Update an ActiveX ComboBox value to a custom string and verify the change programmatically."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "update-the-display-label-of-a-linked-ole-object-to-a-descriptive-string.cs",
       "title": "Update the display label of a linked OLE object to a descriptive string."
     },
