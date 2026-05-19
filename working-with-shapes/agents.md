@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - create-a-multiline-textbox-and-set-individual-line-alignments-to-left-center-and-right-respectively.cs
 - apply-left-alignment-to-the-first-line-and-center-alignment-to-the-second-line-of-a-textbox.cs
 - load-multiple-svg-icons-from-a-folder-and-place-each-icon-into-successive-rows-starting-from-row-ten.cs
+- batch-insert-a-company-logo-svg-at-the-topright-corner-of-each-worksheet-in-the-workbook.cs
