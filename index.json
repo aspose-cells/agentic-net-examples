@@ -1616,6 +1616,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "unlock-all-shapes-on-a-worksheet-by-iterating-through-shapecollection-and-clearing-each-shapes-locked-flag.cs",
+      "title": "Unlock all shapes on a worksheet by iterating through ShapeCollection and clearing each shape's Locked flag."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "unlock-the-shape-signature-after-confirmation-to-allow-modifications-to-its-size-and-position.cs",
       "title": "Unlock the shape Signature after confirmation to allow modifications to its size and position."
     },
