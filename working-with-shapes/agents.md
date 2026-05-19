@@ -265,3 +265,4 @@ Output files are written to the working directory.
 - create-a-batch-process-that-reads-multiple-excel-files-from-a-directory-and-adds-consistent-watermark.cs
 - implement-logging-to-record-timestamp-and-worksheet-name-each-time-a-wordart-shape-is-added.cs
 - create-a-custom-function-that-returns-true-if-a-given-shape-is-a-locked-wordart-watermark.cs
+- use-linq-to-filter-shapecollection-for-only-wordart-shapes-before-applying-batch-style-changes.cs
