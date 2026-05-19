@@ -402,3 +402,4 @@ Output files are written to the working directory.
 - use-linq-to-select-shapes-with-rotatetextwithshape-set-to-true-and-disable-rotation-for-them.cs
 - apply-character-spacing-of-12-points-to-all-text-within-shapes-to-improve-readability.cs
 - set-text-alignment-to-center-horizontally-and-middle-vertically-for-a-specific-shape.cs
+- reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs
