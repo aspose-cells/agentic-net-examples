@@ -1776,6 +1776,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-an-xlsx-workbook-and-replace-smartart-text-in-all-shapes.cs",
+      "title": "Load an XLSX workbook and replace SmartArt text in all shapes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-multiple-svg-icons-from-a-folder-and-place-each-icon-into-successive-rows-starting-from-row-ten.cs",
       "title": "Load multiple SVG icons from a folder and place each icon into successive rows starting from row ten."
     },
