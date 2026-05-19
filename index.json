@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-z-order-using-a-large-positive-integer-and-confirm-it-appears-above-all-layers.cs",
+      "title": "Create a shape, set its Z-order using a large positive integer, and confirm it appears above all layers."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-that-displays-a-live-formula-result-by-linking-its-text-to-the-calculation-cell.cs",
       "title": "Create a shape that displays a live formula result by linking its text to the calculation cell."
     },
