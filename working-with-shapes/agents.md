@@ -258,3 +258,4 @@ Output files are written to the working directory.
 - apply-builtin-wordart-style-curved-text-to-a-shape-and-adjust-curvature-via-adjustment-values.cs
 - duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs
 - determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs
+- create-a-routine-that-removes-all-existing-wordart-shapes-before-adding-new-watermarks.cs
