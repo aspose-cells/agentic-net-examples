@@ -136,6 +136,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "instantiate-a-workbook-apply-data-validation-rules-and-export-the-sheet-to-a-json-file.cs",
+      "title": "Instantiate a workbook, apply data validation rules, and export the sheet to a JSON file."
+    },
+    {
+      "category": "save-workbook",
       "file": "instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs",
       "title": "Instantiate a workbook, configure CSV separator as semicolon, and export the active sheet to CSV."
     },
