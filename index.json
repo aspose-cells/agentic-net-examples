@@ -156,6 +156,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-a-workbook-add-a-chart-object-and-save-the-workbook-as-a-pdf-with-embedded-chart.cs",
+      "title": "Load a workbook, add a chart object, and save the workbook as a PDF with embedded chart."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-a-workbook-adjust-pdf-export-quality-to-300-dpi-and-save-the-highresolution-pdf.cs",
       "title": "Load a workbook, adjust PDF export quality to 300 DPI, and save the high\u2011resolution PDF."
     },

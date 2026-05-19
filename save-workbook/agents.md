@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - load-a-workbook-enable-strict-compliance-and-attempt-to-save-to-a-location-with-insufficient-permissions.cs
 - read-a-workbook-merge-cells-across-rows-and-export-the-result-to-an-html-file-with-tables.cs
 - open-a-workbook-set-ooxmlcompressiontype-to-level5-and-compare-resulting-file-size-to-default-compression.cs
+- load-a-workbook-add-a-chart-object-and-save-the-workbook-as-a-pdf-with-embedded-chart.cs
