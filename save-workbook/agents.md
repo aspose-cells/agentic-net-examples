@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs
 - load-a-workbook-apply-a-watermark-to-each-page-and-save-the-output-as-a-pdf-document.cs
 - instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs
+- open-an-ots-template-replace-placeholder-text-and-save-the-result-as-an-ods-file.cs

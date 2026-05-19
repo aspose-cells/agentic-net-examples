@@ -191,6 +191,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-an-ots-template-replace-placeholder-text-and-save-the-result-as-an-ods-file.cs",
+      "title": "Open an OTS template, replace placeholder text, and save the result as an ODS file."
+    },
+    {
+      "category": "save-workbook",
       "file": "read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs",
       "title": "Read a CSV file, filter rows by date, and export the result to an HTML file."
     },
