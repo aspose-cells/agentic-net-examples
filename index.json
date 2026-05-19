@@ -976,6 +976,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "export-the-workbook-with-wordart-watermarks-to-pdf-format-ensuring-watermark-visibility-in-output.cs",
+      "title": "Export the workbook with WordArt watermarks to PDF format ensuring watermark visibility in output."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-worksheet-shapes-as-separate-svg-files-preserving-visual-properties-for-reuse-in-web-pages.cs",
       "title": "Export worksheet shapes as separate SVG files, preserving visual properties for reuse in web pages."
     },
