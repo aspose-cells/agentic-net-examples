@@ -424,3 +424,4 @@ Output files are written to the working directory.
 - generate-a-report-listing-workbook-names-worksheet-titles-and-counts-of-detected-smartart-shapes.cs
 - validate-that-each-smartart-conversion-returns-a-nonnull-groupshape-before-proceeding.cs
 - implement-error-handling-for-unsupported-smartart-types-that-cannot-be-converted-to-groupshape.cs
+- measure-execution-time-of-smartart-detection-across-worksheets-for-performance-optimization.cs
