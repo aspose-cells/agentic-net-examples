@@ -836,6 +836,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "assign-spacebeforept-three-points-to-add-spacing-before-each-paragraph.cs",
+      "title": "Assign SpaceBeforePt three points to add spacing before each paragraph."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "batch-add-textbox-controls-to-each-worksheet-assigning-unique-identifiers.cs",
       "title": "Batch add TextBox controls to each worksheet, assigning unique identifiers."
     },
