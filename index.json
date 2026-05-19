@@ -2196,6 +2196,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-move-a-shape-behind-gridlines-retrieve-its-z-order-and-ensure-the-value-is-negative.cs",
+      "title": "Programmatically move a shape behind gridlines, retrieve its Z-order, and ensure the value is negative."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-move-a-shape-to-the-back-layer-then-adjust-its-absolute-position-to-align-with-a-header.cs",
       "title": "Programmatically move a shape to the back layer, then adjust its absolute position to align with a header."
     },

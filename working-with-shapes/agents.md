@@ -536,3 +536,4 @@ Output files are written to the working directory.
 - programmatically-duplicate-a-worksheet-copy-all-shapes-and-maintain-original-z-order-relationships-in-the-copy.cs
 - link-a-shape-to-a-cell-that-references-an-external-workbook-and-verify-crossworkbook-content-displays-correctly.cs
 - iterate-worksheets-add-a-shape-to-each-link-to-a-summary-cell-and-log-results.cs
+- programmatically-move-a-shape-behind-gridlines-retrieve-its-z-order-and-ensure-the-value-is-negative.cs
