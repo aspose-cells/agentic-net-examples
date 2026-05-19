@@ -161,6 +161,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-a-workbook-set-ooxmlcompressiontype-to-level3-and-write-the-compressed-file-to-a-stream.cs",
+      "title": "Load a workbook, set OoxmlCompressionType to Level3, and write the compressed file to a stream."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-a-workbook-set-pdf-export-to-embed-fonts-and-save-the-pdf-for-crossplatform-compatibility.cs",
       "title": "Load a workbook, set PDF export to embed fonts, and save the PDF for cross\u2011platform compatibility."
     },
