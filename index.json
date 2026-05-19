@@ -811,6 +811,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-custom-adjustment-values-to-a-collection-of-shapes-in-a-loop-for-uniformity.cs",
+      "title": "Apply custom adjustment values to a collection of shapes in a loop for uniformity."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-left-alignment-to-the-entire-text-within-the-textbox.cs",
       "title": "Apply left alignment to the entire text within the textbox."
     },
