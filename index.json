@@ -1126,6 +1126,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "ungroup-previously-grouped-shapes-ensuring-each-retains-its-original-formatting.cs",
+      "title": "Ungroup previously grouped shapes ensuring each retains its original formatting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "unlock-a-previously-locked-textbox-to-allow-editing-of-its-position-and-size.cs",
       "title": "Unlock a previously locked textbox to allow editing of its position and size."
     },
