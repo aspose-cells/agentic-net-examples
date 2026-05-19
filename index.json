@@ -611,6 +611,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-the-internal-margins-of-the-textbox-to-control-padding-around-the-text.cs",
+      "title": "Adjust the internal margins of the textbox to control padding around the text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "append-additional-text-to-the-existing-content-of-the-textbox-programmatically.cs",
       "title": "Append additional text to the existing content of the textbox programmatically."
     },
