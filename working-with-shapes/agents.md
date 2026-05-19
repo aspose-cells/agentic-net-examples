@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - batch-insert-pictures-from-a-csv-list-of-image-urls-linking-each-picture-to-its-corresponding-cell-reference.cs
 - load-an-existing-workbook-and-access-its-worksheet-collection-for-manipulation.cs
 - insert-a-wav-file-as-an-embedded-ole-object-at-specified-cell-coordinates.cs
+- set-the-oleobjectname-property-to-a-unique-identifier-after-insertion.cs
