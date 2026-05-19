@@ -466,3 +466,4 @@ Output files are written to the working directory.
 - link-a-shape-to-a-cell-with-a-date-formula-and-format-displayed-text-using-a-custom-pattern.cs
 - link-a-shape-to-a-cell-that-uses-the-concatenate-function-and-ensure-the-shape-displays-combined-text.cs
 - link-a-shape-to-a-cell-that-uses-the-text-function-for-number-formatting-and-display-formatted-number.cs
+- add-a-shape-link-it-to-a-cell-with-a-number-format-including-thousand-separator-and-display.cs
