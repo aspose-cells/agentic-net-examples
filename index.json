@@ -946,6 +946,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-rightmarginpt-to-ten-points-to-provide-space-for-long-sentences.cs",
+      "title": "Configure RightMarginPt to ten points to provide space for long sentences."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-shadow-effect-with-45-degree-angle-10-point-distance-and-dark-gray-color.cs",
       "title": "Configure shadow effect with 45 degree angle, 10 point distance, and dark gray color."
     },
