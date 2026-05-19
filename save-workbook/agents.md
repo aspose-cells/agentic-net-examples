@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - read-an-xls-file-apply-conditional-formatting-and-save-the-result-as-an-mht-web-archive.cs
 - load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs
 - open-a-workbook-enable-strict-open-xml-compliance-and-save-it-using-the-default-file-name.cs
+- load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs
