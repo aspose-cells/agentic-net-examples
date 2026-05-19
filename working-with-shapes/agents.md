@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - create-a-rectangle-shape-fill-it-with-light-blue-and-place-it-behind-chart-objects.cs
 - group-multiple-rectangle-shapes-into-a-single-container-for-collective-movement.cs
 - insert-a-generic-activex-togglebutton-using-shapecollectionaddactivexcontrol-and-set-its-default-state.cs
+- access-the-newly-added-activex-control-via-shapeactivexcontrol-and-cast-it-to-its-specific-type.cs
