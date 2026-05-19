@@ -621,6 +621,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "assign-a-custom-display-label-to-the-ole-object-using-the-label-property.cs",
+      "title": "Assign a custom display label to the OLE object using the Label property."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "batch-insert-pictures-from-a-csv-list-of-image-urls-linking-each-picture-to-its-corresponding-cell-reference.cs",
       "title": "Batch insert pictures from a CSV list of image URLs, linking each picture to its corresponding cell reference."
     },
