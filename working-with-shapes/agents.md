@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - apply-a-gradient-fill-to-the-textbox-using-two-custom-colors-and-a-defined-angle.cs
 - add-a-hyperlink-to-the-textbox-that-opens-a-web-page-when-the-shape-is-clicked.cs
 - lock-the-textbox-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs
+- unlock-a-previously-locked-textbox-to-allow-editing-of-its-position-and-size.cs
