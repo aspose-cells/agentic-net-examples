@@ -1011,6 +1011,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "duplicate-form-controls-from-one-worksheet-to-another-ensuring-linked-cell-addresses-remain-unchanged.cs",
+      "title": "Duplicate form controls from one worksheet to another ensuring linked cell addresses remain unchanged."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs",
       "title": "Duplicate the WordArt shape, move the copy to a different cell range, and change its text."
     },
