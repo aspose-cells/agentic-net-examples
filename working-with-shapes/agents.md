@@ -251,3 +251,4 @@ Output files are written to the working directory.
 - group-the-two-wordart-shapes-together-and-lock-the-group-to-maintain-layout-integrity.cs
 - iterate-through-all-worksheets-and-add-a-semitransparent-wordart-watermark-to-each-sheet.cs
 - save-the-workbook-containing-wordart-watermarks-as-an-xlsx-file-preserving-all-shape-attributes.cs
+- export-the-workbook-with-wordart-watermarks-to-pdf-format-ensuring-watermark-visibility-in-output.cs
