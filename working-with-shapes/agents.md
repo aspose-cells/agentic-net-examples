@@ -470,3 +470,4 @@ Output files are written to the working directory.
 - create-a-shape-link-it-to-a-cell-using-text-for-percentage-format-and-verify-percent-display.cs
 - add-a-shape-link-it-to-a-cell-with-a-custom-date-format-and-display-formatted-date.cs
 - create-a-shape-link-it-to-a-cell-using-text-for-scientific-notation-and-verify-display.cs
+- link-a-shape-to-a-cell-containing-a-vlookup-formula-and-ensure-shape-updates-with-lookup-result.cs
