@@ -261,3 +261,4 @@ Output files are written to the working directory.
 - create-a-routine-that-removes-all-existing-wordart-shapes-before-adding-new-watermarks.cs
 - validate-each-worksheet-contains-exactly-one-locked-wordart-watermark-and-report-any-discrepancies.cs
 - implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs
+- apply-preset-wordart-style-bold-wave-to-shapes-only-on-worksheets-whose-names-start-with-report.cs

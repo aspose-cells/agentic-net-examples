@@ -721,6 +721,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-preset-wordart-style-bold-wave-to-shapes-only-on-worksheets-whose-names-start-with-report.cs",
+      "title": "Apply preset WordArt style Bold Wave to shapes only on worksheets whose names start with Report."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-right-alignment-to-specific-characters-within-the-textbox-for-emphasis.cs",
       "title": "Apply right alignment to specific characters within the textbox for emphasis."
     },
