@@ -499,3 +499,4 @@ Output files are written to the working directory.
 - create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs
 - create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs
 - retrieve-all-connection-points-of-a-connector-shape-and-log-their-x-and-y-coordinates-for-analysis.cs
+- retrieve-connection-points-of-a-shape-filter-points-with-x-coordinate-greater-than-100-and-log-them.cs
