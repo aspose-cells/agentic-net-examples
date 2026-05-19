@@ -906,6 +906,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "batch-replace-smartart-text-across-multiple-worksheets-within-the-same-workbook.cs",
+      "title": "Batch replace SmartArt text across multiple worksheets within the same workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs",
       "title": "Cast the conversion result to GroupShape and verify the object type is GroupShape."
     },

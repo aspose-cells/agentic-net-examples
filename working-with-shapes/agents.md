@@ -435,3 +435,4 @@ Output files are written to the working directory.
 - refresh-linked-shapes-after-workbook-save-to-ensure-positions-remain-accurate.cs
 - load-an-xlsx-workbook-and-replace-smartart-text-in-all-shapes.cs
 - identify-smartart-shapes-in-a-worksheet-and-list-their-names.cs
+- batch-replace-smartart-text-across-multiple-worksheets-within-the-same-workbook.cs
