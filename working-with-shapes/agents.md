@@ -508,3 +508,4 @@ Output files are written to the working directory.
 - add-a-shape-retrieve-its-connection-points-and-export-the-points-list-to-a-json-file-for-use.cs
 - add-a-shape-retrieve-its-connection-points-and-generate-a-csv-file-listing-point-indices-and-coordinates.cs
 - programmatically-retrieve-connection-points-of-a-shape-filter-points-within-a-specific-rectangle-and-log-them.cs
+- add-a-shape-retrieve-its-connection-points-and-compare-them-against-a-baseline-defined-in-a-json-schema.cs
