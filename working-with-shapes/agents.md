@@ -288,3 +288,4 @@ Output files are written to the working directory.
 - add-a-glowing-outer-border-to-a-picture-shape-using-specified-glow-radius-and-color-value.cs
 - implement-a-reflection-effect-on-a-shape-with-defined-transparency-and-size-parameters-to-simulate-glass.cs
 - configure-3d-rotation-and-bevel-properties-on-a-shape-to-create-realistic-threedimensional-appearance.cs
+- adjust-a-shapes-adjustment-values-to-modify-its-geometry-such-as-changing-a-stars-point-count.cs
