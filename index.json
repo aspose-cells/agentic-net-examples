@@ -1851,6 +1851,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-using-the-concat-function-and-verify-shape-displays-concatenated-string.cs",
+      "title": "Link a shape to a cell using the CONCAT function and verify shape displays concatenated string."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-with-a-date-formula-and-format-displayed-text-using-a-custom-pattern.cs",
       "title": "Link a shape to a cell with a date formula and format displayed text using a custom pattern."
     },
