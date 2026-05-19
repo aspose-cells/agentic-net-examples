@@ -661,6 +661,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-an-ole-object-for-a-word-document-embed-it-then-change-its-display-icon-to-an-image.cs",
+      "title": "Create an OLE object for a Word document, embed it, then change its display icon to an image."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-an-ole-object-from-a-pdf-file-embed-it-into-worksheet-at-cell-h4-and-set-size.cs",
       "title": "Create an OLE object from a PDF file, embed it into worksheet at cell H4, and set size."
     },

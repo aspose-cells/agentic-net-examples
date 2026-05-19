@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - extract-ole-object-data-decompress-if-necessary-and-save-the-original-file-format-to-a-specified-folder.cs
 - extract-an-ole-object-rename-the-extracted-file-based-on-worksheet-name-and-save-to-output-directory.cs
 - edit-an-ole-object-by-changing-its-source-file-path-to-a-new-word-document-and-update-properties.cs
+- create-an-ole-object-for-a-word-document-embed-it-then-change-its-display-icon-to-an-image.cs
