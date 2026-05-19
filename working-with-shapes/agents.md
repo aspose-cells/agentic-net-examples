@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - configure-autofit-for-the-textbox-to-resize-automatically-based-on-its-content-length.cs
 - rotate-the-textbox-by-a-specified-angle-and-verify-its-new-orientation-on-the-worksheet.cs
 - set-the-textbox-background-fill-to-a-solid-color-with-optional-transparency.cs
+- apply-a-gradient-fill-to-the-textbox-using-two-custom-colors-and-a-defined-angle.cs

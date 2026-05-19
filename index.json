@@ -636,6 +636,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-gradient-fill-to-the-textbox-using-two-custom-colors-and-a-defined-angle.cs",
+      "title": "Apply a gradient fill to the textbox using two custom colors and a defined angle."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-an-icon-set-condition-to-cells-c3c12-replace-default-icons-with-text-labels-and-save-workbook.cs",
       "title": "Apply an icon set condition to cells C3:C12, replace default icons with text labels, and save workbook."
     },
