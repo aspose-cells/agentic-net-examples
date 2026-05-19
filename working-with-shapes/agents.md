@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - set-the-oleobjectname-property-to-a-unique-identifier-after-insertion.cs
 - configure-the-oleobjectwidth-and-height-to-fit-within-the-target-cell-range.cs
 - set-the-oleobjectlockaspectratio-flag-to-preserve-original-proportions-during-resizing.cs
+- assign-a-custom-display-label-to-the-ole-object-using-the-label-property.cs
