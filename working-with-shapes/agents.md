@@ -533,3 +533,4 @@ Output files are written to the working directory.
 - filter-shapes-linked-to-cells-containing-errors-and-log-problematic-shapes.cs
 - retrieve-absolute-positions-of-all-shapes-calculate-distance-between-each-pair-and-write-distances-into-a-matrix-worksheet.cs
 - add-a-shape-set-its-top-left-corner-to-specific-pixel-coordinates-and-validate-placement.cs
+- programmatically-duplicate-a-worksheet-copy-all-shapes-and-maintain-original-z-order-relationships-in-the-copy.cs

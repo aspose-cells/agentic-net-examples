@@ -2181,6 +2181,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-duplicate-a-worksheet-copy-all-shapes-and-maintain-original-z-order-relationships-in-the-copy.cs",
+      "title": "Programmatically duplicate a worksheet, copy all shapes, and maintain original Z-order relationships in the copy."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-move-a-shape-to-the-back-layer-then-adjust-its-absolute-position-to-align-with-a-header.cs",
       "title": "Programmatically move a shape to the back layer, then adjust its absolute position to align with a header."
     },
