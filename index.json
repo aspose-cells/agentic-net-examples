@@ -1546,6 +1546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-each-worksheet-contains-exactly-one-locked-wordart-watermark-and-report-any-discrepancies.cs",
+      "title": "Validate each worksheet contains exactly one locked WordArt watermark and report any discrepancies."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "validate-inserted-svg-files-to-ensure-they-do-not-contain-unsupported-elements-that-could-cause-rendering-errors.cs",
       "title": "Validate inserted SVG files to ensure they do not contain unsupported elements that could cause rendering errors."
     },
