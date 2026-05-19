@@ -336,3 +336,4 @@ Output files are written to the working directory.
 - update-a-shapes-connection-point-offset-to-1020-and-persist-the-changes.cs
 - apply-a-custom-reflection-preset-with-size-forty-blur-three-and-distance-six-points.cs
 - set-shadow-color-using-argb-values-25512800-and-transparency-to-thirty-percent.cs
+- create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs
