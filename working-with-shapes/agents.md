@@ -521,3 +521,4 @@ Output files are written to the working directory.
 - retrieve-a-shapes-absolute-position-add-a-margin-offset-and-reposition-the-shape-accordingly.cs
 - programmatically-read-a-shapes-absolute-position-convert-to-millimeters-and-write-conversion-to-a-hidden-cell.cs
 - programmatically-retrieve-a-shapes-absolute-position-add-a-random-offset-and-update-the-shapes-location.cs
+- retrieve-a-shapes-absolute-position-and-compare-with-expected-pixel-coordinates-from-a-design-spec.cs
