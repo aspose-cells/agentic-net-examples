@@ -437,3 +437,4 @@ Output files are written to the working directory.
 - identify-smartart-shapes-in-a-worksheet-and-list-their-names.cs
 - batch-replace-smartart-text-across-multiple-worksheets-within-the-same-workbook.cs
 - validate-that-each-smartart-shape-contains-nonempty-text-after-replacement.cs
+- export-the-workbook-with-modified-smartart-shapes-to-a-pdf-document.cs

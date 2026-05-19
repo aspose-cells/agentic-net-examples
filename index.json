@@ -1371,6 +1371,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "export-the-workbook-with-modified-smartart-shapes-to-a-pdf-document.cs",
+      "title": "Export the workbook with modified SmartArt shapes to a PDF document."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-the-workbook-with-wordart-watermarks-to-pdf-format-ensuring-watermark-visibility-in-output.cs",
       "title": "Export the workbook with WordArt watermarks to PDF format ensuring watermark visibility in output."
     },
