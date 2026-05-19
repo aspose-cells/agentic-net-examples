@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - export-the-formula-in-cell-c5-to-latex-using-tolatex-and-embed-the-result-in-an-html-paragraph.cs
 - convert-the-formula-in-cell-d10-to-mathml-via-tomathml-and-store-the-markup-in-a-string-variable.cs
 - export-multiple-worksheet-formulas-to-latex-and-concatenate-the-results-into-a-single-document.cs
+- generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs

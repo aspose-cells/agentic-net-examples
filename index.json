@@ -896,6 +896,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs",
+      "title": "Generate MathML for each formula in column H and store the markup in adjacent cells."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "group-a-picture-and-a-chart-lock-the-group-then-attempt-to-ungroup-to-test-lock-enforcement.cs",
       "title": "Group a picture and a chart, lock the group, then attempt to ungroup to test lock enforcement."
     },
