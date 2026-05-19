@@ -656,6 +656,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs",
+      "title": "Adjust WordArt shape's transparency to thirty percent to create a subtle background effect."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "append-additional-text-to-the-existing-content-of-the-textbox-programmatically.cs",
       "title": "Append additional text to the existing content of the textbox programmatically."
     },
