@@ -1201,6 +1201,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs",
+      "title": "Implement error handling that logs a warning when attempting to lock a shape already marked as locked."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-to-catch-exceptions-when-a-specified-textbox-name-does-not-exist-in-the-worksheet.cs",
       "title": "Implement error handling to catch exceptions when a specified TextBox name does not exist in the worksheet."
     },
