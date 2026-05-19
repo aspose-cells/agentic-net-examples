@@ -537,3 +537,4 @@ Output files are written to the working directory.
 - link-a-shape-to-a-cell-that-references-an-external-workbook-and-verify-crossworkbook-content-displays-correctly.cs
 - iterate-worksheets-add-a-shape-to-each-link-to-a-summary-cell-and-log-results.cs
 - programmatically-move-a-shape-behind-gridlines-retrieve-its-z-order-and-ensure-the-value-is-negative.cs
+- adjust-a-shapes-z-order-to-just-above-a-specific-existing-shape.cs
