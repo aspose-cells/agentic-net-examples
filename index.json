@@ -886,6 +886,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs",
+      "title": "Log the original file name and size of each extracted OLE object for traceability."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs",
       "title": "Place a shape and adjust its Z-order to bring it forward above other objects."
     },

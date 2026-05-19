@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - save-the-workbook-after-refreshing-linked-ole-objects-to-apply-the-updates.cs
 - export-a-worksheet-containing-ole-objects-to-pdf-while-preserving-object-placeholders.cs
 - configure-the-workbook-to-run-in-licensed-mode-to-suppress-evaluation-watermarks.cs
+- log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs
