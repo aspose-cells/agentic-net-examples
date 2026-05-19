@@ -886,6 +886,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "batch-process-a-directory-of-excel-files-converting-all-smartart-shapes-to-groupshapes-automatically.cs",
+      "title": "Batch process a directory of Excel files, converting all SmartArt shapes to GroupShapes automatically."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "batch-process-multiple-workbooks-in-a-folder-adding-tiled-textures-to-a-designated-shape.cs",
       "title": "Batch process multiple workbooks in a folder, adding tiled textures to a designated shape."
     },
