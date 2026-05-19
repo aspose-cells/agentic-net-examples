@@ -836,6 +836,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-an-existing-workbook-and-access-its-worksheet-collection-for-manipulation.cs",
+      "title": "Load an existing workbook and access its Worksheet collection for manipulation."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs",
       "title": "Place a shape and adjust its Z-order to bring it forward above other objects."
     },

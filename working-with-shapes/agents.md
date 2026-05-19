@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs
 - batch-process-multiple-worksheets-by-inserting-a-picture-linked-to-cell-a1-in-each-sheet-and-saving-file.cs
 - batch-insert-pictures-from-a-csv-list-of-image-urls-linking-each-picture-to-its-corresponding-cell-reference.cs
+- load-an-existing-workbook-and-access-its-worksheet-collection-for-manipulation.cs
