@@ -1366,6 +1366,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "filter-shapes-to-process-only-those-where-issmartart-returns-true.cs",
+      "title": "Filter shapes to process only those where IsSmartArt returns true."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "generate-a-report-listing-all-shape-types-present-in-a-workbook-along-with-their-cell-coordinates.cs",
       "title": "Generate a report listing all shape types present in a workbook along with their cell coordinates."
     },
