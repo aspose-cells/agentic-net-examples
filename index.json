@@ -1981,6 +1981,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "refresh-linked-shapes-after-updating-their-source-cell-values-to-display-new-data.cs",
+      "title": "Refresh linked shapes after updating their source cell values to display new data."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-linked-shapes-after-workbook-save-to-ensure-positions-remain-accurate.cs",
       "title": "Refresh linked shapes after workbook save to ensure positions remain accurate."
     },

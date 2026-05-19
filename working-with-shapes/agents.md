@@ -445,3 +445,4 @@ Output files are written to the working directory.
 - apply-custom-adjustment-values-to-a-collection-of-shapes-in-a-loop-for-uniformity.cs
 - reset-all-shape-adjustment-values-to-their-default-settings-programmatically.cs
 - save-the-workbook-after-geometry-changes-to-an-xlsx-file-preserving-original-data.cs
+- refresh-linked-shapes-after-updating-their-source-cell-values-to-display-new-data.cs
