@@ -2321,6 +2321,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "send-a-picture-shape-to-the-back-of-the-worksheet-by-calling-tofrontorback-with-a-negative-value.cs",
+      "title": "Send a picture shape to the back of the worksheet by calling ToFrontOrBack with a negative value."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "send-a-shape-named-chartoverlay-to-the-front-layer-to-ensure-it-appears-above-all-objects.cs",
       "title": "Send a shape named ChartOverlay to the front layer to ensure it appears above all objects."
     },
