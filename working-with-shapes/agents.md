@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - change-the-font-color-of-partial-text-inside-the-textbox-to-a-custom-rgb-value.cs
 - adjust-the-internal-margins-of-the-textbox-to-control-padding-around-the-text.cs
 - enable-text-wrapping-inside-the-textbox-so-long-sentences-break-onto-multiple-lines.cs
+- configure-autofit-for-the-textbox-to-resize-automatically-based-on-its-content-length.cs

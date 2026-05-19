@@ -716,6 +716,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-autofit-for-the-textbox-to-resize-automatically-based-on-its-content-length.cs",
+      "title": "Configure auto\u2011fit for the textbox to resize automatically based on its content length."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-the-oleobjectwidth-and-height-to-fit-within-the-target-cell-range.cs",
       "title": "Configure the OleObject.Width and Height to fit within the target cell range."
     },
