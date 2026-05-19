@@ -891,6 +891,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "compare-visual-quality-between-tiled-texture-and-stretched-texture-by-toggling-istiling.cs",
+      "title": "Compare visual quality between tiled texture and stretched texture by toggling IsTiling."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-3d-rotation-and-bevel-properties-on-a-shape-to-create-realistic-threedimensional-appearance.cs",
       "title": "Configure 3D rotation and bevel properties on a shape to create realistic three\u2011dimensional appearance."
     },
