@@ -946,6 +946,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs",
+      "title": "Determine Z\u2011order of all shapes programmatically and bring the most important WordArt to front."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs",
       "title": "Duplicate an existing shape, rename the copy, and offset its position by ten points to the right."
     },
