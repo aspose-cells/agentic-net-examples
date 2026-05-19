@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - link-a-shape-commentbox-to-cell-g12-so-the-shape-moves-when-the-cell-shifts.cs
 - configure-a-shape-to-follow-cell-resizing-by-linking-it-to-cell-h5-and-enabling-movewithcells-option.cs
 - access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs
+- group-shapes-icon1-icon2-and-icon3-into-a-single-group-named-iconset-for-collective-manipulation.cs
