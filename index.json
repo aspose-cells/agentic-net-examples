@@ -131,6 +131,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs",
+      "title": "Instantiate a workbook from a stream, set workbook compression to Level6, and write to a MemoryStream."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
       "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
     },
