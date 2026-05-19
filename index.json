@@ -1386,6 +1386,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "save-the-workbook-containing-wordart-watermarks-as-an-xlsx-file-preserving-all-shape-attributes.cs",
+      "title": "Save the workbook containing WordArt watermarks as an XLSX file preserving all shape attributes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs",
       "title": "Send a chart shape backward so that a linked picture appears above it in the worksheet."
     },

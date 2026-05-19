@@ -250,3 +250,4 @@ Output files are written to the working directory.
 - use-fontsettingcollection-to-apply-the-bold-wave-preset-style-to-all-worksheet-wordart-shapes.cs
 - group-the-two-wordart-shapes-together-and-lock-the-group-to-maintain-layout-integrity.cs
 - iterate-through-all-worksheets-and-add-a-semitransparent-wordart-watermark-to-each-sheet.cs
+- save-the-workbook-containing-wordart-watermarks-as-an-xlsx-file-preserving-all-shape-attributes.cs
