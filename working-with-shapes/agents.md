@@ -296,3 +296,4 @@ Output files are written to the working directory.
 - assign-a-cell-range-anchor-to-a-shape-so-it-moves-dynamically-when-rows-or-columns-are-inserted.cs
 - read-the-current-shadow-color-of-a-shape-and-output-its-rgb-values-for-logging-purposes.cs
 - extract-the-glow-color-from-a-shape-and-compare-it-against-a-predefined-palette-for-consistency-checks.cs
+- batch-copy-all-pictures-from-multiple-worksheets-into-a-summary-sheet-preserving-each-pictures-original-size.cs
