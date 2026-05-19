@@ -1176,6 +1176,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-through-all-worksheets-and-add-a-semitransparent-wordart-watermark-to-each-sheet.cs",
+      "title": "Iterate through all worksheets and add a semi\u2011transparent WordArt watermark to each sheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-through-all-worksheets-and-delete-any-checkbox-controls-linked-to-cells-containing-zero.cs",
       "title": "Iterate through all worksheets and delete any CheckBox controls linked to cells containing zero."
     },
