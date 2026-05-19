@@ -701,6 +701,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-custom-reflection-preset-with-size-forty-blur-three-and-distance-six-points.cs",
+      "title": "Apply a custom reflection preset with size forty, blur three, and distance six points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-gradient-fill-to-the-textbox-using-two-custom-colors-and-a-defined-angle.cs",
       "title": "Apply a gradient fill to the textbox using two custom colors and a defined angle."
     },
