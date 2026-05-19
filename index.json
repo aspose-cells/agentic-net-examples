@@ -711,6 +711,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-preset-shadow-of-type-outershadow-to-the-shapes-text-via-textoptionsshadowpresettype.cs",
+      "title": "Apply a preset shadow of type OuterShadow to the shape's text via TextOptions.Shadow.PresetType."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-soft-shadow-effect-with-custom-offset-and-color-to-a-chart-shape-for-visual-depth.cs",
       "title": "Apply a soft shadow effect with custom offset and color to a chart shape for visual depth."
     },
