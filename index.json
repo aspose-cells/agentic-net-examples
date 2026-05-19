@@ -1426,6 +1426,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "obtain-all-connection-points-of-a-shape-to-calculate-attachment-positions-for-linked-arrows-and-connectors.cs",
+      "title": "Obtain all connection points of a shape to calculate attachment positions for linked arrows and connectors."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs",
       "title": "Place a shape and adjust its Z-order to bring it forward above other objects."
     },
