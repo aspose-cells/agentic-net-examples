@@ -1871,6 +1871,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs",
+      "title": "Reset all shape text formatting properties to defaults using the ClearFormatting method."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "resize-a-shape-proportionally-to-match-the-dimensions-of-a-target-cell-range-while-maintaining-aspect-ratio.cs",
       "title": "Resize a shape proportionally to match the dimensions of a target cell range while maintaining aspect ratio."
     },
