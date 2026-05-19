@@ -1041,6 +1041,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs",
+      "title": "Develop a validation script that ensures no shape exceeds a specified width and height threshold across the workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs",
       "title": "Duplicate an existing shape, rename the copy, and offset its position by ten points to the right."
     },
