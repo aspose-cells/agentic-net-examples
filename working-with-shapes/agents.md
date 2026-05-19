@@ -438,3 +438,4 @@ Output files are written to the working directory.
 - batch-replace-smartart-text-across-multiple-worksheets-within-the-same-workbook.cs
 - validate-that-each-smartart-shape-contains-nonempty-text-after-replacement.cs
 - export-the-workbook-with-modified-smartart-shapes-to-a-pdf-document.cs
+- access-nonprimitive-shape-data-and-extract-all-path-segment-points.cs

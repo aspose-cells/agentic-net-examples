@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "access-nonprimitive-shape-data-and-extract-all-path-segment-points.cs",
+      "title": "Access non\u2011primitive shape data and extract all path segment points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "access-the-newly-added-activex-control-via-shapeactivexcontrol-and-cast-it-to-its-specific-type.cs",
       "title": "Access the newly added ActiveX control via Shape.ActiveXControl and cast it to its specific type."
     },
