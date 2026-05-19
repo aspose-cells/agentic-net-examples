@@ -1116,6 +1116,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "extract-the-glow-color-from-a-shape-and-compare-it-against-a-predefined-palette-for-consistency-checks.cs",
+      "title": "Extract the glow color from a shape and compare it against a predefined palette for consistency checks."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "generate-a-report-listing-all-shape-types-present-in-a-workbook-along-with-their-cell-coordinates.cs",
       "title": "Generate a report listing all shape types present in a workbook along with their cell coordinates."
     },

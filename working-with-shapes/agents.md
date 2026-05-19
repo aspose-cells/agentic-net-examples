@@ -295,3 +295,4 @@ Output files are written to the working directory.
 - move-a-shape-to-the-back-of-the-zorder-hierarchy-so-underlying-cells-become-visible-through-it.cs
 - assign-a-cell-range-anchor-to-a-shape-so-it-moves-dynamically-when-rows-or-columns-are-inserted.cs
 - read-the-current-shadow-color-of-a-shape-and-output-its-rgb-values-for-logging-purposes.cs
+- extract-the-glow-color-from-a-shape-and-compare-it-against-a-predefined-palette-for-consistency-checks.cs
