@@ -514,3 +514,4 @@ Output files are written to the working directory.
 - retrieve-a-shapes-absolute-position-then-align-another-shape-to-the-same-coordinates.cs
 - calculate-the-pixel-offset-between-two-shapes-using-their-absolute-positions-and-store-the-result-in-a-cell.cs
 - retrieve-a-shapes-absolute-position-convert-pixels-to-centimeters-and-store-conversion-in-a-cell.cs
+- retrieve-absolute-positions-of-all-shapes-on-a-worksheet-sort-them-by-y-coordinate-and-output-order.cs
