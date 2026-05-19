@@ -400,3 +400,4 @@ Output files are written to the working directory.
 - batch-process-multiple-workbooks-updating-all-shape-text-margins-to-standard-values-in-each-file.cs
 - log-each-shapes-original-and-new-margin-settings-to-a-csv-file-for-audit-purposes.cs
 - use-linq-to-select-shapes-with-rotatetextwithshape-set-to-true-and-disable-rotation-for-them.cs
+- apply-character-spacing-of-12-points-to-all-text-within-shapes-to-improve-readability.cs

@@ -776,6 +776,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-character-spacing-of-12-points-to-all-text-within-shapes-to-improve-readability.cs",
+      "title": "Apply character spacing of 1.2 points to all text within shapes to improve readability."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-conditional-formatting-to-a-shapes-fill-color-based-on-a-linked-cells-value-exceeding-a-threshold.cs",
       "title": "Apply conditional formatting to a shape's fill color based on a linked cell's value exceeding a threshold."
     },
