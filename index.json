@@ -1946,6 +1946,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-the-shapes-collection-of-the-selected-worksheet-for-further-processing.cs",
+      "title": "Retrieve the Shapes collection of the selected worksheet for further processing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs",
       "title": "Retrieve the textbox by its assigned name to modify its properties programmatically."
     },
