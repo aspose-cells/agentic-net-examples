@@ -291,3 +291,4 @@ Output files are written to the working directory.
 - adjust-a-shapes-adjustment-values-to-modify-its-geometry-such-as-changing-a-stars-point-count.cs
 - retrieve-the-absolute-topleft-coordinates-of-a-shape-to-align-it-precisely-with-a-target-cell-range.cs
 - obtain-all-connection-points-of-a-shape-to-calculate-attachment-positions-for-linked-arrows-and-connectors.cs
+- send-a-specific-shape-to-the-front-of-the-zorder-stack-to-ensure-it-overlays-other-objects.cs
