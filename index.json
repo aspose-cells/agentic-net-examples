@@ -1781,6 +1781,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-containing-a-vlookup-formula-and-ensure-shape-updates-with-lookup-result.cs",
+      "title": "Link a shape to a cell containing a VLOOKUP formula and ensure shape updates with lookup result."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-that-uses-the-concatenate-function-and-ensure-the-shape-displays-combined-text.cs",
       "title": "Link a shape to a cell that uses the CONCATENATE function and ensure the shape displays combined text."
     },
