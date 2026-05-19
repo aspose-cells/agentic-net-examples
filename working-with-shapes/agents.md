@@ -310,3 +310,4 @@ Output files are written to the working directory.
 - write-code-to-set-a-pictures-anchor-to-a-merged-cell-range-ensuring-it-moves-with-merged-cells.cs
 - create-a-routine-that-reads-each-shapes-shadow-color-and-adjusts-it-to-match-the-workbooks-theme-palette.cs
 - develop-a-feature-that-automatically-groups-shapes-added-within-a-specific-time-window-into-a-single-collection.cs
+- write-a-function-that-calculates-the-distance-between-two-shapes-using-their-absolute-positions-for-collision-detection.cs
