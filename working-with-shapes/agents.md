@@ -311,3 +311,4 @@ Output files are written to the working directory.
 - create-a-routine-that-reads-each-shapes-shadow-color-and-adjusts-it-to-match-the-workbooks-theme-palette.cs
 - develop-a-feature-that-automatically-groups-shapes-added-within-a-specific-time-window-into-a-single-collection.cs
 - write-a-function-that-calculates-the-distance-between-two-shapes-using-their-absolute-positions-for-collision-detection.cs
+- implement-a-process-to-copy-a-shapes-3d-format-settings-from-one-shape-to-another-across-worksheets.cs
