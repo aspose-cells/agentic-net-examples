@@ -2336,6 +2336,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "update-a-cell-range-linked-to-a-picture-shape-and-then-refresh-the-picture.cs",
+      "title": "Update a cell range linked to a picture shape and then refresh the picture."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "update-a-shapes-connection-point-offset-to-1020-and-persist-the-changes.cs",
       "title": "Update a shape's connection point offset to (10,20) and persist the changes."
     },
