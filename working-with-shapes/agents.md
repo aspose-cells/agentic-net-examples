@@ -538,3 +538,4 @@ Output files are written to the working directory.
 - iterate-worksheets-add-a-shape-to-each-link-to-a-summary-cell-and-log-results.cs
 - programmatically-move-a-shape-behind-gridlines-retrieve-its-z-order-and-ensure-the-value-is-negative.cs
 - adjust-a-shapes-z-order-to-just-above-a-specific-existing-shape.cs
+- add-a-shape-link-it-to-a-cell-with-a-custom-number-format-including-thousand-separator-and-display.cs
