@@ -232,3 +232,4 @@ Output files are written to the working directory.
 - group-multiple-rectangle-shapes-into-a-single-container-for-collective-movement.cs
 - insert-a-generic-activex-togglebutton-using-shapecollectionaddactivexcontrol-and-set-its-default-state.cs
 - access-the-newly-added-activex-control-via-shapeactivexcontrol-and-cast-it-to-its-specific-type.cs
+- set-the-size-and-position-of-an-activex-control-after-insertion-using-the-shape-objects-properties.cs

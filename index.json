@@ -1361,6 +1361,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-the-size-and-position-of-an-activex-control-after-insertion-using-the-shape-objects-properties.cs",
+      "title": "Set the size and position of an ActiveX control after insertion using the Shape object's properties."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-the-textbox-background-fill-to-a-solid-color-with-optional-transparency.cs",
       "title": "Set the textbox background fill to a solid color with optional transparency."
     },
