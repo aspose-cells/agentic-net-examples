@@ -407,3 +407,4 @@ Output files are written to the working directory.
 - apply-a-custom-paragraph-style-by-setting-line-spacing-space-before-and-space-after-simultaneously.cs
 - adjust-character-spacing-together-with-line-spacing-to-achieve-balanced-text-appearance.cs
 - verify-that-rotatetextwithshape-default-is-true-before-modifying-it-in-the-shape.cs
+- load-an-excel-workbook-from-a-file-stream-using-workbookload.cs
