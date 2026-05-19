@@ -2071,6 +2071,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-that-character-spacing-values-remain-within-the-allowed-range-of-10-to-10-points.cs",
+      "title": "Validate that character spacing values remain within the allowed range of -10 to 10 points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "validate-that-each-activex-control-has-a-unique-name-property-before-saving-the-workbook.cs",
       "title": "Validate that each ActiveX control has a unique name property before saving the workbook."
     },
