@@ -2326,6 +2326,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-a-shapes-absolute-position-add-a-margin-offset-and-reposition-the-shape-accordingly.cs",
+      "title": "Retrieve a shape's absolute position, add a margin offset, and reposition the shape accordingly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-a-shapes-absolute-position-convert-pixels-to-centimeters-and-store-conversion-in-a-cell.cs",
       "title": "Retrieve a shape's absolute position, convert pixels to centimeters, and store conversion in a cell."
     },
