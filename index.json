@@ -1856,6 +1856,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "toggle-the-visibility-of-the-glow-effect-on-a-specific-shape-without-altering-other-properties.cs",
+      "title": "Toggle the visibility of the glow effect on a specific shape without altering other properties."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "transfer-a-chart-from-sheet1-to-sheet3-using-shapesaddcopy-while-maintaining-data-source-references.cs",
       "title": "Transfer a chart from Sheet1 to Sheet3 using Shapes.AddCopy while maintaining data source references."
     },

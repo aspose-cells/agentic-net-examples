@@ -344,3 +344,4 @@ Output files are written to the working directory.
 - set-the-reflection-distance-to-twelve-points-and-verify-visual-change-using-automated-screenshot-comparison.cs
 - disable-all-shape-reflections-while-preserving-other-effects-and-save-the-workbook.cs
 - copy-reflection-settings-from-one-shape-to-another-within-the-same-worksheet.cs
+- toggle-the-visibility-of-the-glow-effect-on-a-specific-shape-without-altering-other-properties.cs
