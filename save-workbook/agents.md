@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - open-a-workbook-configure-saveoptions-to-generate-a-single-worksheet-mht-file-and-save-it.cs
 - load-a-workbook-set-ooxmlcompressiontype-to-level3-and-write-the-compressed-file-to-a-stream.cs
 - read-a-workbook-filter-out-hidden-rows-and-export-the-visible-data-to-a-txt-file.cs
+- open-a-workbook-set-contentdisposition-to-attachment-and-deliver-the-xlsx-file-via-http-response.cs

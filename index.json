@@ -211,6 +211,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-set-contentdisposition-to-attachment-and-deliver-the-xlsx-file-via-http-response.cs",
+      "title": "Open a workbook, set ContentDisposition to Attachment, and deliver the XLSX file via HTTP response."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs",
       "title": "Open a workbook, set ExportAllSheets to true, and save all worksheets into a single CSV file."
     },
