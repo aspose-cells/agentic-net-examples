@@ -856,6 +856,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "clone-a-shape-modify-its-reflection-and-place-the-clone-beside-the-original-shape.cs",
+      "title": "Clone a shape, modify its reflection, and place the clone beside the original shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "clone-an-existing-ole-object-and-place-the-copy-on-a-different-worksheet.cs",
       "title": "Clone an existing OLE object and place the copy on a different worksheet."
     },
