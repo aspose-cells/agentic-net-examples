@@ -331,3 +331,4 @@ Output files are written to the working directory.
 - set-threedimensional-material-to-plastic-and-apply-lighting-preset-soft-with-seventy-percent-intensity.cs
 - rotate-the-threedimensional-shape-by-thirty-degrees-around-the-x-axis.cs
 - tile-a-picture-file-as-texture-inside-a-rectangle-shape-while-preserving-aspect-ratio.cs
+- send-the-shape-to-the-front-layer-to-adjust-zorder-positioning.cs
