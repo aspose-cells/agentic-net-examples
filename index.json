@@ -2101,6 +2101,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "serialize-groupshape-properties-including-child-shapes-to-json-for-persistence.cs",
+      "title": "Serialize GroupShape properties, including child shapes, to JSON for persistence."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-alternative-text-for-the-textbox-to-improve-accessibility-for-screen-readers.cs",
       "title": "Set alternative text for the textbox to improve accessibility for screen readers."
     },
