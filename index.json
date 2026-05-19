@@ -876,6 +876,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-custom-function-that-returns-true-if-a-given-shape-is-a-locked-wordart-watermark.cs",
+      "title": "Create a custom function that returns true if a given shape is a locked WordArt watermark."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-multiline-textbox-and-set-individual-line-alignments-to-left-center-and-right-respectively.cs",
       "title": "Create a multiline TextBox and set individual line alignments to left, center, and right respectively."
     },
