@@ -1491,6 +1491,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-error-handling-for-unsupported-smartart-types-that-cannot-be-converted-to-groupshape.cs",
+      "title": "Implement error handling for unsupported SmartArt types that cannot be converted to GroupShape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs",
       "title": "Implement error handling that logs a warning when attempting to lock a shape already marked as locked."
     },
