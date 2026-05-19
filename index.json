@@ -181,6 +181,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "read-a-txt-workbook-split-cells-by-custom-delimiter-and-export-the-data-to-an-xml-file.cs",
+      "title": "Read a TXT workbook, split cells by custom delimiter, and export the data to an XML file."
+    },
+    {
+      "category": "save-workbook",
       "file": "read-an-xls-file-apply-conditional-formatting-and-save-the-result-as-an-mht-web-archive.cs",
       "title": "Read an XLS file, apply conditional formatting, and save the result as an MHT web archive."
     },
