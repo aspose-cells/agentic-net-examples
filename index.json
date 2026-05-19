@@ -1181,6 +1181,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "resize-a-shape-proportionally-to-match-the-dimensions-of-a-target-cell-range-while-maintaining-aspect-ratio.cs",
+      "title": "Resize a shape proportionally to match the dimensions of a target cell range while maintaining aspect ratio."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-an-oleobject-by-name-from-the-worksheets-oleobjects-collection-for-modification.cs",
       "title": "Retrieve an OleObject by name from the worksheet\u2019s OleObjects collection for modification."
     },
