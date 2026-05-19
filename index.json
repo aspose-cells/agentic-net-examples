@@ -986,6 +986,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-oleobjectalternativetext-property-to-store-custom-metadata-for-later-retrieval.cs",
+      "title": "Use OleObject.AlternativeText property to store custom metadata for later retrieval."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs",
       "title": "Use the OleObject.IsLinked property to identify linked OLE objects before processing."
     },
