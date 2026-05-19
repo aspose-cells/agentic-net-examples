@@ -532,3 +532,4 @@ Output files are written to the working directory.
 - programmatically-move-a-shape-to-the-front-then-to-the-back-and-record-z-order-values-after-each-move.cs
 - filter-shapes-linked-to-cells-containing-errors-and-log-problematic-shapes.cs
 - retrieve-absolute-positions-of-all-shapes-calculate-distance-between-each-pair-and-write-distances-into-a-matrix-worksheet.cs
+- add-a-shape-set-its-top-left-corner-to-specific-pixel-coordinates-and-validate-placement.cs
