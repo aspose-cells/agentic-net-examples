@@ -1971,6 +1971,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-rotatetextwithshape-property-to-false-so-text-remains-horizontal-when-shape-rotates.cs",
+      "title": "Set RotateTextWithShape property to false so text remains horizontal when shape rotates."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-shadow-color-using-argb-values-25512800-and-transparency-to-thirty-percent.cs",
       "title": "Set shadow color using ARGB values (255,128,0,0) and transparency to thirty percent."
     },
