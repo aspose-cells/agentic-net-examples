@@ -956,6 +956,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "compare-the-number-of-adjustment-values-before-and-after-conversion-to-ensure-data-integrity.cs",
+      "title": "Compare the number of adjustment values before and after conversion to ensure data integrity."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "compare-visual-quality-between-tiled-texture-and-stretched-texture-by-toggling-istiling.cs",
       "title": "Compare visual quality between tiled texture and stretched texture by toggling IsTiling."
     },
