@@ -2156,6 +2156,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-read-a-shapes-absolute-position-convert-to-millimeters-and-write-conversion-to-a-hidden-cell.cs",
+      "title": "Programmatically read a shape's absolute position, convert to millimeters, and write conversion to a hidden cell."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-read-a-shapes-connection-points-calculate-bounding-box-dimensions-and-write-dimensions-to-worksheet-cells.cs",
       "title": "Programmatically read a shape's connection points, calculate bounding box dimensions, and write dimensions to worksheet cells."
     },
