@@ -455,3 +455,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-modify-shapes-and-save-without-file-system-access.cs
 - export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs
 - compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs
+- use-specific-adjustment-indices-to-modify-the-tip-angle-of-a-callout-shape.cs
