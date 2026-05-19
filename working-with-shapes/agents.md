@@ -389,3 +389,4 @@ Output files are written to the working directory.
 - adjust-topmarginpt-to-five-points-for-consistent-top-margin-layout.cs
 - set-leftmarginpt-to-eight-points-to-align-text-with-cell-borders.cs
 - modify-bottommarginpt-to-two-points-to-prevent-text-clipping-at-the-bottom.cs
+- configure-rightmarginpt-to-ten-points-to-provide-space-for-long-sentences.cs
