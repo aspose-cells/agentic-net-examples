@@ -353,3 +353,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-to-a-new-file-preserving-original-formatting-and-textures.cs
 - iterate-through-all-shapes-in-the-worksheet-and-apply-tiled-texture-to-each.cs
 - load-an-image-from-a-url-and-use-it-as-texture-for-a-specific-shape.cs
+- create-a-new-text-box-shape-and-set-its-text-using-textbodytext-property.cs
