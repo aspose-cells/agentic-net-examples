@@ -131,6 +131,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
+      "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
+    },
+    {
+      "category": "save-workbook",
       "file": "read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs",
       "title": "Read a CSV file, filter rows by date, and export the result to an HTML file."
     },
