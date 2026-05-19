@@ -1341,6 +1341,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "update-the-linked-cell-reference-of-an-existing-checkbox-to-reflect-layout-changes.cs",
+      "title": "Update the linked cell reference of an existing CheckBox to reflect layout changes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-oleobjectalternativetext-property-to-store-custom-metadata-for-later-retrieval.cs",
       "title": "Use OleObject.AlternativeText property to store custom metadata for later retrieval."
     },
