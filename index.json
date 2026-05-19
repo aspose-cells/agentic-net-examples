@@ -781,6 +781,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-threedimensional-lighting-direction-top-and-set-specular-power-to-eighty-for-the-shape.cs",
+      "title": "Apply three\u2011dimensional lighting direction \"Top\" and set specular power to eighty for the shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "assign-a-cell-range-anchor-to-a-shape-so-it-moves-dynamically-when-rows-or-columns-are-inserted.cs",
       "title": "Assign a cell range anchor to a shape so it moves dynamically when rows or columns are inserted."
     },
