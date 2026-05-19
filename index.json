@@ -761,6 +761,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "convert-the-formula-in-cell-d10-to-mathml-via-tomathml-and-store-the-markup-in-a-string-variable.cs",
+      "title": "Convert the formula in cell D10 to MathML via ToMathML() and store the markup in a string variable."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "copy-the-textbox-to-another-worksheet-while-preserving-its-size-and-text-attributes.cs",
       "title": "Copy the textbox to another worksheet while preserving its size and text attributes."
     },
