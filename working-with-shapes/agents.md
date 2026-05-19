@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-to-a-shapes-fill-color-based-on-a-linked-cells-value-exceeding-a-threshold.cs
 - resize-a-shape-proportionally-to-match-the-dimensions-of-a-target-cell-range-while-maintaining-aspect-ratio.cs
 - programmatically-remove-all-shapes-from-a-worksheet-before-exporting-the-data-to-a-csv-format-for-clean-output.cs
+- export-all-shapes-xml-definitions-to-a-separate-file-for-external-analysis-and-version-control-tracking.cs

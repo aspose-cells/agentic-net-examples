@@ -866,6 +866,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "export-all-shapes-xml-definitions-to-a-separate-file-for-external-analysis-and-version-control-tracking.cs",
+      "title": "Export all shapes' XML definitions to a separate file for external analysis and version control tracking."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-multiple-worksheet-formulas-to-latex-and-concatenate-the-results-into-a-single-document.cs",
       "title": "Export multiple worksheet formulas to LaTeX and concatenate the results into a single document."
     },
