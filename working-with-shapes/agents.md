@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - move-the-textbox-to-a-different-cell-location-by-updating-its-anchor-coordinates.cs
 - ungroup-previously-grouped-shapes-ensuring-each-retains-its-original-formatting.cs
 - set-the-zorder-of-the-textbox-to-bring-it-to-the-front-of-overlapping-objects.cs
+- load-a-workbook-locate-a-textbox-named-headerbox-and-replace-tag_1-with-dynamic-title.cs
