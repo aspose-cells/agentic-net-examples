@@ -681,6 +681,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-topmarginpt-to-five-points-for-consistent-top-margin-layout.cs",
+      "title": "Adjust TopMarginPt to five points for consistent top margin layout."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs",
       "title": "Adjust WordArt shape's transparency to thirty percent to create a subtle background effect."
     },
