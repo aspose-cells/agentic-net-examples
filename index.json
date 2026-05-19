@@ -681,6 +681,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "change-the-font-color-of-partial-text-inside-the-textbox-to-a-custom-rgb-value.cs",
+      "title": "Change the font color of partial text inside the textbox to a custom RGB value."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "change-the-font-size-of-partial-text-inside-the-textbox-to-highlight-important-words.cs",
       "title": "Change the font size of partial text inside the textbox to highlight important words."
     },
