@@ -1726,6 +1726,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "send-the-shape-to-the-front-layer-to-adjust-zorder-positioning.cs",
+      "title": "Send the shape to the front layer to adjust Z\u2011order positioning."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-alternative-text-for-the-textbox-to-improve-accessibility-for-screen-readers.cs",
       "title": "Set alternative text for the textbox to improve accessibility for screen readers."
     },
