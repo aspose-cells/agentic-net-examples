@@ -465,3 +465,4 @@ Output files are written to the working directory.
 - update-a-linked-cell-value-and-refresh-the-shape-to-display-the-new-content-automatically.cs
 - link-a-shape-to-a-cell-with-a-date-formula-and-format-displayed-text-using-a-custom-pattern.cs
 - link-a-shape-to-a-cell-that-uses-the-concatenate-function-and-ensure-the-shape-displays-combined-text.cs
+- link-a-shape-to-a-cell-that-uses-the-text-function-for-number-formatting-and-display-formatted-number.cs
