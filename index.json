@@ -166,6 +166,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-a-workbook-enable-strict-compliance-and-attempt-to-save-to-a-location-with-insufficient-permissions.cs",
+      "title": "Load a workbook, enable strict compliance, and attempt to save to a location with insufficient permissions."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs",
       "title": "Load a workbook from a network stream, adjust compression to Level9, and write to a file."
     },
