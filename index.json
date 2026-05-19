@@ -681,6 +681,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-50-transparent-reflection-to-the-selected-shape-using-shapereflection.cs",
+      "title": "Apply a 50% transparent reflection to the selected shape using Shape.Reflection."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-conditional-formatting-rule-using-an-icon-set-to-display-custom-emoji-icons-based-on-text-values.cs",
       "title": "Apply a conditional formatting rule using an icon set to display custom emoji icons based on text values."
     },
