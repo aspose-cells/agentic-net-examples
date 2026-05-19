@@ -211,6 +211,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "read-a-workbook-compress-it-at-level1-for-fast-saving-and-compare-performance-with-level9.cs",
+      "title": "Read a workbook, compress it at Level1 for fast saving, and compare performance with Level9."
+    },
+    {
+      "category": "save-workbook",
       "file": "read-an-xls-file-apply-conditional-formatting-and-save-the-result-as-an-mht-web-archive.cs",
       "title": "Read an XLS file, apply conditional formatting, and save the result as an MHT web archive."
     },
