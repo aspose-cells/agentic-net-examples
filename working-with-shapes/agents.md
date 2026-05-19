@@ -200,3 +200,4 @@ Output files are written to the working directory.
 - lock-the-shape-signature-to-prevent-accidental-resizing-or-repositioning-during-workbook-editing.cs
 - unlock-the-shape-signature-after-confirmation-to-allow-modifications-to-its-size-and-position.cs
 - duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs
+- export-the-formula-in-cell-c5-to-latex-using-tolatex-and-embed-the-result-in-an-html-paragraph.cs
