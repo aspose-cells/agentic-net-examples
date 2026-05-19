@@ -398,3 +398,4 @@ Output files are written to the working directory.
 - filter-shapes-by-type-and-set-specific-margins-only-for-rectangle-shapes.cs
 - create-a-utility-method-that-accepts-a-shape-and-applies-predefined-paragraph-formatting-parameters.cs
 - batch-process-multiple-workbooks-updating-all-shape-text-margins-to-standard-values-in-each-file.cs
+- log-each-shapes-original-and-new-margin-settings-to-a-csv-file-for-audit-purposes.cs
