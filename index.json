@@ -1221,6 +1221,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-a-batch-copy-operation-that-transfers-all-drawing-objects-from-a-template-worksheet-to-newly-created-worksheets.cs",
+      "title": "Implement a batch copy operation that transfers all drawing objects from a template worksheet to newly created worksheets."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-a-batch-operation-that-locks-all-shapes-on-every-worksheet-before-exporting-the-workbook-to-pdf.cs",
       "title": "Implement a batch operation that locks all shapes on every worksheet before exporting the workbook to PDF."
     },
