@@ -2051,6 +2051,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-change-a-shapes-linked-cell-from-a1-to-b2-and-verify-the-shape-updates-accordingly.cs",
+      "title": "Programmatically change a shape's linked cell from A1 to B2 and verify the shape updates accordingly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-duplicate-a-shape-and-assign-a-different-texture-image-to-the-copy.cs",
       "title": "Programmatically duplicate a shape and assign a different texture image to the copy."
     },
