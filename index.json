@@ -951,6 +951,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs",
+      "title": "Duplicate the WordArt shape, move the copy to a different cell range, and change its text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "edit-an-ole-object-by-changing-its-source-file-path-to-a-new-word-document-and-update-properties.cs",
       "title": "Edit an OLE object by changing its source file path to a new Word document and update properties."
     },
