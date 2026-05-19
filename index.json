@@ -2491,6 +2491,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-a-shapes-absolute-position-based-on-column-width-and-row-height-calculations-and-validate-alignment.cs",
+      "title": "Set a shape's absolute position based on column width and row height calculations, and validate alignment."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-alternative-text-for-the-textbox-to-improve-accessibility-for-screen-readers.cs",
       "title": "Set alternative text for the textbox to improve accessibility for screen readers."
     },
