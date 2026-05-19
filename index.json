@@ -206,6 +206,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-apply-a-custom-number-format-and-save-the-file-as-a-csv-with-tab-delimiter.cs",
+      "title": "Open a workbook, apply a custom number format, and save the file as a CSV with tab delimiter."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-a-workbook-configure-saveoptions-to-generate-a-single-worksheet-mht-file-and-save-it.cs",
       "title": "Open a workbook, configure SaveOptions to generate a single worksheet MHT file, and save it."
     },
