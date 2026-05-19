@@ -432,3 +432,4 @@ Output files are written to the working directory.
 - compare-the-number-of-adjustment-values-before-and-after-conversion-to-ensure-data-integrity.cs
 - serialize-groupshape-properties-including-child-shapes-to-json-for-persistence.cs
 - deserialize-saved-groupshape-json-and-reconstruct-the-smartart-hierarchy-within-a-workbook.cs
+- refresh-linked-shapes-after-workbook-save-to-ensure-positions-remain-accurate.cs
