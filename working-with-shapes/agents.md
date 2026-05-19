@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - iterate-over-all-textbox-shapes-extract-their-inner-text-and-write-the-collected-strings-to-a-csv-file.cs
 - iterate-all-shapes-on-a-worksheet-listing-each-shapes-name-type-and-absolute-coordinates.cs
 - retrieve-the-absolute-x-and-y-coordinates-of-shape-logo-and-log-them-for-debugging.cs
+- send-a-shape-named-chartoverlay-to-the-front-layer-to-ensure-it-appears-above-all-objects.cs
