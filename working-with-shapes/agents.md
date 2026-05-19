@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - copy-the-textbox-to-another-worksheet-while-preserving-its-size-and-text-attributes.cs
 - move-the-textbox-to-a-different-cell-location-by-updating-its-anchor-coordinates.cs
 - ungroup-previously-grouped-shapes-ensuring-each-retains-its-original-formatting.cs
+- set-the-zorder-of-the-textbox-to-bring-it-to-the-front-of-overlapping-objects.cs
