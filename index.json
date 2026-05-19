@@ -1763,6 +1763,11 @@
       "category": "working-with-shapes",
       "file": "verify-that-the-extracted-files-extension-matches-the-original-format-for-integrity.cs",
       "title": "Verify that the extracted file\u2019s extension matches the original format for integrity."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs",
+      "title": "Write code to clone a chart shape, modify its data series, and place it on another worksheet."
     }
   ]
 }
