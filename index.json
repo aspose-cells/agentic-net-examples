@@ -2116,6 +2116,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "save-the-workbook-after-geometry-changes-to-an-xlsx-file-preserving-original-data.cs",
+      "title": "Save the workbook after geometry changes to an XLSX file preserving original data."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "save-the-workbook-after-refreshing-linked-ole-objects-to-apply-the-updates.cs",
       "title": "Save the workbook after refreshing linked OLE objects to apply the updates."
     },

@@ -444,3 +444,4 @@ Output files are written to the working directory.
 - adjust-geometry-of-a-rounded-rectangle-callout-by-setting-specific-adjustment-values.cs
 - apply-custom-adjustment-values-to-a-collection-of-shapes-in-a-loop-for-uniformity.cs
 - reset-all-shape-adjustment-values-to-their-default-settings-programmatically.cs
+- save-the-workbook-after-geometry-changes-to-an-xlsx-file-preserving-original-data.cs
