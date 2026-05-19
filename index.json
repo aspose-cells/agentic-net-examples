@@ -1126,6 +1126,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-the-absolute-x-and-y-coordinates-of-shape-logo-and-log-them-for-debugging.cs",
+      "title": "Retrieve the absolute X and Y coordinates of shape Logo and log them for debugging."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs",
       "title": "Retrieve the textbox by its assigned name to modify its properties programmatically."
     },
