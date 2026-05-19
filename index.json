@@ -2161,6 +2161,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-move-a-shape-to-the-back-layer-then-adjust-its-absolute-position-to-align-with-a-header.cs",
+      "title": "Programmatically move a shape to the back layer, then adjust its absolute position to align with a header."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-move-a-shape-to-the-front-capture-its-z-order-index-and-store-it-in-a-log-file.cs",
       "title": "Programmatically move a shape to the front, capture its Z-order index, and store it in a log file."
     },
