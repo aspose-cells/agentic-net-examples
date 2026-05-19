@@ -416,3 +416,4 @@ Output files are written to the working directory.
 - cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs
 - enumerate-child-shapes-within-the-groupshape-to-access-individual-components.cs
 - read-the-text-property-of-each-child-shape-to-extract-gear-type-smartart-content.cs
+- concatenate-extracted-child-shape-texts-into-a-single-string-for-further-processing.cs
