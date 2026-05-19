@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - load-a-workbook-adjust-pdf-export-quality-to-300-dpi-and-save-the-highresolution-pdf.cs
 - instantiate-a-workbook-set-exportallsheets-false-and-export-only-the-active-sheet-to-an-xml-file.cs
 - open-a-workbook-apply-a-custom-number-format-and-save-the-file-as-a-csv-with-tab-delimiter.cs
+- load-a-workbook-enable-strict-compliance-and-attempt-to-save-to-a-location-with-insufficient-permissions.cs
