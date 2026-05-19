@@ -1101,6 +1101,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "unlock-a-previously-locked-textbox-to-allow-editing-of-its-position-and-size.cs",
+      "title": "Unlock a previously locked textbox to allow editing of its position and size."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "update-the-display-label-of-a-linked-ole-object-to-a-descriptive-string.cs",
       "title": "Update the display label of a linked OLE object to a descriptive string."
     },
