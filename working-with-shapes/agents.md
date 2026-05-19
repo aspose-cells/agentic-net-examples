@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - apply-right-alignment-to-specific-characters-within-the-textbox-for-emphasis.cs
 - change-the-font-size-of-partial-text-inside-the-textbox-to-highlight-important-words.cs
 - apply-bold-and-italic-styles-to-selected-text-fragments-within-the-textbox.cs
+- change-the-font-color-of-partial-text-inside-the-textbox-to-a-custom-rgb-value.cs
