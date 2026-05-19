@@ -2331,6 +2331,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-a-shapes-absolute-position-convert-pixels-to-points-and-compare-with-excels-point-measurement.cs",
+      "title": "Retrieve a shape's absolute position, convert pixels to points, and compare with Excel's point measurement."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-a-shapes-absolute-position-then-align-another-shape-to-the-same-coordinates.cs",
       "title": "Retrieve a shape's absolute position then align another shape to the same coordinates."
     },
