@@ -483,3 +483,4 @@ Output files are written to the working directory.
 - link-a-shape-to-a-cell-containing-a-datevalue-function-and-ensure-the-shape-displays-the-formatted-date.cs
 - link-a-shape-to-a-cell-using-textjoin-function-and-display-concatenated-list.cs
 - link-a-shape-to-a-cell-using-the-concat-function-and-verify-shape-displays-concatenated-string.cs
+- programmatically-change-a-shapes-linked-cell-from-a1-to-b2-and-verify-the-shape-updates-accordingly.cs
