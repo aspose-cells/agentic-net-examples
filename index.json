@@ -2076,6 +2076,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-move-a-shape-to-the-front-capture-its-z-order-index-and-store-it-in-a-log-file.cs",
+      "title": "Programmatically move a shape to the front, capture its Z-order index, and store it in a log file."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-move-a-shape-to-the-front-layer-using-a-positive-integer-argument-in-tofrontorback.cs",
       "title": "Programmatically move a shape to the front layer using a positive integer argument in ToFrontOrBack."
     },

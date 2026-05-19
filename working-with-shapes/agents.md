@@ -489,3 +489,4 @@ Output files are written to the working directory.
 - programmatically-duplicate-a-shape-link-the-duplicate-to-a-different-cell-and-compare-their-displayed-contents.cs
 - programmatically-move-a-shape-to-the-front-layer-using-a-positive-integer-argument-in-tofrontorback.cs
 - send-a-picture-shape-to-the-back-of-the-worksheet-by-calling-tofrontorback-with-a-negative-value.cs
+- programmatically-move-a-shape-to-the-front-capture-its-z-order-index-and-store-it-in-a-log-file.cs
