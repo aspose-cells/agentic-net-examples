@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs
 - implement-error-handling-to-catch-exceptions-when-extracting-corrupted-or-unsupported-ole-objects.cs
 - generate-a-report-listing-each-ole-objects-name-label-class-identifier-and-file-size.cs
+- use-oleobjectalternativetext-property-to-store-custom-metadata-for-later-retrieval.cs
