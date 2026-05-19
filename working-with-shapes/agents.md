@@ -393,3 +393,4 @@ Output files are written to the working directory.
 - set-rotatetextwithshape-property-to-false-so-text-remains-horizontal-when-shape-rotates.cs
 - enable-rotatetextwithshape-property-to-true-to-rotate-text-together-with-the-shape.cs
 - specify-fareastfontname-as-ms-mincho-and-latinfontname-as-arial-for-multilingual-text.cs
+- change-latinfontname-to-calibri-while-keeping-fareastfontname-unchanged-for-western-font-style.cs
