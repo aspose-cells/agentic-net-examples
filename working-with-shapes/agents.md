@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - replace-multiple-placeholder-tags-tag_a-tag_b-and-tag_c-within-a-textbox-using-a-dictionary-mapping.cs
 - implement-error-handling-to-catch-exceptions-when-a-specified-textbox-name-does-not-exist-in-the-worksheet.cs
 - create-a-new-textbox-on-sheet1-set-its-width-to-200-points-and-position-it-at-cell-b2.cs
+- create-a-multiline-textbox-and-set-individual-line-alignments-to-left-center-and-right-respectively.cs

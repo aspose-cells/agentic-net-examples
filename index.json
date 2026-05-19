@@ -761,6 +761,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-multiline-textbox-and-set-individual-line-alignments-to-left-center-and-right-respectively.cs",
+      "title": "Create a multiline TextBox and set individual line alignments to left, center, and right respectively."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-new-textbox-on-sheet1-set-its-width-to-200-points-and-position-it-at-cell-b2.cs",
       "title": "Create a new TextBox on Sheet1, set its width to 200 points, and position it at cell B2."
     },
