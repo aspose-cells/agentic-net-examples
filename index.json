@@ -2026,6 +2026,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-presetshadowtypeinnershadow-to-create-a-subtle-inset-effect-on-shape-text.cs",
+      "title": "Use PresetShadowType.InnerShadow to create a subtle inset effect on shape text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-shapecollectionaddwordart-overload-that-accepts-a-style-name-to-directly-apply-a-builtin-style.cs",
       "title": "Use ShapeCollection.AddWordArt overload that accepts a style name to directly apply a built\u2011in style."
     },
