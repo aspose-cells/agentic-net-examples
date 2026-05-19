@@ -2336,6 +2336,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-absolute-positions-of-all-shapes-on-a-worksheet-sort-them-by-y-coordinate-and-output-order.cs",
+      "title": "Retrieve absolute positions of all shapes on a worksheet, sort them by Y coordinate, and output order."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-all-connection-points-of-a-chart-shape-and-export-coordinates-to-a-csv-file.cs",
       "title": "Retrieve all connection points of a chart shape and export coordinates to a CSV file."
     },
