@@ -541,3 +541,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-with-a-custom-number-format-including-thousand-separator-and-display.cs
 - programmatically-retrieve-all-shapes-sort-them-by-z-order-and-output-sorted-list-to-console.cs
 - add-a-shape-set-its-linked-cell-to-a-cell-with-custom-text-format-and-verify-formatted-text-appears.cs
+- add-a-shape-link-it-to-a-cell-using-text-for-custom-number-format-with-currency-and-verify.cs
