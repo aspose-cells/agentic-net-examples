@@ -205,3 +205,4 @@ Output files are written to the working directory.
 - export-multiple-worksheet-formulas-to-latex-and-concatenate-the-results-into-a-single-document.cs
 - generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs
 - create-a-shape-that-displays-a-live-formula-result-by-linking-its-text-to-the-calculation-cell.cs
+- apply-conditional-formatting-to-a-shapes-fill-color-based-on-a-linked-cells-value-exceeding-a-threshold.cs
