@@ -383,3 +383,4 @@ Output files are written to the working directory.
 - use-reflection-to-list-all-available-presetshadowtype-enumeration-members-for-dynamic-configuration.cs
 - load-an-excel-workbook-and-locate-the-worksheet-containing-the-target-shape.cs
 - access-the-shapes-textbody-and-obtain-the-shapetextalignment-object-for-formatting.cs
+- set-linespacingpt-to-twelve-points-to-define-paragraph-line-spacing.cs
