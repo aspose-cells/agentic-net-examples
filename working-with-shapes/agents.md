@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - apply-bold-and-italic-styles-to-selected-text-fragments-within-the-textbox.cs
 - change-the-font-color-of-partial-text-inside-the-textbox-to-a-custom-rgb-value.cs
 - adjust-the-internal-margins-of-the-textbox-to-control-padding-around-the-text.cs
+- enable-text-wrapping-inside-the-textbox-so-long-sentences-break-onto-multiple-lines.cs
