@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - load-the-workbook-and-select-the-target-worksheet-before-performing-any-shape-operations.cs
 - add-a-new-textbox-to-the-worksheet-at-the-specified-cell-coordinates.cs
 - assign-a-unique-name-to-the-textbox-for-later-identification-and-manipulation.cs
+- retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs
