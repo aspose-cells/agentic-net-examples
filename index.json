@@ -1591,6 +1591,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "read-the-current-glow-color-of-a-specific-shape-and-log-it-to-the-console.cs",
+      "title": "Read the current glow color of a specific shape and log it to the console."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "read-the-current-shadow-color-of-a-shape-and-output-its-rgb-values-for-logging-purposes.cs",
       "title": "Read the current shadow color of a shape and output its RGB values for logging purposes."
     },
