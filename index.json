@@ -951,6 +951,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "remove-an-unwanted-ole-object-from-a-worksheet-based-on-its-label-content.cs",
+      "title": "Remove an unwanted OLE object from a worksheet based on its label content."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-an-oleobject-by-name-from-the-worksheets-oleobjects-collection-for-modification.cs",
       "title": "Retrieve an OleObject by name from the worksheet\u2019s OleObjects collection for modification."
     },
