@@ -1871,6 +1871,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "measure-performance-of-updateselectedvalue-on-a-large-workbook-containing-many-linked-shapes.cs",
+      "title": "Measure performance of UpdateSelectedValue on a large workbook containing many linked shapes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "modify-bottommarginpt-to-two-points-to-prevent-text-clipping-at-the-bottom.cs",
       "title": "Modify BottomMarginPt to two points to prevent text clipping at the bottom."
     },

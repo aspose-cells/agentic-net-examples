@@ -448,3 +448,4 @@ Output files are written to the working directory.
 - refresh-linked-shapes-after-updating-their-source-cell-values-to-display-new-data.cs
 - update-a-cell-range-linked-to-a-picture-shape-and-then-refresh-the-picture.cs
 - batch-update-linked-shapes-across-several-worksheets-to-reflect-new-data-sources.cs
+- measure-performance-of-updateselectedvalue-on-a-large-workbook-containing-many-linked-shapes.cs
