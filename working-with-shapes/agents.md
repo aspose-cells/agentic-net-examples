@@ -202,3 +202,4 @@ Output files are written to the working directory.
 - duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs
 - export-the-formula-in-cell-c5-to-latex-using-tolatex-and-embed-the-result-in-an-html-paragraph.cs
 - convert-the-formula-in-cell-d10-to-mathml-via-tomathml-and-store-the-markup-in-a-string-variable.cs
+- export-multiple-worksheet-formulas-to-latex-and-concatenate-the-results-into-a-single-document.cs
