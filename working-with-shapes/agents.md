@@ -308,3 +308,4 @@ Output files are written to the working directory.
 - develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs
 - implement-a-batch-operation-that-locks-all-shapes-on-every-worksheet-before-exporting-the-workbook-to-pdf.cs
 - write-code-to-set-a-pictures-anchor-to-a-merged-cell-range-ensuring-it-moves-with-merged-cells.cs
+- create-a-routine-that-reads-each-shapes-shadow-color-and-adjusts-it-to-match-the-workbooks-theme-palette.cs

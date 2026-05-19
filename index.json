@@ -961,6 +961,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-routine-that-reads-each-shapes-shadow-color-and-adjusts-it-to-match-the-workbooks-theme-palette.cs",
+      "title": "Create a routine that reads each shape's shadow color and adjusts it to match the workbook's theme palette."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-routine-that-removes-all-existing-wordart-shapes-before-adding-new-watermarks.cs",
       "title": "Create a routine that removes all existing WordArt shapes before adding new watermarks."
     },
