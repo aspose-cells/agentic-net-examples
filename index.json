@@ -131,6 +131,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
+      "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
+    },
+    {
+      "category": "save-workbook",
       "file": "instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs",
       "title": "Instantiate a workbook from a stream, set workbook compression to Level6, and write to a MemoryStream."
     },
