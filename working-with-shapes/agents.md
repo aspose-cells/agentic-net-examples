@@ -244,3 +244,4 @@ Output files are written to the working directory.
 - generate-a-report-listing-all-shape-types-present-in-a-workbook-along-with-their-cell-coordinates.cs
 - create-a-new-workbook-and-insert-a-wordart-watermark-on-the-first-worksheet.cs
 - adjust-the-wordart-shapes-top-left-width-and-height-to-cover-the-entire-worksheet.cs
+- send-the-inserted-wordart-shape-to-the-back-of-the-sheet-to-act-as-background-watermark.cs
