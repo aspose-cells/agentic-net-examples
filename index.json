@@ -2066,6 +2066,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-adjust-a-shapes-z-order-by-subtracting-three-from-its-current-value-and-verify-new-order.cs",
+      "title": "Programmatically adjust a shape's Z-order by subtracting three from its current value and verify new order."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-change-a-shapes-linked-cell-from-a1-to-b2-and-verify-the-shape-updates-accordingly.cs",
       "title": "Programmatically change a shape's linked cell from A1 to B2 and verify the shape updates accordingly."
     },
