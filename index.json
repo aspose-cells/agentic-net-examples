@@ -1721,6 +1721,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "log-each-shapes-original-and-new-margin-settings-to-a-csv-file-for-audit-purposes.cs",
+      "title": "Log each shape's original and new margin settings to a CSV file for audit purposes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs",
       "title": "Log the original file name and size of each extracted OLE object for traceability."
     },
