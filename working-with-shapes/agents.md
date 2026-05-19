@@ -409,3 +409,4 @@ Output files are written to the working directory.
 - verify-that-rotatetextwithshape-default-is-true-before-modifying-it-in-the-shape.cs
 - load-an-excel-workbook-from-a-file-stream-using-workbookload.cs
 - select-a-specific-worksheet-from-the-workbook-via-workbookworksheets-collection.cs
+- retrieve-the-shapes-collection-of-the-selected-worksheet-for-further-processing.cs
