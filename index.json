@@ -2051,6 +2051,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "specify-fareastfontname-as-ms-mincho-and-latinfontname-as-arial-for-multilingual-text.cs",
+      "title": "Specify FarEastFontName as \"MS Mincho\" and LatinFontName as \"Arial\" for multilingual text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "synchronize-the-checked-state-of-multiple-checkbox-controls-with-corresponding-cells-in-a-data-table.cs",
       "title": "Synchronize the checked state of multiple CheckBox controls with corresponding cells in a data table."
     },
