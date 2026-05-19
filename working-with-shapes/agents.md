@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - assign-a-new-guid-to-the-oleobjectclassid-to-change-its-associated-application.cs
 - iterate-through-all-oleobjects-in-a-workbook-and-extract-each-to-a-folder.cs
 - use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs
+- refresh-linked-ole-objects-by-invoking-excel-automation-through-the-updatelink-method.cs

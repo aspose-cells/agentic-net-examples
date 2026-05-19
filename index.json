@@ -901,6 +901,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "refresh-linked-ole-objects-by-invoking-excel-automation-through-the-updatelink-method.cs",
+      "title": "Refresh linked OLE objects by invoking Excel automation through the UpdateLink method."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-linked-pictures-after-modifying-source-images-on-a-local-file-system-ensuring-updated-visuals-appear.cs",
       "title": "Refresh linked pictures after modifying source images on a local file system, ensuring updated visuals appear."
     },
