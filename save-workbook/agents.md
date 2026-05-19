@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs
 - open-an-ots-template-replace-placeholder-text-and-save-the-result-as-an-ods-file.cs
 - load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs
+- read-a-workbook-compress-it-at-level1-for-fast-saving-and-compare-performance-with-level9.cs
