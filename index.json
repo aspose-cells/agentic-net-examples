@@ -851,6 +851,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "export-the-formula-in-cell-c5-to-latex-using-tolatex-and-embed-the-result-in-an-html-paragraph.cs",
+      "title": "Export the formula in cell C5 to LaTeX using ToLaTeX() and embed the result in an HTML paragraph."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-the-textbox-as-a-png-image-with-a-transparent-background-for-external-use.cs",
       "title": "Export the textbox as a PNG image with a transparent background for external use."
     },
