@@ -171,6 +171,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs",
+      "title": "Open a workbook, set ExportAllSheets to true, and save all worksheets into a single CSV file."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
       "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
     },
