@@ -241,6 +241,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "read-a-workbook-filter-out-hidden-rows-and-export-the-visible-data-to-a-txt-file.cs",
+      "title": "Read a workbook, filter out hidden rows, and export the visible data to a TXT file."
+    },
+    {
+      "category": "save-workbook",
       "file": "read-an-xls-file-apply-conditional-formatting-and-save-the-result-as-an-mht-web-archive.cs",
       "title": "Read an XLS file, apply conditional formatting, and save the result as an MHT web archive."
     },
