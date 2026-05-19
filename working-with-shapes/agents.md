@@ -262,3 +262,4 @@ Output files are written to the working directory.
 - validate-each-worksheet-contains-exactly-one-locked-wordart-watermark-and-report-any-discrepancies.cs
 - implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs
 - apply-preset-wordart-style-bold-wave-to-shapes-only-on-worksheets-whose-names-start-with-report.cs
+- create-a-batch-process-that-reads-multiple-excel-files-from-a-directory-and-adds-consistent-watermark.cs

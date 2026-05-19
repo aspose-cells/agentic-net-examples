@@ -856,6 +856,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-batch-process-that-reads-multiple-excel-files-from-a-directory-and-adds-consistent-watermark.cs",
+      "title": "Create a batch process that reads multiple Excel files from a directory and adds consistent watermark."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
       "title": "Create a camera shape for a specified range to capture its visual representation as an image."
     },
