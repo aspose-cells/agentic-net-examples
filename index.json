@@ -991,6 +991,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-commentbox-to-cell-g12-so-the-shape-moves-when-the-cell-shifts.cs",
+      "title": "Link a shape CommentBox to cell G12 so the shape moves when the cell shifts."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shapes-text-to-cell-k3-so-the-shape-updates-automatically-when-the-cell-value-changes.cs",
       "title": "Link a shape's text to cell K3 so the shape updates automatically when the cell value changes."
     },
