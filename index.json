@@ -1371,6 +1371,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "lock-a-specific-picture-shape-to-prevent-editing-during-worksheet-protection-and-verify-its-locked-property.cs",
+      "title": "Lock a specific picture shape to prevent editing during worksheet protection and verify its Locked property."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "lock-the-shape-signature-to-prevent-accidental-resizing-or-repositioning-during-workbook-editing.cs",
       "title": "Lock the shape Signature to prevent accidental resizing or repositioning during workbook editing."
     },

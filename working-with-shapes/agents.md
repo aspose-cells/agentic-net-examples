@@ -282,3 +282,4 @@ Output files are written to the working directory.
 - duplicate-form-controls-from-one-worksheet-to-another-ensuring-linked-cell-addresses-remain-unchanged.cs
 - group-three-selected-shapes-into-a-composite-object-and-assign-a-descriptive-name-for-reference.cs
 - ungroup-a-previously-grouped-shape-collection-to-modify-individual-components-formatting-and-positioning.cs
+- lock-a-specific-picture-shape-to-prevent-editing-during-worksheet-protection-and-verify-its-locked-property.cs
