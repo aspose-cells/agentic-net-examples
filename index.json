@@ -896,6 +896,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs",
+      "title": "Cast the conversion result to GroupShape and verify the object type is GroupShape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "change-latinfontname-to-calibri-while-keeping-fareastfontname-unchanged-for-western-font-style.cs",
       "title": "Change LatinFontName to \"Calibri\" while keeping FarEastFontName unchanged for western font style."
     },

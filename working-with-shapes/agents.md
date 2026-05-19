@@ -413,3 +413,4 @@ Output files are written to the working directory.
 - iterate-through-each-shape-and-use-shapeissmartart-to-identify-smartart-objects.cs
 - filter-shapes-to-process-only-those-where-issmartart-returns-true.cs
 - convert-each-detected-smartart-shape-to-a-groupshape-using-shapegetresultofsmartart.cs
+- cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs
