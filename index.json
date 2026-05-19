@@ -821,6 +821,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-the-wordart-shapes-fill-to-a-gradient-transitioning-from-blue-to-transparent.cs",
+      "title": "Configure the WordArt shape's fill to a gradient transitioning from blue to transparent."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-the-workbook-to-run-in-licensed-mode-to-suppress-evaluation-watermarks.cs",
       "title": "Configure the workbook to run in licensed mode to suppress evaluation watermarks."
     },
