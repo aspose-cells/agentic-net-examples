@@ -2506,6 +2506,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-an-integration-test-confirming-linked-shape-refresh-updates-picture-after-cell-change.cs",
+      "title": "Write an integration test confirming linked shape refresh updates picture after cell change."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-code-that-links-each-shape-to-its-corresponding-data-cell-enabling-dynamic-updates-when-cell-values-change.cs",
       "title": "Write code that links each shape to its corresponding data cell, enabling dynamic updates when cell values change."
     },

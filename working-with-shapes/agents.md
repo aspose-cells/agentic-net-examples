@@ -451,3 +451,4 @@ Output files are written to the working directory.
 - measure-performance-of-updateselectedvalue-on-a-large-workbook-containing-many-linked-shapes.cs
 - log-each-shape-adjustment-change-to-a-text-file-for-audit-purposes.cs
 - write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs
+- write-an-integration-test-confirming-linked-shape-refresh-updates-picture-after-cell-change.cs
