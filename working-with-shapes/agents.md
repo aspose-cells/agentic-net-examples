@@ -546,3 +546,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-with-a-volatile-function-and-test-automatic-updates.cs
 - add-a-shape-link-it-to-a-cell-using-text-for-custom-number-format-with-percentage-and-verify.cs
 - add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-scientific-notation-and-verify.cs
+- add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-custom-date-and-verify.cs
