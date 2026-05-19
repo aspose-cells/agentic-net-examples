@@ -510,3 +510,4 @@ Output files are written to the working directory.
 - programmatically-retrieve-connection-points-of-a-shape-filter-points-within-a-specific-rectangle-and-log-them.cs
 - add-a-shape-retrieve-its-connection-points-and-compare-them-against-a-baseline-defined-in-a-json-schema.cs
 - obtain-the-absolute-pixel-position-of-a-grouped-shape-and-convert-it-to-inches-for-reporting.cs
+- place-a-shape-over-a-merged-cell-range-and-verify-its-absolute-position-aligns-with-the-merged-area.cs

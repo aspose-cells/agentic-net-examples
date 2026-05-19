@@ -2111,6 +2111,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "place-a-shape-over-a-merged-cell-range-and-verify-its-absolute-position-aligns-with-the-merged-area.cs",
+      "title": "Place a shape over a merged cell range and verify its absolute position aligns with the merged area."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-adjust-a-shapes-z-order-by-adding-five-to-its-current-value-and-observe-layer-change.cs",
       "title": "Programmatically adjust a shape's Z-order by adding five to its current value and observe layer change."
     },
