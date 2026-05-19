@@ -357,3 +357,4 @@ Output files are written to the working directory.
 - retrieve-the-fontsetting-object-from-a-shapes-textbody-to-modify-text-appearance.cs
 - set-character-spacing-to-5-points-on-the-shapes-text-via-textoptionscharacterspacing.cs
 - apply-a-preset-shadow-of-type-outershadow-to-the-shapes-text-via-textoptionsshadowpresettype.cs
+- change-the-shadow-preset-to-perspectivediagonalbottomleft-and-observe-visual-difference.cs
