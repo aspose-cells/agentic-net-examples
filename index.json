@@ -1001,6 +1001,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-utility-that-lists-each-shapes-zorder-index-and-sorts-them-alphabetically-by-name-for-reporting.cs",
+      "title": "Create a utility that lists each shape's Z\u2011order index and sorts them alphabetically by name for reporting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-validation-rule-that-ensures-every-shape-linked-to-a-cell-references-a-valid-nonempty-cell-address.cs",
       "title": "Create a validation rule that ensures every shape linked to a cell references a valid, non\u2011empty cell address."
     },
