@@ -1981,6 +1981,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "select-a-specific-worksheet-from-the-workbook-via-workbookworksheets-collection.cs",
+      "title": "Select a specific worksheet from the workbook via workbook.Worksheets collection."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs",
       "title": "Send a chart shape backward so that a linked picture appears above it in the worksheet."
     },
