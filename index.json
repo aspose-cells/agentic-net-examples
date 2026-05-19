@@ -1241,6 +1241,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-an-existing-excel-file-replace-its-header-wordart-with-a-new-style-and-save.cs",
+      "title": "Load an existing Excel file, replace its header WordArt with a new style, and save."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-an-existing-workbook-and-access-its-worksheet-collection-for-manipulation.cs",
       "title": "Load an existing workbook and access its Worksheet collection for manipulation."
     },

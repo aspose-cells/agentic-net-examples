@@ -252,3 +252,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-and-add-a-semitransparent-wordart-watermark-to-each-sheet.cs
 - save-the-workbook-containing-wordart-watermarks-as-an-xlsx-file-preserving-all-shape-attributes.cs
 - export-the-workbook-with-wordart-watermarks-to-pdf-format-ensuring-watermark-visibility-in-output.cs
+- load-an-existing-excel-file-replace-its-header-wordart-with-a-new-style-and-save.cs
