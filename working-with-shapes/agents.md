@@ -368,3 +368,4 @@ Output files are written to the working directory.
 - use-presetshadowtypeinnershadow-to-create-a-subtle-inset-effect-on-shape-text.cs
 - apply-a-custom-character-spacing-of-2-points-to-compress-text-within-a-narrow-shape.cs
 - programmatically-duplicate-a-shape-and-assign-a-different-texture-image-to-the-copy.cs
+- retrieve-the-current-shadow-preset-of-a-shapes-text-and-log-it-for-debugging.cs
