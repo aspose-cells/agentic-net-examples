@@ -1561,6 +1561,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-linq-to-filter-shapecollection-for-only-wordart-shapes-before-applying-batch-style-changes.cs",
+      "title": "Use LINQ to filter ShapeCollection for only WordArt shapes before applying batch style changes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-oleobjectalternativetext-property-to-store-custom-metadata-for-later-retrieval.cs",
       "title": "Use OleObject.AlternativeText property to store custom metadata for later retrieval."
     },
