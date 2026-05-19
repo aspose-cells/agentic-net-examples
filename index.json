@@ -2061,6 +2061,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-adjust-a-shapes-z-order-by-adding-five-to-its-current-value-and-observe-layer-change.cs",
+      "title": "Programmatically adjust a shape's Z-order by adding five to its current value and observe layer change."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-change-a-shapes-linked-cell-from-a1-to-b2-and-verify-the-shape-updates-accordingly.cs",
       "title": "Programmatically change a shape's linked cell from A1 to B2 and verify the shape updates accordingly."
     },
