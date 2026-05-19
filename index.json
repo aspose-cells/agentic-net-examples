@@ -2076,6 +2076,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-move-a-shape-to-the-front-layer-using-a-positive-integer-argument-in-tofrontorback.cs",
+      "title": "Programmatically move a shape to the front layer using a positive integer argument in ToFrontOrBack."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-remove-all-shapes-from-a-worksheet-before-exporting-the-data-to-a-csv-format-for-clean-output.cs",
       "title": "Programmatically remove all shapes from a worksheet before exporting the data to a CSV format for clean output."
     },
