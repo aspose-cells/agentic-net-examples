@@ -1466,6 +1466,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "generate-a-report-listing-each-shapes-type-position-and-adjustment-values-in-a-summary-worksheet.cs",
+      "title": "Generate a report listing each shape\u2019s type, position, and adjustment values in a summary worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "generate-a-report-listing-workbook-names-worksheet-titles-and-counts-of-detected-smartart-shapes.cs",
       "title": "Generate a report listing workbook names, worksheet titles, and counts of detected SmartArt shapes."
     },
