@@ -1761,6 +1761,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-the-fontsetting-object-from-a-shapes-textbody-to-modify-text-appearance.cs",
+      "title": "Retrieve the FontSetting object from a shape's TextBody to modify text appearance."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs",
       "title": "Retrieve the textbox by its assigned name to modify its properties programmatically."
     },
