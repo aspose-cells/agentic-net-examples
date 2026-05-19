@@ -329,3 +329,4 @@ Output files are written to the working directory.
 - define-a-blue-glow-effect-with-size-eight-points-on-all-shapes-in-the-worksheet.cs
 - read-the-current-glow-color-of-a-specific-shape-and-log-it-to-the-console.cs
 - set-threedimensional-material-to-plastic-and-apply-lighting-preset-soft-with-seventy-percent-intensity.cs
+- rotate-the-threedimensional-shape-by-thirty-degrees-around-the-x-axis.cs
