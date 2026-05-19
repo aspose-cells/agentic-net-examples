@@ -141,6 +141,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs",
+      "title": "Load an SXC workbook, rename the active worksheet, and export the sheet to a CSV file."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-an-xlsb-file-calculate-all-formulas-and-generate-a-json-representation-of-the-data.cs",
       "title": "Load an XLSB file, calculate all formulas, and generate a JSON representation of the data."
     },
