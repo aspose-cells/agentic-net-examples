@@ -2211,6 +2211,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-shapetextalignment-object-to-read-current-line-spacing-before-applying-changes.cs",
+      "title": "Use ShapeTextAlignment object to read current line spacing before applying changes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs",
       "title": "Use the OleObject.IsLinked property to identify linked OLE objects before processing."
     },
