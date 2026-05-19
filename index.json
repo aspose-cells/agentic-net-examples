@@ -1916,6 +1916,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-that-references-an-external-workbook-and-verify-crossworkbook-content-displays-correctly.cs",
+      "title": "Link a shape to a cell that references an external workbook and verify cross\u2011workbook content displays correctly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-that-uses-the-char-function-to-display-special-characters-and-verify-rendering.cs",
       "title": "Link a shape to a cell that uses the CHAR function to display special characters and verify rendering."
     },
