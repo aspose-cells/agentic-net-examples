@@ -1241,6 +1241,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-a-feature-that-automatically-unlocks-all-shapes-when-the-workbook-is-opened-in-edit-mode.cs",
+      "title": "Implement a feature that automatically unlocks all shapes when the workbook is opened in edit mode."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-a-process-to-copy-a-shapes-3d-format-settings-from-one-shape-to-another-across-worksheets.cs",
       "title": "Implement a process to copy a shape's 3D format settings from one shape to another across worksheets."
     },
