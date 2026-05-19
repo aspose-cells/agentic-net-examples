@@ -481,3 +481,4 @@ Output files are written to the working directory.
 - add-a-shape-set-its-linked-cell-to-a-cell-using-the-mid-function-and-display-extracted-substring.cs
 - add-a-shape-link-it-to-a-cell-using-value-to-convert-text-to-number-and-verify.cs
 - link-a-shape-to-a-cell-containing-a-datevalue-function-and-ensure-the-shape-displays-the-formatted-date.cs
+- link-a-shape-to-a-cell-using-textjoin-function-and-display-concatenated-list.cs
