@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - open-a-workbook-enable-page-margins-and-export-the-document-to-an-html-file-with-embedded-images.cs
 - load-a-workbook-set-pdf-export-to-embed-fonts-and-save-the-pdf-for-crossplatform-compatibility.cs
 - instantiate-a-workbook-apply-data-validation-rules-and-export-the-sheet-to-a-json-file.cs
+- open-a-workbook-configure-saveoptions-to-generate-a-single-worksheet-mht-file-and-save-it.cs
