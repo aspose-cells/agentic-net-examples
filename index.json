@@ -551,6 +551,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "access-the-shapes-textbody-and-obtain-the-shapetextalignment-object-for-formatting.cs",
+      "title": "Access the shape's TextBody and obtain the ShapeTextAlignment object for formatting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-checkbox-control-to-a-worksheet-and-link-its-state-to-cell-b2.cs",
       "title": "Add a CheckBox control to a worksheet and link its state to cell B2."
     },
