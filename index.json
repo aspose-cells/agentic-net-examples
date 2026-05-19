@@ -991,6 +991,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-a-workbook-locate-a-textbox-named-headerbox-and-replace-tag_1-with-dynamic-title.cs",
+      "title": "Load a workbook, locate a TextBox named HeaderBox, and replace <TAG_1> with dynamic title."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-an-existing-workbook-and-access-its-worksheet-collection-for-manipulation.cs",
       "title": "Load an existing workbook and access its Worksheet collection for manipulation."
     },
