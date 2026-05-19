@@ -1761,6 +1761,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-with-a-date-formula-and-format-displayed-text-using-a-custom-pattern.cs",
+      "title": "Link a shape to a cell with a date formula and format displayed text using a custom pattern."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shapes-text-to-cell-k3-so-the-shape-updates-automatically-when-the-cell-value-changes.cs",
       "title": "Link a shape's text to cell K3 so the shape updates automatically when the cell value changes."
     },
