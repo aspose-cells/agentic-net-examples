@@ -365,3 +365,4 @@ Output files are written to the working directory.
 - batch-process-multiple-workbooks-in-a-folder-adding-tiled-textures-to-a-designated-shape.cs
 - measure-performance-impact-of-enabling-texture-tiling-on-large-worksheets-with-many-shapes.cs
 - compare-visual-quality-between-tiled-texture-and-stretched-texture-by-toggling-istiling.cs
+- use-presetshadowtypeinnershadow-to-create-a-subtle-inset-effect-on-shape-text.cs
