@@ -656,6 +656,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-a-shapes-adjustment-values-to-modify-its-geometry-such-as-changing-a-stars-point-count.cs",
+      "title": "Adjust a shape's adjustment values to modify its geometry, such as changing a star's point count."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "adjust-the-internal-margins-of-the-textbox-to-control-padding-around-the-text.cs",
       "title": "Adjust the internal margins of the textbox to control padding around the text."
     },
