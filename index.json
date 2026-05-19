@@ -1061,6 +1061,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "move-a-shape-called-watermark-to-the-back-layer-so-underlying-cells-remain-visible.cs",
+      "title": "Move a shape called Watermark to the back layer so underlying cells remain visible."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "move-the-textbox-to-a-different-cell-location-by-updating-its-anchor-coordinates.cs",
       "title": "Move the textbox to a different cell location by updating its anchor coordinates."
     },
