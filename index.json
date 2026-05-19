@@ -1421,6 +1421,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "move-a-shape-to-the-back-of-the-zorder-hierarchy-so-underlying-cells-become-visible-through-it.cs",
+      "title": "Move a shape to the back of the Z\u2011order hierarchy so underlying cells become visible through it."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "move-the-textbox-to-a-different-cell-location-by-updating-its-anchor-coordinates.cs",
       "title": "Move the textbox to a different cell location by updating its anchor coordinates."
     },
