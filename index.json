@@ -1241,6 +1241,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "deserialize-saved-groupshape-json-and-reconstruct-the-smartart-hierarchy-within-a-workbook.cs",
+      "title": "Deserialize saved GroupShape JSON and reconstruct the SmartArt hierarchy within a workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "design-a-routine-that-extracts-all-shape-hyperlinks-and-generates-a-report-listing-source-cells-and-target-urls.cs",
       "title": "Design a routine that extracts all shape hyperlinks and generates a report listing source cells and target URLs."
     },
