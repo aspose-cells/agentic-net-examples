@@ -1631,6 +1631,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-through-each-shape-and-use-shapeissmartart-to-identify-smartart-objects.cs",
+      "title": "Iterate through each shape and use Shape.IsSmartArt to identify SmartArt objects."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-commentbox-to-cell-g12-so-the-shape-moves-when-the-cell-shifts.cs",
       "title": "Link a shape CommentBox to cell G12 so the shape moves when the cell shifts."
     },
