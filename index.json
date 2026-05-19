@@ -2271,6 +2271,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-all-connection-points-of-a-connector-shape-and-log-their-x-and-y-coordinates-for-analysis.cs",
+      "title": "Retrieve all connection points of a connector shape and log their X and Y coordinates for analysis."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-all-textbox-controls-from-a-worksheet-and-output-their-positions.cs",
       "title": "Retrieve all TextBox controls from a worksheet and output their positions."
     },

@@ -498,3 +498,4 @@ Output files are written to the working directory.
 - programmatically-set-a-shapes-z-order-to-a-specific-positive-value-then-retrieve-and-confirm-the-same-value.cs
 - create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs
 - create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs
+- retrieve-all-connection-points-of-a-connector-shape-and-log-their-x-and-y-coordinates-for-analysis.cs
