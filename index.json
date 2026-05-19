@@ -981,6 +981,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "generate-a-report-listing-all-shape-types-present-in-a-workbook-along-with-their-cell-coordinates.cs",
+      "title": "Generate a report listing all shape types present in a workbook along with their cell coordinates."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "generate-a-report-listing-each-ole-objects-name-label-class-identifier-and-file-size.cs",
       "title": "Generate a report listing each OLE object's name, label, class identifier, and file size."
     },
