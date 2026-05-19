@@ -1071,6 +1071,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "lock-the-shape-signature-to-prevent-accidental-resizing-or-repositioning-during-workbook-editing.cs",
+      "title": "Lock the shape Signature to prevent accidental resizing or repositioning during workbook editing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "lock-the-textbox-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs",
       "title": "Lock the textbox to prevent users from moving or resizing it in the Excel UI."
     },
