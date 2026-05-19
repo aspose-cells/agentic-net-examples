@@ -1803,6 +1803,11 @@
       "category": "working-with-shapes",
       "file": "write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs",
       "title": "Write code to clone a chart shape, modify its data series, and place it on another worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "write-code-to-set-a-pictures-anchor-to-a-merged-cell-range-ensuring-it-moves-with-merged-cells.cs",
+      "title": "Write code to set a picture's anchor to a merged cell range, ensuring it moves with merged cells."
     }
   ]
 }
