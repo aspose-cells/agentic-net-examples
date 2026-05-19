@@ -931,6 +931,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-a-batch-operation-that-replaces-date-tags-in-all-textboxes-with-the-current-system-date-formatted-yyyymmdd.cs",
+      "title": "Implement a batch operation that replaces <DATE> tags in all TextBoxes with the current system date formatted yyyy\u2011MM\u2011dd."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-to-catch-exceptions-when-a-specified-textbox-name-does-not-exist-in-the-worksheet.cs",
       "title": "Implement error handling to catch exceptions when a specified TextBox name does not exist in the worksheet."
     },
