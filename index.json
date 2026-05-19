@@ -801,6 +801,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "assign-a-png-image-stream-to-the-shapes-filltexturefillimage-property.cs",
+      "title": "Assign a PNG image stream to the shape's Fill.TextureFill.Image property."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "assign-a-unique-name-to-the-textbox-for-later-identification-and-manipulation.cs",
       "title": "Assign a unique name to the textbox for later identification and manipulation."
     },
