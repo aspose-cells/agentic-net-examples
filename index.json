@@ -1596,6 +1596,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "ungroup-a-previously-grouped-shape-collection-to-modify-individual-components-formatting-and-positioning.cs",
+      "title": "Ungroup a previously grouped shape collection to modify individual components' formatting and positioning."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "ungroup-previously-grouped-shapes-ensuring-each-retains-its-original-formatting.cs",
       "title": "Ungroup previously grouped shapes ensuring each retains its original formatting."
     },
