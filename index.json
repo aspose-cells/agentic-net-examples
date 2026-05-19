@@ -2261,6 +2261,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "verify-that-rotatetextwithshape-default-is-true-before-modifying-it-in-the-shape.cs",
+      "title": "Verify that RotateTextWithShape default is true before modifying it in the shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "verify-that-the-extracted-files-extension-matches-the-original-format-for-integrity.cs",
       "title": "Verify that the extracted file\u2019s extension matches the original format for integrity."
     },
