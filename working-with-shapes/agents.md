@@ -391,3 +391,4 @@ Output files are written to the working directory.
 - modify-bottommarginpt-to-two-points-to-prevent-text-clipping-at-the-bottom.cs
 - configure-rightmarginpt-to-ten-points-to-provide-space-for-long-sentences.cs
 - set-rotatetextwithshape-property-to-false-so-text-remains-horizontal-when-shape-rotates.cs
+- enable-rotatetextwithshape-property-to-true-to-rotate-text-together-with-the-shape.cs

@@ -1251,6 +1251,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "enable-rotatetextwithshape-property-to-true-to-rotate-text-together-with-the-shape.cs",
+      "title": "Enable RotateTextWithShape property to true to rotate text together with the shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "enable-text-wrapping-inside-the-textbox-so-long-sentences-break-onto-multiple-lines.cs",
       "title": "Enable text wrapping inside the textbox so long sentences break onto multiple lines."
     },
