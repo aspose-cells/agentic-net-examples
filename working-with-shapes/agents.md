@@ -227,3 +227,4 @@ Output files are written to the working directory.
 - set-the-selected-indices-of-a-listbox-based-on-values-from-column-a.cs
 - insert-a-button-control-assign-a-macro-name-and-position-it-at-cell-d5.cs
 - configure-the-button-to-trigger-a-vba-script-that-highlights-the-active-row.cs
+- resize-the-line-to-span-cells-b2-through-e2-and-adjust-its-thickness.cs
