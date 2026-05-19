@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-url-replace-tags-in-all-textboxes-and-save-the-file-to-cloud-storage.cs
 - iterate-over-all-textbox-shapes-extract-their-inner-text-and-write-the-collected-strings-to-a-csv-file.cs
 - iterate-all-shapes-on-a-worksheet-listing-each-shapes-name-type-and-absolute-coordinates.cs
+- retrieve-the-absolute-x-and-y-coordinates-of-shape-logo-and-log-them-for-debugging.cs
