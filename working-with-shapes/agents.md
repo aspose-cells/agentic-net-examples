@@ -523,3 +523,4 @@ Output files are written to the working directory.
 - programmatically-retrieve-a-shapes-absolute-position-add-a-random-offset-and-update-the-shapes-location.cs
 - retrieve-a-shapes-absolute-position-and-compare-with-expected-pixel-coordinates-from-a-design-spec.cs
 - create-a-shape-set-its-absolute-position-to-align-with-a-specific-column-header-and-validate-alignment.cs
+- add-a-shape-set-its-absolute-position-based-on-column-index-multiplied-by-column-width-and-test-placement.cs
