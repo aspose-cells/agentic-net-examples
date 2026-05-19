@@ -1121,6 +1121,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs",
+      "title": "Group three WordArt shapes, lock the group, and export the worksheet as an XLSX file."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-a-batch-operation-that-replaces-date-tags-in-all-textboxes-with-the-current-system-date-formatted-yyyymmdd.cs",
       "title": "Implement a batch operation that replaces <DATE> tags in all TextBoxes with the current system date formatted yyyy\u2011MM\u2011dd."
     },
