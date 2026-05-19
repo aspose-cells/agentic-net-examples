@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - create-a-combobox-control-populate-it-with-five-items-and-define-its-dropdown-width.cs
 - read-the-currently-selected-value-from-an-activex-combobox-on-the-second-sheet.cs
 - update-an-activex-combobox-value-to-a-custom-string-and-verify-the-change-programmatically.cs
+- add-a-listbox-control-enable-multiselection-mode-and-populate-it-with-ten-entries.cs

@@ -561,6 +561,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-listbox-control-enable-multiselection-mode-and-populate-it-with-ten-entries.cs",
+      "title": "Add a ListBox control, enable multi\u2011selection mode, and populate it with ten entries."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-new-textbox-to-the-worksheet-at-the-specified-cell-coordinates.cs",
       "title": "Add a new textbox to the worksheet at the specified cell coordinates."
     },
