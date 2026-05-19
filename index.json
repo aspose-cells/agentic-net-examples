@@ -841,6 +841,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "batch-process-multiple-workbooks-in-a-folder-adding-tiled-textures-to-a-designated-shape.cs",
+      "title": "Batch process multiple workbooks in a folder, adding tiled textures to a designated shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "batch-process-multiple-worksheets-by-inserting-a-picture-linked-to-cell-a1-in-each-sheet-and-saving-file.cs",
       "title": "Batch process multiple worksheets by inserting a picture linked to cell A1 in each sheet and saving file."
     },
