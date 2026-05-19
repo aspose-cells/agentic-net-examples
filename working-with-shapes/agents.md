@@ -384,3 +384,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-and-locate-the-worksheet-containing-the-target-shape.cs
 - access-the-shapes-textbody-and-obtain-the-shapetextalignment-object-for-formatting.cs
 - set-linespacingpt-to-twelve-points-to-define-paragraph-line-spacing.cs
+- assign-spacebeforept-three-points-to-add-spacing-before-each-paragraph.cs
