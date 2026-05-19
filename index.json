@@ -1466,6 +1466,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "read-the-current-shadow-color-of-a-shape-and-output-its-rgb-values-for-logging-purposes.cs",
+      "title": "Read the current shadow color of a shape and output its RGB values for logging purposes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "read-the-currently-selected-value-from-an-activex-combobox-on-the-second-sheet.cs",
       "title": "Read the currently selected value from an ActiveX ComboBox on the second sheet."
     },
