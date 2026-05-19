@@ -991,6 +991,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-the-oleobjectvisible-property-to-false-for-background-objects-that-should-not-appear.cs",
+      "title": "Set the OleObject.Visible property to false for background objects that should not appear."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs",
       "title": "Ungroup a previously created shape group, modify each individual shape's position, and save changes."
     },
