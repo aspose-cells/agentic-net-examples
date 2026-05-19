@@ -636,6 +636,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "change-the-position-of-a-retrieved-oleobject-using-top-and-left-offset-values.cs",
+      "title": "Change the position of a retrieved OleObject using top and left offset values."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-a-camera-shape-to-capture-the-target-range-with-defined-resolution-and-image-format-settings.cs",
       "title": "Configure a camera shape to capture the target range with defined resolution and image format settings."
     },
