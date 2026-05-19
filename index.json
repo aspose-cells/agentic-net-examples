@@ -141,6 +141,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs",
+      "title": "Load a workbook from a network stream, adjust compression to Level9, and write to a file."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs",
       "title": "Load an SXC workbook, rename the active worksheet, and export the sheet to a CSV file."
     },
