@@ -418,3 +418,4 @@ Output files are written to the working directory.
 - read-the-text-property-of-each-child-shape-to-extract-gear-type-smartart-content.cs
 - concatenate-extracted-child-shape-texts-into-a-single-string-for-further-processing.cs
 - apply-multiple-adjustment-values-to-customize-the-smartart-layout-configuration.cs
+- refresh-the-linked-smartart-shape-after-updating-the-target-cell-with-shaperefreshlinkedshape.cs

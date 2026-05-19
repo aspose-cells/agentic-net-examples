@@ -1901,6 +1901,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "refresh-the-linked-smartart-shape-after-updating-the-target-cell-with-shaperefreshlinkedshape.cs",
+      "title": "Refresh the linked SmartArt shape after updating the target cell with Shape.RefreshLinkedShape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "remove-all-threedimensional-formatting-from-shapes-while-keeping-twodimensional-properties-intact.cs",
       "title": "Remove all three\u2011dimensional formatting from shapes while keeping two\u2011dimensional properties intact."
     },
