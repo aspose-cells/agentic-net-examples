@@ -519,3 +519,4 @@ Output files are written to the working directory.
 - set-a-shapes-absolute-position-based-on-column-width-and-row-height-calculations-and-validate-alignment.cs
 - set-a-shapes-absolute-position-using-pixel-values-derived-from-dpi-scaling-and-test-accuracy.cs
 - retrieve-a-shapes-absolute-position-add-a-margin-offset-and-reposition-the-shape-accordingly.cs
+- programmatically-read-a-shapes-absolute-position-convert-to-millimeters-and-write-conversion-to-a-hidden-cell.cs
