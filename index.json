@@ -1476,6 +1476,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-through-all-shapes-in-the-worksheet-and-apply-tiled-texture-to-each.cs",
+      "title": "Iterate through all shapes in the worksheet and apply tiled texture to each."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-through-all-worksheets-and-add-a-semitransparent-wordart-watermark-to-each-sheet.cs",
       "title": "Iterate through all worksheets and add a semi\u2011transparent WordArt watermark to each sheet."
     },
