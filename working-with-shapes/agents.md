@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - group-shapes-icon1-icon2-and-icon3-into-a-single-group-named-iconset-for-collective-manipulation.cs
 - lock-the-shape-signature-to-prevent-accidental-resizing-or-repositioning-during-workbook-editing.cs
 - unlock-the-shape-signature-after-confirmation-to-allow-modifications-to-its-size-and-position.cs
+- duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs
