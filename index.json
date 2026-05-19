@@ -271,6 +271,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "read-a-workbook-merge-cells-across-rows-and-export-the-result-to-an-html-file-with-tables.cs",
+      "title": "Read a workbook, merge cells across rows, and export the result to an HTML file with tables."
+    },
+    {
+      "category": "save-workbook",
       "file": "read-an-xls-file-apply-conditional-formatting-and-save-the-result-as-an-mht-web-archive.cs",
       "title": "Read an XLS file, apply conditional formatting, and save the result as an MHT web archive."
     },
