@@ -371,3 +371,4 @@ Output files are written to the working directory.
 - retrieve-the-current-shadow-preset-of-a-shapes-text-and-log-it-for-debugging.cs
 - validate-that-character-spacing-values-remain-within-the-allowed-range-of-10-to-10-points.cs
 - create-a-unit-test-that-verifies-texture-tiling-is-applied-when-istiling-is-true.cs
+- develop-a-helper-method-that-returns-a-fontsetting-configured-with-a-specific-shadow-preset-and-spacing.cs

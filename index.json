@@ -1166,6 +1166,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-helper-method-that-returns-a-fontsetting-configured-with-a-specific-shadow-preset-and-spacing.cs",
+      "title": "Develop a helper method that returns a FontSetting configured with a specific shadow preset and spacing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs",
       "title": "Develop a method to retrieve and display absolute positions of all shapes on a worksheet for analysis."
     },
