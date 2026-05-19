@@ -161,6 +161,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-enable-strict-open-xml-compliance-and-save-it-using-the-default-file-name.cs",
+      "title": "Open a workbook, enable strict Open XML compliance, and save it using the default file name."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
       "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
     },
