@@ -611,6 +611,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-second-wordart-shape-with-builtin-style-simple-fill-and-custom-font-size.cs",
+      "title": "Add a second WordArt shape with built\u2011in style Simple Fill and custom font size."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-and-enable-its-locked-property-to-prevent-accidental-modifications.cs",
       "title": "Add a shape and enable its locked property to prevent accidental modifications."
     },
