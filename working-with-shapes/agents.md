@@ -299,3 +299,4 @@ Output files are written to the working directory.
 - batch-copy-all-pictures-from-multiple-worksheets-into-a-summary-sheet-preserving-each-pictures-original-size.cs
 - create-a-macrolike-routine-that-groups-shapes-by-type-then-locks-each-group-to-prevent-accidental-edits.cs
 - develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs
+- write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs
