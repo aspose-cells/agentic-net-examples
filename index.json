@@ -976,6 +976,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-script-that-applies-a-uniform-shadow-offset-to-every-shape-ensuring-consistent-visual-alignment.cs",
+      "title": "Create a script that applies a uniform shadow offset to every shape, ensuring consistent visual alignment."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs",
       "title": "Create a shape and apply conditional formatting that changes its fill based on cell values."
     },
