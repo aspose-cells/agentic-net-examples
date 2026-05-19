@@ -1411,6 +1411,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "generate-a-report-listing-workbook-names-worksheet-titles-and-counts-of-detected-smartart-shapes.cs",
+      "title": "Generate a report listing workbook names, worksheet titles, and counts of detected SmartArt shapes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs",
       "title": "Generate MathML for each formula in column H and store the markup in adjacent cells."
     },
