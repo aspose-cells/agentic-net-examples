@@ -1821,6 +1821,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-threedimensional-rotation-angles-x20-y45-z10-for-a-chart-and-save.cs",
+      "title": "Set three\u2011dimensional rotation angles X=20, Y=45, Z=10 for a chart and save."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-wordart-shapes-text-alignment-to-center-horizontally-and-vertically-within-the-shape-bounds.cs",
       "title": "Set WordArt shape's text alignment to center horizontally and vertically within the shape bounds."
     },
