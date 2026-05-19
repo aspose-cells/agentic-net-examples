@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "resize-the-line-to-span-cells-b2-through-e2-and-adjust-its-thickness.cs",
+      "title": "Resize the Line to span cells B2 through E2 and adjust its thickness."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-all-textbox-controls-from-a-worksheet-and-output-their-positions.cs",
       "title": "Retrieve all TextBox controls from a worksheet and output their positions."
     },
