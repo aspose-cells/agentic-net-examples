@@ -886,6 +886,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-the-oleobjectname-property-to-a-unique-identifier-after-insertion.cs",
+      "title": "Set the OleObject.Name property to a unique identifier after insertion."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs",
       "title": "Ungroup a previously created shape group, modify each individual shape's position, and save changes."
     }
