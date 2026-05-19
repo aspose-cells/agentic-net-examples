@@ -342,3 +342,4 @@ Output files are written to the working directory.
 - remove-the-shadow-effect-from-a-shape-while-preserving-its-reflection-and-glow.cs
 - set-threedimensional-rotation-angles-x20-y45-z10-for-a-chart-and-save.cs
 - set-the-reflection-distance-to-twelve-points-and-verify-visual-change-using-automated-screenshot-comparison.cs
+- disable-all-shape-reflections-while-preserving-other-effects-and-save-the-workbook.cs

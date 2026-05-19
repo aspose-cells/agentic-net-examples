@@ -1136,6 +1136,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "disable-all-shape-reflections-while-preserving-other-effects-and-save-the-workbook.cs",
+      "title": "Disable all shape reflections while preserving other effects and save the workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs",
       "title": "Duplicate an existing shape, rename the copy, and offset its position by ten points to the right."
     },
