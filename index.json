@@ -956,6 +956,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-wordart-shape-assign-a-custom-font-family-and-set-the-font-size-to-fortyeight-points.cs",
+      "title": "Create a WordArt shape, assign a custom font family, and set the font size to forty\u2011eight points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-wordart-shape-set-flip-horizontally-property-and-verify-visual-reversal.cs",
       "title": "Create a WordArt shape, set flip horizontally property, and verify visual reversal."
     },

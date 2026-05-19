@@ -273,3 +273,4 @@ Output files are written to the working directory.
 - create-a-wordart-shape-set-flip-horizontally-property-and-verify-visual-reversal.cs
 - add-a-wordart-shape-to-a-specific-cell-range-and-anchor-it-so-it-moves-with-cells.cs
 - programmatically-unlock-a-previously-locked-wordart-watermark-to-allow-user-modifications-in-the-workbook.cs
+- create-a-wordart-shape-assign-a-custom-font-family-and-set-the-font-size-to-fortyeight-points.cs
