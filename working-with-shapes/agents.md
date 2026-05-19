@@ -257,3 +257,4 @@ Output files are written to the working directory.
 - configure-the-wordart-shapes-fill-to-a-gradient-transitioning-from-blue-to-transparent.cs
 - apply-builtin-wordart-style-curved-text-to-a-shape-and-adjust-curvature-via-adjustment-values.cs
 - duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs
+- determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs
