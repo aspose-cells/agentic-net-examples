@@ -1766,6 +1766,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-a-workbook-from-a-memory-stream-modify-shapes-and-save-without-file-system-access.cs",
+      "title": "Load a workbook from a memory stream, modify shapes, and save without file system access."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-a-workbook-from-a-url-replace-tags-in-all-textboxes-and-save-the-file-to-cloud-storage.cs",
       "title": "Load a workbook from a URL, replace tags in all TextBoxes, and save the file to cloud storage."
     },
