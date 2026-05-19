@@ -2396,6 +2396,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-that-each-smartart-shape-contains-nonempty-text-after-replacement.cs",
+      "title": "Validate that each SmartArt shape contains non\u2011empty text after replacement."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "validate-that-shapeissmartart-returns-false-for-regular-shapes-after-conversion.cs",
       "title": "Validate that Shape.IsSmartArt returns false for regular shapes after conversion."
     },
