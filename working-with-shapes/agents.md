@@ -430,3 +430,4 @@ Output files are written to the working directory.
 - programmatically-set-the-zorder-of-a-smartart-shape-to-bring-it-to-the-front.cs
 - validate-that-shapeissmartart-returns-false-for-regular-shapes-after-conversion.cs
 - compare-the-number-of-adjustment-values-before-and-after-conversion-to-ensure-data-integrity.cs
+- serialize-groupshape-properties-including-child-shapes-to-json-for-persistence.cs
