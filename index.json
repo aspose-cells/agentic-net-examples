@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-with-multi-line-text-link-it-to-a-cell-containing-line-break-characters-and-display-correctly.cs",
+      "title": "Create a shape with multi-line text, link it to a cell containing line break characters, and display correctly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-unit-test-that-verifies-texture-tiling-is-applied-when-istiling-is-true.cs",
       "title": "Create a unit test that verifies texture tiling is applied when IsTiling is true."
     },
