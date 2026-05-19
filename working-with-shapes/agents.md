@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - export-a-worksheet-containing-ole-objects-to-pdf-while-preserving-object-placeholders.cs
 - configure-the-workbook-to-run-in-licensed-mode-to-suppress-evaluation-watermarks.cs
 - log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs
+- create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs

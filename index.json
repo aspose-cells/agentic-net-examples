@@ -666,6 +666,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs",
+      "title": "Create a batch process that adds the same WAV OLE object to every worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
       "title": "Create a camera shape for a specified range to capture its visual representation as an image."
     },
