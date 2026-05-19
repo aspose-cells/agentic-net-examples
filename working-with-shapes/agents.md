@@ -454,3 +454,4 @@ Output files are written to the working directory.
 - write-an-integration-test-confirming-linked-shape-refresh-updates-picture-after-cell-change.cs
 - load-a-workbook-from-a-memory-stream-modify-shapes-and-save-without-file-system-access.cs
 - export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs
+- compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs
