@@ -1131,6 +1131,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-utility-method-that-accepts-a-shape-and-applies-predefined-paragraph-formatting-parameters.cs",
+      "title": "Create a utility method that accepts a shape and applies predefined paragraph formatting parameters."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-utility-that-lists-each-shapes-zorder-index-and-sorts-them-alphabetically-by-name-for-reporting.cs",
       "title": "Create a utility that lists each shape's Z\u2011order index and sorts them alphabetically by name for reporting."
     },
