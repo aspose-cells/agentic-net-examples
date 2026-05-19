@@ -946,6 +946,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs",
+      "title": "Use the OleObject.IsLinked property to identify linked OLE objects before processing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "verify-that-the-extracted-files-extension-matches-the-original-format-for-integrity.cs",
       "title": "Verify that the extracted file\u2019s extension matches the original format for integrity."
     }
