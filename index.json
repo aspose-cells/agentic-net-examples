@@ -1021,6 +1021,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-multiple-svg-icons-from-a-folder-and-place-each-icon-into-successive-rows-starting-from-row-ten.cs",
+      "title": "Load multiple SVG icons from a folder and place each icon into successive rows starting from row ten."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-the-workbook-and-select-the-target-worksheet-before-performing-any-shape-operations.cs",
       "title": "Load the workbook and select the target worksheet before performing any shape operations."
     },
