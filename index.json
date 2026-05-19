@@ -151,6 +151,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "instantiate-a-workbook-set-exportallsheets-false-and-export-only-the-active-sheet-to-an-xml-file.cs",
+      "title": "Instantiate a workbook, set ExportAllSheets false, and export only the active sheet to an XML file."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-a-workbook-adjust-pdf-export-quality-to-300-dpi-and-save-the-highresolution-pdf.cs",
       "title": "Load a workbook, adjust PDF export quality to 300 DPI, and save the high\u2011resolution PDF."
     },
