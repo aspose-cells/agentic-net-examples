@@ -1656,6 +1656,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-all-connection-points-of-a-chart-shape-and-export-coordinates-to-a-csv-file.cs",
+      "title": "Retrieve all connection points of a chart shape and export coordinates to a CSV file."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-all-textbox-controls-from-a-worksheet-and-output-their-positions.cs",
       "title": "Retrieve all TextBox controls from a worksheet and output their positions."
     },
