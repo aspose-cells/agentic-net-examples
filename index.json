@@ -1126,6 +1126,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "group-three-selected-shapes-into-a-composite-object-and-assign-a-descriptive-name-for-reference.cs",
+      "title": "Group three selected shapes into a composite object and assign a descriptive name for reference."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs",
       "title": "Group three WordArt shapes, lock the group, and export the worksheet as an XLSX file."
     },
