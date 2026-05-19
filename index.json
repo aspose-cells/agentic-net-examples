@@ -756,6 +756,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-a-shapes-z-order-to-just-above-a-specific-existing-shape.cs",
+      "title": "Adjust a shape's Z-order to just above a specific existing shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "adjust-character-spacing-together-with-line-spacing-to-achieve-balanced-text-appearance.cs",
       "title": "Adjust character spacing together with line spacing to achieve balanced text appearance."
     },
