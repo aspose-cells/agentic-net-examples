@@ -1826,6 +1826,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-using-left-and-right-functions-to-extract-substrings-and-display-them.cs",
+      "title": "Link a shape to a cell using LEFT and RIGHT functions to extract substrings and display them."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-with-a-date-formula-and-format-displayed-text-using-a-custom-pattern.cs",
       "title": "Link a shape to a cell with a date formula and format displayed text using a custom pattern."
     },
