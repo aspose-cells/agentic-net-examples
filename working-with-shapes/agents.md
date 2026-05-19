@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - set-the-zorder-of-the-textbox-to-bring-it-to-the-front-of-overlapping-objects.cs
 - load-a-workbook-locate-a-textbox-named-headerbox-and-replace-tag_1-with-dynamic-title.cs
 - validate-that-all-textbox-shapes-contain-required-tags-before-performing-batch-replacement-to-avoid-missing-data-errors.cs
+- replace-multiple-placeholder-tags-tag_a-tag_b-and-tag_c-within-a-textbox-using-a-dictionary-mapping.cs
