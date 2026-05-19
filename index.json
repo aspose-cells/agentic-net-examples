@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "access-the-newly-added-activex-control-via-shapeactivexcontrol-and-cast-it-to-its-specific-type.cs",
+      "title": "Access the newly added ActiveX control via Shape.ActiveXControl and cast it to its specific type."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-checkbox-control-to-a-worksheet-and-link-its-state-to-cell-b2.cs",
       "title": "Add a CheckBox control to a worksheet and link its state to cell B2."
     },
