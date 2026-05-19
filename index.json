@@ -1076,6 +1076,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-script-that-iterates-through-all-shapes-unlocking-those-with-a-specific-tag-attribute-for-editing.cs",
+      "title": "Develop a script that iterates through all shapes, unlocking those with a specific tag attribute for editing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs",
       "title": "Develop a validation script that ensures no shape exceeds a specified width and height threshold across the workbook."
     },
