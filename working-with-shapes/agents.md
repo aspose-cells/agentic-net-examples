@@ -263,3 +263,4 @@ Output files are written to the working directory.
 - implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs
 - apply-preset-wordart-style-bold-wave-to-shapes-only-on-worksheets-whose-names-start-with-report.cs
 - create-a-batch-process-that-reads-multiple-excel-files-from-a-directory-and-adds-consistent-watermark.cs
+- implement-logging-to-record-timestamp-and-worksheet-name-each-time-a-wordart-shape-is-added.cs
