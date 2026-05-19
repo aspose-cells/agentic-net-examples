@@ -1661,6 +1661,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "remove-the-shadow-effect-from-a-shape-while-preserving-its-reflection-and-glow.cs",
+      "title": "Remove the shadow effect from a shape while preserving its reflection and glow."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "replace-multiple-placeholder-tags-tag_a-tag_b-and-tag_c-within-a-textbox-using-a-dictionary-mapping.cs",
       "title": "Replace multiple placeholder tags <TAG_A>, <TAG_B>, and <TAG_C> within a TextBox using a dictionary mapping."
     },

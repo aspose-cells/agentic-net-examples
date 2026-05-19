@@ -339,3 +339,4 @@ Output files are written to the working directory.
 - create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs
 - apply-threedimensional-lighting-direction-top-and-set-specular-power-to-eighty-for-the-shape.cs
 - clone-a-shape-modify-its-reflection-and-place-the-clone-beside-the-original-shape.cs
+- remove-the-shadow-effect-from-a-shape-while-preserving-its-reflection-and-glow.cs
