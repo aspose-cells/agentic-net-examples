@@ -1661,6 +1661,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "remove-all-threedimensional-formatting-from-shapes-while-keeping-twodimensional-properties-intact.cs",
+      "title": "Remove all three\u2011dimensional formatting from shapes while keeping two\u2011dimensional properties intact."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "remove-an-existing-activex-control-from-a-worksheet-and-verify-its-absence-in-the-shapes-collection.cs",
       "title": "Remove an existing ActiveX control from a worksheet and verify its absence in the Shapes collection."
     },
