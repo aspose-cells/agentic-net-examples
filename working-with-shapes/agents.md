@@ -270,3 +270,4 @@ Output files are written to the working directory.
 - adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs
 - create-a-reusable-method-that-adds-a-wordart-watermark-with-specified-text-style-and-lock-settings.cs
 - apply-builtin-wordart-style-shadowed-to-a-shape-and-modify-its-shadow-offset-manually.cs
+- create-a-wordart-shape-set-flip-horizontally-property-and-verify-visual-reversal.cs
