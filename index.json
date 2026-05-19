@@ -1946,6 +1946,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-leftmarginpt-to-eight-points-to-align-text-with-cell-borders.cs",
+      "title": "Set LeftMarginPt to eight points to align text with cell borders."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-linespacingpt-to-twelve-points-to-define-paragraph-line-spacing.cs",
       "title": "Set LineSpacingPt to twelve points to define paragraph line spacing."
     },

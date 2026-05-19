@@ -387,3 +387,4 @@ Output files are written to the working directory.
 - assign-spacebeforept-three-points-to-add-spacing-before-each-paragraph.cs
 - set-spaceafterpt-four-points-to-add-spacing-after-each-paragraph.cs
 - adjust-topmarginpt-to-five-points-for-consistent-top-margin-layout.cs
+- set-leftmarginpt-to-eight-points-to-align-text-with-cell-borders.cs
