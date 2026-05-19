@@ -736,6 +736,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-a-shape-to-follow-cell-resizing-by-linking-it-to-cell-h5-and-enabling-movewithcells-option.cs",
+      "title": "Configure a shape to follow cell resizing by linking it to cell H5 and enabling move\u2011with\u2011cells option."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-autofit-for-the-textbox-to-resize-automatically-based-on-its-content-length.cs",
       "title": "Configure auto\u2011fit for the textbox to resize automatically based on its content length."
     },
