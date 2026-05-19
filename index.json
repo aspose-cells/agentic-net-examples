@@ -921,6 +921,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "copy-reflection-settings-from-one-shape-to-another-within-the-same-worksheet.cs",
+      "title": "Copy reflection settings from one shape to another within the same worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "copy-the-textbox-to-another-worksheet-while-preserving-its-size-and-text-attributes.cs",
       "title": "Copy the textbox to another worksheet while preserving its size and text attributes."
     },
