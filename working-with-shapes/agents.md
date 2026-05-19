@@ -479,3 +479,4 @@ Output files are written to the working directory.
 - link-a-shape-to-a-cell-that-uses-the-char-function-to-display-special-characters-and-verify-rendering.cs
 - link-a-shape-to-a-cell-using-left-and-right-functions-to-extract-substrings-and-display-them.cs
 - add-a-shape-set-its-linked-cell-to-a-cell-using-the-mid-function-and-display-extracted-substring.cs
+- add-a-shape-link-it-to-a-cell-using-value-to-convert-text-to-number-and-verify.cs
