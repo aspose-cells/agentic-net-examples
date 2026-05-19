@@ -1826,6 +1826,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-character-spacing-to-5-points-on-the-shapes-text-via-textoptionscharacterspacing.cs",
+      "title": "Set character spacing to 5 points on the shape's text via TextOptions.CharacterSpacing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-reflection-size-to-30-points-and-blur-radius-to-5-points-on-the-shape.cs",
       "title": "Set reflection size to 30 points and blur radius to 5 points on the shape."
     },
