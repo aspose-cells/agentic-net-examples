@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs
 - create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs
 - implement-error-handling-to-catch-exceptions-when-extracting-corrupted-or-unsupported-ole-objects.cs
+- generate-a-report-listing-each-ole-objects-name-label-class-identifier-and-file-size.cs
