@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - create-a-new-textbox-on-sheet1-set-its-width-to-200-points-and-position-it-at-cell-b2.cs
 - create-a-multiline-textbox-and-set-individual-line-alignments-to-left-center-and-right-respectively.cs
 - apply-left-alignment-to-the-first-line-and-center-alignment-to-the-second-line-of-a-textbox.cs
+- load-multiple-svg-icons-from-a-folder-and-place-each-icon-into-successive-rows-starting-from-row-ten.cs
