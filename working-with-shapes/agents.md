@@ -238,3 +238,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-and-delete-any-checkbox-controls-linked-to-cells-containing-zero.cs
 - export-the-properties-of-all-shape-controls-to-a-json-file-for-external-analysis.cs
 - import-shape-configuration-from-a-json-file-and-recreate-the-controls-on-a-target-worksheet.cs
+- apply-conditional-formatting-to-a-textbox-based-on-the-numeric-value-of-its-linked-cell.cs

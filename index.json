@@ -691,6 +691,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-conditional-formatting-to-a-textbox-based-on-the-numeric-value-of-its-linked-cell.cs",
+      "title": "Apply conditional formatting to a TextBox based on the numeric value of its linked cell."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-left-alignment-to-the-entire-text-within-the-textbox.cs",
       "title": "Apply left alignment to the entire text within the textbox."
     },
