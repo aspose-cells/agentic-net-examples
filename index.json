@@ -1006,6 +1006,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-generic-activex-togglebutton-using-shapecollectionaddactivexcontrol-and-set-its-default-state.cs",
+      "title": "Insert a generic ActiveX ToggleButton using ShapeCollection.AddActiveXControl and set its default state."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs",
       "title": "Insert a linked picture from a secure intranet URL, configure authentication headers, and handle access denied errors."
     },
