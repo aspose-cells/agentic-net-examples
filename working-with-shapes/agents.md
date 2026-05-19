@@ -267,3 +267,4 @@ Output files are written to the working directory.
 - create-a-custom-function-that-returns-true-if-a-given-shape-is-a-locked-wordart-watermark.cs
 - use-linq-to-filter-shapecollection-for-only-wordart-shapes-before-applying-batch-style-changes.cs
 - set-wordart-shapes-text-alignment-to-center-horizontally-and-vertically-within-the-shape-bounds.cs
+- adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs
