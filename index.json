@@ -136,6 +136,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs",
+      "title": "Instantiate a workbook, configure CSV separator as semicolon, and export the active sheet to CSV."
+    },
+    {
+      "category": "save-workbook",
       "file": "instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs",
       "title": "Instantiate a workbook from a stream, set workbook compression to Level6, and write to a MemoryStream."
     },
