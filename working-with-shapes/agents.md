@@ -395,3 +395,4 @@ Output files are written to the working directory.
 - specify-fareastfontname-as-ms-mincho-and-latinfontname-as-arial-for-multilingual-text.cs
 - change-latinfontname-to-calibri-while-keeping-fareastfontname-unchanged-for-western-font-style.cs
 - iterate-over-all-shapes-in-the-worksheet-and-apply-uniform-line-spacing-of-15-points.cs
+- filter-shapes-by-type-and-set-specific-margins-only-for-rectangle-shapes.cs
