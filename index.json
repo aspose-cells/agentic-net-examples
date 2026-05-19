@@ -1811,6 +1811,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-through-a-shapes-connectionpoints-collection-to-calculate-the-average-position-of-all-points.cs",
+      "title": "Iterate through a shape's ConnectionPoints collection to calculate the average position of all points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-through-all-oleobjects-in-a-workbook-and-extract-each-to-a-folder.cs",
       "title": "Iterate through all OleObjects in a workbook and extract each to a folder."
     },

@@ -501,3 +501,4 @@ Output files are written to the working directory.
 - retrieve-all-connection-points-of-a-connector-shape-and-log-their-x-and-y-coordinates-for-analysis.cs
 - retrieve-connection-points-of-a-shape-filter-points-with-x-coordinate-greater-than-100-and-log-them.cs
 - programmatically-read-connection-points-of-a-shape-identify-points-on-the-right-edge-and-log-them.cs
+- iterate-through-a-shapes-connectionpoints-collection-to-calculate-the-average-position-of-all-points.cs
