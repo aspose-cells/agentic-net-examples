@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - verify-that-the-extracted-files-extension-matches-the-original-format-for-integrity.cs
 - read-the-classid-clsid-property-of-an-embedded-ole-object-for-auditing.cs
 - assign-a-new-guid-to-the-oleobjectclassid-to-change-its-associated-application.cs
+- iterate-through-all-oleobjects-in-a-workbook-and-extract-each-to-a-folder.cs
