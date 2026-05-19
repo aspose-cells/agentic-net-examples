@@ -846,6 +846,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "detect-shapes-that-exceed-worksheet-boundaries-and-automatically-reposition-them-within-visible-limits-to-avoid-clipping.cs",
+      "title": "Detect shapes that exceed worksheet boundaries and automatically reposition them within visible limits to avoid clipping."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs",
       "title": "Duplicate an existing shape, rename the copy, and offset its position by ten points to the right."
     },
