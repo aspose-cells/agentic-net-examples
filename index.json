@@ -1611,6 +1611,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-shapecollectionaddwordart-overload-that-accepts-a-style-name-to-directly-apply-a-builtin-style.cs",
+      "title": "Use ShapeCollection.AddWordArt overload that accepts a style name to directly apply a built\u2011in style."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs",
       "title": "Use the OleObject.IsLinked property to identify linked OLE objects before processing."
     },
