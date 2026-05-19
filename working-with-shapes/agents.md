@@ -338,3 +338,4 @@ Output files are written to the working directory.
 - set-shadow-color-using-argb-values-25512800-and-transparency-to-thirty-percent.cs
 - create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs
 - apply-threedimensional-lighting-direction-top-and-set-specular-power-to-eighty-for-the-shape.cs
+- clone-a-shape-modify-its-reflection-and-place-the-clone-beside-the-original-shape.cs
