@@ -130,6 +130,11 @@
       "title": "Update the text direction of all comments in a worksheet to LeftToRight for standard layout."
     },
     {
+      "category": "save-workbook",
+      "file": "read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs",
+      "title": "Read a CSV file, filter rows by date, and export the result to an HTML file."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
