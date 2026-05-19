@@ -941,6 +941,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "export-the-properties-of-all-shape-controls-to-a-json-file-for-external-analysis.cs",
+      "title": "Export the properties of all shape controls to a JSON file for external analysis."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-the-textbox-as-a-png-image-with-a-transparent-background-for-external-use.cs",
       "title": "Export the textbox as a PNG image with a transparent background for external use."
     },

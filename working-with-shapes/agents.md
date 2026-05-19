@@ -236,3 +236,4 @@ Output files are written to the working directory.
 - remove-an-existing-activex-control-from-a-worksheet-and-verify-its-absence-in-the-shapes-collection.cs
 - batch-add-textbox-controls-to-each-worksheet-assigning-unique-identifiers.cs
 - iterate-through-all-worksheets-and-delete-any-checkbox-controls-linked-to-cells-containing-zero.cs
+- export-the-properties-of-all-shape-controls-to-a-json-file-for-external-analysis.cs
