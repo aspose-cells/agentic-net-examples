@@ -266,3 +266,4 @@ Output files are written to the working directory.
 - implement-logging-to-record-timestamp-and-worksheet-name-each-time-a-wordart-shape-is-added.cs
 - create-a-custom-function-that-returns-true-if-a-given-shape-is-a-locked-wordart-watermark.cs
 - use-linq-to-filter-shapecollection-for-only-wordart-shapes-before-applying-batch-style-changes.cs
+- set-wordart-shapes-text-alignment-to-center-horizontally-and-vertically-within-the-shape-bounds.cs
