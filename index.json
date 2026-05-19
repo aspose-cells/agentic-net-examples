@@ -556,6 +556,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-glowing-outer-border-to-a-picture-shape-using-specified-glow-radius-and-color-value.cs",
+      "title": "Add a glowing outer border to a picture shape using specified glow radius and color value."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-hyperlink-to-an-ole-object-that-opens-the-original-source-file-when-clicked.cs",
       "title": "Add a hyperlink to an OLE object that opens the original source file when clicked."
     },
