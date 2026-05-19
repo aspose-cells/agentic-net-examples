@@ -1446,6 +1446,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "filter-shapes-by-autoshapetype-and-process-only-those-matching-given-criteria.cs",
+      "title": "Filter shapes by AutoShapeType and process only those matching given criteria."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "filter-shapes-by-type-and-set-specific-margins-only-for-rectangle-shapes.cs",
       "title": "Filter shapes by type and set specific margins only for rectangle shapes."
     },
