@@ -2136,6 +2136,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "serialize-extracted-shape-path-data-to-json-for-external-consumption.cs",
+      "title": "Serialize extracted shape path data to JSON for external consumption."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "serialize-groupshape-properties-including-child-shapes-to-json-for-persistence.cs",
       "title": "Serialize GroupShape properties, including child shapes, to JSON for persistence."
     },
