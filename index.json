@@ -1071,6 +1071,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-alternative-text-for-the-textbox-to-improve-accessibility-for-screen-readers.cs",
+      "title": "Set alternative text for the textbox to improve accessibility for screen readers."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-the-displayed-text-of-the-textbox-using-a-provided-string-value.cs",
       "title": "Set the displayed text of the textbox using a provided string value."
     },
