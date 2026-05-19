@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - enable-text-wrapping-inside-the-textbox-so-long-sentences-break-onto-multiple-lines.cs
 - configure-autofit-for-the-textbox-to-resize-automatically-based-on-its-content-length.cs
 - rotate-the-textbox-by-a-specified-angle-and-verify-its-new-orientation-on-the-worksheet.cs
+- set-the-textbox-background-fill-to-a-solid-color-with-optional-transparency.cs
