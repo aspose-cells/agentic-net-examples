@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - change-the-line-style-of-shape-divider-to-dashed-and-set-its-thickness-to-two-points.cs
 - create-a-shape-containing-a-hyperlink-to-another-worksheet-within-the-same-workbook-for-quick-navigation.cs
 - add-a-textbox-control-to-the-first-worksheet-and-set-its-initial-text.cs
+- retrieve-all-textbox-controls-from-a-worksheet-and-output-their-positions.cs
