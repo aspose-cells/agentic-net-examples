@@ -611,6 +611,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "append-additional-text-to-the-existing-content-of-the-textbox-programmatically.cs",
+      "title": "Append additional text to the existing content of the textbox programmatically."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-conditional-formatting-rule-using-an-icon-set-to-display-custom-emoji-icons-based-on-text-values.cs",
       "title": "Apply a conditional formatting rule using an icon set to display custom emoji icons based on text values."
     },

@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - assign-a-unique-name-to-the-textbox-for-later-identification-and-manipulation.cs
 - retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs
 - set-the-displayed-text-of-the-textbox-using-a-provided-string-value.cs
+- append-additional-text-to-the-existing-content-of-the-textbox-programmatically.cs
