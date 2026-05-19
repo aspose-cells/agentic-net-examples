@@ -661,6 +661,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-custom-date-format-and-verify-date.cs",
+      "title": "Add a shape, link it to a cell using TEXT for custom date format, and verify date."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-link-it-to-a-cell-using-value-to-convert-text-to-number-and-verify.cs",
       "title": "Add a shape, link it to a cell using VALUE to convert text to number, and verify."
     },
