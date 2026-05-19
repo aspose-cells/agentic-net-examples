@@ -646,6 +646,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-containing-a-sum-formula-and-verify-shape-shows-total-sum.cs",
+      "title": "Add a shape, link it to a cell containing a SUM formula, and verify shape shows total sum."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-link-it-to-a-cell-containing-an-if-statement-and-ensure-shape-reflects-conditional-output.cs",
       "title": "Add a shape, link it to a cell containing an IF statement, and ensure shape reflects conditional output."
     },
