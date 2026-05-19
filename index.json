@@ -2096,6 +2096,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "obtain-the-absolute-pixel-position-of-a-grouped-shape-and-convert-it-to-inches-for-reporting.cs",
+      "title": "Obtain the absolute pixel position of a grouped shape and convert it to inches for reporting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "place-a-shape-and-adjust-its-z-order-to-bring-it-forward-above-other-objects.cs",
       "title": "Place a shape and adjust its Z-order to bring it forward above other objects."
     },
