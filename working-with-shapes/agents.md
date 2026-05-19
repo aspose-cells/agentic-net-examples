@@ -428,3 +428,4 @@ Output files are written to the working directory.
 - use-a-custom-predicate-to-select-smartart-shapes-whose-extracted-text-contains-a-specific-keyword.cs
 - log-detailed-information-for-each-smartart-shape-including-type-position-and-size.cs
 - programmatically-set-the-zorder-of-a-smartart-shape-to-bring-it-to-the-front.cs
+- validate-that-shapeissmartart-returns-false-for-regular-shapes-after-conversion.cs
