@@ -2156,6 +2156,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-retrieve-connection-points-of-a-shape-filter-points-within-a-specific-rectangle-and-log-them.cs",
+      "title": "Programmatically retrieve connection points of a shape, filter points within a specific rectangle, and log them."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-set-a-shapes-z-order-to-a-specific-positive-value-then-retrieve-and-confirm-the-same-value.cs",
       "title": "Programmatically set a shape's Z-order to a specific positive value, then retrieve and confirm the same value."
     },
