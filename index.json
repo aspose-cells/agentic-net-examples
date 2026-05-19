@@ -918,6 +918,11 @@
       "category": "working-with-shapes",
       "file": "ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs",
       "title": "Ungroup a previously created shape group, modify each individual shape's position, and save changes."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "update-the-display-label-of-a-linked-ole-object-to-a-descriptive-string.cs",
+      "title": "Update the display label of a linked OLE object to a descriptive string."
     }
   ]
 }
