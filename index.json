@@ -1861,6 +1861,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "read-the-text-property-of-each-child-shape-to-extract-gear-type-smartart-content.cs",
+      "title": "Read the Text property of each child shape to extract Gear type SmartArt content."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-a-camera-shape-programmatically-using-the-api-method-to-ensure-current-range-content-is-shown.cs",
       "title": "Refresh a camera shape programmatically using the API method to ensure current range content is shown."
     },

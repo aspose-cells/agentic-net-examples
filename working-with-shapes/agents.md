@@ -415,3 +415,4 @@ Output files are written to the working directory.
 - convert-each-detected-smartart-shape-to-a-groupshape-using-shapegetresultofsmartart.cs
 - cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs
 - enumerate-child-shapes-within-the-groupshape-to-access-individual-components.cs
+- read-the-text-property-of-each-child-shape-to-extract-gear-type-smartart-content.cs
