@@ -375,3 +375,4 @@ Output files are written to the working directory.
 - iterate-over-all-text-boxes-in-a-worksheet-and-set-their-character-spacing-uniformly.cs
 - use-a-trycatch-block-to-handle-exceptions-when-loading-an-invalid-image-for-texture.cs
 - create-a-macrolike-routine-that-toggles-texture-tiling-on-a-shape-each-execution.cs
+- apply-a-preset-shadow-of-type-outerbottom-to-shape-text-and-capture-a-screenshot.cs

@@ -721,6 +721,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-preset-shadow-of-type-outerbottom-to-shape-text-and-capture-a-screenshot.cs",
+      "title": "Apply a preset shadow of type OuterBottom to shape text and capture a screenshot."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-preset-shadow-of-type-outershadow-to-the-shapes-text-via-textoptionsshadowpresettype.cs",
       "title": "Apply a preset shadow of type OuterShadow to the shape's text via TextOptions.Shadow.PresetType."
     },
