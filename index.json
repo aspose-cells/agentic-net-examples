@@ -1056,6 +1056,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-feature-that-automatically-groups-shapes-added-within-a-specific-time-window-into-a-single-collection.cs",
+      "title": "Develop a feature that automatically groups shapes added within a specific time window into a single collection."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs",
       "title": "Develop a method to retrieve and display absolute positions of all shapes on a worksheet for analysis."
     },
