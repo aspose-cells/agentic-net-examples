@@ -981,6 +981,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-new-text-box-shape-and-set-its-text-using-textbodytext-property.cs",
+      "title": "Create a new text box shape and set its text using TextBody.Text property."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-new-textbox-on-sheet1-set-its-width-to-200-points-and-position-it-at-cell-b2.cs",
       "title": "Create a new TextBox on Sheet1, set its width to 200 points, and position it at cell B2."
     },
