@@ -411,3 +411,4 @@ Output files are written to the working directory.
 - select-a-specific-worksheet-from-the-workbook-via-workbookworksheets-collection.cs
 - retrieve-the-shapes-collection-of-the-selected-worksheet-for-further-processing.cs
 - iterate-through-each-shape-and-use-shapeissmartart-to-identify-smartart-objects.cs
+- filter-shapes-to-process-only-those-where-issmartart-returns-true.cs
