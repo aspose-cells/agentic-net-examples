@@ -1616,6 +1616,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-an-excel-workbook-and-locate-the-worksheet-containing-the-target-shape.cs",
+      "title": "Load an Excel workbook and locate the worksheet containing the target shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-an-excel-workbook-from-a-file-and-access-the-first-worksheet.cs",
       "title": "Load an Excel workbook from a file and access the first worksheet."
     },

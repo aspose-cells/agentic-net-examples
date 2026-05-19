@@ -381,3 +381,4 @@ Output files are written to the working directory.
 - implement-a-feature-that-disables-texture-tiling-when-the-shapes-area-is-smaller-than-the-image-dimensions.cs
 - create-a-custom-enumeration-mapping-between-presetshadowtype-values-and-descriptive-labels-for-ui-display.cs
 - use-reflection-to-list-all-available-presetshadowtype-enumeration-members-for-dynamic-configuration.cs
+- load-an-excel-workbook-and-locate-the-worksheet-containing-the-target-shape.cs
