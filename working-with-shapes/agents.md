@@ -209,3 +209,4 @@ Output files are written to the working directory.
 - resize-a-shape-proportionally-to-match-the-dimensions-of-a-target-cell-range-while-maintaining-aspect-ratio.cs
 - programmatically-remove-all-shapes-from-a-worksheet-before-exporting-the-data-to-a-csv-format-for-clean-output.cs
 - export-all-shapes-xml-definitions-to-a-separate-file-for-external-analysis-and-version-control-tracking.cs
+- export-worksheet-shapes-as-separate-svg-files-preserving-visual-properties-for-reuse-in-web-pages.cs
