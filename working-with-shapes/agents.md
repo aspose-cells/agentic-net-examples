@@ -255,3 +255,4 @@ Output files are written to the working directory.
 - load-an-existing-excel-file-replace-its-header-wordart-with-a-new-style-and-save.cs
 - create-a-wordart-shape-set-rotation-to-45-degrees-and-position-it-diagonally-across-the-sheet.cs
 - configure-the-wordart-shapes-fill-to-a-gradient-transitioning-from-blue-to-transparent.cs
+- apply-builtin-wordart-style-curved-text-to-a-shape-and-adjust-curvature-via-adjustment-values.cs
