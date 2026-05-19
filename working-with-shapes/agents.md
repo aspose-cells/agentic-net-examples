@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - unlock-a-previously-locked-textbox-to-allow-editing-of-its-position-and-size.cs
 - set-alternative-text-for-the-textbox-to-improve-accessibility-for-screen-readers.cs
 - export-the-textbox-as-a-png-image-with-a-transparent-background-for-external-use.cs
+- delete-the-textbox-from-the-worksheet-when-it-is-no-longer-required.cs
