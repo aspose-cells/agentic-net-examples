@@ -485,3 +485,4 @@ Output files are written to the working directory.
 - link-a-shape-to-a-cell-using-the-concat-function-and-verify-shape-displays-concatenated-string.cs
 - programmatically-change-a-shapes-linked-cell-from-a1-to-b2-and-verify-the-shape-updates-accordingly.cs
 - create-a-shape-with-multi-line-text-link-it-to-a-cell-containing-line-break-characters-and-display-correctly.cs
+- add-a-shape-link-it-to-a-cell-with-a-circular-reference-and-handle-the-resulting-error-gracefully.cs
