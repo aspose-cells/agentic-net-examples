@@ -781,6 +781,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-the-button-to-trigger-a-vba-script-that-highlights-the-active-row.cs",
+      "title": "Configure the Button to trigger a VBA script that highlights the active row."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-the-oleobjectwidth-and-height-to-fit-within-the-target-cell-range.cs",
       "title": "Configure the OleObject.Width and Height to fit within the target cell range."
     },
