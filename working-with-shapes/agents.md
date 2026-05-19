@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - iterate-all-shapes-on-a-worksheet-listing-each-shapes-name-type-and-absolute-coordinates.cs
 - retrieve-the-absolute-x-and-y-coordinates-of-shape-logo-and-log-them-for-debugging.cs
 - send-a-shape-named-chartoverlay-to-the-front-layer-to-ensure-it-appears-above-all-objects.cs
+- move-a-shape-called-watermark-to-the-back-layer-so-underlying-cells-remain-visible.cs
