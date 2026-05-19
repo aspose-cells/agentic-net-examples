@@ -346,3 +346,4 @@ Output files are written to the working directory.
 - copy-reflection-settings-from-one-shape-to-another-within-the-same-worksheet.cs
 - toggle-the-visibility-of-the-glow-effect-on-a-specific-shape-without-altering-other-properties.cs
 - remove-all-threedimensional-formatting-from-shapes-while-keeping-twodimensional-properties-intact.cs
+- load-an-excel-workbook-from-a-file-path-and-access-the-first-worksheet.cs
