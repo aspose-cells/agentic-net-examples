@@ -421,3 +421,4 @@ Output files are written to the working directory.
 - refresh-the-linked-smartart-shape-after-updating-the-target-cell-with-shaperefreshlinkedshape.cs
 - save-the-modified-workbook-to-a-new-file-while-preserving-original-formatting.cs
 - batch-process-a-directory-of-excel-files-converting-all-smartart-shapes-to-groupshapes-automatically.cs
+- generate-a-report-listing-workbook-names-worksheet-titles-and-counts-of-detected-smartart-shapes.cs
