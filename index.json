@@ -1811,6 +1811,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-that-uses-the-substitute-function-to-replace-characters-and-verify-updated-text.cs",
+      "title": "Link a shape to a cell that uses the SUBSTITUTE function to replace characters and verify updated text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-that-uses-the-text-function-for-number-formatting-and-display-formatted-number.cs",
       "title": "Link a shape to a cell that uses the TEXT function for number formatting and display formatted number."
     },
