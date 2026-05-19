@@ -1341,6 +1341,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-error-handling-for-missing-image-files-when-setting-shape-texture.cs",
+      "title": "Implement error handling for missing image files when setting shape texture."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs",
       "title": "Implement error handling that logs a warning when attempting to lock a shape already marked as locked."
     },
