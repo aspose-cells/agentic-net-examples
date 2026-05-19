@@ -541,6 +541,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-hyperlink-to-an-ole-object-that-opens-the-original-source-file-when-clicked.cs",
+      "title": "Add a hyperlink to an OLE object that opens the original source file when clicked."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-picture-and-apply-cropping-parameters-to-display-only-the-central-portion-of-the-image.cs",
       "title": "Add a picture and apply cropping parameters to display only the central portion of the image."
     },
