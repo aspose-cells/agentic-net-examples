@@ -464,3 +464,4 @@ Output files are written to the working directory.
 - create-a-workbook-add-a-rectangle-shape-and-link-it-to-cell-a1-for-dynamic-text.cs
 - update-a-linked-cell-value-and-refresh-the-shape-to-display-the-new-content-automatically.cs
 - link-a-shape-to-a-cell-with-a-date-formula-and-format-displayed-text-using-a-custom-pattern.cs
+- link-a-shape-to-a-cell-that-uses-the-concatenate-function-and-ensure-the-shape-displays-combined-text.cs

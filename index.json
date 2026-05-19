@@ -1761,6 +1761,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-that-uses-the-concatenate-function-and-ensure-the-shape-displays-combined-text.cs",
+      "title": "Link a shape to a cell that uses the CONCATENATE function and ensure the shape displays combined text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-with-a-date-formula-and-format-displayed-text-using-a-custom-pattern.cs",
       "title": "Link a shape to a cell with a date formula and format displayed text using a custom pattern."
     },
