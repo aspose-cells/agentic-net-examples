@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs
 - refresh-linked-ole-objects-by-invoking-excel-automation-through-the-updatelink-method.cs
 - save-the-workbook-after-refreshing-linked-ole-objects-to-apply-the-updates.cs
+- export-a-worksheet-containing-ole-objects-to-pdf-while-preserving-object-placeholders.cs
