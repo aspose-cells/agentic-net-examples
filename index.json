@@ -961,6 +961,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-wordart-shape-set-adjustment-values-to-create-custom-curvature-and-save-the-workbook.cs",
+      "title": "Create a WordArt shape, set adjustment values to create custom curvature, and save the workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-wordart-shape-set-flip-horizontally-property-and-verify-visual-reversal.cs",
       "title": "Create a WordArt shape, set flip horizontally property, and verify visual reversal."
     },
