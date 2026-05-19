@@ -666,6 +666,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-left-alignment-to-the-first-line-and-center-alignment-to-the-second-line-of-a-textbox.cs",
+      "title": "Apply left alignment to the first line and center alignment to the second line of a TextBox."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-right-alignment-to-specific-characters-within-the-textbox-for-emphasis.cs",
       "title": "Apply right alignment to specific characters within the textbox for emphasis."
     },
