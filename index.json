@@ -1011,6 +1011,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-a-workbook-from-a-url-replace-tags-in-all-textboxes-and-save-the-file-to-cloud-storage.cs",
+      "title": "Load a workbook from a URL, replace tags in all TextBoxes, and save the file to cloud storage."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-a-workbook-from-stream-attach-a-linked-picture-from-web-url-to-cell-g10-then-refresh-links.cs",
       "title": "Load a workbook from stream, attach a linked picture from web URL to cell G10, then refresh links."
     },
