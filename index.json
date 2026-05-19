@@ -706,6 +706,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-custom-character-spacing-of-2-points-to-compress-text-within-a-narrow-shape.cs",
+      "title": "Apply a custom character spacing of -2 points to compress text within a narrow shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-custom-reflection-preset-with-size-forty-blur-three-and-distance-six-points.cs",
       "title": "Apply a custom reflection preset with size forty, blur three, and distance six points."
     },
