@@ -259,3 +259,4 @@ Output files are written to the working directory.
 - duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs
 - determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs
 - create-a-routine-that-removes-all-existing-wordart-shapes-before-adding-new-watermarks.cs
+- validate-each-worksheet-contains-exactly-one-locked-wordart-watermark-and-report-any-discrepancies.cs
