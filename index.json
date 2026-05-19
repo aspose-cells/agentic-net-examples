@@ -1566,6 +1566,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-over-all-shapes-in-the-worksheet-and-apply-uniform-line-spacing-of-15-points.cs",
+      "title": "Iterate over all shapes in the worksheet and apply uniform line spacing of 1.5 points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-over-all-text-boxes-in-a-worksheet-and-set-their-character-spacing-uniformly.cs",
       "title": "Iterate over all text boxes in a worksheet and set their character spacing uniformly."
     },
