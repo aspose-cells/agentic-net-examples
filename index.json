@@ -863,6 +863,11 @@
       "category": "working-with-shapes",
       "file": "send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs",
       "title": "Send a chart shape backward so that a linked picture appears above it in the worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs",
+      "title": "Ungroup a previously created shape group, modify each individual shape's position, and save changes."
     }
   ]
 }

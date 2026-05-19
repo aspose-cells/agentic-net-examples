@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - create-an-ole-object-for-a-word-document-embed-it-then-change-its-display-icon-to-an-image.cs
 - group-a-picture-and-a-chart-lock-the-group-then-attempt-to-ungroup-to-test-lock-enforcement.cs
 - create-a-shape-group-lock-it-then-attempt-to-move-an-inner-shape-to-test-lock-enforcement.cs
+- ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs
