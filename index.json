@@ -706,6 +706,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "extract-an-embedded-ole-object-to-a-designated-output-folder-on-disk.cs",
+      "title": "Extract an embedded OLE object to a designated output folder on disk."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "extract-an-ole-object-rename-the-extracted-file-based-on-worksheet-name-and-save-to-output-directory.cs",
       "title": "Extract an OLE object, rename the extracted file based on worksheet name, and save to output directory."
     },

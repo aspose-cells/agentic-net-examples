@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - retrieve-an-oleobject-by-name-from-the-worksheets-oleobjects-collection-for-modification.cs
 - change-the-position-of-a-retrieved-oleobject-using-top-and-left-offset-values.cs
 - update-the-display-label-of-a-linked-ole-object-to-a-descriptive-string.cs
+- extract-an-embedded-ole-object-to-a-designated-output-folder-on-disk.cs
