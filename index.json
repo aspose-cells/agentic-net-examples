@@ -2121,6 +2121,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-read-a-shapes-connection-points-calculate-bounding-box-dimensions-and-write-dimensions-to-worksheet-cells.cs",
+      "title": "Programmatically read a shape's connection points, calculate bounding box dimensions, and write dimensions to worksheet cells."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-read-connection-points-of-a-shape-identify-points-on-the-right-edge-and-log-them.cs",
       "title": "Programmatically read connection points of a shape, identify points on the right edge, and log them."
     },
