@@ -1001,6 +1001,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "convert-each-detected-smartart-shape-to-a-groupshape-using-shapegetresultofsmartart.cs",
+      "title": "Convert each detected SmartArt shape to a GroupShape using Shape.GetResultOfSmartArt."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "convert-the-formula-in-cell-d10-to-mathml-via-tomathml-and-store-the-markup-in-a-string-variable.cs",
       "title": "Convert the formula in cell D10 to MathML via ToMathML() and store the markup in a string variable."
     },
