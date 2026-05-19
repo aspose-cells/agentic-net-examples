@@ -1051,6 +1051,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs",
+      "title": "Develop a method to retrieve and display absolute positions of all shapes on a worksheet for analysis."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "develop-a-process-to-ungroup-nested-shape-groups-recursively-until-only-individual-shapes-remain-on-the-sheet.cs",
       "title": "Develop a process to ungroup nested shape groups recursively until only individual shapes remain on the sheet."
     },

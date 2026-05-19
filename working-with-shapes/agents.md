@@ -305,3 +305,4 @@ Output files are written to the working directory.
 - develop-a-process-to-ungroup-nested-shape-groups-recursively-until-only-individual-shapes-remain-on-the-sheet.cs
 - implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs
 - create-a-script-that-applies-a-uniform-glow-effect-to-every-shape-whose-name-contains-important.cs
+- develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs
