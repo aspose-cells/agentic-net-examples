@@ -1841,6 +1841,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-routine-that-copies-a-chart-shape-changes-its-title-and-places-it-on-a-summary-worksheet.cs",
+      "title": "Write a routine that copies a chart shape, changes its title, and places it on a summary worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-code-to-apply-a-custom-reflection-gradient-to-a-picture-shape-adjusting-both-opacity-and-size-parameters.cs",
       "title": "Write code to apply a custom reflection gradient to a picture shape, adjusting both opacity and size parameters."
     },

@@ -317,3 +317,4 @@ Output files are written to the working directory.
 - write-code-to-apply-a-custom-reflection-gradient-to-a-picture-shape-adjusting-both-opacity-and-size-parameters.cs
 - implement-a-batch-copy-operation-that-transfers-all-drawing-objects-from-a-template-worksheet-to-newly-created-worksheets.cs
 - create-a-utility-that-lists-each-shapes-zorder-index-and-sorts-them-alphabetically-by-name-for-reporting.cs
+- write-a-routine-that-copies-a-chart-shape-changes-its-title-and-places-it-on-a-summary-worksheet.cs
