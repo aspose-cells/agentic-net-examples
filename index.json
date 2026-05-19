@@ -721,6 +721,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-the-preset-wordart-style-wave-to-the-first-shapes-text-using-fontsetting.cs",
+      "title": "Apply the preset WordArt style Wave to the first shape's text using FontSetting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "assign-a-custom-display-label-to-the-ole-object-using-the-label-property.cs",
       "title": "Assign a custom display label to the OLE object using the Label property."
     },
