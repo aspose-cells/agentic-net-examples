@@ -996,6 +996,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "calculate-the-pixel-offset-between-two-shapes-using-their-absolute-positions-and-store-the-result-in-a-cell.cs",
+      "title": "Calculate the pixel offset between two shapes using their absolute positions and store the result in a cell."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs",
       "title": "Cast the conversion result to GroupShape and verify the object type is GroupShape."
     },
