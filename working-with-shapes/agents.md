@@ -334,3 +334,4 @@ Output files are written to the working directory.
 - send-the-shape-to-the-front-layer-to-adjust-zorder-positioning.cs
 - retrieve-all-connection-points-of-a-chart-shape-and-export-coordinates-to-a-csv-file.cs
 - update-a-shapes-connection-point-offset-to-1020-and-persist-the-changes.cs
+- apply-a-custom-reflection-preset-with-size-forty-blur-three-and-distance-six-points.cs
