@@ -986,6 +986,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-button-control-assign-a-macro-name-and-position-it-at-cell-d5.cs",
+      "title": "Insert a Button control, assign a macro name, and position it at cell D5."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs",
       "title": "Insert a linked picture from a secure intranet URL, configure authentication headers, and handle access denied errors."
     },

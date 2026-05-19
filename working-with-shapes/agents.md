@@ -225,3 +225,4 @@ Output files are written to the working directory.
 - update-an-activex-combobox-value-to-a-custom-string-and-verify-the-change-programmatically.cs
 - add-a-listbox-control-enable-multiselection-mode-and-populate-it-with-ten-entries.cs
 - set-the-selected-indices-of-a-listbox-based-on-values-from-column-a.cs
+- insert-a-button-control-assign-a-macro-name-and-position-it-at-cell-d5.cs
