@@ -1831,6 +1831,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-code-to-apply-a-custom-reflection-gradient-to-a-picture-shape-adjusting-both-opacity-and-size-parameters.cs",
+      "title": "Write code to apply a custom reflection gradient to a picture shape, adjusting both opacity and size parameters."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs",
       "title": "Write code to clone a chart shape, modify its data series, and place it on another worksheet."
     },

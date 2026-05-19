@@ -314,3 +314,4 @@ Output files are written to the working directory.
 - implement-a-process-to-copy-a-shapes-3d-format-settings-from-one-shape-to-another-across-worksheets.cs
 - create-a-validation-rule-that-ensures-every-shape-linked-to-a-cell-references-a-valid-nonempty-cell-address.cs
 - develop-a-script-that-iterates-through-all-shapes-unlocking-those-with-a-specific-tag-attribute-for-editing.cs
+- write-code-to-apply-a-custom-reflection-gradient-to-a-picture-shape-adjusting-both-opacity-and-size-parameters.cs
