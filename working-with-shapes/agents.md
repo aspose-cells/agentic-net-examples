@@ -503,3 +503,4 @@ Output files are written to the working directory.
 - programmatically-read-connection-points-of-a-shape-identify-points-on-the-right-edge-and-log-them.cs
 - iterate-through-a-shapes-connectionpoints-collection-to-calculate-the-average-position-of-all-points.cs
 - programmatically-read-a-shapes-connection-points-calculate-bounding-box-dimensions-and-write-dimensions-to-worksheet-cells.cs
+- programmatically-retrieve-connection-points-of-a-shape-calculate-euclidean-distance-between-first-two-points-and-store-result.cs

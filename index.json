@@ -2136,6 +2136,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-retrieve-connection-points-of-a-shape-calculate-euclidean-distance-between-first-two-points-and-store-result.cs",
+      "title": "Programmatically retrieve connection points of a shape, calculate Euclidean distance between first two points, and store result."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-set-a-shapes-z-order-to-a-specific-positive-value-then-retrieve-and-confirm-the-same-value.cs",
       "title": "Programmatically set a shape's Z-order to a specific positive value, then retrieve and confirm the same value."
     },
