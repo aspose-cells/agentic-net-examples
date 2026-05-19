@@ -821,6 +821,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-containing-a-hyperlink-to-another-worksheet-within-the-same-workbook-for-quick-navigation.cs",
+      "title": "Create a shape containing a hyperlink to another worksheet within the same workbook for quick navigation."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-group-lock-it-then-attempt-to-move-an-inner-shape-to-test-lock-enforcement.cs",
       "title": "Create a shape group, lock it, then attempt to move an inner shape to test lock enforcement."
     },

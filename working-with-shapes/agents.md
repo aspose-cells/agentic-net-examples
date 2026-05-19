@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - implement-a-batch-operation-that-replaces-date-tags-in-all-textboxes-with-the-current-system-date-formatted-yyyymmdd.cs
 - detect-shapes-that-exceed-worksheet-boundaries-and-automatically-reposition-them-within-visible-limits-to-avoid-clipping.cs
 - change-the-line-style-of-shape-divider-to-dashed-and-set-its-thickness-to-two-points.cs
+- create-a-shape-containing-a-hyperlink-to-another-worksheet-within-the-same-workbook-for-quick-navigation.cs
