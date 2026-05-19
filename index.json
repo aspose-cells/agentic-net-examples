@@ -741,6 +741,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "copy-the-textbox-to-another-worksheet-while-preserving-its-size-and-text-attributes.cs",
+      "title": "Copy the textbox to another worksheet while preserving its size and text attributes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs",
       "title": "Create a batch process that adds the same WAV OLE object to every worksheet."
     },
