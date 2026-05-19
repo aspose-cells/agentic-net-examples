@@ -976,6 +976,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "group-multiple-rectangle-shapes-into-a-single-container-for-collective-movement.cs",
+      "title": "Group multiple Rectangle shapes into a single container for collective movement."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "group-shapes-icon1-icon2-and-icon3-into-a-single-group-named-iconset-for-collective-manipulation.cs",
       "title": "Group shapes Icon1, Icon2, and Icon3 into a single group named IconSet for collective manipulation."
     },
