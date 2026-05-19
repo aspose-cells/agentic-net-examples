@@ -981,6 +981,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs",
+      "title": "Compare geometry before and after XML import to ensure consistency."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "compare-shape-path-data-before-and-after-modification-to-detect-geometry-changes.cs",
       "title": "Compare shape path data before and after modification to detect geometry changes."
     },
