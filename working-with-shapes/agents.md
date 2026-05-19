@@ -525,3 +525,4 @@ Output files are written to the working directory.
 - create-a-shape-set-its-absolute-position-to-align-with-a-specific-column-header-and-validate-alignment.cs
 - add-a-shape-set-its-absolute-position-based-on-column-index-multiplied-by-column-width-and-test-placement.cs
 - create-a-shape-set-its-absolute-position-using-pixel-values-from-a-configuration-file-and-validate-placement.cs
+- programmatically-move-a-shape-to-the-back-layer-then-adjust-its-absolute-position-to-align-with-a-header.cs
