@@ -806,6 +806,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-combobox-control-populate-it-with-five-items-and-define-its-dropdown-width.cs",
+      "title": "Create a ComboBox control, populate it with five items, and define its drop\u2011down width."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-conditional-formatting-rule-using-an-icon-set-to-display-arrows-based-on-numeric-thresholds.cs",
       "title": "Create a conditional formatting rule using an icon set to display arrows based on numeric thresholds."
     },
