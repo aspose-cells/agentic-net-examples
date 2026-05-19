@@ -1121,6 +1121,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-the-zorder-of-the-textbox-to-bring-it-to-the-front-of-overlapping-objects.cs",
+      "title": "Set the Z\u2011order of the textbox to bring it to the front of overlapping objects."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs",
       "title": "Ungroup a previously created shape group, modify each individual shape's position, and save changes."
     },
