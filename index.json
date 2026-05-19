@@ -616,6 +616,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-textbox-control-to-the-first-worksheet-and-set-its-initial-text.cs",
+      "title": "Add a TextBox control to the first worksheet and set its initial text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-an-ole-object-for-a-powerpoint-slide-set-its-size-to-match-cell-g3-and-lock-it.cs",
       "title": "Add an OLE object for a PowerPoint slide, set its size to match cell G3, and lock it."
     },
