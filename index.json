@@ -141,6 +141,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-an-xlsb-file-calculate-all-formulas-and-generate-a-json-representation-of-the-data.cs",
+      "title": "Load an XLSB file, calculate all formulas, and generate a JSON representation of the data."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-an-xlsm-file-remove-macros-and-save-the-workbook-as-a-strict-open-xml-xlsx.cs",
       "title": "Load an XLSM file, remove macros, and save the workbook as a strict Open XML XLSX."
     },
