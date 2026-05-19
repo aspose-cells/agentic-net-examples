@@ -516,3 +516,4 @@ Output files are written to the working directory.
 - retrieve-a-shapes-absolute-position-convert-pixels-to-centimeters-and-store-conversion-in-a-cell.cs
 - retrieve-absolute-positions-of-all-shapes-on-a-worksheet-sort-them-by-y-coordinate-and-output-order.cs
 - retrieve-a-shapes-absolute-position-convert-pixels-to-points-and-compare-with-excels-point-measurement.cs
+- set-a-shapes-absolute-position-based-on-column-width-and-row-height-calculations-and-validate-alignment.cs
