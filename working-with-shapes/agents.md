@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - resize-the-line-to-span-cells-b2-through-e2-and-adjust-its-thickness.cs
 - create-a-rectangle-shape-fill-it-with-light-blue-and-place-it-behind-chart-objects.cs
 - group-multiple-rectangle-shapes-into-a-single-container-for-collective-movement.cs
+- insert-a-generic-activex-togglebutton-using-shapecollectionaddactivexcontrol-and-set-its-default-state.cs
