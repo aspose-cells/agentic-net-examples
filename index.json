@@ -681,6 +681,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-custom-text-and-verify.cs",
+      "title": "Add a shape, link it to a cell using TEXT for number format with custom text, and verify."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-scientific-notation-and-verify.cs",
       "title": "Add a shape, link it to a cell using TEXT for number format with scientific notation, and verify."
     },
