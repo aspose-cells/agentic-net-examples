@@ -2511,6 +2511,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "verify-that-pdf-output-reflects-updated-linked-shape-image-after-refresh-operation.cs",
+      "title": "Verify that PDF output reflects updated linked shape image after refresh operation."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "verify-that-rotatetextwithshape-default-is-true-before-modifying-it-in-the-shape.cs",
       "title": "Verify that RotateTextWithShape default is true before modifying it in the shape."
     },
