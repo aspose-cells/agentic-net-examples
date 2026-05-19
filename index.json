@@ -641,6 +641,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-the-oleobjectwidth-and-height-to-fit-within-the-target-cell-range.cs",
+      "title": "Configure the OleObject.Width and Height to fit within the target cell range."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
       "title": "Create a camera shape for a specified range to capture its visual representation as an image."
     },

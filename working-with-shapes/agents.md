@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - load-an-existing-workbook-and-access-its-worksheet-collection-for-manipulation.cs
 - insert-a-wav-file-as-an-embedded-ole-object-at-specified-cell-coordinates.cs
 - set-the-oleobjectname-property-to-a-unique-identifier-after-insertion.cs
+- configure-the-oleobjectwidth-and-height-to-fit-within-the-target-cell-range.cs
