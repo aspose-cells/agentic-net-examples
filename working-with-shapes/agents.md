@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - use-oleobjectalternativetext-property-to-store-custom-metadata-for-later-retrieval.cs
 - clone-an-existing-ole-object-and-place-the-copy-on-a-different-worksheet.cs
 - remove-an-unwanted-ole-object-from-a-worksheet-based-on-its-label-content.cs
+- add-a-hyperlink-to-an-ole-object-that-opens-the-original-source-file-when-clicked.cs
