@@ -1406,6 +1406,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "synchronize-the-checked-state-of-multiple-checkbox-controls-with-corresponding-cells-in-a-data-table.cs",
+      "title": "Synchronize the checked state of multiple CheckBox controls with corresponding cells in a data table."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs",
       "title": "Ungroup a previously created shape group, modify each individual shape's position, and save changes."
     },
