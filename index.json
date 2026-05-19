@@ -1256,6 +1256,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-over-all-shapes-identify-wordart-objects-and-change-their-text-color-to-dark-blue.cs",
+      "title": "Iterate over all shapes, identify WordArt objects, and change their text color to dark blue."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-over-all-textbox-shapes-extract-their-inner-text-and-write-the-collected-strings-to-a-csv-file.cs",
       "title": "Iterate over all TextBox shapes, extract their inner text, and write the collected strings to a CSV file."
     },
