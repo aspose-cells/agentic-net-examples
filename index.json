@@ -996,6 +996,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-custom-enumeration-mapping-between-presetshadowtype-values-and-descriptive-labels-for-ui-display.cs",
+      "title": "Create a custom enumeration mapping between PresetShadowType values and descriptive labels for UI display."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-custom-function-that-returns-true-if-a-given-shape-is-a-locked-wordart-watermark.cs",
       "title": "Create a custom function that returns true if a given shape is a locked WordArt watermark."
     },
