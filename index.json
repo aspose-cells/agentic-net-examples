@@ -136,6 +136,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-an-xlsm-file-remove-macros-and-save-the-workbook-as-a-strict-open-xml-xlsx.cs",
+      "title": "Load an XLSM file, remove macros, and save the workbook as a strict Open XML XLSX."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
       "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
     },

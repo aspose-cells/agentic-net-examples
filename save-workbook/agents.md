@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs
 - open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs
 - instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs
+- load-an-xlsm-file-remove-macros-and-save-the-workbook-as-a-strict-open-xml-xlsx.cs
