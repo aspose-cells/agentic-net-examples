@@ -1016,6 +1016,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "import-shape-configuration-from-a-json-file-and-recreate-the-controls-on-a-target-worksheet.cs",
+      "title": "Import shape configuration from a JSON file and recreate the controls on a target worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-button-control-assign-a-macro-name-and-position-it-at-cell-d5.cs",
       "title": "Insert a Button control, assign a macro name, and position it at cell D5."
     },
