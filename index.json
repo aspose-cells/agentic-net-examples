@@ -1151,6 +1151,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-a-reflection-effect-on-a-shape-with-defined-transparency-and-size-parameters-to-simulate-glass.cs",
+      "title": "Implement a reflection effect on a shape with defined transparency and size parameters to simulate glass."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-to-catch-exceptions-when-a-specified-textbox-name-does-not-exist-in-the-worksheet.cs",
       "title": "Implement error handling to catch exceptions when a specified TextBox name does not exist in the worksheet."
     },
