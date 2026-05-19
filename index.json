@@ -2261,6 +2261,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-retrieve-all-shapes-sort-them-by-z-order-and-output-sorted-list-to-console.cs",
+      "title": "Programmatically retrieve all shapes, sort them by Z-order, and output sorted list to console."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-retrieve-connection-points-of-a-shape-calculate-euclidean-distance-between-first-two-points-and-store-result.cs",
       "title": "Programmatically retrieve connection points of a shape, calculate Euclidean distance between first two points, and store result."
     },
