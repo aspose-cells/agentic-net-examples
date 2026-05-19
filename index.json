@@ -1896,6 +1896,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "measure-file-size-differences-between-workbooks-before-and-after-shape-modifications.cs",
+      "title": "Measure file size differences between workbooks before and after shape modifications."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "measure-performance-impact-of-enabling-texture-tiling-on-large-worksheets-with-many-shapes.cs",
       "title": "Measure performance impact of enabling texture tiling on large worksheets with many shapes."
     },
