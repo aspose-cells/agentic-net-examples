@@ -2441,6 +2441,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-specific-adjustment-indices-to-modify-the-tip-angle-of-a-callout-shape.cs",
+      "title": "Use specific adjustment indices to modify the tip angle of a callout shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs",
       "title": "Use the OleObject.IsLinked property to identify linked OLE objects before processing."
     },
