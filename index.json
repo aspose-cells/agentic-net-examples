@@ -1376,6 +1376,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "send-the-inserted-wordart-shape-to-the-back-of-the-sheet-to-act-as-background-watermark.cs",
+      "title": "Send the inserted WordArt shape to the back of the sheet to act as background watermark."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-alternative-text-for-the-textbox-to-improve-accessibility-for-screen-readers.cs",
       "title": "Set alternative text for the textbox to improve accessibility for screen readers."
     },
