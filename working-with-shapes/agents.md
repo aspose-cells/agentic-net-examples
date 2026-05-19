@@ -425,3 +425,4 @@ Output files are written to the working directory.
 - validate-that-each-smartart-conversion-returns-a-nonnull-groupshape-before-proceeding.cs
 - implement-error-handling-for-unsupported-smartart-types-that-cannot-be-converted-to-groupshape.cs
 - measure-execution-time-of-smartart-detection-across-worksheets-for-performance-optimization.cs
+- use-a-custom-predicate-to-select-smartart-shapes-whose-extracted-text-contains-a-specific-keyword.cs

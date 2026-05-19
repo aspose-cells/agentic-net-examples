@@ -2266,6 +2266,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-a-custom-predicate-to-select-smartart-shapes-whose-extracted-text-contains-a-specific-keyword.cs",
+      "title": "Use a custom predicate to select SmartArt shapes whose extracted text contains a specific keyword."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-a-trycatch-block-to-handle-exceptions-when-loading-an-invalid-image-for-texture.cs",
       "title": "Use a try\u2011catch block to handle exceptions when loading an invalid image for texture."
     },
