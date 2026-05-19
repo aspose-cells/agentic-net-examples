@@ -1786,6 +1786,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "rotate-the-shapes-text-by-45-degrees-using-textoptionsrotationangle-property.cs",
+      "title": "Rotate the shape's text by 45 degrees using TextOptions.RotationAngle property."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "rotate-the-textbox-by-a-specified-angle-and-verify-its-new-orientation-on-the-worksheet.cs",
       "title": "Rotate the textbox by a specified angle and verify its new orientation on the worksheet."
     },

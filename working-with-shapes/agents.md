@@ -359,3 +359,4 @@ Output files are written to the working directory.
 - apply-a-preset-shadow-of-type-outershadow-to-the-shapes-text-via-textoptionsshadowpresettype.cs
 - change-the-shadow-preset-to-perspectivediagonalbottomleft-and-observe-visual-difference.cs
 - adjust-line-spacing-to-15-lines-within-the-shapes-text-using-textoptionslinespacing.cs
+- rotate-the-shapes-text-by-45-degrees-using-textoptionsrotationangle-property.cs
