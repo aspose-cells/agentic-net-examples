@@ -497,3 +497,4 @@ Output files are written to the working directory.
 - create-a-shape-set-its-z-order-to-a-specific-negative-value-and-confirm-it-resides-beneath-gridlines.cs
 - programmatically-set-a-shapes-z-order-to-a-specific-positive-value-then-retrieve-and-confirm-the-same-value.cs
 - create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs
+- create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs
