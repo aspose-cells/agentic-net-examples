@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - edit-an-ole-object-by-changing-its-source-file-path-to-a-new-word-document-and-update-properties.cs
 - create-an-ole-object-for-a-word-document-embed-it-then-change-its-display-icon-to-an-image.cs
 - group-a-picture-and-a-chart-lock-the-group-then-attempt-to-ungroup-to-test-lock-enforcement.cs
+- create-a-shape-group-lock-it-then-attempt-to-move-an-inner-shape-to-test-lock-enforcement.cs

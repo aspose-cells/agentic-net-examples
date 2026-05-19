@@ -656,6 +656,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-group-lock-it-then-attempt-to-move-an-inner-shape-to-test-lock-enforcement.cs",
+      "title": "Create a shape group, lock it, then attempt to move an inner shape to test lock enforcement."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-an-ole-object-for-a-pdf-set-its-icon-caption-to-report-and-embed-it-in-sheet.cs",
       "title": "Create an OLE object for a PDF, set its icon caption to 'Report', and embed it in sheet."
     },
