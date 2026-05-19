@@ -191,6 +191,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-configure-saveoptions-to-generate-a-single-worksheet-mht-file-and-save-it.cs",
+      "title": "Open a workbook, configure SaveOptions to generate a single worksheet MHT file, and save it."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-a-workbook-enable-page-margins-and-export-the-document-to-an-html-file-with-embedded-images.cs",
       "title": "Open a workbook, enable page margins, and export the document to an HTML file with embedded images."
     },
