@@ -475,3 +475,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-containing-a-nested-formula-and-verify-shape-reflects-final-result.cs
 - add-a-shape-link-it-to-a-cell-containing-a-sum-formula-and-verify-shape-shows-total-sum.cs
 - add-a-shape-link-it-to-a-cell-using-replace-function-and-verify-shape-shows-replaced-text.cs
+- link-a-shape-to-a-cell-that-uses-the-substitute-function-to-replace-characters-and-verify-updated-text.cs
