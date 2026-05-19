@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - load-multiple-svg-icons-from-a-folder-and-place-each-icon-into-successive-rows-starting-from-row-ten.cs
 - batch-insert-a-company-logo-svg-at-the-topright-corner-of-each-worksheet-in-the-workbook.cs
 - load-a-workbook-from-a-url-replace-tags-in-all-textboxes-and-save-the-file-to-cloud-storage.cs
+- iterate-over-all-textbox-shapes-extract-their-inner-text-and-write-the-collected-strings-to-a-csv-file.cs
