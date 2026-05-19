@@ -1066,6 +1066,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "define-a-blue-glow-effect-with-size-eight-points-on-all-shapes-in-the-worksheet.cs",
+      "title": "Define a blue glow effect with size eight points on all shapes in the worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "delete-the-textbox-from-the-worksheet-when-it-is-no-longer-required.cs",
       "title": "Delete the textbox from the worksheet when it is no longer required."
     },
