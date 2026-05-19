@@ -377,3 +377,4 @@ Output files are written to the working directory.
 - create-a-macrolike-routine-that-toggles-texture-tiling-on-a-shape-each-execution.cs
 - apply-a-preset-shadow-of-type-outerbottom-to-shape-text-and-capture-a-screenshot.cs
 - read-shape-properties-into-a-json-object-for-external-reporting-of-texture-and-text-settings.cs
+- write-a-script-that-loads-a-workbook-from-a-url-applies-texture-tiling-and-saves-to-cloud-storage.cs

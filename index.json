@@ -2136,6 +2136,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-script-that-loads-a-workbook-from-a-url-applies-texture-tiling-and-saves-to-cloud-storage.cs",
+      "title": "Write a script that loads a workbook from a URL, applies texture tiling, and saves to cloud storage."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-code-that-links-each-shape-to-its-corresponding-data-cell-enabling-dynamic-updates-when-cell-values-change.cs",
       "title": "Write code that links each shape to its corresponding data cell, enabling dynamic updates when cell values change."
     },
