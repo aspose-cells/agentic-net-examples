@@ -2016,6 +2016,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "reset-all-shape-adjustment-values-to-their-default-settings-programmatically.cs",
+      "title": "Reset all shape adjustment values to their default settings programmatically."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs",
       "title": "Reset all shape text formatting properties to defaults using the ClearFormatting method."
     },
