@@ -275,3 +275,4 @@ Output files are written to the working directory.
 - programmatically-unlock-a-previously-locked-wordart-watermark-to-allow-user-modifications-in-the-workbook.cs
 - create-a-wordart-shape-assign-a-custom-font-family-and-set-the-font-size-to-fortyeight-points.cs
 - use-shapecollectionaddwordart-overload-that-accepts-a-style-name-to-directly-apply-a-builtin-style.cs
+- iterate-over-all-shapes-identify-wordart-objects-and-change-their-text-color-to-dark-blue.cs
