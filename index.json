@@ -966,6 +966,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-script-that-applies-a-uniform-glow-effect-to-every-shape-whose-name-contains-important.cs",
+      "title": "Create a script that applies a uniform glow effect to every shape whose name contains 'Important'."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs",
       "title": "Create a shape and apply conditional formatting that changes its fill based on cell values."
     },
