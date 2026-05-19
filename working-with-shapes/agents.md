@@ -467,3 +467,4 @@ Output files are written to the working directory.
 - link-a-shape-to-a-cell-that-uses-the-concatenate-function-and-ensure-the-shape-displays-combined-text.cs
 - link-a-shape-to-a-cell-that-uses-the-text-function-for-number-formatting-and-display-formatted-number.cs
 - add-a-shape-link-it-to-a-cell-with-a-number-format-including-thousand-separator-and-display.cs
+- create-a-shape-link-it-to-a-cell-using-text-for-percentage-format-and-verify-percent-display.cs
