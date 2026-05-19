@@ -976,6 +976,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-over-all-textbox-shapes-extract-their-inner-text-and-write-the-collected-strings-to-a-csv-file.cs",
+      "title": "Iterate over all TextBox shapes, extract their inner text, and write the collected strings to a CSV file."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-through-all-oleobjects-in-a-workbook-and-extract-each-to-a-folder.cs",
       "title": "Iterate through all OleObjects in a workbook and extract each to a folder."
     },
