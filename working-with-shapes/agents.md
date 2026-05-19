@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - remove-an-unwanted-ole-object-from-a-worksheet-based-on-its-label-content.cs
 - add-a-hyperlink-to-an-ole-object-that-opens-the-original-source-file-when-clicked.cs
 - set-the-oleobjectvisible-property-to-false-for-background-objects-that-should-not-appear.cs
+- load-the-workbook-and-select-the-target-worksheet-before-performing-any-shape-operations.cs
