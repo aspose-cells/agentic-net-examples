@@ -641,6 +641,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-wordart-shape-to-a-specific-cell-range-and-anchor-it-so-it-moves-with-cells.cs",
+      "title": "Add a WordArt shape to a specific cell range and anchor it so it moves with cells."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-an-ole-object-for-a-powerpoint-slide-set-its-size-to-match-cell-g3-and-lock-it.cs",
       "title": "Add an OLE object for a PowerPoint slide, set its size to match cell G3, and lock it."
     },
