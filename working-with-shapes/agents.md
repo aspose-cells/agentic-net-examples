@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - lock-the-textbox-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs
 - unlock-a-previously-locked-textbox-to-allow-editing-of-its-position-and-size.cs
 - set-alternative-text-for-the-textbox-to-improve-accessibility-for-screen-readers.cs
+- export-the-textbox-as-a-png-image-with-a-transparent-background-for-external-use.cs
