@@ -946,6 +946,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs",
+      "title": "Create a gradient glow transitioning from red to yellow with size five points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-macrolike-routine-that-groups-shapes-by-type-then-locks-each-group-to-prevent-accidental-edits.cs",
       "title": "Create a macro\u2011like routine that groups shapes by type, then locks each group to prevent accidental edits."
     },
