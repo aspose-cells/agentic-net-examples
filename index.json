@@ -1801,6 +1801,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "measure-execution-time-of-smartart-detection-across-worksheets-for-performance-optimization.cs",
+      "title": "Measure execution time of SmartArt detection across worksheets for performance optimization."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "measure-performance-impact-of-enabling-texture-tiling-on-large-worksheets-with-many-shapes.cs",
       "title": "Measure performance impact of enabling texture tiling on large worksheets with many shapes."
     },
