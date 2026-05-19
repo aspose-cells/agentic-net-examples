@@ -666,6 +666,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-with-a-circular-reference-and-handle-the-resulting-error-gracefully.cs",
+      "title": "Add a shape, link it to a cell with a circular reference, and handle the resulting error gracefully."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-link-it-to-a-cell-with-a-custom-date-format-and-display-formatted-date.cs",
       "title": "Add a shape, link it to a cell with a custom date format, and display formatted date."
     },
