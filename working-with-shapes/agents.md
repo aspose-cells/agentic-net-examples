@@ -358,3 +358,4 @@ Output files are written to the working directory.
 - set-character-spacing-to-5-points-on-the-shapes-text-via-textoptionscharacterspacing.cs
 - apply-a-preset-shadow-of-type-outershadow-to-the-shapes-text-via-textoptionsshadowpresettype.cs
 - change-the-shadow-preset-to-perspectivediagonalbottomleft-and-observe-visual-difference.cs
+- adjust-line-spacing-to-15-lines-within-the-shapes-text-using-textoptionslinespacing.cs
