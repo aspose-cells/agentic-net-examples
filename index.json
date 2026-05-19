@@ -926,6 +926,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "save-the-workbook-after-refreshing-linked-ole-objects-to-apply-the-updates.cs",
+      "title": "Save the workbook after refreshing linked OLE objects to apply the updates."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs",
       "title": "Send a chart shape backward so that a linked picture appears above it in the worksheet."
     },
