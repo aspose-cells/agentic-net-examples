@@ -361,3 +361,4 @@ Output files are written to the working directory.
 - adjust-line-spacing-to-15-lines-within-the-shapes-text-using-textoptionslinespacing.cs
 - rotate-the-shapes-text-by-45-degrees-using-textoptionsrotationangle-property.cs
 - validate-that-the-shapes-texture-image-file-exists-before-assigning-it-to-avoid-errors.cs
+- implement-error-handling-for-missing-image-files-when-setting-shape-texture.cs
