@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs
 - read-a-txt-workbook-split-cells-by-custom-delimiter-and-export-the-data-to-an-xml-file.cs
 - open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs
+- load-a-workbook-apply-a-watermark-to-each-page-and-save-the-output-as-a-pdf-document.cs
