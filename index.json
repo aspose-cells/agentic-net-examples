@@ -876,6 +876,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "read-the-classid-clsid-property-of-an-embedded-ole-object-for-auditing.cs",
+      "title": "Read the ClassId (CLSID) property of an embedded OLE object for auditing."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-a-camera-shape-programmatically-using-the-api-method-to-ensure-current-range-content-is-shown.cs",
       "title": "Refresh a camera shape programmatically using the API method to ensure current range content is shown."
     },

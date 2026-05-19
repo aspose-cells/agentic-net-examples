@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - update-the-display-label-of-a-linked-ole-object-to-a-descriptive-string.cs
 - extract-an-embedded-ole-object-to-a-designated-output-folder-on-disk.cs
 - verify-that-the-extracted-files-extension-matches-the-original-format-for-integrity.cs
+- read-the-classid-clsid-property-of-an-embedded-ole-object-for-auditing.cs
