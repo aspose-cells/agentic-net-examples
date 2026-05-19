@@ -443,3 +443,4 @@ Output files are written to the working directory.
 - compare-shape-path-data-before-and-after-modification-to-detect-geometry-changes.cs
 - adjust-geometry-of-a-rounded-rectangle-callout-by-setting-specific-adjustment-values.cs
 - apply-custom-adjustment-values-to-a-collection-of-shapes-in-a-loop-for-uniformity.cs
+- reset-all-shape-adjustment-values-to-their-default-settings-programmatically.cs
