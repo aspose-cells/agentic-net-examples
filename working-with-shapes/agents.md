@@ -279,3 +279,4 @@ Output files are written to the working directory.
 - create-a-wordart-shape-set-adjustment-values-to-create-custom-curvature-and-save-the-workbook.cs
 - group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs
 - transfer-a-chart-from-sheet1-to-sheet3-using-shapesaddcopy-while-maintaining-data-source-references.cs
+- duplicate-form-controls-from-one-worksheet-to-another-ensuring-linked-cell-addresses-remain-unchanged.cs
