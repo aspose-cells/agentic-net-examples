@@ -283,3 +283,4 @@ Output files are written to the working directory.
 - group-three-selected-shapes-into-a-composite-object-and-assign-a-descriptive-name-for-reference.cs
 - ungroup-a-previously-grouped-shape-collection-to-modify-individual-components-formatting-and-positioning.cs
 - lock-a-specific-picture-shape-to-prevent-editing-during-worksheet-protection-and-verify-its-locked-property.cs
+- unlock-all-shapes-on-a-worksheet-by-iterating-through-shapecollection-and-clearing-each-shapes-locked-flag.cs
