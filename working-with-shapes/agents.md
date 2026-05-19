@@ -284,3 +284,4 @@ Output files are written to the working directory.
 - ungroup-a-previously-grouped-shape-collection-to-modify-individual-components-formatting-and-positioning.cs
 - lock-a-specific-picture-shape-to-prevent-editing-during-worksheet-protection-and-verify-its-locked-property.cs
 - unlock-all-shapes-on-a-worksheet-by-iterating-through-shapecollection-and-clearing-each-shapes-locked-flag.cs
+- apply-a-soft-shadow-effect-with-custom-offset-and-color-to-a-chart-shape-for-visual-depth.cs

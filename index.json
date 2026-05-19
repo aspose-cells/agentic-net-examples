@@ -691,6 +691,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-a-soft-shadow-effect-with-custom-offset-and-color-to-a-chart-shape-for-visual-depth.cs",
+      "title": "Apply a soft shadow effect with custom offset and color to a chart shape for visual depth."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-an-icon-set-condition-to-cells-c3c12-replace-default-icons-with-text-labels-and-save-workbook.cs",
       "title": "Apply an icon set condition to cells C3:C12, replace default icons with text labels, and save workbook."
     },
