@@ -301,3 +301,4 @@ Output files are written to the working directory.
 - develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs
 - write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs
 - design-a-routine-that-extracts-all-shape-hyperlinks-and-generates-a-report-listing-source-cells-and-target-urls.cs
+- programmatically-set-the-zorder-of-a-shape-based-on-its-importance-level-defined-in-a-custom-metadata-field.cs
