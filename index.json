@@ -711,6 +711,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "export-a-worksheet-containing-ole-objects-to-pdf-while-preserving-object-placeholders.cs",
+      "title": "Export a worksheet containing OLE objects to PDF while preserving object placeholders."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "extract-an-embedded-ole-object-to-a-designated-output-folder-on-disk.cs",
       "title": "Extract an embedded OLE object to a designated output folder on disk."
     },
