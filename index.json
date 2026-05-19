@@ -2381,6 +2381,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "update-a-linked-shape-after-changing-a-formula-in-the-source-cell.cs",
+      "title": "Update a linked shape after changing a formula in the source cell."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "update-a-shapes-connection-point-offset-to-1020-and-persist-the-changes.cs",
       "title": "Update a shape's connection point offset to (10,20) and persist the changes."
     },
