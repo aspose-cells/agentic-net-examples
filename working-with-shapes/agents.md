@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - batch-add-textbox-controls-to-each-worksheet-assigning-unique-identifiers.cs
 - iterate-through-all-worksheets-and-delete-any-checkbox-controls-linked-to-cells-containing-zero.cs
 - export-the-properties-of-all-shape-controls-to-a-json-file-for-external-analysis.cs
+- import-shape-configuration-from-a-json-file-and-recreate-the-controls-on-a-target-worksheet.cs
