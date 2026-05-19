@@ -349,3 +349,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-from-a-file-path-and-access-the-first-worksheet.cs
 - retrieve-a-shape-by-its-name-from-the-worksheet-and-verify-its-existence.cs
 - assign-a-png-image-stream-to-the-shapes-filltexturefillimage-property.cs
+- enable-tiling-on-the-shape-by-setting-filltexturefillistiling-to-true.cs

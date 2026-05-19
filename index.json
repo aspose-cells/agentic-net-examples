@@ -1176,6 +1176,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "enable-tiling-on-the-shape-by-setting-filltexturefillistiling-to-true.cs",
+      "title": "Enable tiling on the shape by setting Fill.TextureFill.IsTiling to true."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-a-worksheet-containing-ole-objects-to-pdf-while-preserving-object-placeholders.cs",
       "title": "Export a worksheet containing OLE objects to PDF while preserving object placeholders."
     },
