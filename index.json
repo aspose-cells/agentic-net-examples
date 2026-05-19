@@ -1901,6 +1901,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-worksheets-add-a-shape-to-each-link-to-a-summary-cell-and-log-results.cs",
+      "title": "Iterate worksheets, add a shape to each, link to a summary cell, and log results."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-commentbox-to-cell-g12-so-the-shape-moves-when-the-cell-shifts.cs",
       "title": "Link a shape CommentBox to cell G12 so the shape moves when the cell shifts."
     },
