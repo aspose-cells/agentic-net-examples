@@ -2286,6 +2286,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-connection-points-of-a-shape-filter-points-with-x-coordinate-greater-than-100-and-log-them.cs",
+      "title": "Retrieve connection points of a shape, filter points with X coordinate greater than 100, and log them."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-absolute-position-of-a-shape-anchored-at-cell-f5-and-log-its-x-and-y-coordinates.cs",
       "title": "Retrieve the absolute position of a shape anchored at cell F5 and log its X and Y coordinates."
     },
