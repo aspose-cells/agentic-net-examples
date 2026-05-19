@@ -1461,6 +1461,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "identify-smartart-shapes-in-a-worksheet-and-list-their-names.cs",
+      "title": "Identify SmartArt shapes in a worksheet and list their names."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-a-batch-copy-operation-that-transfers-all-drawing-objects-from-a-template-worksheet-to-newly-created-worksheets.cs",
       "title": "Implement a batch copy operation that transfers all drawing objects from a template worksheet to newly created worksheets."
     },
