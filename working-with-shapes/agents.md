@@ -405,3 +405,4 @@ Output files are written to the working directory.
 - reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs
 - use-shapetextalignment-object-to-read-current-line-spacing-before-applying-changes.cs
 - apply-a-custom-paragraph-style-by-setting-line-spacing-space-before-and-space-after-simultaneously.cs
+- adjust-character-spacing-together-with-line-spacing-to-achieve-balanced-text-appearance.cs

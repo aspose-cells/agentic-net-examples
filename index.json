@@ -666,6 +666,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-character-spacing-together-with-line-spacing-to-achieve-balanced-text-appearance.cs",
+      "title": "Adjust character spacing together with line spacing to achieve balanced text appearance."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "adjust-line-spacing-to-15-lines-within-the-shapes-text-using-textoptionslinespacing.cs",
       "title": "Adjust line spacing to 1.5 lines within the shape's text using TextOptions.LineSpacing."
     },
