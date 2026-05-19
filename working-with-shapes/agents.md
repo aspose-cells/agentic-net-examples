@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - export-the-textbox-as-a-png-image-with-a-transparent-background-for-external-use.cs
 - delete-the-textbox-from-the-worksheet-when-it-is-no-longer-required.cs
 - copy-the-textbox-to-another-worksheet-while-preserving-its-size-and-text-attributes.cs
+- move-the-textbox-to-a-different-cell-location-by-updating-its-anchor-coordinates.cs
