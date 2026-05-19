@@ -313,3 +313,4 @@ Output files are written to the working directory.
 - write-a-function-that-calculates-the-distance-between-two-shapes-using-their-absolute-positions-for-collision-detection.cs
 - implement-a-process-to-copy-a-shapes-3d-format-settings-from-one-shape-to-another-across-worksheets.cs
 - create-a-validation-rule-that-ensures-every-shape-linked-to-a-cell-references-a-valid-nonempty-cell-address.cs
+- develop-a-script-that-iterates-through-all-shapes-unlocking-those-with-a-specific-tag-attribute-for-editing.cs
