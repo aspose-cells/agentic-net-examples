@@ -1311,6 +1311,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-inserted-svg-files-to-ensure-they-do-not-contain-unsupported-elements-that-could-cause-rendering-errors.cs",
+      "title": "Validate inserted SVG files to ensure they do not contain unsupported elements that could cause rendering errors."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "validate-that-all-textbox-shapes-contain-required-tags-before-performing-batch-replacement-to-avoid-missing-data-errors.cs",
       "title": "Validate that all TextBox shapes contain required tags before performing batch replacement to avoid missing data errors."
     },

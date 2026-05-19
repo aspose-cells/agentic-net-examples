@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - programmatically-remove-all-shapes-from-a-worksheet-before-exporting-the-data-to-a-csv-format-for-clean-output.cs
 - export-all-shapes-xml-definitions-to-a-separate-file-for-external-analysis-and-version-control-tracking.cs
 - export-worksheet-shapes-as-separate-svg-files-preserving-visual-properties-for-reuse-in-web-pages.cs
+- validate-inserted-svg-files-to-ensure-they-do-not-contain-unsupported-elements-that-could-cause-rendering-errors.cs
