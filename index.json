@@ -2331,6 +2331,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-that-each-smartart-conversion-returns-a-nonnull-groupshape-before-proceeding.cs",
+      "title": "Validate that each SmartArt conversion returns a non\u2011null GroupShape before proceeding."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "validate-that-the-shapes-texture-image-file-exists-before-assigning-it-to-avoid-errors.cs",
       "title": "Validate that the shape's texture image file exists before assigning it to avoid errors."
     },
