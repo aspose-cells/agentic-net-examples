@@ -716,6 +716,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-an-outer-shadow-preset-and-set-its-transparency-to-40-percent-for-the-shape.cs",
+      "title": "Apply an outer shadow preset and set its transparency to 40 percent for the shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-bold-and-italic-styles-to-selected-text-fragments-within-the-textbox.cs",
       "title": "Apply bold and italic styles to selected text fragments within the textbox."
     },
