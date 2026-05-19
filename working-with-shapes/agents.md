@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - delete-the-textbox-from-the-worksheet-when-it-is-no-longer-required.cs
 - copy-the-textbox-to-another-worksheet-while-preserving-its-size-and-text-attributes.cs
 - move-the-textbox-to-a-different-cell-location-by-updating-its-anchor-coordinates.cs
+- ungroup-previously-grouped-shapes-ensuring-each-retains-its-original-formatting.cs
