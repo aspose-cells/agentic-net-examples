@@ -2391,6 +2391,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "update-a-linked-cell-value-and-refresh-the-shape-to-display-the-new-content-automatically.cs",
+      "title": "Update a linked cell value and refresh the shape to display the new content automatically."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "update-a-linked-shape-after-changing-a-formula-in-the-source-cell.cs",
       "title": "Update a linked shape after changing a formula in the source cell."
     },
