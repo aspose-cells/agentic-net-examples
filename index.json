@@ -1341,6 +1341,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs",
+      "title": "Create multiple shapes, assign each a different Z-order value, and confirm rendering order matches expectations."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "define-a-blue-glow-effect-with-size-eight-points-on-all-shapes-in-the-worksheet.cs",
       "title": "Define a blue glow effect with size eight points on all shapes in the worksheet."
     },
