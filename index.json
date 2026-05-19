@@ -1811,6 +1811,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-function-that-calculates-the-distance-between-two-shapes-using-their-absolute-positions-for-collision-detection.cs",
+      "title": "Write a function that calculates the distance between two shapes using their absolute positions for collision detection."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs",
       "title": "Write code to clone a chart shape, modify its data series, and place it on another worksheet."
     },
