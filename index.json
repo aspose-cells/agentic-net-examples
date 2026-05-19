@@ -1516,6 +1516,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-wordart-shapes-text-alignment-to-center-horizontally-and-vertically-within-the-shape-bounds.cs",
+      "title": "Set WordArt shape's text alignment to center horizontally and vertically within the shape bounds."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "synchronize-the-checked-state-of-multiple-checkbox-controls-with-corresponding-cells-in-a-data-table.cs",
       "title": "Synchronize the checked state of multiple CheckBox controls with corresponding cells in a data table."
     },
