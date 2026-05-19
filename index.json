@@ -1001,6 +1001,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-the-displayed-text-of-the-textbox-using-a-provided-string-value.cs",
+      "title": "Set the displayed text of the textbox using a provided string value."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-the-oleobjectlockaspectratio-flag-to-preserve-original-proportions-during-resizing.cs",
       "title": "Set the OleObject.LockAspectRatio flag to preserve original proportions during resizing."
     },

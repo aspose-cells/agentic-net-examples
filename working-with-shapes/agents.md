@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - add-a-new-textbox-to-the-worksheet-at-the-specified-cell-coordinates.cs
 - assign-a-unique-name-to-the-textbox-for-later-identification-and-manipulation.cs
 - retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs
+- set-the-displayed-text-of-the-textbox-using-a-provided-string-value.cs
