@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs
 - group-shapes-icon1-icon2-and-icon3-into-a-single-group-named-iconset-for-collective-manipulation.cs
 - lock-the-shape-signature-to-prevent-accidental-resizing-or-repositioning-during-workbook-editing.cs
+- unlock-the-shape-signature-after-confirmation-to-allow-modifications-to-its-size-and-position.cs
