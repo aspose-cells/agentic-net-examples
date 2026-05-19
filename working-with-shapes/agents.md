@@ -461,3 +461,4 @@ Output files are written to the working directory.
 - update-a-linked-shape-after-changing-a-formula-in-the-source-cell.cs
 - verify-that-pdf-output-reflects-updated-linked-shape-image-after-refresh-operation.cs
 - measure-file-size-differences-between-workbooks-before-and-after-shape-modifications.cs
+- create-a-workbook-add-a-rectangle-shape-and-link-it-to-cell-a1-for-dynamic-text.cs

@@ -1251,6 +1251,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-workbook-add-a-rectangle-shape-and-link-it-to-cell-a1-for-dynamic-text.cs",
+      "title": "Create a workbook, add a rectangle shape, and link it to cell A1 for dynamic text."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-an-ole-object-for-a-pdf-set-its-icon-caption-to-report-and-embed-it-in-sheet.cs",
       "title": "Create an OLE object for a PDF, set its icon caption to 'Report', and embed it in sheet."
     },
