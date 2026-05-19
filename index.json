@@ -666,6 +666,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-conditional-formatting-to-a-shapes-fill-color-based-on-a-linked-cells-value-exceeding-a-threshold.cs",
+      "title": "Apply conditional formatting to a shape's fill color based on a linked cell's value exceeding a threshold."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-left-alignment-to-the-entire-text-within-the-textbox.cs",
       "title": "Apply left alignment to the entire text within the textbox."
     },
