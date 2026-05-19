@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - set-the-oleobjectlockaspectratio-flag-to-preserve-original-proportions-during-resizing.cs
 - assign-a-custom-display-label-to-the-ole-object-using-the-label-property.cs
 - retrieve-an-oleobject-by-name-from-the-worksheets-oleobjects-collection-for-modification.cs
+- change-the-position-of-a-retrieved-oleobject-using-top-and-left-offset-values.cs
