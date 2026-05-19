@@ -1286,6 +1286,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-absolute-position-to-align-with-a-specific-column-header-and-validate-alignment.cs",
+      "title": "Create a shape, set its absolute position to align with a specific column header, and validate alignment."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-set-its-z-order-to-a-specific-negative-value-and-confirm-it-resides-beneath-gridlines.cs",
       "title": "Create a shape, set its Z-order to a specific negative value, and confirm it resides beneath gridlines."
     },
