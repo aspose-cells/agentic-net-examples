@@ -661,6 +661,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-the-workbook-to-run-in-licensed-mode-to-suppress-evaluation-watermarks.cs",
+      "title": "Configure the workbook to run in licensed mode to suppress evaluation watermarks."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
       "title": "Create a camera shape for a specified range to capture its visual representation as an image."
     },
