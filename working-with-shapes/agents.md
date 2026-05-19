@@ -440,3 +440,4 @@ Output files are written to the working directory.
 - export-the-workbook-with-modified-smartart-shapes-to-a-pdf-document.cs
 - access-nonprimitive-shape-data-and-extract-all-path-segment-points.cs
 - serialize-extracted-shape-path-data-to-json-for-external-consumption.cs
+- compare-shape-path-data-before-and-after-modification-to-detect-geometry-changes.cs

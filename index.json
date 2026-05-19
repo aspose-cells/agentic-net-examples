@@ -966,6 +966,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "compare-shape-path-data-before-and-after-modification-to-detect-geometry-changes.cs",
+      "title": "Compare shape path data before and after modification to detect geometry changes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "compare-the-number-of-adjustment-values-before-and-after-conversion-to-ensure-data-integrity.cs",
       "title": "Compare the number of adjustment values before and after conversion to ensure data integrity."
     },
