@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - extract-an-ole-object-rename-the-extracted-file-based-on-worksheet-name-and-save-to-output-directory.cs
 - edit-an-ole-object-by-changing-its-source-file-path-to-a-new-word-document-and-update-properties.cs
 - create-an-ole-object-for-a-word-document-embed-it-then-change-its-display-icon-to-an-image.cs
+- group-a-picture-and-a-chart-lock-the-group-then-attempt-to-ungroup-to-test-lock-enforcement.cs
