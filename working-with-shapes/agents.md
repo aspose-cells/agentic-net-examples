@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - read-the-classid-clsid-property-of-an-embedded-ole-object-for-auditing.cs
 - assign-a-new-guid-to-the-oleobjectclassid-to-change-its-associated-application.cs
 - iterate-through-all-oleobjects-in-a-workbook-and-extract-each-to-a-folder.cs
+- use-the-oleobjectislinked-property-to-identify-linked-ole-objects-before-processing.cs
