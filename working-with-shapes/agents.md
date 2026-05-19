@@ -404,3 +404,4 @@ Output files are written to the working directory.
 - set-text-alignment-to-center-horizontally-and-middle-vertically-for-a-specific-shape.cs
 - reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs
 - use-shapetextalignment-object-to-read-current-line-spacing-before-applying-changes.cs
+- apply-a-custom-paragraph-style-by-setting-line-spacing-space-before-and-space-after-simultaneously.cs
