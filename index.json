@@ -886,6 +886,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-an-oleobject-by-name-from-the-worksheets-oleobjects-collection-for-modification.cs",
+      "title": "Retrieve an OleObject by name from the worksheet\u2019s OleObjects collection for modification."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-absolute-position-of-a-shape-anchored-at-cell-f5-and-log-its-x-and-y-coordinates.cs",
       "title": "Retrieve the absolute position of a shape anchored at cell F5 and log its X and Y coordinates."
     },
