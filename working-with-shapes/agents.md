@@ -297,3 +297,4 @@ Output files are written to the working directory.
 - read-the-current-shadow-color-of-a-shape-and-output-its-rgb-values-for-logging-purposes.cs
 - extract-the-glow-color-from-a-shape-and-compare-it-against-a-predefined-palette-for-consistency-checks.cs
 - batch-copy-all-pictures-from-multiple-worksheets-into-a-summary-sheet-preserving-each-pictures-original-size.cs
+- create-a-macrolike-routine-that-groups-shapes-by-type-then-locks-each-group-to-prevent-accidental-edits.cs
