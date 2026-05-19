@@ -906,6 +906,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-wordart-shape-set-rotation-to-45-degrees-and-position-it-diagonally-across-the-sheet.cs",
+      "title": "Create a WordArt shape, set rotation to 45 degrees, and position it diagonally across the sheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-an-ole-object-for-a-pdf-set-its-icon-caption-to-report-and-embed-it-in-sheet.cs",
       "title": "Create an OLE object for a PDF, set its icon caption to 'Report', and embed it in sheet."
     },
