@@ -976,6 +976,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-all-shapes-on-a-worksheet-listing-each-shapes-name-type-and-absolute-coordinates.cs",
+      "title": "Iterate all shapes on a worksheet, listing each shape's name, type, and absolute coordinates."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-over-all-textbox-shapes-extract-their-inner-text-and-write-the-collected-strings-to-a-csv-file.cs",
       "title": "Iterate over all TextBox shapes, extract their inner text, and write the collected strings to a CSV file."
     },
