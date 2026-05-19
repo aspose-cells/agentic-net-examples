@@ -306,3 +306,4 @@ Output files are written to the working directory.
 - implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs
 - create-a-script-that-applies-a-uniform-glow-effect-to-every-shape-whose-name-contains-important.cs
 - develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs
+- implement-a-batch-operation-that-locks-all-shapes-on-every-worksheet-before-exporting-the-workbook-to-pdf.cs
