@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - rotate-the-textbox-by-a-specified-angle-and-verify-its-new-orientation-on-the-worksheet.cs
 - set-the-textbox-background-fill-to-a-solid-color-with-optional-transparency.cs
 - apply-a-gradient-fill-to-the-textbox-using-two-custom-colors-and-a-defined-angle.cs
+- add-a-hyperlink-to-the-textbox-that-opens-a-web-page-when-the-shape-is-clicked.cs

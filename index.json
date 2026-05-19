@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-hyperlink-to-the-textbox-that-opens-a-web-page-when-the-shape-is-clicked.cs",
+      "title": "Add a hyperlink to the textbox that opens a web page when the shape is clicked."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-new-textbox-to-the-worksheet-at-the-specified-cell-coordinates.cs",
       "title": "Add a new textbox to the worksheet at the specified cell coordinates."
     },
