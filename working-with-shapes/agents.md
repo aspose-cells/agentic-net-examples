@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - set-the-displayed-text-of-the-textbox-using-a-provided-string-value.cs
 - append-additional-text-to-the-existing-content-of-the-textbox-programmatically.cs
 - apply-left-alignment-to-the-entire-text-within-the-textbox.cs
+- apply-center-alignment-to-selected-characters-inside-the-textbox-using-rich-text-formatting.cs

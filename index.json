@@ -636,6 +636,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-center-alignment-to-selected-characters-inside-the-textbox-using-rich-text-formatting.cs",
+      "title": "Apply center alignment to selected characters inside the textbox using rich text formatting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-left-alignment-to-the-entire-text-within-the-textbox.cs",
       "title": "Apply left alignment to the entire text within the textbox."
     },
