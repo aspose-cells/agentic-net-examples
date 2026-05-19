@@ -646,6 +646,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-the-wordart-shapes-top-left-width-and-height-to-cover-the-entire-worksheet.cs",
+      "title": "Adjust the WordArt shape's top, left, width, and height to cover the entire worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "append-additional-text-to-the-existing-content-of-the-textbox-programmatically.cs",
       "title": "Append additional text to the existing content of the textbox programmatically."
     },

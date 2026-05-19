@@ -243,3 +243,4 @@ Output files are written to the working directory.
 - validate-that-each-activex-control-has-a-unique-name-property-before-saving-the-workbook.cs
 - generate-a-report-listing-all-shape-types-present-in-a-workbook-along-with-their-cell-coordinates.cs
 - create-a-new-workbook-and-insert-a-wordart-watermark-on-the-first-worksheet.cs
+- adjust-the-wordart-shapes-top-left-width-and-height-to-cover-the-entire-worksheet.cs
