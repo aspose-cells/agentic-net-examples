@@ -151,6 +151,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-a-workbook-adjust-pdf-export-quality-to-300-dpi-and-save-the-highresolution-pdf.cs",
+      "title": "Load a workbook, adjust PDF export quality to 300 DPI, and save the high\u2011resolution PDF."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-a-workbook-apply-a-watermark-to-each-page-and-save-the-output-as-a-pdf-document.cs",
       "title": "Load a workbook, apply a watermark to each page, and save the output as a PDF document."
     },
