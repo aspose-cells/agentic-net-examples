@@ -218,3 +218,4 @@ Output files are written to the working directory.
 - add-a-textbox-control-to-the-first-worksheet-and-set-its-initial-text.cs
 - retrieve-all-textbox-controls-from-a-worksheet-and-output-their-positions.cs
 - change-the-text-of-a-specific-textbox-and-save-the-workbook-as-xlsx.cs
+- add-a-checkbox-control-to-a-worksheet-and-link-its-state-to-cell-b2.cs
