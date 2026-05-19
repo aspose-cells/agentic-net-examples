@@ -871,6 +871,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "configure-shadow-effect-with-45-degree-angle-10-point-distance-and-dark-gray-color.cs",
+      "title": "Configure shadow effect with 45 degree angle, 10 point distance, and dark gray color."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "configure-the-button-to-trigger-a-vba-script-that-highlights-the-active-row.cs",
       "title": "Configure the Button to trigger a VBA script that highlights the active row."
     },
