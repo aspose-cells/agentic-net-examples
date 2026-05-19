@@ -1561,6 +1561,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-an-image-from-a-url-and-use-it-as-texture-for-a-specific-shape.cs",
+      "title": "Load an image from a URL and use it as texture for a specific shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-multiple-svg-icons-from-a-folder-and-place-each-icon-into-successive-rows-starting-from-row-ten.cs",
       "title": "Load multiple SVG icons from a folder and place each icon into successive rows starting from row ten."
     },
