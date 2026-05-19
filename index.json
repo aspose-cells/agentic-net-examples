@@ -1566,6 +1566,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "send-a-specific-shape-to-the-front-of-the-zorder-stack-to-ensure-it-overlays-other-objects.cs",
+      "title": "Send a specific shape to the front of the Z\u2011order stack to ensure it overlays other objects."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "send-the-inserted-wordart-shape-to-the-back-of-the-sheet-to-act-as-background-watermark.cs",
       "title": "Send the inserted WordArt shape to the back of the sheet to act as background watermark."
     },
