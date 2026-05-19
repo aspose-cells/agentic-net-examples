@@ -546,6 +546,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-new-textbox-to-the-worksheet-at-the-specified-cell-coordinates.cs",
+      "title": "Add a new textbox to the worksheet at the specified cell coordinates."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-picture-and-apply-cropping-parameters-to-display-only-the-central-portion-of-the-image.cs",
       "title": "Add a picture and apply cropping parameters to display only the central portion of the image."
     },
