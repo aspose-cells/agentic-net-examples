@@ -831,6 +831,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-through-all-oleobjects-in-a-workbook-and-extract-each-to-a-folder.cs",
+      "title": "Iterate through all OleObjects in a workbook and extract each to a folder."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shapes-text-to-cell-k3-so-the-shape-updates-automatically-when-the-cell-value-changes.cs",
       "title": "Link a shape's text to cell K3 so the shape updates automatically when the cell value changes."
     },
