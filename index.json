@@ -1811,6 +1811,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-a-cell-containing-a-datevalue-function-and-ensure-the-shape-displays-the-formatted-date.cs",
+      "title": "Link a shape to a cell containing a DATEVALUE function and ensure the shape displays the formatted date."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-containing-a-vlookup-formula-and-ensure-shape-updates-with-lookup-result.cs",
       "title": "Link a shape to a cell containing a VLOOKUP formula and ensure shape updates with lookup result."
     },
