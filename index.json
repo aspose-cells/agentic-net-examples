@@ -1046,6 +1046,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-process-to-ungroup-nested-shape-groups-recursively-until-only-individual-shapes-remain-on-the-sheet.cs",
+      "title": "Develop a process to ungroup nested shape groups recursively until only individual shapes remain on the sheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs",
       "title": "Develop a validation script that ensures no shape exceeds a specified width and height threshold across the workbook."
     },
