@@ -726,6 +726,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-shape-set-its-linked-cell-to-a-cell-with-custom-text-format-and-verify-formatted-text-appears.cs",
+      "title": "Add a shape, set its linked cell to a cell with custom text format, and verify formatted text appears."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-set-its-top-left-corner-to-specific-pixel-coordinates-and-validate-placement.cs",
       "title": "Add a shape, set its top-left corner to specific pixel coordinates, and validate placement."
     },
