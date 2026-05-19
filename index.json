@@ -2101,6 +2101,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-set-a-shapes-z-order-to-zero-and-verify-it-appears-at-the-default-layer-position.cs",
+      "title": "Programmatically set a shape's Z-order to zero and verify it appears at the default layer position."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-set-the-zorder-of-a-shape-based-on-its-importance-level-defined-in-a-custom-metadata-field.cs",
       "title": "Programmatically set the Z\u2011order of a shape based on its importance level defined in a custom metadata field."
     },
