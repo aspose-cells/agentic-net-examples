@@ -911,6 +911,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-reusable-method-that-adds-a-wordart-watermark-with-specified-text-style-and-lock-settings.cs",
+      "title": "Create a reusable method that adds a WordArt watermark with specified text, style, and lock settings."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-routine-that-removes-all-existing-wordart-shapes-before-adding-new-watermarks.cs",
       "title": "Create a routine that removes all existing WordArt shapes before adding new watermarks."
     },
