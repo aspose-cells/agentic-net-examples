@@ -841,6 +841,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-rectangle-shape-fill-it-with-light-blue-and-place-it-behind-chart-objects.cs",
+      "title": "Create a Rectangle shape, fill it with light blue, and place it behind chart objects."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs",
       "title": "Create a shape and apply conditional formatting that changes its fill based on cell values."
     },

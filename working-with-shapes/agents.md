@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - insert-a-button-control-assign-a-macro-name-and-position-it-at-cell-d5.cs
 - configure-the-button-to-trigger-a-vba-script-that-highlights-the-active-row.cs
 - resize-the-line-to-span-cells-b2-through-e2-and-adjust-its-thickness.cs
+- create-a-rectangle-shape-fill-it-with-light-blue-and-place-it-behind-chart-objects.cs
