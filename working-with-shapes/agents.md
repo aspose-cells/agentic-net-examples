@@ -469,3 +469,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-with-a-number-format-including-thousand-separator-and-display.cs
 - create-a-shape-link-it-to-a-cell-using-text-for-percentage-format-and-verify-percent-display.cs
 - add-a-shape-link-it-to-a-cell-with-a-custom-date-format-and-display-formatted-date.cs
+- create-a-shape-link-it-to-a-cell-using-text-for-scientific-notation-and-verify-display.cs

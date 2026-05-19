@@ -1221,6 +1221,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-link-it-to-a-cell-using-text-for-scientific-notation-and-verify-display.cs",
+      "title": "Create a shape, link it to a cell using TEXT for scientific notation, and verify display."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-that-displays-a-live-formula-result-by-linking-its-text-to-the-calculation-cell.cs",
       "title": "Create a shape that displays a live formula result by linking its text to the calculation cell."
     },
