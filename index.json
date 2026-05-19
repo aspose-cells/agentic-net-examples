@@ -2171,6 +2171,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-linq-to-select-shapes-with-rotatetextwithshape-set-to-true-and-disable-rotation-for-them.cs",
+      "title": "Use LINQ to select shapes with RotateTextWithShape set to true and disable rotation for them."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-oleobjectalternativetext-property-to-store-custom-metadata-for-later-retrieval.cs",
       "title": "Use OleObject.AlternativeText property to store custom metadata for later retrieval."
     },
