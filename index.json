@@ -1031,6 +1031,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "design-a-routine-that-extracts-all-shape-hyperlinks-and-generates-a-report-listing-source-cells-and-target-urls.cs",
+      "title": "Design a routine that extracts all shape hyperlinks and generates a report listing source cells and target URLs."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "detect-shapes-that-exceed-worksheet-boundaries-and-automatically-reposition-them-within-visible-limits-to-avoid-clipping.cs",
       "title": "Detect shapes that exceed worksheet boundaries and automatically reposition them within visible limits to avoid clipping."
     },
