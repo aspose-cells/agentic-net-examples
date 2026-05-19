@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs
 - open-a-fods-workbook-change-the-default-font-and-save-it-as-an-ods-document.cs
 - load-an-xlsb-file-calculate-all-formulas-and-generate-a-json-representation-of-the-data.cs
+- read-an-xls-file-apply-conditional-formatting-and-save-the-result-as-an-mht-web-archive.cs
