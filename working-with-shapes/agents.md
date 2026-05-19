@@ -345,3 +345,4 @@ Output files are written to the working directory.
 - disable-all-shape-reflections-while-preserving-other-effects-and-save-the-workbook.cs
 - copy-reflection-settings-from-one-shape-to-another-within-the-same-worksheet.cs
 - toggle-the-visibility-of-the-glow-effect-on-a-specific-shape-without-altering-other-properties.cs
+- remove-all-threedimensional-formatting-from-shapes-while-keeping-twodimensional-properties-intact.cs
