@@ -487,3 +487,4 @@ Output files are written to the working directory.
 - create-a-shape-with-multi-line-text-link-it-to-a-cell-containing-line-break-characters-and-display-correctly.cs
 - add-a-shape-link-it-to-a-cell-with-a-circular-reference-and-handle-the-resulting-error-gracefully.cs
 - programmatically-duplicate-a-shape-link-the-duplicate-to-a-different-cell-and-compare-their-displayed-contents.cs
+- programmatically-move-a-shape-to-the-front-layer-using-a-positive-integer-argument-in-tofrontorback.cs
