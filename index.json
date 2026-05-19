@@ -761,6 +761,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-new-textbox-on-sheet1-set-its-width-to-200-points-and-position-it-at-cell-b2.cs",
+      "title": "Create a new TextBox on Sheet1, set its width to 200 points, and position it at cell B2."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-picture-object-set-upperleftcell-to-d5-enable-move-with-cell-and-add-to-worksheet.cs",
       "title": "Create a picture object, set UpperLeftCell to D5, enable move with cell, and add to worksheet."
     },
