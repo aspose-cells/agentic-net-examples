@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - configure-the-workbook-to-run-in-licensed-mode-to-suppress-evaluation-watermarks.cs
 - log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs
 - create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs
+- implement-error-handling-to-catch-exceptions-when-extracting-corrupted-or-unsupported-ole-objects.cs
