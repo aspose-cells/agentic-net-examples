@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs
+- open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs
