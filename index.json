@@ -1081,6 +1081,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs",
+      "title": "Implement error handling to catch exceptions when adding WordArt to a protected worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-to-catch-exceptions-when-extracting-corrupted-or-unsupported-ole-objects.cs",
       "title": "Implement error handling to catch exceptions when extracting corrupted or unsupported OLE objects."
     },

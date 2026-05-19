@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs
 - create-a-routine-that-removes-all-existing-wordart-shapes-before-adding-new-watermarks.cs
 - validate-each-worksheet-contains-exactly-one-locked-wordart-watermark-and-report-any-discrepancies.cs
+- implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs
