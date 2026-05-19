@@ -322,3 +322,4 @@ Output files are written to the working directory.
 - create-a-script-that-applies-a-uniform-shadow-offset-to-every-shape-ensuring-consistent-visual-alignment.cs
 - write-code-that-links-each-shape-to-its-corresponding-data-cell-enabling-dynamic-updates-when-cell-values-change.cs
 - load-an-excel-workbook-from-a-file-and-access-the-first-worksheet.cs
+- apply-a-50-transparent-reflection-to-the-selected-shape-using-shapereflection.cs
