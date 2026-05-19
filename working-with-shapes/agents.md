@@ -494,3 +494,4 @@ Output files are written to the working directory.
 - programmatically-adjust-a-shapes-z-order-by-subtracting-three-from-its-current-value-and-verify-new-order.cs
 - programmatically-set-a-shapes-z-order-to-zero-and-verify-it-appears-at-the-default-layer-position.cs
 - create-a-shape-set-its-z-order-using-a-large-positive-integer-and-confirm-it-appears-above-all-layers.cs
+- create-a-shape-set-its-z-order-to-a-specific-negative-value-and-confirm-it-resides-beneath-gridlines.cs

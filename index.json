@@ -1261,6 +1261,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-z-order-to-a-specific-negative-value-and-confirm-it-resides-beneath-gridlines.cs",
+      "title": "Create a shape, set its Z-order to a specific negative value, and confirm it resides beneath gridlines."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-set-its-z-order-using-a-large-positive-integer-and-confirm-it-appears-above-all-layers.cs",
       "title": "Create a shape, set its Z-order using a large positive integer, and confirm it appears above all layers."
     },
