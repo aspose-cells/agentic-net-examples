@@ -1141,6 +1141,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-remove-all-shapes-from-a-worksheet-before-exporting-the-data-to-a-csv-format-for-clean-output.cs",
+      "title": "Programmatically remove all shapes from a worksheet before exporting the data to a CSV format for clean output."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "read-the-classid-clsid-property-of-an-embedded-ole-object-for-auditing.cs",
       "title": "Read the ClassId (CLSID) property of an embedded OLE object for auditing."
     },
