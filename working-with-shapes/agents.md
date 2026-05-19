@@ -350,3 +350,4 @@ Output files are written to the working directory.
 - retrieve-a-shape-by-its-name-from-the-worksheet-and-verify-its-existence.cs
 - assign-a-png-image-stream-to-the-shapes-filltexturefillimage-property.cs
 - enable-tiling-on-the-shape-by-setting-filltexturefillistiling-to-true.cs
+- save-the-modified-workbook-to-a-new-file-preserving-original-formatting-and-textures.cs

@@ -1761,6 +1761,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "save-the-modified-workbook-to-a-new-file-preserving-original-formatting-and-textures.cs",
+      "title": "Save the modified workbook to a new file preserving original formatting and textures."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "save-the-workbook-after-refreshing-linked-ole-objects-to-apply-the-updates.cs",
       "title": "Save the workbook after refreshing linked OLE objects to apply the updates."
     },
