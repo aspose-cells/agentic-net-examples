@@ -1466,6 +1466,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-that-each-activex-control-has-a-unique-name-property-before-saving-the-workbook.cs",
+      "title": "Validate that each ActiveX control has a unique name property before saving the workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "verify-that-the-extracted-files-extension-matches-the-original-format-for-integrity.cs",
       "title": "Verify that the extracted file\u2019s extension matches the original format for integrity."
     }

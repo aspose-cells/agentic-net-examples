@@ -240,3 +240,4 @@ Output files are written to the working directory.
 - import-shape-configuration-from-a-json-file-and-recreate-the-controls-on-a-target-worksheet.cs
 - apply-conditional-formatting-to-a-textbox-based-on-the-numeric-value-of-its-linked-cell.cs
 - synchronize-the-checked-state-of-multiple-checkbox-controls-with-corresponding-cells-in-a-data-table.cs
+- validate-that-each-activex-control-has-a-unique-name-property-before-saving-the-workbook.cs
