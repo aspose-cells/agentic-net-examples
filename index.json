@@ -726,6 +726,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "change-the-line-style-of-shape-divider-to-dashed-and-set-its-thickness-to-two-points.cs",
+      "title": "Change the line style of shape Divider to dashed and set its thickness to two points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "change-the-position-of-a-retrieved-oleobject-using-top-and-left-offset-values.cs",
       "title": "Change the position of a retrieved OleObject using top and left offset values."
     },
