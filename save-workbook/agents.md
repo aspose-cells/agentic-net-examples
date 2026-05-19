@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs
 - read-a-workbook-compress-it-at-level1-for-fast-saving-and-compare-performance-with-level9.cs
 - open-a-workbook-enable-page-margins-and-export-the-document-to-an-html-file-with-embedded-images.cs
+- load-a-workbook-set-pdf-export-to-embed-fonts-and-save-the-pdf-for-crossplatform-compatibility.cs

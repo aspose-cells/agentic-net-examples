@@ -156,6 +156,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-a-workbook-set-pdf-export-to-embed-fonts-and-save-the-pdf-for-crossplatform-compatibility.cs",
+      "title": "Load a workbook, set PDF export to embed fonts, and save the PDF for cross\u2011platform compatibility."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs",
       "title": "Load a workbook, set workbook settings to ISO 29500\u20112008 strict, and verify the saved file size."
     },
