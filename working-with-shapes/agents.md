@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs
 - create-a-shape-that-displays-a-live-formula-result-by-linking-its-text-to-the-calculation-cell.cs
 - apply-conditional-formatting-to-a-shapes-fill-color-based-on-a-linked-cells-value-exceeding-a-threshold.cs
+- resize-a-shape-proportionally-to-match-the-dimensions-of-a-target-cell-range-while-maintaining-aspect-ratio.cs
