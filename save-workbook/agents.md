@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - load-a-workbook-apply-a-watermark-to-each-page-and-save-the-output-as-a-pdf-document.cs
 - instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs
 - open-an-ots-template-replace-placeholder-text-and-save-the-result-as-an-ods-file.cs
+- load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs

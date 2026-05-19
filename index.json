@@ -156,6 +156,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs",
+      "title": "Load a workbook, set workbook settings to ISO 29500\u20112008 strict, and verify the saved file size."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs",
       "title": "Load an SXC workbook, rename the active worksheet, and export the sheet to a CSV file."
     },
