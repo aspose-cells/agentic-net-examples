@@ -2501,6 +2501,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs",
+      "title": "Write a unit test verifying SmartArt text replacement works correctly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-code-that-links-each-shape-to-its-corresponding-data-cell-enabling-dynamic-updates-when-cell-values-change.cs",
       "title": "Write code that links each shape to its corresponding data cell, enabling dynamic updates when cell values change."
     },
