@@ -1521,6 +1521,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-the-absolute-topleft-coordinates-of-a-shape-to-align-it-precisely-with-a-target-cell-range.cs",
+      "title": "Retrieve the absolute top\u2011left coordinates of a shape to align it precisely with a target cell range."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-absolute-x-and-y-coordinates-of-shape-logo-and-log-them-for-debugging.cs",
       "title": "Retrieve the absolute X and Y coordinates of shape Logo and log them for debugging."
     },

@@ -289,3 +289,4 @@ Output files are written to the working directory.
 - implement-a-reflection-effect-on-a-shape-with-defined-transparency-and-size-parameters-to-simulate-glass.cs
 - configure-3d-rotation-and-bevel-properties-on-a-shape-to-create-realistic-threedimensional-appearance.cs
 - adjust-a-shapes-adjustment-values-to-modify-its-geometry-such-as-changing-a-stars-point-count.cs
+- retrieve-the-absolute-topleft-coordinates-of-a-shape-to-align-it-precisely-with-a-target-cell-range.cs
