@@ -861,6 +861,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "change-the-shadow-preset-to-perspectivediagonalbottomleft-and-observe-visual-difference.cs",
+      "title": "Change the shadow preset to PerspectiveDiagonalBottomLeft and observe visual difference."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "change-the-text-of-a-specific-textbox-and-save-the-workbook-as-xlsx.cs",
       "title": "Change the text of a specific TextBox and save the workbook as XLSX."
     },
