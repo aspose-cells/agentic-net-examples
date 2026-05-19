@@ -456,3 +456,4 @@ Output files are written to the working directory.
 - export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs
 - compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs
 - use-specific-adjustment-indices-to-modify-the-tip-angle-of-a-callout-shape.cs
+- generate-a-report-listing-each-shapes-type-position-and-adjustment-values-in-a-summary-worksheet.cs
