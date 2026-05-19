@@ -1591,6 +1591,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "filter-shapes-linked-to-cells-containing-errors-and-log-problematic-shapes.cs",
+      "title": "Filter shapes linked to cells containing errors and log problematic shapes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "filter-shapes-to-process-only-those-where-issmartart-returns-true.cs",
       "title": "Filter shapes to process only those where IsSmartArt returns true."
     },

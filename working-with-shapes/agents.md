@@ -530,3 +530,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-using-text-for-custom-date-format-and-verify-date.cs
 - programmatically-move-a-shape-to-the-front-capture-its-z-order-index-then-move-it-back-and-compare.cs
 - programmatically-move-a-shape-to-the-front-then-to-the-back-and-record-z-order-values-after-each-move.cs
+- filter-shapes-linked-to-cells-containing-errors-and-log-problematic-shapes.cs
