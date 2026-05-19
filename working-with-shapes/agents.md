@@ -373,3 +373,4 @@ Output files are written to the working directory.
 - create-a-unit-test-that-verifies-texture-tiling-is-applied-when-istiling-is-true.cs
 - develop-a-helper-method-that-returns-a-fontsetting-configured-with-a-specific-shadow-preset-and-spacing.cs
 - iterate-over-all-text-boxes-in-a-worksheet-and-set-their-character-spacing-uniformly.cs
+- use-a-trycatch-block-to-handle-exceptions-when-loading-an-invalid-image-for-texture.cs
