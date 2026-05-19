@@ -241,6 +241,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-set-ooxmlcompressiontype-to-level5-and-compare-resulting-file-size-to-default-compression.cs",
+      "title": "Open a workbook, set OoxmlCompressionType to Level5, and compare resulting file size to default compression."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
       "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
     },

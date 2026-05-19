@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - open-a-workbook-apply-a-custom-number-format-and-save-the-file-as-a-csv-with-tab-delimiter.cs
 - load-a-workbook-enable-strict-compliance-and-attempt-to-save-to-a-location-with-insufficient-permissions.cs
 - read-a-workbook-merge-cells-across-rows-and-export-the-result-to-an-html-file-with-tables.cs
+- open-a-workbook-set-ooxmlcompressiontype-to-level5-and-compare-resulting-file-size-to-default-compression.cs
