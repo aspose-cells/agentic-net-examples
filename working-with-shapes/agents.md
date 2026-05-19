@@ -423,3 +423,4 @@ Output files are written to the working directory.
 - batch-process-a-directory-of-excel-files-converting-all-smartart-shapes-to-groupshapes-automatically.cs
 - generate-a-report-listing-workbook-names-worksheet-titles-and-counts-of-detected-smartart-shapes.cs
 - validate-that-each-smartart-conversion-returns-a-nonnull-groupshape-before-proceeding.cs
+- implement-error-handling-for-unsupported-smartart-types-that-cannot-be-converted-to-groupshape.cs
