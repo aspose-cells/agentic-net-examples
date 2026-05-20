@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - compare-custom-property-sets-between-two-workbooks-and-generate-a-list-of-differences-for-auditing.cs
 - remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs
 - add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs
+- set-the-builtin-comments-property-to-a-multiline-description-providing-detailed-notes-about-the-workbook.cs
