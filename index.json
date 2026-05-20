@@ -4013,6 +4013,11 @@
       "category": "xml-maps",
       "file": "validate-linked-cells-after-importing-xml-data-by-reexecuting-worksheetxmlmapquery-and-checking-results.cs",
       "title": "Validate linked cells after importing XML data by re\u2011executing Worksheet.XmlMapQuery and checking results."
+    },
+    {
+      "category": "xml-maps",
+      "file": "validate-the-xml-map-against-its-xsd-schema-and-report-any-validation-errors-encountered.cs",
+      "title": "Validate the XML map against its XSD schema and report any validation errors encountered."
     }
   ]
 }
