@@ -476,6 +476,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "iterate-through-multiple-workbooks-in-a-directory-adding-a-shared-contenttypeproperty-to-each-file.cs",
+      "title": "Iterate through multiple workbooks in a directory, adding a shared ContentTypeProperty to each file."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs",
       "title": "Load a CSV file into a workbook, specify the delimiter, and treat the first row as headers."
     },
