@@ -361,6 +361,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "add-a-comment-to-a-cell-with-author-information-and-display-it-when-the-cell-is-selected.cs",
+      "title": "Add a comment to a cell with author information and display it when the cell is selected."
+    },
+    {
+      "category": "manage-workbook",
       "file": "add-a-custom-document-property-named-projectversion-and-assign-it-a-semantic-version-string.cs",
       "title": "Add a custom document property named ProjectVersion and assign it a semantic version string."
     },
