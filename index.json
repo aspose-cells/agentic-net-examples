@@ -241,6 +241,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-workbook-and-validate-that-documentversion-matches-a-semantic-version-pattern-before-saving.cs",
+      "title": "Open a workbook and validate that DocumentVersion matches a semantic version pattern before saving."
+    },
+    {
+      "category": "document-properties",
       "file": "open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs",
       "title": "Open an Excel file and read the Author built\u2011in property to identify the creator."
     },
