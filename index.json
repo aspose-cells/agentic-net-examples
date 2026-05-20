@@ -386,6 +386,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs",
+      "title": "Copy a worksheet from the source workbook to a destination workbook while preserving cell styles."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
       "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
     },
