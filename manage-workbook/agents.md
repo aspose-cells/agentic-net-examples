@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - load-a-workbook-that-contains-numerous-unused-styles-and-invoke-removeunusedstyles-to-clean-it.cs
 - measure-the-file-size-before-and-after-removing-unused-styles-to-assess-reduction-impact.cs
 - combine-adding-custom-xml-parts-with-style-cleanup-in-a-single-processing-pipeline-for-efficiency.cs
+- open-the-saved-xlsx-file-as-a-zip-archive-and-verify-the-presence-of-the-customxml-folder.cs
