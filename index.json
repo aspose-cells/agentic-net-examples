@@ -201,6 +201,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-an-excel-file-and-verify-that-language-contains-a-valid-net-culture-code.cs",
+      "title": "Load an Excel file and verify that Language contains a valid .NET culture code."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs",
       "title": "Open a file and iterate through all built\u2011in properties, logging each name and value."
     },
