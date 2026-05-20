@@ -326,6 +326,11 @@
     },
     {
       "category": "document-properties",
+      "file": "set-the-builtin-comments-property-to-a-multiline-description-providing-detailed-notes-about-the-workbook.cs",
+      "title": "Set the built\u2011in Comments property to a multiline description providing detailed notes about the workbook."
+    },
+    {
+      "category": "document-properties",
       "file": "use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs",
       "title": "Use DocumentPropertyCollection to retrieve the total count of properties and display the number in logs."
     },
