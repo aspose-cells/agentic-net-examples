@@ -911,6 +911,11 @@
     },
     {
       "category": "slicer",
+      "file": "list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs",
+      "title": "List all slicer names on a worksheet and write them to a text file."
+    },
+    {
+      "category": "slicer",
       "file": "load-a-workbook-from-a-memory-stream-update-slicer-selections-refresh-pivot-tables-and-write-pdf-to-stream.cs",
       "title": "Load a workbook from a memory stream, update slicer selections, refresh pivot tables, and write PDF to stream."
     },

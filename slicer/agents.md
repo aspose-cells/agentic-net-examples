@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - before-exporting-to-pdf-set-pdf-conversion-options-to-embed-fonts-and-retain-slicer-formatting.cs
 - iterate-over-slicercacheitems-to-deselect-items-matching-a-specific-keyword.cs
 - save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs
+- list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs
