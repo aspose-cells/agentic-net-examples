@@ -3901,6 +3901,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-xml-without-xml-declaration-by-setting-exportxmloptionsomitxmldeclaration-to-true.cs",
+      "title": "Export XML without XML declaration by setting ExportXmlOptions.OmitXmlDeclaration to true."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
       "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
     },
