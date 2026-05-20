@@ -876,6 +876,11 @@
     },
     {
       "category": "slicer",
+      "file": "create-a-function-returning-true-if-a-slicer-contains-any-selected-items-otherwise-false.cs",
+      "title": "Create a function returning true if a slicer contains any selected items, otherwise false."
+    },
+    {
+      "category": "slicer",
       "file": "create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs",
       "title": "Create a slicer linked to a pivot table within the loaded workbook."
     },

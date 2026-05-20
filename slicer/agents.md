@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - save-the-workbook-with-pdf-options-to-embed-the-slicers-visual-style-in-the-output-file.cs
 - after-adding-new-items-to-a-slicers-cache-call-refresh-and-confirm-the-pivot-table-reflects-the-additions.cs
 - remove-slicers-from-all-worksheets-in-a-workbook-and-save-a-consolidated-pdf.cs
+- create-a-function-returning-true-if-a-slicer-contains-any-selected-items-otherwise-false.cs
