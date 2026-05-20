@@ -3941,6 +3941,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "iterate-through-each-mapped-cell-area-and-log-its-row-and-column-indices-for-debugging.cs",
+      "title": "Iterate through each mapped cell area and log its row and column indices for debugging."
+    },
+    {
+      "category": "xml-maps",
       "file": "list-all-xml-maps-in-the-workbook-and-output-each-maps-name-to-the-console.cs",
       "title": "List all XML maps in the workbook and output each map\u2019s name to the console."
     },

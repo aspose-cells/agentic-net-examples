@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - import-xml-data-into-the-workbook-by-linking-cells-to-corresponding-xml-map-elements.cs
 - update-values-in-mapped-cells-and-automatically-reflect-changes-in-the-underlying-xml-document.cs
 - retrieve-the-address-of-the-first-cell-mapped-to-the-invoicetotal-element.cs
+- iterate-through-each-mapped-cell-area-and-log-its-row-and-column-indices-for-debugging.cs
