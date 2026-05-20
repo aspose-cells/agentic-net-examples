@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - integrate-workbook-disposal-into-a-finally-block-to-guarantee-resource-release-even-when-exceptions-occur.cs
 - implement-a-commandline-tool-that-accepts-a-file-path-adds-an-optional-property-and-disposes-the-workbook.cs
 - create-a-unit-test-that-asserts-the-isnillable-flag-is-true-for-a-given-contenttypeproperty-after-saving.cs
+- serialize-the-workbooks-custom-xml-part-to-a-string-and-log-its-xml-content-for-debugging.cs

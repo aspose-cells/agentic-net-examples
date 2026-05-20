@@ -601,6 +601,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "serialize-the-workbooks-custom-xml-part-to-a-string-and-log-its-xml-content-for-debugging.cs",
+      "title": "Serialize the workbook's custom XML part to a string and log its XML content for debugging."
+    },
+    {
+      "category": "manage-workbook",
       "file": "set-isnillable-to-true-for-the-shared-property-across-all-workbooks-to-ensure-optional-metadata.cs",
       "title": "Set IsNillable to true for the shared property across all workbooks to ensure optional metadata."
     },
