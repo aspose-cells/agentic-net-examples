@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - create-a-reusable-method-that-adds-a-contenttypeproperty-and-sets-isnillable-based-on-a-boolean-parameter.cs
 - create-a-batch-job-that-processes-100-workbooks-adding-optional-metadata-and-removing-unused-styles.cs
 - log-the-duration-of-each-workbooks-processing-steps-to-identify-performance-bottlenecks.cs
+- implement-error-handling-to-continue-batch-processing-when-a-workbook-fails-to-load-due-to-corruption.cs
