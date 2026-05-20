@@ -4031,6 +4031,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "use-worksheetcellsfind-to-locate-a-cell-that-is-mapped-to-a-specific-xml-attribute.cs",
+      "title": "Use Worksheet.Cells.Find to locate a cell that is mapped to a specific XML attribute."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-linked-cells-after-importing-xml-data-by-reexecuting-worksheetxmlmapquery-and-checking-results.cs",
       "title": "Validate linked cells after importing XML data by re\u2011executing Worksheet.XmlMapQuery and checking results."
     },
