@@ -846,6 +846,11 @@
     },
     {
       "category": "slicer",
+      "file": "batch-process-multiple-workbooks-adding-slicers-to-each-and-adjusting-their-widths-uniformly.cs",
+      "title": "Batch process multiple workbooks, adding slicers to each and adjusting their widths uniformly."
+    },
+    {
+      "category": "slicer",
       "file": "before-exporting-to-pdf-set-pdf-conversion-options-to-embed-fonts-and-retain-slicer-formatting.cs",
       "title": "Before exporting to PDF, set PDF conversion options to embed fonts and retain slicer formatting."
     },
