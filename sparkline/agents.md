@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - set-sparkline-to-show-negative-points-using-custom-blue-color-in-cell-j6.cs
 - apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs
 - set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs
+- remove-all-sparklines-from-active-worksheet-by-invoking-clear-method-on-each-sparklinegroup.cs
