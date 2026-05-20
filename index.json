@@ -130,6 +130,11 @@
       "title": "Update the text direction of all comments in a worksheet to LeftToRight for standard layout."
     },
     {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
+      "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
