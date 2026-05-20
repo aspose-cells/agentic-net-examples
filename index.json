@@ -3966,6 +3966,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-multiple-workbooks-from-a-directory-apply-the-same-xml-map-and-batch-export-their-xml-data.cs",
+      "title": "Load multiple workbooks from a directory, apply the same XML map, and batch export their XML data."
+    },
+    {
+      "category": "xml-maps",
       "file": "loop-through-all-xml-maps-in-a-workbook-and-export-each-maps-xml-using-exportxml.cs",
       "title": "Loop through all XML maps in a workbook and export each map\u2019s XML using ExportXml."
     },
