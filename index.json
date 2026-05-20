@@ -626,6 +626,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "use-a-memory-stream-to-load-a-workbook-add-metadata-and-save-back-without-touching-the-file-system.cs",
+      "title": "Use a memory stream to load a workbook, add metadata, and save back without touching the file system."
+    },
+    {
+      "category": "manage-workbook",
       "file": "use-workbookloadoptions-to-open-a-passwordprotected-file-then-add-optional-metadata-before-saving.cs",
       "title": "Use Workbook.LoadOptions to open a password\u2011protected file, then add optional metadata before saving."
     },
