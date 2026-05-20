@@ -311,6 +311,11 @@
     },
     {
       "category": "sparkline",
+      "file": "clone-an-existing-sparkline-group-and-place-the-clone-into-a-different-worksheet.cs",
+      "title": "Clone an existing sparkline group and place the clone into a different worksheet."
+    },
+    {
+      "category": "sparkline",
       "file": "configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs",
       "title": "Configure sparkline axis minimum and maximum to fixed numeric values for consistent scaling."
     },
