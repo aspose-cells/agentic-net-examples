@@ -166,6 +166,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-spreadsheet-and-set-the-language-builtin-property-to-fr-fr-for-localization.cs",
+      "title": "Open a spreadsheet and set the Language built\u2011in property to \"fr-FR\" for localization."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs",
       "title": "Open a workbook and query the ScaleCrop built\u2011in property to view image scaling flag."
     },
