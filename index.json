@@ -416,6 +416,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "protect-the-workbook-with-a-password-and-allow-only-readonly-access-for-users.cs",
+      "title": "Protect the workbook with a password and allow only read\u2011only access for users."
+    },
+    {
+      "category": "manage-workbook",
       "file": "set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs",
       "title": "Set page margins to narrow values and configure the workbook to print in landscape orientation."
     },
