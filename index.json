@@ -1056,6 +1056,11 @@
     },
     {
       "category": "slicer",
+      "file": "set-slicer-width-to-150-pixels-and-verify-its-appearance-on-the-worksheet.cs",
+      "title": "Set slicer width to 150 pixels and verify its appearance on the worksheet."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
