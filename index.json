@@ -991,6 +991,11 @@
     },
     {
       "category": "slicer",
+      "file": "save-the-workbook-with-pdf-options-to-embed-the-slicers-visual-style-in-the-output-file.cs",
+      "title": "Save the workbook with PDF options to embed the slicer\u2019s visual style in the output file."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },

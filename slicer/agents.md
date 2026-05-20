@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - use-a-configuration-flag-to-decide-whether-to-keep-slicers-when-exporting-the-workbook-to-pdf.cs
 - generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs
 - write-a-unit-test-verifying-that-slicerrefresh-updates-the-linked-pivot-tables-row-count-as-expected.cs
+- save-the-workbook-with-pdf-options-to-embed-the-slicers-visual-style-in-the-output-file.cs
