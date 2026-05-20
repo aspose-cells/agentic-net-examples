@@ -421,6 +421,11 @@
     },
     {
       "category": "sparkline",
+      "file": "serialize-sparkline-group-settings-to-json-string-for-later-reuse-or-configuration-sharing.cs",
+      "title": "Serialize sparkline group settings to JSON string for later reuse or configuration sharing."
+    },
+    {
+      "category": "sparkline",
       "file": "set-sparkline-3d-depth-property-to-higher-value-to-enhance-visual-depth-perception.cs",
       "title": "Set sparkline 3D depth property to higher value to enhance visual depth perception."
     },

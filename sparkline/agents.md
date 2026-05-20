@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - create-a-sparkline-referencing-data-from-another-worksheet-named-datasheet-for-crosssheet-trends.cs
 - handle-null-values-in-source-data-range-gracefully-when-generating-sparkline-to-avoid-rendering-errors.cs
 - enable-sparkline-markers-only-for-outlier-points-exceeding-predefined-threshold-to-highlight-anomalies.cs
+- serialize-sparkline-group-settings-to-json-string-for-later-reuse-or-configuration-sharing.cs
