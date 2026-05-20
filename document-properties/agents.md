@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs
 - use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs
 - compare-custom-property-sets-between-two-workbooks-and-generate-a-list-of-differences-for-auditing.cs
+- remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs
