@@ -451,6 +451,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "replace-all-occurrences-of-a-placeholder-string-using-a-regular-expression-across-the-entire-workbook.cs",
+      "title": "Replace all occurrences of a placeholder string using a regular expression across the entire workbook."
+    },
+    {
+      "category": "manage-workbook",
       "file": "set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs",
       "title": "Set page margins to narrow values and configure the workbook to print in landscape orientation."
     },

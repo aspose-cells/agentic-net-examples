@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - create-a-pivot-table-from-a-data-source-range-and-place-it-on-a-new-worksheet.cs
 - add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs
 - insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs
+- replace-all-occurrences-of-a-placeholder-string-using-a-regular-expression-across-the-entire-workbook.cs
