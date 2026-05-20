@@ -371,6 +371,11 @@
     },
     {
       "category": "sparkline",
+      "file": "handle-null-values-in-source-data-range-gracefully-when-generating-sparkline-to-avoid-rendering-errors.cs",
+      "title": "Handle null values in source data range gracefully when generating sparkline to avoid rendering errors."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs",
       "title": "Insert a win/loss sparkline at cell E2 referencing data in F2:F12 range."
     },
