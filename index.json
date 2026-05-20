@@ -851,6 +851,11 @@
     },
     {
       "category": "slicer",
+      "file": "compare-slicer-selection-states-before-and-after-calling-refresh-to-ensure-changes-are-applied-correctly.cs",
+      "title": "Compare slicer selection states before and after calling Refresh to ensure changes are applied correctly."
+    },
+    {
+      "category": "slicer",
       "file": "configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs",
       "title": "Configure the slicer to display items with no data by toggling the show\u2011zero\u2011items option."
     },
