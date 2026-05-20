@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - open-a-workbook-and-validate-that-documentversion-matches-a-semantic-version-pattern-before-saving.cs
 - load-an-excel-file-and-verify-that-language-contains-a-valid-net-culture-code.cs
 - open-a-workbook-set-scalecrop-to-true-and-ensure-the-flag-persists-when-saving-as-pdf.cs
+- instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs
