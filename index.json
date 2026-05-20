@@ -1126,6 +1126,11 @@
     },
     {
       "category": "slicer",
+      "file": "save-the-workbook-with-slicers-and-compare-file-sizes-with-a-version-saved-without-slicers.cs",
+      "title": "Save the workbook with slicers and compare file sizes with a version saved without slicers."
+    },
+    {
+      "category": "slicer",
       "file": "set-slicer-placement-and-ensure-it-remains-unchanged-after-saving-and-reloading-the-workbook.cs",
       "title": "Set slicer placement and ensure it remains unchanged after saving and reloading the workbook."
     },
