@@ -3871,6 +3871,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "batch-process-a-folder-of-workbooks-adding-the-same-xml-map-to-each-file-programmatically.cs",
+      "title": "Batch process a folder of workbooks, adding the same XML map to each file programmatically."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-xml-data-for-a-specific-map-to-a-file-using-workbookexportxml-with-map-index.cs",
       "title": "Export XML data for a specific map to a file using Workbook.ExportXml with map index."
     },
