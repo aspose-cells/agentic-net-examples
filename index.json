@@ -346,6 +346,11 @@
     },
     {
       "category": "sparkline",
+      "file": "create-a-sparkline-referencing-data-from-another-worksheet-named-datasheet-for-crosssheet-trends.cs",
+      "title": "Create a sparkline referencing data from another worksheet named 'DataSheet' for cross\u2011sheet trends."
+    },
+    {
+      "category": "sparkline",
       "file": "delete-the-second-sparkline-in-the-first-sparkline-group-using-sparklinegroupremoveat-method.cs",
       "title": "Delete the second sparkline in the first sparkline group using SparklineGroup.RemoveAt method."
     },
