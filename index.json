@@ -3876,6 +3876,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-xml-data-for-a-specific-map-to-a-memory-stream-using-workbookexportxml-overload.cs",
+      "title": "Export XML data for a specific map to a memory stream using Workbook.ExportXml overload."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
       "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
     },
