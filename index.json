@@ -4041,6 +4041,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "programmatically-disable-automatic-xml-map-refresh-during-bulk-cell-updates-to-improve-processing-speed.cs",
+      "title": "Programmatically disable automatic XML map refresh during bulk cell updates to improve processing speed."
+    },
+    {
+      "category": "xml-maps",
       "file": "query-cells-mapped-to-a-given-xpath-expression-using-worksheetxmlmapquery-method.cs",
       "title": "Query cells mapped to a given XPath expression using Worksheet.XmlMapQuery method."
     },
