@@ -946,6 +946,11 @@
     },
     {
       "category": "slicer",
+      "file": "export-the-workbook-containing-slicers-to-pdf-and-compare-slicer-positions-with-the-original-excel-file.cs",
+      "title": "Export the workbook containing slicers to PDF and compare slicer positions with the original Excel file."
+    },
+    {
+      "category": "slicer",
       "file": "generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs",
       "title": "Generate a PDF report that includes only the slicer region by setting the worksheet\u2019s print area."
     },
