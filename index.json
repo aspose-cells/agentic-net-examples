@@ -820,6 +820,11 @@
       "title": "Load a workbook from an Excel file into memory for further manipulation."
     },
     {
+      "category": "slicer",
+      "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
+      "title": "Set the slicer caption to a custom string to improve user understanding."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
