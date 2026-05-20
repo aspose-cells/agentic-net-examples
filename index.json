@@ -166,6 +166,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-workbook-locate-the-custom-property-projectid-and-update-its-integer-value.cs",
+      "title": "Load a workbook, locate the custom property \"ProjectId\", and update its integer value."
+    },
+    {
+      "category": "document-properties",
       "file": "load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs",
       "title": "Load an Excel document and inspect the LinksUpToDate built\u2011in property for hyperlink status."
     },
