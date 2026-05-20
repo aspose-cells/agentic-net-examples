@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-from-a-xlsx-file-and-attach-an-xml-schema-map.cs
 - create-a-new-workbook-add-a-worksheet-and-define-an-xml-map-using-a-xsd-file.cs
 - import-xml-data-into-the-workbook-by-linking-cells-to-corresponding-xml-map-elements.cs
+- update-values-in-mapped-cells-and-automatically-reflect-changes-in-the-underlying-xml-document.cs
