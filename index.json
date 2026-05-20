@@ -3881,6 +3881,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-xml-with-indentation-enabled-by-configuring-exportxmloptions-before-calling-exportxml.cs",
+      "title": "Export XML with indentation enabled by configuring ExportXmlOptions before calling ExportXml."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-xml-with-utf8-encoding-by-specifying-encodingutf8-parameter-in-exportxml-method.cs",
       "title": "Export XML with UTF\u20118 encoding by specifying Encoding.UTF8 parameter in ExportXml method."
     },
