@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - load-multiple-workbooks-remove-all-slicers-and-archive-the-resulting-pdfs-in-a-zip-file.cs
 - before-saving-automatically-select-the-first-item-if-a-slicer-has-no-selected-items.cs
 - use-the-workbooks-calculate-method-after-slicer-refresh-to-ensure-formulas-reflect-the-new-filter.cs
+- load-an-xlsx-workbook-create-a-slicer-for-a-table-column-and-save-the-file.cs
