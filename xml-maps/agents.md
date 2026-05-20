@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs
 - use-the-worksheetcellsclear-method-on-a-mapped-range-to-reset-values-while-preserving-the-map-linkage.cs
 - add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs
+- create-a-scheduled-task-that-refreshes-all-xml-maps-in-a-set-of-workbooks-every-night-at-midnight.cs
