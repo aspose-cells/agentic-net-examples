@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - create-a-slicer-then-copy-its-properties-to-a-new-slicer-on-another-worksheet.cs
 - set-slicer-placement-and-ensure-it-remains-unchanged-after-saving-and-reloading-the-workbook.cs
 - validate-that-slicer-placement-coordinates-remain-consistent-after-saving-and-reloading-the-workbook.cs
+- export-the-workbook-containing-slicers-to-pdf-and-compare-slicer-positions-with-the-original-excel-file.cs
