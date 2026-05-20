@@ -461,6 +461,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "load-a-workbook-that-contains-numerous-unused-styles-and-invoke-removeunusedstyles-to-clean-it.cs",
+      "title": "Load a workbook that contains numerous unused styles and invoke RemoveUnusedStyles to clean it."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-an-xlsx-workbook-from-a-file-stream-and-enable-automatic-formula-calculation.cs",
       "title": "Load an XLSX workbook from a file stream and enable automatic formula calculation."
     },
