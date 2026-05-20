@@ -460,6 +460,11 @@
       "title": "Validate that sparkline data range does not contain errors before creating the sparkline object."
     },
     {
+      "category": "sparkline",
+      "file": "write-a-unit-test-verifying-that-adding-a-sparkline-increases-sparkline-count-by-exactly-one.cs",
+      "title": "Write a unit test verifying that adding a sparkline increases sparkline count by exactly one."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
