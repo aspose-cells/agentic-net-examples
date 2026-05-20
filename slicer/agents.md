@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - before-saving-automatically-select-the-first-item-if-a-slicer-has-no-selected-items.cs
 - use-the-workbooks-calculate-method-after-slicer-refresh-to-ensure-formulas-reflect-the-new-filter.cs
 - load-an-xlsx-workbook-create-a-slicer-for-a-table-column-and-save-the-file.cs
+- load-a-workbook-create-slicers-for-multiple-table-columns-and-align-them-vertically-with-equal-spacing.cs
