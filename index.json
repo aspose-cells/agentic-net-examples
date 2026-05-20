@@ -131,6 +131,11 @@
     },
     {
       "category": "document-properties",
+      "file": "batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs",
+      "title": "Batch process all workbooks in a folder, setting each file's Language property to \"en-GB\"."
+    },
+    {
+      "category": "document-properties",
       "file": "create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs",
       "title": "Create a workbook and set the Title built\u2011in property to a descriptive project name."
     },
