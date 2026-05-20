@@ -1046,6 +1046,11 @@
     },
     {
       "category": "slicer",
+      "file": "remove-an-existing-pivot-connection-from-the-slicer-to-stop-automatic-updates.cs",
+      "title": "Remove an existing pivot connection from the slicer to stop automatic updates."
+    },
+    {
+      "category": "slicer",
       "file": "remove-slicers-from-all-worksheets-in-a-workbook-and-save-a-consolidated-pdf.cs",
       "title": "Remove slicers from all worksheets in a workbook and save a consolidated PDF."
     },
