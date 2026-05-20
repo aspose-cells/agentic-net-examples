@@ -306,6 +306,11 @@
     },
     {
       "category": "sparkline",
+      "file": "apply-custom-background-color-to-sparkline-chart-area-to-match-workbook-theme-colors.cs",
+      "title": "Apply custom background color to sparkline chart area to match workbook theme colors."
+    },
+    {
+      "category": "sparkline",
       "file": "apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs",
       "title": "Apply custom line weight of two points to sparkline group situated in cell K7."
     },
