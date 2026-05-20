@@ -131,6 +131,11 @@
     },
     {
       "category": "document-properties",
+      "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
+      "title": "Add a custom property containing an array of string tags to categorize workbook content."
+    },
+    {
+      "category": "document-properties",
       "file": "batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs",
       "title": "Batch process all workbooks in a folder, setting each file's Language property to \"en-GB\"."
     },
