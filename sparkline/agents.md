@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - change-sparkline-material-to-plastic-to-affect-surface-shading-and-give-subtle-glossy-effect.cs
 - apply-custom-background-color-to-sparkline-chart-area-to-match-workbook-theme-colors.cs
 - enable-display-of-empty-cells-as-zero-values-in-sparkline-at-cell-m9-for-accurate-totals.cs
+- configure-sparkline-to-ignore-hidden-cells-while-calculating-values-to-reflect-only-visible-data.cs
