@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - add-multiple-custom-xml-parts-representing-different-data-sections-then-verify-each-appears-in-the-customxml-folder.cs
 - configure-the-workbook-to-use-a-specific-culture-when-formatting-optional-property-values-during-export.cs
 - load-a-workbook-that-contains-numerous-unused-styles-and-invoke-removeunusedstyles-to-clean-it.cs
+- measure-the-file-size-before-and-after-removing-unused-styles-to-assess-reduction-impact.cs
