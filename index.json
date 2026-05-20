@@ -276,6 +276,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-workbook-update-document-properties-and-export-the-result-to-csv-format-for-downstream-processing.cs",
+      "title": "Open a workbook, update document properties, and export the result to CSV format for downstream processing."
+    },
+    {
+      "category": "document-properties",
       "file": "open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs",
       "title": "Open an Excel file and read the Author built\u2011in property to identify the creator."
     },
