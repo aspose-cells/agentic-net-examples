@@ -3876,6 +3876,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "apply-a-custom-style-to-cells-mapped-to-the-customername-element-to-highlight-customer-names.cs",
+      "title": "Apply a custom style to cells mapped to the /Customer/Name element to highlight customer names."
+    },
+    {
+      "category": "xml-maps",
       "file": "apply-data-validation-rules-to-mapped-cells-to-ensure-imported-xml-values-meet-business-constraints.cs",
       "title": "Apply data validation rules to mapped cells to ensure imported XML values meet business constraints."
     },

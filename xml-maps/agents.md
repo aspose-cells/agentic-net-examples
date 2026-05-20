@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - implement-a-routine-that-clears-all-cell-values-linked-to-a-specific-xml-map-without-removing-the-map.cs
 - export-the-workbook-to-pdf-while-preserving-the-visual-representation-of-mapped-cells-and-their-data.cs
 - generate-a-summary-report-listing-each-xml-map-its-root-element-and-the-number-of-linked-cells.cs
+- apply-a-custom-style-to-cells-mapped-to-the-customername-element-to-highlight-customer-names.cs
