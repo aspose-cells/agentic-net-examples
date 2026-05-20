@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - merge-cells-in-a-header-row-apply-bold-font-and-center-the-text-horizontally.cs
 - apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs
 - apply-data-validation-to-restrict-input-to-a-list-of-predefined-values-in-a-column.cs
+- set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs
