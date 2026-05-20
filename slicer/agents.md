@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - remove-an-existing-pivot-connection-from-the-slicer-to-stop-automatic-updates.cs
 - programmatically-retrieve-slicer-properties-log-them-and-modify-row-height-based-on-logged-values.cs
 - create-a-slicer-and-retrieve-its-identifier-for-use-in-subsequent-api-calls.cs
+- create-a-slicer-then-copy-its-properties-to-a-new-slicer-on-another-worksheet.cs
