@@ -291,6 +291,11 @@
     },
     {
       "category": "sparkline",
+      "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
+      "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
+    },
+    {
+      "category": "sparkline",
       "file": "load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs",
       "title": "Load an existing workbook and import Aspose.Cells.Charts namespace for sparkline operations."
     },
