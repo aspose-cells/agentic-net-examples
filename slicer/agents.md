@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs
 - add-a-slicer-to-a-worksheet-that-contains-a-chart-to-filter-chart-data-dynamically.cs
 - clone-an-existing-slicer-and-place-the-copy-on-another-worksheet-for-parallel-filtering.cs
+- delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs

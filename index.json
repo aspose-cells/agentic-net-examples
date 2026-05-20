@@ -846,6 +846,11 @@
     },
     {
       "category": "slicer",
+      "file": "delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs",
+      "title": "Delete a slicer by name from the workbook to clean up unused controls."
+    },
+    {
+      "category": "slicer",
       "file": "hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs",
       "title": "Hide the slicer header row to create a compact filtering control without a title."
     },
