@@ -3891,6 +3891,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "create-a-pivot-table-that-summarizes-data-from-cells-mapped-to-the-ordersorder-element.cs",
+      "title": "Create a pivot table that summarizes data from cells mapped to the /Orders/Order element."
+    },
+    {
+      "category": "xml-maps",
       "file": "enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs",
       "title": "Enumerate the XmlMapCollection and log each map\u2019s name and root element name for debugging."
     },
