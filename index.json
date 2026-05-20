@@ -131,6 +131,11 @@
     },
     {
       "category": "document-properties",
+      "file": "instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs",
+      "title": "Instantiate a workbook and obtain the DocumentVersion built\u2011in property to check version information."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
       "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
     },
