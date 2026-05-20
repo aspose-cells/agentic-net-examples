@@ -421,6 +421,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "move-a-worksheet-to-a-new-position-within-the-same-workbook-and-update-its-tab-color.cs",
+      "title": "Move a worksheet to a new position within the same workbook and update its tab color."
+    },
+    {
+      "category": "manage-workbook",
       "file": "protect-the-workbook-with-a-password-and-allow-only-readonly-access-for-users.cs",
       "title": "Protect the workbook with a password and allow only read\u2011only access for users."
     },
