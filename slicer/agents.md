@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs
 - create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs
 - set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs
+- position-the-slicer-by-specifying-precise-top-and-left-coordinates-programmatically.cs
