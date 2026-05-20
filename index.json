@@ -3931,6 +3931,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-the-workbook-to-pdf-while-preserving-the-visual-representation-of-mapped-cells-and-their-data.cs",
+      "title": "Export the workbook to PDF while preserving the visual representation of mapped cells and their data."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-xml-data-for-a-specific-map-to-a-file-using-workbookexportxml-with-map-index.cs",
       "title": "Export XML data for a specific map to a file using Workbook.ExportXml with map index."
     },
