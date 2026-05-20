@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs
 - batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs
 - configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs
+- enable-display-of-both-first-and-last-points-in-line-sparkline-located-at-i4.cs
