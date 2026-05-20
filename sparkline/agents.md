@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - move-a-sparkline-from-original-location-to-new-cell-range-by-removing-and-readding-programmatically.cs
 - set-sparkline-group-orientation-to-vertical-for-columntype-sparklines-to-improve-readability.cs
 - create-a-sparkline-referencing-data-from-another-worksheet-named-datasheet-for-crosssheet-trends.cs
+- handle-null-values-in-source-data-range-gracefully-when-generating-sparkline-to-avoid-rendering-errors.cs
