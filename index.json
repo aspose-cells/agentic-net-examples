@@ -906,6 +906,11 @@
     },
     {
       "category": "slicer",
+      "file": "iterate-each-slicer-log-its-selected-items-then-deselect-all-items-and-refresh.cs",
+      "title": "Iterate each slicer, log its selected items, then deselect all items and refresh."
+    },
+    {
+      "category": "slicer",
       "file": "iterate-over-slicercacheitems-to-deselect-items-matching-a-specific-keyword.cs",
       "title": "Iterate over SlicerCacheItems to deselect items matching a specific keyword."
     },

@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs
 - list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs
 - load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs
+- iterate-each-slicer-log-its-selected-items-then-deselect-all-items-and-refresh.cs
