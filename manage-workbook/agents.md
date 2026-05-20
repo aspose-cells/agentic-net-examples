@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - configure-workbooksettings-to-disable-automatic-style-creation-before-removing-unused-styles-for-faster-cleanup.cs
 - benchmark-the-time-required-to-remove-unused-styles-from-workbooks-of-varying-size-to-determine-scaling-behavior.cs
 - compare-two-workbooks-one-with-unused-styles-removed-and-one-without-to-evaluate-visual-consistency.cs
+- wrap-workbook-loading-and-saving-inside-a-using-statement-to-guarantee-deterministic-disposal-of-resources.cs
