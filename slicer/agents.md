@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs
 - set-the-slicer-item-sorting-order-to-descending-based-on-underlying-data-values.cs
 - configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs
+- arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs
