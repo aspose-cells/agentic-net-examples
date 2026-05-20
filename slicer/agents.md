@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - mark-the-slicer-as-nonprintable-and-ensure-it-does-not-appear-in-printed-output.cs
 - iterate-through-all-slicers-in-the-workbook-and-set-each-printable-flag-to-false.cs
 - validate-that-the-slicer-printable-flag-is-true-before-exporting-the-workbook-to-pdf.cs
+- add-a-pivot-table-connection-to-the-slicer-for-dynamic-data-filtering.cs
