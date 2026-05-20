@@ -951,6 +951,11 @@
     },
     {
       "category": "slicer",
+      "file": "unselect-all-items-in-a-slicer-call-refresh-and-export-the-workbook-to-pdf-preserving-slicer-appearance.cs",
+      "title": "Unselect all items in a slicer, call Refresh, and export the workbook to PDF preserving slicer appearance."
+    },
+    {
+      "category": "slicer",
       "file": "update-slicer-properties-across-all-worksheets-in-a-workbook-to-enforce-a-corporate-style.cs",
       "title": "Update slicer properties across all worksheets in a workbook to enforce a corporate style."
     },

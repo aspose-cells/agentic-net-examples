@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - iterate-all-worksheets-delete-every-slicer-and-export-the-modified-workbook-to-pdf.cs
 - identify-slicers-starting-with-region-remove-them-and-save-the-workbook-in-xlsx-format.cs
 - retrieve-a-slicer-programmatically-select-multiple-items-refresh-it-and-save-changes-to-xlsx.cs
+- unselect-all-items-in-a-slicer-call-refresh-and-export-the-workbook-to-pdf-preserving-slicer-appearance.cs
