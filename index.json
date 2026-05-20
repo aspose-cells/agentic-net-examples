@@ -951,6 +951,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-create-a-slicer-for-a-table-column-and-save-the-file.cs",
+      "title": "Load an XLSX workbook, create a slicer for a table column, and save the file."
+    },
+    {
+      "category": "slicer",
       "file": "load-an-xlsx-workbook-remove-a-named-slicer-and-save-the-workbook-as-xlsx.cs",
       "title": "Load an XLSX workbook, remove a named slicer, and save the workbook as XLSX."
     },
