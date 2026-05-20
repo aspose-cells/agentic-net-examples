@@ -3876,6 +3876,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "apply-data-validation-rules-to-mapped-cells-to-ensure-imported-xml-values-meet-business-constraints.cs",
+      "title": "Apply data validation rules to mapped cells to ensure imported XML values meet business constraints."
+    },
+    {
+      "category": "xml-maps",
       "file": "batch-export-xml-data-from-multiple-workbooks-by-iterating-files-and-invoking-exportxml-for-each-map.cs",
       "title": "Batch export XML data from multiple workbooks by iterating files and invoking ExportXml for each map."
     },

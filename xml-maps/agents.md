@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - synchronize-cell-values-with-xml-map-data-after-performing-bulk-calculations-on-the-worksheet.cs
 - export-mapped-xml-data-as-a-compressed-zip-archive-containing-separate-files-for-each-map.cs
 - create-a-custom-function-that-transforms-xml-node-values-before-they-are-written-to-mapped-cells.cs
+- apply-data-validation-rules-to-mapped-cells-to-ensure-imported-xml-values-meet-business-constraints.cs
