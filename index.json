@@ -481,6 +481,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "set-workbook-theme-to-a-builtin-style-and-update-all-cell-styles-accordingly.cs",
+      "title": "Set workbook theme to a built\u2011in style and update all cell styles accordingly."
+    },
+    {
+      "category": "manage-workbook",
       "file": "validate-all-formulas-in-the-workbook-for-errors-and-generate-a-report-of-problematic-cells.cs",
       "title": "Validate all formulas in the workbook for errors and generate a report of problematic cells."
     },
