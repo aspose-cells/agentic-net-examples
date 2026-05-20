@@ -156,6 +156,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs",
+      "title": "Load a template workbook and clone its built\u2011in properties into a newly created workbook."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs",
       "title": "Load a workbook and assign the DocumentVersion built\u2011in property the value \"2.0\"."
     },
