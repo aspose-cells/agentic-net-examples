@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - generate-a-report-listing-workbooks-that-contain-optional-contenttypeproperties-lacking-the-isnillable-flag.cs
 - apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs
 - iterate-through-multiple-workbooks-in-a-directory-adding-a-shared-contenttypeproperty-to-each-file.cs
+- set-isnillable-to-true-for-the-shared-property-across-all-workbooks-to-ensure-optional-metadata.cs
