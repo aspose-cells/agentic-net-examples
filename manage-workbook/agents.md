@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - read-the-optional-flag-of-each-contenttypeproperty-and-generate-a-summary-indicating-which-are-nillable.cs
 - generate-a-report-listing-workbooks-that-contain-optional-contenttypeproperties-lacking-the-isnillable-flag.cs
 - apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs
+- iterate-through-multiple-workbooks-in-a-directory-adding-a-shared-contenttypeproperty-to-each-file.cs
