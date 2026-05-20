@@ -381,6 +381,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "apply-data-validation-to-restrict-input-to-a-list-of-predefined-values-in-a-column.cs",
+      "title": "Apply data validation to restrict input to a list of predefined values in a column."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
       "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
     },
