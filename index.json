@@ -901,6 +901,11 @@
     },
     {
       "category": "slicer",
+      "file": "convert-the-workbook-with-slicers-to-pdf-while-preserving-slicer-appearance-and-metadata.cs",
+      "title": "Convert the workbook with slicers to PDF while preserving slicer appearance and metadata."
+    },
+    {
+      "category": "slicer",
       "file": "create-a-batch-process-that-removes-a-named-slicer-from-multiple-xlsx-workbooks-and-saves-each-as-pdf.cs",
       "title": "Create a batch process that removes a named slicer from multiple XLSX workbooks and saves each as PDF."
     },
