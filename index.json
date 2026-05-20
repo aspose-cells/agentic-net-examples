@@ -361,6 +361,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs",
+      "title": "Load a CSV file into a workbook, specify the delimiter, and treat the first row as headers."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-an-xlsx-workbook-from-a-file-stream-and-enable-automatic-formula-calculation.cs",
       "title": "Load an XLSX workbook from a file stream and enable automatic formula calculation."
     },
