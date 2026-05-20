@@ -3878,6 +3878,11 @@
       "category": "xml-maps",
       "file": "import-an-xml-map-from-an-xsd-file-into-a-workbook-using-workbookimportxml-method.cs",
       "title": "Import an XML map from an XSD file into a workbook using Workbook.ImportXml method."
+    },
+    {
+      "category": "xml-maps",
+      "file": "list-all-xml-maps-in-the-workbook-and-output-each-maps-name-to-the-console.cs",
+      "title": "List all XML maps in the workbook and output each map\u2019s name to the console."
     }
   ]
 }
