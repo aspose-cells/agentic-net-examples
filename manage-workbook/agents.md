@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs
 - replace-all-occurrences-of-a-placeholder-string-using-a-regular-expression-across-the-entire-workbook.cs
 - search-for-dates-matching-a-pattern-and-reformat-them-to-iso-8601-using-regex-replacement.cs
+- validate-all-formulas-in-the-workbook-for-errors-and-generate-a-report-of-problematic-cells.cs

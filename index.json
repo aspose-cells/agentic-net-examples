@@ -470,6 +470,11 @@
       "title": "Set workbook calculation engine to use multi\u2011threaded processing for faster evaluation of large data sets."
     },
     {
+      "category": "manage-workbook",
+      "file": "validate-all-formulas-in-the-workbook-for-errors-and-generate-a-report-of-problematic-cells.cs",
+      "title": "Validate all formulas in the workbook for errors and generate a report of problematic cells."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
