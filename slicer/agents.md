@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - apply-the-slicerstylelight1-formatting-style-to-the-slicer-and-save-changes-in-the-workbook.cs
 - update-slicer-style-based-on-datadriven-criteria-using-the-api.cs
 - mark-the-slicer-as-nonprintable-and-ensure-it-does-not-appear-in-printed-output.cs
+- iterate-through-all-slicers-in-the-workbook-and-set-each-printable-flag-to-false.cs

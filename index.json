@@ -961,6 +961,11 @@
     },
     {
       "category": "slicer",
+      "file": "iterate-through-all-slicers-in-the-workbook-and-set-each-printable-flag-to-false.cs",
+      "title": "Iterate through all slicers in the workbook and set each printable flag to false."
+    },
+    {
+      "category": "slicer",
       "file": "list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs",
       "title": "List all slicer names on a worksheet and write them to a text file."
     },
