@@ -966,6 +966,11 @@
     },
     {
       "category": "slicer",
+      "file": "generate-a-report-listing-each-slicers-title-size-and-linked-table-column-for-auditing-purposes.cs",
+      "title": "Generate a report listing each slicer\u2019s title, size, and linked table column for auditing purposes."
+    },
+    {
+      "category": "slicer",
       "file": "hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs",
       "title": "Hide the slicer header row to create a compact filtering control without a title."
     },
