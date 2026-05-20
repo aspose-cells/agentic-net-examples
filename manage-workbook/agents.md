@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - load-an-xlsx-workbook-from-a-file-stream-and-enable-automatic-formula-calculation.cs
 - load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs
+- load-a-workbook-from-a-memory-stream-modify-a-cell-value-and-write-back-to-the-stream.cs
