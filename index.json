@@ -186,6 +186,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs",
+      "title": "Open a file and iterate through all built\u2011in properties, logging each name and value."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs",
       "title": "Open a file and update the Author built\u2011in property with the correct contributor identifier."
     },
