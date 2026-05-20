@@ -1076,6 +1076,11 @@
     },
     {
       "category": "slicer",
+      "file": "render-the-workbook-to-pdf-while-preserving-slicer-visual-properties-and-layout.cs",
+      "title": "Render the workbook to PDF while preserving slicer visual properties and layout."
+    },
+    {
+      "category": "slicer",
       "file": "resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs",
       "title": "Resize the slicer by assigning specific height and width values for layout consistency."
     },
