@@ -156,6 +156,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-workbook-and-check-whether-a-custom-property-clientname-exists-before-adding.cs",
+      "title": "Load a workbook and check whether a custom property \"ClientName\" exists before adding."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-disable-the-linksuptodate-builtin-property-to-prevent-link-checks.cs",
       "title": "Load a workbook and disable the LinksUpToDate built\u2011in property to prevent link checks."
     },
