@@ -1040,6 +1040,11 @@
       "title": "Use Worksheet.Slicers.RemoveAll to clear every slicer from a sheet, then save the workbook as XLSX."
     },
     {
+      "category": "slicer",
+      "file": "write-a-unit-test-verifying-that-slicerrefresh-updates-the-linked-pivot-tables-row-count-as-expected.cs",
+      "title": "Write a unit test verifying that Slicer.Refresh updates the linked pivot table\u2019s row count as expected."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
