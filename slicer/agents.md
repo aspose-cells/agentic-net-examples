@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-create-a-slicer-for-a-table-column-and-save-the-file.cs
 - load-a-workbook-create-slicers-for-multiple-table-columns-and-align-them-vertically-with-equal-spacing.cs
 - create-a-slicer-linked-to-a-table-column-then-set-its-placement-to-the-topright-corner.cs
+- move-the-slicer-to-cell-d5-and-align-it-with-existing-chart-objects.cs

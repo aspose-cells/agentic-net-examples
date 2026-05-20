@@ -991,6 +991,11 @@
     },
     {
       "category": "slicer",
+      "file": "move-the-slicer-to-cell-d5-and-align-it-with-existing-chart-objects.cs",
+      "title": "Move the slicer to cell D5 and align it with existing chart objects."
+    },
+    {
+      "category": "slicer",
       "file": "position-the-slicer-by-specifying-precise-top-and-left-coordinates-programmatically.cs",
       "title": "Position the slicer by specifying precise top and left coordinates programmatically."
     },
