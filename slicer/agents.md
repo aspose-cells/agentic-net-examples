@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - synchronize-two-slicers-so-that-selecting-an-item-in-one-updates-the-other-automatically.cs
 - load-an-xlsx-workbook-remove-a-named-slicer-and-save-the-workbook-as-xlsx.cs
 - iterate-all-worksheets-delete-every-slicer-and-export-the-modified-workbook-to-pdf.cs
+- identify-slicers-starting-with-region-remove-them-and-save-the-workbook-in-xlsx-format.cs
