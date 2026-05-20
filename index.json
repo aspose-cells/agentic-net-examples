@@ -361,6 +361,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
+      "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs",
       "title": "Load a CSV file into a workbook, specify the delimiter, and treat the first row as headers."
     },
