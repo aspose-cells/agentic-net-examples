@@ -461,6 +461,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "generate-a-report-listing-workbooks-that-contain-optional-contenttypeproperties-lacking-the-isnillable-flag.cs",
+      "title": "Generate a report listing workbooks that contain optional ContentTypeProperties lacking the IsNillable flag."
+    },
+    {
+      "category": "manage-workbook",
       "file": "insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs",
       "title": "Insert a hyperlink into a cell that points to an external website and opens in a new tab."
     },
