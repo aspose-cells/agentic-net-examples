@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - validate-that-the-slicer-printable-flag-is-true-before-exporting-the-workbook-to-pdf.cs
 - add-a-pivot-table-connection-to-the-slicer-for-dynamic-data-filtering.cs
 - remove-an-existing-pivot-connection-from-the-slicer-to-stop-automatic-updates.cs
+- programmatically-retrieve-slicer-properties-log-them-and-modify-row-height-based-on-logged-values.cs

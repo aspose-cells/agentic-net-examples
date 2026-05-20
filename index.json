@@ -1041,6 +1041,11 @@
     },
     {
       "category": "slicer",
+      "file": "programmatically-retrieve-slicer-properties-log-them-and-modify-row-height-based-on-logged-values.cs",
+      "title": "Programmatically retrieve slicer properties, log them, and modify row height based on logged values."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs",
       "title": "Programmatically select specific slicer items based on a predefined list of values."
     },
