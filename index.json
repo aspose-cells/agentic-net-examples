@@ -201,6 +201,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-workbook-modify-several-properties-and-save-the-file-to-xlsx-format-preserving-changes.cs",
+      "title": "Load a workbook, modify several properties, and save the file to XLSX format preserving changes."
+    },
+    {
+      "category": "document-properties",
       "file": "load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs",
       "title": "Load an Excel document and inspect the LinksUpToDate built\u2011in property for hyperlink status."
     },

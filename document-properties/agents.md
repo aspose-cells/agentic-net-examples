@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs
 - load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs
 - open-a-workbook-and-confirm-that-application-metadata-fields-appear-in-saved-file-properties.cs
+- load-a-workbook-modify-several-properties-and-save-the-file-to-xlsx-format-preserving-changes.cs
