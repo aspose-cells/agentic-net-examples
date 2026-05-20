@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - use-workbookloadoptions-to-preserve-existing-xml-maps-when-opening-a-workbook-in-readonly-mode.cs
 - add-a-new-xml-map-to-a-workbook-that-already-contains-multiple-maps-and-manage-their-order.cs
 - synchronize-cell-values-with-xml-map-data-after-performing-bulk-calculations-on-the-worksheet.cs
+- export-mapped-xml-data-as-a-compressed-zip-archive-containing-separate-files-for-each-map.cs
