@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - export-xml-data-for-a-specific-map-to-a-memory-stream-using-workbookexportxml-overload.cs
 - loop-through-all-xml-maps-in-a-workbook-and-export-each-maps-xml-using-exportxml.cs
 - export-xml-with-utf8-encoding-by-specifying-encodingutf8-parameter-in-exportxml-method.cs
+- export-xml-with-indentation-enabled-by-configuring-exportxmloptions-before-calling-exportxml.cs
