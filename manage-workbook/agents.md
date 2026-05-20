@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - implement-a-commandline-tool-that-accepts-a-file-path-adds-an-optional-property-and-disposes-the-workbook.cs
 - create-a-unit-test-that-asserts-the-isnillable-flag-is-true-for-a-given-contenttypeproperty-after-saving.cs
 - serialize-the-workbooks-custom-xml-part-to-a-string-and-log-its-xml-content-for-debugging.cs
+- use-a-memory-stream-to-load-a-workbook-add-metadata-and-save-back-without-touching-the-file-system.cs
