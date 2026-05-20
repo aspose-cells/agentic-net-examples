@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - remove-slicers-from-all-worksheets-in-a-workbook-and-save-a-consolidated-pdf.cs
 - create-a-function-returning-true-if-a-slicer-contains-any-selected-items-otherwise-false.cs
 - process-a-list-of-slicer-names-removing-each-one-and-logging-the-operation-result.cs
+- load-multiple-workbooks-remove-all-slicers-and-archive-the-resulting-pdfs-in-a-zip-file.cs

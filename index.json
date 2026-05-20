@@ -951,6 +951,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-multiple-workbooks-remove-all-slicers-and-archive-the-resulting-pdfs-in-a-zip-file.cs",
+      "title": "Load multiple workbooks, remove all slicers, and archive the resulting PDFs in a zip file."
+    },
+    {
+      "category": "slicer",
       "file": "load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs",
       "title": "Load workbooks in parallel threads, remove a designated slicer from each, and save results as PDFs."
     },
