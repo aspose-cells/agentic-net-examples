@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - validate-that-sparkline-data-range-does-not-contain-errors-before-creating-the-sparkline-object.cs
 - save-the-modified-workbook-with-new-sparklines-to-an-xlsx-file-at-specified-path.cs
 - export-a-specific-sparkline-as-a-png-image-file-to-designated-output-directory.cs
+- render-a-sparkline-to-a-memory-stream-for-embedding-into-a-pdf-report-later.cs
