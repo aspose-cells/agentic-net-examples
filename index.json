@@ -836,6 +836,11 @@
     },
     {
       "category": "slicer",
+      "file": "before-exporting-to-pdf-set-pdf-conversion-options-to-embed-fonts-and-retain-slicer-formatting.cs",
+      "title": "Before exporting to PDF, set PDF conversion options to embed fonts and retain slicer formatting."
+    },
+    {
+      "category": "slicer",
       "file": "change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs",
       "title": "Change the slicer layout direction to right\u2011to\u2011left for languages that read RTL."
     },

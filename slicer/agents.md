@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - export-a-workbook-containing-slicers-to-pdf-ensuring-all-slicers-appear-on-the-same-page.cs
 - compare-slicer-selection-states-before-and-after-calling-refresh-to-ensure-changes-are-applied-correctly.cs
 - use-worksheetslicersremoveall-to-clear-every-slicer-from-a-sheet-then-save-the-workbook-as-xlsx.cs
+- before-exporting-to-pdf-set-pdf-conversion-options-to-embed-fonts-and-retain-slicer-formatting.cs
