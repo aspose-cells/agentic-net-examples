@@ -146,6 +146,11 @@
     },
     {
       "category": "document-properties",
+      "file": "generate-a-summary-report-that-aggregates-builtin-property-values-from-multiple-workbooks-into-a-consolidated-excel-file.cs",
+      "title": "Generate a summary report that aggregates built\u2011in property values from multiple workbooks into a consolidated Excel file."
+    },
+    {
+      "category": "document-properties",
       "file": "instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs",
       "title": "Instantiate a workbook, adjust built\u2011in properties, and save the document as PDF to embed metadata."
     },
