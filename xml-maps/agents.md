@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - validate-the-xml-map-against-its-xsd-schema-and-report-any-validation-errors-encountered.cs
 - remove-an-existing-xml-map-from-the-workbook-and-ensure-all-linked-cells-are-cleared.cs
 - load-multiple-workbooks-from-a-directory-apply-the-same-xml-map-and-batch-export-their-xml-data.cs
+- configure-the-xml-map-to-ignore-whitespace-nodes-during-import-to-prevent-unwanted-blank-entries.cs
