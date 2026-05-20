@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs
 - write-a-unit-test-verifying-that-slicerrefresh-updates-the-linked-pivot-tables-row-count-as-expected.cs
 - save-the-workbook-with-pdf-options-to-embed-the-slicers-visual-style-in-the-output-file.cs
+- after-adding-new-items-to-a-slicers-cache-call-refresh-and-confirm-the-pivot-table-reflects-the-additions.cs
