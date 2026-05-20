@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs
 - list-all-xml-maps-in-the-workbook-and-output-each-maps-name-to-the-console.cs
 - retrieve-the-root-element-name-of-a-specific-map-by-its-index-using-workbookxmlmapsindexrootelementname.cs
+- query-cells-mapped-to-a-given-xpath-expression-using-worksheetxmlmapquery-method.cs

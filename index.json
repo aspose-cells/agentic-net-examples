@@ -3886,6 +3886,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "query-cells-mapped-to-a-given-xpath-expression-using-worksheetxmlmapquery-method.cs",
+      "title": "Query cells mapped to a given XPath expression using Worksheet.XmlMapQuery method."
+    },
+    {
+      "category": "xml-maps",
       "file": "retrieve-the-root-element-name-of-a-specific-map-by-its-index-using-workbookxmlmapsindexrootelementname.cs",
       "title": "Retrieve the root element name of a specific map by its index using workbook.XmlMaps[index].RootElementName."
     }
