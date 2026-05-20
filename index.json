@@ -816,6 +816,11 @@
     },
     {
       "category": "slicer",
+      "file": "adjust-slicer-row-height-to-30-points-after-linking-it-to-the-second-table-column.cs",
+      "title": "Adjust slicer row height to 30 points after linking it to the second table column."
+    },
+    {
+      "category": "slicer",
       "file": "after-adding-new-items-to-a-slicers-cache-call-refresh-and-confirm-the-pivot-table-reflects-the-additions.cs",
       "title": "After adding new items to a slicer\u2019s cache, call Refresh and confirm the pivot table reflects the additions."
     },
