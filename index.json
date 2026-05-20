@@ -821,6 +821,11 @@
     },
     {
       "category": "slicer",
+      "file": "hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs",
+      "title": "Hide the slicer header row to create a compact filtering control without a title."
+    },
+    {
+      "category": "slicer",
       "file": "load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs",
       "title": "Load a workbook from an Excel file into memory for further manipulation."
     },

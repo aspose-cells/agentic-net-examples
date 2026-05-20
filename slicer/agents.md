@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs
 - apply-a-builtin-slicer-style-such-as-light-1-for-quick-visual-formatting.cs
 - modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs
+- hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs
