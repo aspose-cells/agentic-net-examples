@@ -3891,6 +3891,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "configure-the-workbook-to-automatically-refresh-xml-map-data-when-the-source-xml-file-changes-on-disk.cs",
+      "title": "Configure the workbook to automatically refresh XML map data when the source XML file changes on disk."
+    },
+    {
+      "category": "xml-maps",
       "file": "configure-the-xml-map-to-ignore-whitespace-nodes-during-import-to-prevent-unwanted-blank-entries.cs",
       "title": "Configure the XML map to ignore whitespace nodes during import to prevent unwanted blank entries."
     },
