@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - after-processing-call-workbookdispose-explicitly-for-each-workbook-to-release-file-handles-and-memory.cs
 - integrate-workbook-disposal-into-a-finally-block-to-guarantee-resource-release-even-when-exceptions-occur.cs
 - implement-a-commandline-tool-that-accepts-a-file-path-adds-an-optional-property-and-disposes-the-workbook.cs
+- create-a-unit-test-that-asserts-the-isnillable-flag-is-true-for-a-given-contenttypeproperty-after-saving.cs
