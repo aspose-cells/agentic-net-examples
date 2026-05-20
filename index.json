@@ -316,6 +316,11 @@
     },
     {
       "category": "sparkline",
+      "file": "change-sparkline-material-to-plastic-to-affect-surface-shading-and-give-subtle-glossy-effect.cs",
+      "title": "Change sparkline material to 'Plastic' to affect surface shading and give subtle glossy effect."
+    },
+    {
+      "category": "sparkline",
       "file": "clone-an-existing-sparkline-group-and-place-the-clone-into-a-different-worksheet.cs",
       "title": "Clone an existing sparkline group and place the clone into a different worksheet."
     },
