@@ -941,6 +941,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-a-workbook-create-slicers-for-multiple-table-columns-and-align-them-vertically-with-equal-spacing.cs",
+      "title": "Load a workbook, create slicers for multiple table columns, and align them vertically with equal spacing."
+    },
+    {
+      "category": "slicer",
       "file": "load-a-workbook-from-a-memory-stream-update-slicer-selections-refresh-pivot-tables-and-write-pdf-to-stream.cs",
       "title": "Load a workbook from a memory stream, update slicer selections, refresh pivot tables, and write PDF to stream."
     },
