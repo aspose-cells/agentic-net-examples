@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - lock-a-slicer-to-prevent-end-users-from-modifying-its-configuration-on-protected-sheets.cs
 - set-the-slicer-to-be-printable-so-it-appears-when-the-worksheet-is-printed-to-paper.cs
 - export-the-slicer-as-an-image-and-embed-it-in-a-pdf-report-generated-from-the-workbook.cs
+- save-the-workbook-containing-slicers-to-macroenabled-excel-format-while-retaining-vba-code.cs

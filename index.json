@@ -901,6 +901,11 @@
     },
     {
       "category": "slicer",
+      "file": "save-the-workbook-containing-slicers-to-macroenabled-excel-format-while-retaining-vba-code.cs",
+      "title": "Save the workbook containing slicers to macro\u2011enabled Excel format while retaining VBA code."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
