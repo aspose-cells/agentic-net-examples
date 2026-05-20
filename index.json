@@ -3881,6 +3881,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs",
+      "title": "Enumerate the XmlMapCollection and log each map\u2019s name and root element name for debugging."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-xml-data-for-a-specific-map-to-a-file-using-workbookexportxml-with-map-index.cs",
       "title": "Export XML data for a specific map to a file using Workbook.ExportXml with map index."
     },
