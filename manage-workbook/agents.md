@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - measure-the-file-size-before-and-after-removing-unused-styles-to-assess-reduction-impact.cs
 - combine-adding-custom-xml-parts-with-style-cleanup-in-a-single-processing-pipeline-for-efficiency.cs
 - open-the-saved-xlsx-file-as-a-zip-archive-and-verify-the-presence-of-the-customxml-folder.cs
+- validate-that-each-saved-workbook-contains-the-expected-custom-xml-part-by-checking-the-zip-entry-name.cs
