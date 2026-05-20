@@ -416,6 +416,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "export-a-specific-worksheet-to-an-image-file-with-300-dpi-resolution-and-transparent-background.cs",
+      "title": "Export a specific worksheet to an image file with 300 DPI resolution and transparent background."
+    },
+    {
+      "category": "manage-workbook",
       "file": "insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs",
       "title": "Insert a hyperlink into a cell that points to an external website and opens in a new tab."
     },
