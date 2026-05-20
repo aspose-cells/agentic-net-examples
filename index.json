@@ -306,6 +306,11 @@
     },
     {
       "category": "sparkline",
+      "file": "delete-the-second-sparkline-in-the-first-sparkline-group-using-sparklinegroupremoveat-method.cs",
+      "title": "Delete the second sparkline in the first sparkline group using SparklineGroup.RemoveAt method."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs",
       "title": "Insert a win/loss sparkline at cell E2 referencing data in F2:F12 range."
     },
