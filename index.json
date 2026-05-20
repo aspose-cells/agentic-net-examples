@@ -496,6 +496,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "open-the-saved-xlsx-file-as-a-zip-archive-and-verify-the-presence-of-the-customxml-folder.cs",
+      "title": "Open the saved .xlsx file as a zip archive and verify the presence of the customXml folder."
+    },
+    {
+      "category": "manage-workbook",
       "file": "protect-the-workbook-with-a-password-and-allow-only-readonly-access-for-users.cs",
       "title": "Protect the workbook with a password and allow only read\u2011only access for users."
     },
