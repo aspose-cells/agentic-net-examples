@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - export-a-specific-sparkline-as-a-png-image-file-to-designated-output-directory.cs
 - render-a-sparkline-to-a-memory-stream-for-embedding-into-a-pdf-report-later.cs
 - clone-an-existing-sparkline-group-and-place-the-clone-into-a-different-worksheet.cs
+- set-sparkline-3d-depth-property-to-higher-value-to-enhance-visual-depth-perception.cs
