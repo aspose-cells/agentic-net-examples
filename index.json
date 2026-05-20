@@ -1021,6 +1021,11 @@
     },
     {
       "category": "slicer",
+      "file": "use-a-configuration-flag-to-decide-whether-to-keep-slicers-when-exporting-the-workbook-to-pdf.cs",
+      "title": "Use a configuration flag to decide whether to keep slicers when exporting the workbook to PDF."
+    },
+    {
+      "category": "slicer",
       "file": "use-slicercacheitems-to-select-items-based-on-external-csv-data-then-refresh-the-slicer.cs",
       "title": "Use SlicerCacheItems to select items based on external CSV data, then refresh the slicer."
     },
