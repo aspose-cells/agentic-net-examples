@@ -251,6 +251,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-workbook-set-scalecrop-to-true-and-ensure-the-flag-persists-when-saving-as-pdf.cs",
+      "title": "Open a workbook, set ScaleCrop to true, and ensure the flag persists when saving as PDF."
+    },
+    {
+      "category": "document-properties",
       "file": "open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs",
       "title": "Open an Excel file and read the Author built\u2011in property to identify the creator."
     },
