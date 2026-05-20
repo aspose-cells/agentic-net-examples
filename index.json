@@ -951,6 +951,11 @@
     },
     {
       "category": "slicer",
+      "file": "set-the-worksheet-print-area-to-slicer-bounds-then-render-the-slicer-as-an-image-file.cs",
+      "title": "Set the worksheet print area to slicer bounds, then render the slicer as an image file."
+    },
+    {
+      "category": "slicer",
       "file": "synchronize-two-slicers-so-that-selecting-an-item-in-one-updates-the-other-automatically.cs",
       "title": "Synchronize two slicers so that selecting an item in one updates the other automatically."
     },
