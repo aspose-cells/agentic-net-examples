@@ -3871,6 +3871,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-xml-data-for-a-specific-map-to-a-file-using-workbookexportxml-with-map-index.cs",
+      "title": "Export XML data for a specific map to a file using Workbook.ExportXml with map index."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
       "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
     },
