@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - move-the-slicer-to-cell-d5-and-align-it-with-existing-chart-objects.cs
 - adjust-slicer-row-height-to-30-points-after-linking-it-to-the-second-table-column.cs
 - set-slicer-row-height-dynamically-based-on-the-number-of-unique-items-in-the-linked-column.cs
+- set-slicer-width-to-150-pixels-and-verify-its-appearance-on-the-worksheet.cs
