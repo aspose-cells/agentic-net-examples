@@ -3881,6 +3881,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-xml-with-utf8-encoding-by-specifying-encodingutf8-parameter-in-exportxml-method.cs",
+      "title": "Export XML with UTF\u20118 encoding by specifying Encoding.UTF8 parameter in ExportXml method."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
       "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
     },
