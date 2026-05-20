@@ -146,6 +146,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs",
+      "title": "Load an Excel document and inspect the LinksUpToDate built\u2011in property for hyperlink status."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs",
       "title": "Open a workbook and query the ScaleCrop built\u2011in property to view image scaling flag."
     },
