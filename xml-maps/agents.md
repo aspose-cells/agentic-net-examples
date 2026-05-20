@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - remove-an-xml-map-by-its-name-using-a-helper-that-searches-the-xmlmaps-collection.cs
 - update-an-existing-xml-map-by-readding-it-with-the-same-name-and-a-new-xsd-schema.cs
 - load-a-workbook-from-a-memory-stream-add-an-xml-map-and-save-back-to-a-stream.cs
+- batch-process-a-folder-of-workbooks-adding-the-same-xml-map-to-each-file-programmatically.cs
