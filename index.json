@@ -4041,6 +4041,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "use-workbookloadoptions-to-preserve-existing-xml-maps-when-opening-a-workbook-in-readonly-mode.cs",
+      "title": "Use Workbook.LoadOptions to preserve existing XML maps when opening a workbook in read\u2011only mode."
+    },
+    {
+      "category": "xml-maps",
       "file": "use-worksheetcellsfind-to-locate-a-cell-that-is-mapped-to-a-specific-xml-attribute.cs",
       "title": "Use Worksheet.Cells.Find to locate a cell that is mapped to a specific XML attribute."
     },
