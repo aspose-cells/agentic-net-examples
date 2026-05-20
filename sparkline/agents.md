@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs
 - add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs
 - create-a-column-sparkline-in-cell-c5-based-on-values-from-d5d15-range.cs
+- insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs
