@@ -1071,6 +1071,11 @@
     },
     {
       "category": "slicer",
+      "file": "use-the-workbooks-calculate-method-after-slicer-refresh-to-ensure-formulas-reflect-the-new-filter.cs",
+      "title": "Use the workbook\u2019s Calculate method after slicer refresh to ensure formulas reflect the new filter."
+    },
+    {
+      "category": "slicer",
       "file": "use-worksheetslicersremoveall-to-clear-every-slicer-from-a-sheet-then-save-the-workbook-as-xlsx.cs",
       "title": "Use Worksheet.Slicers.RemoveAll to clear every slicer from a sheet, then save the workbook as XLSX."
     },
