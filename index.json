@@ -850,6 +850,11 @@
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
     {
+      "category": "slicer",
+      "file": "set-the-slicer-item-sorting-order-to-descending-based-on-underlying-data-values.cs",
+      "title": "Set the slicer item sorting order to descending based on underlying data values."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
