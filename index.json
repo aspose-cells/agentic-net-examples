@@ -4136,6 +4136,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "use-the-worksheetcellsclear-method-on-a-mapped-range-to-reset-values-while-preserving-the-map-linkage.cs",
+      "title": "Use the Worksheet.Cells.Clear method on a mapped range to reset values while preserving the map linkage."
+    },
+    {
+      "category": "xml-maps",
       "file": "use-workbookloadoptions-to-preserve-existing-xml-maps-when-opening-a-workbook-in-readonly-mode.cs",
       "title": "Use Workbook.LoadOptions to preserve existing XML maps when opening a workbook in read\u2011only mode."
     },
