@@ -811,6 +811,11 @@
     },
     {
       "category": "slicer",
+      "file": "add-a-pivot-table-connection-to-the-slicer-for-dynamic-data-filtering.cs",
+      "title": "Add a pivot table connection to the slicer for dynamic data filtering."
+    },
+    {
+      "category": "slicer",
       "file": "add-a-slicer-to-a-worksheet-that-contains-a-chart-to-filter-chart-data-dynamically.cs",
       "title": "Add a slicer to a worksheet that contains a chart to filter chart data dynamically."
     },
