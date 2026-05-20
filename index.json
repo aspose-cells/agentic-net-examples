@@ -416,6 +416,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs",
+      "title": "Insert a hyperlink into a cell that points to an external website and opens in a new tab."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs",
       "title": "Load a CSV file into a workbook, specify the delimiter, and treat the first row as headers."
     },
