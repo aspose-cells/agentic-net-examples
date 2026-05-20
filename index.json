@@ -146,6 +146,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs",
+      "title": "Open a workbook and query the ScaleCrop built\u2011in property to view image scaling flag."
+    },
+    {
+      "category": "document-properties",
       "file": "open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs",
       "title": "Open an Excel file and read the Author built\u2011in property to identify the creator."
     },
