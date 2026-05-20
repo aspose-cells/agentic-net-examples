@@ -516,6 +516,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "read-the-optional-flag-of-each-contenttypeproperty-and-generate-a-summary-indicating-which-are-nillable.cs",
+      "title": "Read the optional flag of each ContentTypeProperty and generate a summary indicating which are nillable."
+    },
+    {
+      "category": "manage-workbook",
       "file": "replace-all-occurrences-of-a-placeholder-string-using-a-regular-expression-across-the-entire-workbook.cs",
       "title": "Replace all occurrences of a placeholder string using a regular expression across the entire workbook."
     },
