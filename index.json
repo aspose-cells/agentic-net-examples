@@ -926,6 +926,11 @@
     },
     {
       "category": "slicer",
+      "file": "synchronize-two-slicers-so-that-selecting-an-item-in-one-updates-the-other-automatically.cs",
+      "title": "Synchronize two slicers so that selecting an item in one updates the other automatically."
+    },
+    {
+      "category": "slicer",
       "file": "update-slicer-properties-across-all-worksheets-in-a-workbook-to-enforce-a-corporate-style.cs",
       "title": "Update slicer properties across all worksheets in a workbook to enforce a corporate style."
     },
