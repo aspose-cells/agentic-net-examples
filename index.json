@@ -926,6 +926,11 @@
     },
     {
       "category": "slicer",
+      "file": "create-a-slicer-then-copy-its-properties-to-a-new-slicer-on-another-worksheet.cs",
+      "title": "Create a slicer, then copy its properties to a new slicer on another worksheet."
+    },
+    {
+      "category": "slicer",
       "file": "delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs",
       "title": "Delete a slicer by name from the workbook to clean up unused controls."
     },
