@@ -156,6 +156,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-workbook-and-disable-the-linksuptodate-builtin-property-to-prevent-link-checks.cs",
+      "title": "Load a workbook and disable the LinksUpToDate built\u2011in property to prevent link checks."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
       "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
     },
