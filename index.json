@@ -356,6 +356,11 @@
     },
     {
       "category": "sparkline",
+      "file": "deserialize-sparkline-configuration-from-json-file-and-apply-settings-to-newly-created-workbook.cs",
+      "title": "Deserialize sparkline configuration from JSON file and apply settings to newly created workbook."
+    },
+    {
+      "category": "sparkline",
       "file": "enable-display-of-both-first-and-last-points-in-line-sparkline-located-at-i4.cs",
       "title": "Enable display of both first and last points in line sparkline located at I4."
     },

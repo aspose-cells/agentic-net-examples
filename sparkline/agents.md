@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - handle-null-values-in-source-data-range-gracefully-when-generating-sparkline-to-avoid-rendering-errors.cs
 - enable-sparkline-markers-only-for-outlier-points-exceeding-predefined-threshold-to-highlight-anomalies.cs
 - serialize-sparkline-group-settings-to-json-string-for-later-reuse-or-configuration-sharing.cs
+- deserialize-sparkline-configuration-from-json-file-and-apply-settings-to-newly-created-workbook.cs
