@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - open-a-workbook-set-scalecrop-to-true-and-ensure-the-flag-persists-when-saving-as-pdf.cs
 - instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs
 - load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs
+- open-a-workbook-and-confirm-that-application-metadata-fields-appear-in-saved-file-properties.cs
