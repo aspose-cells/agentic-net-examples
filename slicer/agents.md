@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - set-slicer-row-height-dynamically-based-on-the-number-of-unique-items-in-the-linked-column.cs
 - set-slicer-width-to-150-pixels-and-verify-its-appearance-on-the-worksheet.cs
 - batch-process-multiple-workbooks-adding-slicers-to-each-and-adjusting-their-widths-uniformly.cs
+- change-the-slicer-title-to-region-filter-and-update-the-workbook-accordingly.cs

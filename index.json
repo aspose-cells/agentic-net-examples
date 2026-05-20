@@ -866,6 +866,11 @@
     },
     {
       "category": "slicer",
+      "file": "change-the-slicer-title-to-region-filter-and-update-the-workbook-accordingly.cs",
+      "title": "Change the slicer title to 'Region Filter' and update the workbook accordingly."
+    },
+    {
+      "category": "slicer",
       "file": "clear-all-selected-items-in-a-slicer-to-reset-the-filter-to-its-default-state.cs",
       "title": "Clear all selected items in a slicer to reset the filter to its default state."
     },
