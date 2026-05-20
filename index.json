@@ -891,6 +891,11 @@
     },
     {
       "category": "slicer",
+      "file": "generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs",
+      "title": "Generate a PDF report that includes only the slicer region by setting the worksheet\u2019s print area."
+    },
+    {
+      "category": "slicer",
       "file": "hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs",
       "title": "Hide the slicer header row to create a compact filtering control without a title."
     },
