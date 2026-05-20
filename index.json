@@ -166,6 +166,11 @@
     },
     {
       "category": "document-properties",
+      "file": "iterate-through-a-directory-of-excel-files-and-update-every-documentversion-property-to-30.cs",
+      "title": "Iterate through a directory of Excel files and update every DocumentVersion property to \"3.0\"."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs",
       "title": "Load a spreadsheet and read the Language built\u2011in property to determine locale settings."
     },
