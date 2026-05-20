@@ -1051,6 +1051,11 @@
     },
     {
       "category": "slicer",
+      "file": "set-slicer-row-height-dynamically-based-on-the-number-of-unique-items-in-the-linked-column.cs",
+      "title": "Set slicer row height dynamically based on the number of unique items in the linked column."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
