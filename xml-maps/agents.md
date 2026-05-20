@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - batch-export-xml-data-from-multiple-workbooks-by-iterating-files-and-invoking-exportxml-for-each-map.cs
 - import-xml-data-into-linked-cells-using-workbookimportxml-after-the-xml-map-has-been-added.cs
 - import-xml-data-from-a-stream-into-a-workbook-with-linked-cells-using-importxml-overload.cs
+- export-xml-without-xml-declaration-by-setting-exportxmloptionsomitxmldeclaration-to-true.cs
