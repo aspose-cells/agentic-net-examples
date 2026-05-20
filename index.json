@@ -3906,6 +3906,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "compare-two-xml-maps-within-the-same-workbook-to-identify-overlapping-cell-assignments-and-resolve-conflicts.cs",
+      "title": "Compare two XML maps within the same workbook to identify overlapping cell assignments and resolve conflicts."
+    },
+    {
+      "category": "xml-maps",
       "file": "configure-the-workbook-to-automatically-refresh-xml-map-data-when-the-source-xml-file-changes-on-disk.cs",
       "title": "Configure the workbook to automatically refresh XML map data when the source XML file changes on disk."
     },

@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - use-the-worksheetcellsclear-method-on-a-mapped-range-to-reset-values-while-preserving-the-map-linkage.cs
 - add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs
 - create-a-scheduled-task-that-refreshes-all-xml-maps-in-a-set-of-workbooks-every-night-at-midnight.cs
+- compare-two-xml-maps-within-the-same-workbook-to-identify-overlapping-cell-assignments-and-resolve-conflicts.cs
