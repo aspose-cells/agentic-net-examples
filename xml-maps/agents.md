@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - import-an-xml-map-from-an-xsd-file-into-a-workbook-using-workbookimportxml-method.cs
+- import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs
