@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - iterate-over-slicercacheitems-to-deselect-items-matching-a-specific-keyword.cs
 - save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs
 - list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs
+- load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs

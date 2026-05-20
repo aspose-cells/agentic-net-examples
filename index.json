@@ -931,6 +931,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs",
+      "title": "Load workbooks in parallel threads, remove a designated slicer from each, and save results as PDFs."
+    },
+    {
+      "category": "slicer",
       "file": "lock-a-slicer-to-prevent-end-users-from-modifying-its-configuration-on-protected-sheets.cs",
       "title": "Lock a slicer to prevent end users from modifying its configuration on protected sheets."
     },
