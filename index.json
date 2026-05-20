@@ -3961,6 +3961,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "generate-a-summary-report-listing-each-xml-map-its-root-element-and-the-number-of-linked-cells.cs",
+      "title": "Generate a summary report listing each XML map, its root element, and the number of linked cells."
+    },
+    {
+      "category": "xml-maps",
       "file": "implement-a-routine-that-clears-all-cell-values-linked-to-a-specific-xml-map-without-removing-the-map.cs",
       "title": "Implement a routine that clears all cell values linked to a specific XML map without removing the map."
     },
