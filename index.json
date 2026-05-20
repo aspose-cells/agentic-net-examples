@@ -321,6 +321,11 @@
     },
     {
       "category": "sparkline",
+      "file": "read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs",
+      "title": "Read the value of the third sparkline in the second sparkline group and log it."
+    },
+    {
+      "category": "sparkline",
       "file": "set-sparkline-markers-to-display-high-points-using-red-color-for-sparkline-in-h3.cs",
       "title": "Set sparkline markers to display high points using red color for sparkline in H3."
     },
