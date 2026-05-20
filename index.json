@@ -135,6 +135,11 @@
       "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
     },
     {
+      "category": "document-properties",
+      "file": "open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs",
+      "title": "Open an Excel file and read the Author built\u2011in property to identify the creator."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
