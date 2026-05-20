@@ -256,6 +256,11 @@
     },
     {
       "category": "document-properties",
+      "file": "log-a-warning-whenever-code-attempts-to-modify-application-metadata-which-is-immutable.cs",
+      "title": "Log a warning whenever code attempts to modify application metadata, which is immutable."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs",
       "title": "Open a file and iterate through all built\u2011in properties, logging each name and value."
     },
