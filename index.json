@@ -4121,6 +4121,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "validate-that-all-required-xml-elements-have-corresponding-mapped-cells-before-exporting-the-xml-data.cs",
+      "title": "Validate that all required XML elements have corresponding mapped cells before exporting the XML data."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-the-xml-map-against-its-xsd-schema-and-report-any-validation-errors-encountered.cs",
       "title": "Validate the XML map against its XSD schema and report any validation errors encountered."
     }
