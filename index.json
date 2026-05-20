@@ -360,6 +360,11 @@
       "title": "Validate that the Title built\u2011in property is not empty before exporting the workbook to any external format."
     },
     {
+      "category": "manage-workbook",
+      "file": "load-an-xlsx-workbook-from-a-file-stream-and-enable-automatic-formula-calculation.cs",
+      "title": "Load an XLSX workbook from a file stream and enable automatic formula calculation."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
