@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-update-slicer-selections-refresh-pivot-tables-and-write-pdf-to-stream.cs
 - set-the-worksheet-print-area-to-slicer-bounds-then-render-the-slicer-as-an-image-file.cs
 - after-updating-slicer-items-verify-the-associated-pivot-table-reflects-the-new-filter-criteria.cs
+- create-a-batch-process-that-removes-a-named-slicer-from-multiple-xlsx-workbooks-and-saves-each-as-pdf.cs

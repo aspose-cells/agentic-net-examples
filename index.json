@@ -856,6 +856,11 @@
     },
     {
       "category": "slicer",
+      "file": "create-a-batch-process-that-removes-a-named-slicer-from-multiple-xlsx-workbooks-and-saves-each-as-pdf.cs",
+      "title": "Create a batch process that removes a named slicer from multiple XLSX workbooks and saves each as PDF."
+    },
+    {
+      "category": "slicer",
       "file": "create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs",
       "title": "Create a slicer linked to a pivot table within the loaded workbook."
     },
