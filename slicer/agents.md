@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - add-a-pivot-table-connection-to-the-slicer-for-dynamic-data-filtering.cs
 - remove-an-existing-pivot-connection-from-the-slicer-to-stop-automatic-updates.cs
 - programmatically-retrieve-slicer-properties-log-them-and-modify-row-height-based-on-logged-values.cs
+- create-a-slicer-and-retrieve-its-identifier-for-use-in-subsequent-api-calls.cs
