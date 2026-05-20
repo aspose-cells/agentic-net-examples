@@ -816,6 +816,11 @@
     },
     {
       "category": "slicer",
+      "file": "configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs",
+      "title": "Configure the slicer to display items with no data by toggling the show\u2011zero\u2011items option."
+    },
+    {
+      "category": "slicer",
       "file": "create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs",
       "title": "Create a slicer linked to a pivot table within the loaded workbook."
     },
