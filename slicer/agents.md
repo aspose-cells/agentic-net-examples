@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - batch-create-slicers-for-each-pivot-table-in-a-workbook-using-a-loop-over-all-tables.cs
 - update-slicer-properties-across-all-worksheets-in-a-workbook-to-enforce-a-corporate-style.cs
 - synchronize-two-slicers-so-that-selecting-an-item-in-one-updates-the-other-automatically.cs
+- load-an-xlsx-workbook-remove-a-named-slicer-and-save-the-workbook-as-xlsx.cs
