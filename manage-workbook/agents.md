@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - export-a-list-of-all-contenttypeproperty-names-from-a-workbook-to-a-csv-file-for-reporting.cs
 - read-the-optional-flag-of-each-contenttypeproperty-and-generate-a-summary-indicating-which-are-nillable.cs
 - generate-a-report-listing-workbooks-that-contain-optional-contenttypeproperties-lacking-the-isnillable-flag.cs
+- apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs

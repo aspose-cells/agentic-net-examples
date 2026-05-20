@@ -396,6 +396,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs",
+      "title": "Apply a filter to process only workbooks that already contain a specific custom XML part before modification."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
       "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
     },
