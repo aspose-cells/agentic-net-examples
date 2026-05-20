@@ -366,6 +366,11 @@
     },
     {
       "category": "sparkline",
+      "file": "enable-sparkline-markers-only-for-outlier-points-exceeding-predefined-threshold-to-highlight-anomalies.cs",
+      "title": "Enable sparkline markers only for outlier points exceeding predefined threshold to highlight anomalies."
+    },
+    {
+      "category": "sparkline",
       "file": "export-a-specific-sparkline-as-a-png-image-file-to-designated-output-directory.cs",
       "title": "Export a specific sparkline as a PNG image file to designated output directory."
     },
