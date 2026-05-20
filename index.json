@@ -146,6 +146,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs",
+      "title": "Load a workbook and assign the DocumentVersion built\u2011in property the value \"2.0\"."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
       "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
     },
