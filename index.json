@@ -856,6 +856,11 @@
     },
     {
       "category": "slicer",
+      "file": "export-the-slicer-as-an-image-and-embed-it-in-a-pdf-report-generated-from-the-workbook.cs",
+      "title": "Export the slicer as an image and embed it in a PDF report generated from the workbook."
+    },
+    {
+      "category": "slicer",
       "file": "hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs",
       "title": "Hide the slicer header row to create a compact filtering control without a title."
     },
