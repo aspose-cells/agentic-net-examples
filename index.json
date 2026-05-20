@@ -811,6 +811,11 @@
     },
     {
       "category": "slicer",
+      "file": "create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs",
+      "title": "Create a slicer linked to a pivot table within the loaded workbook."
+    },
+    {
+      "category": "slicer",
       "file": "load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs",
       "title": "Load a workbook from an Excel file into memory for further manipulation."
     },
