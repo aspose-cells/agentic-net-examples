@@ -421,6 +421,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "export-the-workbook-to-pdf-format-with-high-resolution-images-and-embedded-fonts.cs",
+      "title": "Export the workbook to PDF format with high resolution images and embedded fonts."
+    },
+    {
+      "category": "manage-workbook",
       "file": "insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs",
       "title": "Insert a hyperlink into a cell that points to an external website and opens in a new tab."
     },
