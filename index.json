@@ -961,6 +961,11 @@
     },
     {
       "category": "slicer",
+      "file": "save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs",
+      "title": "Save the workbook after each slicer modification to create incremental versioned files for change tracking."
+    },
+    {
+      "category": "slicer",
       "file": "save-the-workbook-containing-slicers-to-macroenabled-excel-format-while-retaining-vba-code.cs",
       "title": "Save the workbook containing slicers to macro\u2011enabled Excel format while retaining VBA code."
     },
