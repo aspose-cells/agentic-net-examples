@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - move-a-worksheet-to-a-new-position-within-the-same-workbook-and-update-its-tab-color.cs
 - create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-summary-formula.cs
 - create-a-pivot-table-from-a-data-source-range-and-place-it-on-a-new-worksheet.cs
+- add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs

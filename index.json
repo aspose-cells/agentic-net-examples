@@ -361,6 +361,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
+      "title": "Add a chart to a worksheet based on a data range and customize its legend position."
+    },
+    {
+      "category": "manage-workbook",
       "file": "add-a-comment-to-a-cell-with-author-information-and-display-it-when-the-cell-is-selected.cs",
       "title": "Add a comment to a cell with author information and display it when the cell is selected."
     },
