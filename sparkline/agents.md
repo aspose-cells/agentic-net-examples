@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - render-a-sparkline-to-a-memory-stream-for-embedding-into-a-pdf-report-later.cs
 - clone-an-existing-sparkline-group-and-place-the-clone-into-a-different-worksheet.cs
 - set-sparkline-3d-depth-property-to-higher-value-to-enhance-visual-depth-perception.cs
+- adjust-sparkline-lighting-to-soft-mode-for-improved-appearance-in-excel-2010-files.cs
