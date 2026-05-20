@@ -3981,6 +3981,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "retrieve-the-address-of-the-first-cell-mapped-to-the-invoicetotal-element.cs",
+      "title": "Retrieve the address of the first cell mapped to the /Invoice/Total element."
+    },
+    {
+      "category": "xml-maps",
       "file": "retrieve-the-root-element-name-of-a-specific-map-by-its-index-using-workbookxmlmapsindexrootelementname.cs",
       "title": "Retrieve the root element name of a specific map by its index using workbook.XmlMaps[index].RootElementName."
     },
