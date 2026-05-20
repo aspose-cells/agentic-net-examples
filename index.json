@@ -3966,6 +3966,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-the-workbook-to-an-ods-file-while-ensuring-that-xml-map-definitions-are-retained-in-the-output.cs",
+      "title": "Export the workbook to an ODS file while ensuring that XML map definitions are retained in the output."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-the-workbook-to-pdf-while-preserving-the-visual-representation-of-mapped-cells-and-their-data.cs",
       "title": "Export the workbook to PDF while preserving the visual representation of mapped cells and their data."
     },
