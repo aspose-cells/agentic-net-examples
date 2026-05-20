@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - delete-the-second-sparkline-in-the-first-sparkline-group-using-sparklinegroupremoveat-method.cs
 - read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs
 - batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs
+- configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs
