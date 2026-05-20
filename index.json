@@ -401,6 +401,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-custom-xml-part-containing-a-book-catalog-schema-and-add-it-using-workbookcontenttypepropertiesadd.cs",
+      "title": "Create a custom XML part containing a book catalog schema and add it using Workbook.ContentTypeProperties.Add."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-summary-formula.cs",
       "title": "Create a named range that spans multiple worksheets and use it in a summary formula."
     },

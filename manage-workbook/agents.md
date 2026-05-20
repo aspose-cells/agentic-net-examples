@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - use-workbookloadoptions-to-open-a-passwordprotected-file-then-add-optional-metadata-before-saving.cs
 - add-a-new-contenttypeproperty-named-projectid-with-a-string-value-to-the-workbook.cs
 - mark-the-newly-added-projectid-property-as-optional-by-setting-its-isnillable-flag-to-true.cs
+- create-a-custom-xml-part-containing-a-book-catalog-schema-and-add-it-using-workbookcontenttypepropertiesadd.cs
