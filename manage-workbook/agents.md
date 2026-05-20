@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - benchmark-the-time-required-to-remove-unused-styles-from-workbooks-of-varying-size-to-determine-scaling-behavior.cs
 - compare-two-workbooks-one-with-unused-styles-removed-and-one-without-to-evaluate-visual-consistency.cs
 - wrap-workbook-loading-and-saving-inside-a-using-statement-to-guarantee-deterministic-disposal-of-resources.cs
+- after-processing-call-workbookdispose-explicitly-for-each-workbook-to-release-file-handles-and-memory.cs

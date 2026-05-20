@@ -396,6 +396,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "after-processing-call-workbookdispose-explicitly-for-each-workbook-to-release-file-handles-and-memory.cs",
+      "title": "After processing, call Workbook.Dispose explicitly for each workbook to release file handles and memory."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs",
       "title": "Apply a filter to process only workbooks that already contain a specific custom XML part before modification."
     },
