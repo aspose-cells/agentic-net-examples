@@ -871,6 +871,11 @@
     },
     {
       "category": "slicer",
+      "file": "programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs",
+      "title": "Programmatically select specific slicer items based on a predefined list of values."
+    },
+    {
+      "category": "slicer",
       "file": "resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs",
       "title": "Resize the slicer by assigning specific height and width values for layout consistency."
     },

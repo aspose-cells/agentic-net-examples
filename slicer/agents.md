@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - clone-an-existing-slicer-and-place-the-copy-on-another-worksheet-for-parallel-filtering.cs
 - delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs
 - retrieve-the-collection-of-slicers-from-a-worksheet-and-iterate-to-log-each-name.cs
+- programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs
