@@ -951,6 +951,11 @@
     },
     {
       "category": "slicer",
+      "file": "export-the-workbook-to-pdf-with-high-resolution-to-ensure-slicer-text-remains-sharp.cs",
+      "title": "Export the workbook to PDF with high resolution to ensure slicer text remains sharp."
+    },
+    {
+      "category": "slicer",
       "file": "generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs",
       "title": "Generate a PDF report that includes only the slicer region by setting the worksheet\u2019s print area."
     },
