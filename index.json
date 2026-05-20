@@ -4006,6 +4006,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "log-the-execution-time-of-each-xml-map-query-to-identify-performance-bottlenecks-in-large-datasets.cs",
+      "title": "Log the execution time of each XML map query to identify performance bottlenecks in large datasets."
+    },
+    {
+      "category": "xml-maps",
       "file": "loop-through-all-xml-maps-in-a-workbook-and-export-each-maps-xml-using-exportxml.cs",
       "title": "Loop through all XML maps in a workbook and export each map\u2019s XML using ExportXml."
     },
