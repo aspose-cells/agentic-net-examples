@@ -1146,6 +1146,11 @@
     },
     {
       "category": "slicer",
+      "file": "validate-that-the-slicer-printable-flag-is-true-before-exporting-the-workbook-to-pdf.cs",
+      "title": "Validate that the slicer printable flag is true before exporting the workbook to PDF."
+    },
+    {
+      "category": "slicer",
       "file": "write-a-unit-test-verifying-that-slicerrefresh-updates-the-linked-pivot-tables-row-count-as-expected.cs",
       "title": "Write a unit test verifying that Slicer.Refresh updates the linked pivot table\u2019s row count as expected."
     },
