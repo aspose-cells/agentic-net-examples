@@ -391,6 +391,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "after-adding-custom-properties-verify-that-the-workbooks-core-properties-remain-unchanged.cs",
+      "title": "After adding custom properties, verify that the workbook's core properties remain unchanged."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
       "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
     },

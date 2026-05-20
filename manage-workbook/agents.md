@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - combine-adding-custom-xml-parts-with-style-cleanup-in-a-single-processing-pipeline-for-efficiency.cs
 - open-the-saved-xlsx-file-as-a-zip-archive-and-verify-the-presence-of-the-customxml-folder.cs
 - validate-that-each-saved-workbook-contains-the-expected-custom-xml-part-by-checking-the-zip-entry-name.cs
+- after-adding-custom-properties-verify-that-the-workbooks-core-properties-remain-unchanged.cs
