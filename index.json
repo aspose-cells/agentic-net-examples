@@ -3936,6 +3936,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-mapped-data-to-a-json-file-by-converting-the-xml-nodes-to-equivalent-json-structures.cs",
+      "title": "Export mapped data to a JSON file by converting the XML nodes to equivalent JSON structures."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-mapped-xml-data-as-a-compressed-zip-archive-containing-separate-files-for-each-map.cs",
       "title": "Export mapped XML data as a compressed .zip archive containing separate files for each map."
     },
