@@ -171,6 +171,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-an-excel-file-and-create-a-custom-property-projectid-with-an-integer-identifier.cs",
+      "title": "Load an Excel file and create a custom property \"ProjectId\" with an integer identifier."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs",
       "title": "Open a file and update the Author built\u2011in property with the correct contributor identifier."
     },
