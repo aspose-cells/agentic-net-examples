@@ -156,6 +156,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs",
+      "title": "Open a file and update the Author built\u2011in property with the correct contributor identifier."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs",
       "title": "Open a workbook and query the ScaleCrop built\u2011in property to view image scaling flag."
     },
