@@ -376,6 +376,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
+      "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
       "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
     },
