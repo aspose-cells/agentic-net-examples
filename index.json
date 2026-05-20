@@ -871,6 +871,11 @@
     },
     {
       "category": "slicer",
+      "file": "iterate-all-worksheets-delete-every-slicer-and-export-the-modified-workbook-to-pdf.cs",
+      "title": "Iterate all worksheets, delete every slicer, and export the modified workbook to PDF."
+    },
+    {
+      "category": "slicer",
       "file": "load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs",
       "title": "Load a workbook from an Excel file into memory for further manipulation."
     },
