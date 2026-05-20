@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - set-isnillable-to-true-for-the-shared-property-across-all-workbooks-to-ensure-optional-metadata.cs
 - create-a-reusable-method-that-adds-a-contenttypeproperty-and-sets-isnillable-based-on-a-boolean-parameter.cs
 - create-a-batch-job-that-processes-100-workbooks-adding-optional-metadata-and-removing-unused-styles.cs
+- log-the-duration-of-each-workbooks-processing-steps-to-identify-performance-bottlenecks.cs

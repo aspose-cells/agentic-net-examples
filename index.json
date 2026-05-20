@@ -511,6 +511,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "log-the-duration-of-each-workbooks-processing-steps-to-identify-performance-bottlenecks.cs",
+      "title": "Log the duration of each workbook's processing steps to identify performance bottlenecks."
+    },
+    {
+      "category": "manage-workbook",
       "file": "mark-the-newly-added-projectid-property-as-optional-by-setting-its-isnillable-flag-to-true.cs",
       "title": "Mark the newly added ProjectId property as optional by setting its IsNillable flag to true."
     },
