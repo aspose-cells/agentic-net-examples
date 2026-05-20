@@ -3911,6 +3911,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "import-xml-data-into-linked-cells-using-workbookimportxml-after-the-xml-map-has-been-added.cs",
+      "title": "Import XML data into linked cells using Workbook.ImportXml after the XML map has been added."
+    },
+    {
+      "category": "xml-maps",
       "file": "list-all-xml-maps-in-the-workbook-and-output-each-maps-name-to-the-console.cs",
       "title": "List all XML maps in the workbook and output each map\u2019s name to the console."
     },
