@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-modify-a-cell-value-and-write-back-to-the-stream.cs
 - create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs
 - set-workbook-calculation-engine-to-use-multithreaded-processing-for-faster-evaluation-of-large-data-sets.cs
+- enable-iterative-calculation-mode-and-set-maximum-iterations-to-improve-convergence-of-circular-formulas.cs

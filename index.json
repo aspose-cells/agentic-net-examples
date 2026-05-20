@@ -366,6 +366,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "enable-iterative-calculation-mode-and-set-maximum-iterations-to-improve-convergence-of-circular-formulas.cs",
+      "title": "Enable iterative calculation mode and set maximum iterations to improve convergence of circular formulas."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs",
       "title": "Load a CSV file into a workbook, specify the delimiter, and treat the first row as headers."
     },
