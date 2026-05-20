@@ -166,6 +166,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs",
+      "title": "Load a workbook and enumerate custom properties, exporting their names, types, and values to JSON."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
       "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
     },
