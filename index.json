@@ -321,6 +321,11 @@
     },
     {
       "category": "sparkline",
+      "file": "enable-display-of-both-first-and-last-points-in-line-sparkline-located-at-i4.cs",
+      "title": "Enable display of both first and last points in line sparkline located at I4."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs",
       "title": "Insert a win/loss sparkline at cell E2 referencing data in F2:F12 range."
     },
