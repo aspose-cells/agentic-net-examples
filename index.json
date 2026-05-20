@@ -370,6 +370,11 @@
       "title": "Set sparkline to show negative points using custom blue color in cell J6."
     },
     {
+      "category": "sparkline",
+      "file": "validate-that-sparkline-data-range-does-not-contain-errors-before-creating-the-sparkline-object.cs",
+      "title": "Validate that sparkline data range does not contain errors before creating the sparkline object."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
