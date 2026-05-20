@@ -421,6 +421,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "compare-two-workbooks-one-with-unused-styles-removed-and-one-without-to-evaluate-visual-consistency.cs",
+      "title": "Compare two workbooks, one with unused styles removed and one without, to evaluate visual consistency."
+    },
+    {
+      "category": "manage-workbook",
       "file": "configure-the-workbook-to-use-a-specific-culture-when-formatting-optional-property-values-during-export.cs",
       "title": "Configure the workbook to use a specific culture when formatting optional property values during export."
     },
