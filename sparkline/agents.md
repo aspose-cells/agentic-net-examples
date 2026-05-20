@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs
 - create-a-column-sparkline-in-cell-c5-based-on-values-from-d5d15-range.cs
 - insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs
+- apply-3d-formatting-with-thirty-degree-rotation-to-sparkline-group-located-at-g1.cs
