@@ -816,6 +816,11 @@
     },
     {
       "category": "slicer",
+      "file": "after-adding-new-items-to-a-slicers-cache-call-refresh-and-confirm-the-pivot-table-reflects-the-additions.cs",
+      "title": "After adding new items to a slicer\u2019s cache, call Refresh and confirm the pivot table reflects the additions."
+    },
+    {
+      "category": "slicer",
       "file": "after-updating-slicer-items-verify-the-associated-pivot-table-reflects-the-new-filter-criteria.cs",
       "title": "After updating slicer items, verify the associated pivot table reflects the new filter criteria."
     },
