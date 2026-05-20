@@ -146,6 +146,11 @@
     },
     {
       "category": "document-properties",
+      "file": "create-a-unit-test-that-adds-a-custom-property-saves-the-workbook-reloads-it-and-verifies-persistence.cs",
+      "title": "Create a unit test that adds a custom property, saves the workbook, reloads it, and verifies persistence."
+    },
+    {
+      "category": "document-properties",
       "file": "create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs",
       "title": "Create a utility that reads custom properties from a workbook and writes them into a \"Metadata\" worksheet."
     },
