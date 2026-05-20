@@ -891,6 +891,11 @@
     },
     {
       "category": "slicer",
+      "file": "create-a-slicer-linked-to-a-table-column-then-set-its-placement-to-the-topright-corner.cs",
+      "title": "Create a slicer linked to a table column, then set its placement to the top\u2011right corner."
+    },
+    {
+      "category": "slicer",
       "file": "delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs",
       "title": "Delete a slicer by name from the workbook to clean up unused controls."
     },
