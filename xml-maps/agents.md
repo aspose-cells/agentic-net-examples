@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - iterate-through-each-mapped-cell-area-and-log-its-row-and-column-indices-for-debugging.cs
 - export-the-current-xml-map-data-to-a-separate-xml-file-preserving-original-schema-structure.cs
 - validate-the-xml-map-against-its-xsd-schema-and-report-any-validation-errors-encountered.cs
+- remove-an-existing-xml-map-from-the-workbook-and-ensure-all-linked-cells-are-cleared.cs

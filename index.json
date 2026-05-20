@@ -3981,6 +3981,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "remove-an-existing-xml-map-from-the-workbook-and-ensure-all-linked-cells-are-cleared.cs",
+      "title": "Remove an existing XML map from the workbook and ensure all linked cells are cleared."
+    },
+    {
+      "category": "xml-maps",
       "file": "remove-an-unwanted-xml-map-from-the-workbook-by-its-index-using-xmlmapsremoveat.cs",
       "title": "Remove an unwanted XML map from the workbook by its index using XmlMaps.RemoveAt."
     },
