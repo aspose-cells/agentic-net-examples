@@ -3931,6 +3931,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "implement-error-handling-to-catch-exceptions-when-an-xml-map-path-does-not-exist-in-the-schema.cs",
+      "title": "Implement error handling to catch exceptions when an XML map path does not exist in the schema."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
       "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
     },
