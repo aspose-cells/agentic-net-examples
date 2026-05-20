@@ -916,6 +916,11 @@
     },
     {
       "category": "slicer",
+      "file": "retrieve-a-slicer-programmatically-select-multiple-items-refresh-it-and-save-changes-to-xlsx.cs",
+      "title": "Retrieve a slicer, programmatically select multiple items, refresh it, and save changes to XLSX."
+    },
+    {
+      "category": "slicer",
       "file": "retrieve-the-collection-of-slicers-from-a-worksheet-and-iterate-to-log-each-name.cs",
       "title": "Retrieve the collection of slicers from a worksheet and iterate to log each name."
     },
