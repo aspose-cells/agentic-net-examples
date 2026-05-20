@@ -336,6 +336,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-sparkline-to-ignore-hidden-cells-while-calculating-values-to-reflect-only-visible-data.cs",
+      "title": "Configure sparkline to ignore hidden cells while calculating values to reflect only visible data."
+    },
+    {
+      "category": "sparkline",
       "file": "create-a-column-sparkline-in-cell-c5-based-on-values-from-d5d15-range.cs",
       "title": "Create a column sparkline in cell C5 based on values from D5:D15 range."
     },
