@@ -3991,6 +3991,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "update-values-in-mapped-cells-and-automatically-reflect-changes-in-the-underlying-xml-document.cs",
+      "title": "Update values in mapped cells and automatically reflect changes in the underlying XML document."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-linked-cells-after-importing-xml-data-by-reexecuting-worksheetxmlmapquery-and-checking-results.cs",
       "title": "Validate linked cells after importing XML data by re\u2011executing Worksheet.XmlMapQuery and checking results."
     }
