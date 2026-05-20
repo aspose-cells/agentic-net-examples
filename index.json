@@ -821,6 +821,11 @@
     },
     {
       "category": "slicer",
+      "file": "change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs",
+      "title": "Change the slicer layout direction to right\u2011to\u2011left for languages that read RTL."
+    },
+    {
+      "category": "slicer",
       "file": "configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs",
       "title": "Configure the slicer to display items with no data by toggling the show\u2011zero\u2011items option."
     },

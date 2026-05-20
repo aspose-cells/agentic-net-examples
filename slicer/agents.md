@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - set-the-slicer-item-sorting-order-to-descending-based-on-underlying-data-values.cs
 - configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs
 - arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs
+- change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs
