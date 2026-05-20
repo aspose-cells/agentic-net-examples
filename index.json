@@ -4101,6 +4101,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "use-a-linq-query-on-the-workbooks-xmlmaps-collection-to-find-maps-containing-a-specific-namespace.cs",
+      "title": "Use a LINQ query on the workbook's XmlMaps collection to find maps containing a specific namespace."
+    },
+    {
+      "category": "xml-maps",
       "file": "use-multithreading-to-process-xml-map-imports-for-several-workbooks-concurrently-improving-performance.cs",
       "title": "Use multithreading to process XML map imports for several workbooks concurrently, improving performance."
     },
