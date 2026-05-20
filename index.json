@@ -1006,6 +1006,11 @@
     },
     {
       "category": "slicer",
+      "file": "mark-the-slicer-as-nonprintable-and-ensure-it-does-not-appear-in-printed-output.cs",
+      "title": "Mark the slicer as non\u2011printable and ensure it does not appear in printed output."
+    },
+    {
+      "category": "slicer",
       "file": "modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs",
       "title": "Modify the slicer font family, size, and color to enhance label readability."
     },
