@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - retrieve-the-collection-of-slicers-from-a-worksheet-and-iterate-to-log-each-name.cs
 - programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs
 - clear-all-selected-items-in-a-slicer-to-reset-the-filter-to-its-default-state.cs
+- lock-a-slicer-to-prevent-end-users-from-modifying-its-configuration-on-protected-sheets.cs

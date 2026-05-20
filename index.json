@@ -866,6 +866,11 @@
     },
     {
       "category": "slicer",
+      "file": "lock-a-slicer-to-prevent-end-users-from-modifying-its-configuration-on-protected-sheets.cs",
+      "title": "Lock a slicer to prevent end users from modifying its configuration on protected sheets."
+    },
+    {
+      "category": "slicer",
       "file": "modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs",
       "title": "Modify the slicer font family, size, and color to enhance label readability."
     },
