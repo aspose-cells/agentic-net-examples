@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - change-the-slicer-title-to-region-filter-and-update-the-workbook-accordingly.cs
 - apply-the-slicerstylelight1-formatting-style-to-the-slicer-and-save-changes-in-the-workbook.cs
 - update-slicer-style-based-on-datadriven-criteria-using-the-api.cs
+- mark-the-slicer-as-nonprintable-and-ensure-it-does-not-appear-in-printed-output.cs
