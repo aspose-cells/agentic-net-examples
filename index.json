@@ -4016,6 +4016,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "set-a-custom-namespace-prefix-for-the-xml-map-to-handle-namespaced-xml-documents-correctly.cs",
+      "title": "Set a custom namespace prefix for the XML map to handle namespaced XML documents correctly."
+    },
+    {
+      "category": "xml-maps",
       "file": "update-an-existing-xml-map-by-readding-it-with-the-same-name-and-a-new-xsd-schema.cs",
       "title": "Update an existing XML map by re\u2011adding it with the same name and a new XSD schema."
     },
