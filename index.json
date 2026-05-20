@@ -136,6 +136,11 @@
     },
     {
       "category": "document-properties",
+      "file": "instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs",
+      "title": "Instantiate a workbook, adjust built\u2011in properties, and save the document as PDF to embed metadata."
+    },
+    {
+      "category": "document-properties",
       "file": "instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs",
       "title": "Instantiate a workbook and deliberately access a non\u2011existent built\u2011in property to demonstrate exception handling."
     },
