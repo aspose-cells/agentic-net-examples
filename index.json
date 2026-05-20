@@ -3936,6 +3936,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "import-xml-data-into-the-workbook-by-linking-cells-to-corresponding-xml-map-elements.cs",
+      "title": "Import XML data into the workbook by linking cells to corresponding XML map elements."
+    },
+    {
+      "category": "xml-maps",
       "file": "list-all-xml-maps-in-the-workbook-and-output-each-maps-name-to-the-console.cs",
       "title": "List all XML maps in the workbook and output each map\u2019s name to the console."
     },
