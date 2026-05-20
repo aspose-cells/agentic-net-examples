@@ -3881,6 +3881,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "configure-the-xml-map-to-ignore-whitespace-nodes-during-import-to-prevent-unwanted-blank-entries.cs",
+      "title": "Configure the XML map to ignore whitespace nodes during import to prevent unwanted blank entries."
+    },
+    {
+      "category": "xml-maps",
       "file": "create-a-new-workbook-add-a-worksheet-and-define-an-xml-map-using-a-xsd-file.cs",
       "title": "Create a new workbook, add a worksheet, and define an XML map using a XSD file."
     },
