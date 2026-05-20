@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - enable-iterative-calculation-mode-and-set-maximum-iterations-to-improve-convergence-of-circular-formulas.cs
 - add-a-custom-xml-part-containing-metadata-and-retrieve-it-later-using-its-unique-identifier.cs
 - add-a-custom-document-property-named-projectversion-and-assign-it-a-semantic-version-string.cs
+- add-a-comment-to-a-cell-with-author-information-and-display-it-when-the-cell-is-selected.cs
