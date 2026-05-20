@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - export-mapped-data-to-a-json-file-by-converting-the-xml-nodes-to-equivalent-json-structures.cs
 - implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs
 - use-the-worksheetcellsclear-method-on-a-mapped-range-to-reset-values-while-preserving-the-map-linkage.cs
+- add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs

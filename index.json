@@ -3871,6 +3871,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
+      "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
+    },
+    {
+      "category": "xml-maps",
       "file": "add-a-new-xml-map-to-a-workbook-that-already-contains-multiple-maps-and-manage-their-order.cs",
       "title": "Add a new XML map to a workbook that already contains multiple maps and manage their order."
     },
