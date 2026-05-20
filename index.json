@@ -836,6 +836,11 @@
     },
     {
       "category": "slicer",
+      "file": "apply-the-slicerstylelight1-formatting-style-to-the-slicer-and-save-changes-in-the-workbook.cs",
+      "title": "Apply the 'SlicerStyleLight1' formatting style to the slicer and save changes in the workbook."
+    },
+    {
+      "category": "slicer",
       "file": "arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs",
       "title": "Arrange slicer items in multiple columns by setting the column count property."
     },
