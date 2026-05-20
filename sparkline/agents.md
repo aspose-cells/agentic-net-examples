@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs
 - set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs
 - remove-all-sparklines-from-active-worksheet-by-invoking-clear-method-on-each-sparklinegroup.cs
+- iterate-through-each-sparkline-collect-average-values-and-store-results-in-a-list.cs
