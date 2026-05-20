@@ -3941,6 +3941,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "load-an-excel-workbook-from-a-xlsx-file-and-attach-an-xml-schema-map.cs",
+      "title": "Load an Excel workbook from a .xlsx file and attach an XML schema map."
+    },
+    {
+      "category": "xml-maps",
       "file": "loop-through-all-xml-maps-in-a-workbook-and-export-each-maps-xml-using-exportxml.cs",
       "title": "Loop through all XML maps in a workbook and export each map\u2019s XML using ExportXml."
     },
