@@ -3871,6 +3871,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "add-a-new-xml-map-to-a-workbook-that-already-contains-multiple-maps-and-manage-their-order.cs",
+      "title": "Add a new XML map to a workbook that already contains multiple maps and manage their order."
+    },
+    {
+      "category": "xml-maps",
       "file": "batch-export-xml-data-from-multiple-workbooks-by-iterating-files-and-invoking-exportxml-for-each-map.cs",
       "title": "Batch export XML data from multiple workbooks by iterating files and invoking ExportXml for each map."
     },
