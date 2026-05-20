@@ -3891,6 +3891,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-the-current-xml-map-data-to-a-separate-xml-file-preserving-original-schema-structure.cs",
+      "title": "Export the current XML map data to a separate .xml file preserving original schema structure."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-xml-data-for-a-specific-map-to-a-file-using-workbookexportxml-with-map-index.cs",
       "title": "Export XML data for a specific map to a file using Workbook.ExportXml with map index."
     },

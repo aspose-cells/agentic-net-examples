@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - update-values-in-mapped-cells-and-automatically-reflect-changes-in-the-underlying-xml-document.cs
 - retrieve-the-address-of-the-first-cell-mapped-to-the-invoicetotal-element.cs
 - iterate-through-each-mapped-cell-area-and-log-its-row-and-column-indices-for-debugging.cs
+- export-the-current-xml-map-data-to-a-separate-xml-file-preserving-original-schema-structure.cs
