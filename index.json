@@ -401,6 +401,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "combine-adding-custom-xml-parts-with-style-cleanup-in-a-single-processing-pipeline-for-efficiency.cs",
+      "title": "Combine adding custom XML parts with style cleanup in a single processing pipeline for efficiency."
+    },
+    {
+      "category": "manage-workbook",
       "file": "configure-the-workbook-to-use-a-specific-culture-when-formatting-optional-property-values-during-export.cs",
       "title": "Configure the workbook to use a specific culture when formatting optional property values during export."
     },
