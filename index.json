@@ -380,6 +380,11 @@
       "title": "Load an XLSX workbook from a file stream and enable automatic formula calculation."
     },
     {
+      "category": "manage-workbook",
+      "file": "set-workbook-calculation-engine-to-use-multithreaded-processing-for-faster-evaluation-of-large-data-sets.cs",
+      "title": "Set workbook calculation engine to use multi\u2011threaded processing for faster evaluation of large data sets."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
