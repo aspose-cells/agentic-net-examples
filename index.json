@@ -321,6 +321,11 @@
     },
     {
       "category": "document-properties",
+      "file": "read-the-keywords-builtin-property-and-use-its-values-to-populate-a-search-index.cs",
+      "title": "Read the Keywords built\u2011in property and use its values to populate a search index."
+    },
+    {
+      "category": "document-properties",
       "file": "remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs",
       "title": "Remove all custom properties whose names start with the prefix \"Temp_\" to clean temporary entries."
     },
