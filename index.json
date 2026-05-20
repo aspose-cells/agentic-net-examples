@@ -810,6 +810,11 @@
       "title": "Read an XLS file, apply conditional formatting, and save the result as an MHT web archive."
     },
     {
+      "category": "slicer",
+      "file": "load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs",
+      "title": "Load a workbook from an Excel file into memory for further manipulation."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
