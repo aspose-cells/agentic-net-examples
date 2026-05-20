@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - render-the-workbook-to-pdf-while-preserving-slicer-visual-properties-and-layout.cs
 - export-the-workbook-to-pdf-with-high-resolution-to-ensure-slicer-text-remains-sharp.cs
 - convert-the-workbook-with-slicers-to-pdf-while-preserving-slicer-appearance-and-metadata.cs
+- implement-error-handling-when-adding-a-slicer-to-a-nonexistent-table-column-in-the-worksheet.cs

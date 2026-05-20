@@ -976,6 +976,11 @@
     },
     {
       "category": "slicer",
+      "file": "implement-error-handling-when-adding-a-slicer-to-a-nonexistent-table-column-in-the-worksheet.cs",
+      "title": "Implement error handling when adding a slicer to a non\u2011existent table column in the worksheet."
+    },
+    {
+      "category": "slicer",
       "file": "iterate-all-worksheets-delete-every-slicer-and-export-the-modified-workbook-to-pdf.cs",
       "title": "Iterate all worksheets, delete every slicer, and export the modified workbook to PDF."
     },
