@@ -826,6 +826,11 @@
     },
     {
       "category": "slicer",
+      "file": "batch-create-slicers-for-each-pivot-table-in-a-workbook-using-a-loop-over-all-tables.cs",
+      "title": "Batch create slicers for each pivot table in a workbook using a loop over all tables."
+    },
+    {
+      "category": "slicer",
       "file": "change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs",
       "title": "Change the slicer layout direction to right\u2011to\u2011left for languages that read RTL."
     },
