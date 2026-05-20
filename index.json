@@ -316,6 +316,11 @@
     },
     {
       "category": "document-properties",
+      "file": "remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs",
+      "title": "Remove all custom properties whose names start with the prefix \"Temp_\" to clean temporary entries."
+    },
+    {
+      "category": "document-properties",
       "file": "use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs",
       "title": "Use DocumentPropertyCollection to retrieve the total count of properties and display the number in logs."
     },
