@@ -831,6 +831,11 @@
     },
     {
       "category": "slicer",
+      "file": "clear-all-selected-items-in-a-slicer-to-reset-the-filter-to-its-default-state.cs",
+      "title": "Clear all selected items in a slicer to reset the filter to its default state."
+    },
+    {
+      "category": "slicer",
       "file": "clone-an-existing-slicer-and-place-the-copy-on-another-worksheet-for-parallel-filtering.cs",
       "title": "Clone an existing slicer and place the copy on another worksheet for parallel filtering."
     },
