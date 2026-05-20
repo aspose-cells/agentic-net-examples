@@ -1101,6 +1101,11 @@
     },
     {
       "category": "slicer",
+      "file": "set-slicer-placement-and-ensure-it-remains-unchanged-after-saving-and-reloading-the-workbook.cs",
+      "title": "Set slicer placement and ensure it remains unchanged after saving and reloading the workbook."
+    },
+    {
+      "category": "slicer",
       "file": "set-slicer-row-height-dynamically-based-on-the-number-of-unique-items-in-the-linked-column.cs",
       "title": "Set slicer row height dynamically based on the number of unique items in the linked column."
     },
