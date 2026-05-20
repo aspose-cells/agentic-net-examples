@@ -361,6 +361,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "add-a-custom-document-property-named-projectversion-and-assign-it-a-semantic-version-string.cs",
+      "title": "Add a custom document property named ProjectVersion and assign it a semantic version string."
+    },
+    {
+      "category": "manage-workbook",
       "file": "add-a-custom-xml-part-containing-metadata-and-retrieve-it-later-using-its-unique-identifier.cs",
       "title": "Add a custom XML part containing metadata and retrieve it later using its unique identifier."
     },
