@@ -136,6 +136,11 @@
     },
     {
       "category": "document-properties",
+      "file": "instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs",
+      "title": "Instantiate a workbook and deliberately access a non\u2011existent built\u2011in property to demonstrate exception handling."
+    },
+    {
+      "category": "document-properties",
       "file": "instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs",
       "title": "Instantiate a workbook and enable the ScaleCrop built\u2011in property to preserve image proportions."
     },
