@@ -3936,6 +3936,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "create-a-scheduled-task-that-refreshes-all-xml-maps-in-a-set-of-workbooks-every-night-at-midnight.cs",
+      "title": "Create a scheduled task that refreshes all XML maps in a set of workbooks every night at midnight."
+    },
+    {
+      "category": "xml-maps",
       "file": "enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs",
       "title": "Enumerate the XmlMapCollection and log each map\u2019s name and root element name for debugging."
     },
