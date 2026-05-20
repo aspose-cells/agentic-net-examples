@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - import-xml-data-from-a-stream-into-a-workbook-with-linked-cells-using-importxml-overload.cs
 - export-xml-without-xml-declaration-by-setting-exportxmloptionsomitxmldeclaration-to-true.cs
 - enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs
+- load-an-excel-workbook-from-a-xlsx-file-and-attach-an-xml-schema-map.cs
