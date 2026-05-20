@@ -971,6 +971,11 @@
     },
     {
       "category": "slicer",
+      "file": "remove-slicers-from-all-worksheets-in-a-workbook-and-save-a-consolidated-pdf.cs",
+      "title": "Remove slicers from all worksheets in a workbook and save a consolidated PDF."
+    },
+    {
+      "category": "slicer",
       "file": "resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs",
       "title": "Resize the slicer by assigning specific height and width values for layout consistency."
     },
