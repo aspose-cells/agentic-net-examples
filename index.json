@@ -821,6 +821,11 @@
     },
     {
       "category": "slicer",
+      "file": "position-the-slicer-by-specifying-precise-top-and-left-coordinates-programmatically.cs",
+      "title": "Position the slicer by specifying precise top and left coordinates programmatically."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
