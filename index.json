@@ -201,6 +201,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-spreadsheet-and-filter-custom-properties-by-datetime-type-then-list-them.cs",
+      "title": "Open a spreadsheet and filter custom properties by DateTime type, then list them."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-spreadsheet-and-remove-the-custom-property-isreviewed-to-clean-obsolete-metadata.cs",
       "title": "Open a spreadsheet and remove the custom property \"IsReviewed\" to clean obsolete metadata."
     },

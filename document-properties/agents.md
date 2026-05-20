@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - load-a-workbook-and-check-whether-a-custom-property-clientname-exists-before-adding.cs
 - open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs
 - load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs
+- open-a-spreadsheet-and-filter-custom-properties-by-datetime-type-then-list-them.cs
