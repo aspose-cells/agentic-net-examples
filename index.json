@@ -290,6 +290,11 @@
       "title": "Read an XLS file, apply conditional formatting, and save the result as an MHT web archive."
     },
     {
+      "category": "sparkline",
+      "file": "load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs",
+      "title": "Load an existing workbook and import Aspose.Cells.Charts namespace for sparkline operations."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
