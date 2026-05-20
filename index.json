@@ -186,6 +186,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-workbook-and-add-a-custom-boolean-property-isreviewed-set-to-true.cs",
+      "title": "Open a workbook and add a custom Boolean property \"IsReviewed\" set to true."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-workbook-and-add-a-custom-property-processeddate-with-the-current-datetime-value.cs",
       "title": "Open a workbook and add a custom property \"ProcessedDate\" with the current DateTime value."
     },
