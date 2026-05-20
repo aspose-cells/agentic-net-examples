@@ -186,6 +186,11 @@
     },
     {
       "category": "document-properties",
+      "file": "open-a-spreadsheet-and-remove-the-custom-property-isreviewed-to-clean-obsolete-metadata.cs",
+      "title": "Open a spreadsheet and remove the custom property \"IsReviewed\" to clean obsolete metadata."
+    },
+    {
+      "category": "document-properties",
       "file": "open-a-spreadsheet-and-set-the-language-builtin-property-to-fr-fr-for-localization.cs",
       "title": "Open a spreadsheet and set the Language built\u2011in property to \"fr-FR\" for localization."
     },
