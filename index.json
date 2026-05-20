@@ -3911,6 +3911,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "create-a-backup-copy-of-the-workbook-before-modifying-xml-maps-to-allow-easy-rollback-if-needed.cs",
+      "title": "Create a backup copy of the workbook before modifying XML maps to allow easy rollback if needed."
+    },
+    {
+      "category": "xml-maps",
       "file": "create-a-custom-function-that-transforms-xml-node-values-before-they-are-written-to-mapped-cells.cs",
       "title": "Create a custom function that transforms XML node values before they are written to mapped cells."
     },
