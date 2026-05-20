@@ -1176,6 +1176,11 @@
     },
     {
       "category": "slicer",
+      "file": "validate-that-slicer-placement-coordinates-remain-consistent-after-saving-and-reloading-the-workbook.cs",
+      "title": "Validate that slicer placement coordinates remain consistent after saving and reloading the workbook."
+    },
+    {
+      "category": "slicer",
       "file": "validate-that-the-slicer-printable-flag-is-true-before-exporting-the-workbook-to-pdf.cs",
       "title": "Validate that the slicer printable flag is true before exporting the workbook to PDF."
     },
