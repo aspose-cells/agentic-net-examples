@@ -401,6 +401,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "merge-cells-in-a-header-row-apply-bold-font-and-center-the-text-horizontally.cs",
+      "title": "Merge cells in a header row, apply bold font, and center the text horizontally."
+    },
+    {
+      "category": "manage-workbook",
       "file": "set-workbook-calculation-engine-to-use-multithreaded-processing-for-faster-evaluation-of-large-data-sets.cs",
       "title": "Set workbook calculation engine to use multi\u2011threaded processing for faster evaluation of large data sets."
     },
