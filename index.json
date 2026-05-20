@@ -301,6 +301,11 @@
     },
     {
       "category": "sparkline",
+      "file": "batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs",
+      "title": "Batch create sparklines for rows one through twenty, each using corresponding column data range."
+    },
+    {
+      "category": "sparkline",
       "file": "create-a-column-sparkline-in-cell-c5-based-on-values-from-d5d15-range.cs",
       "title": "Create a column sparkline in cell C5 based on values from D5:D15 range."
     },
