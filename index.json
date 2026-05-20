@@ -381,6 +381,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "add-a-new-contenttypeproperty-named-projectid-with-a-string-value-to-the-workbook.cs",
+      "title": "Add a new ContentTypeProperty named ProjectId with a string value to the workbook."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
       "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
     },

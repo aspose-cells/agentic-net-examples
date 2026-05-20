@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - export-the-workbook-to-pdf-format-with-high-resolution-images-and-embedded-fonts.cs
 - set-workbook-theme-to-a-builtin-style-and-update-all-cell-styles-accordingly.cs
 - use-workbookloadoptions-to-open-a-passwordprotected-file-then-add-optional-metadata-before-saving.cs
+- add-a-new-contenttypeproperty-named-projectid-with-a-string-value-to-the-workbook.cs
