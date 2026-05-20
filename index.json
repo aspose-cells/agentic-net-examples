@@ -456,6 +456,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "search-for-dates-matching-a-pattern-and-reformat-them-to-iso-8601-using-regex-replacement.cs",
+      "title": "Search for dates matching a pattern and reformat them to ISO 8601 using regex replacement."
+    },
+    {
+      "category": "manage-workbook",
       "file": "set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs",
       "title": "Set page margins to narrow values and configure the workbook to print in landscape orientation."
     },

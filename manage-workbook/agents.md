@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs
 - insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs
 - replace-all-occurrences-of-a-placeholder-string-using-a-regular-expression-across-the-entire-workbook.cs
+- search-for-dates-matching-a-pattern-and-reformat-them-to-iso-8601-using-regex-replacement.cs
