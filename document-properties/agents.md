@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs
 - load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs
 - open-a-spreadsheet-and-filter-custom-properties-by-datetime-type-then-list-them.cs
+- instantiate-two-workbooks-and-copy-all-document-properties-from-source-to-destination-programmatically.cs

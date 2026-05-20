@@ -146,6 +146,11 @@
     },
     {
       "category": "document-properties",
+      "file": "instantiate-two-workbooks-and-copy-all-document-properties-from-source-to-destination-programmatically.cs",
+      "title": "Instantiate two workbooks and copy all document properties from source to destination programmatically."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs",
       "title": "Load a spreadsheet and read the Language built\u2011in property to determine locale settings."
     },
