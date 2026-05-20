@@ -131,6 +131,11 @@
     },
     {
       "category": "document-properties",
+      "file": "create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs",
+      "title": "Create a workbook and set the Title built\u2011in property to a descriptive project name."
+    },
+    {
+      "category": "document-properties",
       "file": "instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs",
       "title": "Instantiate a workbook and obtain the DocumentVersion built\u2011in property to check version information."
     },
