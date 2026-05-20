@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - use-worksheetslicersremoveall-to-clear-every-slicer-from-a-sheet-then-save-the-workbook-as-xlsx.cs
 - before-exporting-to-pdf-set-pdf-conversion-options-to-embed-fonts-and-retain-slicer-formatting.cs
 - iterate-over-slicercacheitems-to-deselect-items-matching-a-specific-keyword.cs
+- save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs
