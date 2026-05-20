@@ -4036,6 +4036,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "synchronize-cell-values-with-xml-map-data-after-performing-bulk-calculations-on-the-worksheet.cs",
+      "title": "Synchronize cell values with XML map data after performing bulk calculations on the worksheet."
+    },
+    {
+      "category": "xml-maps",
       "file": "update-an-existing-xml-map-by-readding-it-with-the-same-name-and-a-new-xsd-schema.cs",
       "title": "Update an existing XML map by re\u2011adding it with the same name and a new XSD schema."
     },

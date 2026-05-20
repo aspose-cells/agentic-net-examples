@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - implement-error-handling-to-catch-exceptions-when-an-xml-map-path-does-not-exist-in-the-schema.cs
 - use-workbookloadoptions-to-preserve-existing-xml-maps-when-opening-a-workbook-in-readonly-mode.cs
 - add-a-new-xml-map-to-a-workbook-that-already-contains-multiple-maps-and-manage-their-order.cs
+- synchronize-cell-values-with-xml-map-data-after-performing-bulk-calculations-on-the-worksheet.cs
