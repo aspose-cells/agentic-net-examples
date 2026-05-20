@@ -546,6 +546,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "set-isnillable-to-true-for-the-shared-property-across-all-workbooks-to-ensure-optional-metadata.cs",
+      "title": "Set IsNillable to true for the shared property across all workbooks to ensure optional metadata."
+    },
+    {
+      "category": "manage-workbook",
       "file": "set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs",
       "title": "Set page margins to narrow values and configure the workbook to print in landscape orientation."
     },
