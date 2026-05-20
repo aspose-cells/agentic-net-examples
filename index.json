@@ -4066,6 +4066,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "use-multithreading-to-process-xml-map-imports-for-several-workbooks-concurrently-improving-performance.cs",
+      "title": "Use multithreading to process XML map imports for several workbooks concurrently, improving performance."
+    },
+    {
+      "category": "xml-maps",
       "file": "use-workbookloadoptions-to-preserve-existing-xml-maps-when-opening-a-workbook-in-readonly-mode.cs",
       "title": "Use Workbook.LoadOptions to preserve existing XML maps when opening a workbook in read\u2011only mode."
     },
