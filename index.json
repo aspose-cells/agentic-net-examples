@@ -4081,6 +4081,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "set-the-xmlmaps-preservewhitespace-property-to-true-to-keep-formatting-spaces-from-the-source-xml.cs",
+      "title": "Set the XmlMap's PreserveWhitespace property to true to keep formatting spaces from the source XML."
+    },
+    {
+      "category": "xml-maps",
       "file": "synchronize-cell-values-with-xml-map-data-after-performing-bulk-calculations-on-the-worksheet.cs",
       "title": "Synchronize cell values with XML map data after performing bulk calculations on the worksheet."
     },
