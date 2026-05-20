@@ -1111,6 +1111,11 @@
     },
     {
       "category": "slicer",
+      "file": "update-slicer-style-based-on-datadriven-criteria-using-the-api.cs",
+      "title": "Update slicer style based on data\u2011driven criteria using the API."
+    },
+    {
+      "category": "slicer",
       "file": "use-a-configuration-flag-to-decide-whether-to-keep-slicers-when-exporting-the-workbook-to-pdf.cs",
       "title": "Use a configuration flag to decide whether to keep slicers when exporting the workbook to PDF."
     },
