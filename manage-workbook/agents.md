@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - compare-two-workbooks-one-with-unused-styles-removed-and-one-without-to-evaluate-visual-consistency.cs
 - wrap-workbook-loading-and-saving-inside-a-using-statement-to-guarantee-deterministic-disposal-of-resources.cs
 - after-processing-call-workbookdispose-explicitly-for-each-workbook-to-release-file-handles-and-memory.cs
+- integrate-workbook-disposal-into-a-finally-block-to-guarantee-resource-release-even-when-exceptions-occur.cs
