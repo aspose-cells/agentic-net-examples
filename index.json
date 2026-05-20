@@ -136,6 +136,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs",
+      "title": "Load a spreadsheet and read the Language built\u2011in property to determine locale settings."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
       "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
     },
