@@ -3926,6 +3926,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "remove-an-xml-map-by-its-name-using-a-helper-that-searches-the-xmlmaps-collection.cs",
+      "title": "Remove an XML map by its name using a helper that searches the XmlMaps collection."
+    },
+    {
+      "category": "xml-maps",
       "file": "retrieve-the-root-element-name-of-a-specific-map-by-its-index-using-workbookxmlmapsindexrootelementname.cs",
       "title": "Retrieve the root element name of a specific map by its index using workbook.XmlMaps[index].RootElementName."
     },
