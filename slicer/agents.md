@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - create-a-batch-process-that-removes-a-named-slicer-from-multiple-xlsx-workbooks-and-saves-each-as-pdf.cs
 - use-slicercacheitems-to-select-items-based-on-external-csv-data-then-refresh-the-slicer.cs
 - export-a-workbook-containing-slicers-to-pdf-ensuring-all-slicers-appear-on-the-same-page.cs
+- compare-slicer-selection-states-before-and-after-calling-refresh-to-ensure-changes-are-applied-correctly.cs
