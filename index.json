@@ -871,6 +871,11 @@
     },
     {
       "category": "slicer",
+      "file": "export-a-workbook-containing-slicers-to-pdf-ensuring-all-slicers-appear-on-the-same-page.cs",
+      "title": "Export a workbook containing slicers to PDF, ensuring all slicers appear on the same page."
+    },
+    {
+      "category": "slicer",
       "file": "export-the-slicer-as-an-image-and-embed-it-in-a-pdf-report-generated-from-the-workbook.cs",
       "title": "Export the slicer as an image and embed it in a PDF report generated from the workbook."
     },
