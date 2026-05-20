@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - retrieve-the-root-element-name-of-a-specific-map-by-its-index-using-workbookxmlmapsindexrootelementname.cs
 - query-cells-mapped-to-a-given-xpath-expression-using-worksheetxmlmapquery-method.cs
 - query-cells-with-namespaceaware-xpath-by-providing-prefix-mappings-to-worksheetxmlmapquery.cs
+- validate-linked-cells-after-importing-xml-data-by-reexecuting-worksheetxmlmapquery-and-checking-results.cs
