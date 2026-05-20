@@ -826,6 +826,11 @@
     },
     {
       "category": "slicer",
+      "file": "modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs",
+      "title": "Modify the slicer font family, size, and color to enhance label readability."
+    },
+    {
+      "category": "slicer",
       "file": "position-the-slicer-by-specifying-precise-top-and-left-coordinates-programmatically.cs",
       "title": "Position the slicer by specifying precise top and left coordinates programmatically."
     },
