@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs
 - enable-display-of-both-first-and-last-points-in-line-sparkline-located-at-i4.cs
 - set-sparkline-to-show-negative-points-using-custom-blue-color-in-cell-j6.cs
+- apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs

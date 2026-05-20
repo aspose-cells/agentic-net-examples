@@ -301,6 +301,11 @@
     },
     {
       "category": "sparkline",
+      "file": "apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs",
+      "title": "Apply custom line weight of two points to sparkline group situated in cell K7."
+    },
+    {
+      "category": "sparkline",
       "file": "batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs",
       "title": "Batch create sparklines for rows one through twenty, each using corresponding column data range."
     },
