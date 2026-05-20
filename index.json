@@ -615,6 +615,11 @@
       "title": "Validate that each saved workbook contains the expected custom XML part by checking the zip entry name."
     },
     {
+      "category": "manage-workbook",
+      "file": "wrap-workbook-loading-and-saving-inside-a-using-statement-to-guarantee-deterministic-disposal-of-resources.cs",
+      "title": "Wrap workbook loading and saving inside a using statement to guarantee deterministic disposal of resources."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
