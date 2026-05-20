@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - query-cells-with-namespaceaware-xpath-by-providing-prefix-mappings-to-worksheetxmlmapquery.cs
 - validate-linked-cells-after-importing-xml-data-by-reexecuting-worksheetxmlmapquery-and-checking-results.cs
 - export-xml-data-for-a-specific-map-to-a-file-using-workbookexportxml-with-map-index.cs
+- export-xml-data-for-a-specific-map-to-a-memory-stream-using-workbookexportxml-overload.cs
