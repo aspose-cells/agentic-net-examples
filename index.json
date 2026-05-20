@@ -811,6 +811,11 @@
     },
     {
       "category": "slicer",
+      "file": "apply-a-builtin-slicer-style-such-as-light-1-for-quick-visual-formatting.cs",
+      "title": "Apply a built\u2011in slicer style such as \u201cLight\u202f1\u201d for quick visual formatting."
+    },
+    {
+      "category": "slicer",
       "file": "create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs",
       "title": "Create a slicer linked to a pivot table within the loaded workbook."
     },
