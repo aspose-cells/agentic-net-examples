@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - set-the-builtin-comments-property-to-a-multiline-description-providing-detailed-notes-about-the-workbook.cs
 - read-the-keywords-builtin-property-and-use-its-values-to-populate-a-search-index.cs
 - validate-that-scalecrop-cannot-be-enabled-when-the-workbook-contains-chart-objects.cs
+- log-a-warning-whenever-code-attempts-to-modify-application-metadata-which-is-immutable.cs
