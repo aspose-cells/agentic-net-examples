@@ -846,6 +846,11 @@
     },
     {
       "category": "slicer",
+      "file": "before-saving-automatically-select-the-first-item-if-a-slicer-has-no-selected-items.cs",
+      "title": "Before saving, automatically select the first item if a slicer has no selected items."
+    },
+    {
+      "category": "slicer",
       "file": "change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs",
       "title": "Change the slicer layout direction to right\u2011to\u2011left for languages that read RTL."
     },
