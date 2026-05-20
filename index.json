@@ -396,6 +396,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-pivot-table-from-a-data-source-range-and-place-it-on-a-new-worksheet.cs",
+      "title": "Create a pivot table from a data source range and place it on a new worksheet."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
       "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
     },
