@@ -411,6 +411,11 @@
     },
     {
       "category": "sparkline",
+      "file": "set-sparkline-group-orientation-to-vertical-for-columntype-sparklines-to-improve-readability.cs",
+      "title": "Set sparkline group orientation to vertical for column\u2011type sparklines to improve readability."
+    },
+    {
+      "category": "sparkline",
       "file": "set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs",
       "title": "Set sparkline group to display markers for both high and low points simultaneously."
     },

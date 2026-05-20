@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - enable-display-of-empty-cells-as-zero-values-in-sparkline-at-cell-m9-for-accurate-totals.cs
 - configure-sparkline-to-ignore-hidden-cells-while-calculating-values-to-reflect-only-visible-data.cs
 - move-a-sparkline-from-original-location-to-new-cell-range-by-removing-and-readding-programmatically.cs
+- set-sparkline-group-orientation-to-vertical-for-columntype-sparklines-to-improve-readability.cs
