@@ -381,6 +381,11 @@
     },
     {
       "category": "sparkline",
+      "file": "move-a-sparkline-from-original-location-to-new-cell-range-by-removing-and-readding-programmatically.cs",
+      "title": "Move a sparkline from original location to new cell range by removing and re\u2011adding programmatically."
+    },
+    {
+      "category": "sparkline",
       "file": "read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs",
       "title": "Read the value of the third sparkline in the second sparkline group and log it."
     },
