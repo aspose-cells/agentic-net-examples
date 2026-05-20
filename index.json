@@ -3911,6 +3911,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "import-xml-data-from-a-stream-into-a-workbook-with-linked-cells-using-importxml-overload.cs",
+      "title": "Import XML data from a stream into a workbook with linked cells using ImportXml overload."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-xml-data-into-linked-cells-using-workbookimportxml-after-the-xml-map-has-been-added.cs",
       "title": "Import XML data into linked cells using Workbook.ImportXml after the XML map has been added."
     },
