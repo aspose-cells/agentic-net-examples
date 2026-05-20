@@ -161,6 +161,11 @@
     },
     {
       "category": "document-properties",
+      "file": "load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs",
+      "title": "Load a spreadsheet and use try\u2011catch to safely read a custom property \"Reviewer\"."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs",
       "title": "Load a template workbook and clone its built\u2011in properties into a newly created workbook."
     },
