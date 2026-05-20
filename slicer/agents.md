@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs
 - clear-all-selected-items-in-a-slicer-to-reset-the-filter-to-its-default-state.cs
 - lock-a-slicer-to-prevent-end-users-from-modifying-its-configuration-on-protected-sheets.cs
+- set-the-slicer-to-be-printable-so-it-appears-when-the-worksheet-is-printed-to-paper.cs
