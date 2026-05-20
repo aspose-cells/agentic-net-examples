@@ -136,6 +136,11 @@
     },
     {
       "category": "document-properties",
+      "file": "create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs",
+      "title": "Create a utility that reads custom properties from a workbook and writes them into a \"Metadata\" worksheet."
+    },
+    {
+      "category": "document-properties",
       "file": "create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs",
       "title": "Create a workbook and set the Title built\u2011in property to a descriptive project name."
     },
