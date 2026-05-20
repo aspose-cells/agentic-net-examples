@@ -3891,6 +3891,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "query-cells-with-namespaceaware-xpath-by-providing-prefix-mappings-to-worksheetxmlmapquery.cs",
+      "title": "Query cells with namespace\u2011aware XPath by providing prefix mappings to Worksheet.XmlMapQuery."
+    },
+    {
+      "category": "xml-maps",
       "file": "retrieve-the-root-element-name-of-a-specific-map-by-its-index-using-workbookxmlmapsindexrootelementname.cs",
       "title": "Retrieve the root element name of a specific map by its index using workbook.XmlMaps[index].RootElementName."
     }
