@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - iterate-through-each-sparkline-collect-average-values-and-store-results-in-a-list.cs
 - validate-that-sparkline-data-range-does-not-contain-errors-before-creating-the-sparkline-object.cs
 - save-the-modified-workbook-with-new-sparklines-to-an-xlsx-file-at-specified-path.cs
+- export-a-specific-sparkline-as-a-png-image-file-to-designated-output-directory.cs
