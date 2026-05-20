@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - identify-slicers-starting-with-region-remove-them-and-save-the-workbook-in-xlsx-format.cs
 - retrieve-a-slicer-programmatically-select-multiple-items-refresh-it-and-save-changes-to-xlsx.cs
 - unselect-all-items-in-a-slicer-call-refresh-and-export-the-workbook-to-pdf-preserving-slicer-appearance.cs
+- load-a-workbook-from-a-memory-stream-update-slicer-selections-refresh-pivot-tables-and-write-pdf-to-stream.cs
