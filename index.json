@@ -3921,6 +3921,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "remove-an-unwanted-xml-map-from-the-workbook-by-its-index-using-xmlmapsremoveat.cs",
+      "title": "Remove an unwanted XML map from the workbook by its index using XmlMaps.RemoveAt."
+    },
+    {
+      "category": "xml-maps",
       "file": "retrieve-the-root-element-name-of-a-specific-map-by-its-index-using-workbookxmlmapsindexrootelementname.cs",
       "title": "Retrieve the root element name of a specific map by its index using workbook.XmlMaps[index].RootElementName."
     },
