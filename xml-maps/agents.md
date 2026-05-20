@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - use-multithreading-to-process-xml-map-imports-for-several-workbooks-concurrently-improving-performance.cs
 - log-the-execution-time-of-each-xml-map-query-to-identify-performance-bottlenecks-in-large-datasets.cs
 - configure-the-workbook-to-automatically-refresh-xml-map-data-when-the-source-xml-file-changes-on-disk.cs
+- implement-a-routine-that-clears-all-cell-values-linked-to-a-specific-xml-map-without-removing-the-map.cs
