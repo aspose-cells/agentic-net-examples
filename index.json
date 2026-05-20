@@ -476,6 +476,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "measure-the-file-size-before-and-after-removing-unused-styles-to-assess-reduction-impact.cs",
+      "title": "Measure the file size before and after removing unused styles to assess reduction impact."
+    },
+    {
+      "category": "manage-workbook",
       "file": "merge-cells-in-a-header-row-apply-bold-font-and-center-the-text-horizontally.cs",
       "title": "Merge cells in a header row, apply bold font, and center the text horizontally."
     },
