@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs
 - load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs
 - open-a-spreadsheet-and-set-the-language-builtin-property-to-fr-fr-for-localization.cs
+- instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs

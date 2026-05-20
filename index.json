@@ -136,6 +136,11 @@
     },
     {
       "category": "document-properties",
+      "file": "instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs",
+      "title": "Instantiate a workbook and enable the ScaleCrop built\u2011in property to preserve image proportions."
+    },
+    {
+      "category": "document-properties",
       "file": "instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs",
       "title": "Instantiate a workbook and obtain the DocumentVersion built\u2011in property to check version information."
     },
