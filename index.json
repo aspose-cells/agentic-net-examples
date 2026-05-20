@@ -826,6 +826,11 @@
     },
     {
       "category": "slicer",
+      "file": "resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs",
+      "title": "Resize the slicer by assigning specific height and width values for layout consistency."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
