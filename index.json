@@ -971,6 +971,11 @@
     },
     {
       "category": "slicer",
+      "file": "process-a-list-of-slicer-names-removing-each-one-and-logging-the-operation-result.cs",
+      "title": "Process a list of slicer names, removing each one and logging the operation result."
+    },
+    {
+      "category": "slicer",
       "file": "programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs",
       "title": "Programmatically select specific slicer items based on a predefined list of values."
     },
