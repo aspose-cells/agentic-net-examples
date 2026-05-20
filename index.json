@@ -310,6 +310,11 @@
       "title": "Open an Excel file and read the Author built\u2011in property to identify the creator."
     },
     {
+      "category": "document-properties",
+      "file": "validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs",
+      "title": "Validate that the Title built\u2011in property is not empty before exporting the workbook to any external format."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
