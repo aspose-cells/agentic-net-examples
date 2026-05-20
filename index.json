@@ -3991,6 +3991,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs",
+      "title": "Implement a UI dialog that lets users select an XML schema file to create a new map."
+    },
+    {
+      "category": "xml-maps",
       "file": "implement-error-handling-to-catch-exceptions-when-an-xml-map-path-does-not-exist-in-the-schema.cs",
       "title": "Implement error handling to catch exceptions when an XML map path does not exist in the schema."
     },
