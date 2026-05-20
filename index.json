@@ -345,6 +345,11 @@
       "title": "Set sparkline markers to display high points using red color for sparkline in H3."
     },
     {
+      "category": "sparkline",
+      "file": "set-sparkline-to-show-negative-points-using-custom-blue-color-in-cell-j6.cs",
+      "title": "Set sparkline to show negative points using custom blue color in cell J6."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
