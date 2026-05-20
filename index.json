@@ -391,6 +391,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-summary-formula.cs",
+      "title": "Create a named range that spans multiple worksheets and use it in a summary formula."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
       "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
     },
