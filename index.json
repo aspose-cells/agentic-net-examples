@@ -876,6 +876,11 @@
     },
     {
       "category": "slicer",
+      "file": "retrieve-the-collection-of-slicers-from-a-worksheet-and-iterate-to-log-each-name.cs",
+      "title": "Retrieve the collection of slicers from a worksheet and iterate to log each name."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
