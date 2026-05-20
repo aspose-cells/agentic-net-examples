@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - validate-that-all-required-xml-elements-have-corresponding-mapped-cells-before-exporting-the-xml-data.cs
 - use-a-linq-query-on-the-workbooks-xmlmaps-collection-to-find-maps-containing-a-specific-namespace.cs
 - programmatically-disable-automatic-xml-map-refresh-during-bulk-cell-updates-to-improve-processing-speed.cs
+- after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs

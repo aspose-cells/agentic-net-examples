@@ -3876,6 +3876,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
+      "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
+    },
+    {
+      "category": "xml-maps",
       "file": "apply-a-custom-style-to-cells-mapped-to-the-customername-element-to-highlight-customer-names.cs",
       "title": "Apply a custom style to cells mapped to the /Customer/Name element to highlight customer names."
     },
