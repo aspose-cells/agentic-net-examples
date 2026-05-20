@@ -3868,6 +3868,11 @@
       "category": "working-with-shapes",
       "file": "write-code-to-set-a-pictures-anchor-to-a-merged-cell-range-ensuring-it-moves-with-merged-cells.cs",
       "title": "Write code to set a picture's anchor to a merged cell range, ensuring it moves with merged cells."
+    },
+    {
+      "category": "xml-maps",
+      "file": "import-an-xml-map-from-an-xsd-file-into-a-workbook-using-workbookimportxml-method.cs",
+      "title": "Import an XML map from an XSD file into a workbook using Workbook.ImportXml method."
     }
   ]
 }
