@@ -321,6 +321,11 @@
     },
     {
       "category": "sparkline",
+      "file": "benchmark-performance-of-creating-five-thousand-sparklines-in-a-large-workbook-to-assess-scalability.cs",
+      "title": "Benchmark performance of creating five thousand sparklines in a large workbook to assess scalability."
+    },
+    {
+      "category": "sparkline",
       "file": "change-sparkline-material-to-plastic-to-affect-surface-shading-and-give-subtle-glossy-effect.cs",
       "title": "Change sparkline material to 'Plastic' to affect surface shading and give subtle glossy effect."
     },

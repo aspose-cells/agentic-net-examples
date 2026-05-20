@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - serialize-sparkline-group-settings-to-json-string-for-later-reuse-or-configuration-sharing.cs
 - deserialize-sparkline-configuration-from-json-file-and-apply-settings-to-newly-created-workbook.cs
 - write-a-unit-test-verifying-that-adding-a-sparkline-increases-sparkline-count-by-exactly-one.cs
+- benchmark-performance-of-creating-five-thousand-sparklines-in-a-large-workbook-to-assess-scalability.cs
