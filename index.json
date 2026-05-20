@@ -341,6 +341,11 @@
     },
     {
       "category": "document-properties",
+      "file": "validate-that-scalecrop-cannot-be-enabled-when-the-workbook-contains-chart-objects.cs",
+      "title": "Validate that ScaleCrop cannot be enabled when the workbook contains chart objects."
+    },
+    {
+      "category": "document-properties",
       "file": "validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs",
       "title": "Validate that the Title built\u2011in property is not empty before exporting the workbook to any external format."
     },
