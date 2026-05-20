@@ -311,6 +311,11 @@
     },
     {
       "category": "document-properties",
+      "file": "use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs",
+      "title": "Use DocumentPropertyCollection to retrieve the total count of properties and display the number in logs."
+    },
+    {
+      "category": "document-properties",
       "file": "validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs",
       "title": "Validate that the Title built\u2011in property is not empty before exporting the workbook to any external format."
     },
