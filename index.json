@@ -3871,6 +3871,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "batch-export-xml-data-from-multiple-workbooks-by-iterating-files-and-invoking-exportxml-for-each-map.cs",
+      "title": "Batch export XML data from multiple workbooks by iterating files and invoking ExportXml for each map."
+    },
+    {
+      "category": "xml-maps",
       "file": "batch-process-a-folder-of-workbooks-adding-the-same-xml-map-to-each-file-programmatically.cs",
       "title": "Batch process a folder of workbooks, adding the same XML map to each file programmatically."
     },
