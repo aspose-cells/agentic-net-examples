@@ -386,6 +386,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "add-multiple-custom-xml-parts-representing-different-data-sections-then-verify-each-appears-in-the-customxml-folder.cs",
+      "title": "Add multiple custom XML parts representing different data sections, then verify each appears in the customXml folder."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
       "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
     },
