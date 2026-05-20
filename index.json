@@ -361,6 +361,11 @@
     },
     {
       "category": "sparkline",
+      "file": "render-a-sparkline-to-a-memory-stream-for-embedding-into-a-pdf-report-later.cs",
+      "title": "Render a sparkline to a memory stream for embedding into a PDF report later."
+    },
+    {
+      "category": "sparkline",
       "file": "save-the-modified-workbook-with-new-sparklines-to-an-xlsx-file-at-specified-path.cs",
       "title": "Save the modified workbook with new sparklines to an XLSX file at specified path."
     },
