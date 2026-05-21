@@ -436,6 +436,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs",
+      "title": "Demonstrate preserving the original thread culture while loading a workbook with French CultureInfo using LoadOptions."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-chartglobalizationsettings-derivative-that-overrides-getothername-for-a-localized-piechart-other-label.cs",
       "title": "Develop a ChartGlobalizationSettings derivative that overrides GetOtherName for a localized pie\u2011chart \u201cOther\u201d label."
     },
