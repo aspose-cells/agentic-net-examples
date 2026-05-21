@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - log-a-warning-if-the-vba-project-is-locked-for-viewing-after-checking-its-protection-status.cs
 - clone-a-workbook-duplicate-its-vba-project-and-save-the-clone-as-a-separate-xlsm-file.cs
 - skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs
+- implement-error-handling-around-vbaprojectprotect-to-capture-exceptions-when-an-empty-password-is-supplied.cs
