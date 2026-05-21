@@ -1886,6 +1886,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-exclude-charts-and-save-the-result-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, exclude charts, and save the result to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs",
       "title": "Load a workbook with specific print area defined, then extract only the cells within that area using LightCells."
     },
