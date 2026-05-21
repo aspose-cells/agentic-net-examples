@@ -851,6 +851,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "package-the-custom-ribbon-xml-and-path-update-logic-into-a-reusable-net-library.cs",
+      "title": "Package the custom ribbon XML and path update logic into a reusable .NET library."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "programmatically-remove-a-hidden-external-link-from-the-workbook-and-verify-its-absence.cs",
       "title": "Programmatically remove a hidden external link from the workbook and verify its absence."
     },
