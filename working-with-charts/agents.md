@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - assign-a-named-range-called-salesdata-as-the-chart-source-using-setchartdatarange.cs
 - convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs
 - apply-a-filter-on-the-listobject-to-show-only-rows-where-region-equals-east.cs
+- insert-a-new-row-into-the-listobject-with-q4-data-chart-automatically-extends.cs
