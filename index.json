@@ -406,6 +406,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-a-feature-that-switches-localization-at-runtime-based-on-user-selection-without-reloading-the-workbook.cs",
+      "title": "Implement a feature that switches localization at runtime based on user selection without reloading the workbook."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "implement-a-method-to-reset-globalizationsettings-to-default-english-behavior-for-specific-worksheets.cs",
       "title": "Implement a method to reset GlobalizationSettings to default English behavior for specific worksheets."
     },
