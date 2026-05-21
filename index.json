@@ -1816,6 +1816,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "read-numeric-cells-from-an-applegenerated-spreadsheet-calculate-their-average-and-output-the-result-to-the-console.cs",
+      "title": "Read numeric cells from an Apple\u2011generated spreadsheet, calculate their average, and output the result to the console."
+    },
+    {
+      "category": "open-workbook",
       "file": "save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs",
       "title": "Save the workbook back to XLSX format after modifying cell values using Workbook.Save with default options."
     },
