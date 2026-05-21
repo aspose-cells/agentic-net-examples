@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs
 - extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs
 - convert-a-loaded-workbook-to-pdf-while-an-interruptmonitor-aborts-the-conversion-if-it-exceeds-twenty-seconds.cs
+- export-a-loaded-workbook-to-html-and-use-interruptmonitor-to-stop-the-process-after-a-defined-timeout.cs
