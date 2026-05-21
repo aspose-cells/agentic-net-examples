@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-as-an-xlsb-file-while-preserving-all-external-connection-settings.cs
 - validate-that-updating-a-powerqueryformulaitemvalue-correctly-changes-the-underlying-query-definition.cs
 - load-multiple-xls-files-from-a-directory-update-each-dbconnectionname-and-save-changes-in-place.cs
+- export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs
