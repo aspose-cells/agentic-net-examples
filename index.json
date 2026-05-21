@@ -3711,6 +3711,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-chart-type-from-column-to-line-programmatically-before-exporting-to-pdf.cs",
+      "title": "Change the chart type from column to line programmatically before exporting to PDF."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-chart-type-of-a-specific-series-to-line-while-keeping-other-series-as-columns.cs",
       "title": "Change the chart type of a specific series to line while keeping other series as columns."
     },
