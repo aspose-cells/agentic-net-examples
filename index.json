@@ -3566,6 +3566,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-secondary-axis-to-a-bar-chart-and-assign-the-revenue-series-to-it.cs",
+      "title": "Add a secondary axis to a bar chart and assign the revenue series to it."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
