@@ -716,6 +716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-a-macro-that-iterates-through-all-worksheets-and-logs-each-sheet-name-using-the-new-module.cs",
+      "title": "Create a macro that iterates through all worksheets and logs each sheet name using the new module."
+    },
+    {
+      "category": "macro-project",
       "file": "create-a-new-vba-module-named-automation-within-the-vbaproject.cs",
       "title": "Create a new VBA module named Automation within the VbaProject."
     },
