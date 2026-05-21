@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - remove-any-module-named-temp-from-a-collection-of-workbooks-and-save-the-modified-files.cs
 - create-a-new-vba-module-with-utf8-code-page-and-add-multilingual-macro-text.cs
 - attempt-to-unlock-a-vba-project-locked-for-viewing-using-provided-credentials-and-report-the-result.cs
+- generate-a-summary-of-all-vba-modules-including-line-counts-and-write-the-report-to-a-text-file.cs
