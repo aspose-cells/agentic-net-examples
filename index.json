@@ -3666,6 +3666,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "catch-and-log-an-exception-when-an-invalid-numeric-format-code-is-assigned-to-a-series.cs",
+      "title": "Catch and log an exception when an invalid numeric format code is assigned to a series."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-an-existing-pie-chart-to-a-doughnut-chart-by-updating-its-charttype-property.cs",
       "title": "Change an existing pie chart to a doughnut chart by updating its ChartType property."
     },
