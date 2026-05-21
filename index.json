@@ -651,6 +651,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs",
+      "title": "Change Description property of a DBConnection to reflect its new purpose after migration."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-dataconnections-to-identify-sql-type-connections-and-cast-each-to-dbconnection.cs",
       "title": "Iterate through DataConnections to identify SQL type connections and cast each to DBConnection."
     },

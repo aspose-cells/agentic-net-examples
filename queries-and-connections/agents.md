@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - iterate-through-dataconnections-to-identify-sql-type-connections-and-cast-each-to-dbconnection.cs
 - retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs
 - update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs
+- change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs
