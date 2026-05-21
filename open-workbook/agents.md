@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - load-a-partially-corrupted-excel-file-while-capturing-warnings-then-continue-processing-the-recoverable-content.cs
 - batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs
 - enumerate-all-loaded-worksheets-after-opening-a-workbook-and-output-their-names-to-the-console.cs
+- read-cell-values-with-culturespecific-number-formatting-after-loading-a-workbook-to-ensure-correct-decimals.cs

@@ -1776,6 +1776,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "read-cell-values-with-culturespecific-number-formatting-after-loading-a-workbook-to-ensure-correct-decimals.cs",
+      "title": "Read cell values with culture\u2011specific number formatting after loading a workbook to ensure correct decimals."
+    },
+    {
+      "category": "open-workbook",
       "file": "read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs",
       "title": "Read numeric cells as text in load by enabling the LoadOptions.ConvertNumericToText feature."
     },
