@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs
 - render-the-svg-worksheet-image-in-a-wpf-image-control-for-display-within-a-desktop-application.cs
 - use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs
+- render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs
