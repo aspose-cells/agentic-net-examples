@@ -886,6 +886,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-that-the-exported-certificate-stream-length-matches-the-original-file-size.cs",
+      "title": "Validate that the exported certificate stream length matches the original file size."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-that-the-vba-project-password-meets-minimum-length-requirements-before-invoking-the-protect-method.cs",
       "title": "Validate that the VBA project password meets minimum length requirements before invoking the Protect method."
     },
