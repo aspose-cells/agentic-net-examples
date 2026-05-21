@@ -711,6 +711,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs",
+      "title": "Disable the default \"Data\" tab in the ribbon by removing its XML definition."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs",
       "title": "Enable BackgroundRefresh on a WebQuery connection to avoid blocking UI during retrieval."
     },
