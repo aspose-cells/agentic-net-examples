@@ -436,6 +436,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "log-performance-metrics-for-each-localization-step-during-batch-processing-to-identify-bottlenecks.cs",
+      "title": "Log performance metrics for each localization step during batch processing to identify bottlenecks."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "measure-performance-differences-when-loading-workbooks-with-and-without-custom-globalizationsettings-applied.cs",
       "title": "Measure performance differences when loading workbooks with and without custom GlobalizationSettings applied."
     },
