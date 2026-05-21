@@ -696,6 +696,11 @@
     },
     {
       "category": "macro-project",
+      "file": "insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs",
+      "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-xlsm-workbook-from-disk-and-obtain-its-vbaproject-object-for-analysis.cs",
       "title": "Load an XLSM workbook from disk and obtain its VbaProject object for analysis."
     },
