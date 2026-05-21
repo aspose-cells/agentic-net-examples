@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs
 - add-a-secondary-axis-to-a-bar-chart-and-assign-the-revenue-series-to-it.cs
 - configure-bubble-chart-data-by-linking-xvalues-values-and-bubblesizes-to-three-separate-ranges.cs
+- apply-a-predefined-chart-style-named-style20-to-ensure-visual-consistency-across-reports.cs
