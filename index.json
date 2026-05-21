@@ -3785,6 +3785,11 @@
       "title": "Use Chart.SetChartDataRange to bind the chart to the specified range A1:B12."
     },
     {
+      "category": "working-with-charts",
+      "file": "use-index-and-match-functions-to-build-a-dynamic-range-for-a-secondary-axis-data-source.cs",
+      "title": "Use INDEX and MATCH functions to build a dynamic range for a secondary axis data source."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
