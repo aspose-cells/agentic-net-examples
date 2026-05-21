@@ -726,6 +726,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xlsb-workbook-change-the-dbconnectionname-and-log-the-modification-timestamp.cs",
+      "title": "Load an XLSB workbook, change the DBConnection.Name, and log the modification timestamp."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "load-multiple-xls-files-from-a-directory-update-each-dbconnectionname-and-save-changes-in-place.cs",
       "title": "Load multiple XLS files from a directory, update each DBConnection.Name, and save changes in place."
     },
