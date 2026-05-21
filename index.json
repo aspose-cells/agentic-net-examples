@@ -751,6 +751,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "programmatically-remove-a-hidden-external-link-from-the-workbook-and-verify-its-absence.cs",
+      "title": "Programmatically remove a hidden external link from the workbook and verify its absence."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs",
       "title": "Refresh all external data connections sequentially to ensure data consistency across the workbook."
     },
