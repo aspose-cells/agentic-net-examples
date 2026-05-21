@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-network-share-protect-its-vba-project-and-verify-protection-after-saving.cs
 - remove-any-module-named-temp-from-a-collection-of-workbooks-and-save-the-modified-files.cs
 - create-a-new-vba-module-with-utf8-code-page-and-add-multilingual-macro-text.cs
+- attempt-to-unlock-a-vba-project-locked-for-viewing-using-provided-credentials-and-report-the-result.cs
