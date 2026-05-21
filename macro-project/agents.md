@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - clear-existing-code-from-a-specific-module-and-insert-updated-macro-logic-from-an-external-source.cs
 - log-a-warning-if-the-vba-project-is-locked-for-viewing-after-checking-its-protection-status.cs
 - clone-a-workbook-duplicate-its-vba-project-and-save-the-clone-as-a-separate-xlsm-file.cs
+- skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs
