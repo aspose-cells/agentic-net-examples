@@ -756,6 +756,11 @@
     },
     {
       "category": "macro-project",
+      "file": "compare-exported-certificate-thumbprint-with-original-certificate-thumbprint-to-ensure-integrity.cs",
+      "title": "Compare exported certificate thumbprint with original certificate thumbprint to ensure integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "confirm-that-the-exported-certificate-file-size-matches-the-expected-length.cs",
       "title": "Confirm that the exported certificate file size matches the expected length."
     },

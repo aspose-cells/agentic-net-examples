@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - overwrite-original-workbook-after-successful-signing-when-backup-is-not-required-by-policy.cs
 - wrap-signing-operation-in-trycatch-block-to-handle-exceptions-and-log-error-details.cs
 - write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs
+- compare-exported-certificate-thumbprint-with-original-certificate-thumbprint-to-ensure-integrity.cs
