@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-lightcells-api-retrieve-loadwarnings-after-load-and-output-them.cs
 - implement-a-commandline-utility-that-accepts-a-folder-path-loads-each-excel-file-without-charts-and-converts-them-to-pdf.cs
 - batch-process-multiple-excel-files-by-loading-them-without-charts-using-loadoptions-and-saving-each-as-pdf.cs
+- use-lightcells-api-to-open-a-large-workbook-then-monitor-memory-usage-statistics-during-processing.cs

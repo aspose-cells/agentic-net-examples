@@ -2151,6 +2151,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-lightcells-api-to-open-a-large-workbook-then-monitor-memory-usage-statistics-during-processing.cs",
+      "title": "Use LightCells API to open a large workbook, then monitor memory usage statistics during processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
