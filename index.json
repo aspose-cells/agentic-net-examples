@@ -1886,6 +1886,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-configure-interruptmonitor-for-a-30second-timeout-and-save-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, configure InterruptMonitor for a 30\u2011second timeout, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-lightcells-api-exclude-charts-and-save-the-result-to-pdf.cs",
       "title": "Load a workbook with LightCells API, exclude charts, and save the result to PDF."
     },

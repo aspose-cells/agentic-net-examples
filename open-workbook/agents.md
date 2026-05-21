@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-lightcells-api-exclude-charts-and-save-the-result-to-pdf.cs
 - load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs
 - load-a-workbook-with-lightcells-api-load-only-worksheets-1-and-3-and-save-to-pdf.cs
+- load-a-workbook-with-lightcells-api-configure-interruptmonitor-for-a-30second-timeout-and-save-to-pdf.cs
