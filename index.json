@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs",
+      "title": "Apply a gradient fill to the chart area background using two complementary colors."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-predefined-chart-style-named-style20-to-ensure-visual-consistency-across-reports.cs",
       "title": "Apply a predefined chart style named Style20 to ensure visual consistency across reports."
     },
