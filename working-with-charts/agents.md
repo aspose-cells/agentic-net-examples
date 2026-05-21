@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs
 - add-a-data-label-to-each-point-in-a-column-chart-displaying-the-exact-value.cs
 - format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs
+- apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs
