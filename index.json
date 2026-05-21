@@ -786,6 +786,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-a-vba-certificate-to-a-temporary-file-then-load-it-into-an-x509certificate-object-for-inspection.cs",
+      "title": "Export a VBA certificate to a temporary file, then load it into an X509Certificate object for inspection."
+    },
+    {
+      "category": "macro-project",
       "file": "export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs",
       "title": "Export each workbook's VBA module code to separate .bas files for version control tracking."
     },
