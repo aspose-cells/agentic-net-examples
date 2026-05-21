@@ -1766,6 +1766,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "implement-a-commandline-utility-that-accepts-a-folder-path-loads-each-excel-file-without-charts-and-converts-them-to-pdf.cs",
+      "title": "Implement a command\u2011line utility that accepts a folder path, loads each Excel file without charts, and converts them to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs",
       "title": "Implement an InterruptMonitor that aborts workbook loading after ten seconds to prevent excessive processing time."
     },
