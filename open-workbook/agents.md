@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - save-a-workbook-using-lightcells-api-while-disabling-automatic-calculation-to-speed-up-writing-of-static-data-sheets.cs
 - implement-lightcellsdatahandler-to-replace-error-values-with-zero-during-load-ensuring-clean-numeric-datasets-for-analysis.cs
 - load-an-xlsx-workbook-from-a-file-path-while-excluding-all-embedded-charts.cs
+- save-the-chartfree-workbook-to-a-pdf-document-preserving-original-cell-formatting.cs
