@@ -1651,6 +1651,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs",
+      "title": "Enable HtmlSaveOptions.ExportImagesAsBase64 to embed images directly in the HTML output for self\u2011contained files."
+    },
+    {
+      "category": "open-workbook",
       "file": "enable-memorypreferences-in-loadoptions-to-prevent-outofmemoryexception-when-loading-a-massive-workbook.cs",
       "title": "Enable MemoryPreferences in LoadOptions to prevent OutOfMemoryException when loading a massive workbook."
     },
