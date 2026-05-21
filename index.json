@@ -3651,6 +3651,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "autofit-the-chart-size-based-on-its-data-range-to-avoid-clipping.cs",
+      "title": "Auto\u2011fit the chart size based on its data range to avoid clipping."
+    },
+    {
+      "category": "working-with-charts",
       "file": "bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs",
       "title": "Bind the chart to the OFFSET\u2011based named range for automatic expansion with new data."
     },
