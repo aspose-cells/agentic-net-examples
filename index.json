@@ -3591,6 +3591,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-through-all-charts-in-the-workbook-and-set-each-title-font-to-arial-size-12.cs",
+      "title": "Iterate through all charts in the workbook and set each title font to Arial, size 12."
+    },
+    {
+      "category": "working-with-charts",
       "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
       "title": "Position the chart at row 15, column 3 with a width of 400 points."
     },
