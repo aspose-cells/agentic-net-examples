@@ -901,6 +901,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-digital-certificate-to-a-pem-file-for-backup.cs",
+      "title": "Export the VBA project's digital certificate to a PEM file for backup."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vbaprojects-digital-certificate-to-a-file-stream-for-external-backup-purposes.cs",
       "title": "Export the VbaProject's digital certificate to a file stream for external backup purposes."
     },

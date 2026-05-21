@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - add-a-com-library-reference-eg-microsoft-scripting-runtime-to-the-vba-project.cs
 - add-a-reference-to-the-microsoft-outlook-object-library-in-the-vba-project-to-enable-email-automation.cs
 - add-a-reference-to-the-microsoft-xml-v60-library-in-the-vba-project-to-enable-xml-parsing.cs
+- export-the-vba-projects-digital-certificate-to-a-pem-file-for-backup.cs
