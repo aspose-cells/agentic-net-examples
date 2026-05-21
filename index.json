@@ -686,6 +686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "attempt-to-unlock-a-vba-project-locked-for-viewing-using-provided-credentials-and-report-the-result.cs",
+      "title": "Attempt to unlock a VBA project locked for viewing using provided credentials and report the result."
+    },
+    {
+      "category": "macro-project",
       "file": "clear-existing-code-from-a-specific-module-and-insert-updated-macro-logic-from-an-external-source.cs",
       "title": "Clear existing code from a specific module and insert updated macro logic from an external source."
     },
