@@ -425,6 +425,11 @@
       "title": "Verify that localized function names are correctly recognized by Excel when the workbook is opened."
     },
     {
+      "category": "globalization-and-localization",
+      "file": "write-unit-tests-asserting-getlocalfunctionname-returns-expected-localized-equivalents-for-common-functions.cs",
+      "title": "Write unit tests asserting GetLocalFunctionName returns expected localized equivalents for common functions."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
