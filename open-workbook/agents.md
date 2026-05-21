@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs
 - apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs
 - open-a-workbook-and-immediately-export-its-visible-sheet-names-to-a-json-array-for-downstream-processing.cs
+- load-only-the-summary-and-data-worksheets-from-the-file-using-loadoptionsloadfilter.cs
