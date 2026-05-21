@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs
 - refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs
 - retrieve-the-first-worksheet-access-its-first-querytable-and-read-preserveformatting-flag.cs
+- enable-preserveformatting-on-a-querytable-to-maintain-cell-styles-after-data-refresh.cs
