@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - create-x509certificate2-from-pfx-file-with-password-and-use-it-to-sign-vba-project.cs
 - sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs
 - export-certificate-to-byte-array-then-write-bytes-to-file-for-external-distribution.cs
+- save-signed-workbook-under-new-filename-to-preserve-original-file-and-maintain-audit-trail.cs
