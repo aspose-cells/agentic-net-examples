@@ -791,6 +791,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "replace-all-occurrences-of-a-deprecated-database-name-within-dbconnectionname-properties-across-workbooks.cs",
+      "title": "Replace all occurrences of a deprecated database name within DBConnection.Name properties across workbooks."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs",
       "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
     },
