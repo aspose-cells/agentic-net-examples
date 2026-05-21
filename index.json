@@ -676,6 +676,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs",
+      "title": "Set RefreshOnLoad flag of a WebQuery connection to true for automatic data update."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs",
       "title": "Update UserName and Password properties of a specific DBConnection with new credentials."
     },
