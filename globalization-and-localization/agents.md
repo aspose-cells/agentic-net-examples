@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs
 - measure-performance-impact-of-applying-custom-globalization-settings-versus-default-settings-when-generating-large-pivot-tables.cs
 - create-an-application-that-loads-a-workbook-with-italian-cultureinfo-adds-subtotals-and-saves-the-result-as-pdf.cs
+- implement-a-method-that-switches-globalizationsettings-at-runtime-based-on-userselected-language-before-chart-creation.cs
