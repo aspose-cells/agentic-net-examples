@@ -3676,6 +3676,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
+      "title": "Set the scatter chart marker size to 8 points and color to teal."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-vertical-axis-maximum-value-to-200-and-minimum-value-to-0-for-consistent-scaling.cs",
       "title": "Set the vertical axis maximum value to 200 and minimum value to 0 for consistent scaling."
     },
