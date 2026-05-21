@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - assign-the-custom-globalizationsettings-to-the-workbook-before-adding-subtotals-to-ensure-localized-labels.cs
 - add-subtotal-rows-to-the-worksheet-after-assigning-custom-globalizationsettings-verifying-localized-total-labels.cs
 - convert-gregorian-date-cells-to-japanese-calendar-dates-with-cellshelper-preserving-era-information-for-each-cell.cs
+- save-the-workbook-containing-japanese-era-dates-as-pdf-confirming-era-symbols-appear-correctly-in-the-output.cs

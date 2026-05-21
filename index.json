@@ -506,6 +506,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "save-the-workbook-containing-japanese-era-dates-as-pdf-confirming-era-symbols-appear-correctly-in-the-output.cs",
+      "title": "Save the workbook containing Japanese era dates as PDF, confirming era symbols appear correctly in the output."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "set-cell-formulas-with-cellformulalocal-to-apply-localized-function-names-during-workbook-processing.cs",
       "title": "Set cell formulas with Cell.FormulaLocal to apply localized function names during workbook processing."
     },
