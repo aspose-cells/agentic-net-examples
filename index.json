@@ -796,6 +796,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-an-existing-xlsm-workbook-from-a-file-path-into-a-workbook-object.cs",
+      "title": "Load an existing XLSM workbook from a file path into a Workbook object."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-xlsm-workbook-from-disk-and-obtain-its-vbaproject-object-for-analysis.cs",
       "title": "Load an XLSM workbook from disk and obtain its VbaProject object for analysis."
     },
