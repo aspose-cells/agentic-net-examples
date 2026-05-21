@@ -1821,6 +1821,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs",
+      "title": "Load a workbook with a specific page setup configuration and verify that margin settings are retained after processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs",
       "title": "Load a workbook with specific print area defined, then extract only the cells within that area using LightCells."
     },

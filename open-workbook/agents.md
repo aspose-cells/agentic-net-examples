@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs
 - apply-filterdatakind-to-load-only-string-cells-from-a-template-then-concatenate-them-into-a-summary-report.cs
 - write-merged-cells-while-streaming-data-with-lightcellsdataprovider-to-preserve-complex-table-structures-in-large-excel-files.cs
+- load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs
