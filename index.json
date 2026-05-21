@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-trendline-to-the-line-chart-and-configure-it-to-display-the-equation-and-rsquared-value.cs",
+      "title": "Add a trendline to the line chart and configure it to display the equation and R\u2011squared value."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-an-error-bar-series-to-a-line-chart-displaying-standard-deviation-values.cs",
       "title": "Add an error bar series to a line chart displaying standard deviation values."
     },
