@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - programmatically-check-each-workbook-in-a-collection-for-unsigned-vba-projects-and-log-file-names.cs
 - use-a-trycatch-block-to-handle-exceptions-when-exporting-a-certificate-from-an-unsigned-vba-project.cs
 - batch-export-certificates-from-all-signed-workbooks-in-a-folder-to-a-designated-output-directory.cs
+- compare-exported-certificate-files-with-original-certificates-to-detect-any-corruption-during-export.cs
