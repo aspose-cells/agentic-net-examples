@@ -821,6 +821,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-certificate-to-a-memorystream-and-write-stream-contents-to-disk.cs",
+      "title": "Export the VBA project's certificate to a MemoryStream and write stream contents to disk."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vba-projects-digital-certificate-to-a-file-path.cs",
       "title": "Export the VBA project's digital certificate to a file path."
     },
