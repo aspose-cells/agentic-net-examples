@@ -721,6 +721,11 @@
     },
     {
       "category": "macro-project",
+      "file": "batch-process-a-folder-of-excel-files-signing-each-vba-project-with-the-same-certificate.cs",
+      "title": "Batch process a folder of Excel files, signing each VBA project with the same certificate."
+    },
+    {
+      "category": "macro-project",
       "file": "batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs",
       "title": "Batch process workbooks to add a standard library reference, then generate a summary of successes and failures."
     },
