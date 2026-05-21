@@ -3611,6 +3611,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-diagonal-stripe-pattern-fill-to-the-chart-background-for-a-stylized-look.cs",
+      "title": "Apply a diagonal stripe pattern fill to the chart background for a stylized look."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-filter-on-the-listobject-to-show-only-rows-where-region-equals-east.cs",
       "title": "Apply a filter on the ListObject to show only rows where Region equals 'East'."
     },

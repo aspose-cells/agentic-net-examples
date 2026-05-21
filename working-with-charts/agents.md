@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - apply-a-radial-gradient-fill-to-the-chart-using-three-color-stops-for-smooth-transition.cs
 - set-a-predefined-texture-fill-on-the-chart-background-to-give-it-a-fabric-appearance.cs
 - load-a-custom-image-and-use-it-as-a-tiled-texture-fill-for-the-chart-area.cs
+- apply-a-diagonal-stripe-pattern-fill-to-the-chart-background-for-a-stylized-look.cs
