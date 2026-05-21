@@ -716,6 +716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "remove-a-specified-module-using-modulesremoveat-and-save-the-workbook-to-apply-changes.cs",
+      "title": "Remove a specified module using Modules.RemoveAt and save the workbook to apply changes."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-modified-workbook-as-an-xlsm-file-to-preserve-the-added-vba-code.cs",
       "title": "Save the modified workbook as an XLSM file to preserve the added VBA code."
     },
