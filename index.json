@@ -3651,6 +3651,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs",
+      "title": "Configure a linear gradient fill for the chart background with two contrasting colors."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-bubble-chart-data-by-linking-xvalues-values-and-bubblesizes-to-three-separate-ranges.cs",
       "title": "Configure bubble chart data by linking XValues, Values, and BubbleSizes to three separate ranges."
     },
