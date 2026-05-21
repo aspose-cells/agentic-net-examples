@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - use-workbooksettings-to-enable-automatic-recalculation-after-applying-localized-formulas-to-ensure-correct-results.cs
 - configure-workbook-to-use-a-specific-cultureinfo-object-for-date-and-number-formats-during-localization.cs
 - test-that-excels-autofilter-works-correctly-with-localized-column-headers-after-applying-globalization.cs
+- ensure-that-pivot-tables-reflect-localized-subtotal-labels-when-the-workbook-is-opened-in-the-target-language.cs

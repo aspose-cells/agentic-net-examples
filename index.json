@@ -386,6 +386,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "ensure-that-pivot-tables-reflect-localized-subtotal-labels-when-the-workbook-is-opened-in-the-target-language.cs",
+      "title": "Ensure that pivot tables reflect localized subtotal labels when the workbook is opened in the target language."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "generate-a-report-listing-processed-workbooks-applied-locales-and-any-localization-errors-encountered.cs",
       "title": "Generate a report listing processed workbooks, applied locales, and any localization errors encountered."
     },
