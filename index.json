@@ -781,6 +781,11 @@
     },
     {
       "category": "macro-project",
+      "file": "detect-and-report-any-duplicate-macro-names-across-multiple-vba-modules-within-a-single-workbook.cs",
+      "title": "Detect and report any duplicate macro names across multiple VBA modules within a single workbook."
+    },
+    {
+      "category": "macro-project",
       "file": "enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs",
       "title": "Enumerate all modules in the VbaProject and output each module name to the console."
     },
