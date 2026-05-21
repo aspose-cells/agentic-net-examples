@@ -1756,6 +1756,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs",
+      "title": "Log warnings about unsupported formulas to a file by implementing IWarningCallback that appends messages with timestamps."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-and-immediately-export-its-visible-sheet-names-to-a-json-array-for-downstream-processing.cs",
       "title": "Open a workbook and immediately export its visible sheet names to a JSON array for downstream processing."
     },
