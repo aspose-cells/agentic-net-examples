@@ -881,6 +881,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-certificate-to-a-cer-file-and-verify-its-thumbprint.cs",
+      "title": "Export the VBA project's certificate to a .cer file and verify its thumbprint."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vba-projects-certificate-to-a-file-path-and-verify-the-file-exists.cs",
       "title": "Export the VBA project's certificate to a file path and verify the file exists."
     },
