@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - track-workbooktotiff-conversion-progress-by-handling-the-conversion-progress-event-and-logging-percentages.cs
 - render-a-workbook-to-tiff-and-write-the-result-into-a-memory-stream-for-further-processing.cs
 - save-a-generated-tiff-file-directly-to-a-network-share-path-after-converting-the-workbook.cs
+- embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs
