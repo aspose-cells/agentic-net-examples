@@ -391,6 +391,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-subclass-of-globalizationsettings-that-overrides-gettotalname-to-provide-a-localized-subtotal-label.cs",
+      "title": "Create a subclass of GlobalizationSettings that overrides GetTotalName to provide a localized subtotal label."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs",
       "title": "Develop a console application that prompts users to select a target language and applies localization to a workbook."
     },
