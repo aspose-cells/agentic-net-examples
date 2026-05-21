@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - implement-fallback-to-english-function-names-when-a-requested-locale-lacks-a-defined-mapping.cs
 - log-each-overridden-method-call-to-a-debug-file-for-troubleshooting-localization-behavior-at-runtime.cs
 - create-a-batch-process-that-applies-the-custom-globalization-settings-to-all-workbooks-in-a-folder.cs
+- validate-that-boolean-values-display-localized-truefalse-strings-in-cells-containing-logical-formulas.cs
