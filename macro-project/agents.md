@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - create-a-macro-that-iterates-through-all-worksheets-and-logs-each-sheet-name-using-the-new-module.cs
 - validate-that-the-vba-project-password-meets-minimum-length-requirements-before-invoking-the-protect-method.cs
 - import-an-exported-vba-project-certificate-into-another-workbook-to-share-signing-authority-across-projects.cs
+- create-a-new-xlsm-workbook-instance-and-add-a-vba-code-module.cs

@@ -731,6 +731,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-a-new-xlsm-workbook-instance-and-add-a-vba-code-module.cs",
+      "title": "Create a new XLSM workbook instance and add a VBA code module."
+    },
+    {
+      "category": "macro-project",
       "file": "delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs",
       "title": "Delete any VBA module that exceeds five hundred lines of code after enumerating the project modules."
     },
