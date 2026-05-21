@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - enable-preserveformatting-on-a-querytable-to-maintain-cell-styles-after-data-refresh.cs
 - disable-preserveformatting-on-a-querytable-to-allow-default-formatting-during-subsequent-refreshes.cs
 - iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs
+- obtain-resultrange-address-of-a-querytable-and-log-it-for-downstream-processing.cs

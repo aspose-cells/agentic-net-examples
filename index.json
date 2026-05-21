@@ -696,6 +696,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "obtain-resultrange-address-of-a-querytable-and-log-it-for-downstream-processing.cs",
+      "title": "Obtain ResultRange address of a QueryTable and log it for downstream processing."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs",
       "title": "Refresh all external data connections sequentially to ensure data consistency across the workbook."
     },
