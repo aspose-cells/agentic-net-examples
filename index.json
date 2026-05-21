@@ -3631,6 +3631,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-pyramid-chart-and-assign-distinct-colors-to-each-level-for-visual-distinction.cs",
+      "title": "Create a pyramid chart and assign distinct colors to each level for visual distinction."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-radar-chart-and-configure-the-radial-axis-to-display-category-names-as-labels.cs",
       "title": "Create a radar chart and configure the radial axis to display category names as labels."
     },
