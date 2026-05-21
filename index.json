@@ -716,6 +716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-error-handling-around-vbaprojectprotect-to-capture-exceptions-when-an-empty-password-is-supplied.cs",
+      "title": "Implement error handling around VbaProject.Protect to capture exceptions when an empty password is supplied."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs",
       "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
     },
