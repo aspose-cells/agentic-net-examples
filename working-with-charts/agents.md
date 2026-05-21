@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-chart-as-an-xlsx-file-to-the-specified-output-directory.cs
 - load-an-existing-xlsx-workbook-retrieve-its-first-chart-and-modify-leader-line-settings.cs
 - dispose-of-the-workbook-object-within-a-using-block-to-release-unmanaged-resources-promptly.cs
+- create-a-batch-process-that-generates-pie-charts-for-each-data-table-across-multiple-worksheets.cs
