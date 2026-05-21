@@ -2346,6 +2346,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-workbook-to-tiff-using-twentyfourbit-color-depth-for-highquality-images.cs",
+      "title": "Convert a workbook to TIFF using twenty\u2011four\u2011bit color depth for high\u2011quality images."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-an-entire-workbook-to-a-multipage-tiff-using-default-rendering-options.cs",
       "title": "Convert an entire workbook to a multi\u2011page TIFF using default rendering options."
     },
