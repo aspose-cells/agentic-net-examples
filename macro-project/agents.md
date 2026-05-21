@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - set-the-buttons-macroname-property-to-reference-the-newly-added-macro.cs
 - save-the-workbook-as-a-macroenabled-xlsm-file-to-the-specified-location.cs
 - load-an-existing-xlsm-workbook-from-a-file-path-into-a-workbook-object.cs
+- retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs

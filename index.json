@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs",
+      "title": "Retrieve the VBA project from the loaded workbook via Workbook.VbaProject."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-modified-workbook-as-an-xlsm-file-to-preserve-the-added-vba-code.cs",
       "title": "Save the modified workbook as an XLSM file to preserve the added VBA code."
     },
