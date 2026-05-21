@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - set-the-chart-title-to-monthly-revenue-and-apply-a-predefined-style-accent1.cs
 - move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs
 - resize-the-chart-to-width-500-points-and-height-300-points-positioning-it-at-cell-d5.cs
+- apply-a-3d-perspective-style-to-the-column-chart-adjusting-depth-and-rotation-angles.cs
