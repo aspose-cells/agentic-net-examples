@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - enable-the-useoptimizedmemory-flag-in-loadoptions-to-improve-performance-when-loading-workbooks-containing-thousands-of-rows.cs
 - load-a-workbook-while-ignoring-all-external-links-by-setting-loadoptionsignoreexternallinks-to-true.cs
 - open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs
+- configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs
