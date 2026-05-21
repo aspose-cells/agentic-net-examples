@@ -1736,6 +1736,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "filter-defined-names-containing-total-during-load-and-verify-that-only-those-names-are-retained.cs",
+      "title": "Filter defined names containing \"Total\" during load and verify that only those names are retained."
+    },
+    {
+      "category": "open-workbook",
       "file": "filter-out-all-pictures-from-a-workbook-during-loading-to-improve-performance-for-large-spreadsheets.cs",
       "title": "Filter out all pictures from a workbook during loading to improve performance for large spreadsheets."
     },
