@@ -581,6 +581,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "test-that-overriding-getgrandtotalname-does-not-affect-subtotal-labels-when-both-custom-settings-are-applied-simultaneously.cs",
+      "title": "Test that overriding GetGrandTotalName does not affect subtotal labels when both custom settings are applied simultaneously."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "use-a-loop-to-assign-different-custom-globalizationsettings-instances-to-multiple-worksheets-each-with-unique-subtotal-label-language.cs",
       "title": "Use a loop to assign different custom GlobalizationSettings instances to multiple worksheets, each with unique subtotal label language."
     },
