@@ -3736,6 +3736,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "reference-a-range-on-a-different-worksheet-as-the-chart-data-source-to-enable-crosssheet-linking.cs",
+      "title": "Reference a range on a different worksheet as the chart data source to enable cross\u2011sheet linking."
+    },
+    {
+      "category": "working-with-charts",
       "file": "refresh-the-chart-after-updating-source-cells-to-ensure-displayed-data-reflects-latest-values.cs",
       "title": "Refresh the chart after updating source cells to ensure displayed data reflects latest values."
     },

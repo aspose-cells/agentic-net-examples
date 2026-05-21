@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - define-a-dynamic-named-range-using-offset-based-on-nonempty-rows-in-column-a.cs
 - bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs
 - use-index-and-match-functions-to-build-a-dynamic-range-for-a-secondary-axis-data-source.cs
+- reference-a-range-on-a-different-worksheet-as-the-chart-data-source-to-enable-crosssheet-linking.cs
