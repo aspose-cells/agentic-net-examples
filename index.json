@@ -801,6 +801,11 @@
     },
     {
       "category": "macro-project",
+      "file": "detect-unsigned-vba-projects-across-a-directory-and-list-file-names-for-further-review.cs",
+      "title": "Detect unsigned VBA projects across a directory and list file names for further review."
+    },
+    {
+      "category": "macro-project",
       "file": "develop-a-console-application-that-accepts-a-folder-path-processes-each-xlsm-and-reports-macro-status.cs",
       "title": "Develop a console application that accepts a folder path, processes each XLSM, and reports macro status."
     },
