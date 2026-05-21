@@ -756,6 +756,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "log-the-original-and-updated-external-link-paths-for-audit-purposes.cs",
+      "title": "Log the original and updated external link paths for audit purposes."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "measure-and-log-the-time-taken-to-refresh-each-dbconnection-for-performance-analysis.cs",
       "title": "Measure and log the time taken to refresh each DBConnection for performance analysis."
     },
