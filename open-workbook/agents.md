@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - save-a-workbook-with-culturespecific-number-formats-by-setting-appropriate-locale-settings-in-lightcellsdataprovider.cs
 - load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs
 - write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs
+- apply-filterdatakind-to-load-only-string-cells-from-a-template-then-concatenate-them-into-a-summary-report.cs
