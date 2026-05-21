@@ -3741,6 +3741,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-batch-process-that-generates-pie-charts-for-each-data-table-across-multiple-worksheets.cs",
+      "title": "Create a batch process that generates pie charts for each data table across multiple worksheets."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-column-chart-object-on-the-worksheet-to-visualize-the-sales-data.cs",
       "title": "Create a column chart object on the worksheet to visualize the sales data."
     },
