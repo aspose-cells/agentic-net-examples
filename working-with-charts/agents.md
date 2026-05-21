@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs
 - apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs
 - set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs
+- enable-3d-rotation-for-a-column-chart-and-set-elevation-angle-to-30-degrees.cs
