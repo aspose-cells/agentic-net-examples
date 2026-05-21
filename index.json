@@ -1851,6 +1851,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-an-xlsx-workbook-from-a-file-path-while-excluding-all-embedded-charts.cs",
+      "title": "Load an XLSX workbook from a file path while excluding all embedded charts."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs",
       "title": "Load an XLSX workbook using LightCells API while applying FilterObjects to exclude charts."
     },
