@@ -3041,6 +3041,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs",
+      "title": "Send the PNG worksheet image via HTTP POST to a REST endpoint for downstream processing."
+    },
+    {
+      "category": "working-with-images",
       "file": "set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs",
       "title": "Set custom page margins in ImageOrPrintOptions before converting workbook to TIFF for layout control."
     },
