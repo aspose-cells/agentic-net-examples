@@ -656,6 +656,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs",
+      "title": "Change the Path property of an external link in an XLS workbook to a network shared folder."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs",
       "title": "Disable BackgroundRefresh on a SQL DBConnection to enforce sequential query execution."
     },

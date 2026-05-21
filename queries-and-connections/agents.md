@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - output-each-powerquery-formula-name-to-the-console-for-verification-purposes.cs
 - retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs
 - rename-the-retrieved-dbconnectionname-to-a-descriptive-identifier-such-as-salesdataconnection.cs
+- change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs
