@@ -3616,6 +3616,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs",
+      "title": "Format data labels to show percentages with one decimal place on a pie chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs",
       "title": "Hide the horizontal axis gridlines to produce a cleaner appearance for the scatter plot."
     },
