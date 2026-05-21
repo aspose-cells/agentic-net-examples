@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs
 - render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs
 - export-a-chart-to-svg-with-viewbox-attribute-for-responsive-scaling-in-modern-browsers.cs
+- attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs

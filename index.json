@@ -2341,6 +2341,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
+      "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
+    },
+    {
+      "category": "working-with-images",
       "file": "compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs",
       "title": "Compress the SVG worksheet file using GZip before transmitting it over the network for efficiency."
     },
