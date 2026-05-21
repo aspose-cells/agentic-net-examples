@@ -4006,6 +4006,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-each-generated-chart-image-as-a-jpeg-file-named-after-its-worksheet-for-easy-identification.cs",
+      "title": "Save each generated chart image as a JPEG file named after its worksheet for easy identification."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-each-generated-chart-image-as-a-png-file-named-after-its-worksheet-for-easy-identification.cs",
       "title": "Save each generated chart image as a PNG file named after its worksheet for easy identification."
     },
