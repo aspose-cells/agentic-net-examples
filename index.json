@@ -1625,6 +1625,11 @@
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
     {
+      "category": "open-workbook",
+      "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
+      "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
