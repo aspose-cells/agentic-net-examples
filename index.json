@@ -721,6 +721,11 @@
     },
     {
       "category": "macro-project",
+      "file": "rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs",
+      "title": "Rename an existing VBA module to DataProcessor by setting its Name property before saving."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-modified-workbook-as-an-xlsm-file-to-preserve-the-added-vba-code.cs",
       "title": "Save the modified workbook as an XLSM file to preserve the added VBA code."
     },
