@@ -2340,6 +2340,11 @@
       "title": "Verify that the merged workbook contains the expected number of worksheets after combination."
     },
     {
+      "category": "working-with-images",
+      "file": "convert-an-entire-workbook-to-a-multipage-tiff-using-default-rendering-options.cs",
+      "title": "Convert an entire workbook to a multi\u2011page TIFF using default rendering options."
+    },
+    {
       "category": "working-with-json",
       "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
       "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."
