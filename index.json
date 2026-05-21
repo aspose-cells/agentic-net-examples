@@ -1596,6 +1596,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs",
+      "title": "Load a legacy XLS file from a Stream object to process its data in memory."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
