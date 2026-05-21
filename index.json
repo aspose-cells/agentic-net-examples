@@ -381,6 +381,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "batch-process-a-folder-of-xlsx-files-loading-each-with-spanish-cultureinfo-and-exporting-charts-to-png-images.cs",
+      "title": "Batch process a folder of XLSX files, loading each with Spanish CultureInfo and exporting charts to PNG images."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "configure-workbook-to-use-a-specific-cultureinfo-object-for-date-and-number-formats-during-localization.cs",
       "title": "Configure workbook to use a specific CultureInfo object for date and number formats during localization."
     },
