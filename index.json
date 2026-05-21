@@ -886,6 +886,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-an-excel-workbook-and-read-the-issigned-property-to-determine-signature-status.cs",
+      "title": "Load an Excel workbook and read the IsSigned property to determine signature status."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-existing-xlsm-workbook-from-a-file-path-into-a-workbook-object.cs",
       "title": "Load an existing XLSM workbook from a file path into a Workbook object."
     },
