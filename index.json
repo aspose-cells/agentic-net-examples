@@ -740,6 +740,11 @@
       "title": "Save the modified workbook as an XLSM file to preserve the added VBA code."
     },
     {
+      "category": "macro-project",
+      "file": "validate-that-each-added-module-contains-a-sub-main-entry-point-before-committing-workbook-changes.cs",
+      "title": "Validate that each added module contains a Sub Main entry point before committing workbook changes."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
