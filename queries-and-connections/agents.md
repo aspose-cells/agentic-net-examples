@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-to-a-new-file-path-preserving-original-version-metadata.cs
 - write-a-utility-that-lists-all-worksheets-containing-query-tables-and-outputs-their-names.cs
 - measure-and-log-the-time-taken-to-refresh-each-dbconnection-for-performance-analysis.cs
+- load-an-xls-workbook-using-the-workbook-class-and-access-its-datamashup-property.cs
