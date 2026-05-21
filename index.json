@@ -3721,6 +3721,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "check-whether-the-chart-already-contains-a-secondary-axis-before-adding-one.cs",
+      "title": "Check whether the chart already contains a secondary axis before adding one."
+    },
+    {
+      "category": "working-with-charts",
       "file": "clone-an-existing-chart-change-its-series-colors-and-place-it-on-a-different-sheet.cs",
       "title": "Clone an existing chart, change its series colors, and place it on a different sheet."
     },
