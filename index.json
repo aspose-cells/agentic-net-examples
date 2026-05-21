@@ -806,6 +806,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs",
+      "title": "Generate a CSV file containing workbook names, macro assignment status, and signature verification results."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-a-summary-of-all-vba-modules-including-line-counts-and-write-the-report-to-a-text-file.cs",
       "title": "Generate a summary of all VBA modules, including line counts, and write the report to a text file."
     },
