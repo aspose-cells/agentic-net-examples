@@ -871,6 +871,11 @@
     },
     {
       "category": "macro-project",
+      "file": "embed-vba-code-that-disables-the-print-command-into-a-workbook-to-prevent-user-printing.cs",
+      "title": "Embed VBA code that disables the Print command into a workbook to prevent user printing."
+    },
+    {
+      "category": "macro-project",
       "file": "enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs",
       "title": "Enumerate all modules in the VbaProject and output each module name to the console."
     },
