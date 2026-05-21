@@ -1646,6 +1646,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "configure-interruptmonitor-to-abort-loading-if-processing-exceeds-30-seconds-and-log-the-interruption-event.cs",
+      "title": "Configure InterruptMonitor to abort loading if processing exceeds 30 seconds and log the interruption event."
+    },
+    {
+      "category": "open-workbook",
       "file": "configure-interruptmonitor-to-abort-workbook-loading-after-five-seconds-then-handle-the-resulting-exception-gracefully.cs",
       "title": "Configure InterruptMonitor to abort workbook loading after five seconds, then handle the resulting exception gracefully."
     },
