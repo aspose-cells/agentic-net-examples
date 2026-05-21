@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - export-the-vba-projects-digital-certificate-to-a-file-path.cs
 - export-the-vba-projects-digital-certificate-to-a-memorystream-for-further-processing.cs
 - confirm-that-the-exported-certificate-file-size-matches-the-expected-length.cs
+- validate-that-the-exported-certificate-stream-length-matches-the-original-file-size.cs
