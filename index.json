@@ -936,6 +936,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs",
+      "title": "Validate that adding a library reference throws an exception when the library is not registered on the host."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-that-each-added-module-contains-a-sub-main-entry-point-before-committing-workbook-changes.cs",
       "title": "Validate that each added module contains a Sub Main entry point before committing workbook changes."
     },
