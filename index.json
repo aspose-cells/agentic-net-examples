@@ -1666,6 +1666,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-partially-corrupted-excel-file-while-capturing-warnings-then-continue-processing-the-recoverable-content.cs",
+      "title": "Load a partially corrupted Excel file while capturing warnings, then continue processing the recoverable content."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs",
       "title": "Load a workbook from an HTTP response stream to process a remotely hosted Excel file without saving locally."
     },
