@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - load-a-passwordprotected-xlsx-file-using-lightcells-api-by-providing-the-decryption-password-in-load-options.cs
 - filter-out-all-pictures-from-a-workbook-during-loading-to-improve-performance-for-large-spreadsheets.cs
 - use-lightcells-api-to-export-cell-values-from-a-workbook-into-a-csv-file-without-loading-the-model.cs
+- apply-filterdatakind-to-load-only-numeric-and-date-cells-from-a-template-workbook-for-statistical-analysis.cs
