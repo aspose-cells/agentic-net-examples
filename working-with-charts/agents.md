@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - create-a-stacked-column-chart-with-three-series-and-customize-each-series-color-individually.cs
 - combine-area-and-line-chart-types-in-one-chart-to-visualize-trends-alongside-volume-data.cs
 - assign-custom-colors-to-individual-pie-chart-slices-based-on-category-importance.cs
+- generate-a-chart-with-a-dynamic-number-of-series-based-on-the-count-of-data-rows.cs
