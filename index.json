@@ -366,6 +366,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "apply-custom-number-format-strings-to-percentage-cells-after-loading-the-workbook-with-brazilian-portuguese-cultureinfo.cs",
+      "title": "Apply custom number format strings to percentage cells after loading the workbook with Brazilian Portuguese CultureInfo."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "assign-the-custom-globalizationsettings-instance-to-workbooksettingsglobalizationsettings-before-loading-any-worksheets.cs",
       "title": "Assign the custom GlobalizationSettings instance to Workbook.Settings.GlobalizationSettings before loading any worksheets."
     },
