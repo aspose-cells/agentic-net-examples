@@ -436,6 +436,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "measure-performance-differences-when-loading-workbooks-with-and-without-custom-globalizationsettings-applied.cs",
+      "title": "Measure performance differences when loading workbooks with and without custom GlobalizationSettings applied."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs",
       "title": "Override GetBooleanString to return localized true/false strings for the selected locale."
     },
