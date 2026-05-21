@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - create-a-test-suite-that-loads-workbooks-with-various-cultureinfo-values-and-verifies-date-parsing-accuracy.cs
 - program-a-macrolike-routine-that-adds-subtotals-with-localized-labels-to-all-worksheets-in-a-workbook.cs
 - configure-chart-rendering-to-use-antialiasing-while-applying-custom-chartglobalizationsettings-for-improved-visual-quality.cs
+- implement-a-fallback-mechanism-that-reverts-to-default-globalization-settings-if-custom-label-methods-throw-exceptions.cs

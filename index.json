@@ -496,6 +496,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-a-fallback-mechanism-that-reverts-to-default-globalization-settings-if-custom-label-methods-throw-exceptions.cs",
+      "title": "Implement a fallback mechanism that reverts to default globalization settings if custom label methods throw exceptions."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "implement-a-feature-that-automatically-selects-the-appropriate-japanese-era-based-on-year-when-converting-dates-in-bulk.cs",
       "title": "Implement a feature that automatically selects the appropriate Japanese era based on year when converting dates in bulk."
     },
