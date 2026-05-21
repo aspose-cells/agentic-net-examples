@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - confirm-that-the-exported-certificate-file-size-matches-the-expected-length.cs
 - validate-that-the-exported-certificate-stream-length-matches-the-original-file-size.cs
 - programmatically-check-each-workbook-in-a-collection-for-unsigned-vba-projects-and-log-file-names.cs
+- use-a-trycatch-block-to-handle-exceptions-when-exporting-a-certificate-from-an-unsigned-vba-project.cs
