@@ -716,6 +716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "confirm-that-the-exported-certificate-file-size-matches-the-expected-length.cs",
+      "title": "Confirm that the exported certificate file size matches the expected length."
+    },
+    {
+      "category": "macro-project",
       "file": "copy-a-vba-module-from-one-workbook-to-another-preserving-its-original-code-and-attributes.cs",
       "title": "Copy a VBA module from one workbook to another, preserving its original code and attributes."
     },

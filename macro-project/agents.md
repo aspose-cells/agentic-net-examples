@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs
 - export-the-vba-projects-digital-certificate-to-a-file-path.cs
 - export-the-vba-projects-digital-certificate-to-a-memorystream-for-further-processing.cs
+- confirm-that-the-exported-certificate-file-size-matches-the-expected-length.cs
