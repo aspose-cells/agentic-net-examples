@@ -1811,6 +1811,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-lightcells-to-iterate-rows-and-write-each-rows-data-to-a-csv-file-for-external-processing.cs",
+      "title": "Use LightCells to iterate rows and write each row's data to a CSV file for external processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs",
       "title": "Validate that required worksheets \"Invoice\" and \"Summary\" exist after loading, throwing an exception if missing."
     },
