@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - create-a-utility-that-converts-date-columns-in-multiple-xls-files-to-japanese-era-format-and-outputs-pdfs.cs
 - test-that-overriding-getgrandtotalname-does-not-affect-subtotal-labels-when-both-custom-settings-are-applied-simultaneously.cs
 - implement-logging-to-capture-which-culturespecific-label-methods-are-called-during-chart-rendering-for-debugging.cs
+- design-a-workflow-that-loads-a-workbook-with-arabic-cultureinfo-adds-righttoleft-subtotals-and-saves-as-pdf.cs
