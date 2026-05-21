@@ -451,6 +451,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "design-a-workflow-that-loads-a-workbook-with-arabic-cultureinfo-adds-righttoleft-subtotals-and-saves-as-pdf.cs",
+      "title": "Design a workflow that loads a workbook with Arabic CultureInfo, adds right\u2011to\u2011left subtotals, and saves as PDF."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-chartglobalizationsettings-derivative-that-overrides-getothername-for-a-localized-piechart-other-label.cs",
       "title": "Develop a ChartGlobalizationSettings derivative that overrides GetOtherName for a localized pie\u2011chart \u201cOther\u201d label."
     },
