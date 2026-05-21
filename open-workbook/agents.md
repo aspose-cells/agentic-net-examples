@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - apply-filterobjects-to-exclude-data-validation-rules-during-loading-reducing-memory-footprint-for-simple-data-extraction-tasks.cs
 - read-cell-comments-using-lightcells-api-and-write-them-to-a-separate-json-file-for-documentation-purposes.cs
 - write-cell-comments-while-saving-a-workbook-with-lightcellsdataprovider-to-preserve-user-annotations-in-the-output-file.cs
+- load-a-workbook-and-filter-out-all-conditional-formatting-rules-to-improve-loading-speed-for-analysis-pipelines.cs
