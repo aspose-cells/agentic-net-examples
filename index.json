@@ -1711,6 +1711,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "export-hyperlinks-from-a-workbook-using-lightcells-api-and-generate-a-report-listing-url-targets-and-cell-addresses.cs",
+      "title": "Export hyperlinks from a workbook using LightCells API and generate a report listing URL targets and cell addresses."
+    },
+    {
+      "category": "open-workbook",
       "file": "extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs",
       "title": "Extract all formulas from loaded worksheets and store them in a dictionary keyed by cell address."
     },
