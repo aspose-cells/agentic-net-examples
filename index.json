@@ -3975,6 +3975,11 @@
       "title": "Use INDEX and MATCH functions to build a dynamic range for a secondary axis data source."
     },
     {
+      "category": "working-with-charts",
+      "file": "validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs",
+      "title": "Validate that the image file exists before assigning it to the chart background fill."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
