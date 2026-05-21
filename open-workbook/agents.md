@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs
 - load-a-partially-corrupted-excel-file-while-capturing-warnings-then-continue-processing-the-recoverable-content.cs
 - batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs
+- enumerate-all-loaded-worksheets-after-opening-a-workbook-and-output-their-names-to-the-console.cs
