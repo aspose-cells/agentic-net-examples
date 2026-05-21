@@ -3936,6 +3936,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "refresh-the-chart-display-by-calling-chartrefresh-after-modifying-labels-and-colors.cs",
+      "title": "Refresh the chart display by calling Chart.Refresh after modifying labels and colors."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-a-specific-series-from-the-chart-by-index-to-simplify-the-visual-representation.cs",
       "title": "Remove a specific series from the chart by index to simplify the visual representation."
     },
