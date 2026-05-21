@@ -1206,6 +1206,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-a-vba-project-after-copying-it-to-ensure-integrity-remains-intact.cs",
+      "title": "Validate the digital signature of a VBA project after copying it to ensure integrity remains intact."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-the-vba-project-and-report-any-verification-errors.cs",
       "title": "Validate the digital signature of the VBA project and report any verification errors."
     },

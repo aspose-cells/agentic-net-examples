@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - sign-the-vba-project-with-a-certificate-stored-in-the-windows-certificate-store-using-its-thumbprint.cs
 - validate-the-digital-signature-of-the-vba-project-and-report-any-verification-errors.cs
 - validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs
+- validate-the-digital-signature-of-a-vba-project-after-copying-it-to-ensure-integrity-remains-intact.cs
