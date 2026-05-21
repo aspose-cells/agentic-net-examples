@@ -1686,6 +1686,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs",
+      "title": "Include worksheets matching the pattern \"Q[0-9]+\" using LoadOptions.LoadFilter with a regular expression filter."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
       "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
     },
