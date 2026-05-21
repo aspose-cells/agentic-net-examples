@@ -691,6 +691,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs",
+      "title": "Add a registered library reference to the VBA project using VbaProject.References.AddRegisteredReference."
+    },
+    {
+      "category": "macro-project",
       "file": "apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs",
       "title": "Apply password protection only when the workbook contains more than ten worksheets to enforce policy."
     },

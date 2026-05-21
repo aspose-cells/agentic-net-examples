@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - load-an-existing-xlsm-workbook-from-a-file-path-into-a-workbook-object.cs
 - retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs
 - verify-the-vba-projects-digital-signature-status-using-the-issigned-property.cs
+- add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs
