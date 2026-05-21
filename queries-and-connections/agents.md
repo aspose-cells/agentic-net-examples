@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs
 - add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs
 - define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs
+- disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs
