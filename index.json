@@ -751,6 +751,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "ensure-the-solution-complies-with-security-best-practices-when-handling-external-file-paths.cs",
+      "title": "Ensure the solution complies with security best practices when handling external file paths."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs",
       "title": "Export a list of all external connection names from a workbook to a plain text file."
     },
