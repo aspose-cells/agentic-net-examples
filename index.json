@@ -401,6 +401,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "develop-a-chartglobalizationsettings-derivative-that-overrides-getothername-for-a-localized-piechart-other-label.cs",
+      "title": "Develop a ChartGlobalizationSettings derivative that overrides GetOtherName for a localized pie\u2011chart \u201cOther\u201d label."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs",
       "title": "Develop a console application that prompts users to select a target language and applies localization to a workbook."
     },
