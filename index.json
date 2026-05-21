@@ -365,6 +365,11 @@
       "title": "Create a custom GlobalizationSettings class overriding GetLocalFunctionName for target language functions."
     },
     {
+      "category": "globalization-and-localization",
+      "file": "override-geterrorstring-in-the-custom-class-to-provide-localized-error-messages-for-excel-errors.cs",
+      "title": "Override GetErrorString in the custom class to provide localized error messages for Excel errors."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
