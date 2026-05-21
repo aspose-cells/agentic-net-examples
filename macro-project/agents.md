@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - open-a-macro-enabled-workbook-while-skipping-worksheet-content-by-applying-the-vba-filter.cs
 - verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs
 - check-if-the-vba-project-is-locked-for-viewing-before-extracting-macros.cs
+- retrieve-the-list-of-com-library-references-from-the-vba-project-and-log-each-reference-name.cs
