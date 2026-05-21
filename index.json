@@ -911,6 +911,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "validate-that-the-imported-ribbon-xml-conforms-to-the-office-open-xml-schema-before-applying.cs",
+      "title": "Validate that the imported Ribbon XML conforms to the Office Open XML schema before applying."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs",
       "title": "Validate that the new external link path points to an existing file before applying changes."
     },

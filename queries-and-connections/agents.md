@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - hide-the-refresh-all-command-on-specific-worksheets-via-customized-ribbon-xml.cs
 - export-the-custom-ribbon-xml-to-a-separate-xml-file-for-version-control.cs
 - import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs
+- validate-that-the-imported-ribbon-xml-conforms-to-the-office-open-xml-schema-before-applying.cs
