@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-an-existing-pie-chart-to-a-doughnut-chart-by-updating-its-charttype-property.cs",
+      "title": "Change an existing pie chart to a doughnut chart by updating its ChartType property."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-bubble-chart-data-by-linking-xvalues-values-and-bubblesizes-to-three-separate-ranges.cs",
       "title": "Configure bubble chart data by linking XValues, Values, and BubbleSizes to three separate ranges."
     },
