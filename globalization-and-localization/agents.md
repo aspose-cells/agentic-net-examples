@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - create-a-subclass-of-globalizationsettings-overriding-getgrandtotalname-to-supply-a-culturespecific-grand-total-label.cs
 - develop-a-chartglobalizationsettings-derivative-that-overrides-getothername-for-a-localized-piechart-other-label.cs
 - assign-the-custom-globalizationsettings-to-the-workbook-before-adding-subtotals-to-ensure-localized-labels.cs
+- add-subtotal-rows-to-the-worksheet-after-assigning-custom-globalizationsettings-verifying-localized-total-labels.cs
