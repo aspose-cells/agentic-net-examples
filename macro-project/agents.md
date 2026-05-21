@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - create-a-unit-test-that-verifies-macro-assignment-fails-when-the-macro-name-does-not-exist.cs
 - implement-a-method-that-copies-a-macro-from-one-workbook-to-another-and-updates-control-references.cs
 - assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs
+- generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs
