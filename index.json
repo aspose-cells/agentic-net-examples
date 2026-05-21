@@ -3656,6 +3656,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "batch-add-identical-chart-templates-to-each-worksheet-in-a-workbook-using-a-loop.cs",
+      "title": "Batch add identical chart templates to each worksheet in a workbook using a loop."
+    },
+    {
+      "category": "working-with-charts",
       "file": "bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs",
       "title": "Bind the chart to the OFFSET\u2011based named range for automatic expansion with new data."
     },
