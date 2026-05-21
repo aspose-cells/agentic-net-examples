@@ -3711,6 +3711,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-chart-as-a-png-image-with-300-dpi-resolution-and-store-alongside-the-workbook.cs",
+      "title": "Export the chart as a PNG image with 300 DPI resolution and store alongside the workbook."
+    },
+    {
+      "category": "working-with-charts",
       "file": "format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs",
       "title": "Format data labels to show percentages with one decimal place on a pie chart."
     },
