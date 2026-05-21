@@ -1686,6 +1686,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "filter-rows-where-column-c-equals-active-while-streaming-with-lightcells-writing-matching-rows-to-a-new-sheet.cs",
+      "title": "Filter rows where column C equals \"Active\" while streaming with LightCells, writing matching rows to a new sheet."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs",
       "title": "Implement an InterruptMonitor that aborts workbook loading after ten seconds to prevent excessive processing time."
     },
