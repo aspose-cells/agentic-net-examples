@@ -701,6 +701,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-a-macroenabled-workbook-from-a-memory-stream-and-verify-it-contains-at-least-one-module.cs",
+      "title": "Load a macro\u2011enabled workbook from a memory stream and verify it contains at least one module."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-xlsm-workbook-from-disk-and-obtain-its-vbaproject-object-for-analysis.cs",
       "title": "Load an XLSM workbook from disk and obtain its VbaProject object for analysis."
     },
