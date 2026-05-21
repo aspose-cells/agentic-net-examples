@@ -666,6 +666,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "assign-a-keyboard-shortcut-to-the-custom-ribbon-button-for-quick-access.cs",
+      "title": "Assign a keyboard shortcut to the custom ribbon button for quick access."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs",
       "title": "Change Description property of a DBConnection to reflect its new purpose after migration."
     },
