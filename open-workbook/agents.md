@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs
 - apply-filterobjects-to-exclude-data-validation-rules-during-loading-reducing-memory-footprint-for-simple-data-extraction-tasks.cs
 - read-cell-comments-using-lightcells-api-and-write-them-to-a-separate-json-file-for-documentation-purposes.cs
+- write-cell-comments-while-saving-a-workbook-with-lightcellsdataprovider-to-preserve-user-annotations-in-the-output-file.cs
