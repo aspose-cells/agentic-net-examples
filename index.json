@@ -685,6 +685,11 @@
       "title": "Write unit tests for GetErrorString covering standard Excel error codes across multiple locales."
     },
     {
+      "category": "macro-project",
+      "file": "load-an-xlsm-workbook-from-disk-and-obtain-its-vbaproject-object-for-analysis.cs",
+      "title": "Load an XLSM workbook from disk and obtain its VbaProject object for analysis."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
