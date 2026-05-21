@@ -3051,6 +3051,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "preserve-data-labels-visibility-when-converting-a-chart-to-png-to-retain-informational-context.cs",
+      "title": "Preserve data labels visibility when converting a chart to PNG to retain informational context."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs",
       "title": "Render a chart object from the workbook to a PNG image using the ChartRender API."
     },
