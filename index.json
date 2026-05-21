@@ -2396,6 +2396,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-a-worksheet-to-jpeg-with-gridlines-hidden-by-setting-isgridlinesvisible-to-false.cs",
+      "title": "Render a worksheet to JPEG with gridlines hidden by setting IsGridLinesVisible to false."
+    },
+    {
+      "category": "working-with-images",
       "file": "save-a-generated-tiff-file-directly-to-a-network-share-path-after-converting-the-workbook.cs",
       "title": "Save a generated TIFF file directly to a network share path after converting the workbook."
     },

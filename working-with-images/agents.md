@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - specify-a-white-background-color-in-imageorprintoptions-when-rendering-workbook-to-tiff-to-ensure-consistency.cs
 - convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs
 - export-the-worksheet-named-chart-to-bmp-at-96-dpi-resolution-for-legacy-image-compatibility.cs
+- render-a-worksheet-to-jpeg-with-gridlines-hidden-by-setting-isgridlinesvisible-to-false.cs
