@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - implement-a-method-to-reset-globalizationsettings-to-default-english-behavior-for-specific-worksheets.cs
 - create-a-configuration-file-mapping-locale-identifiers-to-corresponding-custom-globalizationsettings-classes.cs
 - load-the-configuration-at-runtime-and-instantiate-the-appropriate-localization-class-based-on-user-input.cs
+- develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs
