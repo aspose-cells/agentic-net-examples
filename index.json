@@ -586,6 +586,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "write-a-script-that-extracts-chart-images-applies-a-localized-other-label-and-saves-them-as-pdf-pages.cs",
+      "title": "Write a script that extracts chart images, applies a localized \u201cOther\u201d label, and saves them as PDF pages."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "write-unit-tests-asserting-getlocalfunctionname-returns-expected-localized-equivalents-for-common-functions.cs",
       "title": "Write unit tests asserting GetLocalFunctionName returns expected localized equivalents for common functions."
     },

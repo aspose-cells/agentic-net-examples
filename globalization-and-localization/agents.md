@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - implement-a-method-that-switches-globalizationsettings-at-runtime-based-on-userselected-language-before-chart-creation.cs
 - generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs
 - apply-custom-number-format-strings-to-percentage-cells-after-loading-the-workbook-with-brazilian-portuguese-cultureinfo.cs
+- write-a-script-that-extracts-chart-images-applies-a-localized-other-label-and-saves-them-as-pdf-pages.cs
