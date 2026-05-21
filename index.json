@@ -3971,6 +3971,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-a-passwordprotected-xls-file-then-retrieve-the-chart-located-on-the-second-worksheet.cs",
+      "title": "Open a password\u2011protected XLS file, then retrieve the chart located on the second worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
       "title": "Position the chart at row 15, column 3 with a width of 400 points."
     },
