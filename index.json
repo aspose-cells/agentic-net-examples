@@ -1156,6 +1156,11 @@
     },
     {
       "category": "macro-project",
+      "file": "sign-the-vba-project-with-a-certificate-stored-in-the-windows-certificate-store-using-its-thumbprint.cs",
+      "title": "Sign the VBA project with a certificate stored in the Windows certificate store using its thumbprint."
+    },
+    {
+      "category": "macro-project",
       "file": "sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs",
       "title": "Sign workbook using certificate from Windows store selected by subject name for code signing."
     },
