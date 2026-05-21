@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - save-the-localized-workbook-as-xlsx-preserving-original-formatting-comments-and-cell-styles.cs
 - generate-a-report-listing-processed-workbooks-applied-locales-and-any-localization-errors-encountered.cs
 - implement-fallback-to-english-function-names-when-a-requested-locale-lacks-a-defined-mapping.cs
+- log-each-overridden-method-call-to-a-debug-file-for-troubleshooting-localization-behavior-at-runtime.cs
