@@ -2356,6 +2356,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs",
+      "title": "Convert a worksheet to SVG with the viewBox attribute enabled for scalable rendering."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-an-entire-workbook-to-a-multipage-tiff-using-default-rendering-options.cs",
       "title": "Convert an entire workbook to a multi\u2011page TIFF using default rendering options."
     },

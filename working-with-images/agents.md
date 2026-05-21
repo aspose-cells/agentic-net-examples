@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - store-the-png-worksheet-image-in-azure-blob-storage-with-custom-metadata-for-categorization.cs
 - send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs
 - perform-pixelbypixel-comparison-between-the-generated-png-worksheet-image-and-a-baseline-reference.cs
+- convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs
