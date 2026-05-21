@@ -3661,6 +3661,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "define-a-dynamic-named-range-using-offset-based-on-nonempty-rows-in-column-a.cs",
+      "title": "Define a dynamic named range using OFFSET based on non\u2011empty rows in column A."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-chart-category-labels-by-linking-the-categorydata-property-to-range-b2b8.cs",
       "title": "Define chart category labels by linking the CategoryData property to range B2:B8."
     },
