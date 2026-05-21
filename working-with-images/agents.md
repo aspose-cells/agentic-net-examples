@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs
 - convert-a-worksheet-to-png-and-embed-the-resulting-image-as-a-base64-string-in-json.cs
 - render-a-worksheet-to-jpeg-and-upload-the-image-file-to-a-cloud-storage-bucket.cs
+- store-the-png-worksheet-image-in-azure-blob-storage-with-custom-metadata-for-categorization.cs

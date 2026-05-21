@@ -2431,6 +2431,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "store-the-png-worksheet-image-in-azure-blob-storage-with-custom-metadata-for-categorization.cs",
+      "title": "Store the PNG worksheet image in Azure Blob Storage with custom metadata for categorization."
+    },
+    {
+      "category": "working-with-images",
       "file": "track-workbooktotiff-conversion-progress-by-handling-the-conversion-progress-event-and-logging-percentages.cs",
       "title": "Track workbook\u2011to\u2011TIFF conversion progress by handling the conversion progress event and logging percentages."
     },
