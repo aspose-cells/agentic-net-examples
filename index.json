@@ -1791,6 +1791,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-large-workbook-with-lightcells-api-and-save-directly-to-pdf.cs",
+      "title": "Load a large workbook with LightCells API and save directly to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs",
       "title": "Load a legacy XLS file from a Stream object to process its data in memory."
     },
