@@ -1701,6 +1701,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs",
+      "title": "Load a workbook while excluding chart objects, then verify that the resulting worksheets contain zero charts."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-while-ignoring-all-external-links-by-setting-loadoptionsignoreexternallinks-to-true.cs",
       "title": "Load a workbook while ignoring all external links by setting LoadOptions.IgnoreExternalLinks to true."
     },

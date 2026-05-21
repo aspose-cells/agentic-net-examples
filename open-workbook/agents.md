@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - export-a-loaded-workbook-to-html-and-use-interruptmonitor-to-stop-the-process-after-a-defined-timeout.cs
 - save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs
 - use-lightcells-to-iterate-rows-and-write-each-rows-data-to-a-csv-file-for-external-processing.cs
+- load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs
