@@ -1846,6 +1846,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-to-disable-charts-load-only-worksheets-0-and-2-and-save-to-pdf.cs",
+      "title": "Load a workbook using LoadOptions to disable charts, load only worksheets 0 and 2, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-using-loadoptions-to-disable-charts-set-printer-paper-size-a5-and-save-to-pdf.cs",
       "title": "Load a workbook using LoadOptions to disable charts, set printer paper size A5, and save to PDF."
     },
