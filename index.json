@@ -2046,6 +2046,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "write-merged-cells-while-streaming-data-with-lightcellsdataprovider-to-preserve-complex-table-structures-in-large-excel-files.cs",
+      "title": "Write merged cells while streaming data with LightCellsDataProvider to preserve complex table structures in large Excel files."
+    },
+    {
+      "category": "open-workbook",
       "file": "write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs",
       "title": "Write pivot table definitions while saving with LightCellsDataProvider to recreate analytical views in the output workbook."
     },
