@@ -3631,6 +3631,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-radial-gradient-fill-to-the-chart-using-three-color-stops-for-smooth-transition.cs",
+      "title": "Apply a radial gradient fill to the chart using three color stops for smooth transition."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-a-named-range-called-salesdata-as-the-chart-source-using-setchartdatarange.cs",
       "title": "Assign a named range called SalesData as the chart source using SetChartDataRange."
     },
