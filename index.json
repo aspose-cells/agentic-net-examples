@@ -1790,6 +1790,11 @@
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
     {
+      "category": "open-workbook",
+      "file": "validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs",
+      "title": "Validate that required worksheets \"Invoice\" and \"Summary\" exist after loading, throwing an exception if missing."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."

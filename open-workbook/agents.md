@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs
 - enumerate-all-loaded-worksheets-after-opening-a-workbook-and-output-their-names-to-the-console.cs
 - read-cell-values-with-culturespecific-number-formatting-after-loading-a-workbook-to-ensure-correct-decimals.cs
+- validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs
