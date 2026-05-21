@@ -3926,6 +3926,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-through-all-worksheets-in-a-workbook-and-list-each-charts-name-and-type.cs",
+      "title": "Iterate through all worksheets in a workbook and list each chart\u2019s name and type."
+    },
+    {
+      "category": "working-with-charts",
       "file": "link-a-chart-series-to-a-named-range-called-salesdata-for-dynamic-updates.cs",
       "title": "Link a chart series to a named range called SalesData for dynamic updates."
     },
