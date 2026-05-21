@@ -926,6 +926,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "use-a-file-picker-dialog-in-the-ribbon-button-to-select-the-new-external-data-source-file.cs",
+      "title": "Use a file picker dialog in the ribbon button to select the new external data source file."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "use-workbookdatamashup-to-extract-odata-service-urls-and-store-them-in-a-json-configuration-file.cs",
       "title": "Use Workbook.DataMashup to extract OData service URLs and store them in a JSON configuration file."
     },
