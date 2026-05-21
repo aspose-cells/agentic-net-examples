@@ -1611,6 +1611,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "interrupt-a-longrunning-workbook-load-operation-by-configuring-an-interruptmonitor-and-calling-its-cancel-method.cs",
+      "title": "Interrupt a long\u2011running workbook load operation by configuring an InterruptMonitor and calling its Cancel method."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs",
       "title": "Load a legacy XLS file from a Stream object to process its data in memory."
     },
