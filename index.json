@@ -2351,6 +2351,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-worksheet-to-png-and-embed-the-resulting-image-as-a-base64-string-in-json.cs",
+      "title": "Convert a worksheet to PNG and embed the resulting image as a base64 string in JSON."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-an-entire-workbook-to-a-multipage-tiff-using-default-rendering-options.cs",
       "title": "Convert an entire workbook to a multi\u2011page TIFF using default rendering options."
     },

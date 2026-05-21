@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - export-the-worksheet-named-chart-to-bmp-at-96-dpi-resolution-for-legacy-image-compatibility.cs
 - render-a-worksheet-to-jpeg-with-gridlines-hidden-by-setting-isgridlinesvisible-to-false.cs
 - generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs
+- convert-a-worksheet-to-png-and-embed-the-resulting-image-as-a-base64-string-in-json.cs
