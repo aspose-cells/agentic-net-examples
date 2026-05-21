@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs
 - implement-error-handling-around-vbaprojectprotect-to-capture-exceptions-when-an-empty-password-is-supplied.cs
 - export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs
+- load-a-workbook-from-a-network-share-protect-its-vba-project-and-verify-protection-after-saving.cs
