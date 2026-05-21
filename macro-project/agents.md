@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - if-the-project-is-unprotected-apply-password-protection-with-the-protect-method-and-a-strong-password.cs
 - create-a-new-vba-module-named-automation-within-the-vbaproject.cs
 - insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs
+- save-the-modified-workbook-as-an-xlsm-file-to-preserve-the-added-vba-code.cs
