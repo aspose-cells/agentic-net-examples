@@ -2040,6 +2040,11 @@
       "title": "Write cell comments while saving a workbook with LightCellsDataProvider to preserve user annotations in the output file."
     },
     {
+      "category": "open-workbook",
+      "file": "write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs",
+      "title": "Write pivot table definitions while saving with LightCellsDataProvider to recreate analytical views in the output workbook."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."

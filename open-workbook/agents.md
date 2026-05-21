@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - configure-lightcells-to-use-a-custom-buffer-size-for-reading-cells-optimizing-performance-for-highthroughput-scenarios.cs
 - save-a-workbook-with-culturespecific-number-formats-by-setting-appropriate-locale-settings-in-lightcellsdataprovider.cs
 - load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs
+- write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs
