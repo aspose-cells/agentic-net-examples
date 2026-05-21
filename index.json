@@ -1786,6 +1786,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs",
+      "title": "Load a workbook with specific print area defined, then extract only the cells within that area using LightCells."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
       "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
     },
