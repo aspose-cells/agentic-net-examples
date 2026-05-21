@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - validate-the-digital-signature-of-the-vba-project-and-report-any-verification-errors.cs
 - validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs
 - validate-the-digital-signature-of-a-vba-project-after-copying-it-to-ensure-integrity-remains-intact.cs
+- validate-the-digital-signature-of-a-vba-project-after-adding-a-new-macro-to-ensure-the-signature-reflects-changes.cs

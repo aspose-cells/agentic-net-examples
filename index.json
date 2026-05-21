@@ -1206,6 +1206,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-a-vba-project-after-adding-a-new-macro-to-ensure-the-signature-reflects-changes.cs",
+      "title": "Validate the digital signature of a VBA project after adding a new macro to ensure the signature reflects changes."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-digital-signature-of-a-vba-project-after-copying-it-to-ensure-integrity-remains-intact.cs",
       "title": "Validate the digital signature of a VBA project after copying it to ensure integrity remains intact."
     },
