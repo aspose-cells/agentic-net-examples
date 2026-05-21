@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - attempt-to-unlock-a-vba-project-locked-for-viewing-using-provided-credentials-and-report-the-result.cs
 - generate-a-summary-of-all-vba-modules-including-line-counts-and-write-the-report-to-a-text-file.cs
 - apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs
+- delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs
