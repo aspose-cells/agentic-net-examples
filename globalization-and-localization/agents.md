@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - log-performance-metrics-for-each-localization-step-during-batch-processing-to-identify-bottlenecks.cs
 - create-a-diagnostic-tool-that-compares-original-english-formulas-with-localized-versions-for-accuracy-verification.cs
 - provide-documentation-examples-showing-how-to-toggle-between-english-and-localized-function-names-using-formulalocal.cs
+- load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs

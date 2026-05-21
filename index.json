@@ -426,6 +426,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs",
+      "title": "Load an XLSX workbook using LoadOptions with CultureInfo set to French, preserving thread culture."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "load-the-configuration-at-runtime-and-instantiate-the-appropriate-localization-class-based-on-user-input.cs",
       "title": "Load the configuration at runtime and instantiate the appropriate localization class based on user input."
     },
