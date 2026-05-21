@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-as-an-xlsm-file-to-preserve-the-added-vba-code.cs
 - load-a-macroenabled-workbook-from-a-memory-stream-and-verify-it-contains-at-least-one-module.cs
 - enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs
+- remove-a-specified-module-using-modulesremoveat-and-save-the-workbook-to-apply-changes.cs
