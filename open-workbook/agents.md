@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - automatically-detect-the-workbook-format-by-passing-only-the-file-path-to-the-workbook-constructor.cs
 - open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs
 - load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs
+- load-only-defined-names-from-a-workbook-by-setting-loadoptionsloadfilter-to-a-predefined-definednamesfilter.cs
