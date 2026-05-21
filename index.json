@@ -1606,6 +1606,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs",
+      "title": "Batch load multiple workbooks using the same LoadOptions configuration to apply consistent worksheet filtering."
+    },
+    {
+      "category": "open-workbook",
       "file": "calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs",
       "title": "Calculate all formulas in the loaded workbook by invoking Workbook.CalculateFormula after the file is opened."
     },
