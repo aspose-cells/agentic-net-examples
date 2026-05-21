@@ -1636,6 +1636,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "configure-lightcells-to-process-cells-in-rowmajor-order-for-optimal-cache-utilization-during-large-file-reads.cs",
+      "title": "Configure LightCells to process cells in row\u2011major order for optimal cache utilization during large file reads."
+    },
+    {
+      "category": "open-workbook",
       "file": "configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs",
       "title": "Configure LoadOptions to load only the workbook's custom XML parts for metadata extraction without loading cell data."
     },
