@@ -751,6 +751,11 @@
     },
     {
       "category": "macro-project",
+      "file": "batch-process-a-folder-of-macro-enabled-workbooks-adding-a-printing-prevention-macro-to-each-file.cs",
+      "title": "Batch process a folder of macro-enabled workbooks, adding a printing-prevention macro to each file."
+    },
+    {
+      "category": "macro-project",
       "file": "batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs",
       "title": "Batch process workbooks to add a standard library reference, then generate a summary of successes and failures."
     },

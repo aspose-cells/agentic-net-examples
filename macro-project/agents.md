@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-vba-data-filtered-then-list-all-form-controls-that-have-macros-assigned.cs
 - load-a-workbook-with-vba-filter-then-extract-the-vba-projects-description-property-for-metadata.cs
 - load-a-workbook-with-vba-filter-then-extract-the-vba-projects-author-metadata-for-documentation.cs
+- batch-process-a-folder-of-macro-enabled-workbooks-adding-a-printing-prevention-macro-to-each-file.cs
