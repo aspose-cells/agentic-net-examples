@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - load-a-large-workbook-with-lightcells-api-and-save-directly-to-pdf.cs
 - load-only-worksheets-with-indexes-0-and-2-using-loadoptions-and-export-them-to-separate-pdf-files.cs
 - filter-defined-names-containing-total-during-load-and-verify-that-only-those-names-are-retained.cs
+- configure-interruptmonitor-to-abort-loading-if-processing-exceeds-30-seconds-and-log-the-interruption-event.cs
