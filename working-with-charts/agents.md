@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - add-a-pie-chart-object-to-the-worksheet-using-charttypepie.cs
 - set-the-charts-data-source-range-to-the-populated-cells-via-chartsetdatarange-method.cs
 - enable-leader-lines-on-the-pie-chart-by-setting-chartshowleaderlines-property-to-true.cs
+- iterate-over-each-chartseries-and-assign-custom-foregroundcolor-to-specific-chartpoints.cs

@@ -3871,6 +3871,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-over-each-chartseries-and-assign-custom-foregroundcolor-to-specific-chartpoints.cs",
+      "title": "Iterate over each ChartSeries and assign custom ForegroundColor to specific ChartPoints."
+    },
+    {
+      "category": "working-with-charts",
       "file": "iterate-through-a-collection-of-workbooks-add-a-predefined-chart-template-to-each-and-save-changes.cs",
       "title": "Iterate through a collection of workbooks, add a predefined chart template to each, and save changes."
     },
