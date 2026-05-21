@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs
 - check-the-issigned-property-after-adding-a-digital-signature-to-a-vba-project-programmatically.cs
 - create-a-unit-test-that-verifies-macro-assignment-fails-when-the-macro-name-does-not-exist.cs
+- implement-a-method-that-copies-a-macro-from-one-workbook-to-another-and-updates-control-references.cs

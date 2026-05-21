@@ -811,6 +811,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-a-method-that-copies-a-macro-from-one-workbook-to-another-and-updates-control-references.cs",
+      "title": "Implement a method that copies a macro from one workbook to another and updates control references."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-error-handling-around-vbaprojectprotect-to-capture-exceptions-when-an-empty-password-is-supplied.cs",
       "title": "Implement error handling around VbaProject.Protect to capture exceptions when an empty password is supplied."
     },
