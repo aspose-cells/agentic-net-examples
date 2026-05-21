@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-a-function-that-checks-whether-a-workbook-contains-any-form-controls-before-assigning-macros.cs",
+      "title": "Implement a function that checks whether a workbook contains any form controls before assigning macros."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-a-method-that-copies-a-macro-from-one-workbook-to-another-and-updates-control-references.cs",
       "title": "Implement a method that copies a macro from one workbook to another and updates control references."
     },
