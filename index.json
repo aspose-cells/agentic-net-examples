@@ -3876,6 +3876,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-containing-the-modified-chart-as-an-xlsx-file-to-preserve-formatting.cs",
+      "title": "Save the workbook containing the modified chart as an XLSX file to preserve formatting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-a-predefined-texture-fill-on-the-chart-background-to-give-it-a-fabric-appearance.cs",
       "title": "Set a predefined texture fill on the chart background to give it a fabric appearance."
     },
