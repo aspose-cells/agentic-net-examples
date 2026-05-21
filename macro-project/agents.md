@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs
 - export-a-vba-certificate-to-a-temporary-file-then-load-it-into-an-x509certificate-object-for-inspection.cs
 - detect-and-report-any-duplicate-macro-names-across-multiple-vba-modules-within-a-single-workbook.cs
+- log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs
