@@ -3666,6 +3666,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "automate-chart-creation-for-each-worksheet-tab-using-a-loop-to-ensure-consistency.cs",
+      "title": "Automate chart creation for each worksheet tab using a loop to ensure consistency."
+    },
+    {
+      "category": "working-with-charts",
       "file": "batch-add-identical-chart-templates-to-each-worksheet-in-a-workbook-using-a-loop.cs",
       "title": "Batch add identical chart templates to each worksheet in a workbook using a loop."
     },

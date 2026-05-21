@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - assign-custom-colors-to-individual-pie-chart-slices-based-on-category-importance.cs
 - generate-a-chart-with-a-dynamic-number-of-series-based-on-the-count-of-data-rows.cs
 - apply-a-gradient-fill-for-the-plot-area-using-two-complementary-colors-for-depth.cs
+- automate-chart-creation-for-each-worksheet-tab-using-a-loop-to-ensure-consistency.cs
