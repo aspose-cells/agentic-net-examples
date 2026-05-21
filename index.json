@@ -1631,6 +1631,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "exclude-hidden-worksheets-during-load-by-configuring-loadoptionsloadfilter-to-ignore-them.cs",
+      "title": "Exclude hidden worksheets during load by configuring LoadOptions.LoadFilter to ignore them."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
       "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
     },
