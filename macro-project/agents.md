@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - implement-a-function-that-checks-whether-a-workbook-contains-any-form-controls-before-assigning-macros.cs
 - batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs
 - use-reflection-to-enumerate-all-vba-project-references-and-output-their-names-and-versions.cs
+- export-certificates-from-workbooks-using-asynchronous-tasks-to-improve-performance-on-large-file-sets.cs
