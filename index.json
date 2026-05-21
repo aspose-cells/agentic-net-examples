@@ -4006,6 +4006,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-each-generated-chart-image-as-a-png-file-named-after-its-worksheet-for-easy-identification.cs",
+      "title": "Save each generated chart image as a PNG file named after its worksheet for easy identification."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-containing-the-chart-as-an-xlsx-file-named-quarterlyreportxlsx-in-the-output-folder.cs",
       "title": "Save the workbook containing the chart as an XLSX file named QuarterlyReport.xlsx in the output folder."
     },
