@@ -3676,6 +3676,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "clone-an-existing-chart-change-its-series-colors-and-place-it-on-a-different-sheet.cs",
+      "title": "Clone an existing chart, change its series colors, and place it on a different sheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs",
       "title": "Configure a linear gradient fill for the chart background with two contrasting colors."
     },

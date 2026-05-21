@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-modified-chart-as-an-xlsx-file-to-preserve-formatting.cs
 - batch-add-identical-chart-templates-to-each-worksheet-in-a-workbook-using-a-loop.cs
 - update-the-chart-data-source-dynamically-based-on-userselected-date-range-values.cs
+- clone-an-existing-chart-change-its-series-colors-and-place-it-on-a-different-sheet.cs
