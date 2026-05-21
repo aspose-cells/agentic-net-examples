@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - validate-that-boolean-values-display-localized-truefalse-strings-in-cells-containing-logical-formulas.cs
 - write-unit-tests-asserting-getlocalfunctionname-returns-expected-localized-equivalents-for-common-functions.cs
 - write-unit-tests-for-geterrorstring-covering-standard-excel-error-codes-across-multiple-locales.cs
+- write-unit-tests-for-getbooleanstring-covering-true-false-and-null-values-in-different-locales.cs

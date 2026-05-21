@@ -431,6 +431,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "write-unit-tests-for-getbooleanstring-covering-true-false-and-null-values-in-different-locales.cs",
+      "title": "Write unit tests for GetBooleanString covering true, false, and null values in different locales."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "write-unit-tests-for-geterrorstring-covering-standard-excel-error-codes-across-multiple-locales.cs",
       "title": "Write unit tests for GetErrorString covering standard Excel error codes across multiple locales."
     },
