@@ -661,6 +661,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "change-the-absolute-path-of-an-external-link-data-source-file-programmatically-for-a-workbook.cs",
+      "title": "Change the absolute path of an external link data source file programmatically for a workbook."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs",
       "title": "Change the Path property of an external link in an XLS workbook to a network shared folder."
     },
