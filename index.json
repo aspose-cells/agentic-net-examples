@@ -1841,6 +1841,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-apply-printer-paper-size-a5-and-verify-that-the-generated-pdf-matches-the-specified-dimensions.cs",
+      "title": "Load a workbook, apply printer paper size A5, and verify that the generated PDF matches the specified dimensions."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs",
       "title": "Load a workbook containing pivot tables using LightCells API and extract pivot cache data for external reporting."
     },
