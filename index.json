@@ -2475,6 +2475,11 @@
       "title": "Track workbook\u2011to\u2011TIFF conversion progress by handling the conversion progress event and logging percentages."
     },
     {
+      "category": "working-with-images",
+      "file": "validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs",
+      "title": "Validate the SVG worksheet file against the SVG schema to ensure structural correctness."
+    },
+    {
       "category": "working-with-json",
       "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
       "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."

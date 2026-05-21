@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - embed-the-generated-svg-worksheet-file-into-an-html-document-using-the-object-tag-for-display.cs
 - save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs
 - compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs
+- validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs
