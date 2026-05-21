@@ -740,6 +740,11 @@
       "title": "Validate that all external connections have non\u2011empty credentials before saving the workbook."
     },
     {
+      "category": "queries-and-connections",
+      "file": "write-a-utility-that-lists-all-worksheets-containing-query-tables-and-outputs-their-names.cs",
+      "title": "Write a utility that lists all worksheets containing query tables and outputs their names."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
