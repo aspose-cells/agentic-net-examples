@@ -701,6 +701,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-reference-to-the-microsoft-outlook-object-library-in-the-vba-project-to-enable-email-automation.cs",
+      "title": "Add a reference to the Microsoft Outlook Object Library in the VBA project to enable email automation."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs",
       "title": "Add a registered library reference to the VBA project using VbaProject.References.AddRegisteredReference."
     },
