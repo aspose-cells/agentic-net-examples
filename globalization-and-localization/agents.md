@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - create-a-custom-globalizationsettings-class-overriding-getlocalfunctionname-for-target-language-functions.cs
 - override-geterrorstring-in-the-custom-class-to-provide-localized-error-messages-for-excel-errors.cs
+- override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs

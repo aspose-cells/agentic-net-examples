@@ -366,6 +366,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs",
+      "title": "Override GetBooleanString to return localized true/false strings for the selected locale."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "override-geterrorstring-in-the-custom-class-to-provide-localized-error-messages-for-excel-errors.cs",
       "title": "Override GetErrorString in the custom class to provide localized error messages for Excel errors."
     },
