@@ -1616,6 +1616,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "capture-load-warnings-about-unsupported-features-and-write-each-warning-message-to-the-application-log-file.cs",
+      "title": "Capture load warnings about unsupported features and write each warning message to the application log file."
+    },
+    {
+      "category": "open-workbook",
       "file": "configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs",
       "title": "Configure LoadOptions to load only the workbook's custom XML parts for metadata extraction without loading cell data."
     },
