@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - apply-a-predefined-chart-style-named-style20-to-ensure-visual-consistency-across-reports.cs
 - position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs
 - refresh-the-chart-after-updating-source-cells-to-ensure-displayed-data-reflects-latest-values.cs
+- export-the-chart-as-a-png-image-and-save-it-to-the-output-folder.cs
