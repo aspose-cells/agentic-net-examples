@@ -1921,6 +1921,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs",
+      "title": "Save a workbook as XLS while enabling temporary folder storage to handle large file size without exhausting RAM."
+    },
+    {
+      "category": "open-workbook",
       "file": "save-a-workbook-as-xlsx-while-specifying-a-custom-temporary-folder-for-intermediate-files-to-reduce-disk-io.cs",
       "title": "Save a workbook as XLSX while specifying a custom temporary folder for intermediate files to reduce disk I/O."
     },
