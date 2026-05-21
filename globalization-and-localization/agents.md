@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - test-that-overriding-getgrandtotalname-does-not-affect-subtotal-labels-when-both-custom-settings-are-applied-simultaneously.cs
 - implement-logging-to-capture-which-culturespecific-label-methods-are-called-during-chart-rendering-for-debugging.cs
 - design-a-workflow-that-loads-a-workbook-with-arabic-cultureinfo-adds-righttoleft-subtotals-and-saves-as-pdf.cs
+- create-a-function-that-returns-a-formatted-japanese-era-date-string-given-a-gregorian-datetime-input.cs
