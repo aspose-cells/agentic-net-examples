@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - obtain-resultrange-address-of-a-querytable-and-log-it-for-downstream-processing.cs
 - rename-an-existing-dbconnection-to-reflect-a-new-database-server-after-migration.cs
 - validate-that-all-external-connections-have-nonempty-credentials-before-saving-the-workbook.cs
+- save-the-modified-workbook-to-a-new-file-path-preserving-original-version-metadata.cs
