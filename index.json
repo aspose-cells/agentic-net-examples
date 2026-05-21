@@ -491,6 +491,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-a-feature-that-automatically-selects-the-appropriate-japanese-era-based-on-year-when-converting-dates-in-bulk.cs",
+      "title": "Implement a feature that automatically selects the appropriate Japanese era based on year when converting dates in bulk."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "implement-a-feature-that-switches-localization-at-runtime-based-on-user-selection-without-reloading-the-workbook.cs",
       "title": "Implement a feature that switches localization at runtime based on user selection without reloading the workbook."
     },
