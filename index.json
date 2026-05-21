@@ -696,6 +696,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "create-a-unit-test-that-validates-external-link-path-changes-and-custom-ribbon-integration.cs",
+      "title": "Create a unit test that validates external link path changes and custom ribbon integration."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs",
       "title": "Define a custom ribbon group within the \"Data Tools\" tab for connection management commands."
     },
