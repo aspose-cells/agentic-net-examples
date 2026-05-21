@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-check-each-workbook-in-a-collection-for-unsigned-vba-projects-and-log-file-names.cs",
+      "title": "Programmatically check each workbook in a collection for unsigned VBA projects and log file names."
+    },
+    {
+      "category": "macro-project",
       "file": "protect-all-xlsm-files-in-a-directory-applying-passwords-only-to-unprotected-vba-projects.cs",
       "title": "Protect all XLSM files in a directory, applying passwords only to unprotected VBA projects."
     },
