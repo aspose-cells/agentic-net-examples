@@ -830,6 +830,11 @@
       "title": "Validate that each added module contains a Sub Main entry point before committing workbook changes."
     },
     {
+      "category": "macro-project",
+      "file": "validate-that-the-vba-project-password-meets-minimum-length-requirements-before-invoking-the-protect-method.cs",
+      "title": "Validate that the VBA project password meets minimum length requirements before invoking the Protect method."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
