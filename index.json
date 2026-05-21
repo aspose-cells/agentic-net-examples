@@ -1596,6 +1596,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs",
+      "title": "After loading, iterate through workbook.LoadWarnings collection and output each warning message to console."
+    },
+    {
+      "category": "open-workbook",
       "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
       "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
     },
