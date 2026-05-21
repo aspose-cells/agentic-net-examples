@@ -966,6 +966,11 @@
     },
     {
       "category": "macro-project",
+      "file": "save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs",
+      "title": "Save the signed workbook to a new location, ensuring the digital signature remains intact."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-workbook-as-a-macroenabled-xlsm-file-to-the-specified-location.cs",
       "title": "Save the workbook as a macro\u2011enabled XLSM file to the specified location."
     },
