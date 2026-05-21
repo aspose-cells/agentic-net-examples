@@ -1071,6 +1071,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-that-vba-project-signature-becomes-invalid-after-modifying-macro-code-without-resigning.cs",
+      "title": "Verify that VBA project signature becomes invalid after modifying macro code without re\u2011signing."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-the-vba-projects-digital-signature-status-using-the-issigned-property.cs",
       "title": "Verify the VBA project's digital signature status using the IsSigned property."
     },
