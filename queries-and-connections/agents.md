@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - validate-that-the-imported-ribbon-xml-conforms-to-the-office-open-xml-schema-before-applying.cs
 - add-a-tooltip-to-the-custom-ribbon-button-describing-its-function-for-end-users.cs
 - assign-a-keyboard-shortcut-to-the-custom-ribbon-button-for-quick-access.cs
+- ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs
