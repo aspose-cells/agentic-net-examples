@@ -3816,6 +3816,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-leader-lines-on-the-pie-chart-by-setting-chartshowleaderlines-property-to-true.cs",
+      "title": "Enable leader lines on the pie chart by setting Chart.ShowLeaderLines property to true."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-the-chart-to-refresh-automatically-when-the-workbook-is-opened-ensuring-latest-data-is-displayed.cs",
       "title": "Enable the chart to refresh automatically when the workbook is opened, ensuring latest data is displayed."
     },
