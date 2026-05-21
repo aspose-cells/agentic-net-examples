@@ -716,6 +716,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "output-each-powerquery-formula-name-to-the-console-for-verification-purposes.cs",
+      "title": "Output each PowerQuery formula name to the console for verification purposes."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs",
       "title": "Refresh all external data connections sequentially to ensure data consistency across the workbook."
     },

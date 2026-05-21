@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - measure-and-log-the-time-taken-to-refresh-each-dbconnection-for-performance-analysis.cs
 - load-an-xls-workbook-using-the-workbook-class-and-access-its-datamashup-property.cs
 - extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs
+- output-each-powerquery-formula-name-to-the-console-for-verification-purposes.cs
