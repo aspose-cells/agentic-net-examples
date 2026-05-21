@@ -686,6 +686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "if-the-project-is-unprotected-apply-password-protection-with-the-protect-method-and-a-strong-password.cs",
+      "title": "If the project is unprotected, apply password protection with the Protect method and a strong password."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-xlsm-workbook-from-disk-and-obtain-its-vbaproject-object-for-analysis.cs",
       "title": "Load an XLSM workbook from disk and obtain its VbaProject object for analysis."
     },

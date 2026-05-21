@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-an-xlsm-workbook-from-disk-and-obtain-its-vbaproject-object-for-analysis.cs
+- if-the-project-is-unprotected-apply-password-protection-with-the-protect-method-and-a-strong-password.cs
