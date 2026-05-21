@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - set-htmlsaveoptionspagetitle-to-the-workbooks-filename-ensuring-each-html-file-displays-a-meaningful-title.cs
 - load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs
 - configure-memorysettingmemorypreference-to-low-before-opening-a-massive-xlsx-file-to-reduce-ram-usage.cs
+- apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs
