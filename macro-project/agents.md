@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - use-a-trycatch-block-to-handle-exceptions-when-exporting-a-certificate-from-an-unsigned-vba-project.cs
 - batch-export-certificates-from-all-signed-workbooks-in-a-folder-to-a-designated-output-directory.cs
 - compare-exported-certificate-files-with-original-certificates-to-detect-any-corruption-during-export.cs
+- add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs

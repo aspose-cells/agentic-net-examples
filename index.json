@@ -686,6 +686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs",
+      "title": "Add a custom reference to a VBA project that points to a COM library installed on the system."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-module-that-references-external-com-libraries-and-ensure-the-references-compile-correctly.cs",
       "title": "Add a module that references external COM libraries and ensure the references compile correctly."
     },
