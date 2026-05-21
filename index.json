@@ -436,6 +436,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-utility-that-converts-date-columns-in-multiple-xls-files-to-japanese-era-format-and-outputs-pdfs.cs",
+      "title": "Create a utility that converts date columns in multiple XLS files to Japanese era format and outputs PDFs."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-an-application-that-loads-a-workbook-with-italian-cultureinfo-adds-subtotals-and-saves-the-result-as-pdf.cs",
       "title": "Create an application that loads a workbook with Italian CultureInfo, adds subtotals, and saves the result as PDF."
     },
