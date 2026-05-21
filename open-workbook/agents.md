@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - filter-rows-where-column-c-equals-active-while-streaming-with-lightcells-writing-matching-rows-to-a-new-sheet.cs
 - set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
 - enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs
+- limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs

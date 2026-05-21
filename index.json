@@ -1716,6 +1716,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs",
+      "title": "Limit PDF output to the first ten pages by setting PdfSaveOptions.PageCount to ten before saving."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs",
       "title": "Load a legacy XLS file from a Stream object to process its data in memory."
     },
