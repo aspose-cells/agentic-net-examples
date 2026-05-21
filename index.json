@@ -1651,6 +1651,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
+      "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs",
       "title": "Load an Excel 97\u20112003 workbook by assigning LoadOptions.Version to Excel97to2003 during initialization."
     },
