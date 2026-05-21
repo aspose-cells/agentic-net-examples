@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - load-workbook-with-loadoptionsfiltervbaproject-to-include-only-signed-macros-for-further-processing.cs
 - generate-report-listing-signed-versus-unsigned-workbooks-in-specified-directory-for-compliance-review.cs
 - automate-signing-of-excel-files-in-continuous-integration-pipeline-to-enforce-macro-security.cs
+- use-asynchronous-tasks-to-sign-multiple-workbooks-concurrently-improving-processing-throughput-significantly.cs
