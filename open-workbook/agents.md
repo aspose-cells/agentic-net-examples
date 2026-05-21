@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - load-only-visible-worksheets-by-applying-filterobjects-then-process-each-visible-sheet-sequentially-using-lightcells.cs
 - configure-lightcells-to-use-a-custom-buffer-size-for-reading-cells-optimizing-performance-for-highthroughput-scenarios.cs
 - save-a-workbook-with-culturespecific-number-formats-by-setting-appropriate-locale-settings-in-lightcellsdataprovider.cs
+- load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs

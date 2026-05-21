@@ -1796,6 +1796,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs",
+      "title": "Load a workbook containing pivot tables using LightCells API and extract pivot cache data for external reporting."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs",
       "title": "Load a workbook from an HTTP response stream to process a remotely hosted Excel file without saving locally."
     },
