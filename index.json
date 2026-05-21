@@ -3651,6 +3651,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "link-a-chart-series-to-a-named-range-called-salesdata-for-dynamic-updates.cs",
+      "title": "Link a chart series to a named range called SalesData for dynamic updates."
+    },
+    {
+      "category": "working-with-charts",
       "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
       "title": "Position the chart at row 15, column 3 with a width of 400 points."
     },
