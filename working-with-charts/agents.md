@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - set-the-chart-fill-format-to-a-solid-color-with-80-percent-opacity-for-subtle-shading.cs
 - create-a-stacked-column-chart-with-three-series-and-customize-each-series-color-individually.cs
 - combine-area-and-line-chart-types-in-one-chart-to-visualize-trends-alongside-volume-data.cs
+- assign-custom-colors-to-individual-pie-chart-slices-based-on-category-importance.cs

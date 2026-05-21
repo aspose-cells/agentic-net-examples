@@ -3651,6 +3651,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-custom-colors-to-individual-pie-chart-slices-based-on-category-importance.cs",
+      "title": "Assign custom colors to individual pie chart slices based on category importance."
+    },
+    {
+      "category": "working-with-charts",
       "file": "autofit-the-chart-size-based-on-its-data-range-to-avoid-clipping.cs",
       "title": "Auto\u2011fit the chart size based on its data range to avoid clipping."
     },
