@@ -416,6 +416,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "validate-that-boolean-values-display-localized-truefalse-strings-in-cells-containing-logical-formulas.cs",
+      "title": "Validate that Boolean values display localized true/false strings in cells containing logical formulas."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "verify-that-localized-function-names-are-correctly-recognized-by-excel-when-the-workbook-is-opened.cs",
       "title": "Verify that localized function names are correctly recognized by Excel when the workbook is opened."
     },
