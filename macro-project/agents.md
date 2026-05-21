@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs
 - log-the-signing-result-to-console-output-indicating-success-or-failure-for-each-workbook.cs
 - batch-process-a-folder-of-excel-files-signing-each-vba-project-with-the-same-certificate.cs
+- batch-validate-signatures-of-multiple-workbooks-and-generate-a-summary-report-of-validation-statuses.cs
