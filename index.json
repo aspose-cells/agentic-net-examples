@@ -3661,6 +3661,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-chart-theme-to-the-builtin-office-theme-programmatically-for-consistent-styling.cs",
+      "title": "Change the chart theme to the built\u2011in \"Office\" theme programmatically for consistent styling."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs",
       "title": "Configure a linear gradient fill for the chart background with two contrasting colors."
     },
