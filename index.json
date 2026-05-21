@@ -3946,6 +3946,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-xlsx-workbook-from-a-file-path-and-obtain-the-first-chart-object.cs",
+      "title": "Load an XLSX workbook from a file path and obtain the first chart object."
+    },
+    {
+      "category": "working-with-charts",
       "file": "lock-the-chart-object-programmatically-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs",
       "title": "Lock the chart object programmatically to prevent users from moving or resizing it in the Excel UI."
     },
