@@ -446,6 +446,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "verify-that-chart-titles-and-axis-labels-display-localized-text-when-source-cells-contain-localized-strings.cs",
+      "title": "Verify that chart titles and axis labels display localized text when source cells contain localized strings."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "verify-that-localized-function-names-are-correctly-recognized-by-excel-when-the-workbook-is-opened.cs",
       "title": "Verify that localized function names are correctly recognized by Excel when the workbook is opened."
     },
