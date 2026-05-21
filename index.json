@@ -751,6 +751,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "hide-the-refresh-all-command-on-specific-worksheets-via-customized-ribbon-xml.cs",
+      "title": "Hide the \"Refresh All\" command on specific worksheets via customized Ribbon XML."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
       "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
     },
