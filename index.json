@@ -3686,6 +3686,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "combine-area-and-line-chart-types-in-one-chart-to-visualize-trends-alongside-volume-data.cs",
+      "title": "Combine area and line chart types in one chart to visualize trends alongside volume data."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs",
       "title": "Configure a linear gradient fill for the chart background with two contrasting colors."
     },
