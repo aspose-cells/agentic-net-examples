@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - export-the-vba-projects-certificate-to-a-file-path-and-verify-the-file-exists.cs
 - export-the-vba-projects-certificate-to-a-memorystream-and-write-stream-contents-to-disk.cs
 - save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs
+- log-the-signing-result-to-console-output-indicating-success-or-failure-for-each-workbook.cs
