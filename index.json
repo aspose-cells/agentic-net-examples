@@ -1836,6 +1836,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "set-loadoptionsloadfilter-to-load-only-data-cells-skipping-chart-objects-to-reduce-memory-usage.cs",
+      "title": "Set LoadOptions.LoadFilter to load only data cells, skipping chart objects to reduce memory usage."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
