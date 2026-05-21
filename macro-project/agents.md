@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs
 - verify-the-vba-projects-digital-signature-status-using-the-issigned-property.cs
 - add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs
+- export-the-vba-projects-digital-certificate-to-a-file-path.cs
