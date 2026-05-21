@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs
 - set-series-fill-color-using-an-rgb-value-to-match-corporate-branding-guidelines.cs
 - set-the-chart-fill-format-to-a-solid-color-with-80-percent-opacity-for-subtle-shading.cs
+- create-a-stacked-column-chart-with-three-series-and-customize-each-series-color-individually.cs
