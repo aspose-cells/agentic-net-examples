@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - package-the-custom-ribbon-xml-and-path-update-logic-into-a-reusable-net-library.cs
 - provide-sample-code-demonstrating-how-to-programmatically-change-external-link-paths-and-customize-the-ribbon.cs
 - ensure-the-solution-complies-with-security-best-practices-when-handling-external-file-paths.cs
+- review-and-update-the-custom-ribbon-xml-to-maintain-compatibility-with-future-office-versions.cs
