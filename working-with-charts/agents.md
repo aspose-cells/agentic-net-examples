@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - programmatically-generate-ten-worksheets-each-with-a-chart-bound-to-its-own-data-table-using-a-loop.cs
 - iterate-through-a-collection-of-workbooks-add-a-predefined-chart-template-to-each-and-save-changes.cs
 - add-a-trendline-to-the-line-chart-and-configure-it-to-display-the-equation-and-rsquared-value.cs
+- enable-the-chart-to-refresh-automatically-when-the-workbook-is-opened-ensuring-latest-data-is-displayed.cs

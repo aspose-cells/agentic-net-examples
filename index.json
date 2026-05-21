@@ -3711,6 +3711,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-the-chart-to-refresh-automatically-when-the-workbook-is-opened-ensuring-latest-data-is-displayed.cs",
+      "title": "Enable the chart to refresh automatically when the workbook is opened, ensuring latest data is displayed."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs",
       "title": "Export all charts in the workbook as separate SVG files for scalable vector graphics usage."
     },
