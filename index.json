@@ -971,6 +971,11 @@
     },
     {
       "category": "macro-project",
+      "file": "sign-the-vba-project-using-a-certificate-retrieved-from-windows-certificate-store-by-thumbprint.cs",
+      "title": "Sign the VBA project using a certificate retrieved from Windows certificate store by thumbprint."
+    },
+    {
+      "category": "macro-project",
       "file": "sign-the-vba-project-with-a-certificate-loaded-from-a-pfx-file-and-password.cs",
       "title": "Sign the VBA project with a certificate loaded from a PFX file and password."
     },
