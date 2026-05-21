@@ -761,6 +761,11 @@
     },
     {
       "category": "macro-project",
+      "file": "remove-any-module-named-temp-from-a-collection-of-workbooks-and-save-the-modified-files.cs",
+      "title": "Remove any module named Temp from a collection of workbooks and save the modified files."
+    },
+    {
+      "category": "macro-project",
       "file": "rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs",
       "title": "Rename an existing VBA module to DataProcessor by setting its Name property before saving."
     },
