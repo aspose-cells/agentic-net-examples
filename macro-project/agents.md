@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - compare-exported-certificate-thumbprint-with-original-certificate-thumbprint-to-ensure-integrity.cs
 - load-workbook-from-memory-stream-sign-vba-project-then-write-signed-workbook-back-to-stream.cs
 - save-signed-workbook-to-network-location-via-stream-to-enable-centralized-access-for-users.cs
+- create-new-workbook-add-vba-module-with-code-then-digitally-sign-the-vba-project.cs

@@ -801,6 +801,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-new-workbook-add-vba-module-with-code-then-digitally-sign-the-vba-project.cs",
+      "title": "Create new workbook, add VBA module with code, then digitally sign the VBA project."
+    },
+    {
+      "category": "macro-project",
       "file": "create-x509certificate2-from-pfx-file-with-password-and-use-it-to-sign-vba-project.cs",
       "title": "Create X509Certificate2 from PFX file with password and use it to sign VBA project."
     },
