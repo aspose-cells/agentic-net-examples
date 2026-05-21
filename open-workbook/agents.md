@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - use-lightcells-api-to-open-a-large-workbook-then-monitor-memory-usage-statistics-during-processing.cs
 - load-a-workbook-apply-printer-paper-size-a5-and-verify-that-the-generated-pdf-matches-the-specified-dimensions.cs
 - load-a-workbook-apply-printer-paper-size-letter-and-ensure-the-pdf-page-count-aligns-with-expectations.cs
+- load-a-workbook-filter-defined-names-containing-total-and-generate-a-pdf-that-includes-only-those-named-ranges.cs

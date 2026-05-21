@@ -1856,6 +1856,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-filter-defined-names-containing-total-and-generate-a-pdf-that-includes-only-those-named-ranges.cs",
+      "title": "Load a workbook, filter defined names containing \"Total\", and generate a PDF that includes only those named ranges."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs",
       "title": "Load a workbook from an HTTP response stream to process a remotely hosted Excel file without saving locally."
     },
