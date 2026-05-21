@@ -1756,6 +1756,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs",
+      "title": "Load an XLSX workbook using LightCells API while applying FilterObjects to exclude charts."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs",
       "title": "Load only chart objects by setting LoadOptions.LoadFilter to include charts exclusively."
     },
