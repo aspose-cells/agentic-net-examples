@@ -971,6 +971,11 @@
     },
     {
       "category": "macro-project",
+      "file": "sign-the-vba-project-with-a-certificate-loaded-from-a-pfx-file-and-password.cs",
+      "title": "Sign the VBA project with a certificate loaded from a PFX file and password."
+    },
+    {
+      "category": "macro-project",
       "file": "skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs",
       "title": "Skip protecting workbooks that are already secured by using IsProtected in a conditional statement."
     },
