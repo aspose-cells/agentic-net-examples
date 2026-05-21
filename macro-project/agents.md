@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs
 - validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs
 - export-a-vba-certificate-to-a-temporary-file-then-load-it-into-an-x509certificate-object-for-inspection.cs
+- detect-and-report-any-duplicate-macro-names-across-multiple-vba-modules-within-a-single-workbook.cs
