@@ -3641,6 +3641,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-label-leader-lines-for-a-pie-chart-to-improve-readability-of-long-names.cs",
+      "title": "Enable data label leader lines for a pie chart to improve readability of long names."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-markers-on-a-line-series-and-set-marker-shape-to-triangle.cs",
       "title": "Enable data markers on a line series and set marker shape to triangle."
     },
