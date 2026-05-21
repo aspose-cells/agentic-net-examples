@@ -741,6 +741,11 @@
     },
     {
       "category": "macro-project",
+      "file": "serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs",
+      "title": "Serialize the VBA project structure, including module names and code snippets, into a JSON report file."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-that-each-added-module-contains-a-sub-main-entry-point-before-committing-workbook-changes.cs",
       "title": "Validate that each added module contains a Sub Main entry point before committing workbook changes."
     },

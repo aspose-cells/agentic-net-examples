@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - export-the-vbaprojects-digital-certificate-to-a-file-stream-for-external-backup-purposes.cs
 - protect-all-xlsm-files-in-a-directory-applying-passwords-only-to-unprotected-vba-projects.cs
 - validate-that-each-added-module-contains-a-sub-main-entry-point-before-committing-workbook-changes.cs
+- serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs
