@@ -2366,6 +2366,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-a-workbook-to-tiff-and-write-the-result-into-a-memory-stream-for-further-processing.cs",
+      "title": "Render a workbook to TIFF and write the result into a memory stream for further processing."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-workbook-to-tiff-with-horizontal-and-vertical-resolutions-set-to-150-dpi.cs",
       "title": "Render a workbook to TIFF with horizontal and vertical resolutions set to 150 DPI."
     },
