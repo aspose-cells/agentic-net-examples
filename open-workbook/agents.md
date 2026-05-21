@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs
 - configure-memorysettingmemorypreference-to-low-before-opening-a-massive-xlsx-file-to-reduce-ram-usage.cs
 - apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs
+- use-interruptmonitor-to-abort-workbook-loading-if-processing-exceeds-a-predefined-time-limit.cs
