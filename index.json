@@ -761,6 +761,11 @@
     },
     {
       "category": "macro-project",
+      "file": "skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs",
+      "title": "Skip protecting workbooks that are already secured by using IsProtected in a conditional statement."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-that-each-added-module-contains-a-sub-main-entry-point-before-committing-workbook-changes.cs",
       "title": "Validate that each added module contains a Sub Main entry point before committing workbook changes."
     },
