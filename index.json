@@ -2391,6 +2391,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs",
+      "title": "Set custom page margins in ImageOrPrintOptions before converting workbook to TIFF for layout control."
+    },
+    {
+      "category": "working-with-images",
       "file": "track-workbooktotiff-conversion-progress-by-handling-the-conversion-progress-event-and-logging-percentages.cs",
       "title": "Track workbook\u2011to\u2011TIFF conversion progress by handling the conversion progress event and logging percentages."
     },
