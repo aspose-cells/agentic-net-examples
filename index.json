@@ -1851,6 +1851,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-only-visible-worksheets-by-applying-filterobjects-then-process-each-visible-sheet-sequentially-using-lightcells.cs",
+      "title": "Load only visible worksheets by applying FilterObjects, then process each visible sheet sequentially using LightCells."
+    },
+    {
+      "category": "open-workbook",
       "file": "log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs",
       "title": "Log warnings about unsupported formulas to a file by implementing IWarningCallback that appends messages with timestamps."
     },
