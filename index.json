@@ -1011,6 +1011,11 @@
     },
     {
       "category": "macro-project",
+      "file": "save-signed-workbook-under-new-filename-to-preserve-original-file-and-maintain-audit-trail.cs",
+      "title": "Save signed workbook under new filename to preserve original file and maintain audit trail."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-modified-workbook-as-an-xlsm-file-to-preserve-the-added-vba-code.cs",
       "title": "Save the modified workbook as an XLSM file to preserve the added VBA code."
     },
