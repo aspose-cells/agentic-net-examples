@@ -1146,6 +1146,11 @@
     },
     {
       "category": "macro-project",
+      "file": "sign-the-vba-project-using-a-pfx-certificate-file-protected-by-a-strong-password.cs",
+      "title": "Sign the VBA project using a PFX certificate file protected by a strong password."
+    },
+    {
+      "category": "macro-project",
       "file": "sign-the-vba-project-with-a-certificate-loaded-from-a-pfx-file-and-password.cs",
       "title": "Sign the VBA project with a certificate loaded from a PFX file and password."
     },
