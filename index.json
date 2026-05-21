@@ -3571,6 +3571,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-new-series-to-the-chart-using-a-worksheet-range-as-data-source.cs",
+      "title": "Add a new series to the chart using a worksheet range as data source."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-secondary-axis-to-a-bar-chart-and-assign-the-revenue-series-to-it.cs",
       "title": "Add a secondary axis to a bar chart and assign the revenue series to it."
     },
