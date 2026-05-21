@@ -1651,6 +1651,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs",
+      "title": "Extract all formulas from loaded worksheets and store them in a dictionary keyed by cell address."
+    },
+    {
+      "category": "open-workbook",
       "file": "filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs",
       "title": "Filter out defined names starting with \"_\" during load and verify their absence after opening."
     },
