@@ -3851,6 +3851,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-chart-to-png-with-300-dpi-resolution-by-specifying-imageresolution-parameter.cs",
+      "title": "Export the chart to PNG with 300 DPI resolution by specifying ImageResolution parameter."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-configured-pie-chart-to-a-png-image-using-charttoimage-with-default-settings.cs",
       "title": "Export the configured pie chart to a PNG image using Chart.ToImage with default settings."
     },
