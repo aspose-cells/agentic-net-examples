@@ -3591,6 +3591,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "refresh-the-chart-after-updating-source-cells-to-ensure-displayed-data-reflects-latest-values.cs",
+      "title": "Refresh the chart after updating source cells to ensure displayed data reflects latest values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
       "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
     },
