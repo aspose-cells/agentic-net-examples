@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs
 - convert-a-workbook-to-tiff-using-twentyfourbit-color-depth-for-highquality-images.cs
 - generate-a-multipage-tiff-from-the-first-three-worksheets-of-a-loaded-workbook.cs
+- track-workbooktotiff-conversion-progress-by-handling-the-conversion-progress-event-and-logging-percentages.cs
