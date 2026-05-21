@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - autofit-the-chart-size-based-on-its-data-range-to-avoid-clipping.cs
 - save-the-workbook-containing-the-modified-chart-as-an-xlsx-file-to-preserve-formatting.cs
 - batch-add-identical-chart-templates-to-each-worksheet-in-a-workbook-using-a-loop.cs
+- update-the-chart-data-source-dynamically-based-on-userselected-date-range-values.cs
