@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - convert-an-entire-workbook-to-a-multipage-tiff-using-default-rendering-options.cs
 - render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs
+- render-a-workbook-to-tiff-with-horizontal-and-vertical-resolutions-set-to-150-dpi.cs
