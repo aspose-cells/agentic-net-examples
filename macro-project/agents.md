@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-vba-data-filtered-then-enumerate-all-macro-names-present-in-the-project.cs
 - load-a-workbook-with-vba-data-filtered-then-list-all-form-controls-that-have-macros-assigned.cs
 - load-a-workbook-with-vba-filter-then-extract-the-vba-projects-description-property-for-metadata.cs
+- load-a-workbook-with-vba-filter-then-extract-the-vba-projects-author-metadata-for-documentation.cs
