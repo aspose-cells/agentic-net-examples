@@ -1656,6 +1656,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "export-a-loaded-workbook-to-html-and-use-interruptmonitor-to-stop-the-process-after-a-defined-timeout.cs",
+      "title": "Export a loaded workbook to HTML and use InterruptMonitor to stop the process after a defined timeout."
+    },
+    {
+      "category": "open-workbook",
       "file": "extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs",
       "title": "Extract all formulas from loaded worksheets and store them in a dictionary keyed by cell address."
     },
