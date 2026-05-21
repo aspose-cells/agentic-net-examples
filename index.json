@@ -1026,6 +1026,11 @@
     },
     {
       "category": "macro-project",
+      "file": "save-signed-workbook-to-network-location-via-stream-to-enable-centralized-access-for-users.cs",
+      "title": "Save signed workbook to network location via stream to enable centralized access for users."
+    },
+    {
+      "category": "macro-project",
       "file": "save-signed-workbook-under-new-filename-to-preserve-original-file-and-maintain-audit-trail.cs",
       "title": "Save signed workbook under new filename to preserve original file and maintain audit trail."
     },
