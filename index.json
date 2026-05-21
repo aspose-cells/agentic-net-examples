@@ -511,6 +511,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs",
+      "title": "Programmatically set worksheet cell styles to display dates in Japanese era format after conversion, then export to PDF."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "provide-documentation-examples-showing-how-to-toggle-between-english-and-localized-function-names-using-formulalocal.cs",
       "title": "Provide documentation examples showing how to toggle between English and localized function names using FormulaLocal."
     },

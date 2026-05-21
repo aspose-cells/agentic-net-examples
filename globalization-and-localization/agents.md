@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - batch-process-a-folder-of-xlsx-files-loading-each-with-spanish-cultureinfo-and-exporting-charts-to-png-images.cs
 - implement-error-handling-for-loadoptionscultureinfo-when-an-unsupported-locale-identifier-is-supplied-during-workbook-loading.cs
 - compare-pdf-output-of-a-workbook-loaded-with-invariant-culture-versus-french-culture-to-assess-number-format-differences.cs
+- programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs
