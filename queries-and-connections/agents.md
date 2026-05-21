@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - load-an-xlsb-workbook-change-the-dbconnectionname-and-log-the-modification-timestamp.cs
 - detect-and-list-external-connections-of-type-webquery-across-a-batch-of-workbooks.cs
 - update-the-source-file-location-of-a-power-query-data-source-to-a-cloud-storage-url.cs
+- verify-that-hidden-external-links-remain-hidden-after-encrypting-the-workbook-with-a-password.cs
