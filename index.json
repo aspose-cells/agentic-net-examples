@@ -1631,6 +1631,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "configure-memorysettingmemorypreference-to-low-before-opening-a-massive-xlsx-file-to-reduce-ram-usage.cs",
+      "title": "Configure MemorySetting.MemoryPreference to Low before opening a massive XLSX file to reduce RAM usage."
+    },
+    {
+      "category": "open-workbook",
       "file": "convert-a-loaded-workbook-to-pdf-while-an-interruptmonitor-aborts-the-conversion-if-it-exceeds-twenty-seconds.cs",
       "title": "Convert a loaded workbook to PDF while an InterruptMonitor aborts the conversion if it exceeds twenty seconds."
     },
