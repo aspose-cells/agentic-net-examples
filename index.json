@@ -3696,6 +3696,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-chart-type-of-a-specific-series-to-line-while-keeping-other-series-as-columns.cs",
+      "title": "Change the chart type of a specific series to line while keeping other series as columns."
+    },
+    {
+      "category": "working-with-charts",
       "file": "clone-an-existing-chart-change-its-series-colors-and-place-it-on-a-different-sheet.cs",
       "title": "Clone an existing chart, change its series colors, and place it on a different sheet."
     },

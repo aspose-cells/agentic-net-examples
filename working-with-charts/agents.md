@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - apply-a-gradient-fill-for-the-plot-area-using-two-complementary-colors-for-depth.cs
 - automate-chart-creation-for-each-worksheet-tab-using-a-loop-to-ensure-consistency.cs
 - set-series-visibility-to-false-for-hidden-data-points-without-removing-them-from-the-chart.cs
+- change-the-chart-type-of-a-specific-series-to-line-while-keeping-other-series-as-columns.cs
