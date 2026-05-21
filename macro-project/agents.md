@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - check-the-issigned-property-after-adding-a-digital-signature-to-a-vba-project-programmatically.cs
 - create-a-unit-test-that-verifies-macro-assignment-fails-when-the-macro-name-does-not-exist.cs
 - implement-a-method-that-copies-a-macro-from-one-workbook-to-another-and-updates-control-references.cs
+- assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs

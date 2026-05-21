@@ -706,6 +706,11 @@
     },
     {
       "category": "macro-project",
+      "file": "assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs",
+      "title": "Assign different macros to multiple form controls on the same worksheet and verify each executes correctly."
+    },
+    {
+      "category": "macro-project",
       "file": "attempt-to-unlock-a-vba-project-locked-for-viewing-using-provided-credentials-and-report-the-result.cs",
       "title": "Attempt to unlock a VBA project locked for viewing using provided credentials and report the result."
     },
