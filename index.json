@@ -1006,6 +1006,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-projects-digital-signature-using-workbookvbaprojectvalidatesignature-method-and-capture-result.cs",
+      "title": "Validate the VBA project's digital signature using Workbook.VbaProject.ValidateSignature method and capture result."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-the-vba-projects-digital-signature-status-using-the-issigned-property.cs",
       "title": "Verify the VBA project's digital signature status using the IsSigned property."
     },
