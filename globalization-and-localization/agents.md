@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - ensure-that-pivot-tables-reflect-localized-subtotal-labels-when-the-workbook-is-opened-in-the-target-language.cs
 - verify-that-chart-titles-and-axis-labels-display-localized-text-when-source-cells-contain-localized-strings.cs
 - implement-a-method-to-reset-globalizationsettings-to-default-english-behavior-for-specific-worksheets.cs
+- create-a-configuration-file-mapping-locale-identifiers-to-corresponding-custom-globalizationsettings-classes.cs
