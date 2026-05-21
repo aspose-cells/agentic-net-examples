@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - save-signed-workbook-under-new-filename-to-preserve-original-file-and-maintain-audit-trail.cs
 - overwrite-original-workbook-after-successful-signing-when-backup-is-not-required-by-policy.cs
 - wrap-signing-operation-in-trycatch-block-to-handle-exceptions-and-log-error-details.cs
+- write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs
