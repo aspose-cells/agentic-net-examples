@@ -736,6 +736,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-a-workbook-from-a-network-share-protect-its-vba-project-and-verify-protection-after-saving.cs",
+      "title": "Load a workbook from a network share, protect its VBA project, and verify protection after saving."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-xlsm-workbook-from-disk-and-obtain-its-vbaproject-object-for-analysis.cs",
       "title": "Load an XLSM workbook from disk and obtain its VbaProject object for analysis."
     },
