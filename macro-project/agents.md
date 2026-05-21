@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - detect-unsigned-vba-projects-across-a-directory-and-list-file-names-for-further-review.cs
 - copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs
 - preserve-existing-macros-while-copying-userform-storage-to-ensure-functionality-remains-unchanged.cs
+- load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs
