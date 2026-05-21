@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs
 - export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs
 - embed-the-generated-svg-worksheet-file-into-an-html-document-using-the-object-tag-for-display.cs
+- save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs
