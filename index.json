@@ -4061,6 +4061,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-chartpointisinsecondaryplot-to-identify-points-belonging-to-the-secondary-plot.cs",
+      "title": "Use ChartPoint.IsInSecondaryPlot to identify points belonging to the secondary plot."
+    },
+    {
+      "category": "working-with-charts",
       "file": "use-chartsetchartdatarange-to-bind-the-chart-to-the-specified-range-a1b12.cs",
       "title": "Use Chart.SetChartDataRange to bind the chart to the specified range A1:B12."
     },
