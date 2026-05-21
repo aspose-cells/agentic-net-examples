@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs
 - create-a-unit-test-that-validates-external-link-path-changes-and-custom-ribbon-integration.cs
 - package-the-custom-ribbon-xml-and-path-update-logic-into-a-reusable-net-library.cs
+- provide-sample-code-demonstrating-how-to-programmatically-change-external-link-paths-and-customize-the-ribbon.cs
