@@ -1856,6 +1856,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs",
+      "title": "Set PdfSaveOptions.CompressionLevel to high when saving to reduce file size while maintaining visual fidelity."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
