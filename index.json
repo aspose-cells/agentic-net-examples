@@ -3941,6 +3941,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-from-a-memory-stream-and-access-its-chart-collection-for-processing.cs",
+      "title": "Load a workbook from a memory stream and access its chart collection for processing."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-existing-xlsx-workbook-retrieve-its-first-chart-and-modify-leader-line-settings.cs",
       "title": "Load an existing XLSX workbook, retrieve its first chart, and modify leader line settings."
     },
