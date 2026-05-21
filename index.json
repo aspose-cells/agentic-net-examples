@@ -386,6 +386,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-diagnostic-tool-that-compares-original-english-formulas-with-localized-versions-for-accuracy-verification.cs",
+      "title": "Create a diagnostic tool that compares original English formulas with localized versions for accuracy verification."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs",
       "title": "Develop a console application that prompts users to select a target language and applies localization to a workbook."
     },
