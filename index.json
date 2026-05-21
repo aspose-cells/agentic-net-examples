@@ -391,6 +391,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "configure-chart-rendering-to-use-antialiasing-while-applying-custom-chartglobalizationsettings-for-improved-visual-quality.cs",
+      "title": "Configure chart rendering to use anti\u2011aliasing while applying custom ChartGlobalizationSettings for improved visual quality."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "configure-workbook-to-use-a-specific-cultureinfo-object-for-date-and-number-formats-during-localization.cs",
       "title": "Configure workbook to use a specific CultureInfo object for date and number formats during localization."
     },
