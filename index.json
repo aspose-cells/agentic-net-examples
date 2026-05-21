@@ -3836,6 +3836,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-charts-data-label-position-to-inside-end-for-column-series-to-improve-readability.cs",
+      "title": "Set the chart's data label position to inside end for column series to improve readability."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
       "title": "Set the scatter chart marker size to 8 points and color to teal."
     },
