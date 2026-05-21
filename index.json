@@ -4181,6 +4181,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "toggle-visibility-of-a-specific-series-to-hide-it-from-the-rendered-chart.cs",
+      "title": "Toggle visibility of a specific series to hide it from the rendered chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "update-the-chart-data-source-dynamically-based-on-userselected-date-range-values.cs",
       "title": "Update the chart data source dynamically based on user\u2011selected date range values."
     },
