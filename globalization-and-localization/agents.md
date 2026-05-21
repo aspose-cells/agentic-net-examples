@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-strings-to-percentage-cells-after-loading-the-workbook-with-brazilian-portuguese-cultureinfo.cs
 - write-a-script-that-extracts-chart-images-applies-a-localized-other-label-and-saves-them-as-pdf-pages.cs
 - demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs
+- create-a-utility-that-converts-date-columns-in-multiple-xls-files-to-japanese-era-format-and-outputs-pdfs.cs
