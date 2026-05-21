@@ -2376,6 +2376,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs",
+      "title": "Export a worksheet to SVG without the viewBox attribute to produce fixed\u2011size vector output."
+    },
+    {
+      "category": "working-with-images",
       "file": "export-the-worksheet-named-chart-to-bmp-at-96-dpi-resolution-for-legacy-image-compatibility.cs",
       "title": "Export the worksheet named Chart to BMP at 96 DPI resolution for legacy image compatibility."
     },
