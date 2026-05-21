@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs
 - preserve-existing-macros-while-copying-userform-storage-to-ensure-functionality-remains-unchanged.cs
 - load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs
+- verify-that-vba-project-signature-becomes-invalid-after-modifying-macro-code-without-resigning.cs
