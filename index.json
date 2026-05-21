@@ -676,6 +676,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs",
+      "title": "Create a backup of the workbook before modifying external link paths."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "detect-and-list-external-connections-of-type-webquery-across-a-batch-of-workbooks.cs",
       "title": "Detect and list external connections of type WebQuery across a batch of workbooks."
     },
