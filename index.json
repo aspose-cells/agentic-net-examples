@@ -661,6 +661,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "disable-preserveformatting-on-a-querytable-to-allow-default-formatting-during-subsequent-refreshes.cs",
+      "title": "Disable PreserveFormatting on a QueryTable to allow default formatting during subsequent refreshes."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs",
       "title": "Enable BackgroundRefresh on a WebQuery connection to avoid blocking UI during retrieval."
     },
