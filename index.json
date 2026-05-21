@@ -901,6 +901,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-certificate-to-a-pfx-file-protected-by-a-password-for-secure-storage.cs",
+      "title": "Export the VBA project's certificate to a .pfx file protected by a password for secure storage."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vba-projects-digital-certificate-to-a-file-path.cs",
       "title": "Export the VBA project's digital certificate to a file path."
     },
