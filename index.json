@@ -3806,6 +3806,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "define-minimum-and-maximum-values-for-the-yaxis-to-control-chart-scaling.cs",
+      "title": "Define minimum and maximum values for the Y\u2011axis to control chart scaling."
+    },
+    {
+      "category": "working-with-charts",
       "file": "delete-a-row-from-the-listobject-and-verify-the-chart-series-contracts-accordingly.cs",
       "title": "Delete a row from the ListObject and verify the chart series contracts accordingly."
     },
