@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - save-the-chartfree-workbook-to-a-pdf-document-preserving-original-cell-formatting.cs
 - load-a-workbook-using-loadoptions-with-loadcharts-disabled-and-verify-loadwarnings-for-missing-chart-data.cs
 - apply-printer-paper-size-a5-during-load-and-generate-a-pdf-with-matching-page-dimensions.cs
+- reload-the-same-workbook-with-printer-paper-size-a3-and-compare-pdf-file-sizes-between-a5-and-a3-outputs.cs

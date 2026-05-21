@@ -1986,6 +1986,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "reload-the-same-workbook-with-printer-paper-size-a3-and-compare-pdf-file-sizes-between-a5-and-a3-outputs.cs",
+      "title": "Reload the same workbook with printer paper size A3 and compare PDF file sizes between A5 and A3 outputs."
+    },
+    {
+      "category": "open-workbook",
       "file": "retrieve-and-log-warning-messages-after-loading-a-workbook-with-filtered-objects-to-diagnose-data-loss.cs",
       "title": "Retrieve and log warning messages after loading a workbook with filtered objects to diagnose data loss."
     },
