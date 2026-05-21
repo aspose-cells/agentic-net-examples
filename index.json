@@ -1941,6 +1941,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "set-memorysettingmemorypreference-to-normal-for-a-small-xlsx-file-to-achieve-faster-processing-speed.cs",
+      "title": "Set MemorySetting.MemoryPreference to Normal for a small XLSX file to achieve faster processing speed."
+    },
+    {
+      "category": "open-workbook",
       "file": "set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs",
       "title": "Set PdfSaveOptions.CompressionLevel to high when saving to reduce file size while maintaining visual fidelity."
     },
