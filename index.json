@@ -721,6 +721,11 @@
     },
     {
       "category": "macro-project",
+      "file": "protect-all-xlsm-files-in-a-directory-applying-passwords-only-to-unprotected-vba-projects.cs",
+      "title": "Protect all XLSM files in a directory, applying passwords only to unprotected VBA projects."
+    },
+    {
+      "category": "macro-project",
       "file": "remove-a-specified-module-using-modulesremoveat-and-save-the-workbook-to-apply-changes.cs",
       "title": "Remove a specified module using Modules.RemoveAt and save the workbook to apply changes."
     },

@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - remove-a-specified-module-using-modulesremoveat-and-save-the-workbook-to-apply-changes.cs
 - rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs
 - export-the-vbaprojects-digital-certificate-to-a-file-stream-for-external-backup-purposes.cs
+- protect-all-xlsm-files-in-a-directory-applying-passwords-only-to-unprotected-vba-projects.cs
