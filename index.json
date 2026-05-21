@@ -3586,6 +3586,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-secondary-yaxis-and-assign-selected-series-to-render-on-that-axis.cs",
+      "title": "Add a secondary Y\u2011axis and assign selected series to render on that axis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-trendline-to-the-line-chart-and-configure-it-to-display-the-equation-and-rsquared-value.cs",
       "title": "Add a trendline to the line chart and configure it to display the equation and R\u2011squared value."
     },
