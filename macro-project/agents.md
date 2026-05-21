@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-and-read-the-issigned-property-to-determine-signature-status.cs
 - load-workbook-with-loadoptionsfiltervbaproject-to-exclude-unsigned-macros-during-import.cs
 - validate-the-vba-projects-digital-signature-using-workbookvbaprojectvalidatesignature-method-and-capture-result.cs
+- sign-the-vba-project-with-a-certificate-loaded-from-a-pfx-file-and-password.cs
