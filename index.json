@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-a-macro-that-generates-charts-from-a-template-workbook-to-multiple-target-workbooks-in-a-loop.cs",
+      "title": "Copy a macro that generates charts from a template workbook to multiple target workbooks in a loop."
+    },
+    {
+      "category": "macro-project",
       "file": "copy-a-vba-module-from-one-workbook-to-another-preserving-its-original-code-and-attributes.cs",
       "title": "Copy a VBA module from one workbook to another, preserving its original code and attributes."
     },
