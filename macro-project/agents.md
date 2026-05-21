@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - transfer-a-userform-called-inputform-between-two-workbooks-while-preserving-its-controls-and-code.cs
 - assign-a-macro-that-calculates-summary-statistics-to-a-shape-object-on-the-worksheet-programmatically.cs
 - embed-vba-code-that-disables-the-print-command-into-a-workbook-to-prevent-user-printing.cs
+- load-a-workbook-with-vba-data-filtered-then-enumerate-all-macro-names-present-in-the-project.cs

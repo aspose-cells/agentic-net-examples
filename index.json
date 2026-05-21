@@ -1011,6 +1011,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-a-workbook-with-vba-data-filtered-then-enumerate-all-macro-names-present-in-the-project.cs",
+      "title": "Load a workbook with VBA data filtered, then enumerate all macro names present in the project."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-excel-workbook-and-read-the-issigned-property-to-determine-signature-status.cs",
       "title": "Load an Excel workbook and read the IsSigned property to determine signature status."
     },
