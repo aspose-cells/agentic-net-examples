@@ -3586,6 +3586,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-theme-color-palette-to-all-series-in-a-multiseries-chart.cs",
+      "title": "Apply a custom theme color palette to all series in a multi\u2011series chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs",
       "title": "Apply a gradient fill to the chart area background using two complementary colors."
     },
