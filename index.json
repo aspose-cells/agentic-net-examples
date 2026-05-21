@@ -766,6 +766,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "save-the-modified-workbook-as-an-xlsb-file-while-preserving-all-external-connection-settings.cs",
+      "title": "Save the modified workbook as an XLSB file while preserving all external connection settings."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "save-the-modified-workbook-to-a-new-file-path-preserving-original-version-metadata.cs",
       "title": "Save the modified workbook to a new file path preserving original version metadata."
     },
