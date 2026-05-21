@@ -861,6 +861,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "provide-sample-code-demonstrating-how-to-programmatically-change-external-link-paths-and-customize-the-ribbon.cs",
+      "title": "Provide sample code demonstrating how to programmatically change external link paths and customize the ribbon."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs",
       "title": "Refresh all external data connections sequentially to ensure data consistency across the workbook."
     },
