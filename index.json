@@ -3036,6 +3036,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs",
+      "title": "Render a chart object from the workbook to a PNG image using the ChartRender API."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs",
       "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
     },
