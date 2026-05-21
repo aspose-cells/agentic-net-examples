@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - override-geterrorstring-in-the-custom-class-to-provide-localized-error-messages-for-excel-errors.cs
 - override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs
 - assign-the-custom-globalizationsettings-instance-to-workbooksettingsglobalizationsettings-before-loading-any-worksheets.cs
+- load-the-excel-workbook-using-workbookload-after-configuring-the-custom-globalization-settings.cs
