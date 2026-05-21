@@ -906,6 +906,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "review-and-update-the-custom-ribbon-xml-to-maintain-compatibility-with-future-office-versions.cs",
+      "title": "Review and update the custom ribbon XML to maintain compatibility with future Office versions."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "save-the-modified-workbook-as-an-xlsb-file-while-preserving-all-external-connection-settings.cs",
       "title": "Save the modified workbook as an XLSB file while preserving all external connection settings."
     },
