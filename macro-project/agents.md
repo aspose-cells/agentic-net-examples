@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - develop-a-console-application-that-accepts-a-folder-path-processes-each-xlsm-and-reports-macro-status.cs
 - load-an-excel-workbook-and-read-the-issigned-property-to-determine-signature-status.cs
 - load-workbook-with-loadoptionsfiltervbaproject-to-exclude-unsigned-macros-during-import.cs
+- validate-the-vba-projects-digital-signature-using-workbookvbaprojectvalidatesignature-method-and-capture-result.cs
