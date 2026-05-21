@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs
 - load-a-workbook-set-printer-paper-size-to-letter-via-loadoptions-and-verify-pdf-page-count-matches-expectations.cs
 - load-a-workbook-using-loadoptions-to-disable-charts-set-printer-paper-size-a5-and-save-to-pdf.cs
+- load-a-workbook-using-loadoptions-to-disable-charts-load-only-worksheets-0-and-2-and-save-to-pdf.cs
