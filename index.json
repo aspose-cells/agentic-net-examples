@@ -576,6 +576,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "test-that-overriding-getgrandtotalname-does-not-affect-subtotal-labels-when-both-custom-settings-are-applied-simultaneously.cs",
+      "title": "Test that overriding GetGrandTotalName does not affect subtotal labels when both custom settings are applied simultaneously."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "use-workbooksettings-to-enable-automatic-recalculation-after-applying-localized-formulas-to-ensure-correct-results.cs",
       "title": "Use Workbook.Settings to enable automatic recalculation after applying localized formulas to ensure correct results."
     },

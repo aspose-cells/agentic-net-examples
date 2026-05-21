@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - write-a-script-that-extracts-chart-images-applies-a-localized-other-label-and-saves-them-as-pdf-pages.cs
 - demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs
 - create-a-utility-that-converts-date-columns-in-multiple-xls-files-to-japanese-era-format-and-outputs-pdfs.cs
+- test-that-overriding-getgrandtotalname-does-not-affect-subtotal-labels-when-both-custom-settings-are-applied-simultaneously.cs
