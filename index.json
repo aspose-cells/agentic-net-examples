@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-pie-chart-object-to-the-worksheet-using-charttypepie.cs",
+      "title": "Add a Pie chart object to the worksheet using ChartType.Pie."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-secondary-axis-to-a-bar-chart-and-assign-the-revenue-series-to-it.cs",
       "title": "Add a secondary axis to a bar chart and assign the revenue series to it."
     },
