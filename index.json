@@ -3916,6 +3916,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-series-fill-color-using-an-rgb-value-to-match-corporate-branding-guidelines.cs",
+      "title": "Set series fill color using an RGB value to match corporate branding guidelines."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
       "title": "Set the chart border thickness to 2 points and color to dark gray."
     },
