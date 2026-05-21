@@ -3851,6 +3851,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-same-pie-chart-to-a-jpeg-image-using-charttoimage-specifying-jpeg-format.cs",
+      "title": "Export the same pie chart to a JPEG image using Chart.ToImage specifying JPEG format."
+    },
+    {
+      "category": "working-with-charts",
       "file": "format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs",
       "title": "Format data labels to show percentages with one decimal place on a pie chart."
     },
