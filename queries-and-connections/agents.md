@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs
 - retrieve-the-first-worksheet-access-its-first-querytable-and-read-preserveformatting-flag.cs
 - enable-preserveformatting-on-a-querytable-to-maintain-cell-styles-after-data-refresh.cs
+- disable-preserveformatting-on-a-querytable-to-allow-default-formatting-during-subsequent-refreshes.cs
