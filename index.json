@@ -651,6 +651,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "add-error-handling-to-capture-exceptions-when-an-external-connection-path-is-invalid.cs",
+      "title": "Add error handling to capture exceptions when an external connection path is invalid."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs",
       "title": "Change Description property of a DBConnection to reflect its new purpose after migration."
     },
