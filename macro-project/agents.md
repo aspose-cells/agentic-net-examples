@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - export-the-vba-projects-digital-certificate-to-a-pem-file-for-backup.cs
 - export-the-vba-projects-certificate-to-a-cer-file-and-verify-its-thumbprint.cs
 - export-the-vba-projects-certificate-to-a-base64-string-for-inclusion-in-configuration.cs
+- export-the-vba-projects-certificate-to-a-pfx-file-protected-by-a-password-for-secure-storage.cs
