@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - set-the-charts-data-label-position-to-inside-end-for-column-series-to-improve-readability.cs
 - lock-the-chart-object-programmatically-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs
 - load-a-workbook-add-a-column-chart-to-the-first-worksheet.cs
+- add-a-new-series-to-the-chart-using-a-worksheet-range-as-data-source.cs
