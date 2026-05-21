@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
 - include-the-svg-chart-file-in-a-web-page-to-allow-interactive-zoom-and-pan-features.cs
 - preserve-data-labels-visibility-when-converting-a-chart-to-png-to-retain-informational-context.cs
+- set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
