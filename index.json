@@ -641,6 +641,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "write-code-to-export-a-workbooks-chart-objects-to-separate-pdf-files-each-preserving-custom-globalization-settings.cs",
+      "title": "Write code to export a workbook\u2019s chart objects to separate PDF files, each preserving custom globalization settings."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "write-unit-tests-asserting-getlocalfunctionname-returns-expected-localized-equivalents-for-common-functions.cs",
       "title": "Write unit tests asserting GetLocalFunctionName returns expected localized equivalents for common functions."
     },
