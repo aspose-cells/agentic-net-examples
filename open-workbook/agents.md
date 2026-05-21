@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - exclude-hidden-rows-during-workbook-loading-by-configuring-filterobjects-to-ignore-rows-with-visibility-set-to-false.cs
 - read-numeric-cell-values-with-lightcells-api-and-store-them-in-a-highperformance-inmemory-collection.cs
 - save-a-workbook-as-xlsx-while-specifying-a-custom-temporary-folder-for-intermediate-files-to-reduce-disk-io.cs
+- load-a-passwordprotected-xlsx-file-using-lightcells-api-by-providing-the-decryption-password-in-load-options.cs

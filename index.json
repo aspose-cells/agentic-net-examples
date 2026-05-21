@@ -1746,6 +1746,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-passwordprotected-xlsx-file-using-lightcells-api-by-providing-the-decryption-password-in-load-options.cs",
+      "title": "Load a password\u2011protected XLSX file using LightCells API by providing the decryption password in load options."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs",
       "title": "Load a workbook from an HTTP response stream to process a remotely hosted Excel file without saving locally."
     },
