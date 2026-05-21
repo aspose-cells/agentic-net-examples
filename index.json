@@ -3861,6 +3861,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-a-specific-series-from-the-chart-by-index-to-simplify-the-visual-representation.cs",
+      "title": "Remove a specific series from the chart by index to simplify the visual representation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-the-third-chart-from-the-worksheet-using-the-chartsremoveat-method-call.cs",
       "title": "Remove the third chart from the worksheet using the Charts.RemoveAt method call."
     },
