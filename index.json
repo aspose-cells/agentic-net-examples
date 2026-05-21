@@ -716,6 +716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs",
+      "title": "Delete any VBA module that exceeds five hundred lines of code after enumerating the project modules."
+    },
+    {
+      "category": "macro-project",
       "file": "enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs",
       "title": "Enumerate all modules in the VbaProject and output each module name to the console."
     },
