@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - reorder-chart-series-to-display-the-most-important-data-first-using-the-seriescollection.cs
 - validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs
 - catch-and-log-an-exception-when-an-invalid-numeric-format-code-is-assigned-to-a-series.cs
+- define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs

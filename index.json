@@ -3731,6 +3731,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs",
+      "title": "Define a custom color palette and assign specific colors to each chart series programmatically."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-a-dynamic-named-range-using-offset-based-on-nonempty-rows-in-column-a.cs",
       "title": "Define a dynamic named range using OFFSET based on non\u2011empty rows in column A."
     },
