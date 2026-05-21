@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - load-a-workbook-using-loadoptions-to-disable-charts-configure-interruptmonitor-and-save-to-pdf.cs
 - load-a-workbook-using-loadoptions-to-disable-charts-retrieve-loadwarnings-and-log-them.cs
 - load-a-workbook-with-lightcells-api-exclude-charts-and-save-the-result-to-pdf.cs
+- load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs
