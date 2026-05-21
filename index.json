@@ -686,6 +686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-com-library-reference-eg-microsoft-scripting-runtime-to-the-vba-project.cs",
+      "title": "Add a COM library reference (e.g., Microsoft Scripting Runtime) to the VBA project."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs",
       "title": "Add a custom reference to a VBA project that points to a COM library installed on the system."
     },
