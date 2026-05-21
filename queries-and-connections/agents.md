@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - generate-a-csv-file-containing-workbook-name-connection-type-and-connection-name-for-all-files-in-a-folder.cs
 - replace-all-occurrences-of-a-deprecated-database-name-within-dbconnectionname-properties-across-workbooks.cs
 - change-the-absolute-path-of-an-external-link-data-source-file-programmatically-for-a-workbook.cs
+- validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs
