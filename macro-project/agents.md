@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - batch-process-a-folder-of-excel-files-signing-each-vba-project-with-the-same-certificate.cs
 - batch-validate-signatures-of-multiple-workbooks-and-generate-a-summary-report-of-validation-statuses.cs
 - detect-unsigned-vba-projects-across-a-directory-and-list-file-names-for-further-review.cs
+- copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs

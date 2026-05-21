@@ -766,6 +766,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs",
+      "title": "Copy UserForm DesignerStorage from a template workbook to a target workbook preserving layout."
+    },
+    {
+      "category": "macro-project",
       "file": "create-a-macro-that-iterates-through-all-worksheets-and-logs-each-sheet-name-using-the-new-module.cs",
       "title": "Create a macro that iterates through all worksheets and logs each sheet name using the new module."
     },
