@@ -651,6 +651,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
+      "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "add-error-handling-to-capture-exceptions-when-an-external-connection-path-is-invalid.cs",
       "title": "Add error handling to capture exceptions when an external connection path is invalid."
     },

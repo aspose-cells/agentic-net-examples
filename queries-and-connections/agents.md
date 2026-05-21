@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - log-the-original-and-updated-external-link-paths-for-audit-purposes.cs
 - handle-errors-when-the-external-link-file-is-missing-or-inaccessible-during-path-update.cs
 - create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs
+- add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs
