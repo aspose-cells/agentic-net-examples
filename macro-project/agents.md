@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - save-signed-workbook-to-network-location-via-stream-to-enable-centralized-access-for-users.cs
 - create-new-workbook-add-vba-module-with-code-then-digitally-sign-the-vba-project.cs
 - remove-digital-signature-from-vba-project-by-clearing-certificate-and-verify-issigned-becomes-false.cs
+- load-workbook-with-loadoptionsfiltervbaproject-to-include-only-signed-macros-for-further-processing.cs
