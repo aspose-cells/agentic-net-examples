@@ -761,6 +761,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs",
+      "title": "Import custom ribbon XML from an external .xml file into an existing workbook programmatically."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
       "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
     },
