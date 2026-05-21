@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs
 - specify-a-white-background-color-in-imageorprintoptions-when-rendering-workbook-to-tiff-to-ensure-consistency.cs
 - convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs
+- export-the-worksheet-named-chart-to-bmp-at-96-dpi-resolution-for-legacy-image-compatibility.cs
