@@ -1981,6 +1981,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "save-a-workbook-using-lightcells-api-while-disabling-automatic-calculation-to-speed-up-writing-of-static-data-sheets.cs",
+      "title": "Save a workbook using LightCells API while disabling automatic calculation to speed up writing of static data sheets."
+    },
+    {
+      "category": "open-workbook",
       "file": "save-a-workbook-with-a-specific-printer-paper-size-setting-using-lightcells-api-to-ensure-correct-print-layout.cs",
       "title": "Save a workbook with a specific printer paper size setting using LightCells API to ensure correct print layout."
     },

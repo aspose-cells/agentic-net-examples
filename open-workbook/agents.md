@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - apply-filterdatakind-to-load-only-string-cells-from-a-template-then-concatenate-them-into-a-summary-report.cs
 - write-merged-cells-while-streaming-data-with-lightcellsdataprovider-to-preserve-complex-table-structures-in-large-excel-files.cs
 - load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs
+- save-a-workbook-using-lightcells-api-while-disabling-automatic-calculation-to-speed-up-writing-of-static-data-sheets.cs
