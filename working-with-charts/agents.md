@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-in-a-workbook-and-list-each-charts-name-and-type.cs
 - read-the-chart-title-modify-it-to-a-custom-string-and-apply-the-change.cs
 - change-the-chart-type-from-column-to-line-programmatically-before-exporting-to-pdf.cs
+- set-the-xaxis-title-to-a-descriptive-label-that-reflects-the-data-range.cs

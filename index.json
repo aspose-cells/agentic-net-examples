@@ -4156,6 +4156,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-xaxis-title-to-a-descriptive-label-that-reflects-the-data-range.cs",
+      "title": "Set the X\u2011axis title to a descriptive label that reflects the data range."
+    },
+    {
+      "category": "working-with-charts",
       "file": "update-the-chart-data-source-dynamically-based-on-userselected-date-range-values.cs",
       "title": "Update the chart data source dynamically based on user\u2011selected date range values."
     },
