@@ -1641,6 +1641,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-while-ignoring-all-external-links-by-setting-loadoptionsignoreexternallinks-to-true.cs",
+      "title": "Load a workbook while ignoring all external links by setting LoadOptions.IgnoreExternalLinks to true."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs",
       "title": "Load an Excel 97\u20112003 workbook by assigning LoadOptions.Version to Excel97to2003 during initialization."
     },
