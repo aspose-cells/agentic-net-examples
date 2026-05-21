@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs
 - set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs
 - enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs
+- disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs
