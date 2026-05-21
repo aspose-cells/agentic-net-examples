@@ -1841,6 +1841,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-set-printer-paper-size-to-letter-via-loadoptions-and-verify-pdf-page-count-matches-expectations.cs",
+      "title": "Load a workbook, set printer paper size to Letter via LoadOptions, and verify PDF page count matches expectations."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-using-loadoptions-with-loadcharts-disabled-and-verify-loadwarnings-for-missing-chart-data.cs",
       "title": "Load a workbook using LoadOptions with LoadCharts disabled and verify LoadWarnings for missing chart data."
     },

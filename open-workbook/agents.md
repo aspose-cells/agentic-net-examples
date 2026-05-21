@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - filter-defined-names-containing-total-during-load-and-verify-that-only-those-names-are-retained.cs
 - configure-interruptmonitor-to-abort-loading-if-processing-exceeds-30-seconds-and-log-the-interruption-event.cs
 - after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs
+- load-a-workbook-set-printer-paper-size-to-letter-via-loadoptions-and-verify-pdf-page-count-matches-expectations.cs
