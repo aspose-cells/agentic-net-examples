@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - perform-pixelbypixel-comparison-between-the-generated-png-worksheet-image-and-a-baseline-reference.cs
 - convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs
 - export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs
+- embed-the-generated-svg-worksheet-file-into-an-html-document-using-the-object-tag-for-display.cs
