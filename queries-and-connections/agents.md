@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs
 - generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs
 - save-the-modified-workbook-as-an-xlsb-file-while-preserving-all-external-connection-settings.cs
+- validate-that-updating-a-powerqueryformulaitemvalue-correctly-changes-the-underlying-query-definition.cs
