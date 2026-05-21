@@ -3571,6 +3571,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-bubble-chart-data-by-linking-xvalues-values-and-bubblesizes-to-three-separate-ranges.cs",
+      "title": "Configure bubble chart data by linking XValues, Values, and BubbleSizes to three separate ranges."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
