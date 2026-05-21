@@ -1701,6 +1701,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "filter-out-all-pictures-from-a-workbook-during-loading-to-improve-performance-for-large-spreadsheets.cs",
+      "title": "Filter out all pictures from a workbook during loading to improve performance for large spreadsheets."
+    },
+    {
+      "category": "open-workbook",
       "file": "filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs",
       "title": "Filter out defined names starting with \"_\" during load and verify their absence after opening."
     },
