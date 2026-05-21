@@ -3996,6 +3996,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-containing-the-chart-as-an-xlsx-file-to-the-specified-output-directory.cs",
+      "title": "Save the workbook containing the chart as an XLSX file to the specified output directory."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-containing-the-modified-chart-as-an-xlsx-file-to-preserve-formatting.cs",
       "title": "Save the workbook containing the modified chart as an XLSX file to preserve formatting."
     },
