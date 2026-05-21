@@ -426,6 +426,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-an-application-that-loads-a-workbook-with-italian-cultureinfo-adds-subtotals-and-saves-the-result-as-pdf.cs",
+      "title": "Create an application that loads a workbook with Italian CultureInfo, adds subtotals, and saves the result as PDF."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-chartglobalizationsettings-derivative-that-overrides-getothername-for-a-localized-piechart-other-label.cs",
       "title": "Develop a ChartGlobalizationSettings derivative that overrides GetOtherName for a localized pie\u2011chart \u201cOther\u201d label."
     },
