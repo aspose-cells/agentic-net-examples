@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - implement-a-commandline-utility-that-accepts-a-folder-path-loads-each-excel-file-without-charts-and-converts-them-to-pdf.cs
 - batch-process-multiple-excel-files-by-loading-them-without-charts-using-loadoptions-and-saving-each-as-pdf.cs
 - use-lightcells-api-to-open-a-large-workbook-then-monitor-memory-usage-statistics-during-processing.cs
+- load-a-workbook-apply-printer-paper-size-a5-and-verify-that-the-generated-pdf-matches-the-specified-dimensions.cs
