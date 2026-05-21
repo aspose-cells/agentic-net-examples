@@ -3681,6 +3681,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-title-text-to-quarterly-revenue-and-apply-bold-formatting.cs",
+      "title": "Set the chart title text to \"Quarterly Revenue\" and apply bold formatting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
       "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
     },
