@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - load-an-xls-workbook-using-the-workbook-class-and-access-its-datamashup-property.cs
 - extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs
 - output-each-powerquery-formula-name-to-the-console-for-verification-purposes.cs
+- retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs
