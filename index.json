@@ -4156,6 +4156,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-exported-jpeg-image-quality-is-acceptable-by-checking-file-size-range.cs",
+      "title": "Validate that exported JPEG image quality is acceptable by checking file size range."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs",
       "title": "Validate that the image file exists before assigning it to the chart background fill."
     },
