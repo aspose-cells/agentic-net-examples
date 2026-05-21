@@ -3606,6 +3606,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-the-third-chart-from-the-worksheet-using-the-chartsremoveat-method-call.cs",
+      "title": "Remove the third chart from the worksheet using the Charts.RemoveAt method call."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
       "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
     },

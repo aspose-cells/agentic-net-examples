@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - refresh-the-chart-after-updating-source-cells-to-ensure-displayed-data-reflects-latest-values.cs
 - export-the-chart-as-a-png-image-and-save-it-to-the-output-folder.cs
 - iterate-through-all-charts-in-the-workbook-and-set-each-title-font-to-arial-size-12.cs
+- remove-the-third-chart-from-the-worksheet-using-the-chartsremoveat-method-call.cs
