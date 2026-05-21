@@ -801,6 +801,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "set-the-path-property-of-an-external-link-to-a-relative-path-and-test-workbook-portability.cs",
+      "title": "Set the Path property of an external link to a relative path and test workbook portability."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs",
       "title": "Update UserName and Password properties of a specific DBConnection with new credentials."
     },
