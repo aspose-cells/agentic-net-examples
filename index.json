@@ -1681,6 +1681,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "exclude-hidden-rows-during-workbook-loading-by-configuring-filterobjects-to-ignore-rows-with-visibility-set-to-false.cs",
+      "title": "Exclude hidden rows during workbook loading by configuring FilterObjects to ignore rows with visibility set to false."
+    },
+    {
+      "category": "open-workbook",
       "file": "exclude-hidden-worksheets-during-load-by-configuring-loadoptionsloadfilter-to-ignore-them.cs",
       "title": "Exclude hidden worksheets during load by configuring LoadOptions.LoadFilter to ignore them."
     },
