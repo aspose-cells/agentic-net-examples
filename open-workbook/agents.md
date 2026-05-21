@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - read-cell-comments-using-lightcells-api-and-write-them-to-a-separate-json-file-for-documentation-purposes.cs
 - write-cell-comments-while-saving-a-workbook-with-lightcellsdataprovider-to-preserve-user-annotations-in-the-output-file.cs
 - load-a-workbook-and-filter-out-all-conditional-formatting-rules-to-improve-loading-speed-for-analysis-pipelines.cs
+- export-hyperlinks-from-a-workbook-using-lightcells-api-and-generate-a-report-listing-url-targets-and-cell-addresses.cs
