@@ -650,6 +650,11 @@
       "title": "Wrap workbook loading and saving inside a using statement to guarantee deterministic disposal of resources."
     },
     {
+      "category": "queries-and-connections",
+      "file": "load-a-workbook-from-a-file-path-and-obtain-its-dataconnections-collection.cs",
+      "title": "Load a workbook from a file path and obtain its DataConnections collection."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
