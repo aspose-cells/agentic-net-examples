@@ -2341,6 +2341,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs",
+      "title": "Compress the SVG worksheet file using GZip before transmitting it over the network for efficiency."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs",
       "title": "Convert a workbook to TIFF using eight\u2011bit color depth for smaller output files."
     },
