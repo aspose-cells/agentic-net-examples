@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - export-a-chart-to-svg-with-viewbox-attribute-for-responsive-scaling-in-modern-browsers.cs
 - attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
 - include-the-svg-chart-file-in-a-web-page-to-allow-interactive-zoom-and-pan-features.cs
+- preserve-data-labels-visibility-when-converting-a-chart-to-png-to-retain-informational-context.cs
