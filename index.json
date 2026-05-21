@@ -661,6 +661,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs",
+      "title": "Detect hidden external links within the workbook using the appropriate API and list their source paths."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs",
       "title": "Disable BackgroundRefresh on a SQL DBConnection to enforce sequential query execution."
     },

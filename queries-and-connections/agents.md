@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs
 - rename-the-retrieved-dbconnectionname-to-a-descriptive-identifier-such-as-salesdataconnection.cs
 - change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs
+- detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs
