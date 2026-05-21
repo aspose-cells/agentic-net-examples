@@ -426,6 +426,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-function-that-returns-a-formatted-japanese-era-date-string-given-a-gregorian-datetime-input.cs",
+      "title": "Create a function that returns a formatted Japanese era date string given a Gregorian DateTime input."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-a-subclass-of-globalizationsettings-overriding-getgrandtotalname-to-supply-a-culturespecific-grand-total-label.cs",
       "title": "Create a subclass of GlobalizationSettings overriding GetGrandTotalName to supply a culture\u2011specific grand total label."
     },
