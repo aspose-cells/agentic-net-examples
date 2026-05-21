@@ -1671,6 +1671,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-only-the-summary-and-data-worksheets-from-the-file-using-loadoptionsloadfilter.cs",
+      "title": "Load only the \"Summary\" and \"Data\" worksheets from the file using LoadOptions.LoadFilter."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-and-immediately-export-its-visible-sheet-names-to-a-json-array-for-downstream-processing.cs",
       "title": "Open a workbook and immediately export its visible sheet names to a JSON array for downstream processing."
     },
