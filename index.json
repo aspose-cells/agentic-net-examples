@@ -656,6 +656,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs",
+      "title": "Disable BackgroundRefresh on a SQL DBConnection to enforce sequential query execution."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs",
       "title": "Enable BackgroundRefresh on a WebQuery connection to avoid blocking UI during retrieval."
     },
