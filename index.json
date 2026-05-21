@@ -791,6 +791,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "validate-that-updating-a-powerqueryformulaitemvalue-correctly-changes-the-underlying-query-definition.cs",
+      "title": "Validate that updating a PowerQueryFormulaItem.Value correctly changes the underlying query definition."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "write-a-utility-that-lists-all-worksheets-containing-query-tables-and-outputs-their-names.cs",
       "title": "Write a utility that lists all worksheets containing query tables and outputs their names."
     },
