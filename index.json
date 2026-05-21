@@ -2976,6 +2976,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs",
+      "title": "Convert the first worksheet of a workbook to PNG using default resolution for quick preview."
+    },
+    {
+      "category": "working-with-images",
       "file": "embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs",
       "title": "Embed the resulting TIFF image into an HTML page using an img tag with appropriate source attribute."
     },
