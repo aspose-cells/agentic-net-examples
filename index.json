@@ -3941,6 +3941,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "update-the-chart-data-source-dynamically-based-on-userselected-date-range-values.cs",
+      "title": "Update the chart data source dynamically based on user\u2011selected date range values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "use-a-formula-as-the-data-source-for-a-chart-series-to-calculate-moving-averages.cs",
       "title": "Use a formula as the data source for a chart series to calculate moving averages."
     },
