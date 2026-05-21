@@ -686,6 +686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs",
+      "title": "Apply password protection only when the workbook contains more than ten worksheets to enforce policy."
+    },
+    {
+      "category": "macro-project",
       "file": "attempt-to-unlock-a-vba-project-locked-for-viewing-using-provided-credentials-and-report-the-result.cs",
       "title": "Attempt to unlock a VBA project locked for viewing using provided credentials and report the result."
     },
