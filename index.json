@@ -891,6 +891,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-report-listing-signed-versus-unsigned-workbooks-in-specified-directory-for-compliance-review.cs",
+      "title": "Generate report listing signed versus unsigned workbooks in specified directory for compliance review."
+    },
+    {
+      "category": "macro-project",
       "file": "if-the-project-is-unprotected-apply-password-protection-with-the-protect-method-and-a-strong-password.cs",
       "title": "If the project is unprotected, apply password protection with the Protect method and a strong password."
     },
