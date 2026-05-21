@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs
 - output-each-powerquery-formula-name-to-the-console-for-verification-purposes.cs
 - retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs
+- rename-the-retrieved-dbconnectionname-to-a-descriptive-identifier-such-as-salesdataconnection.cs
