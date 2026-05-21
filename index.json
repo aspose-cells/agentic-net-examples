@@ -546,6 +546,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "use-a-loop-to-assign-different-custom-globalizationsettings-instances-to-multiple-worksheets-each-with-unique-subtotal-label-language.cs",
+      "title": "Use a loop to assign different custom GlobalizationSettings instances to multiple worksheets, each with unique subtotal label language."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "use-workbooksettings-to-enable-automatic-recalculation-after-applying-localized-formulas-to-ensure-correct-results.cs",
       "title": "Use Workbook.Settings to enable automatic recalculation after applying localized formulas to ensure correct results."
     },
