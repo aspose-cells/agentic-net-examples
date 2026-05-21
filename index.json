@@ -2386,6 +2386,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "export-a-chart-to-svg-with-viewbox-attribute-for-responsive-scaling-in-modern-browsers.cs",
+      "title": "Export a chart to SVG with viewBox attribute for responsive scaling in modern browsers."
+    },
+    {
+      "category": "working-with-images",
       "file": "export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs",
       "title": "Export a worksheet to SVG without the viewBox attribute to produce fixed\u2011size vector output."
     },
