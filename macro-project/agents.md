@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - automate-signing-of-excel-files-in-continuous-integration-pipeline-to-enforce-macro-security.cs
 - use-asynchronous-tasks-to-sign-multiple-workbooks-concurrently-improving-processing-throughput-significantly.cs
 - load-a-workbook-using-loaddatafilteroptionsvba-to-retrieve-only-vba-project-data.cs
+- open-a-macro-enabled-workbook-while-skipping-worksheet-content-by-applying-the-vba-filter.cs
