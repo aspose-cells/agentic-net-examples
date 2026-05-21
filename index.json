@@ -766,6 +766,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-a-unit-test-that-verifies-macro-assignment-fails-when-the-macro-name-does-not-exist.cs",
+      "title": "Create a unit test that verifies macro assignment fails when the macro name does not exist."
+    },
+    {
+      "category": "macro-project",
       "file": "delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs",
       "title": "Delete any VBA module that exceeds five hundred lines of code after enumerating the project modules."
     },
