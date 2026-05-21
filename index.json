@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "develop-a-console-application-that-accepts-a-folder-path-processes-each-xlsm-and-reports-macro-status.cs",
+      "title": "Develop a console application that accepts a folder path, processes each XLSM, and reports macro status."
+    },
+    {
+      "category": "macro-project",
       "file": "enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs",
       "title": "Enumerate all modules in the VbaProject and output each module name to the console."
     },
