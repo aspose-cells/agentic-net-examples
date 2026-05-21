@@ -3611,6 +3611,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs",
+      "title": "Hide the horizontal axis gridlines to produce a cleaner appearance for the scatter plot."
+    },
+    {
+      "category": "working-with-charts",
       "file": "iterate-through-all-charts-in-the-workbook-and-set-each-title-font-to-arial-size-12.cs",
       "title": "Iterate through all charts in the workbook and set each title font to Arial, size 12."
     },
