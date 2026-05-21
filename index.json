@@ -1901,6 +1901,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "read-cell-comments-using-lightcells-api-and-write-them-to-a-separate-json-file-for-documentation-purposes.cs",
+      "title": "Read cell comments using LightCells API and write them to a separate JSON file for documentation purposes."
+    },
+    {
+      "category": "open-workbook",
       "file": "read-cell-values-with-culturespecific-number-formatting-after-loading-a-workbook-to-ensure-correct-decimals.cs",
       "title": "Read cell values with culture\u2011specific number formatting after loading a workbook to ensure correct decimals."
     },

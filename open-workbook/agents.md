@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs
 - save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs
 - apply-filterobjects-to-exclude-data-validation-rules-during-loading-reducing-memory-footprint-for-simple-data-extraction-tasks.cs
+- read-cell-comments-using-lightcells-api-and-write-them-to-a-separate-json-file-for-documentation-purposes.cs
