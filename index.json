@@ -3690,6 +3690,11 @@
       "title": "Set the vertical axis maximum value to 200 and minimum value to 0 for consistent scaling."
     },
     {
+      "category": "working-with-charts",
+      "file": "use-a-formula-as-the-data-source-for-a-chart-series-to-calculate-moving-averages.cs",
+      "title": "Use a formula as the data source for a chart series to calculate moving averages."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
