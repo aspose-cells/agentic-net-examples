@@ -1631,6 +1631,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-an-excel-95-file-by-setting-loadoptionsversion-to-excel95-before-constructing-the-workbook.cs",
+      "title": "Open an Excel 95 file by setting LoadOptions.Version to Excel95 before constructing the Workbook."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
