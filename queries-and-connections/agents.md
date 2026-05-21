@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs
 - disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs
 - hide-the-refresh-all-command-on-specific-worksheets-via-customized-ribbon-xml.cs
+- export-the-custom-ribbon-xml-to-a-separate-xml-file-for-version-control.cs
