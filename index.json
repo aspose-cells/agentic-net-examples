@@ -3746,6 +3746,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-new-workbook-and-populate-worksheet-cells-with-sales-data-for-the-chart.cs",
+      "title": "Create a new Workbook and populate worksheet cells with sales data for the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-pyramid-chart-and-assign-distinct-colors-to-each-level-for-visual-distinction.cs",
       "title": "Create a pyramid chart and assign distinct colors to each level for visual distinction."
     },
