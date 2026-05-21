@@ -861,6 +861,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs",
+      "title": "Validate that the new external link path points to an existing file before applying changes."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "validate-that-updating-a-powerqueryformulaitemvalue-correctly-changes-the-underlying-query-definition.cs",
       "title": "Validate that updating a PowerQueryFormulaItem.Value correctly changes the underlying query definition."
     },
