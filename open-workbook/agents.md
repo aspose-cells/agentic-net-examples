@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - exclude-hidden-worksheets-during-load-by-configuring-loadoptionsloadfilter-to-ignore-them.cs
 - filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs
 - load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs
+- implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs
