@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - load-a-custom-image-and-use-it-as-a-tiled-texture-fill-for-the-chart-area.cs
 - apply-a-diagonal-stripe-pattern-fill-to-the-chart-background-for-a-stylized-look.cs
 - change-the-chart-theme-to-the-builtin-office-theme-programmatically-for-consistent-styling.cs
+- retrieve-the-current-chart-position-coordinates-and-log-them-for-debugging-purposes.cs

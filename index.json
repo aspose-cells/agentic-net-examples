@@ -3856,6 +3856,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "retrieve-the-current-chart-position-coordinates-and-log-them-for-debugging-purposes.cs",
+      "title": "Retrieve the current chart position coordinates and log them for debugging purposes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-containing-the-chart-as-an-xlsx-file-named-quarterlyreportxlsx-in-the-output-folder.cs",
       "title": "Save the workbook containing the chart as an XLSX file named QuarterlyReport.xlsx in the output folder."
     },
