@@ -1956,6 +1956,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-lightcells-api-to-copy-data-from-one-worksheet-to-another-without-creating-intermediate-workbook-objects.cs",
+      "title": "Use LightCells API to copy data from one worksheet to another without creating intermediate Workbook objects."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-to-export-cell-values-from-a-workbook-into-a-csv-file-without-loading-the-model.cs",
       "title": "Use LightCells API to export cell values from a workbook into a CSV file without loading the model."
     },

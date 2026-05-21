@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - load-a-workbook-without-charts-by-applying-filterobjects-then-verify-that-chart-collections-are-empty-after-loading.cs
 - implement-lightcellsdatahandler-to-convert-all-text-cells-to-uppercase-while-reading-a-workbook-for-standardization.cs
 - set-memorysettingmemorypreference-to-normal-for-a-small-xlsx-file-to-achieve-faster-processing-speed.cs
+- use-lightcells-api-to-copy-data-from-one-worksheet-to-another-without-creating-intermediate-workbook-objects.cs
