@@ -870,6 +870,11 @@
       "title": "Validate that the VBA project password meets minimum length requirements before invoking the Protect method."
     },
     {
+      "category": "macro-project",
+      "file": "verify-the-vba-projects-digital-signature-status-using-the-issigned-property.cs",
+      "title": "Verify the VBA project's digital signature status using the IsSigned property."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
