@@ -3011,6 +3011,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "perform-pixelbypixel-comparison-between-the-generated-png-worksheet-image-and-a-baseline-reference.cs",
+      "title": "Perform pixel\u2011by\u2011pixel comparison between the generated PNG worksheet image and a baseline reference."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs",
       "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
     },
