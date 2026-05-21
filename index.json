@@ -2426,6 +2426,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs",
+      "title": "Iterate through each worksheet in a workbook and save each as a separate PNG file."
+    },
+    {
+      "category": "working-with-images",
       "file": "measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs",
       "title": "Measure conversion duration using Stopwatch and log elapsed time for performance analysis."
     },
