@@ -3816,6 +3816,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "generate-a-chart-with-a-dynamic-number-of-series-based-on-the-count-of-data-rows.cs",
+      "title": "Generate a chart with a dynamic number of series based on the count of data rows."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs",
       "title": "Hide the horizontal axis gridlines to produce a cleaner appearance for the scatter plot."
     },
