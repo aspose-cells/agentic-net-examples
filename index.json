@@ -426,6 +426,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "test-that-excels-autofilter-works-correctly-with-localized-column-headers-after-applying-globalization.cs",
+      "title": "Test that Excel's auto\u2011filter works correctly with localized column headers after applying globalization."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "use-workbooksettings-to-enable-automatic-recalculation-after-applying-localized-formulas-to-ensure-correct-results.cs",
       "title": "Use Workbook.Settings to enable automatic recalculation after applying localized formulas to ensure correct results."
     },
