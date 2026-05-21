@@ -4061,6 +4061,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-title-dynamically-based-on-worksheet-name-using-charttitletext-property.cs",
+      "title": "Set the chart title dynamically based on worksheet name using Chart.Title.Text property."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-title-text-to-quarterly-revenue-and-apply-bold-formatting.cs",
       "title": "Set the chart title text to \"Quarterly Revenue\" and apply bold formatting."
     },
