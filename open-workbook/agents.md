@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs
 - open-a-workbook-from-a-zip-archive-by-extracting-the-stream-and-passing-it-to-the-workbook-constructor.cs
 - load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs
+- apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs
