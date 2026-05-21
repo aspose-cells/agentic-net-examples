@@ -2356,6 +2356,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-a-multipage-tiff-from-the-first-three-worksheets-of-a-loaded-workbook.cs",
+      "title": "Generate a multi\u2011page TIFF from the first three worksheets of a loaded workbook."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs",
       "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
     },
