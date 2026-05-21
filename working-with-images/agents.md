@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - render-a-worksheet-to-jpeg-and-upload-the-image-file-to-a-cloud-storage-bucket.cs
 - store-the-png-worksheet-image-in-azure-blob-storage-with-custom-metadata-for-categorization.cs
 - send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs
+- perform-pixelbypixel-comparison-between-the-generated-png-worksheet-image-and-a-baseline-reference.cs
