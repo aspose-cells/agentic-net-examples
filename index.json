@@ -1631,6 +1631,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs",
+      "title": "Load a workbook from an HTTP response stream to process a remotely hosted Excel file without saving locally."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs",
       "title": "Load an Excel 97\u20112003 workbook by assigning LoadOptions.Version to Excel97to2003 during initialization."
     },
