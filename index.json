@@ -3570,6 +3570,11 @@
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
     {
+      "category": "working-with-charts",
+      "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
+      "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
