@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - adjust-data-label-position-to-outsideend-to-avoid-overlap-with-leader-lines.cs
 - validate-that-custom-slice-colors-persist-after-saving-and-reloading-the-workbook.cs
 - validate-that-exported-jpeg-image-quality-is-acceptable-by-checking-file-size-range.cs
+- verify-that-exporting-chart-without-setting-data-source-throws-an-appropriate-exception.cs
