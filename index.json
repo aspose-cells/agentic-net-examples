@@ -1166,6 +1166,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs",
+      "title": "Verify whether the VBA project in the loaded workbook is password protected."
+    },
+    {
+      "category": "macro-project",
       "file": "wrap-signing-operation-in-trycatch-block-to-handle-exceptions-and-log-error-details.cs",
       "title": "Wrap signing operation in try\u2011catch block to handle exceptions and log error details."
     },

@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - use-asynchronous-tasks-to-sign-multiple-workbooks-concurrently-improving-processing-throughput-significantly.cs
 - load-a-workbook-using-loaddatafilteroptionsvba-to-retrieve-only-vba-project-data.cs
 - open-a-macro-enabled-workbook-while-skipping-worksheet-content-by-applying-the-vba-filter.cs
+- verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs
