@@ -1621,6 +1621,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "configure-interruptmonitor-to-abort-workbook-loading-after-five-seconds-then-handle-the-resulting-exception-gracefully.cs",
+      "title": "Configure InterruptMonitor to abort workbook loading after five seconds, then handle the resulting exception gracefully."
+    },
+    {
+      "category": "open-workbook",
       "file": "configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs",
       "title": "Configure LoadOptions to load only the workbook's custom XML parts for metadata extraction without loading cell data."
     },
