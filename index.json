@@ -376,6 +376,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-fallback-to-english-function-names-when-a-requested-locale-lacks-a-defined-mapping.cs",
+      "title": "Implement fallback to English function names when a requested locale lacks a defined mapping."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "load-the-excel-workbook-using-workbookload-after-configuring-the-custom-globalization-settings.cs",
       "title": "Load the Excel workbook using Workbook.Load after configuring the custom globalization settings."
     },
