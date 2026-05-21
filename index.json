@@ -3586,6 +3586,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
+      "title": "Position the chart at row 15, column 3 with a width of 400 points."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
       "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
     },
