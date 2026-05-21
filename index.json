@@ -1616,6 +1616,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs",
+      "title": "Create a custom IWarningCallback class that logs each load warning to a text file."
+    },
+    {
+      "category": "open-workbook",
       "file": "create-a-custom-loadfilter-that-skips-invisible-worksheets-and-assign-it-to-loadoptions-before-opening.cs",
       "title": "Create a custom LoadFilter that skips invisible worksheets and assign it to LoadOptions before opening."
     },
