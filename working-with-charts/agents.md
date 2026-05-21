@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - use-a-formula-as-the-data-source-for-a-chart-series-to-calculate-moving-averages.cs
 - add-an-error-bar-series-to-a-line-chart-displaying-standard-deviation-values.cs
 - set-the-chart-title-text-to-quarterly-revenue-and-apply-bold-formatting.cs
+- configure-the-chart-legend-to-show-series-names-only-hiding-category-entries.cs

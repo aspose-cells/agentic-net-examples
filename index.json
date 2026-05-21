@@ -3611,6 +3611,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-the-chart-legend-to-show-series-names-only-hiding-category-entries.cs",
+      "title": "Configure the chart legend to show series names only, hiding category entries."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
