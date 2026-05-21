@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-certificate-to-byte-array-then-write-bytes-to-file-for-external-distribution.cs",
+      "title": "Export certificate to byte array, then write bytes to file for external distribution."
+    },
+    {
+      "category": "macro-project",
       "file": "export-certificates-from-workbooks-using-asynchronous-tasks-to-improve-performance-on-large-file-sets.cs",
       "title": "Export certificates from workbooks using asynchronous tasks to improve performance on large file sets."
     },
