@@ -3621,6 +3621,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-picture-background-fill-to-the-chart-by-loading-an-image-file-into-fillformat.cs",
+      "title": "Apply a picture background fill to the chart by loading an image file into FillFormat."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-predefined-chart-style-named-style20-to-ensure-visual-consistency-across-reports.cs",
       "title": "Apply a predefined chart style named Style20 to ensure visual consistency across reports."
     },

@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - add-a-new-series-to-the-chart-using-a-worksheet-range-as-data-source.cs
 - create-a-series-from-an-inmemory-double-array-and-assign-it-to-the-chart.cs
 - set-the-series-values-format-code-to-a-custom-currency-pattern-like-0.cs
+- apply-a-picture-background-fill-to-the-chart-by-loading-an-image-file-into-fillformat.cs
