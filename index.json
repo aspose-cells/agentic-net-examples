@@ -3101,6 +3101,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs",
+      "title": "Use the SVG worksheet graphic as a vector element when generating a PDF document with iTextSharp."
+    },
+    {
+      "category": "working-with-images",
       "file": "validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs",
       "title": "Validate the SVG worksheet file against the SVG schema to ensure structural correctness."
     },
