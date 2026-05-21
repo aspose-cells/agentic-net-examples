@@ -706,6 +706,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-a-vba-module-from-one-workbook-to-another-preserving-its-original-code-and-attributes.cs",
+      "title": "Copy a VBA module from one workbook to another, preserving its original code and attributes."
+    },
+    {
+      "category": "macro-project",
       "file": "create-a-new-vba-module-named-automation-within-the-vbaproject.cs",
       "title": "Create a new VBA module named Automation within the VbaProject."
     },
