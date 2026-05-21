@@ -951,6 +951,11 @@
     },
     {
       "category": "macro-project",
+      "file": "preserve-existing-macros-while-copying-userform-storage-to-ensure-functionality-remains-unchanged.cs",
+      "title": "Preserve existing macros while copying UserForm storage to ensure functionality remains unchanged."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-check-each-workbook-in-a-collection-for-unsigned-vba-projects-and-log-file-names.cs",
       "title": "Programmatically check each workbook in a collection for unsigned VBA projects and log file names."
     },
