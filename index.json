@@ -1021,6 +1021,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-a-workbook-with-vba-filter-then-extract-the-vba-projects-description-property-for-metadata.cs",
+      "title": "Load a workbook with VBA filter, then extract the VBA project's description property for metadata."
+    },
+    {
+      "category": "macro-project",
       "file": "load-an-excel-workbook-and-read-the-issigned-property-to-determine-signature-status.cs",
       "title": "Load an Excel workbook and read the IsSigned property to determine signature status."
     },
