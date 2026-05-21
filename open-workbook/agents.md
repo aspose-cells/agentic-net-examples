@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - open-a-workbook-and-immediately-export-its-visible-sheet-names-to-a-json-array-for-downstream-processing.cs
 - load-only-the-summary-and-data-worksheets-from-the-file-using-loadoptionsloadfilter.cs
 - exclude-hidden-worksheets-during-load-by-configuring-loadoptionsloadfilter-to-ignore-them.cs
+- filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs

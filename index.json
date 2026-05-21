@@ -1636,6 +1636,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs",
+      "title": "Filter out defined names starting with \"_\" during load and verify their absence after opening."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
       "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
     },
