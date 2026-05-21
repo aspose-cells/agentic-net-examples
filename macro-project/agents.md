@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - clone-a-workbook-duplicate-its-vba-project-and-save-the-clone-as-a-separate-xlsm-file.cs
 - skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs
 - implement-error-handling-around-vbaprojectprotect-to-capture-exceptions-when-an-empty-password-is-supplied.cs
+- export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs

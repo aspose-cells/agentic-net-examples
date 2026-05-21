@@ -706,6 +706,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs",
+      "title": "Export each workbook's VBA module code to separate .bas files for version control tracking."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vbaprojects-digital-certificate-to-a-file-stream-for-external-backup-purposes.cs",
       "title": "Export the VbaProject's digital certificate to a file stream for external backup purposes."
     },
