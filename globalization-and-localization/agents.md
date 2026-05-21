@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - create-a-configuration-file-mapping-locale-identifiers-to-corresponding-custom-globalizationsettings-classes.cs
 - load-the-configuration-at-runtime-and-instantiate-the-appropriate-localization-class-based-on-user-input.cs
 - develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs
+- implement-a-feature-that-switches-localization-at-runtime-based-on-user-selection-without-reloading-the-workbook.cs
