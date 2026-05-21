@@ -716,6 +716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "check-the-issigned-property-after-adding-a-digital-signature-to-a-vba-project-programmatically.cs",
+      "title": "Check the IsSigned property after adding a digital signature to a VBA project programmatically."
+    },
+    {
+      "category": "macro-project",
       "file": "clear-existing-code-from-a-specific-module-and-insert-updated-macro-logic-from-an-external-source.cs",
       "title": "Clear existing code from a specific module and insert updated macro logic from an external source."
     },

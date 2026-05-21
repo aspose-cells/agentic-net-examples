@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - compare-exported-certificate-files-with-original-certificates-to-detect-any-corruption-during-export.cs
 - add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs
 - programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs
+- check-the-issigned-property-after-adding-a-digital-signature-to-a-vba-project-programmatically.cs
