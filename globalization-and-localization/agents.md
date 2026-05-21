@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - implement-error-handling-for-loadoptionscultureinfo-when-an-unsupported-locale-identifier-is-supplied-during-workbook-loading.cs
 - compare-pdf-output-of-a-workbook-loaded-with-invariant-culture-versus-french-culture-to-assess-number-format-differences.cs
 - programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs
+- measure-performance-impact-of-applying-custom-globalization-settings-versus-default-settings-when-generating-large-pivot-tables.cs

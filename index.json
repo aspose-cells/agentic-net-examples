@@ -501,6 +501,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "measure-performance-impact-of-applying-custom-globalization-settings-versus-default-settings-when-generating-large-pivot-tables.cs",
+      "title": "Measure performance impact of applying custom globalization settings versus default settings when generating large pivot tables."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs",
       "title": "Override GetBooleanString to return localized true/false strings for the selected locale."
     },
