@@ -1671,6 +1671,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs",
+      "title": "Open an XLSB binary workbook by specifying the file path; the constructor automatically recognizes the format."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
