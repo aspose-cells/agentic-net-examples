@@ -1041,6 +1041,11 @@
     },
     {
       "category": "macro-project",
+      "file": "sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs",
+      "title": "Sign workbook using certificate from Windows store selected by subject name for code signing."
+    },
+    {
+      "category": "macro-project",
       "file": "skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs",
       "title": "Skip protecting workbooks that are already secured by using IsProtected in a conditional statement."
     },
