@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - enumerate-all-loaded-worksheets-after-opening-a-workbook-and-output-their-names-to-the-console.cs
 - read-cell-values-with-culturespecific-number-formatting-after-loading-a-workbook-to-ensure-correct-decimals.cs
 - validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs
+- extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs
