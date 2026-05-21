@@ -1596,6 +1596,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "create-a-custom-loadfilter-that-skips-invisible-worksheets-and-assign-it-to-loadoptions-before-opening.cs",
+      "title": "Create a custom LoadFilter that skips invisible worksheets and assign it to LoadOptions before opening."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
       "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
     },
