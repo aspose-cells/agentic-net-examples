@@ -966,6 +966,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-workbook-with-loadoptionsfiltervbaproject-to-include-only-signed-macros-for-further-processing.cs",
+      "title": "Load workbook with LoadOptions.FilterVbaProject to include only signed macros for further processing."
+    },
+    {
+      "category": "macro-project",
       "file": "log-a-warning-if-the-vba-project-is-locked-for-viewing-after-checking-its-protection-status.cs",
       "title": "Log a warning if the VBA project is locked for viewing after checking its protection status."
     },
