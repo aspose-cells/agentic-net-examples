@@ -1621,6 +1621,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "apply-printer-paper-size-a5-during-load-and-generate-a-pdf-with-matching-page-dimensions.cs",
+      "title": "Apply printer paper size A5 during load and generate a PDF with matching page dimensions."
+    },
+    {
+      "category": "open-workbook",
       "file": "automatically-detect-the-workbook-format-by-passing-only-the-file-path-to-the-workbook-constructor.cs",
       "title": "Automatically detect the workbook format by passing only the file path to the Workbook constructor."
     },
