@@ -1636,6 +1636,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "copy-columns-a-through-d-from-the-source-worksheet-to-a-new-workbook-using-lightcells-for-efficient-selection.cs",
+      "title": "Copy columns A through D from the source worksheet to a new workbook using LightCells for efficient selection."
+    },
+    {
+      "category": "open-workbook",
       "file": "create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs",
       "title": "Create a custom IWarningCallback class that logs each load warning to a text file."
     },
