@@ -796,6 +796,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-x509certificate2-from-pfx-file-with-password-and-use-it-to-sign-vba-project.cs",
+      "title": "Create X509Certificate2 from PFX file with password and use it to sign VBA project."
+    },
+    {
+      "category": "macro-project",
       "file": "delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs",
       "title": "Delete any VBA module that exceeds five hundred lines of code after enumerating the project modules."
     },
