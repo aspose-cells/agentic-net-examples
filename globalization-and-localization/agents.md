@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - write-unit-tests-for-geterrorstring-covering-standard-excel-error-codes-across-multiple-locales.cs
 - write-unit-tests-for-getbooleanstring-covering-true-false-and-null-values-in-different-locales.cs
 - ensure-that-cell-comments-retain-their-original-language-while-function-names-are-localized-according-to-settings.cs
+- use-workbooksettings-to-enable-automatic-recalculation-after-applying-localized-formulas-to-ensure-correct-results.cs
