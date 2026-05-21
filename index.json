@@ -660,6 +660,11 @@
       "title": "Load a workbook from a file path and obtain its DataConnections collection."
     },
     {
+      "category": "queries-and-connections",
+      "file": "retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs",
+      "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."

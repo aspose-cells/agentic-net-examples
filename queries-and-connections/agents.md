@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - load-a-workbook-from-a-file-path-and-obtain-its-dataconnections-collection.cs
 - iterate-through-dataconnections-to-identify-sql-type-connections-and-cast-each-to-dbconnection.cs
+- retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs
