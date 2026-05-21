@@ -721,6 +721,11 @@
     },
     {
       "category": "macro-project",
+      "file": "assign-a-macro-that-calculates-summary-statistics-to-a-shape-object-on-the-worksheet-programmatically.cs",
+      "title": "Assign a macro that calculates summary statistics to a shape object on the worksheet programmatically."
+    },
+    {
+      "category": "macro-project",
       "file": "assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs",
       "title": "Assign different macros to multiple form controls on the same worksheet and verify each executes correctly."
     },
