@@ -1671,6 +1671,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-and-immediately-export-its-visible-sheet-names-to-a-json-array-for-downstream-processing.cs",
+      "title": "Open a workbook and immediately export its visible sheet names to a JSON array for downstream processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs",
       "title": "Open a workbook and retrieve the list of defined names without loading any worksheet data using a LoadFilter."
     },
