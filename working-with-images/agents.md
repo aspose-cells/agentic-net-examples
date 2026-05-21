@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs
 - extract-every-chart-from-a-workbook-and-export-them-as-svg-files-into-a-designated-subfolder.cs
 - split-a-multipage-tiff-workbook-output-into-individual-singlepage-tiff-files-for-separate-handling.cs
+- convert-the-workbook-tiff-to-pdf-by-invoking-a-thirdparty-converter-after-image-generation.cs
