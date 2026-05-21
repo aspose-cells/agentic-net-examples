@@ -1656,6 +1656,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs",
+      "title": "Open a workbook and retrieve the list of defined names without loading any worksheet data using a LoadFilter."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs",
       "title": "Open a workbook from a byte array by wrapping it in a MemoryStream and using the Stream constructor."
     },
