@@ -3761,6 +3761,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-the-chart-to-width-500-points-and-height-300-points-positioning-it-at-cell-d5.cs",
+      "title": "Resize the chart to width 500 points and height 300 points, positioning it at cell D5."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
       "title": "Set the chart border thickness to 2 points and color to dark gray."
     },
