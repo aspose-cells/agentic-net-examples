@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - validate-that-number-formatting-respects-the-loaded-cultureinfo-by-comparing-cell-values-before-and-after-workbook-load.cs
 - implement-a-feature-that-automatically-selects-the-appropriate-japanese-era-based-on-year-when-converting-dates-in-bulk.cs
 - write-code-to-export-a-workbooks-chart-objects-to-separate-pdf-files-each-preserving-custom-globalization-settings.cs
+- create-a-test-suite-that-loads-workbooks-with-various-cultureinfo-values-and-verifies-date-parsing-accuracy.cs
