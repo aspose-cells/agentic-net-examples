@@ -681,6 +681,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs",
+      "title": "Refresh all external data connections sequentially to ensure data consistency across the workbook."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs",
       "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
     },
