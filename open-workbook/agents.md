@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - configure-lightcells-to-process-cells-in-rowmajor-order-for-optimal-cache-utilization-during-large-file-reads.cs
 - save-a-workbook-with-a-specific-printer-paper-size-setting-using-lightcells-api-to-ensure-correct-print-layout.cs
 - load-a-workbook-without-charts-by-applying-filterobjects-then-verify-that-chart-collections-are-empty-after-loading.cs
+- implement-lightcellsdatahandler-to-convert-all-text-cells-to-uppercase-while-reading-a-workbook-for-standardization.cs
