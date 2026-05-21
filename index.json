@@ -661,6 +661,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "write-a-script-that-extracts-the-other-label-text-from-rendered-pie-charts-for-localization-quality-checks.cs",
+      "title": "Write a script that extracts the \u201cOther\u201d label text from rendered pie charts for localization quality checks."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "write-code-to-export-a-workbooks-chart-objects-to-separate-pdf-files-each-preserving-custom-globalization-settings.cs",
       "title": "Write code to export a workbook\u2019s chart objects to separate PDF files, each preserving custom globalization settings."
     },
