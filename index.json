@@ -686,6 +686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-module-that-references-external-com-libraries-and-ensure-the-references-compile-correctly.cs",
+      "title": "Add a module that references external COM libraries and ensure the references compile correctly."
+    },
+    {
+      "category": "macro-project",
       "file": "apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs",
       "title": "Apply password protection only when the workbook contains more than ten worksheets to enforce policy."
     },

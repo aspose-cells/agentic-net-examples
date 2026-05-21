@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs
 - delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs
 - copy-a-vba-module-from-one-workbook-to-another-preserving-its-original-code-and-attributes.cs
+- add-a-module-that-references-external-com-libraries-and-ensure-the-references-compile-correctly.cs
