@@ -1001,6 +1001,11 @@
     },
     {
       "category": "macro-project",
+      "file": "open-a-macro-enabled-workbook-while-skipping-worksheet-content-by-applying-the-vba-filter.cs",
+      "title": "Open a macro-enabled workbook while skipping worksheet content by applying the VBA filter."
+    },
+    {
+      "category": "macro-project",
       "file": "overwrite-original-workbook-after-successful-signing-when-backup-is-not-required-by-policy.cs",
       "title": "Overwrite original workbook after successful signing when backup is not required by policy."
     },
