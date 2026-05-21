@@ -1846,6 +1846,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-apply-printer-paper-size-letter-and-ensure-the-pdf-page-count-aligns-with-expectations.cs",
+      "title": "Load a workbook, apply printer paper size Letter, and ensure the PDF page count aligns with expectations."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs",
       "title": "Load a workbook containing pivot tables using LightCells API and extract pivot cache data for external reporting."
     },
