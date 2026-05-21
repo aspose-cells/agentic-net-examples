@@ -1061,6 +1061,11 @@
     },
     {
       "category": "macro-project",
+      "file": "retrieve-the-list-of-com-library-references-from-the-vba-project-and-log-each-reference-name.cs",
+      "title": "Retrieve the list of COM library references from the VBA project and log each reference name."
+    },
+    {
+      "category": "macro-project",
       "file": "retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs",
       "title": "Retrieve the VBA project from the loaded workbook via Workbook.VbaProject."
     },
