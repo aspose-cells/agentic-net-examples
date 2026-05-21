@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - adjust-the-gap-width-of-a-bar-chart-to-150-percent-for-tighter-column-spacing.cs
 - create-a-radar-chart-and-configure-the-radial-axis-to-display-category-names-as-labels.cs
 - set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs
+- link-a-chart-series-to-a-named-range-called-salesdata-for-dynamic-updates.cs
