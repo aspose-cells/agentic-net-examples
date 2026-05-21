@@ -766,6 +766,11 @@
     },
     {
       "category": "macro-project",
+      "file": "import-an-exported-vba-project-certificate-into-another-workbook-to-share-signing-authority-across-projects.cs",
+      "title": "Import an exported VBA project certificate into another workbook to share signing authority across projects."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs",
       "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
     },
