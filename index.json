@@ -706,6 +706,11 @@
     },
     {
       "category": "macro-project",
+      "file": "batch-export-certificates-from-all-signed-workbooks-in-a-folder-to-a-designated-output-directory.cs",
+      "title": "Batch export certificates from all signed workbooks in a folder to a designated output directory."
+    },
+    {
+      "category": "macro-project",
       "file": "clear-existing-code-from-a-specific-module-and-insert-updated-macro-logic-from-an-external-source.cs",
       "title": "Clear existing code from a specific module and insert updated macro logic from an external source."
     },
