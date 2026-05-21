@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - apply-filterdatakind-to-load-only-numeric-and-date-cells-from-a-template-workbook-for-statistical-analysis.cs
 - configure-lightcells-to-process-cells-in-rowmajor-order-for-optimal-cache-utilization-during-large-file-reads.cs
 - save-a-workbook-with-a-specific-printer-paper-size-setting-using-lightcells-api-to-ensure-correct-print-layout.cs
+- load-a-workbook-without-charts-by-applying-filterobjects-then-verify-that-chart-collections-are-empty-after-loading.cs
