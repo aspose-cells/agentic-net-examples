@@ -3621,6 +3621,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-gradient-fill-for-the-plot-area-using-two-complementary-colors-for-depth.cs",
+      "title": "Apply a gradient fill for the plot area using two complementary colors for depth."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs",
       "title": "Apply a gradient fill to the chart area background using two complementary colors."
     },
