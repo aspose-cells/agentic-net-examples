@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - change-an-existing-pie-chart-to-a-doughnut-chart-by-updating-its-charttype-property.cs
 - enable-data-markers-on-a-line-series-and-set-marker-shape-to-triangle.cs
 - assign-custom-colors-to-each-series-in-a-stacked-bar-chart-using-the-seriesstyle-property.cs
+- define-chart-category-labels-by-linking-the-categorydata-property-to-range-b2b8.cs
