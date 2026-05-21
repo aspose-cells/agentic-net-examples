@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - duplicate-an-existing-chart-place-the-copy-on-a-new-worksheet-and-assign-a-distinct-data-range.cs
 - set-the-chart-title-to-monthly-revenue-and-apply-a-predefined-style-accent1.cs
 - move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs
+- resize-the-chart-to-width-500-points-and-height-300-points-positioning-it-at-cell-d5.cs
