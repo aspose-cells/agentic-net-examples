@@ -1596,6 +1596,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
+      "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs",
       "title": "Load a legacy XLS file from a Stream object to process its data in memory."
     },
