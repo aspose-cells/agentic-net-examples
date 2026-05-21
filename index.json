@@ -1601,6 +1601,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "enable-memorypreferences-in-loadoptions-to-prevent-outofmemoryexception-when-loading-a-massive-workbook.cs",
+      "title": "Enable MemoryPreferences in LoadOptions to prevent OutOfMemoryException when loading a massive workbook."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
       "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
     },
