@@ -361,6 +361,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "assign-the-custom-globalizationsettings-instance-to-workbooksettingsglobalizationsettings-before-loading-any-worksheets.cs",
+      "title": "Assign the custom GlobalizationSettings instance to Workbook.Settings.GlobalizationSettings before loading any worksheets."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-a-custom-globalizationsettings-class-overriding-getlocalfunctionname-for-target-language-functions.cs",
       "title": "Create a custom GlobalizationSettings class overriding GetLocalFunctionName for target language functions."
     },
