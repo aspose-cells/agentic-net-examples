@@ -666,6 +666,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs",
+      "title": "Modify CommandText of a DBConnection to include a filter clause limiting returned rows."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs",
       "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
     },
