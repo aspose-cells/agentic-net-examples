@@ -3906,6 +3906,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "log-indices-of-secondary-plot-points-to-a-text-file-for-later-analysis.cs",
+      "title": "Log indices of secondary plot points to a text file for later analysis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs",
       "title": "Move the chart legend to the bottom position and hide its border for cleaner layout."
     },
