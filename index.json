@@ -3646,6 +3646,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-texture-fill-to-the-chart-area-using-a-wood-grain-image-for-a-natural-look.cs",
+      "title": "Apply a texture fill to the chart area using a wood grain image for a natural look."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-a-named-range-called-salesdata-as-the-chart-source-using-setchartdatarange.cs",
       "title": "Assign a named range called SalesData as the chart source using SetChartDataRange."
     },
