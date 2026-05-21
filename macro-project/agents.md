@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - remove-digital-signature-from-vba-project-by-clearing-certificate-and-verify-issigned-becomes-false.cs
 - load-workbook-with-loadoptionsfiltervbaproject-to-include-only-signed-macros-for-further-processing.cs
 - generate-report-listing-signed-versus-unsigned-workbooks-in-specified-directory-for-compliance-review.cs
+- automate-signing-of-excel-files-in-continuous-integration-pipeline-to-enforce-macro-security.cs
