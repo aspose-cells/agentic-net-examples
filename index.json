@@ -1891,6 +1891,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-load-only-worksheets-1-and-3-and-save-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, load only worksheets 1 and 3, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs",
       "title": "Load a workbook with LightCells API, set printer paper size A3, and save to PDF."
     },
