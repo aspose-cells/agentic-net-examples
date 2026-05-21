@@ -891,6 +891,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "save-the-workbook-with-updated-external-links-and-custom-ribbon-after-user-confirmation.cs",
+      "title": "Save the workbook with updated external links and custom ribbon after user confirmation."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "serialize-the-powerqueryformulacollection-to-xml-for-external-auditing-compliance-purposes.cs",
       "title": "Serialize the PowerQueryFormulaCollection to XML for external auditing compliance purposes."
     },
