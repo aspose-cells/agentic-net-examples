@@ -1856,6 +1856,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-to-disable-charts-retrieve-loadwarnings-and-log-them.cs",
+      "title": "Load a workbook using LoadOptions to disable charts, retrieve LoadWarnings, and log them."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-using-loadoptions-to-disable-charts-set-printer-paper-size-a5-and-save-to-pdf.cs",
       "title": "Load a workbook using LoadOptions to disable charts, set printer paper size A5, and save to PDF."
     },
