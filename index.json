@@ -571,6 +571,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "program-a-macrolike-routine-that-adds-subtotals-with-localized-labels-to-all-worksheets-in-a-workbook.cs",
+      "title": "Program a macro\u2011like routine that adds subtotals with localized labels to all worksheets in a workbook."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs",
       "title": "Programmatically set worksheet cell styles to display dates in Japanese era format after conversion, then export to PDF."
     },
