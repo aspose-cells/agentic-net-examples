@@ -3846,6 +3846,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-a-predefined-texture-fill-on-the-chart-background-to-give-it-a-fabric-appearance.cs",
+      "title": "Set a predefined texture fill on the chart background to give it a fabric appearance."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
       "title": "Set the chart border thickness to 2 points and color to dark gray."
     },
