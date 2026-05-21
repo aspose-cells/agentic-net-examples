@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs
 - change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs
 - modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs
+- set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs
