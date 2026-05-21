@@ -1115,6 +1115,11 @@
       "title": "Wrap signing operation in try\u2011catch block to handle exceptions and log error details."
     },
     {
+      "category": "macro-project",
+      "file": "write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs",
+      "title": "Write validation errors to a text file for later analysis and compliance reporting."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
