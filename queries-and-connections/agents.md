@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - load-multiple-xls-files-from-a-directory-update-each-dbconnectionname-and-save-changes-in-place.cs
 - export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs
 - compare-odata-connection-metadata-before-and-after-modification-to-ensure-version-consistency.cs
+- use-workbookdatamashup-to-extract-odata-service-urls-and-store-them-in-a-json-configuration-file.cs
