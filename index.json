@@ -3866,6 +3866,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-series-values-format-code-to-a-custom-currency-pattern-like-0.cs",
+      "title": "Set the series values format code to a custom currency pattern like \"$#,##0\"."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-vertical-axis-maximum-value-to-200-and-minimum-value-to-0-for-consistent-scaling.cs",
       "title": "Set the vertical axis maximum value to 200 and minimum value to 0 for consistent scaling."
     },
