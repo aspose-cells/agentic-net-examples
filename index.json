@@ -1621,6 +1621,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "convert-a-loaded-workbook-to-pdf-while-an-interruptmonitor-aborts-the-conversion-if-it-exceeds-twenty-seconds.cs",
+      "title": "Convert a loaded workbook to PDF while an InterruptMonitor aborts the conversion if it exceeds twenty seconds."
+    },
+    {
+      "category": "open-workbook",
       "file": "create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs",
       "title": "Create a custom IWarningCallback class that logs each load warning to a text file."
     },
