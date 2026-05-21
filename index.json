@@ -3591,6 +3591,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-markers-on-a-line-series-and-set-marker-shape-to-triangle.cs",
+      "title": "Enable data markers on a line series and set marker shape to triangle."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-chart-as-a-png-image-and-save-it-to-the-output-folder.cs",
       "title": "Export the chart as a PNG image and save it to the output folder."
     },
