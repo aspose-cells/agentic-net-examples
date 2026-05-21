@@ -946,6 +946,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-workbook-from-memory-stream-sign-vba-project-then-write-signed-workbook-back-to-stream.cs",
+      "title": "Load workbook from memory stream, sign VBA project, then write signed workbook back to stream."
+    },
+    {
+      "category": "macro-project",
       "file": "load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs",
       "title": "Load workbook using LoadOptions to omit VBA project and verify macros are excluded."
     },

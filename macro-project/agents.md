@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - wrap-signing-operation-in-trycatch-block-to-handle-exceptions-and-log-error-details.cs
 - write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs
 - compare-exported-certificate-thumbprint-with-original-certificate-thumbprint-to-ensure-integrity.cs
+- load-workbook-from-memory-stream-sign-vba-project-then-write-signed-workbook-back-to-stream.cs
