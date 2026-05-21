@@ -2986,6 +2986,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs",
+      "title": "Measure conversion duration using Stopwatch and log elapsed time for performance analysis."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs",
       "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
     },
