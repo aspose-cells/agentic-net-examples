@@ -1756,6 +1756,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "implement-lightcellsdatahandler-to-replace-error-values-with-zero-during-load-ensuring-clean-numeric-datasets-for-analysis.cs",
+      "title": "Implement LightCellsDataHandler to replace error values with zero during load, ensuring clean numeric datasets for analysis."
+    },
+    {
+      "category": "open-workbook",
       "file": "include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs",
       "title": "Include worksheets matching the pattern \"Q[0-9]+\" using LoadOptions.LoadFilter with a regular expression filter."
     },
