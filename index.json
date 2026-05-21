@@ -366,6 +366,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "apply-culturespecific-number-formatting-to-currency-cells-after-loading-the-workbook-with-german-cultureinfo-without-changing-thread-settings.cs",
+      "title": "Apply culture\u2011specific number formatting to currency cells after loading the workbook with German CultureInfo, without changing thread settings."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "assign-the-custom-globalizationsettings-instance-to-workbooksettingsglobalizationsettings-before-loading-any-worksheets.cs",
       "title": "Assign the custom GlobalizationSettings instance to Workbook.Settings.GlobalizationSettings before loading any worksheets."
     },
