@@ -441,6 +441,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-test-suite-that-loads-workbooks-with-various-cultureinfo-values-and-verifies-date-parsing-accuracy.cs",
+      "title": "Create a test suite that loads workbooks with various CultureInfo values and verifies date parsing accuracy."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-a-utility-that-converts-date-columns-in-multiple-xls-files-to-japanese-era-format-and-outputs-pdfs.cs",
       "title": "Create a utility that converts date columns in multiple XLS files to Japanese era format and outputs PDFs."
     },
