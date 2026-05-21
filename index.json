@@ -3766,6 +3766,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-title-to-monthly-revenue-and-apply-a-predefined-style-accent1.cs",
+      "title": "Set the chart title to \"Monthly Revenue\" and apply a predefined style Accent1."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
       "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
     },

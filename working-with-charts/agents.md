@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - use-index-and-match-functions-to-build-a-dynamic-range-for-a-secondary-axis-data-source.cs
 - reference-a-range-on-a-different-worksheet-as-the-chart-data-source-to-enable-crosssheet-linking.cs
 - duplicate-an-existing-chart-place-the-copy-on-a-new-worksheet-and-assign-a-distinct-data-range.cs
+- set-the-chart-title-to-monthly-revenue-and-apply-a-predefined-style-accent1.cs
