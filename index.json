@@ -3771,6 +3771,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "lock-the-chart-object-programmatically-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs",
+      "title": "Lock the chart object programmatically to prevent users from moving or resizing it in the Excel UI."
+    },
+    {
+      "category": "working-with-charts",
       "file": "move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs",
       "title": "Move the chart legend to the bottom position and hide its border for cleaner layout."
     },
