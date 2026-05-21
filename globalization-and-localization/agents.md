@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - add-subtotal-rows-to-the-worksheet-after-assigning-custom-globalizationsettings-verifying-localized-total-labels.cs
 - convert-gregorian-date-cells-to-japanese-calendar-dates-with-cellshelper-preserving-era-information-for-each-cell.cs
 - save-the-workbook-containing-japanese-era-dates-as-pdf-confirming-era-symbols-appear-correctly-in-the-output.cs
+- batch-process-a-folder-of-xlsx-files-loading-each-with-spanish-cultureinfo-and-exporting-charts-to-png-images.cs
