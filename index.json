@@ -376,6 +376,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-configuration-file-mapping-locale-identifiers-to-corresponding-custom-globalizationsettings-classes.cs",
+      "title": "Create a configuration file mapping locale identifiers to corresponding custom GlobalizationSettings classes."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-a-custom-globalizationsettings-class-overriding-getlocalfunctionname-for-target-language-functions.cs",
       "title": "Create a custom GlobalizationSettings class overriding GetLocalFunctionName for target language functions."
     },
