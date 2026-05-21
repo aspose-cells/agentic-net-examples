@@ -1216,6 +1216,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs",
+      "title": "Validate the VBA project's signature against a trusted root authority and output validation status."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-that-vba-project-signature-becomes-invalid-after-modifying-macro-code-without-resigning.cs",
       "title": "Verify that VBA project signature becomes invalid after modifying macro code without re\u2011signing."
     },
