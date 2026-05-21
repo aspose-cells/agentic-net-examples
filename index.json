@@ -461,6 +461,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-error-handling-for-loadoptionscultureinfo-when-an-unsupported-locale-identifier-is-supplied-during-workbook-loading.cs",
+      "title": "Implement error handling for LoadOptions.CultureInfo when an unsupported locale identifier is supplied during workbook loading."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "implement-fallback-to-english-function-names-when-a-requested-locale-lacks-a-defined-mapping.cs",
       "title": "Implement fallback to English function names when a requested locale lacks a defined mapping."
     },
