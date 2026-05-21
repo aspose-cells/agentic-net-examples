@@ -691,6 +691,11 @@
     },
     {
       "category": "macro-project",
+      "file": "clone-a-workbook-duplicate-its-vba-project-and-save-the-clone-as-a-separate-xlsm-file.cs",
+      "title": "Clone a workbook, duplicate its VBA project, and save the clone as a separate XLSM file."
+    },
+    {
+      "category": "macro-project",
       "file": "create-a-new-vba-module-named-automation-within-the-vbaproject.cs",
       "title": "Create a new VBA module named Automation within the VbaProject."
     },

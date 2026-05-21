@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs
 - clear-existing-code-from-a-specific-module-and-insert-updated-macro-logic-from-an-external-source.cs
 - log-a-warning-if-the-vba-project-is-locked-for-viewing-after-checking-its-protection-status.cs
+- clone-a-workbook-duplicate-its-vba-project-and-save-the-clone-as-a-separate-xlsm-file.cs
