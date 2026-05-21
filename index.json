@@ -3136,6 +3136,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "split-a-multipage-tiff-workbook-output-into-individual-singlepage-tiff-files-for-separate-handling.cs",
+      "title": "Split a multi\u2011page TIFF workbook output into individual single\u2011page TIFF files for separate handling."
+    },
+    {
+      "category": "working-with-images",
       "file": "store-the-png-worksheet-image-in-azure-blob-storage-with-custom-metadata-for-categorization.cs",
       "title": "Store the PNG worksheet image in Azure Blob Storage with custom metadata for categorization."
     },
