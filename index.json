@@ -411,6 +411,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "load-the-configuration-at-runtime-and-instantiate-the-appropriate-localization-class-based-on-user-input.cs",
+      "title": "Load the configuration at runtime and instantiate the appropriate localization class based on user input."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "load-the-excel-workbook-using-workbookload-after-configuring-the-custom-globalization-settings.cs",
       "title": "Load the Excel workbook using Workbook.Load after configuring the custom globalization settings."
     },
