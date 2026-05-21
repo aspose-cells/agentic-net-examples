@@ -3771,6 +3771,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-add-a-column-chart-to-the-first-worksheet.cs",
+      "title": "Load a workbook, add a column chart to the first worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "lock-the-chart-object-programmatically-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs",
       "title": "Lock the chart object programmatically to prevent users from moving or resizing it in the Excel UI."
     },
