@@ -1886,6 +1886,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "save-a-workbook-as-xlsx-while-specifying-a-custom-temporary-folder-for-intermediate-files-to-reduce-disk-io.cs",
+      "title": "Save a workbook as XLSX while specifying a custom temporary folder for intermediate files to reduce disk I/O."
+    },
+    {
+      "category": "open-workbook",
       "file": "save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs",
       "title": "Save the workbook back to XLSX format after modifying cell values using Workbook.Save with default options."
     },
