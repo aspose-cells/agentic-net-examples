@@ -721,6 +721,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "save-the-modified-workbook-to-a-new-file-path-preserving-original-version-metadata.cs",
+      "title": "Save the modified workbook to a new file path preserving original version metadata."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs",
       "title": "Set RefreshOnLoad flag of a WebQuery connection to true for automatic data update."
     },
