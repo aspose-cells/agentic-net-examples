@@ -3676,6 +3676,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "instantiate-a-workbook-add-a-worksheet-and-populate-cells-with-sales-data.cs",
+      "title": "Instantiate a Workbook, add a worksheet, and populate cells with sales data."
+    },
+    {
+      "category": "working-with-charts",
       "file": "iterate-through-all-charts-in-the-workbook-and-set-each-title-font-to-arial-size-12.cs",
       "title": "Iterate through all charts in the workbook and set each title font to Arial, size 12."
     },
