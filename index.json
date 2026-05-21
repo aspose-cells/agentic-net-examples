@@ -656,6 +656,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "add-a-tooltip-to-the-custom-ribbon-button-describing-its-function-for-end-users.cs",
+      "title": "Add a tooltip to the custom ribbon button describing its function for end users."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "add-error-handling-to-capture-exceptions-when-an-external-connection-path-is-invalid.cs",
       "title": "Add error handling to capture exceptions when an external connection path is invalid."
     },

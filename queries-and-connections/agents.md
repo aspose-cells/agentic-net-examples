@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - export-the-custom-ribbon-xml-to-a-separate-xml-file-for-version-control.cs
 - import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs
 - validate-that-the-imported-ribbon-xml-conforms-to-the-office-open-xml-schema-before-applying.cs
+- add-a-tooltip-to-the-custom-ribbon-button-describing-its-function-for-end-users.cs
