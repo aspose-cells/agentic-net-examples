@@ -3991,6 +3991,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "read-the-chart-title-modify-it-to-a-custom-string-and-apply-the-change.cs",
+      "title": "Read the chart title, modify it to a custom string, and apply the change."
+    },
+    {
+      "category": "working-with-charts",
       "file": "reference-a-range-on-a-different-worksheet-as-the-chart-data-source-to-enable-crosssheet-linking.cs",
       "title": "Reference a range on a different worksheet as the chart data source to enable cross\u2011sheet linking."
     },
