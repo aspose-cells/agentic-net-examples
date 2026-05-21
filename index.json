@@ -1016,6 +1016,11 @@
     },
     {
       "category": "macro-project",
+      "file": "remove-digital-signature-from-vba-project-by-clearing-certificate-and-verify-issigned-becomes-false.cs",
+      "title": "Remove digital signature from VBA project by clearing certificate and verify IsSigned becomes false."
+    },
+    {
+      "category": "macro-project",
       "file": "rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs",
       "title": "Rename an existing VBA module to DataProcessor by setting its Name property before saving."
     },
