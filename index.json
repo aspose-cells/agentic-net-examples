@@ -2345,6 +2345,11 @@
       "title": "Convert an entire workbook to a multi\u2011page TIFF using default rendering options."
     },
     {
+      "category": "working-with-images",
+      "file": "render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs",
+      "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
+    },
+    {
       "category": "working-with-json",
       "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
       "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."
