@@ -721,6 +721,11 @@
     },
     {
       "category": "macro-project",
+      "file": "batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs",
+      "title": "Batch process workbooks to add a standard library reference, then generate a summary of successes and failures."
+    },
+    {
+      "category": "macro-project",
       "file": "check-the-issigned-property-after-adding-a-digital-signature-to-a-vba-project-programmatically.cs",
       "title": "Check the IsSigned property after adding a digital signature to a VBA project programmatically."
     },
