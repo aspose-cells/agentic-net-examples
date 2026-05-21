@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "adjust-the-gap-width-of-a-bar-chart-to-150-percent-for-tighter-column-spacing.cs",
+      "title": "Adjust the gap width of a bar chart to 150 percent for tighter column spacing."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs",
       "title": "Apply a gradient fill to the chart area background using two complementary colors."
     },
