@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - render-a-worksheet-to-jpeg-with-gridlines-hidden-by-setting-isgridlinesvisible-to-false.cs
 - generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs
 - convert-a-worksheet-to-png-and-embed-the-resulting-image-as-a-base64-string-in-json.cs
+- render-a-worksheet-to-jpeg-and-upload-the-image-file-to-a-cloud-storage-bucket.cs

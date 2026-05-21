@@ -2406,6 +2406,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-a-worksheet-to-jpeg-and-upload-the-image-file-to-a-cloud-storage-bucket.cs",
+      "title": "Render a worksheet to JPEG and upload the image file to a cloud storage bucket."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-worksheet-to-jpeg-with-gridlines-hidden-by-setting-isgridlinesvisible-to-false.cs",
       "title": "Render a worksheet to JPEG with gridlines hidden by setting IsGridLinesVisible to false."
     },
