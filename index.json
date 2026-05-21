@@ -2441,6 +2441,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-the-svg-worksheet-image-in-a-wpf-image-control-for-display-within-a-desktop-application.cs",
+      "title": "Render the SVG worksheet image in a WPF Image control for display within a desktop application."
+    },
+    {
+      "category": "working-with-images",
       "file": "save-a-generated-tiff-file-directly-to-a-network-share-path-after-converting-the-workbook.cs",
       "title": "Save a generated TIFF file directly to a network share path after converting the workbook."
     },
