@@ -991,6 +991,11 @@
     },
     {
       "category": "macro-project",
+      "file": "resign-vba-project-after-code-changes-to-restore-a-valid-digital-signature-status.cs",
+      "title": "Re\u2011sign VBA project after code changes to restore a valid digital signature status."
+    },
+    {
+      "category": "macro-project",
       "file": "retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs",
       "title": "Retrieve the VBA project from the loaded workbook via Workbook.VbaProject."
     },
