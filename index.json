@@ -706,6 +706,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-reference-to-the-microsoft-xml-v60-library-in-the-vba-project-to-enable-xml-parsing.cs",
+      "title": "Add a reference to the Microsoft XML, v6.0 library in the VBA project to enable XML parsing."
+    },
+    {
+      "category": "macro-project",
       "file": "add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs",
       "title": "Add a registered library reference to the VBA project using VbaProject.References.AddRegisteredReference."
     },
