@@ -3565,6 +3565,11 @@
       "title": "Verify that the merged workbook contains the expected number of worksheets after combination."
     },
     {
+      "category": "working-with-charts",
+      "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
+      "title": "Create a line chart on a worksheet using data from cells A1 through A10."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
