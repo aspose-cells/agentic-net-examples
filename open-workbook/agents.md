@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs
 - instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs
 - create-a-custom-loadfilter-that-skips-invisible-worksheets-and-assign-it-to-loadoptions-before-opening.cs
+- open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs

@@ -1611,6 +1611,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs",
+      "title": "Open an encrypted Excel workbook by providing the password in LoadOptions.Password property."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
