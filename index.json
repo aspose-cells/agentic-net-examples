@@ -1676,6 +1676,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-from-a-zip-archive-by-extracting-the-stream-and-passing-it-to-the-workbook-constructor.cs",
+      "title": "Open a workbook from a ZIP archive by extracting the stream and passing it to the Workbook constructor."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs",
       "title": "Open a workbook with formulas preserved but not calculated by disabling automatic calculation in LoadOptions."
     },
