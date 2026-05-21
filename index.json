@@ -3596,6 +3596,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-filter-on-the-listobject-to-show-only-rows-where-region-equals-east.cs",
+      "title": "Apply a filter on the ListObject to show only rows where Region equals 'East'."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs",
       "title": "Apply a gradient fill to the chart area background using two complementary colors."
     },
