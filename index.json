@@ -831,6 +831,11 @@
     },
     {
       "category": "macro-project",
+      "file": "save-the-workbook-as-a-macroenabled-xlsm-file-to-the-specified-location.cs",
+      "title": "Save the workbook as a macro\u2011enabled XLSM file to the specified location."
+    },
+    {
+      "category": "macro-project",
       "file": "serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs",
       "title": "Serialize the VBA project structure, including module names and code snippets, into a JSON report file."
     },
