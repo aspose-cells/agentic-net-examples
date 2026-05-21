@@ -3606,6 +3606,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-a-named-range-called-salesdata-as-the-chart-source-using-setchartdatarange.cs",
+      "title": "Assign a named range called SalesData as the chart source using SetChartDataRange."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-custom-colors-to-each-series-in-a-stacked-bar-chart-using-the-seriesstyle-property.cs",
       "title": "Assign custom colors to each series in a stacked bar chart using the Series.Style property."
     },
