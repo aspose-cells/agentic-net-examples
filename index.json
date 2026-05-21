@@ -1595,6 +1595,11 @@
       "title": "Wrap workbook loading and saving inside a using statement to guarantee deterministic disposal of resources."
     },
     {
+      "category": "open-workbook",
+      "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
+      "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
