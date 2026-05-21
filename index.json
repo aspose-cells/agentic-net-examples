@@ -1641,6 +1641,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-only-defined-names-from-a-workbook-by-setting-loadoptionsloadfilter-to-a-predefined-definednamesfilter.cs",
+      "title": "Load only defined names from a workbook by setting LoadOptions.LoadFilter to a predefined DefinedNamesFilter."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs",
       "title": "Open a workbook from a byte array by wrapping it in a MemoryStream and using the Stream constructor."
     },
