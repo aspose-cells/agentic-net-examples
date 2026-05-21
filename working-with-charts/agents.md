@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - apply-a-filter-on-the-listobject-to-show-only-rows-where-region-equals-east.cs
 - insert-a-new-row-into-the-listobject-with-q4-data-chart-automatically-extends.cs
 - delete-a-row-from-the-listobject-and-verify-the-chart-series-contracts-accordingly.cs
+- define-a-dynamic-named-range-using-offset-based-on-nonempty-rows-in-column-a.cs
