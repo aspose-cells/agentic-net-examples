@@ -836,6 +836,11 @@
     },
     {
       "category": "macro-project",
+      "file": "set-the-buttons-macroname-property-to-reference-the-newly-added-macro.cs",
+      "title": "Set the button's MacroName property to reference the newly added macro."
+    },
+    {
+      "category": "macro-project",
       "file": "skip-protecting-workbooks-that-are-already-secured-by-using-isprotected-in-a-conditional-statement.cs",
       "title": "Skip protecting workbooks that are already secured by using IsProtected in a conditional statement."
     },

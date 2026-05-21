@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - import-an-exported-vba-project-certificate-into-another-workbook-to-share-signing-authority-across-projects.cs
 - create-a-new-xlsm-workbook-instance-and-add-a-vba-code-module.cs
 - insert-a-form-control-button-onto-a-specific-worksheet-cell.cs
+- set-the-buttons-macroname-property-to-reference-the-newly-added-macro.cs
