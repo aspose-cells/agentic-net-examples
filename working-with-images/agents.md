@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs
 - validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs
 - render-the-svg-worksheet-image-in-a-wpf-image-control-for-display-within-a-desktop-application.cs
+- use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs
