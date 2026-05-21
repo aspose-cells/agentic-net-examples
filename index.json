@@ -371,6 +371,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "load-the-excel-workbook-using-workbookload-after-configuring-the-custom-globalization-settings.cs",
+      "title": "Load the Excel workbook using Workbook.Load after configuring the custom globalization settings."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs",
       "title": "Override GetBooleanString to return localized true/false strings for the selected locale."
     },
