@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - configure-memorysettingmemorypreference-to-low-before-opening-a-massive-xlsx-file-to-reduce-ram-usage.cs
 - apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs
 - use-interruptmonitor-to-abort-workbook-loading-if-processing-exceeds-a-predefined-time-limit.cs
+- retrieve-and-log-warning-messages-after-loading-a-workbook-with-filtered-objects-to-diagnose-data-loss.cs
