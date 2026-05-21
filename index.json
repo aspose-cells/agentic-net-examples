@@ -3681,6 +3681,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-series-from-an-inmemory-double-array-and-assign-it-to-the-chart.cs",
+      "title": "Create a series from an in\u2011memory double array and assign it to the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-a-dynamic-named-range-using-offset-based-on-nonempty-rows-in-column-a.cs",
       "title": "Define a dynamic named range using OFFSET based on non\u2011empty rows in column A."
     },
