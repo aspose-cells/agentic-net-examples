@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs
 - measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs
 - set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs
+- specify-a-white-background-color-in-imageorprintoptions-when-rendering-workbook-to-tiff-to-ensure-consistency.cs
