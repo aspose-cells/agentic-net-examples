@@ -851,6 +851,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
+      "title": "Programmatically rename a form control button while preserving its assigned macro reference."
+    },
+    {
+      "category": "macro-project",
       "file": "protect-all-xlsm-files-in-a-directory-applying-passwords-only-to-unprotected-vba-projects.cs",
       "title": "Protect all XLSM files in a directory, applying passwords only to unprotected VBA projects."
     },
