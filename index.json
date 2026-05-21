@@ -1181,6 +1181,11 @@
     },
     {
       "category": "macro-project",
+      "file": "transfer-a-userform-called-inputform-between-two-workbooks-while-preserving-its-controls-and-code.cs",
+      "title": "Transfer a UserForm called \"InputForm\" between two workbooks while preserving its controls and code."
+    },
+    {
+      "category": "macro-project",
       "file": "use-a-trycatch-block-to-handle-exceptions-when-exporting-a-certificate-from-an-unsigned-vba-project.cs",
       "title": "Use a try\u2011catch block to handle exceptions when exporting a certificate from an unsigned VBA project."
     },
