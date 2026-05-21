@@ -2346,6 +2346,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "batch-convert-all-excel-files-in-a-directory-to-individual-tiff-images-using-default-rendering-settings.cs",
+      "title": "Batch convert all Excel files in a directory to individual TIFF images using default rendering settings."
+    },
+    {
+      "category": "working-with-images",
       "file": "compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs",
       "title": "Compress the SVG worksheet file using GZip before transmitting it over the network for efficiency."
     },

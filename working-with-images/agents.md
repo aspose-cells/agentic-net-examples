@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - include-the-svg-chart-file-in-a-web-page-to-allow-interactive-zoom-and-pan-features.cs
 - preserve-data-labels-visibility-when-converting-a-chart-to-png-to-retain-informational-context.cs
 - set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
+- batch-convert-all-excel-files-in-a-directory-to-individual-tiff-images-using-default-rendering-settings.cs
