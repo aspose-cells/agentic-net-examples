@@ -3061,6 +3061,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs",
+      "title": "Save the SVG worksheet image to a .svg file with UTF\u20118 encoding to preserve character data."
+    },
+    {
+      "category": "working-with-images",
       "file": "send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs",
       "title": "Send the PNG worksheet image via HTTP POST to a REST endpoint for downstream processing."
     },
