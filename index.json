@@ -1606,6 +1606,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "apply-filterdatakind-to-load-only-string-cells-from-a-template-then-concatenate-them-into-a-summary-report.cs",
+      "title": "Apply FilterDataKind to load only string cells from a template, then concatenate them into a summary report."
+    },
+    {
+      "category": "open-workbook",
       "file": "apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs",
       "title": "Apply FilterDefinedNames while loading a workbook to include only required named ranges for calculations."
     },
