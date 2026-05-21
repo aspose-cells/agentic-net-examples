@@ -1596,6 +1596,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs",
+      "title": "Calculate all formulas in the loaded workbook by invoking Workbook.CalculateFormula after the file is opened."
+    },
+    {
+      "category": "open-workbook",
       "file": "create-a-custom-loadfilter-that-skips-invisible-worksheets-and-assign-it-to-loadoptions-before-opening.cs",
       "title": "Create a custom LoadFilter that skips invisible worksheets and assign it to LoadOptions before opening."
     },
