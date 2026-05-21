@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - write-merged-cells-while-streaming-data-with-lightcellsdataprovider-to-preserve-complex-table-structures-in-large-excel-files.cs
 - load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs
 - save-a-workbook-using-lightcells-api-while-disabling-automatic-calculation-to-speed-up-writing-of-static-data-sheets.cs
+- implement-lightcellsdatahandler-to-replace-error-values-with-zero-during-load-ensuring-clean-numeric-datasets-for-analysis.cs
