@@ -3031,6 +3031,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "extract-every-chart-from-a-workbook-and-export-them-as-svg-files-into-a-designated-subfolder.cs",
+      "title": "Extract every chart from a workbook and export them as SVG files into a designated subfolder."
+    },
+    {
+      "category": "working-with-images",
       "file": "generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs",
       "title": "Generate a JPEG image from a worksheet with custom image quality set to 80 percent."
     },
