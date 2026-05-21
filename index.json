@@ -901,6 +901,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs",
+      "title": "Test the custom ribbon button to confirm it successfully updates external link paths."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-all-external-links-in-the-workbook-to-use-relative-paths-for-better-portability.cs",
       "title": "Update all external links in the workbook to use relative paths for better portability."
     },
