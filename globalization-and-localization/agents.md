@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - develop-a-chartglobalizationsettings-derivative-that-overrides-getothername-for-a-localized-piechart-other-label.cs
 - assign-the-custom-globalizationsettings-to-the-workbook-before-adding-subtotals-to-ensure-localized-labels.cs
 - add-subtotal-rows-to-the-worksheet-after-assigning-custom-globalizationsettings-verifying-localized-total-labels.cs
+- convert-gregorian-date-cells-to-japanese-calendar-dates-with-cellshelper-preserving-era-information-for-each-cell.cs

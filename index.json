@@ -381,6 +381,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "convert-gregorian-date-cells-to-japanese-calendar-dates-with-cellshelper-preserving-era-information-for-each-cell.cs",
+      "title": "Convert Gregorian date cells to Japanese calendar dates with CellsHelper, preserving era information for each cell."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-a-batch-process-that-applies-the-custom-globalization-settings-to-all-workbooks-in-a-folder.cs",
       "title": "Create a batch process that applies the custom globalization settings to all workbooks in a folder."
     },
