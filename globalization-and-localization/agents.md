@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - ensure-that-cell-comments-retain-their-original-language-while-function-names-are-localized-according-to-settings.cs
 - use-workbooksettings-to-enable-automatic-recalculation-after-applying-localized-formulas-to-ensure-correct-results.cs
 - configure-workbook-to-use-a-specific-cultureinfo-object-for-date-and-number-formats-during-localization.cs
+- test-that-excels-autofilter-works-correctly-with-localized-column-headers-after-applying-globalization.cs
