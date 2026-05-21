@@ -1861,6 +1861,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "set-htmlsaveoptionspagetitle-to-the-workbooks-filename-ensuring-each-html-file-displays-a-meaningful-title.cs",
+      "title": "Set HtmlSaveOptions.PageTitle to the workbook's filename, ensuring each HTML file displays a meaningful title."
+    },
+    {
+      "category": "open-workbook",
       "file": "set-loadoptionsloadfilter-to-load-only-data-cells-skipping-chart-objects-to-reduce-memory-usage.cs",
       "title": "Set LoadOptions.LoadFilter to load only data cells, skipping chart objects to reduce memory usage."
     },
