@@ -1661,6 +1661,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-with-password-protection-and-then-remove-the-password-by-clearing-loadoptionspassword-after-loading.cs",
+      "title": "Open a workbook with password protection and then remove the password by clearing LoadOptions.Password after loading."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs",
       "title": "Open an encrypted Excel workbook by providing the password in LoadOptions.Password property."
     },
