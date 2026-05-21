@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - catch-and-log-an-exception-when-an-invalid-numeric-format-code-is-assigned-to-a-series.cs
 - define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs
 - set-series-fill-color-using-an-rgb-value-to-match-corporate-branding-guidelines.cs
+- set-the-chart-fill-format-to-a-solid-color-with-80-percent-opacity-for-subtle-shading.cs

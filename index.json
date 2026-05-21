@@ -3926,6 +3926,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-fill-format-to-a-solid-color-with-80-percent-opacity-for-subtle-shading.cs",
+      "title": "Set the chart fill format to a solid color with 80 percent opacity for subtle shading."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-title-text-to-quarterly-revenue-and-apply-bold-formatting.cs",
       "title": "Set the chart title text to \"Quarterly Revenue\" and apply bold formatting."
     },
