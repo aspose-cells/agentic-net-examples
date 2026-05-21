@@ -1601,6 +1601,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "apply-filterdatakind-to-load-only-numeric-and-date-cells-from-a-template-workbook-for-statistical-analysis.cs",
+      "title": "Apply FilterDataKind to load only numeric and date cells from a template workbook for statistical analysis."
+    },
+    {
+      "category": "open-workbook",
       "file": "apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs",
       "title": "Apply FilterDefinedNames while loading a workbook to include only required named ranges for calculations."
     },
