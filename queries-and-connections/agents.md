@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - use-a-file-picker-dialog-in-the-ribbon-button-to-select-the-new-external-data-source-file.cs
 - save-the-workbook-with-updated-external-links-and-custom-ribbon-after-user-confirmation.cs
 - verify-that-the-workbook-opens-without-errors-after-applying-custom-ribbon-and-path-changes.cs
+- document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs
