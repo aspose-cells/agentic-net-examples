@@ -665,6 +665,11 @@
       "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
     },
     {
+      "category": "queries-and-connections",
+      "file": "update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs",
+      "title": "Update UserName and Password properties of a specific DBConnection with new credentials."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
