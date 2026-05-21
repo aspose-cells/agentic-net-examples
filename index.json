@@ -931,6 +931,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs",
+      "title": "Load workbook using LoadOptions to omit VBA project and verify macros are excluded."
+    },
+    {
+      "category": "macro-project",
       "file": "load-workbook-with-loadoptionsfiltervbaproject-to-exclude-unsigned-macros-during-import.cs",
       "title": "Load workbook with LoadOptions.FilterVbaProject to exclude unsigned macros during import."
     },
