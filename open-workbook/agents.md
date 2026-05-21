@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - implement-lightcellsdatahandler-to-replace-error-values-with-zero-during-load-ensuring-clean-numeric-datasets-for-analysis.cs
 - load-an-xlsx-workbook-from-a-file-path-while-excluding-all-embedded-charts.cs
 - save-the-chartfree-workbook-to-a-pdf-document-preserving-original-cell-formatting.cs
+- load-a-workbook-using-loadoptions-with-loadcharts-disabled-and-verify-loadwarnings-for-missing-chart-data.cs

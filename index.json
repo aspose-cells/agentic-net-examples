@@ -1816,6 +1816,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-with-loadcharts-disabled-and-verify-loadwarnings-for-missing-chart-data.cs",
+      "title": "Load a workbook using LoadOptions with LoadCharts disabled and verify LoadWarnings for missing chart data."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs",
       "title": "Load a workbook while excluding chart objects, then verify that the resulting worksheets contain zero charts."
     },
