@@ -1636,6 +1636,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs",
+      "title": "Open a workbook from a byte array by wrapping it in a MemoryStream and using the Stream constructor."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs",
       "title": "Open an encrypted Excel workbook by providing the password in LoadOptions.Password property."
     },
