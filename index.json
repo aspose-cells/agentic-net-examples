@@ -706,6 +706,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "rename-an-existing-dbconnection-to-reflect-a-new-database-server-after-migration.cs",
+      "title": "Rename an existing DBConnection to reflect a new database server after migration."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs",
       "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
     },
