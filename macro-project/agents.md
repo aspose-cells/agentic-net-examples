@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - validate-the-vba-projects-digital-signature-using-workbookvbaprojectvalidatesignature-method-and-capture-result.cs
 - sign-the-vba-project-with-a-certificate-loaded-from-a-pfx-file-and-password.cs
 - sign-the-vba-project-using-a-certificate-retrieved-from-windows-certificate-store-by-thumbprint.cs
+- export-the-vba-projects-certificate-to-a-file-path-and-verify-the-file-exists.cs
