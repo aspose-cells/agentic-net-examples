@@ -1110,6 +1110,11 @@
       "title": "Verify the VBA project's digital signature status using the IsSigned property."
     },
     {
+      "category": "macro-project",
+      "file": "wrap-signing-operation-in-trycatch-block-to-handle-exceptions-and-log-error-details.cs",
+      "title": "Wrap signing operation in try\u2011catch block to handle exceptions and log error details."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
