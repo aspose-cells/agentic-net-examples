@@ -721,6 +721,11 @@
     },
     {
       "category": "macro-project",
+      "file": "compare-exported-certificate-files-with-original-certificates-to-detect-any-corruption-during-export.cs",
+      "title": "Compare exported certificate files with original certificates to detect any corruption during export."
+    },
+    {
+      "category": "macro-project",
       "file": "confirm-that-the-exported-certificate-file-size-matches-the-expected-length.cs",
       "title": "Confirm that the exported certificate file size matches the expected length."
     },
