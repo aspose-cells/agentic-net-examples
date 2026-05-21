@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-japanese-era-dates-as-pdf-confirming-era-symbols-appear-correctly-in-the-output.cs
 - batch-process-a-folder-of-xlsx-files-loading-each-with-spanish-cultureinfo-and-exporting-charts-to-png-images.cs
 - implement-error-handling-for-loadoptionscultureinfo-when-an-unsupported-locale-identifier-is-supplied-during-workbook-loading.cs
+- compare-pdf-output-of-a-workbook-loaded-with-invariant-culture-versus-french-culture-to-assess-number-format-differences.cs

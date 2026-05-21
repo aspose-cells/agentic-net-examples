@@ -381,6 +381,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "compare-pdf-output-of-a-workbook-loaded-with-invariant-culture-versus-french-culture-to-assess-number-format-differences.cs",
+      "title": "Compare PDF output of a workbook loaded with invariant culture versus French culture to assess number format differences."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "configure-workbook-to-use-a-specific-cultureinfo-object-for-date-and-number-formats-during-localization.cs",
       "title": "Configure workbook to use a specific CultureInfo object for date and number formats during localization."
     },
