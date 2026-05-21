@@ -821,6 +821,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "update-the-source-file-location-of-a-power-query-data-source-to-a-cloud-storage-url.cs",
+      "title": "Update the source file location of a Power Query data source to a cloud storage URL."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs",
       "title": "Update UserName and Password properties of a specific DBConnection with new credentials."
     },
