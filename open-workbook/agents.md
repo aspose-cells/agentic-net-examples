@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - interrupt-a-longrunning-workbook-load-operation-by-configuring-an-interruptmonitor-and-calling-its-cancel-method.cs
 - calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs
 - open-an-excel-95-file-by-setting-loadoptionsversion-to-excel95-before-constructing-the-workbook.cs
+- load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs

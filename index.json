@@ -1626,6 +1626,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs",
+      "title": "Load an Excel 97\u20112003 workbook by assigning LoadOptions.Version to Excel97to2003 during initialization."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs",
       "title": "Open an encrypted Excel workbook by providing the password in LoadOptions.Password property."
     },
