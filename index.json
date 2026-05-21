@@ -691,6 +691,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "retrieve-the-first-worksheet-access-its-first-querytable-and-read-preserveformatting-flag.cs",
+      "title": "Retrieve the first worksheet, access its first QueryTable, and read PreserveFormatting flag."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs",
       "title": "Set RefreshOnLoad flag of a WebQuery connection to true for automatic data update."
     },
