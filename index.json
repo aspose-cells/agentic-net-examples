@@ -1801,6 +1801,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs",
+      "title": "Save the workbook back to XLSX format after modifying cell values using Workbook.Save with default options."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
