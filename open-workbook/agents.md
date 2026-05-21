@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs
 - implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs
 - create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs
+- load-a-partially-corrupted-excel-file-while-capturing-warnings-then-continue-processing-the-recoverable-content.cs
