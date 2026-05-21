@@ -966,6 +966,11 @@
     },
     {
       "category": "macro-project",
+      "file": "overwrite-original-workbook-after-successful-signing-when-backup-is-not-required-by-policy.cs",
+      "title": "Overwrite original workbook after successful signing when backup is not required by policy."
+    },
+    {
+      "category": "macro-project",
       "file": "preserve-existing-macros-while-copying-userform-storage-to-ensure-functionality-remains-unchanged.cs",
       "title": "Preserve existing macros while copying UserForm storage to ensure functionality remains unchanged."
     },

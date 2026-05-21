@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs
 - export-certificate-to-byte-array-then-write-bytes-to-file-for-external-distribution.cs
 - save-signed-workbook-under-new-filename-to-preserve-original-file-and-maintain-audit-trail.cs
+- overwrite-original-workbook-after-successful-signing-when-backup-is-not-required-by-policy.cs
