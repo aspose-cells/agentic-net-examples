@@ -926,6 +926,11 @@
     },
     {
       "category": "macro-project",
+      "file": "log-the-signing-result-to-console-output-indicating-success-or-failure-for-each-workbook.cs",
+      "title": "Log the signing result to console output indicating success or failure for each workbook."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-check-each-workbook-in-a-collection-for-unsigned-vba-projects-and-log-file-names.cs",
       "title": "Programmatically check each workbook in a collection for unsigned VBA projects and log file names."
     },
