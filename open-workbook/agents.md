@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs
 - limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs
 - set-htmlsaveoptionspagetitle-to-the-workbooks-filename-ensuring-each-html-file-displays-a-meaningful-title.cs
+- load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs
