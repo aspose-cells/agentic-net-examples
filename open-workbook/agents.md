@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - load-only-defined-names-from-a-workbook-by-setting-loadoptionsloadfilter-to-a-predefined-definednamesfilter.cs
 - open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs
 - read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs
+- open-a-workbook-from-a-network-share-path-while-ensuring-unc-handling-by-using-the-file-path-constructor.cs
