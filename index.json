@@ -1651,6 +1651,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-from-a-network-share-path-while-ensuring-unc-handling-by-using-the-file-path-constructor.cs",
+      "title": "Open a workbook from a network share path while ensuring UNC handling by using the file path constructor."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs",
       "title": "Open a workbook with formulas preserved but not calculated by disabling automatic calculation in LoadOptions."
     },
