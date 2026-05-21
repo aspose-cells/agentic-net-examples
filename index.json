@@ -961,6 +961,11 @@
     },
     {
       "category": "macro-project",
+      "file": "use-reflection-to-enumerate-all-vba-project-references-and-output-their-names-and-versions.cs",
+      "title": "Use reflection to enumerate all VBA project references and output their names and versions."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs",
       "title": "Validate that adding a library reference throws an exception when the library is not registered on the host."
     },
