@@ -686,6 +686,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs",
+      "title": "Define a custom ribbon group within the \"Data Tools\" tab for connection management commands."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "detect-and-list-external-connections-of-type-webquery-across-a-batch-of-workbooks.cs",
       "title": "Detect and list external connections of type WebQuery across a batch of workbooks."
     },
