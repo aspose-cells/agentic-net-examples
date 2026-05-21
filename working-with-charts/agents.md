@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - validate-that-exported-jpeg-image-quality-is-acceptable-by-checking-file-size-range.cs
 - verify-that-exporting-chart-without-setting-data-source-throws-an-appropriate-exception.cs
 - load-an-xlsx-workbook-from-a-file-path-and-obtain-the-first-chart-object.cs
+- load-a-workbook-from-a-memory-stream-and-access-its-chart-collection-for-processing.cs
