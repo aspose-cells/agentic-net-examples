@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs
 - verify-that-vba-project-signature-becomes-invalid-after-modifying-macro-code-without-resigning.cs
 - resign-vba-project-after-code-changes-to-restore-a-valid-digital-signature-status.cs
+- create-x509certificate2-from-pfx-file-with-password-and-use-it-to-sign-vba-project.cs
