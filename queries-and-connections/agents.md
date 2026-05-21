@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - replace-all-occurrences-of-a-deprecated-database-name-within-dbconnectionname-properties-across-workbooks.cs
 - change-the-absolute-path-of-an-external-link-data-source-file-programmatically-for-a-workbook.cs
 - validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs
+- update-all-external-links-in-the-workbook-to-use-relative-paths-for-better-portability.cs
