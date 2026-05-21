@@ -385,6 +385,11 @@
       "title": "Override GetErrorString in the custom class to provide localized error messages for Excel errors."
     },
     {
+      "category": "globalization-and-localization",
+      "file": "set-cell-formulas-with-cellformulalocal-to-apply-localized-function-names-during-workbook-processing.cs",
+      "title": "Set cell formulas with Cell.FormulaLocal to apply localized function names during workbook processing."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
