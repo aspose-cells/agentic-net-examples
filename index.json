@@ -881,6 +881,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-certificate-to-a-base64-string-for-inclusion-in-configuration.cs",
+      "title": "Export the VBA project's certificate to a Base64 string for inclusion in configuration."
+    },
+    {
+      "category": "macro-project",
       "file": "export-the-vba-projects-certificate-to-a-cer-file-and-verify-its-thumbprint.cs",
       "title": "Export the VBA project's certificate to a .cer file and verify its thumbprint."
     },
