@@ -796,6 +796,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-all-macros-from-a-source-workbook-to-a-destination-workbook-while-preserving-macro-security-settings.cs",
+      "title": "Copy all macros from a source workbook to a destination workbook while preserving macro security settings."
+    },
+    {
+      "category": "macro-project",
       "file": "copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs",
       "title": "Copy UserForm DesignerStorage from a template workbook to a target workbook preserving layout."
     },
