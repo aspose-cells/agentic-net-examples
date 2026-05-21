@@ -1616,6 +1616,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "enable-the-useoptimizedmemory-flag-in-loadoptions-to-improve-performance-when-loading-workbooks-containing-thousands-of-rows.cs",
+      "title": "Enable the UseOptimizedMemory flag in LoadOptions to improve performance when loading workbooks containing thousands of rows."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
       "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
     },
