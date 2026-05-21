@@ -3006,6 +3006,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-the-workbook-tiff-to-pdf-by-invoking-a-thirdparty-converter-after-image-generation.cs",
+      "title": "Convert the workbook TIFF to PDF by invoking a third\u2011party converter after image generation."
+    },
+    {
+      "category": "working-with-images",
       "file": "embed-the-generated-svg-worksheet-file-into-an-html-document-using-the-object-tag-for-display.cs",
       "title": "Embed the generated SVG worksheet file into an HTML document using the object tag for display."
     },
