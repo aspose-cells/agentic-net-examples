@@ -731,6 +731,11 @@
     },
     {
       "category": "macro-project",
+      "file": "batch-validate-signatures-of-multiple-workbooks-and-generate-a-summary-report-of-validation-statuses.cs",
+      "title": "Batch validate signatures of multiple workbooks and generate a summary report of validation statuses."
+    },
+    {
+      "category": "macro-project",
       "file": "check-the-issigned-property-after-adding-a-digital-signature-to-a-vba-project-programmatically.cs",
       "title": "Check the IsSigned property after adding a digital signature to a VBA project programmatically."
     },
