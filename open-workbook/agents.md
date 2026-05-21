@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-from-a-file-path-while-excluding-all-embedded-charts.cs
 - save-the-chartfree-workbook-to-a-pdf-document-preserving-original-cell-formatting.cs
 - load-a-workbook-using-loadoptions-with-loadcharts-disabled-and-verify-loadwarnings-for-missing-chart-data.cs
+- apply-printer-paper-size-a5-during-load-and-generate-a-pdf-with-matching-page-dimensions.cs
