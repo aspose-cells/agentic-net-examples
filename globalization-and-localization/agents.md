@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - provide-documentation-examples-showing-how-to-toggle-between-english-and-localized-function-names-using-formulalocal.cs
 - load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs
 - create-a-subclass-of-globalizationsettings-that-overrides-gettotalname-to-provide-a-localized-subtotal-label.cs
+- create-a-subclass-of-globalizationsettings-overriding-getgrandtotalname-to-supply-a-culturespecific-grand-total-label.cs
