@@ -3786,6 +3786,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-containing-the-chart-as-an-xlsx-file-named-quarterlyreportxlsx-in-the-output-folder.cs",
+      "title": "Save the workbook containing the chart as an XLSX file named QuarterlyReport.xlsx in the output folder."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
       "title": "Set the chart border thickness to 2 points and color to dark gray."
     },
