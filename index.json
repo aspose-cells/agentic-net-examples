@@ -726,6 +726,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs",
+      "title": "Document the steps to customize the ribbon XML and change external link paths in a developer guide."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs",
       "title": "Enable BackgroundRefresh on a WebQuery connection to avoid blocking UI during retrieval."
     },
