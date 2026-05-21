@@ -360,6 +360,11 @@
       "title": "Validate that the Title built\u2011in property is not empty before exporting the workbook to any external format."
     },
     {
+      "category": "globalization-and-localization",
+      "file": "create-a-custom-globalizationsettings-class-overriding-getlocalfunctionname-for-target-language-functions.cs",
+      "title": "Create a custom GlobalizationSettings class overriding GetLocalFunctionName for target language functions."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
