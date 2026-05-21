@@ -3635,6 +3635,11 @@
       "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
     },
     {
+      "category": "working-with-charts",
+      "file": "set-the-vertical-axis-maximum-value-to-200-and-minimum-value-to-0-for-consistent-scaling.cs",
+      "title": "Set the vertical axis maximum value to 200 and minimum value to 0 for consistent scaling."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
