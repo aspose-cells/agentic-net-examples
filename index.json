@@ -506,6 +506,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-logging-to-capture-which-culturespecific-label-methods-are-called-during-chart-rendering-for-debugging.cs",
+      "title": "Implement logging to capture which culture\u2011specific label methods are called during chart rendering for debugging."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs",
       "title": "Load an XLSX workbook using LoadOptions with CultureInfo set to French, preserving thread culture."
     },
