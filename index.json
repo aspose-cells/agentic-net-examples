@@ -1651,6 +1651,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs",
+      "title": "Open a workbook with formulas preserved but not calculated by disabling automatic calculation in LoadOptions."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs",
       "title": "Open an encrypted Excel workbook by providing the password in LoadOptions.Password property."
     },
