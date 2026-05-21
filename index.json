@@ -3651,6 +3651,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
+      "title": "Set the chart border thickness to 2 points and color to dark gray."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
       "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
     },
