@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - batch-validate-signatures-of-multiple-workbooks-and-generate-a-summary-report-of-validation-statuses.cs
 - detect-unsigned-vba-projects-across-a-directory-and-list-file-names-for-further-review.cs
 - copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs
+- preserve-existing-macros-while-copying-userform-storage-to-ensure-functionality-remains-unchanged.cs
