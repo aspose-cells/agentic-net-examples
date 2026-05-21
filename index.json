@@ -3611,6 +3611,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-radar-chart-and-configure-the-radial-axis-to-display-category-names-as-labels.cs",
+      "title": "Create a radar chart and configure the radial axis to display category names as labels."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-chart-category-labels-by-linking-the-categorydata-property-to-range-b2b8.cs",
       "title": "Define chart category labels by linking the CategoryData property to range B2:B8."
     },
