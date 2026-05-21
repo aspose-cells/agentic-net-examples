@@ -4151,6 +4151,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-custom-slice-colors-persist-after-saving-and-reloading-the-workbook.cs",
+      "title": "Validate that custom slice colors persist after saving and reloading the workbook."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs",
       "title": "Validate that the image file exists before assigning it to the chart background fill."
     },
