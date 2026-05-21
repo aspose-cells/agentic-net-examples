@@ -736,6 +736,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs",
+      "title": "Retrieve the first external DBConnection from a workbook and read its current Name property."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-the-first-worksheet-access-its-first-querytable-and-read-preserveformatting-flag.cs",
       "title": "Retrieve the first worksheet, access its first QueryTable, and read PreserveFormatting flag."
     },
