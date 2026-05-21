@@ -3701,6 +3701,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-charts-background-image-using-a-file-path-to-a-company-logo.cs",
+      "title": "Set the chart's background image using a file path to a company logo."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
       "title": "Set the scatter chart marker size to 8 points and color to teal."
     },
