@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - measure-performance-differences-when-loading-workbooks-with-and-without-custom-globalizationsettings-applied.cs
 - log-performance-metrics-for-each-localization-step-during-batch-processing-to-identify-bottlenecks.cs
 - create-a-diagnostic-tool-that-compares-original-english-formulas-with-localized-versions-for-accuracy-verification.cs
+- provide-documentation-examples-showing-how-to-toggle-between-english-and-localized-function-names-using-formulalocal.cs

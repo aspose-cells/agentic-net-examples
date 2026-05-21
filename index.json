@@ -461,6 +461,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "provide-documentation-examples-showing-how-to-toggle-between-english-and-localized-function-names-using-formulalocal.cs",
+      "title": "Provide documentation examples showing how to toggle between English and localized function names using FormulaLocal."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "save-the-localized-workbook-as-xlsx-preserving-original-formatting-comments-and-cell-styles.cs",
       "title": "Save the localized workbook as XLSX preserving original formatting, comments, and cell styles."
     },
