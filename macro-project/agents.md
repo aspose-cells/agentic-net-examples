@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs
 - generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs
 - validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs
+- export-a-vba-certificate-to-a-temporary-file-then-load-it-into-an-x509certificate-object-for-inspection.cs
