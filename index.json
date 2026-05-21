@@ -3951,6 +3951,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-series-visibility-to-false-for-hidden-data-points-without-removing-them-from-the-chart.cs",
+      "title": "Set series visibility to false for hidden data points without removing them from the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
       "title": "Set the chart border thickness to 2 points and color to dark gray."
     },
