@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - copy-columns-a-through-d-from-the-source-worksheet-to-a-new-workbook-using-lightcells-for-efficient-selection.cs
 - filter-rows-where-column-c-equals-active-while-streaming-with-lightcells-writing-matching-rows-to-a-new-sheet.cs
 - set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
+- enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs
