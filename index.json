@@ -2986,6 +2986,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "export-the-worksheet-named-chart-to-bmp-at-96-dpi-resolution-for-legacy-image-compatibility.cs",
+      "title": "Export the worksheet named Chart to BMP at 96 DPI resolution for legacy image compatibility."
+    },
+    {
+      "category": "working-with-images",
       "file": "generate-a-multipage-tiff-from-the-first-three-worksheets-of-a-loaded-workbook.cs",
       "title": "Generate a multi\u2011page TIFF from the first three worksheets of a loaded workbook."
     },
