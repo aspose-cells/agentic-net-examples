@@ -726,6 +726,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "handle-errors-when-the-external-link-file-is-missing-or-inaccessible-during-path-update.cs",
+      "title": "Handle errors when the external link file is missing or inaccessible during path update."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
       "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
     },
