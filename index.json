@@ -366,6 +366,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-batch-process-that-applies-the-custom-globalization-settings-to-all-workbooks-in-a-folder.cs",
+      "title": "Create a batch process that applies the custom globalization settings to all workbooks in a folder."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-a-custom-globalizationsettings-class-overriding-getlocalfunctionname-for-target-language-functions.cs",
       "title": "Create a custom GlobalizationSettings class overriding GetLocalFunctionName for target language functions."
     },
