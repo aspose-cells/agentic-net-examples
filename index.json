@@ -3596,6 +3596,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "adjust-data-label-position-to-outsideend-to-avoid-overlap-with-leader-lines.cs",
+      "title": "Adjust data label position to OutsideEnd to avoid overlap with leader lines."
+    },
+    {
+      "category": "working-with-charts",
       "file": "adjust-the-charts-transparency-to-40-percent-for-overlaying-on-a-worksheet-image.cs",
       "title": "Adjust the chart's transparency to 40 percent for overlaying on a worksheet image."
     },
