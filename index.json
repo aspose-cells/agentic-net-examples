@@ -3106,6 +3106,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs",
+      "title": "Set chart image resolution to 300 DPI during PNG conversion to achieve high\u2011definition output."
+    },
+    {
+      "category": "working-with-images",
       "file": "set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs",
       "title": "Set custom page margins in ImageOrPrintOptions before converting workbook to TIFF for layout control."
     },
