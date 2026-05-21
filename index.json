@@ -801,6 +801,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "use-workbookdatamashup-to-extract-odata-service-urls-and-store-them-in-a-json-configuration-file.cs",
+      "title": "Use Workbook.DataMashup to extract OData service URLs and store them in a JSON configuration file."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "validate-that-all-external-connections-have-nonempty-credentials-before-saving-the-workbook.cs",
       "title": "Validate that all external connections have non\u2011empty credentials before saving the workbook."
     },
