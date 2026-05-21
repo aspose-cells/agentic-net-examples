@@ -3831,6 +3831,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-automatic-units-on-the-yaxis-so-values-display-similarly-to-excel.cs",
+      "title": "Enable automatic units on the Y\u2011axis so values display similarly to Excel."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-label-leader-lines-for-a-pie-chart-to-improve-readability-of-long-names.cs",
       "title": "Enable data label leader lines for a pie chart to improve readability of long names."
     },
