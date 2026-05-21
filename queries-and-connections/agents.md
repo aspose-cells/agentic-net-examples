@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs
 - modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs
 - set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs
+- enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs

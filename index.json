@@ -656,6 +656,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs",
+      "title": "Enable BackgroundRefresh on a WebQuery connection to avoid blocking UI during retrieval."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-dataconnections-to-identify-sql-type-connections-and-cast-each-to-dbconnection.cs",
       "title": "Iterate through DataConnections to identify SQL type connections and cast each to DBConnection."
     },
