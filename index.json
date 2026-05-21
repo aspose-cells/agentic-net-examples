@@ -3706,6 +3706,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-chart-as-a-highresolution-jpeg-image-for-inclusion-in-a-powerpoint-slide.cs",
+      "title": "Export the chart as a high\u2011resolution JPEG image for inclusion in a PowerPoint slide."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-chart-as-a-png-image-and-save-it-to-the-output-folder.cs",
       "title": "Export the chart as a PNG image and save it to the output folder."
     },
