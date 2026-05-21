@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - create-a-column-chart-object-on-the-worksheet-to-visualize-the-sales-data.cs
 - use-chartsetchartdatarange-to-bind-the-chart-to-the-specified-range-a1b12.cs
 - assign-a-named-range-called-salesdata-as-the-chart-source-using-setchartdatarange.cs
+- convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs
