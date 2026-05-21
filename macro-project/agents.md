@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs
 - remove-a-specified-module-using-modulesremoveat-and-save-the-workbook-to-apply-changes.cs
 - rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs
+- export-the-vbaprojects-digital-certificate-to-a-file-stream-for-external-backup-purposes.cs
