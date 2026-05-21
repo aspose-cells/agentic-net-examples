@@ -3796,6 +3796,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-custom-image-and-use-it-as-a-tiled-texture-fill-for-the-chart-area.cs",
+      "title": "Load a custom image and use it as a tiled texture fill for the chart area."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-add-a-column-chart-to-the-first-worksheet.cs",
       "title": "Load a workbook, add a column chart to the first worksheet."
     },
