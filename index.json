@@ -1911,6 +1911,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "save-a-workbook-with-a-specific-printer-paper-size-setting-using-lightcells-api-to-ensure-correct-print-layout.cs",
+      "title": "Save a workbook with a specific printer paper size setting using LightCells API to ensure correct print layout."
+    },
+    {
+      "category": "open-workbook",
       "file": "save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs",
       "title": "Save the workbook back to XLSX format after modifying cell values using Workbook.Save with default options."
     },
