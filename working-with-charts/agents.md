@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs
 - save-the-workbook-containing-the-chart-as-an-xlsx-file-named-quarterlyreportxlsx-in-the-output-folder.cs
 - programmatically-generate-ten-worksheets-each-with-a-chart-bound-to-its-own-data-table-using-a-loop.cs
+- iterate-through-a-collection-of-workbooks-add-a-predefined-chart-template-to-each-and-save-changes.cs

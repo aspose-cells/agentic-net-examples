@@ -3746,6 +3746,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-through-a-collection-of-workbooks-add-a-predefined-chart-template-to-each-and-save-changes.cs",
+      "title": "Iterate through a collection of workbooks, add a predefined chart template to each, and save changes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "iterate-through-all-charts-in-the-workbook-and-set-each-title-font-to-arial-size-12.cs",
       "title": "Iterate through all charts in the workbook and set each title font to Arial, size 12."
     },
