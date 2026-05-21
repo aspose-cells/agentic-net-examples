@@ -3846,6 +3846,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-chart-to-a-memory-stream-and-write-the-stream-to-a-file.cs",
+      "title": "Export the chart to a memory stream and write the stream to a file."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-configured-pie-chart-to-a-png-image-using-charttoimage-with-default-settings.cs",
       "title": "Export the configured pie chart to a PNG image using Chart.ToImage with default settings."
     },
