@@ -701,6 +701,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-a-new-vba-module-with-utf8-code-page-and-add-multilingual-macro-text.cs",
+      "title": "Create a new VBA module with UTF\u20118 code page and add multilingual macro text."
+    },
+    {
+      "category": "macro-project",
       "file": "enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs",
       "title": "Enumerate all modules in the VbaProject and output each module name to the console."
     },
