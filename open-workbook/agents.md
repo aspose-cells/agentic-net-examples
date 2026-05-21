@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - set-memorysettingmemorypreference-to-normal-for-a-small-xlsx-file-to-achieve-faster-processing-speed.cs
 - use-lightcells-api-to-copy-data-from-one-worksheet-to-another-without-creating-intermediate-workbook-objects.cs
 - load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs
+- save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs
