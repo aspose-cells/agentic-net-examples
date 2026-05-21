@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - load-the-excel-workbook-using-workbookload-after-configuring-the-custom-globalization-settings.cs
 - set-cell-formulas-with-cellformulalocal-to-apply-localized-function-names-during-workbook-processing.cs
 - verify-that-localized-function-names-are-correctly-recognized-by-excel-when-the-workbook-is-opened.cs
+- save-the-localized-workbook-as-xlsx-preserving-original-formatting-comments-and-cell-styles.cs
