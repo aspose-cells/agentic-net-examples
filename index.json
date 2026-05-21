@@ -686,6 +686,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-a-new-vba-module-named-automation-within-the-vbaproject.cs",
+      "title": "Create a new VBA module named Automation within the VbaProject."
+    },
+    {
+      "category": "macro-project",
       "file": "if-the-project-is-unprotected-apply-password-protection-with-the-protect-method-and-a-strong-password.cs",
       "title": "If the project is unprotected, apply password protection with the Protect method and a strong password."
     },
