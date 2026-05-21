@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - export-hyperlinks-from-a-workbook-using-lightcells-api-and-generate-a-report-listing-url-targets-and-cell-addresses.cs
 - insert-new-hyperlinks-while-writing-cells-with-lightcellsdataprovider-to-create-navigable-references-in-the-generated-spreadsheet.cs
 - load-only-visible-worksheets-by-applying-filterobjects-then-process-each-visible-sheet-sequentially-using-lightcells.cs
+- configure-lightcells-to-use-a-custom-buffer-size-for-reading-cells-optimizing-performance-for-highthroughput-scenarios.cs

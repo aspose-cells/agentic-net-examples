@@ -1646,6 +1646,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "configure-lightcells-to-use-a-custom-buffer-size-for-reading-cells-optimizing-performance-for-highthroughput-scenarios.cs",
+      "title": "Configure LightCells to use a custom buffer size for reading cells, optimizing performance for high\u2011throughput scenarios."
+    },
+    {
+      "category": "open-workbook",
       "file": "configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs",
       "title": "Configure LoadOptions to load only the workbook's custom XML parts for metadata extraction without loading cell data."
     },
