@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs
 - render-a-workbook-to-tiff-with-horizontal-and-vertical-resolutions-set-to-150-dpi.cs
 - convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs
+- convert-a-workbook-to-tiff-using-twentyfourbit-color-depth-for-highquality-images.cs
