@@ -801,6 +801,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-certificates-from-workbooks-using-asynchronous-tasks-to-improve-performance-on-large-file-sets.cs",
+      "title": "Export certificates from workbooks using asynchronous tasks to improve performance on large file sets."
+    },
+    {
+      "category": "macro-project",
       "file": "export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs",
       "title": "Export each workbook's VBA module code to separate .bas files for version control tracking."
     },
