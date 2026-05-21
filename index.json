@@ -726,6 +726,11 @@
     },
     {
       "category": "macro-project",
+      "file": "log-a-warning-if-the-vba-project-is-locked-for-viewing-after-checking-its-protection-status.cs",
+      "title": "Log a warning if the VBA project is locked for viewing after checking its protection status."
+    },
+    {
+      "category": "macro-project",
       "file": "protect-all-xlsm-files-in-a-directory-applying-passwords-only-to-unprotected-vba-projects.cs",
       "title": "Protect all XLSM files in a directory, applying passwords only to unprotected VBA projects."
     },
