@@ -2371,6 +2371,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs",
+      "title": "Generate a JPEG image from a worksheet with custom image quality set to 80 percent."
+    },
+    {
+      "category": "working-with-images",
       "file": "generate-a-multipage-tiff-from-the-first-three-worksheets-of-a-loaded-workbook.cs",
       "title": "Generate a multi\u2011page TIFF from the first three worksheets of a loaded workbook."
     },
