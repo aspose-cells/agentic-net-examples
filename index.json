@@ -1901,6 +1901,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-retrieve-loadwarnings-after-load-and-output-them.cs",
+      "title": "Load a workbook with LightCells API, retrieve LoadWarnings after load, and output them."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs",
       "title": "Load a workbook with LightCells API, set printer paper size A3, and save to PDF."
     },
