@@ -1871,6 +1871,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "retrieve-and-log-warning-messages-after-loading-a-workbook-with-filtered-objects-to-diagnose-data-loss.cs",
+      "title": "Retrieve and log warning messages after loading a workbook with filtered objects to diagnose data loss."
+    },
+    {
+      "category": "open-workbook",
       "file": "save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs",
       "title": "Save the workbook back to XLSX format after modifying cell values using Workbook.Save with default options."
     },
