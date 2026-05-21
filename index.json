@@ -1926,6 +1926,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-lightcells-api-to-export-cell-values-from-a-workbook-into-a-csv-file-without-loading-the-model.cs",
+      "title": "Use LightCells API to export cell values from a workbook into a CSV file without loading the model."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
