@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs
 - validate-the-digital-signature-of-a-vba-project-after-copying-it-to-ensure-integrity-remains-intact.cs
 - validate-the-digital-signature-of-a-vba-project-after-adding-a-new-macro-to-ensure-the-signature-reflects-changes.cs
+- copy-all-macros-from-a-source-workbook-to-a-destination-workbook-while-preserving-macro-security-settings.cs
