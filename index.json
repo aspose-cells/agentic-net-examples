@@ -1891,6 +1891,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-interruptmonitor-to-abort-workbook-loading-if-processing-exceeds-a-predefined-time-limit.cs",
+      "title": "Use InterruptMonitor to abort workbook loading if processing exceeds a predefined time limit."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
