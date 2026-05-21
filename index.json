@@ -3631,6 +3631,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs",
+      "title": "Convert the data range into a ListObject to enable automatic chart updates."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-column-chart-object-on-the-worksheet-to-visualize-the-sales-data.cs",
       "title": "Create a column chart object on the worksheet to visualize the sales data."
     },
