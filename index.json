@@ -390,6 +390,11 @@
       "title": "Set cell formulas with Cell.FormulaLocal to apply localized function names during workbook processing."
     },
     {
+      "category": "globalization-and-localization",
+      "file": "verify-that-localized-function-names-are-correctly-recognized-by-excel-when-the-workbook-is-opened.cs",
+      "title": "Verify that localized function names are correctly recognized by Excel when the workbook is opened."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
