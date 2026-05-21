@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - export-the-vba-projects-certificate-to-a-pfx-file-protected-by-a-password-for-secure-storage.cs
 - sign-the-vba-project-using-a-pfx-certificate-file-protected-by-a-strong-password.cs
 - sign-the-vba-project-with-a-certificate-stored-in-the-windows-certificate-store-using-its-thumbprint.cs
+- validate-the-digital-signature-of-the-vba-project-and-report-any-verification-errors.cs

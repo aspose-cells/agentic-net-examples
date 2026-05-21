@@ -1206,6 +1206,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-digital-signature-of-the-vba-project-and-report-any-verification-errors.cs",
+      "title": "Validate the digital signature of the VBA project and report any verification errors."
+    },
+    {
+      "category": "macro-project",
       "file": "validate-the-vba-projects-digital-signature-using-workbookvbaprojectvalidatesignature-method-and-capture-result.cs",
       "title": "Validate the VBA project's digital signature using Workbook.VbaProject.ValidateSignature method and capture result."
     },
