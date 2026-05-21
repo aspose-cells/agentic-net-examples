@@ -776,6 +776,11 @@
     },
     {
       "category": "macro-project",
+      "file": "insert-a-form-control-button-onto-a-specific-worksheet-cell.cs",
+      "title": "Insert a Form Control button onto a specific worksheet cell."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs",
       "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
     },
