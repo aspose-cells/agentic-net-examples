@@ -1751,6 +1751,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "insert-new-hyperlinks-while-writing-cells-with-lightcellsdataprovider-to-create-navigable-references-in-the-generated-spreadsheet.cs",
+      "title": "Insert new hyperlinks while writing cells with LightCellsDataProvider to create navigable references in the generated spreadsheet."
+    },
+    {
+      "category": "open-workbook",
       "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
       "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
     },
