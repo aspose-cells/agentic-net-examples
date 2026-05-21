@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - use-chartpointisinsecondaryplot-to-identify-points-belonging-to-the-secondary-plot.cs
 - log-indices-of-secondary-plot-points-to-a-text-file-for-later-analysis.cs
 - refresh-the-chart-display-by-calling-chartrefresh-after-modifying-labels-and-colors.cs
+- export-the-configured-pie-chart-to-a-png-image-using-charttoimage-with-default-settings.cs
