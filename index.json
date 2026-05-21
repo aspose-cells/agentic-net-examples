@@ -3736,6 +3736,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs",
+      "title": "Move the chart legend to the bottom position and hide its border for cleaner layout."
+    },
+    {
+      "category": "working-with-charts",
       "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
       "title": "Position the chart at row 15, column 3 with a width of 400 points."
     },
