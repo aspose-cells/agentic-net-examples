@@ -4016,6 +4016,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-charts-data-source-range-to-the-populated-cells-via-chartsetdatarange-method.cs",
+      "title": "Set the chart's data source range to the populated cells via Chart.SetDataRange method."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-charts-topleft-corner-to-row-5-column-3-using-the-position-property.cs",
       "title": "Set the chart's top\u2011left corner to row 5, column 3 using the Position property."
     },
