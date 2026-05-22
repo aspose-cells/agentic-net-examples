@@ -317,3 +317,4 @@ Output files are written to the working directory.
 - configure-data-labels-to-show-both-cell-values-and-series-name-concatenated-with-a-hyphen-separator.cs
 - resize-data-label-shapes-after-applying-bold-font-weight-to-prevent-text-overflow.cs
 - set-legend-position-to-bottom-left-and-adjust-its-x-offset-to-align-with-chart-margins.cs
+- remove-background-fill-from-legend-entries-while-keeping-text-color-unchanged-for-contrast.cs
