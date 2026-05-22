@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - adjust-the-gap-width-of-column-series-on-the-primary-axis-to-improve-spacing-between-bars.cs
 - save-the-workbook-after-chart-modifications-to-a-cloud-storage-location-using-a-stream-api.cs
 - generate-a-report-that-lists-each-charts-axis-type-and-tick-label-direction-for-auditing-purposes.cs
+- apply-a-logarithmic-scale-to-the-primary-y-axis-to-better-visualize-data-with-large-value-ranges.cs
