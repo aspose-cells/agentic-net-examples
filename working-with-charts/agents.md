@@ -284,3 +284,4 @@ Output files are written to the working directory.
 - position-data-labels-inside-end-for-a-column-chart-to-avoid-overlapping-bars.cs
 - measure-chart-rendering-time-after-disabling-data-label-text-wrapping-for-performance-assessment.cs
 - save-the-workbook-containing-the-customized-chart-to-xlsx-format.cs
+- batch-process-multiple-worksheets-disabling-text-wrap-for-all-chart-data-labels.cs
