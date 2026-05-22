@@ -3866,6 +3866,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-legend-font-size-to-twelve-points-and-set-the-font-name-to-arial.cs",
+      "title": "Change the legend font size to twelve points and set the font name to Arial."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-x-axis-type-to-category-to-display-sequential-text-labels-on-the-chart.cs",
       "title": "Change the X axis type to Category to display sequential text labels on the chart."
     },
