@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - after-loading-a-workbook-set-standardheight-and-then-autofit-rows-that-contain-formulas.cs
 - adjust-column-width-by-setting-standardwidth-before-populating-data-to-establish-a-base-width.cs
 - autofit-rows-that-contain-merged-cells-by-specifying-autofitmergedcellstype-in-autofitteroptions-during-processing.cs
+- programmatically-set-a-row-height-then-autofit-the-next-row-based-on-its-content.cs
