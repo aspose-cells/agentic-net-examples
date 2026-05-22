@@ -4236,6 +4236,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs",
+      "title": "Set major unit interval on primary Y axis to 10 to standardize chart grid lines across series."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-pdf-page-orientation-to-landscape-before-converting-the-chart-to-ensure-full-width-usage.cs",
       "title": "Set PDF page orientation to landscape before converting the chart to ensure full width usage."
     },
