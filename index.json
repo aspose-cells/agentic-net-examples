@@ -9616,6 +9616,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs",
+      "title": "Delete a specific row from a table using its primary key value to locate the target."
+    },
+    {
+      "category": "working-with-tables",
       "file": "delete-the-comment-attached-to-the-table-to-clean-up-metadata-after-final-review.cs",
       "title": "Delete the comment attached to the table to clean up metadata after final review."
     },
