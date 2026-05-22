@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - export-each-sheet-as-jpeg-images-with-300-dpi-resolution-for-printing.cs
 - read-a-csv-file-and-export-each-worksheet-as-separate-png-images.cs
 - produce-png-images-with-transparent-background-from-a-csv-workbook.cs
+- convert-multiple-csv-files-to-json-with-formatted-dates-and-store-in-target-folder.cs
