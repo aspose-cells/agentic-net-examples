@@ -4256,6 +4256,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-charts-secondary-axis-title-to-revenue-usd-and-format-the-font-to-bold-italic.cs",
+      "title": "Set chart's secondary axis title to \"Revenue (USD)\" and format the font to bold italic."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs",
       "title": "Set major unit interval on primary Y axis to 10 to standardize chart grid lines across series."
     },
