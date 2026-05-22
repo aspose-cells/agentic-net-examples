@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - compare-row-heights-before-and-after-autofitrows-to-confirm-height-adjustments-were-applied.cs
 - implement-error-handling-when-copying-rows-that-exceed-worksheet-row-limit-to-prevent-exceptions.cs
 - copy-rows-while-preserving-hidden-row-states-ensuring-hidden-rows-remain-hidden-after-duplication.cs
+- exclude-hidden-rows-from-copy-operation-by-filtering-rows-before-invoking-copyrows-method.cs
