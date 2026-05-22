@@ -4121,6 +4121,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-combo-chart-by-adding-a-column-series-and-a-line-series-to-the-same-chart-area.cs",
+      "title": "Create a Combo chart by adding a column series and a line series to the same chart area."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
