@@ -4211,6 +4211,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-to-pull-values-from-a-dynamic-named-range-and-ensure-shapes-resize-on-range-change.cs",
+      "title": "Enable data labels to pull values from a dynamic named range and ensure shapes resize on range change."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-to-pull-values-from-merged-cells-and-verify-correct-display-after-merging.cs",
       "title": "Enable data labels to pull values from merged cells and verify correct display after merging."
     },
