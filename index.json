@@ -4501,6 +4501,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "insert-a-multiline-text-box-control-into-a-chart-positioning-it-at-the-plot-areas-top-right.cs",
+      "title": "Insert a multiline text box control into a chart, positioning it at the plot area\u2019s top right."
+    },
+    {
+      "category": "working-with-charts",
       "file": "insert-a-new-row-into-the-listobject-with-q4-data-chart-automatically-extends.cs",
       "title": "Insert a new row into the ListObject with Q4 data; chart automatically extends."
     },

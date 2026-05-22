@@ -393,3 +393,4 @@ Output files are written to the working directory.
 - load-an-ods-workbook-retrieve-the-first-chart-and-read-its-subtitle-text.cs
 - change-a-charts-subtitle-to-a-custom-string-and-verify-the-update-by-reading-the-property.cs
 - add-a-label-control-inside-a-chart-with-arial-font-size-twelve-and-bold-style.cs
+- insert-a-multiline-text-box-control-into-a-chart-positioning-it-at-the-plot-areas-top-right.cs
