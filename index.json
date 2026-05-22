@@ -9736,6 +9736,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs",
+      "title": "Set the table's show totals row option to false, removing the totals row from the display."
+    },
+    {
+      "category": "working-with-tables",
       "file": "sort-the-table-by-two-columns-first-ascending-by-date-then-descending-by-amount.cs",
       "title": "Sort the table by two columns, first ascending by date then descending by amount."
     },
