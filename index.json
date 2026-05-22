@@ -4361,6 +4361,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-secondary-axis-to-display-values-in-percentage-format-by-applying-a-custom-number-format-string.cs",
+      "title": "Set the secondary axis to display values in percentage format by applying a custom number format string."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-series-values-format-code-to-a-custom-currency-pattern-like-0.cs",
       "title": "Set the series values format code to a custom currency pattern like \"$#,##0\"."
     },
