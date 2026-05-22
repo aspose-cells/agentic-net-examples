@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - split-spacedelimited-text-in-column-a-into-separate-columns-using-texttocolumns.cs
 - convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs
 - parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs
+- duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs
