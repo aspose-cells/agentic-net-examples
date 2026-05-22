@@ -4891,6 +4891,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-replace-the-existing-chart-series-colors-with-a-custom-palette-then-save-to-xlsx.cs",
+      "title": "Load a workbook, replace the existing chart series colors with a custom palette, then save to XLSX."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-excel-workbook-locate-a-chart-and-set-tick-labels-direction-to-horizontal.cs",
       "title": "Load an Excel workbook, locate a chart, and set tick labels direction to horizontal."
     },

@@ -492,3 +492,4 @@ Output files are written to the working directory.
 - open-an-xlsx-workbook-change-each-chart-series-to-use-the-predefined-monochromaticpalette4-and-save.cs
 - load-a-workbook-apply-a-uniform-chart-color-palette-across-all-worksheets-then-save-as-xls.cs
 - open-an-xls-file-change-the-theme-colors-of-a-specific-chart-using-chartcolorpalettetypemonochromaticpalette6-and-save.cs
+- load-a-workbook-replace-the-existing-chart-series-colors-with-a-custom-palette-then-save-to-xlsx.cs
