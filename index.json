@@ -2671,6 +2671,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "copy-rows-between-worksheets-then-autofit-destination-rows-to-match-source-row-heights.cs",
+      "title": "Copy rows between worksheets then auto\u2011fit destination rows to match source row heights."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "copy-rows-while-preserving-embedded-images-and-drawing-objects-using-default-copy-behavior.cs",
       "title": "Copy rows while preserving embedded images and drawing objects using default copy behavior."
     },
