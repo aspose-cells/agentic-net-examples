@@ -131,6 +131,11 @@
     },
     {
       "category": "conversion",
+      "file": "batch-convert-multiple-xlsx-files-to-pdf-and-store-results-in-an-output-folder.cs",
+      "title": "Batch convert multiple XLSX files to PDF and store results in an output folder."
+    },
+    {
+      "category": "conversion",
       "file": "load-an-xlsx-workbook-and-convert-it-to-a-highresolution-pdf-file.cs",
       "title": "Load an XLSX workbook and convert it to a high\u2011resolution PDF file."
     },
