@@ -3976,6 +3976,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "disable-data-label-text-wrapping-for-the-chart-using-datalabelsistextwrapped-false.cs",
+      "title": "Disable data label text wrapping for the chart using DataLabels.IsTextWrapped = false."
+    },
+    {
+      "category": "working-with-charts",
       "file": "disable-data-labels-for-the-third-series-in-the-chart-to-keep-the-view-uncluttered.cs",
       "title": "Disable data labels for the third series in the chart to keep the view uncluttered."
     },
