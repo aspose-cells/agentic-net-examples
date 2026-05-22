@@ -400,3 +400,4 @@ Output files are written to the working directory.
 - toggle-the-visibility-of-a-picture-control-inside-a-chart-based-on-a-boolean-flag.cs
 - remove-a-chart-control-from-a-chart-sheet-by-calling-shapecollectionremoveat-with-the-appropriate-index.cs
 - insert-wordart-as-a-watermark-over-the-plot-area-rotating-it-thirty-degrees-for-a-diagonal-effect.cs
+- apply-a-gradient-fill-to-the-wordart-watermark-transitioning-from-light-gray-to-dark-blue.cs
