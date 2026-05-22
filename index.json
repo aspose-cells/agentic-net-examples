@@ -4056,6 +4056,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "place-the-chart-legend-at-the-bottom-of-the-chart-area-for-balanced-layout.cs",
+      "title": "Place the chart legend at the bottom of the chart area for balanced layout."
+    },
+    {
+      "category": "working-with-charts",
       "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
       "title": "Position the chart at row 15, column 3 with a width of 400 points."
     },
