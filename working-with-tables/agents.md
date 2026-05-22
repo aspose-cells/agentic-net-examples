@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - programmatically-retrieve-the-address-range-of-a-table-and-use-it-as-a-named-range-for-formulas.cs
 - create-a-data-validation-list-that-pulls-its-items-directly-from-a-column-in-a-worksheet-table.cs
 - set-the-tables-show-header-row-option-to-false-for-a-compact-layout-in-a-dashboard-view.cs
+- enable-the-tables-show-header-row-option-and-customize-the-header-font-color-for-emphasis.cs
