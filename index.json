@@ -5281,6 +5281,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-data-labels-to-show-percentages-on-a-stacked-column-chart-and-adjust-label-font-size.cs",
+      "title": "Set data labels to show percentages on a stacked column chart and adjust label font size."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-legend-background-to-transparent-while-keeping-entry-fill-none-to-achieve-a-fully-clear-legend.cs",
       "title": "Set legend background to transparent while keeping entry fill none to achieve a fully clear legend."
     },
