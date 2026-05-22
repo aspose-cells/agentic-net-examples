@@ -3601,6 +3601,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-secondary-axis-to-a-combo-chart-and-display-data-labels-from-cells-on-the-secondary-axis.cs",
+      "title": "Add a secondary axis to a combo chart and display data labels from cells on the secondary axis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-secondary-yaxis-and-assign-selected-series-to-render-on-that-axis.cs",
       "title": "Add a secondary Y\u2011axis and assign selected series to render on that axis."
     },
