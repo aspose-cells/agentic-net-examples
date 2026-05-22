@@ -5026,6 +5026,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xls-file-display-pivotchart-data-as-percentages-by-setting-pivotoptions-and-save.cs",
+      "title": "Open an XLS file, display PivotChart data as percentages by setting PivotOptions, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xlsx-workbook-change-each-chart-series-to-use-the-predefined-monochromaticpalette4-and-save.cs",
       "title": "Open an XLSX workbook, change each chart series to use the predefined MonochromaticPalette4, and save."
     },
