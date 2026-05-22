@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - copy-rows-from-a-protected-worksheet-by-temporarily-disabling-protection-then-reenable-after-copy.cs
 - programmatically-unprotect-a-worksheet-copy-rows-and-protect-worksheet-again-with-same-password.cs
 - copy-rows-containing-merged-cells-and-verify-merged-regions-are-preserved-in-the-destination.cs
+- after-copying-rows-adjust-column-widths-using-autofitcolumns-to-accommodate-newly-copied-data.cs
