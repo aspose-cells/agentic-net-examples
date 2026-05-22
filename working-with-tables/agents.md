@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - enable-the-tables-autofilter-and-apply-a-custom-filter-showing-rows-where-the-amount-is-between-two-values.cs
 - create-a-table-then-attach-a-comment-that-includes-the-creation-timestamp-and-author-information-for-audit.cs
 - refresh-a-query-table-after-modifying-its-underlying-sql-command-to-reflect-updated-query-results.cs
+- import-data-from-a-csv-file-into-a-new-table-and-automatically-detect-column-data-types-during-import.cs
