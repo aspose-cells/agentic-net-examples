@@ -2876,6 +2876,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-a-spreadsheet-unhide-rows-thirty-to-thirtyfive-with-default-height-and-export-pdf.cs",
+      "title": "Read a spreadsheet, unhide rows thirty to thirty\u2011five with default height, and export PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "read-a-workbook-unhide-row-twelve-with-height-twenty-points-and-generate-a-pdf.cs",
       "title": "Read a workbook, unhide row twelve with height twenty points, and generate a PDF."
     },
