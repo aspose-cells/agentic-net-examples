@@ -9631,6 +9631,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-a-table-style-that-uses-alternating-row-colors-to-improve-readability-of-large-data-sets.cs",
+      "title": "Apply a table style that uses alternating row colors to improve readability of large data sets."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs",
       "title": "Apply a unique index to a table column to enforce data uniqueness during data entry."
     },
