@@ -10136,6 +10136,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "validate-that-after-conversion-the-workbook-no-longer-contains-any-listobject-objects.cs",
+      "title": "Validate that after conversion the workbook no longer contains any ListObject objects."
+    },
+    {
+      "category": "working-with-tables",
       "file": "verify-that-after-conversion-the-table-no-longer-supports-sorting-by-checking-listobjectistable-property.cs",
       "title": "Verify that after conversion the table no longer supports sorting by checking ListObject.IsTable property."
     },
