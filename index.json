@@ -3791,6 +3791,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "batch-process-multiple-worksheets-disabling-text-wrap-for-all-chart-data-labels.cs",
+      "title": "Batch process multiple worksheets, disabling text wrap for all chart data labels."
+    },
+    {
+      "category": "working-with-charts",
       "file": "batch-process-multiple-worksheets-inserting-identical-charts-with-distinct-data-ranges-on-each-sheet.cs",
       "title": "Batch process multiple worksheets, inserting identical charts with distinct data ranges on each sheet."
     },
