@@ -217,3 +217,4 @@ Output files are written to the working directory.
 - render-the-modified-chart-to-a-png-image-and-save-it-in-the-output-directory.cs
 - export-the-workbook-containing-the-updated-chart-to-a-pdf-file-preserving-chart-formatting.cs
 - iterate-through-all-worksheets-locate-charts-and-set-each-charts-tick-label-direction-to-rotate90.cs
+- create-a-combined-column-and-line-chart-assigning-column-series-to-primary-axis-and-line-series-to-secondary.cs
