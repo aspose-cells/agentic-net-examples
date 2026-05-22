@@ -310,3 +310,4 @@ Output files are written to the working directory.
 - change-the-chart-type-from-column-to-area-while-preserving-existing-data-label-configurations.cs
 - validate-that-data-labels-display-correct-cell-values-after-modifying-the-source-cell-range-programmatically.cs
 - localize-legend-titles-to-french-using-chartglobalizationsettings-and-verify-correct-language-rendering.cs
+- set-legend-entry-fill-to-transparent-only-for-entries-representing-negative-values.cs
