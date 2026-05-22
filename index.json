@@ -9931,6 +9931,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "load-a-workbook-retrieve-a-table-via-cellgettable-and-read-its-display-name-property.cs",
+      "title": "Load a workbook, retrieve a table via Cell.GetTable, and read its display name property."
+    },
+    {
+      "category": "working-with-tables",
       "file": "load-an-existing-excel-workbook-containing-query-tables-and-enumerate-all-tables-linked-to-external-data-sources.cs",
       "title": "Load an existing Excel workbook containing query tables and enumerate all tables linked to external data sources."
     },
