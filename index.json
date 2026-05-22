@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-data-label-to-each-point-in-a-line-chart-and-link-each-label-to-a-cell.cs",
+      "title": "Add a data label to each point in a line chart and link each label to a cell."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-data-label-to-the-charts-highest-value-point-to-highlight-peak-performance.cs",
       "title": "Add a data label to the chart's highest value point to highlight peak performance."
     },
