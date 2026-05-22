@@ -433,3 +433,4 @@ Output files are written to the working directory.
 - export-the-waterfall-chart-as-a-highresolution-png-image-for-inclusion-in-reports.cs
 - convert-the-workbook-containing-the-waterfall-chart-to-pdf-while-embedding-the-chart-image.cs
 - programmatically-toggle-the-visibility-of-individual-waterfall-series-based-on-user-preferences.cs
+- set-custom-number-formats-for-the-waterfall-chart-axis-to-display-currency-values.cs
