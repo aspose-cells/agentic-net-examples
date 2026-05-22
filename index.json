@@ -4656,6 +4656,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-entry-fill-to-none-for-all-charts-in-a-workbook-using-a-loop-construct.cs",
+      "title": "Set legend entry fill to none for all charts in a workbook using a loop construct."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-legend-entry-fill-to-transparent-only-for-entries-representing-negative-values.cs",
       "title": "Set legend entry fill to transparent only for entries representing negative values."
     },
