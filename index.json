@@ -9626,6 +9626,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "configure-a-query-table-to-use-windows-authentication-for-connecting-to-a-sql-server-data-source.cs",
+      "title": "Configure a query table to use Windows authentication for connecting to a SQL Server data source."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
       "title": "Convert the existing list object into a structured table to leverage advanced table features."
     },
