@@ -9656,6 +9656,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-from-an-external-csv-file-using-a-query-table-data-source-and-map-columns-automatically.cs",
+      "title": "Create a table from an external CSV file using a query table data source and map columns automatically."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-with-a-calculated-column-that-concatenates-first-and-last-name-fields-for-each-row.cs",
       "title": "Create a table with a calculated column that concatenates first and last name fields for each row."
     },
