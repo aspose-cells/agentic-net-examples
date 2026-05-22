@@ -4221,6 +4221,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-new-column-chart-and-assign-its-data-source-using-setchartdatarange-method.cs",
+      "title": "Create a new column chart and assign its data source using SetChartDataRange method."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-new-workbook-and-populate-worksheet-cells-with-sales-data-for-the-chart.cs",
       "title": "Create a new Workbook and populate worksheet cells with sales data for the chart."
     },
