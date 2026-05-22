@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - read-an-excel-file-delete-all-blank-columns-and-generate-a-pdf-of-the-trimmed-sheet.cs
 - load-a-workbook-remove-duplicate-rows-while-preserving-formulas-then-export-the-cleaned-file-as-pdf.cs
 - open-a-spreadsheet-hide-rows-twentyone-to-twentyfive-then-save-the-view-as-pdf.cs
+- read-a-workbook-hide-columns-k-through-m-and-produce-a-pdf-showing-hidden-columns.cs
