@@ -469,3 +469,4 @@ Output files are written to the working directory.
 - apply-a-predefined-theme-to-a-column-chart-and-customize-individual-series-colors.cs
 - programmatically-adjust-the-yaxis-scale-to-display-values-from-0-to-1000-on-a-bar-chart.cs
 - add-a-secondary-yaxis-to-a-column-chart-and-assign-a-different-data-series-to-it.cs
+- apply-a-logarithmic-scale-to-the-xaxis-of-a-scatter-chart-for-better-data-distribution-visualization.cs
