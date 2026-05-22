@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - autofit-rows-containing-merged-cells-to-ensure-merged-content-displays-correctly-in-pdf-output.cs
 - enable-automatic-row-height-adjustment-on-workbook-load-to-preserve-original-layout.cs
 - split-spacedelimited-text-in-column-a-into-separate-columns-using-texttocolumns.cs
+- convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs

@@ -2656,6 +2656,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs",
+      "title": "Convert comma\u2011separated values in column B to individual columns by specifying comma delimiter."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs",
       "title": "Create a custom AutoFitterOptions instance that disables auto\u2011fit for hidden rows and apply it to a specific row range."
     },
