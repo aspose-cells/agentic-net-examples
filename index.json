@@ -2696,6 +2696,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "calculate-all-formulas-in-the-workbook-after-the-second-deletion-operation.cs",
+      "title": "Calculate all formulas in the workbook after the second deletion operation."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "combine-setrowheight-with-autofitrow-to-set-a-minimum-height-before-autofitting-a-row.cs",
       "title": "Combine SetRowHeight with AutoFitRow to set a minimum height before auto\u2011fitting a row."
     },
