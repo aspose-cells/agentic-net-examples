@@ -4061,6 +4061,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-from-a-stream-modify-chart-axes-and-write-the-workbook-back-to-a-byte-array.cs",
+      "title": "Load a workbook from a stream, modify chart axes, and write the workbook back to a byte array."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-excel-workbook-locate-a-chart-and-set-tick-labels-direction-to-horizontal.cs",
       "title": "Load an Excel workbook, locate a chart, and set tick labels direction to horizontal."
     },
