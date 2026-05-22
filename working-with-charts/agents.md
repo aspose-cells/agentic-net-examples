@@ -347,3 +347,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-for-column-chart-after-rotating-label-text-by-fortyfive-degrees.cs
 - enable-data-labels-for-radar-chart-source-values-from-a-transposed-cell-range-and-fit-shapes.cs
 - hide-legend-for-chart-placed-in-a-dashboard-sheet-to-maximize-available-display-area.cs
+- resize-data-label-shapes-after-enabling-data-label-leader-lines-to-test-combined-layout-behavior.cs
