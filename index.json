@@ -4046,6 +4046,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs",
+      "title": "Create chart, set legend to auto position, then override to a fixed top left location."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs",
       "title": "Define a custom color palette and assign specific colors to each chart series programmatically."
     },
