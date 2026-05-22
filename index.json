@@ -2821,6 +2821,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "ungroup-columns-after-modifications-and-ensure-column-widths-remain-consistent-across-the-worksheet.cs",
+      "title": "Ungroup columns after modifications and ensure column widths remain consistent across the worksheet."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "ungroup-previously-grouped-rows-and-verify-that-individual-row-heights-revert-to-original-values.cs",
       "title": "Ungroup previously grouped rows and verify that individual row heights revert to original values."
     },
