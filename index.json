@@ -5121,6 +5121,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "override-chartglobalizationsettingsgetlegend-method-to-supply-arabic-translations-for-legend-entries-in-all-generated-charts.cs",
+      "title": "Override ChartGlobalizationSettings.GetLegend method to supply Arabic translations for legend entries in all generated charts."
+    },
+    {
+      "category": "working-with-charts",
       "file": "override-getaxistitle-in-chartjapanesesettings-to-return-japanese-text-for-x-and-y-axes.cs",
       "title": "Override GetAxisTitle in ChartJapaneseSettings to return Japanese text for X and Y axes."
     },
