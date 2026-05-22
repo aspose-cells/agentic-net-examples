@@ -4646,6 +4646,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-after-adding-hyperlink-to-each-label-that-points-to-an-external-resource.cs",
+      "title": "Resize data label shapes after adding hyperlink to each label that points to an external resource."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-after-applying-bold-font-weight-to-prevent-text-overflow.cs",
       "title": "Resize data label shapes after applying bold font weight to prevent text overflow."
     },

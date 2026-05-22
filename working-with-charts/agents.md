@@ -361,3 +361,4 @@ Output files are written to the working directory.
 - enable-data-labels-to-pull-values-from-a-dynamic-named-range-and-ensure-shapes-resize-on-range-change.cs
 - hide-legend-for-charts-with-a-single-series-to-avoid-redundant-information.cs
 - create-chart-set-legend-to-fixed-size-then-programmatically-adjust-size-based-on-content.cs
+- resize-data-label-shapes-after-adding-hyperlink-to-each-label-that-points-to-an-external-resource.cs
