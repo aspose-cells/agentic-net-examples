@@ -2806,6 +2806,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "document-the-sequence-of-steps-and-code-snippets-in-a-developer-guide.cs",
+      "title": "Document the sequence of steps and code snippets in a developer guide."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs",
       "title": "Duplicate multiple consecutive rows using CopyRows and verify formula references update correctly."
     },
