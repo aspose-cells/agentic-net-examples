@@ -3891,6 +3891,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "detect-if-charts-x-axis-is-value-axis-and-if-not-convert-it-to-support-numeric-data.cs",
+      "title": "Detect if chart's X axis is Value axis, and if not, convert it to support numeric data."
+    },
+    {
+      "category": "working-with-charts",
       "file": "dispose-of-the-workbook-object-within-a-using-block-to-release-unmanaged-resources-promptly.cs",
       "title": "Dispose of the Workbook object within a using block to release unmanaged resources promptly."
     },
