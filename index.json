@@ -4331,6 +4331,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-legend-for-chart-placed-in-a-dashboard-sheet-to-maximize-available-display-area.cs",
+      "title": "Hide legend for chart placed in a dashboard sheet to maximize available display area."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-legend-for-charts-that-contain-more-than-ten-data-points-to-simplify-presentation.cs",
       "title": "Hide legend for charts that contain more than ten data points to simplify presentation."
     },
