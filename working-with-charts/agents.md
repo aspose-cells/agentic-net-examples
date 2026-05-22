@@ -336,3 +336,4 @@ Output files are written to the working directory.
 - enable-data-labels-to-show-percentages-from-cells-for-a-pie-chart-and-adjust-shape-size-accordingly.cs
 - add-data-labels-to-a-histogram-source-values-from-a-calculation-range-and-ensure-shapes-fit-text.cs
 - create-chart-with-secondary-y-axis-enable-cellbased-labels-for-secondary-series-and-position-legend-centrally.cs
+- hide-legend-for-charts-that-contain-more-than-ten-data-points-to-simplify-presentation.cs
