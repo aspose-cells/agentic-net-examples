@@ -422,3 +422,4 @@ Output files are written to the working directory.
 - lock-the-charts-aspect-ratio-to-prevent-distortion-when-resizing-the-plot-area.cs
 - add-a-hyperlink-to-a-label-control-that-opens-a-web-page-when-the-chart-is-viewed.cs
 - programmatically-check-a-checkbox-control-on-a-chart-and-verify-its-checked-property-returns-true.cs
+- load-an-xlsx-workbook-add-a-stacked-bar-chart-and-configure-it-as-a-gantt-chart.cs
