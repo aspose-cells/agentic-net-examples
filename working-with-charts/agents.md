@@ -295,3 +295,4 @@ Output files are written to the working directory.
 - enable-data-labels-to-display-values-from-a-specified-cell-range-for-the-first-chart-series.cs
 - set-seriesdatalabelsshowcellrange-true-to-activate-cellbased-data-labels-for-the-series.cs
 - configure-the-chart-to-show-category-names-as-data-labels-using-a-separate-column-of-cells.cs
+- resize-each-data-label-shape-automatically-to-fit-its-text-after-updating-label-values.cs
