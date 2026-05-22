@@ -3886,6 +3886,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-a-charts-subtitle-to-a-custom-string-and-verify-the-update-by-reading-the-property.cs",
+      "title": "Change a chart\u2019s subtitle to a custom string and verify the update by reading the property."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-an-existing-pie-chart-to-a-doughnut-chart-by-updating-its-charttype-property.cs",
       "title": "Change an existing pie chart to a doughnut chart by updating its ChartType property."
     },
