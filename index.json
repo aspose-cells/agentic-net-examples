@@ -146,6 +146,11 @@
     },
     {
       "category": "conversion",
+      "file": "embed-images-as-base64-in-a-single-html-file-during-export.cs",
+      "title": "Embed images as base64 in a single HTML file during export."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-as-xml-with-a-custom-root-element.cs",
       "title": "Export a workbook as XML with a custom root element."
     },
