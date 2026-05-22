@@ -4506,6 +4506,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-xlsx-workbook-containing-a-chart-and-retrieve-the-first-chart-object.cs",
+      "title": "Load an XLSX workbook containing a chart and retrieve the first chart object."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-obtain-the-first-chart-object.cs",
       "title": "Load an XLSX workbook from a file path and obtain the first chart object."
     },
