@@ -2581,6 +2581,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "apply-setcolumnwidth-to-a-column-then-autofit-an-adjacent-column-for-comparison.cs",
+      "title": "Apply SetColumnWidth to a column, then auto\u2011fit an adjacent column for comparison."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "apply-setcolumnwidthpixel-to-a-group-of-columns-after-autofitting-them-to-achieve-precise-pixel-alignment.cs",
       "title": "Apply SetColumnWidthPixel to a group of columns after auto\u2011fitting them to achieve precise pixel alignment."
     },
