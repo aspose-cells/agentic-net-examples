@@ -4306,6 +4306,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-on-a-stock-chart-series-and-configure-them-to-show-high-and-low-values.cs",
+      "title": "Enable data labels on a stock chart series and configure them to show high and low values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-to-display-custom-text-strings-stored-in-a-separate-worksheet-range.cs",
       "title": "Enable data labels to display custom text strings stored in a separate worksheet range."
     },
