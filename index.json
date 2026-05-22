@@ -9606,6 +9606,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "change-the-table-style-to-a-custom-xmldefined-style-to-meet-corporate-branding-guidelines.cs",
+      "title": "Change the table style to a custom XML\u2011defined style to meet corporate branding guidelines."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
       "title": "Convert the existing list object into a structured table to leverage advanced table features."
     },

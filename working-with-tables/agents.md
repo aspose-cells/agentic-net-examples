@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs
 - create-a-table-with-a-calculated-column-that-concatenates-first-and-last-name-fields-for-each-row.cs
 - apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs
+- change-the-table-style-to-a-custom-xmldefined-style-to-meet-corporate-branding-guidelines.cs
