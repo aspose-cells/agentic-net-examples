@@ -2851,6 +2851,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "load-an-excel-file-unhide-rows-forty-to-fortyfive-with-custom-height-then-export-pdf.cs",
+      "title": "Load an Excel file, unhide rows forty to forty\u2011five with custom height, then export PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-an-excel-workbook-hide-rows-five-through-ten-and-export-the-result-as-pdf.cs",
       "title": "Load an Excel workbook, hide rows five through ten, and export the result as PDF."
     },
