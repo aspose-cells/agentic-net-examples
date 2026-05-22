@@ -4241,6 +4241,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-after-chart-modifications-to-a-cloud-storage-location-using-a-stream-api.cs",
+      "title": "Save the workbook after chart modifications to a cloud storage location using a stream API."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-containing-the-chart-as-an-xlsx-file-named-quarterlyreportxlsx-in-the-output-folder.cs",
       "title": "Save the workbook containing the chart as an XLSX file named QuarterlyReport.xlsx in the output folder."
     },
