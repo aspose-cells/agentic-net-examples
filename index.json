@@ -3831,6 +3831,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-conditional-formatting-to-series-values-greater-than-500-changing-their-fill-color-to-red.cs",
+      "title": "Apply conditional formatting to series values greater than 500, changing their fill color to red."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-conditional-formatting-to-the-progress-bar-chart-colors-based-on-threshold-values.cs",
       "title": "Apply conditional formatting to the Progress Bar chart colors based on threshold values."
     },
