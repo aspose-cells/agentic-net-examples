@@ -9736,6 +9736,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-generate-a-named-range-that-references-only-the-header-row-for-use-in-formulas.cs",
+      "title": "Create a table, then generate a named range that references only the header row for use in formulas."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-then-generate-a-pivot-chart-from-its-data-and-place-it-on-a-dashboard-sheet.cs",
       "title": "Create a table, then generate a pivot chart from its data and place it on a dashboard sheet."
     },
