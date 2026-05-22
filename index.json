@@ -9626,6 +9626,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-data-validation-list-that-pulls-its-items-directly-from-a-column-in-a-worksheet-table.cs",
+      "title": "Create a data validation list that pulls its items directly from a column in a worksheet table."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs",
       "title": "Create a duplicate of an existing table on another worksheet while preserving its style and formulas."
     },
