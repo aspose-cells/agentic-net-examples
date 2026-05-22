@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - adjust-the-charts-topleft-position-coordinates-to-align-it-with-worksheet-cells.cs
 - resize-the-chart-to-a-width-of-400-points-and-height-of-300-points.cs
 - center-the-chart-within-the-pdf-page-during-conversion-to-achieve-balanced-layout.cs
+- align-the-chart-to-the-topleft-corner-of-the-pdf-page-before-exporting.cs
