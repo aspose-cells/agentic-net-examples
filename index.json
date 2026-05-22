@@ -10176,6 +10176,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "update-the-named-range-that-references-a-table-after-expanding-the-table-to-include-new-rows.cs",
+      "title": "Update the named range that references a table after expanding the table to include new rows."
+    },
+    {
+      "category": "working-with-tables",
       "file": "use-listobjectputcellvalue-to-add-a-boolean-value-at-a-specific-row-and-column-offset-within-the-table.cs",
       "title": "Use ListObject.PutCellValue to add a boolean value at a specific row and column offset within the table."
     },
