@@ -4576,6 +4576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "insert-a-trendline-into-the-first-data-series-of-a-chart-and-set-its-type-to-exponential.cs",
+      "title": "Insert a trendline into the first data series of a chart and set its type to exponential."
+    },
+    {
+      "category": "working-with-charts",
       "file": "insert-wordart-as-a-watermark-over-the-plot-area-rotating-it-thirty-degrees-for-a-diagonal-effect.cs",
       "title": "Insert WordArt as a watermark over the plot area, rotating it thirty degrees for a diagonal effect."
     },
