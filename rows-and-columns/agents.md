@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - autofit-all-rows-in-a-worksheet-by-calling-autofitrows-with-startrow-0-and-endrow-maxrow.cs
 - apply-setcolumnwidthpixel-to-a-column-before-adding-numeric-data-to-control-column-width-precisely.cs
 - load-an-xlsx-workbook-apply-autofitteroptionsforrendering-and-save-it-as-pdf.cs
+- autofit-all-rows-for-normal-view-using-worksheetautofitrows-before-exporting-to-other-formats.cs
