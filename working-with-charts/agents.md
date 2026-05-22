@@ -525,3 +525,4 @@ Output files are written to the working directory.
 - hide-a-specific-series-in-a-stacked-bar-chart-by-setting-its-isvisible-property-to-false.cs
 - set-the-isvisible-property-of-a-series-based-on-a-runtime-condition-evaluating-data-completeness.cs
 - change-the-theme-color-of-the-second-series-in-a-pie-chart-by-assigning-a-new-style-object.cs
+- apply-a-custom-color-palette-to-a-chart-by-setting-specific-rgb-values-for-each-series-style.cs
