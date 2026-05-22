@@ -4476,6 +4476,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "generate-an-svg-representation-of-a-chart-for-scalable-vector-display-in-web-applications.cs",
+      "title": "Generate an SVG representation of a chart for scalable vector display in web applications."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-data-labels-for-series-that-have-zero-values-in-a-stacked-column-chart.cs",
       "title": "Hide data labels for series that have zero values in a stacked column chart."
     },
