@@ -2686,6 +2686,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs",
+      "title": "Use AutoFitColumn on a column after inserting multiline text to ensure full visibility."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "use-autofitrows-with-custom-autofitteroptions-to-ignore-merged-cells-while-adjusting-a-specific-row-range.cs",
       "title": "Use AutoFitRows with custom AutoFitterOptions to ignore merged cells while adjusting a specific row range."
     },

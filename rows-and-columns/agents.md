@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - programmatically-set-a-row-height-then-autofit-the-next-row-based-on-its-content.cs
 - apply-setcolumnwidth-to-a-column-then-autofit-an-adjacent-column-for-comparison.cs
 - load-a-workbook-with-onlyauto-enabled-then-iterate-through-each-sheet-to-verify-row-heights-are-adjusted.cs
+- use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs
