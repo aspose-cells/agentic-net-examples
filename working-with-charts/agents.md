@@ -389,3 +389,4 @@ Output files are written to the working directory.
 - log-the-applied-localization-region-and-chart-name-to-a-diagnostics-file-for-audit-purposes.cs
 - verify-that-default-english-text-appears-when-no-localization-settings-are-assigned-to-a-chart.cs
 - ensure-that-only-chart-titles-legends-and-axis-labels-are-affected-by-localization-leaving-data-values-unchanged.cs
+- document-the-steps-to-set-a-localized-region-for-chart-rendering-and-convert-the-chart-to-an-image.cs
