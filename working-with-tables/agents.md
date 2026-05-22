@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs
 - set-a-custom-column-width-for-a-specific-table-column-to-accommodate-long-text-strings.cs
 - hide-a-table-column-programmatically-and-later-unhide-it-based-on-user-interaction-criteria.cs
+- create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs

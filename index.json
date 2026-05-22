@@ -9601,6 +9601,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs",
+      "title": "Create a duplicate of an existing table on another worksheet while preserving its style and formulas."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-list-object-from-a-dynamic-range-and-enable-automatic-expansion-when-new-rows-are-added.cs",
       "title": "Create a list object from a dynamic range and enable automatic expansion when new rows are added."
     },
