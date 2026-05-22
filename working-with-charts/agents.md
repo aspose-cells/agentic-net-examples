@@ -302,3 +302,4 @@ Output files are written to the working directory.
 - assign-a-transparent-fill-to-all-legend-entries-to-achieve-a-clear-background-effect.cs
 - change-the-legend-font-size-to-twelve-points-and-set-the-font-name-to-arial.cs
 - move-the-legend-to-custom-x-and-y-pixel-coordinates-relative-to-the-chart-area.cs
+- enable-the-label-contains-value-from-cells-option-for-a-pie-chart-and-link-labels-to-cells.cs
