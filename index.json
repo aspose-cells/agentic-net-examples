@@ -2855,6 +2855,11 @@
       "title": "Use Worksheet.AutoFitRows overload with startRow and endRow to adjust a block of rows."
     },
     {
+      "category": "rows-and-columns",
+      "file": "validate-that-autofitted-rows-do-not-exceed-a-maximum-height-limit-by-checking-row-heights.cs",
+      "title": "Validate that auto\u2011fitted rows do not exceed a maximum height limit by checking row heights."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
