@@ -2671,6 +2671,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "set-standardwidth-then-autofit-a-range-of-columns-to-observe-overridden-settings.cs",
+      "title": "Set StandardWidth, then auto\u2011fit a range of columns to observe overridden settings."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "set-the-height-of-a-specific-row-eg-row-5-to-a-defined-point-value-using-cellssetrowheight.cs",
       "title": "Set the height of a specific row (e.g., row 5) to a defined point value using Cells.SetRowHeight."
     },
