@@ -3816,6 +3816,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-chart-type-to-cone3d-and-adjust-the-z-axis-depth-for-better-perspective.cs",
+      "title": "Change the chart type to Cone3D and adjust the Z axis depth for better perspective."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-x-axis-type-to-category-to-display-sequential-text-labels-on-the-chart.cs",
       "title": "Change the X axis type to Category to display sequential text labels on the chart."
     },
