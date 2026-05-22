@@ -9641,6 +9641,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-list-object-to-display-a-totals-row-and-configure-count-aggregation-for-a-text-column.cs",
+      "title": "Set the list object to display a totals row and configure count aggregation for a text column."
+    },
+    {
+      "category": "working-with-tables",
       "file": "sort-the-table-by-two-columns-first-ascending-by-date-then-descending-by-amount.cs",
       "title": "Sort the table by two columns, first ascending by date then descending by amount."
     },
