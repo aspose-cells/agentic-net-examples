@@ -397,3 +397,4 @@ Output files are written to the working directory.
 - place-a-picture-control-on-a-chart-using-an-image-stream-and-set-width-to-one-hundred-points.cs
 - add-a-checkbox-control-to-a-chart-sheet-defaulting-its-state-to-unchecked-and-labeling-it-select.cs
 - update-the-text-of-an-existing-label-control-on-a-chart-to-display-the-current-date.cs
+- toggle-the-visibility-of-a-picture-control-inside-a-chart-based-on-a-boolean-flag.cs
