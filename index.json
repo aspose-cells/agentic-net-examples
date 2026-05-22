@@ -4846,6 +4846,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-any-existing-trendlines-from-a-chart-before-adding-new-analytical-lines.cs",
+      "title": "Remove any existing trendlines from a chart before adding new analytical lines."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-background-fill-from-legend-entries-while-keeping-text-color-unchanged-for-contrast.cs",
       "title": "Remove background fill from legend entries while keeping text color unchanged for contrast."
     },
