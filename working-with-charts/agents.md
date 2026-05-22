@@ -348,3 +348,4 @@ Output files are written to the working directory.
 - enable-data-labels-for-radar-chart-source-values-from-a-transposed-cell-range-and-fit-shapes.cs
 - hide-legend-for-chart-placed-in-a-dashboard-sheet-to-maximize-available-display-area.cs
 - resize-data-label-shapes-after-enabling-data-label-leader-lines-to-test-combined-layout-behavior.cs
+- create-chart-set-legend-position-to-bottom-then-shift-it-upward-by-a-fixed-offset.cs
