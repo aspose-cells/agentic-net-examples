@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - enable-the-list-objects-header-row-and-customize-its-background-color-using-a-predefined-style.cs
 - set-the-list-object-to-display-a-totals-row-and-configure-count-aggregation-for-a-text-column.cs
 - load-an-existing-excel-workbook-containing-query-tables-and-enumerate-all-tables-linked-to-external-data-sources.cs
+- set-the-background-refresh-property-of-a-query-table-to-false-ensuring-synchronous-data-retrieval.cs

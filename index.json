@@ -9646,6 +9646,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-background-refresh-property-of-a-query-table-to-false-ensuring-synchronous-data-retrieval.cs",
+      "title": "Set the background refresh property of a query table to false, ensuring synchronous data retrieval."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-list-object-to-display-a-totals-row-and-configure-count-aggregation-for-a-text-column.cs",
       "title": "Set the list object to display a totals row and configure count aggregation for a text column."
     },
