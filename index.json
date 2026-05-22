@@ -9936,6 +9936,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "insert-a-calculated-total-value-at-the-bottom-of-a-table-using-listobjectputcellvalue-with-appropriate-offsets.cs",
+      "title": "Insert a calculated total value at the bottom of a table using ListObject.PutCellValue with appropriate offsets."
+    },
+    {
+      "category": "working-with-tables",
       "file": "insert-a-formula-into-a-table-cell-using-cellputvalue-with-a-formula-string.cs",
       "title": "Insert a formula into a table cell using Cell.PutValue with a formula string."
     },
