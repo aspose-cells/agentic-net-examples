@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - transfer-rows-containing-comments-and-verify-comments-appear-correctly-in-the-destination-worksheet.cs
 - copy-rows-between-worksheets-then-autofit-destination-rows-to-match-source-row-heights.cs
 - retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs
+- batch-process-multiple-worksheets-by-autofitting-rows-for-rendering-before-saving-each-as-pdf.cs
