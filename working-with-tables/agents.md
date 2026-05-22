@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - generate-a-pivot-table-based-on-an-existing-worksheet-table-and-place-it-on-a-new-worksheet.cs
 - disable-autoexpand-for-a-table-to-keep-its-range-fixed-despite-additional-rows-being-entered.cs
 - update-the-named-range-that-references-a-table-after-expanding-the-table-to-include-new-rows.cs
+- remove-an-unwanted-column-from-a-table-while-preserving-the-data-in-other-columns.cs
