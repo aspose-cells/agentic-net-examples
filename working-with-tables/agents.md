@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - change-the-table-style-to-a-custom-xmldefined-style-to-meet-corporate-branding-guidelines.cs
 - add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs
 - remove-an-existing-slicer-from-a-table-and-clean-up-associated-connections.cs
+- programmatically-retrieve-the-address-range-of-a-table-and-use-it-as-a-named-range-for-formulas.cs

@@ -9726,6 +9726,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "programmatically-retrieve-the-address-range-of-a-table-and-use-it-as-a-named-range-for-formulas.cs",
+      "title": "Programmatically retrieve the address range of a table and use it as a named range for formulas."
+    },
+    {
+      "category": "working-with-tables",
       "file": "protect-the-entire-table-with-a-password-allowing-only-readonly-access-for-external-users.cs",
       "title": "Protect the entire table with a password, allowing only read\u2011only access for external users."
     },
