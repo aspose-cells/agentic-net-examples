@@ -3221,6 +3221,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "write-the-unchanged-formula-and-zero-value-of-cell-e3-to-the-console.cs",
+      "title": "Write the unchanged formula and zero value of cell E3 to the console."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "write-the-updated-formula-and-its-calculated-value-of-cell-e3-to-the-console.cs",
       "title": "Write the updated formula and its calculated value of cell E3 to the console."
     },
