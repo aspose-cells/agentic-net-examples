@@ -468,3 +468,4 @@ Output files are written to the working directory.
 - hide-the-second-series-in-a-line-chart-by-setting-its-isvisible-property-to-false.cs
 - apply-a-predefined-theme-to-a-column-chart-and-customize-individual-series-colors.cs
 - programmatically-adjust-the-yaxis-scale-to-display-values-from-0-to-1000-on-a-bar-chart.cs
+- add-a-secondary-yaxis-to-a-column-chart-and-assign-a-different-data-series-to-it.cs
