@@ -10171,6 +10171,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "use-listobjectputcellvalue-to-insert-a-string-value-into-a-table-cell-using-specific-row-and-column-offsets.cs",
+      "title": "Use ListObject.PutCellValue to insert a string value into a table cell using specific row and column offsets."
+    },
+    {
+      "category": "working-with-tables",
       "file": "use-listobjectputcellvalue-with-row-and-column-offsets-to-populate-a-header-cell-in-the-table.cs",
       "title": "Use ListObject.PutCellValue with row and column offsets to populate a header cell in the table."
     },
