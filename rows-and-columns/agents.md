@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - apply-a-uniform-row-height-to-all-rows-in-a-worksheet-by-assigning-cellsstandardheight.cs
 - set-the-width-of-a-specific-column-eg-column-3-using-cellssetcolumnwidth.cs
 - set-the-width-of-a-specific-column-in-pixels-using-cellssetcolumnwidthpixel.cs
+- apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs
