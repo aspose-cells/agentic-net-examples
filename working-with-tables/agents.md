@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - create-a-table-then-generate-a-named-range-that-references-only-the-header-row-for-use-in-formulas.cs
 - apply-a-table-style-that-uses-alternating-row-colors-to-improve-readability-of-large-data-sets.cs
 - export-a-table-to-an-html-file-preserving-table-structure-and-applying-inline-css-for-styling.cs
+- import-an-html-table-into-a-worksheet-converting-it-into-a-structured-table-with-proper-column-headers.cs
