@@ -2621,6 +2621,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "autofit-all-rows-for-normal-view-using-worksheetautofitrows-before-exporting-to-other-formats.cs",
+      "title": "Auto\u2011fit all rows for normal view using Worksheet.AutoFitRows before exporting to other formats."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "autofit-all-rows-in-a-worksheet-by-calling-autofitrows-with-startrow-0-and-endrow-maxrow.cs",
       "title": "Auto\u2011fit all rows in a worksheet by calling AutoFitRows with startRow 0 and endRow MaxRow."
     },
