@@ -4356,6 +4356,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-charttextdirectiontype-enumeration-to-set-tick-labels-direction-to-stacked-for-vertical-orientation.cs",
+      "title": "Use ChartTextDirectionType enumeration to set tick labels direction to Stacked for vertical orientation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "use-index-and-match-functions-to-build-a-dynamic-range-for-a-secondary-axis-data-source.cs",
       "title": "Use INDEX and MATCH functions to build a dynamic range for a secondary axis data source."
     },
