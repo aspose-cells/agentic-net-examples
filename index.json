@@ -3236,6 +3236,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "verify-that-formulas-referencing-deleted-columns-are-updated-accordingly-after-column-deletion.cs",
+      "title": "Verify that formulas referencing deleted columns are updated accordingly after column deletion."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "verify-that-formulas-referencing-deleted-rows-are-updated-accordingly-after-row-deletion.cs",
       "title": "Verify that formulas referencing deleted rows are updated accordingly after row deletion."
     },

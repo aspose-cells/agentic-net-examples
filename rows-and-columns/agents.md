@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - delete-blank-rows-on-the-first-worksheet-with-deleteoptionsupdatereference-set-to-true.cs
 - verify-that-formulas-referencing-deleted-rows-are-updated-accordingly-after-row-deletion.cs
 - delete-blank-columns-on-the-first-worksheet-with-deleteoptionsupdatereference-set-to-true.cs
+- verify-that-formulas-referencing-deleted-columns-are-updated-accordingly-after-column-deletion.cs
