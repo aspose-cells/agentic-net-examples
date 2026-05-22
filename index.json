@@ -10121,6 +10121,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "use-listobjectputcellvalue-to-add-a-boolean-value-at-a-specific-row-and-column-offset-within-the-table.cs",
+      "title": "Use ListObject.PutCellValue to add a boolean value at a specific row and column offset within the table."
+    },
+    {
+      "category": "working-with-tables",
       "file": "use-listobjectputcellvalue-to-add-a-date-value-at-row-offset-two-and-column-offset-three.cs",
       "title": "Use ListObject.PutCellValue to add a date value at row offset two and column offset three."
     },
