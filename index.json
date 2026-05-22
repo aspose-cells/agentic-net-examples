@@ -9736,6 +9736,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "enable-the-tables-autofilter-feature-and-set-a-custom-criteria-that-filters-text-containing-a-specific-substring.cs",
+      "title": "Enable the table's auto\u2011filter feature and set a custom criteria that filters text containing a specific substring."
+    },
+    {
+      "category": "working-with-tables",
       "file": "enable-the-tables-show-header-row-option-and-customize-the-header-font-color-for-emphasis.cs",
       "title": "Enable the table's show header row option and customize the header font color for emphasis."
     },
