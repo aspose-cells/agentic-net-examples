@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - create-a-new-worksheet-table-from-a-range-of-cells-and-assign-a-custom-name.cs
+- apply-a-predefined-table-style-to-the-created-table-and-preserve-the-original-formatting.cs
