@@ -4066,6 +4066,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-chart-assign-a-custom-tag-to-the-legend-object-and-retrieve-it-later-for-metadata.cs",
+      "title": "Create chart, assign a custom tag to the legend object, and retrieve it later for metadata."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-chart-hide-its-legend-then-reenable-legend-visibility-based-on-a-runtime-condition.cs",
       "title": "Create chart, hide its legend, then re\u2011enable legend visibility based on a runtime condition."
     },

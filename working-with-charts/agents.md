@@ -352,3 +352,4 @@ Output files are written to the working directory.
 - apply-custom-locale-to-chart-legend-to-display-month-names-in-spanish-and-verify-formatting.cs
 - set-legend-background-to-transparent-while-keeping-entry-fill-none-to-achieve-a-fully-clear-legend.cs
 - resize-data-label-shapes-after-applying-bold-italic-font-combination-to-test-text-fitting.cs
+- create-chart-assign-a-custom-tag-to-the-legend-object-and-retrieve-it-later-for-metadata.cs
