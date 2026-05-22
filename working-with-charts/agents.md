@@ -201,3 +201,4 @@ Output files are written to the working directory.
 - set-the-xaxis-type-to-date-to-correctly-display-timebased-data-points.cs
 - configure-the-yaxis-type-as-value-to-represent-numeric-measurements-accurately.cs
 - assign-a-secondary-yaxis-type-of-value-and-link-appropriate-series-to-it.cs
+- enable-major-tick-marks-on-the-xaxis-to-improve-readability-of-axis-labels.cs

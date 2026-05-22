@@ -3896,6 +3896,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-major-tick-marks-on-the-xaxis-to-improve-readability-of-axis-labels.cs",
+      "title": "Enable major tick marks on the X\u2011axis to improve readability of axis labels."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-the-chart-to-refresh-automatically-when-the-workbook-is-opened-ensuring-latest-data-is-displayed.cs",
       "title": "Enable the chart to refresh automatically when the workbook is opened, ensuring latest data is displayed."
     },
