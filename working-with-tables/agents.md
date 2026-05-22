@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - create-a-table-with-a-calculated-column-using-the-today-function-to-display-days-since-a-start-date.cs
 - programmatically-detect-tables-lacking-a-header-row-and-add-a-default-header-with-generic-column-names.cs
 - add-a-column-to-a-table-and-set-its-validation-to-a-list-sourced-from-a-table-column.cs
+- remove-a-tables-totals-row-and-then-readd-it-with-custom-formulas-for-each-numeric-column.cs

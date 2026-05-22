@@ -9931,6 +9931,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "remove-a-tables-totals-row-and-then-readd-it-with-custom-formulas-for-each-numeric-column.cs",
+      "title": "Remove a table's totals row and then re\u2011add it with custom formulas for each numeric column."
+    },
+    {
+      "category": "working-with-tables",
       "file": "remove-all-slicers-associated-with-a-specific-table-to-simplify-the-worksheet-interface.cs",
       "title": "Remove all slicers associated with a specific table to simplify the worksheet interface."
     },
