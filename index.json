@@ -3931,6 +3931,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "bind-progress-percentages-from-a-worksheet-column-to-the-visible-series-of-the-progress-bar-chart.cs",
+      "title": "Bind progress percentages from a worksheet column to the visible series of the Progress Bar chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs",
       "title": "Bind the chart to the OFFSET\u2011based named range for automatic expansion with new data."
     },
