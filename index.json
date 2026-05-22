@@ -3716,6 +3716,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "center-the-chart-within-the-pdf-page-during-conversion-to-achieve-balanced-layout.cs",
+      "title": "Center the chart within the PDF page during conversion to achieve balanced layout."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-an-existing-pie-chart-to-a-doughnut-chart-by-updating-its-charttype-property.cs",
       "title": "Change an existing pie chart to a doughnut chart by updating its ChartType property."
     },
