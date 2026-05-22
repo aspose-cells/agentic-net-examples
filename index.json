@@ -3761,6 +3761,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-derived-chartglobalizationsettings-instance-to-a-chart-to-translate-all-component-texts-into-a-target-language.cs",
+      "title": "Apply a derived ChartGlobalizationSettings instance to a chart to translate all component texts into a target language."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-diagonal-stripe-pattern-fill-to-the-chart-background-for-a-stylized-look.cs",
       "title": "Apply a diagonal stripe pattern fill to the chart background for a stylized look."
     },
