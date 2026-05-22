@@ -10061,6 +10061,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "use-listobjectputcellvalue-with-row-and-column-offsets-to-populate-a-header-cell-in-the-table.cs",
+      "title": "Use ListObject.PutCellValue with row and column offsets to populate a header cell in the table."
+    },
+    {
+      "category": "working-with-tables",
       "file": "validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs",
       "title": "Validate that a table contains no duplicate rows based on a combination of key columns."
     },
