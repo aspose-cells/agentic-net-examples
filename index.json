@@ -4236,6 +4236,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "customize-marker-styles-for-the-line-series-in-a-combo-chart-to-highlight-key-data-points.cs",
+      "title": "Customize marker styles for the line series in a Combo chart to highlight key data points."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs",
       "title": "Define a custom color palette and assign specific colors to each chart series programmatically."
     },
