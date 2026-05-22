@@ -5046,6 +5046,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xls-file-add-an-exponential-trendline-to-a-chart-series-and-capture-its-equation-text.cs",
+      "title": "Open an XLS file, add an exponential trendline to a chart series and capture its equation text."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xls-file-apply-a-custom-chartcolorpalettetype-to-all-chart-series-then-save.cs",
       "title": "Open an XLS file, apply a custom ChartColorPaletteType to all chart series, then save."
     },
