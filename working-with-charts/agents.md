@@ -526,3 +526,4 @@ Output files are written to the working directory.
 - set-the-isvisible-property-of-a-series-based-on-a-runtime-condition-evaluating-data-completeness.cs
 - change-the-theme-color-of-the-second-series-in-a-pie-chart-by-assigning-a-new-style-object.cs
 - apply-a-custom-color-palette-to-a-chart-by-setting-specific-rgb-values-for-each-series-style.cs
+- construct-a-combo-chart-that-combines-a-column-series-with-a-line-series-sharing-a-secondary-axis.cs

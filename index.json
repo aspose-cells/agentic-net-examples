@@ -4156,6 +4156,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "construct-a-combo-chart-that-combines-a-column-series-with-a-line-series-sharing-a-secondary-axis.cs",
+      "title": "Construct a combo chart that combines a column series with a line series sharing a secondary axis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs",
       "title": "Convert the data range into a ListObject to enable automatic chart updates."
     },
