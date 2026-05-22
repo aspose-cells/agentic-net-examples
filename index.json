@@ -4586,6 +4586,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-entry-fill-to-transparent-only-for-entries-representing-negative-values.cs",
+      "title": "Set legend entry fill to transparent only for entries representing negative values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs",
       "title": "Set major unit interval on primary Y axis to 10 to standardize chart grid lines across series."
     },
