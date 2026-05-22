@@ -3566,6 +3566,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "access-the-ticklabels-object-of-the-primary-y-axis-and-rotate-labels-ninety-degrees-clockwise.cs",
+      "title": "Access the TickLabels object of the primary Y axis and rotate labels ninety degrees clockwise."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-data-label-to-each-point-in-a-column-chart-displaying-the-exact-value.cs",
       "title": "Add a data label to each point in a column chart displaying the exact value."
     },
