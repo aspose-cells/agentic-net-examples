@@ -3981,6 +3981,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-chart-title-of-the-progress-bar-chart-dynamically-based-on-the-current-project-phase.cs",
+      "title": "Change the chart title of the Progress Bar chart dynamically based on the current project phase."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-chart-type-from-column-to-area-while-preserving-existing-data-label-configurations.cs",
       "title": "Change the chart type from column to area while preserving existing data label configurations."
     },
