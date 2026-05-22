@@ -4476,6 +4476,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-a-chart-to-svg-format-for-scalable-web-display-ensuring-all-text-remains-selectable.cs",
+      "title": "Export a chart to SVG format for scalable web display, ensuring all text remains selectable."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-a-specific-chart-to-a-png-image-file-with-a-resolution-of-three-hundred-dpi.cs",
       "title": "Export a specific chart to a PNG image file with a resolution of three hundred DPI."
     },
