@@ -418,3 +418,4 @@ Output files are written to the working directory.
 - enable-data-labels-on-a-stock-chart-series-and-configure-them-to-show-high-and-low-values.cs
 - insert-a-trendline-into-the-first-data-series-of-a-chart-and-set-its-type-to-exponential.cs
 - remove-any-existing-trendlines-from-a-chart-before-adding-new-analytical-lines.cs
+- configure-chart-axes-to-use-automatic-scaling-ensuring-all-data-points-are-fully-visible.cs

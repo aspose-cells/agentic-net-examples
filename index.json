@@ -4016,6 +4016,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-chart-axes-to-use-automatic-scaling-ensuring-all-data-points-are-fully-visible.cs",
+      "title": "Configure chart axes to use automatic scaling, ensuring all data points are fully visible."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-data-labels-to-show-both-cell-values-and-series-name-concatenated-with-a-hyphen-separator.cs",
       "title": "Configure data labels to show both cell values and series name concatenated with a hyphen separator."
     },
