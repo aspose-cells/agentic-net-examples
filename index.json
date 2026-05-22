@@ -2751,6 +2751,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs",
+      "title": "Retrieve source row height with GetRowHeight and explicitly set destination height using SetRowHeight."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "set-row-height-for-the-header-row-to-improve-visual-emphasis-then-autofit-remaining-rows.cs",
       "title": "Set row height for the header row to improve visual emphasis, then auto\u2011fit remaining rows."
     },
