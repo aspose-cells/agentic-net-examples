@@ -4796,6 +4796,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "programmatically-check-a-checkbox-control-on-a-chart-and-verify-its-checked-property-returns-true.cs",
+      "title": "Programmatically check a checkbox control on a chart and verify its Checked property returns true."
+    },
+    {
+      "category": "working-with-charts",
       "file": "programmatically-generate-ten-worksheets-each-with-a-chart-bound-to-its-own-data-table-using-a-loop.cs",
       "title": "Programmatically generate ten worksheets, each with a chart bound to its own data table using a loop."
     },
