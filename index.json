@@ -5146,6 +5146,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "verify-that-the-chart-title-appears-in-chinese-characters-within-the-exported-png-image.cs",
+      "title": "Verify that the chart title appears in Chinese characters within the exported PNG image."
+    },
+    {
+      "category": "working-with-charts",
       "file": "write-the-chart-pdf-output-to-a-memorystream-for-further-inmemory-processing.cs",
       "title": "Write the chart PDF output to a MemoryStream for further in\u2011memory processing."
     },
