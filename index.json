@@ -9581,6 +9581,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "add-a-slicer-linked-to-a-table-column-and-configure-it-to-allow-multiselection-for-flexible-filtering.cs",
+      "title": "Add a slicer linked to a table column and configure it to allow multi\u2011selection for flexible filtering."
+    },
+    {
+      "category": "working-with-tables",
       "file": "add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs",
       "title": "Add a slicer linked to a table column to provide interactive filtering in the worksheet."
     },
