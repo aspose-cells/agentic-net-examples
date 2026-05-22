@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - create-a-chart-that-uses-a-worksheet-table-as-its-data-source-and-apply-a-predefined-chart-style.cs
 - refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs
 - apply-conditional-formatting-to-a-table-column-that-highlights-cells-exceeding-a-defined-numeric-threshold.cs
+- autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs
