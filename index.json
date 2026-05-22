@@ -9821,6 +9821,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-a-table-to-an-html-file-preserving-table-structure-and-applying-inline-css-for-styling.cs",
+      "title": "Export a table to an HTML file, preserving table structure and applying inline CSS for styling."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs",
       "title": "Export a worksheet containing multiple tables to a single PDF file, preserving each table's layout."
     },
