@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - access-the-second-worksheet-in-the-loaded-workbook-to-prepare-for-formula-verification.cs
 - retrieve-the-formula-of-cell-e3-in-the-second-worksheet-before-deletion.cs
 - create-a-deleteoptions-instance-to-control-reference-updating-behavior-during-deletion.cs
+- set-the-deleteoptionsupdatereference-property-to-true-to-enable-formula-updates.cs
