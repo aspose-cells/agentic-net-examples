@@ -379,3 +379,4 @@ Output files are written to the working directory.
 - verify-that-the-chart-title-appears-in-japanese-characters-within-the-exported-jpeg-image.cs
 - batch-process-all-charts-in-a-workbook-applying-chinese-localization-to-each-before-image-export.cs
 - iterate-through-a-folder-of-xlsx-files-converting-each-chart-to-a-localized-png-using-chinese-settings.cs
+- combine-chart-localization-with-a-predefined-theme-by-setting-the-charts-theme-property-before-export.cs

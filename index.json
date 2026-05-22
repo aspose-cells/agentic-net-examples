@@ -3956,6 +3956,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "combine-chart-localization-with-a-predefined-theme-by-setting-the-charts-theme-property-before-export.cs",
+      "title": "Combine chart localization with a predefined theme by setting the chart's Theme property before export."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs",
       "title": "Configure a linear gradient fill for the chart background with two contrasting colors."
     },
