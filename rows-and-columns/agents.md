@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - create-a-template-row-with-formulas-copy-it-to-several-sheets-and-validate-calculated-results.cs
 - group-a-range-of-rows-programmatically-then-autofit-grouped-rows-to-ensure-proper-display.cs
 - ungroup-previously-grouped-rows-and-verify-that-individual-row-heights-revert-to-original-values.cs
+- group-columns-autofit-rows-within-grouped-columns-and-export-the-worksheet-to-pdf.cs
