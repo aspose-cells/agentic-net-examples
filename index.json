@@ -9896,6 +9896,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "load-a-workbook-and-convert-a-specific-table-to-a-range-preserving-formatting-up-to-row-ten.cs",
+      "title": "Load a workbook and convert a specific table to a range preserving formatting up to row ten."
+    },
+    {
+      "category": "working-with-tables",
       "file": "load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs",
       "title": "Load a workbook, locate a table by name, and export its contents to an HTML fragment."
     },
