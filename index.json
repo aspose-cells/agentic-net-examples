@@ -9706,6 +9706,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-attach-a-comment-that-includes-the-creation-timestamp-and-author-information-for-audit.cs",
+      "title": "Create a table, then attach a comment that includes the creation timestamp and author information for audit."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-then-generate-a-data-validation-rule-restricting-entries-to-values-present-in-another-table-column.cs",
       "title": "Create a table, then generate a data validation rule restricting entries to values present in another table column."
     },
