@@ -467,3 +467,4 @@ Output files are written to the working directory.
 - validate-that-chart-data-range-does-not-contain-empty-cells-before-generating-the-chart.cs
 - hide-the-second-series-in-a-line-chart-by-setting-its-isvisible-property-to-false.cs
 - apply-a-predefined-theme-to-a-column-chart-and-customize-individual-series-colors.cs
+- programmatically-adjust-the-yaxis-scale-to-display-values-from-0-to-1000-on-a-bar-chart.cs
