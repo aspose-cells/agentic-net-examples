@@ -3811,6 +3811,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-data-label-font-size-to-twelve-points-and-color-to-blue-for-a-radar-chart.cs",
+      "title": "Change data label font size to twelve points and color to blue for a radar chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-category-axis-type-to-dateaxis-to-correctly-display-timebased-data.cs",
       "title": "Change the category axis type to DateAxis to correctly display time\u2011based data."
     },
