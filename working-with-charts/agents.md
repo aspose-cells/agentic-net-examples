@@ -301,3 +301,4 @@ Output files are written to the working directory.
 - make-the-chart-legend-invisible-and-confirm-no-legend-entries-are-rendered.cs
 - assign-a-transparent-fill-to-all-legend-entries-to-achieve-a-clear-background-effect.cs
 - change-the-legend-font-size-to-twelve-points-and-set-the-font-name-to-arial.cs
+- move-the-legend-to-custom-x-and-y-pixel-coordinates-relative-to-the-chart-area.cs
