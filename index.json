@@ -4636,6 +4636,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-from-a-memory-stream-modify-chart-subtitles-and-save-back-to-a-new-stream.cs",
+      "title": "Load a workbook from a memory stream, modify chart subtitles, and save back to a new stream."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-from-a-stream-modify-chart-axes-and-write-the-workbook-back-to-a-byte-array.cs",
       "title": "Load a workbook from a stream, modify chart axes, and write the workbook back to a byte array."
     },
