@@ -282,3 +282,4 @@ Output files are written to the working directory.
 - disable-data-label-autofit-feature-to-maintain-consistent-label-width.cs
 - set-data-label-text-alignment-to-rightjustify-for-a-horizontal-bar-chart.cs
 - position-data-labels-inside-end-for-a-column-chart-to-avoid-overlapping-bars.cs
+- measure-chart-rendering-time-after-disabling-data-label-text-wrapping-for-performance-assessment.cs
