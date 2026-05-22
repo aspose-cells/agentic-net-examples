@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs
 - change-the-table-style-to-a-custom-xmldefined-style-to-meet-corporate-branding-guidelines.cs
 - add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs
+- remove-an-existing-slicer-from-a-table-and-clean-up-associated-connections.cs
