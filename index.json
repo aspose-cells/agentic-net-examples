@@ -9566,6 +9566,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "add-a-totals-row-to-the-table-and-configure-sum-formulas-for-numeric-columns.cs",
+      "title": "Add a totals row to the table and configure sum formulas for numeric columns."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-predefined-table-style-to-the-created-table-and-preserve-the-original-formatting.cs",
       "title": "Apply a predefined table style to the created table and preserve the original formatting."
     },
