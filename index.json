@@ -3951,6 +3951,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs",
+      "title": "Create a chart template that includes predefined legend position and data label settings."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-chart-template-with-predefined-data-label-settings-and-apply-it-to-new-charts.cs",
       "title": "Create a chart template with predefined data label settings and apply it to new charts."
     },
