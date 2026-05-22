@@ -413,3 +413,4 @@ Output files are written to the working directory.
 - generate-an-svg-representation-of-a-chart-for-scalable-vector-display-in-web-applications.cs
 - load-a-workbook-from-a-memory-stream-modify-chart-subtitles-and-save-back-to-a-new-stream.cs
 - copy-a-chart-from-one-chart-sheet-to-another-preserving-all-attached-controls-and-formatting.cs
+- set-the-background-color-of-a-charts-plot-area-to-light-yellow-for-improved-readability.cs

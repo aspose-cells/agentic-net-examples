@@ -5106,6 +5106,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-background-color-of-a-charts-plot-area-to-light-yellow-for-improved-readability.cs",
+      "title": "Set the background color of a chart\u2019s plot area to light yellow for improved readability."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
       "title": "Set the chart border thickness to 2 points and color to dark gray."
     },
