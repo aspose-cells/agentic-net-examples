@@ -3691,6 +3691,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "adjust-the-gap-width-of-the-progress-bar-chart-to-make-bars-appear-thicker-for-better-visibility.cs",
+      "title": "Adjust the gap width of the Progress Bar chart to make bars appear thicker for better visibility."
+    },
+    {
+      "category": "working-with-charts",
       "file": "align-the-chart-to-the-topleft-corner-of-the-pdf-page-before-exporting.cs",
       "title": "Align the chart to the top\u2011left corner of the PDF page before exporting."
     },
