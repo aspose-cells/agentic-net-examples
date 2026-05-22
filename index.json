@@ -4366,6 +4366,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-the-charts-secondary-axis-exists-before-assigning-series-to-avoid-runtime-exceptions.cs",
+      "title": "Validate that the chart's secondary axis exists before assigning series to avoid runtime exceptions."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs",
       "title": "Validate that the image file exists before assigning it to the chart background fill."
     },
