@@ -2611,6 +2611,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "autofit-rows-that-contain-merged-cells-by-specifying-autofitmergedcellstype-in-autofitteroptions-during-processing.cs",
+      "title": "Auto\u2011fit rows that contain merged cells by specifying AutoFitMergedCellsType in AutoFitterOptions during processing."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "batch-process-multiple-worksheets-to-apply-standardwidth-for-consistent-column-sizing.cs",
       "title": "Batch process multiple worksheets to apply StandardWidth for consistent column sizing."
     },
