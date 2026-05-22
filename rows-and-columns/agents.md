@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - read-a-workbook-unhide-row-twelve-with-height-twenty-points-and-generate-a-pdf.cs
 - load-a-worksheet-unhide-column-b-specifying-width-fifty-points-then-export-to-pdf.cs
 - open-an-excel-file-hide-rows-twenty-to-twentyfive-and-save-the-output-as-pdf.cs
+- load-a-workbook-hide-columns-d-through-g-then-create-a-pdf-of-the-sheet.cs
