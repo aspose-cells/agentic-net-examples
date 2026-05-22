@@ -3971,6 +3971,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-chart-to-emf-format-for-highresolution-printing-in-windows-applications-compatible.cs",
+      "title": "Export chart to EMF format for high\u2011resolution printing in Windows applications compatible."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-chart-as-a-highresolution-jpeg-image-for-inclusion-in-a-powerpoint-slide.cs",
       "title": "Export the chart as a high\u2011resolution JPEG image for inclusion in a PowerPoint slide."
     },
