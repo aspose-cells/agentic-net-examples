@@ -4976,6 +4976,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-containing-modified-charts-to-an-xlsx-file-while-preserving-all-chart-controls.cs",
+      "title": "Save the workbook containing modified charts to an XLSX file while preserving all chart controls."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-containing-the-chart-as-an-xlsx-file-named-quarterlyreportxlsx-in-the-output-folder.cs",
       "title": "Save the workbook containing the chart as an XLSX file named QuarterlyReport.xlsx in the output folder."
     },
