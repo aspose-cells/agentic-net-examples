@@ -4176,6 +4176,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "generate-a-report-listing-each-data-points-custom-label-text-alongside-its-numeric-value.cs",
+      "title": "Generate a report listing each data point's custom label text alongside its numeric value."
+    },
+    {
+      "category": "working-with-charts",
       "file": "generate-a-report-that-lists-each-charts-axis-type-and-tick-label-direction-for-auditing-purposes.cs",
       "title": "Generate a report that lists each chart's axis type and tick label direction for auditing purposes."
     },
