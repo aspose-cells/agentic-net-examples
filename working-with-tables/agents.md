@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - insert-a-formula-into-a-table-cell-using-cellputvalue-with-a-formula-string.cs
 - use-listobjectputcellvalue-to-add-a-date-value-at-row-offset-two-and-column-offset-three.cs
 - iterate-through-all-tables-in-a-workbook-and-convert-each-to-a-range-with-custom-tabletorangeoptions.cs
+- after-conversion-attempt-to-apply-a-filter-to-the-former-table-range-and-capture-the-expected-exception.cs
