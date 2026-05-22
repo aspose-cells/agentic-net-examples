@@ -4711,6 +4711,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-a-specific-series-in-a-stacked-bar-chart-by-setting-its-isvisible-property-to-false.cs",
+      "title": "Hide a specific series in a stacked bar chart by setting its IsVisible property to false."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-data-labels-for-series-that-have-zero-values-in-a-stacked-column-chart.cs",
       "title": "Hide data labels for series that have zero values in a stacked column chart."
     },
