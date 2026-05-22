@@ -5036,6 +5036,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xls-file-create-a-pivotchart-with-multiple-value-fields-and-assign-individual-colors-then-save.cs",
+      "title": "Open an XLS file, create a PivotChart with multiple value fields and assign individual colors, then save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xls-file-display-pivotchart-data-as-percentages-by-setting-pivotoptions-and-save.cs",
       "title": "Open an XLS file, display PivotChart data as percentages by setting PivotOptions, and save."
     },

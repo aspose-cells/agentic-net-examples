@@ -502,3 +502,4 @@ Output files are written to the working directory.
 - load-a-workbook-refresh-the-pivotchart-after-modifying-its-source-data-then-save.cs
 - open-an-xlsx-workbook-set-custom-axis-titles-for-the-pivotchart-using-pivotoptions-and-save.cs
 - load-a-workbook-apply-a-custom-number-format-to-pivotchart-axis-labels-then-save.cs
+- open-an-xls-file-create-a-pivotchart-with-multiple-value-fields-and-assign-individual-colors-then-save.cs
