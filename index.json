@@ -3711,6 +3711,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-scientific-notation-number-format-to-data-labels-of-the-fourth-series-for-high-magnitude-values.cs",
+      "title": "Apply scientific notation number format to data labels of the fourth series for high magnitude values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-a-line-series-to-the-secondary-vertical-axis-by-setting-its-axisgroup-property-to-two.cs",
       "title": "Assign a line series to the secondary vertical axis by setting its AxisGroup property to two."
     },

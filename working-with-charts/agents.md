@@ -249,3 +249,4 @@ Output files are written to the working directory.
 - link-data-label-number-format-to-corresponding-worksheet-cells-for-dynamic-formatting-inheritance.cs
 - apply-a-custom-currency-number-format-to-all-data-labels-in-the-first-chart-series.cs
 - apply-a-percentage-number-format-to-data-labels-of-the-third-series-for-clearer-percentages.cs
+- apply-scientific-notation-number-format-to-data-labels-of-the-fourth-series-for-high-magnitude-values.cs
