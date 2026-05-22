@@ -2931,6 +2931,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-a-workbook-hide-columns-k-through-m-and-produce-a-pdf-showing-hidden-columns.cs",
+      "title": "Read a workbook, hide columns K through M, and produce a PDF showing hidden columns."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "read-a-workbook-insert-five-rows-at-position-thirty-with-all-formatting-copied-and-generate-pdf.cs",
       "title": "Read a workbook, insert five rows at position thirty with all formatting copied, and generate PDF."
     },
