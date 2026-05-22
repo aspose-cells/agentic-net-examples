@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - read-an-excel-workbook-insert-rows-at-index-twenty-with-formatting-copied-from-source-rows-then-generate-pdf.cs
 - load-a-file-insert-a-column-at-position-two-copy-cell-styles-and-save-the-result-as-pdf.cs
 - open-a-workbook-delete-rows-thirty-to-fortytwo-then-insert-five-new-rows-with-default-height-export-pdf.cs
+- read-a-spreadsheet-delete-column-z-then-hide-rows-fifty-to-fiftyfive-and-produce-pdf.cs
