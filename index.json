@@ -3646,6 +3646,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-currency-number-format-to-all-data-labels-in-the-first-chart-series.cs",
+      "title": "Apply a custom currency number format to all data labels in the first chart series."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-date-axis-to-the-x-axis-for-time-series-data-specifying-date-format-pattern.cs",
       "title": "Apply a custom date axis to the X axis for time series data, specifying date format pattern."
     },

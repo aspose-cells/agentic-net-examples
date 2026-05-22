@@ -247,3 +247,4 @@ Output files are written to the working directory.
 - enable-data-labels-for-the-first-series-of-the-chart-to-display-point-values.cs
 - disable-data-labels-for-the-third-series-in-the-chart-to-keep-the-view-uncluttered.cs
 - link-data-label-number-format-to-corresponding-worksheet-cells-for-dynamic-formatting-inheritance.cs
+- apply-a-custom-currency-number-format-to-all-data-labels-in-the-first-chart-series.cs
