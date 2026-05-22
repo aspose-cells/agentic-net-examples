@@ -430,3 +430,4 @@ Output files are written to the working directory.
 - update-the-data-range-of-the-gantt-chart-after-inserting-additional-task-rows-in-the-worksheet.cs
 - hide-the-legend-of-the-gantt-chart-to-produce-a-cleaner-visual-presentation.cs
 - create-a-waterfall-chart-and-designate-a-specific-data-point-as-the-total-segment.cs
+- export-the-waterfall-chart-as-a-highresolution-png-image-for-inclusion-in-reports.cs
