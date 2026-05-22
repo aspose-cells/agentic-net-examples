@@ -3686,6 +3686,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-a-line-series-to-the-secondary-vertical-axis-by-setting-its-axisgroup-property-to-two.cs",
+      "title": "Assign a line series to the secondary vertical axis by setting its AxisGroup property to two."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-a-named-range-called-salesdata-as-the-chart-source-using-setchartdatarange.cs",
       "title": "Assign a named range called SalesData as the chart source using SetChartDataRange."
     },

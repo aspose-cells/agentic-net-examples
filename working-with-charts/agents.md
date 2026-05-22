@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - retrieve-the-charts-x-axis-and-change-its-type-to-value-for-continuous-numeric-scaling.cs
 - change-the-x-axis-type-to-category-to-display-sequential-text-labels-on-the-chart.cs
 - access-the-ticklabels-object-of-the-primary-y-axis-and-rotate-labels-ninety-degrees-clockwise.cs
+- assign-a-line-series-to-the-secondary-vertical-axis-by-setting-its-axisgroup-property-to-two.cs
