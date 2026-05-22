@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs
 - update-the-existing-table-comment-to-include-version-information-and-author-initials-for-documentation-tracking.cs
 - delete-the-comment-attached-to-the-table-to-clean-up-metadata-after-final-review.cs
+- convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs
