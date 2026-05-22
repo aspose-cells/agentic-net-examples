@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - create-a-table-then-attach-a-comment-that-includes-the-creation-timestamp-and-author-information-for-audit.cs
 - refresh-a-query-table-after-modifying-its-underlying-sql-command-to-reflect-updated-query-results.cs
 - import-data-from-a-csv-file-into-a-new-table-and-automatically-detect-column-data-types-during-import.cs
+- create-a-table-then-generate-a-chart-that-uses-the-tables-totals-row-as-the-data-series-source.cs
