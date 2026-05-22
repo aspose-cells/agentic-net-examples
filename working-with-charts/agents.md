@@ -399,3 +399,4 @@ Output files are written to the working directory.
 - update-the-text-of-an-existing-label-control-on-a-chart-to-display-the-current-date.cs
 - toggle-the-visibility-of-a-picture-control-inside-a-chart-based-on-a-boolean-flag.cs
 - remove-a-chart-control-from-a-chart-sheet-by-calling-shapecollectionremoveat-with-the-appropriate-index.cs
+- insert-wordart-as-a-watermark-over-the-plot-area-rotating-it-thirty-degrees-for-a-diagonal-effect.cs
