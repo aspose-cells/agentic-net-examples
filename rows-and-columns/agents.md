@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - invoke-deleteblankrowsandcolumns-on-the-first-worksheet-with-updatereference-disabled-to-preserve-formulas.cs
 - calculate-all-formulas-in-the-workbook-after-the-second-deletion-operation.cs
 - read-the-formula-of-cell-e3-in-the-second-worksheet-after-the-second-deletion.cs
+- verify-that-the-formula-remains-unchanged-and-its-value-becomes-zero.cs

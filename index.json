@@ -3216,6 +3216,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "verify-that-the-formula-remains-unchanged-and-its-value-becomes-zero.cs",
+      "title": "Verify that the formula remains unchanged and its value becomes zero."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "write-the-updated-formula-and-its-calculated-value-of-cell-e3-to-the-console.cs",
       "title": "Write the updated formula and its calculated value of cell E3 to the console."
     },
