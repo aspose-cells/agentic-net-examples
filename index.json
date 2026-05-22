@@ -4131,6 +4131,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "retrieve-the-charts-x-axis-and-change-its-type-to-value-for-continuous-numeric-scaling.cs",
+      "title": "Retrieve the chart's X axis and change its type to Value for continuous numeric scaling."
+    },
+    {
+      "category": "working-with-charts",
       "file": "retrieve-the-current-chart-position-coordinates-and-log-them-for-debugging-purposes.cs",
       "title": "Retrieve the current chart position coordinates and log them for debugging purposes."
     },
