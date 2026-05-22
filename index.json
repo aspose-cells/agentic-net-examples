@@ -4916,6 +4916,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-through-the-seriescollection-and-assign-individual-theme-colors-to-each-series-based-on-its-index.cs",
+      "title": "Iterate through the SeriesCollection and assign individual theme colors to each series based on its index."
+    },
+    {
+      "category": "working-with-charts",
       "file": "link-a-chart-series-to-a-named-range-called-salesdata-for-dynamic-updates.cs",
       "title": "Link a chart series to a named range called SalesData for dynamic updates."
     },
