@@ -3996,6 +3996,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "disable-data-label-autofit-feature-to-maintain-consistent-label-width.cs",
+      "title": "Disable data label auto\u2011fit feature to maintain consistent label width."
+    },
+    {
+      "category": "working-with-charts",
       "file": "disable-data-label-background-fill-for-a-doughnut-chart-to-improve-clarity.cs",
       "title": "Disable data label background fill for a doughnut chart to improve clarity."
     },

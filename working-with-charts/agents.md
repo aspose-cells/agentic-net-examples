@@ -279,3 +279,4 @@ Output files are written to the working directory.
 - hide-data-labels-for-series-that-have-zero-values-in-a-stacked-column-chart.cs
 - programmatically-toggle-data-label-visibility-based-on-a-configuration-flag.cs
 - disable-data-label-background-fill-for-a-doughnut-chart-to-improve-clarity.cs
+- disable-data-label-autofit-feature-to-maintain-consistent-label-width.cs
