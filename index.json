@@ -4156,6 +4156,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-data-labels-for-series-that-have-zero-values-in-a-stacked-column-chart.cs",
+      "title": "Hide data labels for series that have zero values in a stacked column chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs",
       "title": "Hide the horizontal axis gridlines to produce a cleaner appearance for the scatter plot."
     },
