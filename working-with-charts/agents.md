@@ -340,3 +340,4 @@ Output files are written to the working directory.
 - apply-custom-color-to-legend-font-based-on-series-index-and-maintain-transparent-entry-fill.cs
 - resize-data-label-shapes-for-line-chart-after-enabling-markers-with-large-size-values.cs
 - enable-data-labels-to-display-custom-text-strings-stored-in-a-separate-worksheet-range.cs
+- resize-data-label-shapes-after-adding-a-background-image-to-the-label-shape-for-branding-purposes.cs
