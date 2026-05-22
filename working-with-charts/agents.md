@@ -475,3 +475,4 @@ Output files are written to the working directory.
 - hide-the-chart-legend-entirely-to-produce-a-minimalist-chart-layout-for-presentation-slides.cs
 - set-the-legend-position-to-the-top-right-corner-of-the-chart-area-for-better-readability.cs
 - retrieve-the-chart-title-position-convert-ratio-to-14000-units-and-log-the-values.cs
+- export-a-scatter-chart-to-pdf-file-while-preserving-chart-dimensions-and-resolution.cs
