@@ -4216,6 +4216,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-xaxis-type-to-date-to-correctly-display-timebased-data-points.cs",
+      "title": "Set the X\u2011axis type to Date to correctly display time\u2011based data points."
+    },
+    {
+      "category": "working-with-charts",
       "file": "toggle-visibility-of-a-specific-series-to-hide-it-from-the-rendered-chart.cs",
       "title": "Toggle visibility of a specific series to hide it from the rendered chart."
     },
