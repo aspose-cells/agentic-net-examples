@@ -4701,6 +4701,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "populate-the-ohlc-stock-chart-series-with-open-high-low-and-close-values-from-a-datatable.cs",
+      "title": "Populate the OHLC stock chart series with open, high, low, and close values from a DataTable."
+    },
+    {
+      "category": "working-with-charts",
       "file": "populate-the-worksheet-cells-with-the-required-source-data-that-will-drive-the-chart.cs",
       "title": "Populate the worksheet cells with the required source data that will drive the chart."
     },

@@ -402,3 +402,4 @@ Output files are written to the working directory.
 - insert-wordart-as-a-watermark-over-the-plot-area-rotating-it-thirty-degrees-for-a-diagonal-effect.cs
 - apply-a-gradient-fill-to-the-wordart-watermark-transitioning-from-light-gray-to-dark-blue.cs
 - create-a-new-chart-sheet-and-add-a-stock-chart-of-type-ohlc.cs
+- populate-the-ohlc-stock-chart-series-with-open-high-low-and-close-values-from-a-datatable.cs
