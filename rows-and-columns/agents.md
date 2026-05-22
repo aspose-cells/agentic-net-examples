@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - open-a-workbook-delete-rows-thirty-to-fortytwo-then-insert-five-new-rows-with-default-height-export-pdf.cs
 - read-a-spreadsheet-delete-column-z-then-hide-rows-fifty-to-fiftyfive-and-produce-pdf.cs
 - load-a-workbook-hide-rows-fifty-to-fiftyfive-then-export-the-filtered-view-as-pdf.cs
+- open-a-workbook-unhide-all-rows-in-the-first-sheet-with-default-height-and-export-to-pdf.cs
