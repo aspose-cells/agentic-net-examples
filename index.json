@@ -9846,6 +9846,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "validate-that-a-tables-column-data-types-match-expected-net-types-before-importing-into-a-database.cs",
+      "title": "Validate that a table's column data types match expected .NET types before importing into a database."
+    },
+    {
+      "category": "working-with-tables",
       "file": "write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs",
       "title": "Write a DataTable object into a new worksheet table, mapping column names to table headers automatically."
     },

@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - configure-a-query-table-to-use-windows-authentication-for-connecting-to-a-sql-server-data-source.cs
 - export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs
 - create-a-macroenabled-workbook-add-a-table-and-assign-a-vba-macro-to-run-when-the-table-changes.cs
+- validate-that-a-tables-column-data-types-match-expected-net-types-before-importing-into-a-database.cs
