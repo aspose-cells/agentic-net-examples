@@ -4556,6 +4556,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-for-a-heat-map-chart-after-applying-a-custom-color-gradient-to-the-series.cs",
+      "title": "Resize data label shapes for a heat map chart after applying a custom color gradient to the series."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-for-a-stacked-column-chart-after-increasing-the-label-text-length.cs",
       "title": "Resize data label shapes for a stacked column chart after increasing the label text length."
     },
