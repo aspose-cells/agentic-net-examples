@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - load-a-workbook-modify-a-cell-value-then-autofit-the-affected-row-to-reflect-the-change.cs
 - set-row-heights-for-a-series-of-rows-using-a-loop-that-calls-setrowheight-with-incremental-values.cs
 - apply-setcolumnwidthpixel-to-a-group-of-columns-after-autofitting-them-to-achieve-precise-pixel-alignment.cs
+- create-a-new-workbook-add-data-to-a-column-and-autofit-that-column-to-accommodate-the-longest-entry.cs
