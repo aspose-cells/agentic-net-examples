@@ -9706,6 +9706,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-generate-a-data-validation-rule-restricting-entries-to-values-present-in-another-table-column.cs",
+      "title": "Create a table, then generate a data validation rule restricting entries to values present in another table column."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-then-generate-a-named-range-that-references-only-the-data-body-range-excluding-headers.cs",
       "title": "Create a table, then generate a named range that references only the data body range excluding headers."
     },
