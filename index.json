@@ -10046,6 +10046,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-tabletorangeoptionslastrow-to-zero-to-remove-all-formatting-during-the-table-to-range-conversion.cs",
+      "title": "Set TableToRangeOptions.LastRow to zero to remove all formatting during the table-to-range conversion."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-background-refresh-property-of-a-query-table-to-false-ensuring-synchronous-data-retrieval.cs",
       "title": "Set the background refresh property of a query table to false, ensuring synchronous data retrieval."
     },
