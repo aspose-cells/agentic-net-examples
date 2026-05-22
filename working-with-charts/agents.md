@@ -446,3 +446,4 @@ Output files are written to the working directory.
 - retrieve-the-chart-object-from-a-worksheet-and-programmatically-list-all-its-series-names.cs
 - update-the-data-source-of-a-combo-chart-series-after-modifying-the-underlying-worksheet-table.cs
 - hide-the-gridlines-of-the-chart-plot-area-in-a-combo-chart-to-reduce-visual-clutter.cs
+- add-a-trendline-to-a-line-series-in-a-combo-chart-and-display-its-equation-on-the-chart.cs
