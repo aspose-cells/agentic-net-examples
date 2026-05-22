@@ -9581,6 +9581,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "enable-autofilter-on-the-table-and-define-a-filter-to-show-only-rows-with-values-above-threshold.cs",
+      "title": "Enable auto\u2011filter on the table and define a filter to show only rows with values above threshold."
+    },
+    {
+      "category": "working-with-tables",
       "file": "hide-the-table-header-row-while-keeping-the-data-rows-visible-for-reporting-purposes.cs",
       "title": "Hide the table header row while keeping the data rows visible for reporting purposes."
     },
