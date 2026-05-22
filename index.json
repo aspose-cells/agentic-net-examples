@@ -3781,6 +3781,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "clone-an-existing-chart-modify-its-secondary-axis-settings-and-insert-the-clone-into-a-new-worksheet.cs",
+      "title": "Clone an existing chart, modify its secondary axis settings, and insert the clone into a new worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "combine-area-and-line-chart-types-in-one-chart-to-visualize-trends-alongside-volume-data.cs",
       "title": "Combine area and line chart types in one chart to visualize trends alongside volume data."
     },
