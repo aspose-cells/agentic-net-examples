@@ -322,3 +322,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-for-a-bubble-chart-after-increasing-bubble-sizes-to-test-scaling.cs
 - set-legend-font-color-to-dark-gray-and-ensure-transparent-fill-does-not-affect-readability.cs
 - add-a-data-label-to-each-point-in-a-line-chart-and-link-each-label-to-a-cell.cs
+- hide-the-chart-legend-when-the-number-of-series-exceeds-five-to-reduce-visual-clutter.cs
