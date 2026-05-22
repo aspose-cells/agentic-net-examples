@@ -259,3 +259,4 @@ Output files are written to the working directory.
 - set-the-datalabelsnumberformatlinked-property-to-true-for-the-first-series-to-bind-formatting.cs
 - update-a-richtext-data-label-to-include-italic-text-for-enhanced-emphasis.cs
 - set-the-z-axis-maximum-to-100-and-minimum-to-0-for-standardized-scaling.cs
+- change-the-chart-type-to-cone3d-and-adjust-the-z-axis-depth-for-better-perspective.cs
