@@ -495,3 +495,4 @@ Output files are written to the working directory.
 - load-a-workbook-replace-the-existing-chart-series-colors-with-a-custom-palette-then-save-to-xlsx.cs
 - load-an-xlsx-workbook-create-a-pivottable-from-range-a1e20-then-add-a-linked-pivotchart-and-save.cs
 - open-an-xls-file-add-a-pivotchart-bound-to-an-existing-pivottable-and-save-the-workbook.cs
+- load-a-workbook-configure-the-newly-added-pivotchart-layout-to-tabular-using-pivotoptions-then-save.cs

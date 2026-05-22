@@ -4876,6 +4876,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-configure-the-newly-added-pivotchart-layout-to-tabular-using-pivotoptions-then-save.cs",
+      "title": "Load a workbook, configure the newly added PivotChart layout to Tabular using PivotOptions, then save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-from-a-memory-stream-and-access-its-chart-collection-for-processing.cs",
       "title": "Load a workbook from a memory stream and access its chart collection for processing."
     },
