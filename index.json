@@ -9596,6 +9596,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-a-custom-cell-style-to-a-tables-totals-row-to-differentiate-it-visually-from-data-rows.cs",
+      "title": "Apply a custom cell style to a table's totals row to differentiate it visually from data rows."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-custom-number-format-to-a-numeric-column-in-a-table-to-display-values-as-currency.cs",
       "title": "Apply a custom number format to a numeric column in a table to display values as currency."
     },
