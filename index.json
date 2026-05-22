@@ -3776,6 +3776,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "batch-process-multiple-worksheets-inserting-identical-charts-with-distinct-data-ranges-on-each-sheet.cs",
+      "title": "Batch process multiple worksheets, inserting identical charts with distinct data ranges on each sheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs",
       "title": "Bind the chart to the OFFSET\u2011based named range for automatic expansion with new data."
     },
