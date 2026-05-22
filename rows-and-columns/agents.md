@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - exclude-hidden-rows-from-copy-operation-by-filtering-rows-before-invoking-copyrows-method.cs
 - copy-rows-that-are-part-of-an-autofiltered-range-and-verify-only-visible-rows-are-duplicated.cs
 - after-copying-rows-recalculate-the-worksheet-to-update-any-dependent-formulas-automatically.cs
+- use-worksheetcalculate-method-after-texttocolumns-operation-to-refresh-formulas-referencing-split-columns.cs
