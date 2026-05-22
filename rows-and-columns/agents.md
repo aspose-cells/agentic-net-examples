@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - write-the-unchanged-formula-and-zero-value-of-cell-e3-to-the-console.cs
 - delete-blank-rows-on-the-first-worksheet-using-default-deleteoptions-without-updatereference.cs
 - verify-that-formulas-in-other-worksheets-remain-unchanged-after-default-row-deletion.cs
+- delete-blank-columns-on-the-first-worksheet-using-default-deleteoptions-without-updatereference.cs
