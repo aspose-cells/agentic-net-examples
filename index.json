@@ -9706,6 +9706,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "convert-a-table-to-a-range-preserving-formatting-for-the-header-row-only-then-save-as-ods.cs",
+      "title": "Convert a table to a range preserving formatting for the header row only, then save as ODS."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-a-table-to-a-range-preserving-formatting-up-to-the-last-data-row-then-save-as-ods.cs",
       "title": "Convert a table to a range preserving formatting up to the last data row, then save as ODS."
     },
