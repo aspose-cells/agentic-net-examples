@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - insert-a-multi-line-string-into-a-table-cell-using-listobjectputcellvalue-with-newline-characters.cs
 - convert-a-table-to-a-range-and-copy-the-resulting-range-to-another-worksheet-using-rangecopy.cs
 - define-tabletorangeoptionslastrow-dynamically-based-on-listobjectrowscount-before-converting-the-table-to-a-range.cs
+- insert-a-calculated-total-value-at-the-bottom-of-a-table-using-listobjectputcellvalue-with-appropriate-offsets.cs
