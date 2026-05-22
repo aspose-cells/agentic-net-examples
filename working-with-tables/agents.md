@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-external-documentation-for-reference.cs
 - programmatically-change-the-tables-style-to-tablestylelight10-to-match-the-workbooks-color-palette.cs
 - enable-the-tables-autofilter-feature-and-set-a-custom-criteria-that-filters-text-containing-a-specific-substring.cs
+- add-a-new-row-to-a-table-and-populate-it-with-values-from-a-dictionary-object.cs
