@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - clear-all-filters-applied-to-a-table-restoring-the-full-dataset-visibility-for-analysis.cs
 - create-a-table-from-an-external-csv-file-using-a-query-table-data-source-and-map-columns-automatically.cs
 - configure-a-query-table-to-use-windows-authentication-for-connecting-to-a-sql-server-data-source.cs
+- export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs

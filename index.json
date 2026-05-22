@@ -9706,6 +9706,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs",
+      "title": "Export a worksheet containing multiple tables to a single PDF file, preserving each table's layout."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-a-worksheet-table-to-a-json-string-preserving-column-names-as-json-object-keys.cs",
       "title": "Export a worksheet table to a JSON string, preserving column names as JSON object keys."
     },
