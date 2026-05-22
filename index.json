@@ -4691,6 +4691,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-custom-label-text-length-does-not-exceed-excels-maximum-character-limit-before-assignment.cs",
+      "title": "Validate custom label text length does not exceed Excel's maximum character limit before assignment."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-custom-slice-colors-persist-after-saving-and-reloading-the-workbook.cs",
       "title": "Validate that custom slice colors persist after saving and reloading the workbook."
     },
