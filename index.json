@@ -4016,6 +4016,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-chartjapanesesettings-subclass-of-chartglobalizationsettings-to-provide-japanese-translations.cs",
+      "title": "Create a ChartJapaneseSettings subclass of ChartGlobalizationSettings to provide Japanese translations."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-column-chart-object-on-the-worksheet-to-visualize-the-sales-data.cs",
       "title": "Create a column chart object on the worksheet to visualize the sales data."
     },
