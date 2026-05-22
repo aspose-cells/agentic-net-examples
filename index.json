@@ -9966,6 +9966,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-tables-show-header-row-option-to-true-and-apply-a-bold-font-style-to-header-cells.cs",
+      "title": "Set the table's show header row option to true and apply a bold font style to header cells."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-tables-show-header-row-option-to-true-and-lock-the-header-cells-to-prevent-editing.cs",
       "title": "Set the table's show header row option to true and lock the header cells to prevent editing."
     },
