@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - set-a-custom-maximum-row-height-before-autofitting-to-prevent-excessively-tall-rows.cs
 - use-autofitrows-with-forrendering-on-a-worksheet-containing-wrapped-text-to-avoid-clipping.cs
 - compare-row-heights-before-and-after-autofitrows-to-confirm-height-adjustments-were-applied.cs
+- implement-error-handling-when-copying-rows-that-exceed-worksheet-row-limit-to-prevent-exceptions.cs

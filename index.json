@@ -2741,6 +2741,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "implement-error-handling-when-copying-rows-that-exceed-worksheet-row-limit-to-prevent-exceptions.cs",
+      "title": "Implement error handling when copying rows that exceed worksheet row limit to prevent exceptions."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs",
       "title": "Iterate through each worksheet in a workbook and set StandardHeight to enforce a consistent row height."
     },
