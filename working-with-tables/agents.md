@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - import-data-from-a-csv-file-into-a-new-table-and-automatically-detect-column-data-types-during-import.cs
 - create-a-table-then-generate-a-chart-that-uses-the-tables-totals-row-as-the-data-series-source.cs
 - apply-conditional-formatting-to-highlight-duplicate-values-within-a-specific-table-column-for-data-quality-checks.cs
+- set-the-tables-show-header-row-option-to-true-and-apply-a-bold-font-style-to-header-cells.cs
