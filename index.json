@@ -9806,6 +9806,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "programmatically-change-the-tables-style-to-tablestylelight10-to-match-the-workbooks-color-palette.cs",
+      "title": "Programmatically change the table's style to 'TableStyleLight10' to match the workbook's color palette."
+    },
+    {
+      "category": "working-with-tables",
       "file": "programmatically-detect-tables-that-lack-a-totals-row-and-add-one-with-default-sum-calculations.cs",
       "title": "Programmatically detect tables that lack a totals row and add one with default sum calculations."
     },

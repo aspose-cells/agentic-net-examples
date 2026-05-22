@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - add-a-calculated-column-that-uses-the-if-function-to-categorize-rows-based-on-a-numeric-threshold.cs
 - remove-duplicate-rows-from-a-table-based-on-a-composite-key-of-two-columns-using-builtin-method.cs
 - create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-external-documentation-for-reference.cs
+- programmatically-change-the-tables-style-to-tablestylelight10-to-match-the-workbooks-color-palette.cs
