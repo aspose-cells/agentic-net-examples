@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-apply-autofitteroptionsforrendering-and-save-it-as-pdf.cs
 - autofit-all-rows-for-normal-view-using-worksheetautofitrows-before-exporting-to-other-formats.cs
 - autofit-rows-containing-merged-cells-to-ensure-merged-content-displays-correctly-in-pdf-output.cs
+- enable-automatic-row-height-adjustment-on-workbook-load-to-preserve-original-layout.cs
