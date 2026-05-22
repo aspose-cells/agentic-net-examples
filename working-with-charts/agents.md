@@ -489,3 +489,4 @@ Output files are written to the working directory.
 - add-a-custom-data-label-formatter-that-appends-a-percentage-sign-to-each-label-on-a-pie-chart.cs
 - load-an-xlsx-workbook-change-the-first-chart-series-color-using-monochromaticpalette6-and-save.cs
 - open-an-xls-file-apply-a-custom-chartcolorpalettetype-to-all-chart-series-then-save.cs
+- open-an-xlsx-workbook-change-each-chart-series-to-use-the-predefined-monochromaticpalette4-and-save.cs

@@ -4991,6 +4991,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xlsx-workbook-change-each-chart-series-to-use-the-predefined-monochromaticpalette4-and-save.cs",
+      "title": "Open an XLSX workbook, change each chart series to use the predefined MonochromaticPalette4, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "override-getaxistitle-in-chartjapanesesettings-to-return-japanese-text-for-x-and-y-axes.cs",
       "title": "Override GetAxisTitle in ChartJapaneseSettings to return Japanese text for X and Y axes."
     },
