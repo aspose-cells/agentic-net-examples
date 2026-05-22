@@ -130,6 +130,11 @@
       "title": "Update the text direction of all comments in a worksheet to LeftToRight for standard layout."
     },
     {
+      "category": "conversion",
+      "file": "load-an-xlsx-workbook-and-convert-it-to-a-highresolution-pdf-file.cs",
+      "title": "Load an XLSX workbook and convert it to a high\u2011resolution PDF file."
+    },
+    {
       "category": "document-properties",
       "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
       "title": "Add a custom property containing an array of string tags to categorize workbook content."
