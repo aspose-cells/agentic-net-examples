@@ -3066,6 +3066,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-the-formula-of-cell-e3-in-the-second-worksheet-after-the-second-deletion.cs",
+      "title": "Read the formula of cell E3 in the second worksheet after the second deletion."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs",
       "title": "Retrieve source row height with GetRowHeight and explicitly set destination height using SetRowHeight."
     },
