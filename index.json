@@ -3216,6 +3216,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "verify-that-formulas-in-other-worksheets-remain-unchanged-after-default-column-deletion.cs",
+      "title": "Verify that formulas in other worksheets remain unchanged after default column deletion."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "verify-that-formulas-in-other-worksheets-remain-unchanged-after-default-row-deletion.cs",
       "title": "Verify that formulas in other worksheets remain unchanged after default row deletion."
     },
