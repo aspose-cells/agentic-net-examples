@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs
 - validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs
 - insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs
+- delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs
