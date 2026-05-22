@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - copy-rows-that-include-hyperlinks-and-confirm-hyperlinks-point-to-correct-targets-in-new-location.cs
 - use-cellscopyrow-to-duplicate-a-header-row-and-then-freeze-the-copied-header-for-scrolling.cs
 - after-copying-rows-apply-autofitrows-to-header-rows-separately-to-maintain-consistent-header-height.cs
+- copy-rows-from-a-protected-worksheet-by-temporarily-disabling-protection-then-reenable-after-copy.cs
