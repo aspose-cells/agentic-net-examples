@@ -3801,6 +3801,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "batch-add-a-line-chart-to-each-worksheet-and-link-data-labels-to-corresponding-cells.cs",
+      "title": "Batch add a line chart to each worksheet and link data labels to corresponding cells."
+    },
+    {
+      "category": "working-with-charts",
       "file": "batch-add-identical-chart-templates-to-each-worksheet-in-a-workbook-using-a-loop.cs",
       "title": "Batch add identical chart templates to each worksheet in a workbook using a loop."
     },
