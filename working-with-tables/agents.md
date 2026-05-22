@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs
 - create-a-macroenabled-workbook-add-a-table-and-assign-a-vba-macro-to-run-when-the-table-changes.cs
 - validate-that-a-tables-column-data-types-match-expected-net-types-before-importing-into-a-database.cs
+- generate-a-summary-worksheet-that-aggregates-values-from-multiple-tables-using-structured-reference-formulas.cs
