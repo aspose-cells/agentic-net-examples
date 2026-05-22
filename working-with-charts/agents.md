@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - export-chart-as-svg-vector-graphic-to-preserve-scalability-when-embedding-in-web-pages.cs
 - clone-an-existing-chart-modify-its-secondary-axis-settings-and-insert-the-clone-into-a-new-worksheet.cs
 - detect-if-charts-x-axis-is-value-axis-and-if-not-convert-it-to-support-numeric-data.cs
+- set-charts-secondary-axis-title-to-revenue-usd-and-format-the-font-to-bold-italic.cs
