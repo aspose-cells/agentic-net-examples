@@ -4761,6 +4761,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-background-to-transparent-while-keeping-entry-fill-none-to-achieve-a-fully-clear-legend.cs",
+      "title": "Set legend background to transparent while keeping entry fill none to achieve a fully clear legend."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-legend-entry-fill-to-none-for-all-charts-in-a-workbook-using-a-loop-construct.cs",
       "title": "Set legend entry fill to none for all charts in a workbook using a loop construct."
     },
