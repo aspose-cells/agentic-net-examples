@@ -4871,6 +4871,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-apply-a-uniform-chart-color-palette-across-all-worksheets-then-save-as-xls.cs",
+      "title": "Load a workbook, apply a uniform chart color palette across all worksheets, then save as XLS."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-from-a-memory-stream-and-access-its-chart-collection-for-processing.cs",
       "title": "Load a workbook from a memory stream and access its chart collection for processing."
     },
