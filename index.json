@@ -9681,6 +9681,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-generate-a-named-range-that-references-only-the-data-body-range-excluding-headers.cs",
+      "title": "Create a table, then generate a named range that references only the data body range excluding headers."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-with-a-calculated-column-that-concatenates-first-and-last-name-fields-for-each-row.cs",
       "title": "Create a table with a calculated column that concatenates first and last name fields for each row."
     },
