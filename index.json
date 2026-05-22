@@ -3726,6 +3726,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-font-family-to-all-chart-titles-across-the-workbook-for-consistent-branding.cs",
+      "title": "Apply a custom font family to all chart titles across the workbook for consistent branding."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-font-style-to-data-labels-and-ensure-shapes-resize-to-accommodate-the-new-style.cs",
       "title": "Apply a custom font style to data labels and ensure shapes resize to accommodate the new style."
     },
