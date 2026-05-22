@@ -3086,6 +3086,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "set-the-deleteoptionsupdatereference-property-to-false-to-preserve-original-formulas.cs",
+      "title": "Set the DeleteOptions.UpdateReference property to false to preserve original formulas."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "set-the-deleteoptionsupdatereference-property-to-true-to-enable-formula-updates.cs",
       "title": "Set the DeleteOptions.UpdateReference property to true to enable formula updates."
     },
