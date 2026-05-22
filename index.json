@@ -3211,6 +3211,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "use-worksheetcalculate-method-to-force-recalculation-after-each-deletion-step.cs",
+      "title": "Use Worksheet.Calculate method to force recalculation after each deletion step."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "validate-that-autofitted-rows-do-not-exceed-a-maximum-height-limit-by-checking-row-heights.cs",
       "title": "Validate that auto\u2011fitted rows do not exceed a maximum height limit by checking row heights."
     },
