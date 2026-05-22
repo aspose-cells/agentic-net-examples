@@ -3661,6 +3661,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "adjust-series-overlap-and-gap-width-to-visually-separate-gantt-bars-for-overlapping-tasks.cs",
+      "title": "Adjust series overlap and gap width to visually separate Gantt bars for overlapping tasks."
+    },
+    {
+      "category": "working-with-charts",
       "file": "adjust-the-charts-topleft-position-coordinates-to-align-it-with-worksheet-cells.cs",
       "title": "Adjust the chart\u2019s top\u2011left position coordinates to align it with worksheet cells."
     },
