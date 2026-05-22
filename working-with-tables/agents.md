@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs
 - delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs
 - apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs
+- export-a-worksheet-table-to-a-json-string-preserving-column-names-as-json-object-keys.cs

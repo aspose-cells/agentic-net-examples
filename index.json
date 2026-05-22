@@ -9646,6 +9646,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-a-worksheet-table-to-a-json-string-preserving-column-names-as-json-object-keys.cs",
+      "title": "Export a worksheet table to a JSON string, preserving column names as JSON object keys."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-the-data-from-a-query-table-to-a-csv-file-while-preserving-column-headers-and-data-types.cs",
       "title": "Export the data from a query table to a CSV file while preserving column headers and data types."
     },
