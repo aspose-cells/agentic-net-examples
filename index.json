@@ -4996,6 +4996,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xls-file-change-the-theme-colors-of-a-specific-chart-using-chartcolorpalettetypemonochromaticpalette6-and-save.cs",
+      "title": "Open an XLS file, change the theme colors of a specific chart using ChartColorPaletteType.MonochromaticPalette6, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xlsx-workbook-change-each-chart-series-to-use-the-predefined-monochromaticpalette4-and-save.cs",
       "title": "Open an XLSX workbook, change each chart series to use the predefined MonochromaticPalette4, and save."
     },
