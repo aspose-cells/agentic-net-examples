@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - delete-blank-columns-on-the-first-worksheet-with-deleteoptionsupdatereference-set-to-true.cs
 - verify-that-formulas-referencing-deleted-columns-are-updated-accordingly-after-column-deletion.cs
 - use-worksheetcalculate-method-to-force-recalculation-after-each-deletion-step.cs
+- retrieve-and-display-the-final-calculated-value-of-cell-e3-after-all-operations.cs

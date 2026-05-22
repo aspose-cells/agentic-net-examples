@@ -3091,6 +3091,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "retrieve-and-display-the-final-calculated-value-of-cell-e3-after-all-operations.cs",
+      "title": "Retrieve and display the final calculated value of cell E3 after all operations."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs",
       "title": "Retrieve source row height with GetRowHeight and explicitly set destination height using SetRowHeight."
     },
