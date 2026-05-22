@@ -3921,6 +3921,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-chart-in-a-worksheet-and-bind-its-series-to-a-numeric-data-range.cs",
+      "title": "Create a chart in a worksheet and bind its series to a numeric data range."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-chart-template-with-predefined-data-label-settings-and-apply-it-to-new-charts.cs",
       "title": "Create a chart template with predefined data label settings and apply it to new charts."
     },
