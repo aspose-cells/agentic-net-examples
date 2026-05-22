@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - assign-a-secondary-yaxis-type-of-value-and-link-appropriate-series-to-it.cs
 - enable-major-tick-marks-on-the-xaxis-to-improve-readability-of-axis-labels.cs
 - rotate-xaxis-labels-by-fortyfive-degrees-to-prevent-overlapping-text-in-dense-charts.cs
+- hide-yaxis-gridlines-to-create-a-cleaner-visual-appearance-for-the-chart.cs
