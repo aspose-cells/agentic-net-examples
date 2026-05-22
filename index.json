@@ -4326,6 +4326,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "make-the-chart-legend-invisible-and-confirm-no-legend-entries-are-rendered.cs",
+      "title": "Make the chart legend invisible and confirm no legend entries are rendered."
+    },
+    {
+      "category": "working-with-charts",
       "file": "measure-chart-rendering-time-after-disabling-data-label-text-wrapping-for-performance-assessment.cs",
       "title": "Measure chart rendering time after disabling data label text wrapping for performance assessment."
     },
