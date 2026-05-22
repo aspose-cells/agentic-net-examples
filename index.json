@@ -9726,6 +9726,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "generate-a-summary-worksheet-that-aggregates-values-from-multiple-tables-using-structured-reference-formulas.cs",
+      "title": "Generate a summary worksheet that aggregates values from multiple tables using structured reference formulas."
+    },
+    {
+      "category": "working-with-tables",
       "file": "group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs",
       "title": "Group rows within the table based on category column and collapse the groups for compact view."
     },
