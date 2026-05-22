@@ -195,3 +195,4 @@ Output files are written to the working directory.
 - align-the-chart-to-the-topleft-corner-of-the-pdf-page-before-exporting.cs
 - export-the-chart-to-a-pdf-file-using-an-85-11-inch-custom-page-size.cs
 - export-the-chart-to-pdf-with-an-a4-page-size-and-portrait-orientation.cs
+- write-the-chart-pdf-output-to-a-memorystream-for-further-inmemory-processing.cs

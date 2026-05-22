@@ -4270,6 +4270,11 @@
       "title": "Verify that exporting chart without setting data source throws an appropriate exception."
     },
     {
+      "category": "working-with-charts",
+      "file": "write-the-chart-pdf-output-to-a-memorystream-for-further-inmemory-processing.cs",
+      "title": "Write the chart PDF output to a MemoryStream for further in\u2011memory processing."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
