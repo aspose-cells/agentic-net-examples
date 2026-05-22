@@ -4391,6 +4391,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "define-start-intermediate-and-total-points-in-a-waterfall-chart-and-apply-distinct-colors-for-each-type.cs",
+      "title": "Define start, intermediate, and total points in a waterfall chart and apply distinct colors for each type."
+    },
+    {
+      "category": "working-with-charts",
       "file": "delete-a-row-from-the-listobject-and-verify-the-chart-series-contracts-accordingly.cs",
       "title": "Delete a row from the ListObject and verify the chart series contracts accordingly."
     },
