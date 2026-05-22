@@ -519,3 +519,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-generated-chart-as-an-xlsx-file.cs
 - implement-a-custom-chartglobalizationsettings-class-overriding-gettitle-to-provide-french-chart-titles.cs
 - apply-the-custom-chartglobalizationsettings-instance-to-a-chart-to-localize-axis-labels-into-german.cs
+- override-chartglobalizationsettingsgetlegend-method-to-supply-arabic-translations-for-legend-entries-in-all-generated-charts.cs
