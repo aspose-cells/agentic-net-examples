@@ -3901,6 +3901,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-richtext-data-label-for-a-specific-chart-point-using-mixed-font-sizes.cs",
+      "title": "Create a rich\u2011text data label for a specific chart point using mixed font sizes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-series-from-an-inmemory-double-array-and-assign-it-to-the-chart.cs",
       "title": "Create a series from an in\u2011memory double array and assign it to the chart."
     },
