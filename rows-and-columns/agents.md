@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - apply-setcolumnwidthpixel-to-a-group-of-columns-after-autofitting-them-to-achieve-precise-pixel-alignment.cs
 - create-a-new-workbook-add-data-to-a-column-and-autofit-that-column-to-accommodate-the-longest-entry.cs
 - use-worksheetautofitrows-overload-with-startrow-and-endrow-to-adjust-a-block-of-rows.cs
+- enable-onlyauto-loading-then-immediately-save-the-workbook-as-pdf-to-produce-a-document-with-prefitted-rows.cs
