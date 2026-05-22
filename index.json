@@ -4251,6 +4251,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-the-legend-for-a-doughnut-chart-and-confirm-the-chart-area-expands-to-fill-space.cs",
+      "title": "Hide the legend for a doughnut chart and confirm the chart area expands to fill space."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-yaxis-gridlines-to-create-a-cleaner-visual-appearance-for-the-chart.cs",
       "title": "Hide Y\u2011axis gridlines to create a cleaner visual appearance for the chart."
     },
