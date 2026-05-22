@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - open-a-spreadsheet-hide-rows-twentyone-to-twentyfive-then-save-the-view-as-pdf.cs
 - read-a-workbook-hide-columns-k-through-m-and-produce-a-pdf-showing-hidden-columns.cs
 - load-an-excel-file-unhide-rows-forty-to-fortyfive-with-custom-height-then-export-pdf.cs
+- open-a-worksheet-unhide-columns-n-through-p-using-seventypoint-width-and-save-as-pdf.cs
