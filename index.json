@@ -4491,6 +4491,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-z-axis-maximum-to-100-and-minimum-to-0-for-standardized-scaling.cs",
+      "title": "Set the Z axis maximum to 100 and minimum to 0 for standardized scaling."
+    },
+    {
+      "category": "working-with-charts",
       "file": "show-major-gridlines-on-the-secondary-axis-to-aid-comparison-between-data-series.cs",
       "title": "Show major gridlines on the secondary axis to aid comparison between data series."
     },
