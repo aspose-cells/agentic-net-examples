@@ -4471,6 +4471,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-a-chart-to-pdf-with-a-transparent-background-for-overlaying-on-other-documents.cs",
+      "title": "Export a chart to PDF with a transparent background for overlaying on other documents."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-a-specific-chart-to-a-png-image-file-with-a-resolution-of-three-hundred-dpi.cs",
       "title": "Export a specific chart to a PNG image file with a resolution of three hundred DPI."
     },

@@ -455,3 +455,4 @@ Output files are written to the working directory.
 - adjust-the-gap-width-of-the-progress-bar-chart-to-make-bars-appear-thicker-for-better-visibility.cs
 - loop-through-all-charts-in-a-workbook-and-set-each-charts-background-color-to-light-gray.cs
 - create-multiple-charts-on-a-single-worksheet-each-representing-different-project-metrics.cs
+- export-a-chart-to-pdf-with-a-transparent-background-for-overlaying-on-other-documents.cs
