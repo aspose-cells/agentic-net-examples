@@ -382,3 +382,4 @@ Output files are written to the working directory.
 - combine-chart-localization-with-a-predefined-theme-by-setting-the-charts-theme-property-before-export.cs
 - hide-specific-data-series-in-the-chart-before-applying-localization-to-test-series-visibility-handling.cs
 - add-data-labels-to-the-chart-after-localization-to-verify-that-labels-remain-in-the-original-language.cs
+- export-the-localized-chart-to-a-highresolution-png-image-to-evaluate-text-clarity.cs
