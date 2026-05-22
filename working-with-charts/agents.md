@@ -515,3 +515,4 @@ Output files are written to the working directory.
 - verify-the-retrieved-worksheet-name-matches-the-expected-chart-parent-worksheet.cs
 - create-a-new-column-chart-and-assign-its-data-source-using-setchartdatarange-method.cs
 - set-the-chart-title-programmatically-after-creating-the-chart-properly.cs
+- generate-a-line-chart-from-a-workbook-template-by-processing-smart-markers-with-workbookdesigner.cs
