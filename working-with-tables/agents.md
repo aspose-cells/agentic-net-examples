@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - export-a-table-to-an-html-file-preserving-table-structure-and-applying-inline-css-for-styling.cs
 - import-an-html-table-into-a-worksheet-converting-it-into-a-structured-table-with-proper-column-headers.cs
 - create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-a-sharepoint-document-for-reference.cs
+- load-a-workbook-and-convert-a-specific-table-to-a-range-preserving-formatting-up-to-row-ten.cs
