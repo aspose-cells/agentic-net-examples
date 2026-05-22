@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - create-a-table-then-generate-a-data-validation-rule-restricting-entries-to-values-present-in-another-table-column.cs
 - programmatically-copy-a-tables-style-to-another-table-to-ensure-consistent-visual-formatting-across-sheets.cs
 - set-a-tables-column-to-use-a-custom-date-format-ddmmmyyyy-for-standardized-display-across-reports.cs
+- enable-the-tables-autofilter-and-apply-a-custom-filter-showing-rows-where-the-amount-is-between-two-values.cs
