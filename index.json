@@ -3606,6 +3606,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "adjust-the-charts-topleft-position-coordinates-to-align-it-with-worksheet-cells.cs",
+      "title": "Adjust the chart\u2019s top\u2011left position coordinates to align it with worksheet cells."
+    },
+    {
+      "category": "working-with-charts",
       "file": "adjust-the-charts-transparency-to-40-percent-for-overlaying-on-a-worksheet-image.cs",
       "title": "Adjust the chart's transparency to 40 percent for overlaying on a worksheet image."
     },
