@@ -2786,6 +2786,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "use-pasteoptions-to-copy-only-formatting-from-source-rows-excluding-values-and-formulas.cs",
+      "title": "Use PasteOptions to copy only formatting from source rows, excluding values and formulas."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "use-worksheetautofitrows-overload-with-startrow-and-endrow-to-adjust-a-block-of-rows.cs",
       "title": "Use Worksheet.AutoFitRows overload with startRow and endRow to adjust a block of rows."
     },

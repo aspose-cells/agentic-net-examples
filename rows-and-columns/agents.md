@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - copy-a-column-from-one-worksheet-to-another-while-maintaining-column-width-and-data-types.cs
 - preserve-updated-formula-references-when-copying-rows-that-contain-relative-cell-references.cs
 - disable-formula-adjustment-in-pasteoptions-to-copy-rows-with-absolute-references-unchanged.cs
+- use-pasteoptions-to-copy-only-formatting-from-source-rows-excluding-values-and-formulas.cs
