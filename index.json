@@ -3596,6 +3596,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-hyperlink-to-a-label-control-that-opens-a-web-page-when-the-chart-is-viewed.cs",
+      "title": "Add a hyperlink to a label control that opens a web page when the chart is viewed."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-label-control-inside-a-chart-with-arial-font-size-twelve-and-bold-style.cs",
       "title": "Add a label control inside a chart with Arial font, size twelve, and bold style."
     },

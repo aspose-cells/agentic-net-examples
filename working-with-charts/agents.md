@@ -420,3 +420,4 @@ Output files are written to the working directory.
 - remove-any-existing-trendlines-from-a-chart-before-adding-new-analytical-lines.cs
 - configure-chart-axes-to-use-automatic-scaling-ensuring-all-data-points-are-fully-visible.cs
 - lock-the-charts-aspect-ratio-to-prevent-distortion-when-resizing-the-plot-area.cs
+- add-a-hyperlink-to-a-label-control-that-opens-a-web-page-when-the-chart-is-viewed.cs
