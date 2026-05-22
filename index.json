@@ -4691,6 +4691,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-the-second-series-in-a-line-chart-by-setting-its-isvisible-property-to-false.cs",
+      "title": "Hide the second series in a line chart by setting its IsVisible property to false."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-yaxis-gridlines-to-create-a-cleaner-visual-appearance-for-the-chart.cs",
       "title": "Hide Y\u2011axis gridlines to create a cleaner visual appearance for the chart."
     },
