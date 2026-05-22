@@ -2911,6 +2911,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "open-a-workbook-unhide-all-rows-in-the-first-sheet-with-default-height-and-export-to-pdf.cs",
+      "title": "Open a workbook, unhide all rows in the first sheet with default height, and export to PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "open-a-workbook-unhide-columns-h-through-j-using-fiftypoint-width-then-save-pdf.cs",
       "title": "Open a workbook, unhide columns H through J using fifty\u2011point width, then save PDF."
     },
