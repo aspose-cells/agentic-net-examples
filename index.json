@@ -4031,6 +4031,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-through-all-worksheets-locate-charts-and-set-each-charts-tick-label-direction-to-rotate90.cs",
+      "title": "Iterate through all worksheets, locate charts, and set each chart's tick label direction to Rotate90."
+    },
+    {
+      "category": "working-with-charts",
       "file": "link-a-chart-series-to-a-named-range-called-salesdata-for-dynamic-updates.cs",
       "title": "Link a chart series to a named range called SalesData for dynamic updates."
     },
