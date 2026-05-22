@@ -537,3 +537,4 @@ Output files are written to the working directory.
 - resize-a-chart-to-occupy-ten-rows-and-fifteen-columns-by-adjusting-height-and-width-properties.cs
 - use-setchartdatarange-to-bind-a-chart-to-a-range-that-includes-merged-cells-handling-merged-data-correctly.cs
 - iterate-through-the-seriescollection-and-assign-individual-theme-colors-to-each-series-based-on-its-index.cs
+- set-the-istotal-flag-on-the-last-data-point-of-a-stacked-area-chart-to-display-cumulative-total.cs
