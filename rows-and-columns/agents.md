@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - open-a-worksheet-unhide-columns-n-through-p-using-seventypoint-width-and-save-as-pdf.cs
 - read-a-workbook-insert-two-rows-at-index-fifty-with-default-formatting-then-generate-pdf.cs
 - load-a-spreadsheet-insert-a-column-at-position-five-and-copy-existing-formatting-then-export-pdf.cs
+- open-an-excel-document-delete-rows-sixty-through-sixtyfive-and-save-the-result-as-pdf.cs
