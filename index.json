@@ -9586,6 +9586,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "delete-the-comment-attached-to-the-table-to-clean-up-metadata-after-final-review.cs",
+      "title": "Delete the comment attached to the table to clean up metadata after final review."
+    },
+    {
+      "category": "working-with-tables",
       "file": "enable-autofilter-on-the-table-and-define-a-filter-to-show-only-rows-with-values-above-threshold.cs",
       "title": "Enable auto\u2011filter on the table and define a filter to show only rows with values above threshold."
     },
