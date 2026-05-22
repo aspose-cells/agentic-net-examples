@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - convert-a-table-to-a-range-preserving-formatting-for-the-first-three-rows-then-save-as-ods.cs
 - insert-a-multi-line-string-into-a-table-cell-using-listobjectputcellvalue-with-newline-characters.cs
 - convert-a-table-to-a-range-and-copy-the-resulting-range-to-another-worksheet-using-rangecopy.cs
+- define-tabletorangeoptionslastrow-dynamically-based-on-listobjectrowscount-before-converting-the-table-to-a-range.cs
