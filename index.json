@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-tabletorangeoptionslastrow-to-retain-formatting-for-the-header-and-first-data-row-only-before-conversion.cs",
+      "title": "Apply TableToRangeOptions.LastRow to retain formatting for the header and first data row only before conversion."
+    },
+    {
+      "category": "working-with-tables",
       "file": "autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs",
       "title": "Auto\u2011fit all columns of a table to match the longest cell content for optimal display."
     },
