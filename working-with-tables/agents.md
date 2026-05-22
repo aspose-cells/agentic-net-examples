@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - export-the-data-from-a-query-table-to-a-csv-file-while-preserving-column-headers-and-data-types.cs
 - read-the-metadata-of-a-query-table-including-connection-string-command-type-and-refresh-interval.cs
 - write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs
+- load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs
