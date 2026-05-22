@@ -521,3 +521,4 @@ Output files are written to the working directory.
 - apply-the-custom-chartglobalizationsettings-instance-to-a-chart-to-localize-axis-labels-into-german.cs
 - override-chartglobalizationsettingsgetlegend-method-to-supply-arabic-translations-for-legend-entries-in-all-generated-charts.cs
 - filter-chart-data-to-display-only-series-with-values-exceeding-a-defined-threshold.cs
+- filter-chart-data-to-exclude-categories-containing-the-word-total-using-the-category-filter-method.cs
