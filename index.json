@@ -4066,6 +4066,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-theme-color-of-the-second-series-in-a-pie-chart-by-assigning-a-new-style-object.cs",
+      "title": "Change the theme color of the second series in a pie chart by assigning a new Style object."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-x-axis-type-to-category-to-display-sequential-text-labels-on-the-chart.cs",
       "title": "Change the X axis type to Category to display sequential text labels on the chart."
     },

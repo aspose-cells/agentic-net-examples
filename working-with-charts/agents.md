@@ -524,3 +524,4 @@ Output files are written to the working directory.
 - filter-chart-data-to-exclude-categories-containing-the-word-total-using-the-category-filter-method.cs
 - hide-a-specific-series-in-a-stacked-bar-chart-by-setting-its-isvisible-property-to-false.cs
 - set-the-isvisible-property-of-a-series-based-on-a-runtime-condition-evaluating-data-completeness.cs
+- change-the-theme-color-of-the-second-series-in-a-pie-chart-by-assigning-a-new-style-object.cs
