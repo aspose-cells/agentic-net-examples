@@ -141,6 +141,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-as-xml-with-a-custom-root-element.cs",
+      "title": "Export a workbook as XML with a custom root element."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-json-using-camelcase-property-naming-for-consistency.cs",
       "title": "Export a workbook to JSON using camelCase property naming for consistency."
     },
