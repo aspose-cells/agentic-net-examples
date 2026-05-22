@@ -4096,6 +4096,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-the-legend-entirely-to-maximize-plotting-area-for-data-visualization.cs",
+      "title": "Remove the legend entirely to maximize plotting area for data visualization."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-the-third-chart-from-the-worksheet-using-the-chartsremoveat-method-call.cs",
       "title": "Remove the third chart from the worksheet using the Charts.RemoveAt method call."
     },
