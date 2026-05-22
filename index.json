@@ -9991,6 +9991,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "overwrite-an-existing-value-in-a-table-cell-using-cellputvalue-after-retrieving-the-table-with-cellgettable.cs",
+      "title": "Overwrite an existing value in a table cell using Cell.PutValue after retrieving the table with Cell.GetTable."
+    },
+    {
+      "category": "working-with-tables",
       "file": "programmatically-change-the-tables-style-to-tablestylelight10-to-match-the-workbooks-color-palette.cs",
       "title": "Programmatically change the table's style to 'TableStyleLight10' to match the workbook's color palette."
     },
