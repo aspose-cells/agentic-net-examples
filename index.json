@@ -4171,6 +4171,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-for-radar-chart-source-values-from-a-transposed-cell-range-and-fit-shapes.cs",
+      "title": "Enable data labels for radar chart, source values from a transposed cell range, and fit shapes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-for-the-first-series-of-the-chart-to-display-point-values.cs",
       "title": "Enable data labels for the first series of the chart to display point values."
     },
