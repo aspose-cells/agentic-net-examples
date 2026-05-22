@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - verify-that-formulas-referencing-deleted-columns-are-updated-accordingly-after-column-deletion.cs
 - use-worksheetcalculate-method-to-force-recalculation-after-each-deletion-step.cs
 - retrieve-and-display-the-final-calculated-value-of-cell-e3-after-all-operations.cs
+- ensure-deleteoptionsupdatereference-is-properly-configured-before-each-deleteblankrowsandcolumns-method-call.cs

@@ -2821,6 +2821,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "ensure-deleteoptionsupdatereference-is-properly-configured-before-each-deleteblankrowsandcolumns-method-call.cs",
+      "title": "Ensure DeleteOptions.UpdateReference is properly configured before each DeleteBlankRowsAndColumns method call."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "exclude-hidden-rows-from-copy-operation-by-filtering-rows-before-invoking-copyrows-method.cs",
       "title": "Exclude hidden rows from copy operation by filtering rows before invoking CopyRows method."
     },
