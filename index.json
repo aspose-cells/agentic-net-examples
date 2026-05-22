@@ -3721,6 +3721,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-bold-font-style-and-centered-alignment-to-data-labels.cs",
+      "title": "Apply bold font style and centered alignment to data labels."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-scientific-notation-number-format-to-data-labels-of-the-fourth-series-for-high-magnitude-values.cs",
       "title": "Apply scientific notation number format to data labels of the fourth series for high magnitude values."
     },
