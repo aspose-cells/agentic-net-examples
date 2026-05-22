@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - after-autofitting-a-column-finetune-its-width-with-setcolumnwidthpixel-for-precise-pixel-control.cs
 - iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs
 - batch-process-multiple-worksheets-to-apply-standardwidth-for-consistent-column-sizing.cs
+- use-autofitrows-with-custom-autofitteroptions-to-ignore-merged-cells-while-adjusting-a-specific-row-range.cs
