@@ -2816,6 +2816,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "ungroup-previously-grouped-rows-and-verify-that-individual-row-heights-revert-to-original-values.cs",
+      "title": "Ungroup previously grouped rows and verify that individual row heights revert to original values."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs",
       "title": "Use AutoFitColumn on a column after inserting multiline text to ensure full visibility."
     },
