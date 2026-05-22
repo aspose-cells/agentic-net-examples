@@ -2631,6 +2631,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "autofit-rows-containing-merged-cells-to-ensure-merged-content-displays-correctly-in-pdf-output.cs",
+      "title": "Auto\u2011fit rows containing merged cells to ensure merged content displays correctly in PDF output."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "autofit-rows-that-contain-merged-cells-by-configuring-autofitteroptionsautofitmergedcellstype-and-passing-it-to-worksheetautofitrows.cs",
       "title": "Auto\u2011fit rows that contain merged cells by configuring AutoFitterOptions.AutoFitMergedCellsType and passing it to Worksheet.AutoFitRows."
     },
