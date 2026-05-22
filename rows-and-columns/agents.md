@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - batch-process-multiple-worksheets-to-apply-standardwidth-for-consistent-column-sizing.cs
 - use-autofitrows-with-custom-autofitteroptions-to-ignore-merged-cells-while-adjusting-a-specific-row-range.cs
 - load-a-workbook-modify-a-cell-value-then-autofit-the-affected-row-to-reflect-the-change.cs
+- set-row-heights-for-a-series-of-rows-using-a-loop-that-calls-setrowheight-with-incremental-values.cs

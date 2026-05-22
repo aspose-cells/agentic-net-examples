@@ -2621,6 +2621,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "set-row-heights-for-a-series-of-rows-using-a-loop-that-calls-setrowheight-with-incremental-values.cs",
+      "title": "Set row heights for a series of rows using a loop that calls SetRowHeight with incremental values."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "set-the-height-of-a-specific-row-eg-row-5-to-a-defined-point-value-using-cellssetrowheight.cs",
       "title": "Set the height of a specific row (e.g., row 5) to a defined point value using Cells.SetRowHeight."
     },
