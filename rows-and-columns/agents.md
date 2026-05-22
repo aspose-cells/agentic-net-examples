@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - load-an-excel-document-insert-a-new-row-at-index-fifteen-and-output-the-file-as-pdf.cs
 - open-a-spreadsheet-insert-three-rows-starting-at-row-twenty-preserving-formatting-then-save-pdf.cs
 - read-a-workbook-insert-five-rows-at-position-thirty-with-all-formatting-copied-and-generate-pdf.cs
+- load-a-file-insert-a-new-column-at-index-three-then-export-the-worksheet-as-pdf.cs
