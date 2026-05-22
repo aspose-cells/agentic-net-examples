@@ -4096,6 +4096,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "duplicate-an-existing-chart-modify-its-legend-position-and-save-both-charts-in-the-workbook.cs",
+      "title": "Duplicate an existing chart, modify its legend position, and save both charts in the workbook."
+    },
+    {
+      "category": "working-with-charts",
       "file": "duplicate-an-existing-chart-place-the-copy-on-a-new-worksheet-and-assign-a-distinct-data-range.cs",
       "title": "Duplicate an existing chart, place the copy on a new worksheet, and assign a distinct data range."
     },

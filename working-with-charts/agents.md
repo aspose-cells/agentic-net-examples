@@ -324,3 +324,4 @@ Output files are written to the working directory.
 - add-a-data-label-to-each-point-in-a-line-chart-and-link-each-label-to-a-cell.cs
 - hide-the-chart-legend-when-the-number-of-series-exceeds-five-to-reduce-visual-clutter.cs
 - create-a-chart-on-a-hidden-worksheet-enable-cellbased-labels-then-make-the-worksheet-visible.cs
+- duplicate-an-existing-chart-modify-its-legend-position-and-save-both-charts-in-the-workbook.cs
