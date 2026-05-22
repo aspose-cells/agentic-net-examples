@@ -2721,6 +2721,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "group-a-range-of-rows-programmatically-then-autofit-grouped-rows-to-ensure-proper-display.cs",
+      "title": "Group a range of rows programmatically, then auto\u2011fit grouped rows to ensure proper display."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs",
       "title": "Iterate through each worksheet in a workbook and set StandardHeight to enforce a consistent row height."
     },
