@@ -5106,6 +5106,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "move-a-chart-to-start-at-cell-d5-by-setting-upperleftrow-and-upperleftcolumn-properties.cs",
+      "title": "Move a chart to start at cell D5 by setting UpperLeftRow and UpperLeftColumn properties."
+    },
+    {
+      "category": "working-with-charts",
       "file": "move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs",
       "title": "Move the chart legend to the bottom position and hide its border for cleaner layout."
     },

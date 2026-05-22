@@ -533,3 +533,4 @@ Output files are written to the working directory.
 - define-start-intermediate-and-total-points-in-a-waterfall-chart-and-apply-distinct-colors-for-each-type.cs
 - set-a-data-point-as-total-in-a-column-chart-by-enabling-its-istotal-flag.cs
 - retrieve-the-x-and-y-coordinates-of-a-chart-object-within-its-worksheet-for-precise-alignment.cs
+- move-a-chart-to-start-at-cell-d5-by-setting-upperleftrow-and-upperleftcolumn-properties.cs
