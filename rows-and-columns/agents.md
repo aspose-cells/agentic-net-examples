@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - autofit-rows-that-contain-merged-cells-by-configuring-autofitteroptionsautofitmergedcellstype-and-passing-it-to-worksheetautofitrows.cs
 - combine-setrowheight-with-autofitrow-to-set-a-minimum-height-before-autofitting-a-row.cs
 - after-autofitting-a-column-finetune-its-width-with-setcolumnwidthpixel-for-precise-pixel-control.cs
+- iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs
