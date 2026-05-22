@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs",
+      "title": "Refresh all pivot tables that reference a specific worksheet table after updating its underlying data."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-a-custom-formula-in-the-totals-row-to-calculate-average-of-a-specific-column.cs",
       "title": "Set a custom formula in the totals row to calculate average of a specific column."
     },

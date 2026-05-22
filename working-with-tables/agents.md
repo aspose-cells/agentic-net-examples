@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs
 - load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs
 - create-a-chart-that-uses-a-worksheet-table-as-its-data-source-and-apply-a-predefined-chart-style.cs
+- refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs
