@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - export-a-specific-table-to-an-xml-file-using-the-excel-xml-schema-for-data-interchange.cs
 - create-a-table-with-a-dynamic-named-range-that-expands-automatically-when-new-rows-are-added.cs
 - export-all-tables-in-a-workbook-to-separate-csv-files-naming-each-file-after-its-corresponding-table-name.cs
+- set-the-query-tables-connection-string-to-use-integrated-security-for-secure-access-to-the-database.cs

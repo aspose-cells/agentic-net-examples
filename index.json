@@ -10151,6 +10151,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-query-tables-connection-string-to-use-integrated-security-for-secure-access-to-the-database.cs",
+      "title": "Set the query table's connection string to use integrated security for secure access to the database."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-tables-show-header-row-option-to-false-for-a-compact-layout-in-a-dashboard-view.cs",
       "title": "Set the table's show header row option to false for a compact layout in a dashboard view."
     },
