@@ -9586,6 +9586,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-chart-that-uses-a-worksheet-table-as-its-data-source-and-apply-a-predefined-chart-style.cs",
+      "title": "Create a chart that uses a worksheet table as its data source and apply a predefined chart style."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-list-object-from-a-dynamic-range-and-enable-automatic-expansion-when-new-rows-are-added.cs",
       "title": "Create a list object from a dynamic range and enable automatic expansion when new rows are added."
     },
