@@ -2871,6 +2871,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "open-a-worksheet-delete-all-blank-rows-then-save-the-compacted-workbook-as-pdf.cs",
+      "title": "Open a worksheet, delete all blank rows, then save the compacted workbook as PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "open-an-excel-file-hide-rows-twenty-to-twentyfive-and-save-the-output-as-pdf.cs",
       "title": "Open an Excel file, hide rows twenty to twenty\u2011five, and save the output as PDF."
     },
