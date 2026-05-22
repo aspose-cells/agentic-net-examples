@@ -2951,6 +2951,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-a-workbook-insert-two-rows-at-index-fifty-with-default-formatting-then-generate-pdf.cs",
+      "title": "Read a workbook, insert two rows at index fifty with default formatting, then generate PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "read-a-workbook-unhide-row-twelve-with-height-twenty-points-and-generate-a-pdf.cs",
       "title": "Read a workbook, unhide row twelve with height twenty points, and generate a PDF."
     },
