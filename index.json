@@ -4231,6 +4231,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-charthasaxis-to-check-for-the-existence-of-a-value-axis-on-the-chart.cs",
+      "title": "Use chart.HasAxis to check for the existence of a value axis on the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "use-charthasaxis-to-determine-if-a-category-axis-is-present-in-the-current-chart.cs",
       "title": "Use chart.HasAxis to determine if a category axis is present in the current chart."
     },
