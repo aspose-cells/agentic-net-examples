@@ -9646,6 +9646,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "read-the-metadata-of-a-query-table-including-connection-string-command-type-and-refresh-interval.cs",
+      "title": "Read the metadata of a query table, including connection string, command type, and refresh interval."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-a-custom-formula-in-the-totals-row-to-calculate-average-of-a-specific-column.cs",
       "title": "Set a custom formula in the totals row to calculate average of a specific column."
     },

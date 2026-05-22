@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - load-an-existing-excel-workbook-containing-query-tables-and-enumerate-all-tables-linked-to-external-data-sources.cs
 - set-the-background-refresh-property-of-a-query-table-to-false-ensuring-synchronous-data-retrieval.cs
 - export-the-data-from-a-query-table-to-a-csv-file-while-preserving-column-headers-and-data-types.cs
+- read-the-metadata-of-a-query-table-including-connection-string-command-type-and-refresh-interval.cs
