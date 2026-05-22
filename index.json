@@ -3776,6 +3776,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-the-yaxis-type-as-value-to-represent-numeric-measurements-accurately.cs",
+      "title": "Configure the Y\u2011axis type as Value to represent numeric measurements accurately."
+    },
+    {
+      "category": "working-with-charts",
       "file": "convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs",
       "title": "Convert the data range into a ListObject to enable automatic chart updates."
     },
