@@ -3821,6 +3821,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-combined-column-and-line-chart-assigning-column-series-to-primary-axis-and-line-series-to-secondary.cs",
+      "title": "Create a combined column and line chart, assigning column series to primary axis and line series to secondary."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
