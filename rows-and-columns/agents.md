@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - read-a-spreadsheet-delete-column-z-then-hide-rows-fifty-to-fiftyfive-and-produce-pdf.cs
 - load-a-workbook-hide-rows-fifty-to-fiftyfive-then-export-the-filtered-view-as-pdf.cs
 - open-a-workbook-unhide-all-rows-in-the-first-sheet-with-default-height-and-export-to-pdf.cs
+- read-a-spreadsheet-unhide-all-columns-in-the-second-worksheet-using-default-width-then-generate-pdf.cs
