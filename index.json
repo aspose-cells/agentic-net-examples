@@ -4761,6 +4761,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "insert-a-chart-into-a-specific-cell-range-ensuring-it-occupies-exactly-three-rows-and-five-columns.cs",
+      "title": "Insert a chart into a specific cell range, ensuring it occupies exactly three rows and five columns."
+    },
+    {
+      "category": "working-with-charts",
       "file": "insert-a-multiline-text-box-control-into-a-chart-positioning-it-at-the-plot-areas-top-right.cs",
       "title": "Insert a multiline text box control into a chart, positioning it at the plot area\u2019s top right."
     },

@@ -482,3 +482,4 @@ Output files are written to the working directory.
 - implement-asynchronous-chart-creation-to-improve-ui-responsiveness-in-a-windows-forms-application.cs
 - create-multiple-charts-on-a-single-worksheet-each-using-different-data-ranges-and-chart-types.cs
 - clone-an-existing-chart-modify-its-data-source-and-insert-the-clone-into-another-worksheet.cs
+- insert-a-chart-into-a-specific-cell-range-ensuring-it-occupies-exactly-three-rows-and-five-columns.cs
