@@ -4086,6 +4086,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-automatic-resizing-of-data-label-shapes-for-a-radar-chart-with-long-category-names.cs",
+      "title": "Enable automatic resizing of data label shapes for a radar chart with long category names."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-automatic-scaling-for-secondary-axis-allowing-asposecells-to-calculate-optimal-minimum-and-maximum-values.cs",
       "title": "Enable automatic scaling for secondary axis, allowing Aspose.Cells to calculate optimal minimum and maximum values."
     },
