@@ -2756,6 +2756,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "create-a-deleteoptions-instance-to-control-reference-updating-behavior-during-deletion.cs",
+      "title": "Create a DeleteOptions instance to control reference updating behavior during deletion."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-new-workbook-add-data-to-a-column-and-autofit-that-column-to-accommodate-the-longest-entry.cs",
       "title": "Create a new workbook, add data to a column, and auto\u2011fit that column to accommodate the longest entry."
     },
