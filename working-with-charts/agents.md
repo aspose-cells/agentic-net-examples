@@ -372,3 +372,4 @@ Output files are written to the working directory.
 - export-the-localized-chart-to-a-png-image-file-using-the-toimage-method.cs
 - save-the-generated-png-image-to-a-specified-output-directory-with-a-timestamped-filename.cs
 - verify-that-the-chart-title-appears-in-chinese-characters-within-the-exported-png-image.cs
+- create-a-chartjapanesesettings-subclass-of-chartglobalizationsettings-to-provide-japanese-translations.cs
