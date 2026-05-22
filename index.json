@@ -2666,6 +2666,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "enable-automatic-row-height-adjustment-on-workbook-load-to-preserve-original-layout.cs",
+      "title": "Enable automatic row height adjustment on workbook load to preserve original layout."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "enable-onlyauto-loading-then-immediately-save-the-workbook-as-pdf-to-produce-a-document-with-prefitted-rows.cs",
       "title": "Enable OnlyAuto loading, then immediately save the workbook as PDF to produce a document with pre\u2011fitted rows."
     },
