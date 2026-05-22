@@ -2901,6 +2901,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "open-a-workbook-delete-rows-thirty-to-fortytwo-then-insert-five-new-rows-with-default-height-export-pdf.cs",
+      "title": "Open a workbook, delete rows thirty to forty\u2011two, then insert five new rows with default height, export PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "open-a-workbook-unhide-columns-h-through-j-using-fiftypoint-width-then-save-pdf.cs",
       "title": "Open a workbook, unhide columns H through J using fifty\u2011point width, then save PDF."
     },
