@@ -2566,6 +2566,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "autofit-a-range-of-columns-eg-columns-cf-using-worksheetautofitcolumns.cs",
+      "title": "Auto\u2011fit a range of columns (e.g., columns C\u2011F) using Worksheet.AutoFitColumns."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "autofit-a-range-of-rows-eg-rows-1520-using-worksheetautofitrows.cs",
       "title": "Auto\u2011fit a range of rows (e.g., rows 15\u201120) using Worksheet.AutoFitRows."
     },
