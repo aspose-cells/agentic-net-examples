@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - import-an-html-table-into-a-worksheet-converting-it-into-a-structured-table-with-proper-column-headers.cs
 - create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-a-sharepoint-document-for-reference.cs
 - load-a-workbook-and-convert-a-specific-table-to-a-range-preserving-formatting-up-to-row-ten.cs
+- retrieve-a-table-from-a-cell-using-cellgettable-and-insert-a-numeric-value-with-cellputvalue.cs
