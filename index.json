@@ -3946,6 +3946,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-chart-as-svg-vector-graphic-to-preserve-scalability-when-embedding-in-web-pages.cs",
+      "title": "Export chart as SVG vector graphic to preserve scalability when embedding in web pages."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-chart-as-a-highresolution-jpeg-image-for-inclusion-in-a-powerpoint-slide.cs",
       "title": "Export the chart as a high\u2011resolution JPEG image for inclusion in a PowerPoint slide."
     },

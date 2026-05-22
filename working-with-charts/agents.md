@@ -227,3 +227,4 @@ Output files are written to the working directory.
 - programmatically-hide-tick-marks-on-the-secondary-y-axis-to-reduce-visual-clutter-in-mixed-charts.cs
 - set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs
 - enable-automatic-scaling-for-secondary-axis-allowing-asposecells-to-calculate-optimal-minimum-and-maximum-values.cs
+- export-chart-as-svg-vector-graphic-to-preserve-scalability-when-embedding-in-web-pages.cs
