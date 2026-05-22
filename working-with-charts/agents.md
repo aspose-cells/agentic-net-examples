@@ -424,3 +424,4 @@ Output files are written to the working directory.
 - programmatically-check-a-checkbox-control-on-a-chart-and-verify-its-checked-property-returns-true.cs
 - load-an-xlsx-workbook-add-a-stacked-bar-chart-and-configure-it-as-a-gantt-chart.cs
 - populate-gantt-chart-series-with-task-start-dates-and-durations-extracted-from-worksheet-cells.cs
+- adjust-series-overlap-and-gap-width-to-visually-separate-gantt-bars-for-overlapping-tasks.cs
