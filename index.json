@@ -9681,6 +9681,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs",
+      "title": "Create a table with a header row that uses merged cells to span multiple columns for a title."
+    },
+    {
+      "category": "working-with-tables",
       "file": "delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs",
       "title": "Delete a specific row from a table using its primary key value to locate the target."
     },
