@@ -4056,6 +4056,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-chart-hide-its-legend-then-reenable-legend-visibility-based-on-a-runtime-condition.cs",
+      "title": "Create chart, hide its legend, then re\u2011enable legend visibility based on a runtime condition."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs",
       "title": "Create chart, set legend to auto position, then override to a fixed top left location."
     },
