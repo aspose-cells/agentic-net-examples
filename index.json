@@ -5041,6 +5041,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xlsx-workbook-set-custom-axis-titles-for-the-pivotchart-using-pivotoptions-and-save.cs",
+      "title": "Open an XLSX workbook, set custom axis titles for the PivotChart using PivotOptions, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xlsx-workbook-set-the-pivotchart-legend-position-to-bottom-via-pivotoptions-and-save.cs",
       "title": "Open an XLSX workbook, set the PivotChart legend position to bottom via PivotOptions, and save."
     },
