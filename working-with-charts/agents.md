@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - clone-an-existing-chart-modify-its-secondary-axis-settings-and-insert-the-clone-into-a-new-worksheet.cs
 - detect-if-charts-x-axis-is-value-axis-and-if-not-convert-it-to-support-numeric-data.cs
 - set-charts-secondary-axis-title-to-revenue-usd-and-format-the-font-to-bold-italic.cs
+- adjust-the-gap-width-of-column-series-on-the-primary-axis-to-improve-spacing-between-bars.cs
