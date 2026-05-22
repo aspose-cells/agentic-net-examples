@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-converted-range-as-ods-and-confirm-the-file-size-reduction.cs
 - insert-a-formula-into-a-table-cell-using-cellputvalue-with-a-formula-string.cs
 - use-listobjectputcellvalue-to-add-a-date-value-at-row-offset-two-and-column-offset-three.cs
+- iterate-through-all-tables-in-a-workbook-and-convert-each-to-a-range-with-custom-tabletorangeoptions.cs
