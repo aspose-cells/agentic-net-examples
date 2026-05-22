@@ -2586,6 +2586,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "apply-autofitrows-after-inserting-new-data-rows-to-maintain-uniform-row-height-throughout-sheet.cs",
+      "title": "Apply AutoFitRows after inserting new data rows to maintain uniform row height throughout sheet."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "apply-pasteoptions-to-copy-only-values-from-source-rows-ignoring-formulas-and-formatting.cs",
       "title": "Apply PasteOptions to copy only values from source rows, ignoring formulas and formatting."
     },
