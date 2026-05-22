@@ -4066,6 +4066,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "convert-the-workbook-containing-the-waterfall-chart-to-pdf-while-embedding-the-chart-image.cs",
+      "title": "Convert the workbook containing the Waterfall chart to PDF while embedding the chart image."
+    },
+    {
+      "category": "working-with-charts",
       "file": "copy-a-chart-from-one-chart-sheet-to-another-preserving-all-attached-controls-and-formatting.cs",
       "title": "Copy a chart from one chart sheet to another, preserving all attached controls and formatting."
     },
