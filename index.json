@@ -4806,6 +4806,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-data-labels-display-correct-cell-values-after-modifying-the-source-cell-range-programmatically.cs",
+      "title": "Validate that data labels display correct cell values after modifying the source cell range programmatically."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-exported-jpeg-image-quality-is-acceptable-by-checking-file-size-range.cs",
       "title": "Validate that exported JPEG image quality is acceptable by checking file size range."
     },
