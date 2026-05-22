@@ -4801,6 +4801,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-existing-xlsx-workbook-add-a-stacked-bar-chart-and-save-the-file.cs",
+      "title": "Load an existing XLSX workbook, add a stacked bar chart, and save the file."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-existing-xlsx-workbook-retrieve-its-first-chart-and-modify-leader-line-settings.cs",
       "title": "Load an existing XLSX workbook, retrieve its first chart, and modify leader line settings."
     },
