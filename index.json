@@ -9831,6 +9831,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-tables-show-totals-row-option-and-configure-a-custom-formula-that-counts-distinct-values.cs",
+      "title": "Set the table's show totals row option and configure a custom formula that counts distinct values."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs",
       "title": "Set the table's show totals row option to false, removing the totals row from the display."
     },
