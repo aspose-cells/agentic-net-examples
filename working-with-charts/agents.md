@@ -343,3 +343,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-after-adding-a-background-image-to-the-label-shape-for-branding-purposes.cs
 - create-chart-hide-its-legend-then-reenable-legend-visibility-based-on-a-runtime-condition.cs
 - apply-conditional-rule-that-changes-legend-entry-fill-to-none-when-series-color-matches-a-threshold.cs
+- set-legend-text-alignment-to-center-and-verify-transparent-fill-does-not-affect-alignment.cs
