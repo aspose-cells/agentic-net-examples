@@ -280,3 +280,4 @@ Output files are written to the working directory.
 - programmatically-toggle-data-label-visibility-based-on-a-configuration-flag.cs
 - disable-data-label-background-fill-for-a-doughnut-chart-to-improve-clarity.cs
 - disable-data-label-autofit-feature-to-maintain-consistent-label-width.cs
+- set-data-label-text-alignment-to-rightjustify-for-a-horizontal-bar-chart.cs
