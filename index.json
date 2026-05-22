@@ -3641,6 +3641,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-date-axis-to-the-x-axis-for-time-series-data-specifying-date-format-pattern.cs",
+      "title": "Apply a custom date axis to the X axis for time series data, specifying date format pattern."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-theme-color-palette-to-all-series-in-a-multiseries-chart.cs",
       "title": "Apply a custom theme color palette to all series in a multi\u2011series chart."
     },

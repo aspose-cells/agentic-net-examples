@@ -222,3 +222,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-stream-modify-chart-axes-and-write-the-workbook-back-to-a-byte-array.cs
 - use-charttextdirectiontype-enumeration-to-set-tick-labels-direction-to-stacked-for-vertical-orientation.cs
 - retrieve-current-tick-label-direction-log-it-then-change-direction-to-horizontal-for-better-readability.cs
+- apply-a-custom-date-axis-to-the-x-axis-for-time-series-data-specifying-date-format-pattern.cs
