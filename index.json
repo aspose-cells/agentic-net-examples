@@ -4306,6 +4306,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "programmatically-toggle-data-label-visibility-based-on-a-configuration-flag.cs",
+      "title": "Programmatically toggle data label visibility based on a configuration flag."
+    },
+    {
+      "category": "working-with-charts",
       "file": "read-axis-labels-after-chart-calculation-by-calling-chartcalculate-then-axisgetaxistexts.cs",
       "title": "Read axis labels after chart calculation by calling Chart.Calculate() then Axis.GetAxisTexts()."
     },
