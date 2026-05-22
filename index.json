@@ -2726,6 +2726,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "group-columns-autofit-rows-within-grouped-columns-and-export-the-worksheet-to-pdf.cs",
+      "title": "Group columns, auto\u2011fit rows within grouped columns, and export the worksheet to PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs",
       "title": "Iterate through each worksheet in a workbook and set StandardHeight to enforce a consistent row height."
     },
