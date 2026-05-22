@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - read-a-workbook-hide-columns-k-through-m-and-produce-a-pdf-showing-hidden-columns.cs
 - load-an-excel-file-unhide-rows-forty-to-fortyfive-with-custom-height-then-export-pdf.cs
 - open-a-worksheet-unhide-columns-n-through-p-using-seventypoint-width-and-save-as-pdf.cs
+- read-a-workbook-insert-two-rows-at-index-fifty-with-default-formatting-then-generate-pdf.cs
