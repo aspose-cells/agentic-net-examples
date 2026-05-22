@@ -518,3 +518,4 @@ Output files are written to the working directory.
 - generate-a-line-chart-from-a-workbook-template-by-processing-smart-markers-with-workbookdesigner.cs
 - save-the-workbook-containing-the-generated-chart-as-an-xlsx-file.cs
 - implement-a-custom-chartglobalizationsettings-class-overriding-gettitle-to-provide-french-chart-titles.cs
+- apply-the-custom-chartglobalizationsettings-instance-to-a-chart-to-localize-axis-labels-into-german.cs
