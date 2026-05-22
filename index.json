@@ -9801,6 +9801,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "import-a-json-array-into-a-table-automatically-creating-rows-and-mapping-json-fields-to-columns.cs",
+      "title": "Import a JSON array into a table, automatically creating rows and mapping JSON fields to columns."
+    },
+    {
+      "category": "working-with-tables",
       "file": "import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs",
       "title": "Import data from an XML file into a new table, mapping XML elements to table columns automatically."
     },
