@@ -9616,6 +9616,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-the-data-from-a-query-table-to-a-csv-file-while-preserving-column-headers-and-data-types.cs",
+      "title": "Export the data from a query table to a CSV file while preserving column headers and data types."
+    },
+    {
+      "category": "working-with-tables",
       "file": "group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs",
       "title": "Group rows within the table based on category column and collapse the groups for compact view."
     },
