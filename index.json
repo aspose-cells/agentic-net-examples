@@ -4351,6 +4351,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "move-the-legend-to-custom-x-and-y-pixel-coordinates-relative-to-the-chart-area.cs",
+      "title": "Move the legend to custom X and Y pixel coordinates relative to the chart area."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-a-passwordprotected-xls-file-then-retrieve-the-chart-located-on-the-second-worksheet.cs",
       "title": "Open a password\u2011protected XLS file, then retrieve the chart located on the second worksheet."
     },
