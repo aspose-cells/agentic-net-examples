@@ -9831,6 +9831,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "import-data-from-a-csv-file-into-a-new-table-and-automatically-detect-column-data-types-during-import.cs",
+      "title": "Import data from a CSV file into a new table and automatically detect column data types during import."
+    },
+    {
+      "category": "working-with-tables",
       "file": "import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs",
       "title": "Import data from an XML file into a new table, mapping XML elements to table columns automatically."
     },
