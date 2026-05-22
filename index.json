@@ -9811,6 +9811,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "define-tabletorangeoptionslastrow-dynamically-based-on-listobjectrowscount-before-converting-the-table-to-a-range.cs",
+      "title": "Define TableToRangeOptions.LastRow dynamically based on ListObject.Rows.Count before converting the table to a range."
+    },
+    {
+      "category": "working-with-tables",
       "file": "delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs",
       "title": "Delete a specific row from a table using its primary key value to locate the target."
     },
