@@ -344,3 +344,4 @@ Output files are written to the working directory.
 - create-chart-hide-its-legend-then-reenable-legend-visibility-based-on-a-runtime-condition.cs
 - apply-conditional-rule-that-changes-legend-entry-fill-to-none-when-series-color-matches-a-threshold.cs
 - set-legend-text-alignment-to-center-and-verify-transparent-fill-does-not-affect-alignment.cs
+- resize-data-label-shapes-for-column-chart-after-rotating-label-text-by-fortyfive-degrees.cs

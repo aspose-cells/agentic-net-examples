@@ -4626,6 +4626,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-for-column-chart-after-rotating-label-text-by-fortyfive-degrees.cs",
+      "title": "Resize data label shapes for column chart after rotating label text by forty\u2011five degrees."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-for-line-chart-after-enabling-markers-with-large-size-values.cs",
       "title": "Resize data label shapes for line chart after enabling markers with large size values."
     },
