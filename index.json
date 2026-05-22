@@ -3666,6 +3666,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-font-style-to-data-labels-and-ensure-shapes-resize-to-accommodate-the-new-style.cs",
+      "title": "Apply a custom font style to data labels and ensure shapes resize to accommodate the new style."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-theme-color-palette-to-all-series-in-a-multiseries-chart.cs",
       "title": "Apply a custom theme color palette to all series in a multi\u2011series chart."
     },
