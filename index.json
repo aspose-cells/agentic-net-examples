@@ -4706,6 +4706,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "lock-the-charts-aspect-ratio-to-prevent-distortion-when-resizing-the-plot-area.cs",
+      "title": "Lock the chart\u2019s aspect ratio to prevent distortion when resizing the plot area."
+    },
+    {
+      "category": "working-with-charts",
       "file": "log-indices-of-secondary-plot-points-to-a-text-file-for-later-analysis.cs",
       "title": "Log indices of secondary plot points to a text file for later analysis."
     },
