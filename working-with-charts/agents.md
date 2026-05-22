@@ -419,3 +419,4 @@ Output files are written to the working directory.
 - insert-a-trendline-into-the-first-data-series-of-a-chart-and-set-its-type-to-exponential.cs
 - remove-any-existing-trendlines-from-a-chart-before-adding-new-analytical-lines.cs
 - configure-chart-axes-to-use-automatic-scaling-ensuring-all-data-points-are-fully-visible.cs
+- lock-the-charts-aspect-ratio-to-prevent-distortion-when-resizing-the-plot-area.cs
