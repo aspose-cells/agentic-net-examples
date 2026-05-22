@@ -9916,6 +9916,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-a-tables-column-to-use-a-custom-date-format-ddmmmyyyy-for-standardized-display-across-reports.cs",
+      "title": "Set a table's column to use a custom date format 'dd\u2011MMM\u2011yyyy' for standardized display across reports."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-background-refresh-property-of-a-query-table-to-false-ensuring-synchronous-data-retrieval.cs",
       "title": "Set the background refresh property of a query table to false, ensuring synchronous data retrieval."
     },
