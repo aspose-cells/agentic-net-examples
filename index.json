@@ -4356,6 +4356,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-modified-workbook-to-a-new-file-named-chartreportxlsx-after-completing-chart-updates.cs",
+      "title": "Save the modified workbook to a new file named ChartReport.xlsx after completing chart updates."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-after-chart-modifications-to-a-cloud-storage-location-using-a-stream-api.cs",
       "title": "Save the workbook after chart modifications to a cloud storage location using a stream API."
     },
