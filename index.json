@@ -3686,6 +3686,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-percentage-number-format-to-data-labels-of-the-third-series-for-clearer-percentages.cs",
+      "title": "Apply a percentage number format to data labels of the third series for clearer percentages."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-picture-background-fill-to-the-chart-by-loading-an-image-file-into-fillformat.cs",
       "title": "Apply a picture background fill to the chart by loading an image file into FillFormat."
     },
