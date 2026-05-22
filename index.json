@@ -2556,6 +2556,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "access-the-second-worksheet-in-the-loaded-workbook-to-prepare-for-formula-verification.cs",
+      "title": "Access the second worksheet in the loaded workbook to prepare for formula verification."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "adjust-column-width-by-setting-standardwidth-before-populating-data-to-establish-a-base-width.cs",
       "title": "Adjust column width by setting StandardWidth before populating data to establish a base width."
     },
