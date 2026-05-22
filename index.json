@@ -9621,6 +9621,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "clear-all-filters-applied-to-a-table-restoring-the-full-dataset-visibility-for-analysis.cs",
+      "title": "Clear all filters applied to a table, restoring the full dataset visibility for analysis."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
       "title": "Convert the existing list object into a structured table to leverage advanced table features."
     },

@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - enable-the-tables-show-header-row-option-and-customize-the-header-font-color-for-emphasis.cs
 - reorder-columns-in-a-table-to-match-a-predefined-layout-required-by-downstream-processing-scripts.cs
 - apply-a-filter-that-selects-rows-where-the-status-column-equals-completed-and-hide-the-rest.cs
+- clear-all-filters-applied-to-a-table-restoring-the-full-dataset-visibility-for-analysis.cs
