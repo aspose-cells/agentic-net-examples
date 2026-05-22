@@ -4831,6 +4831,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "loop-through-all-charts-in-a-workbook-and-set-each-charts-background-color-to-light-gray.cs",
+      "title": "Loop through all charts in a workbook and set each chart\u2019s background color to light gray."
+    },
+    {
+      "category": "working-with-charts",
       "file": "make-the-chart-legend-invisible-and-confirm-no-legend-entries-are-rendered.cs",
       "title": "Make the chart legend invisible and confirm no legend entries are rendered."
     },

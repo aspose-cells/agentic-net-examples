@@ -453,3 +453,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-progress-bar-chart-to-xlsx-while-preserving-cell-formulas.cs
 - change-the-chart-title-of-the-progress-bar-chart-dynamically-based-on-the-current-project-phase.cs
 - adjust-the-gap-width-of-the-progress-bar-chart-to-make-bars-appear-thicker-for-better-visibility.cs
+- loop-through-all-charts-in-a-workbook-and-set-each-charts-background-color-to-light-gray.cs
