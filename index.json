@@ -4301,6 +4301,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "position-data-labels-inside-end-for-a-column-chart-to-avoid-overlapping-bars.cs",
+      "title": "Position data labels inside end for a column chart to avoid overlapping bars."
+    },
+    {
+      "category": "working-with-charts",
       "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
       "title": "Position the chart at row 15, column 3 with a width of 400 points."
     },
