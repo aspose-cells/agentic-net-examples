@@ -4546,6 +4546,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "store-retrieved-axis-label-strings-into-a-separate-worksheet-column.cs",
+      "title": "Store retrieved axis label strings into a separate worksheet column."
+    },
+    {
+      "category": "working-with-charts",
       "file": "switch-the-x-axis-from-category-to-date-axis-to-correctly-display-chronological-data-points.cs",
       "title": "Switch the X axis from Category to Date axis to correctly display chronological data points."
     },
