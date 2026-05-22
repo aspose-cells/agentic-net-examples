@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - read-a-spreadsheet-delete-rows-ten-through-fifteen-then-create-a-pdf-of-the-cleaned-sheet.cs
 - load-a-workbook-delete-column-f-and-export-the-resulting-file-as-pdf.cs
 - open-a-worksheet-delete-all-blank-rows-then-save-the-compacted-workbook-as-pdf.cs
+- read-an-excel-file-delete-all-blank-columns-and-generate-a-pdf-of-the-trimmed-sheet.cs

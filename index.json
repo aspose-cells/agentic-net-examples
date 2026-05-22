@@ -2931,6 +2931,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-an-excel-file-delete-all-blank-columns-and-generate-a-pdf-of-the-trimmed-sheet.cs",
+      "title": "Read an Excel file, delete all blank columns, and generate a PDF of the trimmed sheet."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs",
       "title": "Retrieve source row height with GetRowHeight and explicitly set destination height using SetRowHeight."
     },
