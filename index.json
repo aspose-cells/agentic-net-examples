@@ -3921,6 +3921,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-chart-to-pdf-with-an-a4-page-size-and-portrait-orientation.cs",
+      "title": "Export the chart to PDF with an A4 page size and portrait orientation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-chart-to-png-with-300-dpi-resolution-by-specifying-imageresolution-parameter.cs",
       "title": "Export the chart to PNG with 300 DPI resolution by specifying ImageResolution parameter."
     },
