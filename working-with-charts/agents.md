@@ -307,3 +307,4 @@ Output files are written to the working directory.
 - iterate-through-all-charts-in-a-workbook-and-set-each-legends-visibility-based-on-chart-type.cs
 - batch-add-a-line-chart-to-each-worksheet-and-link-data-labels-to-corresponding-cells.cs
 - create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs
+- change-the-chart-type-from-column-to-area-while-preserving-existing-data-label-configurations.cs
