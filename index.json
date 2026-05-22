@@ -4611,6 +4611,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-the-gridlines-of-the-chart-plot-area-in-a-combo-chart-to-reduce-visual-clutter.cs",
+      "title": "Hide the gridlines of the chart plot area in a Combo chart to reduce visual clutter."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs",
       "title": "Hide the horizontal axis gridlines to produce a cleaner appearance for the scatter plot."
     },
