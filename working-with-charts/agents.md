@@ -452,3 +452,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-to-the-progress-bar-chart-colors-based-on-threshold-values.cs
 - save-the-workbook-containing-the-progress-bar-chart-to-xlsx-while-preserving-cell-formulas.cs
 - change-the-chart-title-of-the-progress-bar-chart-dynamically-based-on-the-current-project-phase.cs
+- adjust-the-gap-width-of-the-progress-bar-chart-to-make-bars-appear-thicker-for-better-visibility.cs
