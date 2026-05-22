@@ -3941,6 +3941,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-workbook-add-a-worksheet-and-insert-a-column-chart.cs",
+      "title": "Create a workbook, add a worksheet, and insert a column chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs",
       "title": "Define a custom color palette and assign specific colors to each chart series programmatically."
     },
