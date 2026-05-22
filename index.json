@@ -3906,6 +3906,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-the-chart-to-show-category-names-as-data-labels-using-a-separate-column-of-cells.cs",
+      "title": "Configure the chart to show category names as data labels using a separate column of cells."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-the-yaxis-type-as-value-to-represent-numeric-measurements-accurately.cs",
       "title": "Configure the Y\u2011axis type as Value to represent numeric measurements accurately."
     },
