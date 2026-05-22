@@ -9601,6 +9601,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "disable-the-ability-for-users-to-add-new-rows-to-the-list-object-to-enforce-fixed-dataset-size.cs",
+      "title": "Disable the ability for users to add new rows to the list object to enforce fixed dataset size."
+    },
+    {
+      "category": "working-with-tables",
       "file": "enable-autofilter-on-the-table-and-define-a-filter-to-show-only-rows-with-values-above-threshold.cs",
       "title": "Enable auto\u2011filter on the table and define a filter to show only rows with values above threshold."
     },
