@@ -3951,6 +3951,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-stock-chart-type-to-candlestick-and-adjust-the-candle-width-to-twenty-percent-of-bar-spacing.cs",
+      "title": "Change the stock chart type to candlestick and adjust the candle width to twenty percent of bar spacing."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-x-axis-type-to-category-to-display-sequential-text-labels-on-the-chart.cs",
       "title": "Change the X axis type to Category to display sequential text labels on the chart."
     },
