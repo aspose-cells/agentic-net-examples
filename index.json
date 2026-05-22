@@ -2991,6 +2991,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-an-excel-workbook-insert-rows-at-index-twenty-with-formatting-copied-from-source-rows-then-generate-pdf.cs",
+      "title": "Read an Excel workbook, insert rows at index twenty with formatting copied from source rows, then generate PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs",
       "title": "Retrieve source row height with GetRowHeight and explicitly set destination height using SetRowHeight."
     },
