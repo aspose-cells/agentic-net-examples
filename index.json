@@ -2796,6 +2796,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "preserve-cell-styles-when-copying-rows-by-enabling-style-preservation-in-pasteoptions.cs",
+      "title": "Preserve cell styles when copying rows by enabling style preservation in PasteOptions."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "preserve-updated-formula-references-when-copying-rows-that-contain-relative-cell-references.cs",
       "title": "Preserve updated formula references when copying rows that contain relative cell references."
     },

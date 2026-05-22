@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - after-copying-rows-recalculate-the-worksheet-to-update-any-dependent-formulas-automatically.cs
 - use-worksheetcalculate-method-after-texttocolumns-operation-to-refresh-formulas-referencing-split-columns.cs
 - validate-that-comments-attached-to-original-rows-are-correctly-transferred-to-copied-rows.cs
+- preserve-cell-styles-when-copying-rows-by-enabling-style-preservation-in-pasteoptions.cs
