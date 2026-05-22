@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - set-the-deleteoptionsupdatereference-property-to-false-to-preserve-original-formulas.cs
 - verify-that-deleteoptionsupdatereference-property-is-false-before-the-second-deletion.cs
 - invoke-deleteblankrowsandcolumns-on-the-first-worksheet-with-updatereference-disabled-to-preserve-formulas.cs
+- calculate-all-formulas-in-the-workbook-after-the-second-deletion-operation.cs
