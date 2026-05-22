@@ -9581,6 +9581,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-conditional-formatting-to-a-table-column-that-highlights-cells-exceeding-a-defined-numeric-threshold.cs",
+      "title": "Apply conditional formatting to a table column that highlights cells exceeding a defined numeric threshold."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
       "title": "Convert the existing list object into a structured table to leverage advanced table features."
     },
