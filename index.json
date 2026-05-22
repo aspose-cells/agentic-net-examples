@@ -2981,6 +2981,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-a-spreadsheet-unhide-all-columns-in-the-second-worksheet-using-default-width-then-generate-pdf.cs",
+      "title": "Read a spreadsheet, unhide all columns in the second worksheet using default width, then generate PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "read-a-spreadsheet-unhide-rows-thirty-to-thirtyfive-with-default-height-and-export-pdf.cs",
       "title": "Read a spreadsheet, unhide rows thirty to thirty\u2011five with default height, and export PDF."
     },
