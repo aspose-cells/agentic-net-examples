@@ -4306,6 +4306,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "ensure-memory-usage-remains-stable-when-processing-multiple-localized-chart-exports-in-a-multithreaded-environment.cs",
+      "title": "Ensure memory usage remains stable when processing multiple localized chart exports in a multi\u2011threaded environment."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs",
       "title": "Export all charts in the workbook as separate SVG files for scalable vector graphics usage."
     },

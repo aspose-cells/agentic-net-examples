@@ -385,3 +385,4 @@ Output files are written to the working directory.
 - export-the-localized-chart-to-a-highresolution-png-image-to-evaluate-text-clarity.cs
 - implement-a-unit-test-that-confirms-chartchinesesettings-returns-expected-chinese-strings-for-title-and-legend.cs
 - measure-the-performance-impact-of-applying-localization-to-charts-by-timing-export-duration-for-large-workbooks.cs
+- ensure-memory-usage-remains-stable-when-processing-multiple-localized-chart-exports-in-a-multithreaded-environment.cs
