@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - iterate-through-all-tables-in-a-workbook-and-convert-each-to-a-range-with-custom-tabletorangeoptions.cs
 - after-conversion-attempt-to-apply-a-filter-to-the-former-table-range-and-capture-the-expected-exception.cs
 - load-a-workbook-retrieve-a-table-via-cellgettable-and-read-its-display-name-property.cs
+- use-tabletorangeoptions-to-preserve-formatting-for-the-header-row-only-before-converting-the-table.cs
