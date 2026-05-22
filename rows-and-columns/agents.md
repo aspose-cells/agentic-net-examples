@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - load-a-spreadsheet-insert-a-column-at-position-five-and-copy-existing-formatting-then-export-pdf.cs
 - open-an-excel-document-delete-rows-sixty-through-sixtyfive-and-save-the-result-as-pdf.cs
 - read-a-workbook-delete-column-q-then-create-a-pdf-of-the-modified-worksheet.cs
+- load-a-workbook-hide-rows-ten-to-twenty-then-unhide-rows-fifteen-to-eighteen-with-height-save-pdf.cs
