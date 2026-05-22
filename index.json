@@ -4911,6 +4911,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-xlsx-workbook-change-the-first-chart-series-color-using-monochromaticpalette6-and-save.cs",
+      "title": "Load an XLSX workbook, change the first chart series color using MonochromaticPalette6, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-xlsx-workbook-containing-a-chart-and-retrieve-the-first-chart-object.cs",
       "title": "Load an XLSX workbook containing a chart and retrieve the first chart object."
     },
