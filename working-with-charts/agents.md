@@ -292,3 +292,4 @@ Output files are written to the working directory.
 - generate-a-report-listing-each-data-points-custom-label-text-alongside-its-numeric-value.cs
 - translate-axis-labels-using-an-external-service-and-update-chart-axis-texts-accordingly.cs
 - create-a-chart-in-a-worksheet-and-bind-its-series-to-a-numeric-data-range.cs
+- enable-data-labels-to-display-values-from-a-specified-cell-range-for-the-first-chart-series.cs
