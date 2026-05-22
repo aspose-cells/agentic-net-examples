@@ -2871,6 +2871,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "open-an-excel-workbook-delete-row-eight-and-save-the-updated-document-in-pdf-format.cs",
+      "title": "Open an Excel workbook, delete row eight, and save the updated document in PDF format."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs",
       "title": "Parse semicolon\u2011separated strings in a column using TextToColumns with semicolon delimiter."
     },
