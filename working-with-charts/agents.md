@@ -312,3 +312,4 @@ Output files are written to the working directory.
 - localize-legend-titles-to-french-using-chartglobalizationsettings-and-verify-correct-language-rendering.cs
 - set-legend-entry-fill-to-transparent-only-for-entries-representing-negative-values.cs
 - enable-automatic-resizing-of-data-label-shapes-for-a-radar-chart-with-long-category-names.cs
+- hide-the-legend-for-a-doughnut-chart-and-confirm-the-chart-area-expands-to-fill-space.cs
