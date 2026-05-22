@@ -5451,6 +5451,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-legend-position-to-the-top-right-corner-of-the-chart-area-for-better-readability.cs",
+      "title": "Set the legend position to the top right corner of the chart area for better readability."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
       "title": "Set the scatter chart marker size to 8 points and color to teal."
     },
