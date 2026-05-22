@@ -4176,6 +4176,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-waterfall-chart-with-custom-colors-for-increase-decrease-and-total-columns.cs",
+      "title": "Create a Waterfall chart with custom colors for increase, decrease, and total columns."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-workbook-add-a-worksheet-and-insert-a-column-chart.cs",
       "title": "Create a workbook, add a worksheet, and insert a column chart."
     },
