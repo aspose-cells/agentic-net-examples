@@ -10111,6 +10111,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "use-listobjectputcellvalue-to-insert-a-hyperlink-string-into-a-specific-cell-of-the-table.cs",
+      "title": "Use ListObject.PutCellValue to insert a hyperlink string into a specific cell of the table."
+    },
+    {
+      "category": "working-with-tables",
       "file": "use-listobjectputcellvalue-with-row-and-column-offsets-to-populate-a-header-cell-in-the-table.cs",
       "title": "Use ListObject.PutCellValue with row and column offsets to populate a header cell in the table."
     },
