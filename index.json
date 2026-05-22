@@ -10036,6 +10036,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "retrieve-a-table-with-cellgettable-and-enumerate-its-rows-to-compute-the-sum-of-a-numeric-column.cs",
+      "title": "Retrieve a table with Cell.GetTable and enumerate its rows to compute the sum of a numeric column."
+    },
+    {
+      "category": "working-with-tables",
       "file": "save-the-workbook-containing-the-converted-range-as-ods-and-confirm-the-file-size-reduction.cs",
       "title": "Save the workbook containing the converted range as ODS and confirm the file size reduction."
     },

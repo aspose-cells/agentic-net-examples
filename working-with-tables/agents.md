@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - validate-that-after-conversion-the-workbook-no-longer-contains-any-listobject-objects.cs
 - convert-a-table-to-a-range-preserving-formatting-up-to-the-last-data-row-then-save-as-ods.cs
 - apply-tabletorangeoptionslastrow-to-retain-formatting-for-the-header-and-first-data-row-only-before-conversion.cs
+- retrieve-a-table-with-cellgettable-and-enumerate-its-rows-to-compute-the-sum-of-a-numeric-column.cs
