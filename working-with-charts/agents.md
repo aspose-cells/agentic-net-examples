@@ -325,3 +325,4 @@ Output files are written to the working directory.
 - hide-the-chart-legend-when-the-number-of-series-exceeds-five-to-reduce-visual-clutter.cs
 - create-a-chart-on-a-hidden-worksheet-enable-cellbased-labels-then-make-the-worksheet-visible.cs
 - duplicate-an-existing-chart-modify-its-legend-position-and-save-both-charts-in-the-workbook.cs
+- enable-data-labels-to-pull-values-from-merged-cells-and-verify-correct-display-after-merging.cs

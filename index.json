@@ -4146,6 +4146,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-to-pull-values-from-merged-cells-and-verify-correct-display-after-merging.cs",
+      "title": "Enable data labels to pull values from merged cells and verify correct display after merging."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-to-show-percentages-by-setting-chartdatalabelshowpercentage-to-true.cs",
       "title": "Enable data labels to show percentages by setting ChartDataLabel.ShowPercentage to true."
     },
