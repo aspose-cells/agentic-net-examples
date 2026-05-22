@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - open-a-workbook-unhide-all-rows-in-the-first-sheet-with-default-height-and-export-to-pdf.cs
 - read-a-spreadsheet-unhide-all-columns-in-the-second-worksheet-using-default-width-then-generate-pdf.cs
 - load-a-workbook-from-a-file-and-access-the-first-worksheet.cs
+- access-the-second-worksheet-in-the-loaded-workbook-to-prepare-for-formula-verification.cs
