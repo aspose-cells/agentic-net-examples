@@ -4806,6 +4806,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-rotation-angle-to-ninety-degrees-and-ensure-transparent-entry-fill-remains-unaffected.cs",
+      "title": "Set legend rotation angle to ninety degrees and ensure transparent entry fill remains unaffected."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-legend-text-alignment-to-center-and-verify-transparent-fill-does-not-affect-alignment.cs",
       "title": "Set legend text alignment to center and verify transparent fill does not affect alignment."
     },
