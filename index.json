@@ -136,6 +136,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs",
+      "title": "Convert an XLS workbook to a Markdown document with aligned tables."
+    },
+    {
+      "category": "conversion",
       "file": "convert-multiple-csv-files-to-json-with-formatted-dates-and-store-in-target-folder.cs",
       "title": "Convert multiple CSV files to JSON with formatted dates and store in target folder."
     },
