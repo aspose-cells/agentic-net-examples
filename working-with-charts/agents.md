@@ -501,3 +501,4 @@ Output files are written to the working directory.
 - open-an-xls-file-display-pivotchart-data-as-percentages-by-setting-pivotoptions-and-save.cs
 - load-a-workbook-refresh-the-pivotchart-after-modifying-its-source-data-then-save.cs
 - open-an-xlsx-workbook-set-custom-axis-titles-for-the-pivotchart-using-pivotoptions-and-save.cs
+- load-a-workbook-apply-a-custom-number-format-to-pivotchart-axis-labels-then-save.cs
