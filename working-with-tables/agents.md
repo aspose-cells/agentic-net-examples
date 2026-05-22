@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - create-a-macroenabled-workbook-add-a-table-and-assign-a-vba-macro-to-run-when-the-table-changes.cs
 - validate-that-a-tables-column-data-types-match-expected-net-types-before-importing-into-a-database.cs
 - generate-a-summary-worksheet-that-aggregates-values-from-multiple-tables-using-structured-reference-formulas.cs
+- apply-a-custom-number-format-to-a-numeric-column-in-a-table-to-display-values-as-currency.cs
