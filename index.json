@@ -3751,6 +3751,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-unique-richtext-labels-to-each-data-point-within-a-series-for-detailed-annotation.cs",
+      "title": "Assign unique rich\u2011text labels to each data point within a series for detailed annotation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "autofit-the-chart-size-based-on-its-data-range-to-avoid-clipping.cs",
       "title": "Auto\u2011fit the chart size based on its data range to avoid clipping."
     },
