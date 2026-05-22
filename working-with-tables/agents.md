@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - set-the-tables-show-totals-row-option-and-configure-a-custom-formula-that-calculates-median-value.cs
 - add-a-slicer-linked-to-a-table-column-and-configure-it-to-allow-multiselection-for-flexible-filtering.cs
 - remove-all-slicers-associated-with-a-specific-table-to-simplify-the-worksheet-interface.cs
+- create-a-table-then-generate-a-data-validation-rule-restricting-entries-to-values-present-in-another-table-column.cs
