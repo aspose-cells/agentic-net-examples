@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - convert-a-table-to-a-range-retaining-formatting-only-for-the-first-five-rows-then-save-as-ods.cs
 - verify-that-after-conversion-the-table-no-longer-supports-sorting-by-checking-listobjectistable-property.cs
 - apply-tabletorangeoptionslastrow-to-keep-formatting-through-row-fifteen-before-converting-the-table-to-a-range.cs
+- save-the-workbook-containing-the-converted-range-as-ods-and-confirm-the-file-size-reduction.cs
