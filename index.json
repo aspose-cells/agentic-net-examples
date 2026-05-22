@@ -4496,6 +4496,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "read-legend-current-position-programmatically-switch-to-opposite-corner-and-save-changes.cs",
+      "title": "Read legend current position programmatically, switch to opposite corner, and save changes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "read-the-chart-title-modify-it-to-a-custom-string-and-apply-the-change.cs",
       "title": "Read the chart title, modify it to a custom string, and apply the change."
     },
