@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - delete-all-rows-from-a-table-that-have-a-null-value-in-a-required-column-using-a-loop.cs
 - create-a-table-then-generate-a-pivot-chart-from-its-data-and-place-it-on-a-dashboard-sheet.cs
 - export-a-table-to-a-json-file-with-indentation-for-readability-and-include-column-headers-as-keys.cs
+- import-a-json-array-into-a-table-automatically-creating-rows-and-mapping-json-fields-to-columns.cs
