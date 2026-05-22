@@ -2806,6 +2806,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "load-a-workbook-hide-columns-d-through-g-then-create-a-pdf-of-the-sheet.cs",
+      "title": "Load a workbook, hide columns D through G, then create a PDF of the sheet."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-a-workbook-modify-a-cell-value-then-autofit-the-affected-row-to-reflect-the-change.cs",
       "title": "Load a workbook, modify a cell value, then auto\u2011fit the affected row to reflect the change."
     },
