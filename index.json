@@ -9610,6 +9610,11 @@
       "title": "Sort the table by two columns, first ascending by date then descending by amount."
     },
     {
+      "category": "working-with-tables",
+      "file": "unprotect-the-previously-secured-table-using-the-correct-password-to-enable-editing-operations.cs",
+      "title": "Unprotect the previously secured table using the correct password to enable editing operations."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
