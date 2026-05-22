@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-a-sharepoint-document-for-reference.cs
 - load-a-workbook-and-convert-a-specific-table-to-a-range-preserving-formatting-up-to-row-ten.cs
 - retrieve-a-table-from-a-cell-using-cellgettable-and-insert-a-numeric-value-with-cellputvalue.cs
+- use-listobjectputcellvalue-with-row-and-column-offsets-to-populate-a-header-cell-in-the-table.cs
