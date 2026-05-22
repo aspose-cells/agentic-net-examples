@@ -4191,6 +4191,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-for-boxandwhisker-chart-source-values-from-a-statistical-summary-range.cs",
+      "title": "Enable data labels for box\u2011and\u2011whisker chart, source values from a statistical summary range."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-for-radar-chart-source-values-from-a-transposed-cell-range-and-fit-shapes.cs",
       "title": "Enable data labels for radar chart, source values from a transposed cell range, and fit shapes."
     },
