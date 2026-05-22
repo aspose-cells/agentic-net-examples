@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs
 - transfer-a-row-from-a-source-worksheet-to-a-destination-worksheet-using-cellscopyrow.cs
 - copy-a-column-from-one-worksheet-to-another-while-maintaining-column-width-and-data-types.cs
+- preserve-updated-formula-references-when-copying-rows-that-contain-relative-cell-references.cs

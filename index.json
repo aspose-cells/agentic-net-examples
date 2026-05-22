@@ -2721,6 +2721,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "preserve-updated-formula-references-when-copying-rows-that-contain-relative-cell-references.cs",
+      "title": "Preserve updated formula references when copying rows that contain relative cell references."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "programmatically-set-a-row-height-then-autofit-the-next-row-based-on-its-content.cs",
       "title": "Programmatically set a row height, then auto\u2011fit the next row based on its content."
     },
