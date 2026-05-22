@@ -4016,6 +4016,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-label-text-wrapping-for-a-pie-chart-using-datalabelsistextwrapped-true.cs",
+      "title": "Enable data label text wrapping for a pie chart using DataLabels.IsTextWrapped = true."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-for-the-first-series-of-the-chart-to-display-point-values.cs",
       "title": "Enable data labels for the first series of the chart to display point values."
     },
