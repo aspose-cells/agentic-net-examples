@@ -4426,6 +4426,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-each-data-label-shape-automatically-to-fit-its-text-after-updating-label-values.cs",
+      "title": "Resize each data label shape automatically to fit its text after updating label values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-the-chart-to-400-points-width-and-300-points-height-for-layout-consistency.cs",
       "title": "Resize the chart to 400 points width and 300 points height for layout consistency."
     },
