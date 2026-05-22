@@ -4496,6 +4496,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-combo-chart-to-pdf-with-embedded-fonts-to-ensure-consistent-rendering-across-platforms.cs",
+      "title": "Export the Combo chart to PDF with embedded fonts to ensure consistent rendering across platforms."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-configured-pie-chart-to-a-png-image-using-charttoimage-with-default-settings.cs",
       "title": "Export the configured pie chart to a PNG image using Chart.ToImage with default settings."
     },
