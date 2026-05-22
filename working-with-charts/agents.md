@@ -364,3 +364,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-after-adding-hyperlink-to-each-label-that-points-to-an-external-resource.cs
 - enable-data-labels-for-boxandwhisker-chart-source-values-from-a-statistical-summary-range.cs
 - hide-legend-when-generating-a-series-of-charts-for-a-slideshow-presentation-to-reduce-visual-noise.cs
+- resize-data-label-shapes-after-enabling-data-label-background-color-to-test-contrast-with-transparent-fill.cs

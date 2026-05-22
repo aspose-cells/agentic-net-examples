@@ -4676,6 +4676,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-after-enabling-data-label-background-color-to-test-contrast-with-transparent-fill.cs",
+      "title": "Resize data label shapes after enabling data label background color to test contrast with transparent fill."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-after-enabling-data-label-leader-lines-to-test-combined-layout-behavior.cs",
       "title": "Resize data label shapes after enabling data label leader lines to test combined layout behavior."
     },
