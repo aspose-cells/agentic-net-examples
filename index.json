@@ -5536,6 +5536,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-a-data-point-as-total-in-a-column-chart-by-enabling-its-istotal-flag.cs",
+      "title": "Set a data point as total in a column chart by enabling its IsTotal flag."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-a-predefined-texture-fill-on-the-chart-background-to-give-it-a-fabric-appearance.cs",
       "title": "Set a predefined texture fill on the chart background to give it a fabric appearance."
     },
