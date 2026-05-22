@@ -4626,6 +4626,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-after-applying-bold-italic-font-combination-to-test-text-fitting.cs",
+      "title": "Resize data label shapes after applying bold italic font combination to test text fitting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-after-applying-text-wrap-setting-to-accommodate-multiline-labels.cs",
       "title": "Resize data label shapes after applying text wrap setting to accommodate multi\u2011line labels."
     },
