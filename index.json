@@ -4066,6 +4066,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "clone-an-existing-chart-modify-its-data-source-and-insert-the-clone-into-another-worksheet.cs",
+      "title": "Clone an existing chart, modify its data source, and insert the clone into another worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "clone-an-existing-chart-modify-its-secondary-axis-settings-and-insert-the-clone-into-a-new-worksheet.cs",
       "title": "Clone an existing chart, modify its secondary axis settings, and insert the clone into a new worksheet."
     },
