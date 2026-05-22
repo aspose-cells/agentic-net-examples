@@ -4796,6 +4796,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-generated-png-image-to-a-specified-output-directory-with-a-timestamped-filename.cs",
+      "title": "Save the generated PNG image to a specified output directory with a timestamped filename."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-modified-workbook-to-a-new-file-named-chartreportxlsx-after-completing-chart-updates.cs",
       "title": "Save the modified workbook to a new file named ChartReport.xlsx after completing chart updates."
     },

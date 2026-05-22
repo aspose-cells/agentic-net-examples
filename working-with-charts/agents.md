@@ -370,3 +370,4 @@ Output files are written to the working directory.
 - create-a-chartchinesesettings-subclass-of-chartglobalizationsettings-to-provide-chinese-translations.cs
 - assign-an-instance-of-chartchinesesettings-to-the-charts-globalizationsettings-property-before-exporting.cs
 - export-the-localized-chart-to-a-png-image-file-using-the-toimage-method.cs
+- save-the-generated-png-image-to-a-specified-output-directory-with-a-timestamped-filename.cs
