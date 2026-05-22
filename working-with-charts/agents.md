@@ -522,3 +522,4 @@ Output files are written to the working directory.
 - override-chartglobalizationsettingsgetlegend-method-to-supply-arabic-translations-for-legend-entries-in-all-generated-charts.cs
 - filter-chart-data-to-display-only-series-with-values-exceeding-a-defined-threshold.cs
 - filter-chart-data-to-exclude-categories-containing-the-word-total-using-the-category-filter-method.cs
+- hide-a-specific-series-in-a-stacked-bar-chart-by-setting-its-isvisible-property-to-false.cs
