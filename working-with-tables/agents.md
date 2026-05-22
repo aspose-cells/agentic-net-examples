@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - remove-an-existing-slicer-from-a-table-and-clean-up-associated-connections.cs
 - programmatically-retrieve-the-address-range-of-a-table-and-use-it-as-a-named-range-for-formulas.cs
 - create-a-data-validation-list-that-pulls-its-items-directly-from-a-column-in-a-worksheet-table.cs
+- set-the-tables-show-header-row-option-to-false-for-a-compact-layout-in-a-dashboard-view.cs
