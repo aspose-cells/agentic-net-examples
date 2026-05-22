@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - generate-a-summary-worksheet-that-aggregates-values-from-multiple-tables-using-structured-reference-formulas.cs
 - apply-a-custom-number-format-to-a-numeric-column-in-a-table-to-display-values-as-currency.cs
 - set-the-tables-show-totals-row-option-and-configure-a-custom-formula-that-counts-distinct-values.cs
+- create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs
