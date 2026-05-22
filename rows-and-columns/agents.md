@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-onlyauto-enabled-then-iterate-through-each-sheet-to-verify-row-heights-are-adjusted.cs
 - use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs
 - set-standardwidth-then-autofit-a-range-of-columns-to-observe-overridden-settings.cs
+- create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs
