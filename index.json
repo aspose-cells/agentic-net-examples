@@ -9680,6 +9680,11 @@
       "title": "Update the existing table comment to include version information and author initials for documentation tracking."
     },
     {
+      "category": "working-with-tables",
+      "file": "write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs",
+      "title": "Write a DataTable object into a new worksheet table, mapping column names to table headers automatically."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
