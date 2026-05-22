@@ -2831,6 +2831,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "load-a-workbook-hide-rows-fifty-to-fiftyfive-then-export-the-filtered-view-as-pdf.cs",
+      "title": "Load a workbook, hide rows fifty to fifty\u2011five, then export the filtered view as PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-a-workbook-hide-rows-ten-to-twenty-then-unhide-rows-fifteen-to-eighteen-with-height-save-pdf.cs",
       "title": "Load a workbook, hide rows ten to twenty, then unhide rows fifteen to eighteen with height, save PDF."
     },

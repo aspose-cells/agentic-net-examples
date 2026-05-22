@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - load-a-file-insert-a-column-at-position-two-copy-cell-styles-and-save-the-result-as-pdf.cs
 - open-a-workbook-delete-rows-thirty-to-fortytwo-then-insert-five-new-rows-with-default-height-export-pdf.cs
 - read-a-spreadsheet-delete-column-z-then-hide-rows-fifty-to-fiftyfive-and-produce-pdf.cs
+- load-a-workbook-hide-rows-fifty-to-fiftyfive-then-export-the-filtered-view-as-pdf.cs
