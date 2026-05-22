@@ -4601,6 +4601,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "log-the-applied-localization-region-and-chart-name-to-a-diagnostics-file-for-audit-purposes.cs",
+      "title": "Log the applied localization region and chart name to a diagnostics file for audit purposes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "make-the-chart-legend-invisible-and-confirm-no-legend-entries-are-rendered.cs",
       "title": "Make the chart legend invisible and confirm no legend entries are rendered."
     },
