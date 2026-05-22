@@ -5361,6 +5361,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-charts-dpi-to-300-when-exporting-to-png-for-highquality-print-production.cs",
+      "title": "Set the chart\u2019s DPI to 300 when exporting to PNG for high\u2011quality print production."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-charts-topleft-corner-to-row-5-column-3-using-the-position-property.cs",
       "title": "Set the chart's top\u2011left corner to row 5, column 3 using the Position property."
     },
