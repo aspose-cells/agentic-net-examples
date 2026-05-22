@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs
 - apply-conditional-formatting-to-a-table-column-that-highlights-cells-exceeding-a-defined-numeric-threshold.cs
 - autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs
+- set-a-custom-column-width-for-a-specific-table-column-to-accommodate-long-text-strings.cs
