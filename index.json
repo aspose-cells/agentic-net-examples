@@ -2631,6 +2631,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs",
+      "title": "Create a custom AutoFitterOptions instance that disables auto\u2011fit for hidden rows and apply it to a specific row range."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-new-workbook-add-data-to-a-column-and-autofit-that-column-to-accommodate-the-longest-entry.cs",
       "title": "Create a new workbook, add data to a column, and auto\u2011fit that column to accommodate the longest entry."
     },
