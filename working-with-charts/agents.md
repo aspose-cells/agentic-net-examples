@@ -291,3 +291,4 @@ Output files are written to the working directory.
 - add-a-hyperlink-to-a-data-label-that-opens-a-web-page-when-clicked.cs
 - generate-a-report-listing-each-data-points-custom-label-text-alongside-its-numeric-value.cs
 - translate-axis-labels-using-an-external-service-and-update-chart-axis-texts-accordingly.cs
+- create-a-chart-in-a-worksheet-and-bind-its-series-to-a-numeric-data-range.cs
