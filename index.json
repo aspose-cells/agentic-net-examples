@@ -3591,6 +3591,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-label-control-inside-a-chart-with-arial-font-size-twelve-and-bold-style.cs",
+      "title": "Add a label control inside a chart with Arial font, size twelve, and bold style."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-new-series-to-the-chart-using-a-worksheet-range-as-data-source.cs",
       "title": "Add a new series to the chart using a worksheet range as data source."
     },
