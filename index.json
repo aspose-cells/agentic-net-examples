@@ -4156,6 +4156,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "populate-the-worksheet-cells-with-the-required-source-data-that-will-drive-the-chart.cs",
+      "title": "Populate the worksheet cells with the required source data that will drive the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "position-the-chart-at-row-15-column-3-with-a-width-of-400-points.cs",
       "title": "Position the chart at row 15, column 3 with a width of 400 points."
     },
