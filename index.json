@@ -3636,6 +3636,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-secondary-yaxis-to-a-column-chart-and-assign-a-different-data-series-to-it.cs",
+      "title": "Add a secondary Y\u2011axis to a column chart and assign a different data series to it."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-trendline-to-a-line-series-in-a-combo-chart-and-display-its-equation-on-the-chart.cs",
       "title": "Add a trendline to a line series in a Combo chart and display its equation on the chart."
     },
