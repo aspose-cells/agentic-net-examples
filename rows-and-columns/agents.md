@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - copy-rows-that-are-part-of-an-autofiltered-range-and-verify-only-visible-rows-are-duplicated.cs
 - after-copying-rows-recalculate-the-worksheet-to-update-any-dependent-formulas-automatically.cs
 - use-worksheetcalculate-method-after-texttocolumns-operation-to-refresh-formulas-referencing-split-columns.cs
+- validate-that-comments-attached-to-original-rows-are-correctly-transferred-to-copied-rows.cs
