@@ -9856,6 +9856,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "programmatically-copy-a-tables-style-to-another-table-to-ensure-consistent-visual-formatting-across-sheets.cs",
+      "title": "Programmatically copy a table's style to another table to ensure consistent visual formatting across sheets."
+    },
+    {
+      "category": "working-with-tables",
       "file": "programmatically-detect-tables-that-lack-a-totals-row-and-add-one-with-default-sum-calculations.cs",
       "title": "Programmatically detect tables that lack a totals row and add one with default sum calculations."
     },
