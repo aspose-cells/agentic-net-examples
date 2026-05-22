@@ -513,3 +513,4 @@ Output files are written to the working directory.
 - load-a-workbook-add-a-polynomial-order-three-trendline-to-a-scatter-chart-series-and-capture-its-equation.cs
 - retrieve-the-worksheet-that-contains-a-specific-chart-using-the-chartworksheet-property.cs
 - verify-the-retrieved-worksheet-name-matches-the-expected-chart-parent-worksheet.cs
+- create-a-new-column-chart-and-assign-its-data-source-using-setchartdatarange-method.cs
