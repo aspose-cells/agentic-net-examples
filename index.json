@@ -3851,6 +3851,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "batch-process-all-charts-in-a-workbook-applying-chinese-localization-to-each-before-image-export.cs",
+      "title": "Batch process all charts in a workbook, applying Chinese localization to each before image export."
+    },
+    {
+      "category": "working-with-charts",
       "file": "batch-process-multiple-worksheets-disabling-text-wrap-for-all-chart-data-labels.cs",
       "title": "Batch process multiple worksheets, disabling text wrap for all chart data labels."
     },
