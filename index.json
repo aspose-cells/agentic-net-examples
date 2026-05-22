@@ -9886,6 +9886,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-a-specific-table-to-an-xml-file-using-the-excel-xml-schema-for-data-interchange.cs",
+      "title": "Export a specific table to an XML file using the Excel XML schema for data interchange."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-a-table-to-a-json-file-with-indentation-for-readability-and-include-column-headers-as-keys.cs",
       "title": "Export a table to a JSON file with indentation for readability and include column headers as keys."
     },
