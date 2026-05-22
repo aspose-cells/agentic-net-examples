@@ -4206,6 +4206,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-line-chart-with-markers-then-hide-the-markers-for-the-first-series-only.cs",
+      "title": "Create a line chart with markers, then hide the markers for the first series only."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-new-chart-sheet-and-add-a-stock-chart-of-type-ohlc.cs",
       "title": "Create a new chart sheet and add a stock chart of type OHLC."
     },
