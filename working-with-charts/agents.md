@@ -427,3 +427,4 @@ Output files are written to the working directory.
 - adjust-series-overlap-and-gap-width-to-visually-separate-gantt-bars-for-overlapping-tasks.cs
 - apply-a-custom-color-palette-to-gantt-chart-bars-based-on-task-priority-levels.cs
 - save-the-workbook-with-the-gantt-chart-as-a-new-xlsx-file-in-a-specified-output-folder.cs
+- update-the-data-range-of-the-gantt-chart-after-inserting-additional-task-rows-in-the-worksheet.cs

@@ -5331,6 +5331,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "update-the-data-range-of-the-gantt-chart-after-inserting-additional-task-rows-in-the-worksheet.cs",
+      "title": "Update the data range of the Gantt chart after inserting additional task rows in the worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "update-the-text-of-an-existing-label-control-on-a-chart-to-display-the-current-date.cs",
       "title": "Update the text of an existing label control on a chart to display the current date."
     },
