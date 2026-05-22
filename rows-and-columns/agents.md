@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - read-a-spreadsheet-unhide-all-columns-in-the-second-worksheet-using-default-width-then-generate-pdf.cs
 - load-a-workbook-from-a-file-and-access-the-first-worksheet.cs
 - access-the-second-worksheet-in-the-loaded-workbook-to-prepare-for-formula-verification.cs
+- retrieve-the-formula-of-cell-e3-in-the-second-worksheet-before-deletion.cs
