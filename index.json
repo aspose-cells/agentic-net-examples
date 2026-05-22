@@ -3636,6 +3636,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-axis-titles-to-both-x-and-y-axes-using-bold-formatting-and-a-twelvepoint-font-size.cs",
+      "title": "Add axis titles to both X and Y axes, using bold formatting and a twelve\u2011point font size."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-data-labels-to-a-histogram-source-values-from-a-calculation-range-and-ensure-shapes-fit-text.cs",
       "title": "Add data labels to a histogram, source values from a calculation range, and ensure shapes fit text."
     },
