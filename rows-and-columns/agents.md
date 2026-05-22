@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - batch-copy-a-template-row-to-multiple-target-rows-across-several-worksheets-using-a-loop.cs
 - load-an-excel-workbook-hide-rows-five-through-ten-and-export-the-result-as-pdf.cs
 - open-a-spreadsheet-hide-column-c-then-save-the-modified-file-in-pdf-format.cs
+- read-a-workbook-unhide-row-twelve-with-height-twenty-points-and-generate-a-pdf.cs

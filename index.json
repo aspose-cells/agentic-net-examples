@@ -2861,6 +2861,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-a-workbook-unhide-row-twelve-with-height-twenty-points-and-generate-a-pdf.cs",
+      "title": "Read a workbook, unhide row twelve with height twenty points, and generate a PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs",
       "title": "Retrieve source row height with GetRowHeight and explicitly set destination height using SetRowHeight."
     },
