@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - read-a-workbook-delete-column-q-then-create-a-pdf-of-the-modified-worksheet.cs
 - load-a-workbook-hide-rows-ten-to-twenty-then-unhide-rows-fifteen-to-eighteen-with-height-save-pdf.cs
 - open-a-spreadsheet-hide-columns-five-through-eight-then-unhide-columns-six-and-seven-with-width-export-pdf.cs
+- read-an-excel-workbook-insert-rows-at-index-twenty-with-formatting-copied-from-source-rows-then-generate-pdf.cs
