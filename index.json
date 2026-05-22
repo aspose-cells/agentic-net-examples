@@ -4676,6 +4676,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-for-funnel-chart-after-applying-custom-shape-outline-to-each-label.cs",
+      "title": "Resize data label shapes for funnel chart after applying custom shape outline to each label."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-for-line-chart-after-enabling-markers-with-large-size-values.cs",
       "title": "Resize data label shapes for line chart after enabling markers with large size values."
     },
