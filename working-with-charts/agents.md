@@ -474,3 +474,4 @@ Output files are written to the working directory.
 - remove-all-gridlines-from-a-pie-chart-to-achieve-a-cleaner-visual-presentation.cs
 - hide-the-chart-legend-entirely-to-produce-a-minimalist-chart-layout-for-presentation-slides.cs
 - set-the-legend-position-to-the-top-right-corner-of-the-chart-area-for-better-readability.cs
+- retrieve-the-chart-title-position-convert-ratio-to-14000-units-and-log-the-values.cs
