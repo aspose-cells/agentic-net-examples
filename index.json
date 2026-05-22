@@ -3926,6 +3926,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-data-labels-to-show-both-cell-values-and-series-name-concatenated-with-a-hyphen-separator.cs",
+      "title": "Configure data labels to show both cell values and series name concatenated with a hyphen separator."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-secondary-axis-minimum-maximum-and-major-unit-values-to-align-with-primary-axis-scaling.cs",
       "title": "Configure secondary axis minimum, maximum, and major unit values to align with primary axis scaling."
     },
