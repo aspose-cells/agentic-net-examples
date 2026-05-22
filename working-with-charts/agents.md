@@ -531,3 +531,4 @@ Output files are written to the working directory.
 - build-a-progress-bar-chart-by-configuring-a-stacked-column-chart-with-completed-and-remaining-work-series.cs
 - build-a-waterfall-chart-and-mark-the-final-data-point-as-total-using-the-istotal-flag.cs
 - define-start-intermediate-and-total-points-in-a-waterfall-chart-and-apply-distinct-colors-for-each-type.cs
+- set-a-data-point-as-total-in-a-column-chart-by-enabling-its-istotal-flag.cs
