@@ -4901,6 +4901,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-refresh-the-pivotchart-after-modifying-its-source-data-then-save.cs",
+      "title": "Load a workbook, refresh the PivotChart after modifying its source data, then save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-replace-the-existing-chart-series-colors-with-a-custom-palette-then-save-to-xlsx.cs",
       "title": "Load a workbook, replace the existing chart series colors with a custom palette, then save to XLSX."
     },
