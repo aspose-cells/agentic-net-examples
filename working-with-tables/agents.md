@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs
 - export-a-worksheet-table-to-a-json-string-preserving-column-names-as-json-object-keys.cs
 - import-json-data-into-a-new-table-automatically-creating-columns-based-on-json-object-properties.cs
+- calculate-a-running-total-column-within-a-table-using-a-formula-that-references-previous-rows.cs
