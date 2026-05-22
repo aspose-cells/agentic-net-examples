@@ -3786,6 +3786,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-logarithmic-scale-to-the-xaxis-of-a-scatter-chart-for-better-data-distribution-visualization.cs",
+      "title": "Apply a logarithmic scale to the X\u2011axis of a scatter chart for better data distribution visualization."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-percentage-number-format-to-data-labels-of-the-third-series-for-clearer-percentages.cs",
       "title": "Apply a percentage number format to data labels of the third series for clearer percentages."
     },
