@@ -4861,6 +4861,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "programmatically-toggle-the-visibility-of-individual-waterfall-series-based-on-user-preferences.cs",
+      "title": "Programmatically toggle the visibility of individual Waterfall series based on user preferences."
+    },
+    {
+      "category": "working-with-charts",
       "file": "read-axis-labels-after-chart-calculation-by-calling-chartcalculate-then-axisgetaxistexts.cs",
       "title": "Read axis labels after chart calculation by calling Chart.Calculate() then Axis.GetAxisTexts()."
     },
