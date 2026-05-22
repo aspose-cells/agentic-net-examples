@@ -4566,6 +4566,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-the-legend-of-the-gantt-chart-to-produce-a-cleaner-visual-presentation.cs",
+      "title": "Hide the legend of the Gantt chart to produce a cleaner visual presentation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-yaxis-gridlines-to-create-a-cleaner-visual-appearance-for-the-chart.cs",
       "title": "Hide Y\u2011axis gridlines to create a cleaner visual appearance for the chart."
     },
