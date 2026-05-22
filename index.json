@@ -9686,6 +9686,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-external-documentation-for-reference.cs",
+      "title": "Create a table, then attach a comment that includes a hyperlink to external documentation for reference."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-then-generate-a-named-range-that-references-only-the-data-body-range-excluding-headers.cs",
       "title": "Create a table, then generate a named range that references only the data body range excluding headers."
     },
