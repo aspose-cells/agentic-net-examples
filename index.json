@@ -3591,6 +3591,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-dropdown-list-control-to-the-worksheet-and-bind-it-to-the-chart-data-source-for-updates.cs",
+      "title": "Add a dropdown list control to the worksheet and bind it to the chart data source for updates."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-hyperlink-to-a-data-label-that-opens-a-web-page-when-clicked.cs",
       "title": "Add a hyperlink to a data label that opens a web page when clicked."
     },
