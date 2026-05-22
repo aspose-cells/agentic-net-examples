@@ -535,3 +535,4 @@ Output files are written to the working directory.
 - retrieve-the-x-and-y-coordinates-of-a-chart-object-within-its-worksheet-for-precise-alignment.cs
 - move-a-chart-to-start-at-cell-d5-by-setting-upperleftrow-and-upperleftcolumn-properties.cs
 - resize-a-chart-to-occupy-ten-rows-and-fifteen-columns-by-adjusting-height-and-width-properties.cs
+- use-setchartdatarange-to-bind-a-chart-to-a-range-that-includes-merged-cells-handling-merged-data-correctly.cs
