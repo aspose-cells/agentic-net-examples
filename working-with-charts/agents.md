@@ -267,3 +267,4 @@ Output files are written to the working directory.
 - create-a-workbook-add-a-worksheet-and-insert-a-column-chart.cs
 - disable-data-label-text-wrapping-for-the-chart-using-datalabelsistextwrapped-false.cs
 - enable-data-label-text-wrapping-for-a-pie-chart-using-datalabelsistextwrapped-true.cs
+- read-axis-labels-after-chart-calculation-by-calling-chartcalculate-then-axisgetaxistexts.cs

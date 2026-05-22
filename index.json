@@ -4281,6 +4281,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "read-axis-labels-after-chart-calculation-by-calling-chartcalculate-then-axisgetaxistexts.cs",
+      "title": "Read axis labels after chart calculation by calling Chart.Calculate() then Axis.GetAxisTexts()."
+    },
+    {
+      "category": "working-with-charts",
       "file": "read-the-chart-title-modify-it-to-a-custom-string-and-apply-the-change.cs",
       "title": "Read the chart title, modify it to a custom string, and apply the change."
     },
