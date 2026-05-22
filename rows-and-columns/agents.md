@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - verify-that-the-formula-now-references-the-first-worksheet-cell-a1.cs
 - write-the-updated-formula-and-its-calculated-value-of-cell-e3-to-the-console.cs
 - set-the-deleteoptionsupdatereference-property-to-false-to-preserve-original-formulas.cs
+- verify-that-deleteoptionsupdatereference-property-is-false-before-the-second-deletion.cs
