@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-custom-data-label-formatter-that-appends-a-percentage-sign-to-each-label-on-a-pie-chart.cs",
+      "title": "Add a custom data label formatter that appends a percentage sign to each label on a pie chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-data-label-to-each-point-in-a-column-chart-displaying-the-exact-value.cs",
       "title": "Add a data label to each point in a column chart displaying the exact value."
     },

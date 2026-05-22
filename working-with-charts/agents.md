@@ -486,3 +486,4 @@ Output files are written to the working directory.
 - programmatically-set-the-chart-background-color-to-light-gray-and-remove-any-default-fill-patterns.cs
 - apply-conditional-formatting-to-series-values-greater-than-500-changing-their-fill-color-to-red.cs
 - create-a-line-chart-with-markers-then-hide-the-markers-for-the-first-series-only.cs
+- add-a-custom-data-label-formatter-that-appends-a-percentage-sign-to-each-label-on-a-pie-chart.cs
