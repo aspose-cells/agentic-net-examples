@@ -4576,6 +4576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "override-getaxistitle-in-chartjapanesesettings-to-return-japanese-text-for-x-and-y-axes.cs",
+      "title": "Override GetAxisTitle in ChartJapaneseSettings to return Japanese text for X and Y axes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "place-the-chart-legend-at-the-bottom-of-the-chart-area-for-balanced-layout.cs",
       "title": "Place the chart legend at the bottom of the chart area for balanced layout."
     },
