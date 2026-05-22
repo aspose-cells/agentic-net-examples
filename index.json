@@ -3756,6 +3756,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-custom-label-to-the-first-data-point-of-each-series-within-a-loop.cs",
+      "title": "Assign custom label to the first data point of each series within a loop."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-custom-text-to-each-data-point-in-a-series-using-datapointlabeltext-property.cs",
       "title": "Assign custom text to each data point in a series using DataPoint.Label.Text property."
     },

@@ -270,3 +270,4 @@ Output files are written to the working directory.
 - read-axis-labels-after-chart-calculation-by-calling-chartcalculate-then-axisgetaxistexts.cs
 - store-retrieved-axis-label-strings-into-a-separate-worksheet-column.cs
 - assign-custom-text-to-each-data-point-in-a-series-using-datapointlabeltext-property.cs
+- assign-custom-label-to-the-first-data-point-of-each-series-within-a-loop.cs
