@@ -9716,6 +9716,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "delete-all-rows-from-a-table-that-have-a-null-value-in-a-required-column-using-a-loop.cs",
+      "title": "Delete all rows from a table that have a null value in a required column using a loop."
+    },
+    {
+      "category": "working-with-tables",
       "file": "delete-the-comment-attached-to-the-table-to-clean-up-metadata-after-final-review.cs",
       "title": "Delete the comment attached to the table to clean up metadata after final review."
     },
