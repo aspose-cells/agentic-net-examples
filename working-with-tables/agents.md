@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - import-json-data-into-a-new-table-automatically-creating-columns-based-on-json-object-properties.cs
 - calculate-a-running-total-column-within-a-table-using-a-formula-that-references-previous-rows.cs
 - set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs
+- enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs

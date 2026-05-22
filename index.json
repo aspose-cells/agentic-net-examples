@@ -9651,6 +9651,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs",
+      "title": "Enable the table's auto\u2011expand feature so that adding data below expands the table range automatically."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-a-worksheet-table-to-a-json-string-preserving-column-names-as-json-object-keys.cs",
       "title": "Export a worksheet table to a JSON string, preserving column names as JSON object keys."
     },
