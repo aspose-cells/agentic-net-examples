@@ -5081,6 +5081,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xlsx-workbook-retrieve-the-equation-text-of-a-chart-trendline-after-refreshing-data-and-log-it.cs",
+      "title": "Open an XLSX workbook, retrieve the equation text of a chart trendline after refreshing data, and log it."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xlsx-workbook-set-custom-axis-titles-for-the-pivotchart-using-pivotoptions-and-save.cs",
       "title": "Open an XLSX workbook, set custom axis titles for the PivotChart using PivotOptions, and save."
     },

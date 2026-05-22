@@ -509,3 +509,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-retrieve-confidence-interval-values-of-a-chart-trendline-and-log-them.cs
 - open-an-xls-file-add-an-exponential-trendline-to-a-chart-series-and-capture-its-equation-text.cs
 - load-a-workbook-add-a-moving-average-trendline-to-a-line-chart-and-store-its-equation.cs
+- open-an-xlsx-workbook-retrieve-the-equation-text-of-a-chart-trendline-after-refreshing-data-and-log-it.cs
