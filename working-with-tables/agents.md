@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - set-a-custom-column-width-for-a-specific-table-column-to-accommodate-long-text-strings.cs
 - hide-a-table-column-programmatically-and-later-unhide-it-based-on-user-interaction-criteria.cs
 - create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs
+- validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs
