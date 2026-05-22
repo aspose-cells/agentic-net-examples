@@ -2561,6 +2561,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "after-loading-a-workbook-set-standardheight-and-then-autofit-rows-that-contain-formulas.cs",
+      "title": "After loading a workbook, set StandardHeight and then auto\u2011fit rows that contain formulas."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs",
       "title": "Apply a uniform column width to all columns by assigning Cells.StandardWidth."
     },
