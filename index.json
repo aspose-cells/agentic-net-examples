@@ -4271,6 +4271,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-all-data-labels-from-the-chart-before-exporting-to-reduce-file-size.cs",
+      "title": "Remove all data labels from the chart before exporting to reduce file size."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-the-legend-entirely-to-maximize-plotting-area-for-data-visualization.cs",
       "title": "Remove the legend entirely to maximize plotting area for data visualization."
     },

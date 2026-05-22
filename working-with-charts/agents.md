@@ -255,3 +255,4 @@ Output files are written to the working directory.
 - create-a-richtext-data-label-for-a-specific-chart-point-using-mixed-font-sizes.cs
 - assign-unique-richtext-labels-to-each-data-point-within-a-series-for-detailed-annotation.cs
 - add-a-data-label-to-the-charts-highest-value-point-to-highlight-peak-performance.cs
+- remove-all-data-labels-from-the-chart-before-exporting-to-reduce-file-size.cs
