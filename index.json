@@ -3916,6 +3916,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-chart-to-a-pdf-file-using-an-85-11-inch-custom-page-size.cs",
+      "title": "Export the chart to a PDF file using an 8.5\u202f\u00d7\u202f11\u202finch custom page size."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-chart-to-png-with-300-dpi-resolution-by-specifying-imageresolution-parameter.cs",
       "title": "Export the chart to PNG with 300 DPI resolution by specifying ImageResolution parameter."
     },
