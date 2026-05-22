@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - set-the-tables-show-header-row-option-to-true-and-apply-a-bold-font-style-to-header-cells.cs
 - create-a-table-with-a-calculated-column-using-the-today-function-to-display-days-since-a-start-date.cs
 - programmatically-detect-tables-lacking-a-header-row-and-add-a-default-header-with-generic-column-names.cs
+- add-a-column-to-a-table-and-set-its-validation-to-a-list-sourced-from-a-table-column.cs
