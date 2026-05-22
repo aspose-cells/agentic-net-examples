@@ -449,3 +449,4 @@ Output files are written to the working directory.
 - add-a-trendline-to-a-line-series-in-a-combo-chart-and-display-its-equation-on-the-chart.cs
 - bind-progress-percentages-from-a-worksheet-column-to-the-visible-series-of-the-progress-bar-chart.cs
 - set-the-invisible-series-of-the-progress-bar-chart-to-a-transparent-fill-to-simulate-progress-effect.cs
+- apply-conditional-formatting-to-the-progress-bar-chart-colors-based-on-threshold-values.cs
