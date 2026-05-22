@@ -5001,6 +5001,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xls-file-add-a-pivotchart-bound-to-an-existing-pivottable-and-save-the-workbook.cs",
+      "title": "Open an XLS file, add a PivotChart bound to an existing PivotTable, and save the workbook."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xls-file-apply-a-custom-chartcolorpalettetype-to-all-chart-series-then-save.cs",
       "title": "Open an XLS file, apply a custom ChartColorPaletteType to all chart series, then save."
     },
