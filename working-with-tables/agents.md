@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - set-tabletorangeoptionslastrow-to-zero-to-remove-all-formatting-during-the-table-to-range-conversion.cs
 - use-listobjectputcellvalue-to-insert-a-hyperlink-string-into-a-specific-cell-of-the-table.cs
 - validate-that-after-conversion-the-workbook-no-longer-contains-any-listobject-objects.cs
+- convert-a-table-to-a-range-preserving-formatting-up-to-the-last-data-row-then-save-as-ods.cs
