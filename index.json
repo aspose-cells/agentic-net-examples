@@ -4456,6 +4456,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-datalabelsnumberformatlinked-property-to-true-for-the-first-series-to-bind-formatting.cs",
+      "title": "Set the DataLabels.NumberFormatLinked property to true for the first series to bind formatting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
       "title": "Set the scatter chart marker size to 8 points and color to teal."
     },
