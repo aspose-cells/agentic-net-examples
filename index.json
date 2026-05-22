@@ -9581,6 +9581,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs",
+      "title": "Apply a unique index to a table column to enforce data uniqueness during data entry."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-conditional-formatting-to-a-table-column-that-highlights-cells-exceeding-a-defined-numeric-threshold.cs",
       "title": "Apply conditional formatting to a table column that highlights cells exceeding a defined numeric threshold."
     },

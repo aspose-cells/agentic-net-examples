@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs
 - insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs
 - delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs
+- apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs
