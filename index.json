@@ -4541,6 +4541,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-seriesdatalabelsshowcellrange-true-to-activate-cellbased-data-labels-for-the-series.cs",
+      "title": "Set Series.DataLabels.ShowCellRange = true to activate cell\u2011based data labels for the series."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs",
       "title": "Set the chart border thickness to 2 points and color to dark gray."
     },

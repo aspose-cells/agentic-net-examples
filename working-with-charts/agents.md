@@ -293,3 +293,4 @@ Output files are written to the working directory.
 - translate-axis-labels-using-an-external-service-and-update-chart-axis-texts-accordingly.cs
 - create-a-chart-in-a-worksheet-and-bind-its-series-to-a-numeric-data-range.cs
 - enable-data-labels-to-display-values-from-a-specified-cell-range-for-the-first-chart-series.cs
+- set-seriesdatalabelsshowcellrange-true-to-activate-cellbased-data-labels-for-the-series.cs
