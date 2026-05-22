@@ -3801,6 +3801,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-conditional-formatting-to-the-progress-bar-chart-colors-based-on-threshold-values.cs",
+      "title": "Apply conditional formatting to the Progress Bar chart colors based on threshold values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-conditional-rule-that-changes-legend-entry-fill-to-none-when-series-color-matches-a-threshold.cs",
       "title": "Apply conditional rule that changes legend entry fill to none when series color matches a threshold."
     },
