@@ -4026,6 +4026,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-excel-workbook-locate-a-chart-and-set-tick-labels-direction-to-horizontal.cs",
+      "title": "Load an Excel workbook, locate a chart, and set tick labels direction to horizontal."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-existing-xlsx-workbook-retrieve-its-first-chart-and-modify-leader-line-settings.cs",
       "title": "Load an existing XLSX workbook, retrieve its first chart, and modify leader line settings."
     },
