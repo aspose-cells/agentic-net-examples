@@ -3871,6 +3871,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-the-custom-chartglobalizationsettings-instance-to-a-chart-to-localize-axis-labels-into-german.cs",
+      "title": "Apply the custom ChartGlobalizationSettings instance to a chart to localize axis labels into German."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-the-predefined-chart-style-style1-to-improve-visual-appearance-of-all-charts-in-the-workbook.cs",
       "title": "Apply the predefined chart style 'Style1' to improve visual appearance of all charts in the workbook."
     },
