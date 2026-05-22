@@ -3621,6 +3621,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-builtin-theme-to-the-chart-to-standardize-colors-and-fonts.cs",
+      "title": "Apply a built\u2011in theme to the chart to standardize colors and fonts."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-theme-color-palette-to-all-series-in-a-multiseries-chart.cs",
       "title": "Apply a custom theme color palette to all series in a multi\u2011series chart."
     },
