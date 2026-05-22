@@ -438,3 +438,4 @@ Output files are written to the working directory.
 - create-a-waterfall-chart-with-custom-colors-for-increase-decrease-and-total-columns.cs
 - update-the-data-source-of-all-waterfall-charts-in-a-workbook-after-a-bulk-data-import.cs
 - create-a-combo-chart-by-adding-a-column-series-and-a-line-series-to-the-same-chart-area.cs
+- change-the-second-series-type-from-column-to-line-after-initial-chart-creation-for-a-combo-chart.cs
