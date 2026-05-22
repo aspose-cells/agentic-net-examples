@@ -2616,6 +2616,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "autofit-all-rows-in-a-worksheet-by-calling-autofitrows-with-startrow-0-and-endrow-maxrow.cs",
+      "title": "Auto\u2011fit all rows in a worksheet by calling AutoFitRows with startRow 0 and endRow MaxRow."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "autofit-rows-that-contain-merged-cells-by-configuring-autofitteroptionsautofitmergedcellstype-and-passing-it-to-worksheetautofitrows.cs",
       "title": "Auto\u2011fit rows that contain merged cells by configuring AutoFitterOptions.AutoFitMergedCellsType and passing it to Worksheet.AutoFitRows."
     },
