@@ -3581,6 +3581,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-hyperlink-to-a-data-label-that-opens-a-web-page-when-clicked.cs",
+      "title": "Add a hyperlink to a data label that opens a web page when clicked."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-new-series-to-the-chart-using-a-worksheet-range-as-data-source.cs",
       "title": "Add a new series to the chart using a worksheet range as data source."
     },
