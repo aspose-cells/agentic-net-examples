@@ -4166,6 +4166,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-to-display-custom-text-strings-stored-in-a-separate-worksheet-range.cs",
+      "title": "Enable data labels to display custom text strings stored in a separate worksheet range."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-to-display-values-from-a-specified-cell-range-for-the-first-chart-series.cs",
       "title": "Enable data labels to display values from a specified cell range for the first chart series."
     },
