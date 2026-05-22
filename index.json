@@ -4226,6 +4226,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-combo-chart-with-three-series-column-line-and-area-each-using-a-different-axis.cs",
+      "title": "Create a combo chart with three series: column, line, and area, each using a different axis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
