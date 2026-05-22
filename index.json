@@ -4121,6 +4121,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "programmatically-hide-tick-marks-on-the-secondary-y-axis-to-reduce-visual-clutter-in-mixed-charts.cs",
+      "title": "Programmatically hide tick marks on the secondary Y axis to reduce visual clutter in mixed charts."
+    },
+    {
+      "category": "working-with-charts",
       "file": "read-the-chart-title-modify-it-to-a-custom-string-and-apply-the-change.cs",
       "title": "Read the chart title, modify it to a custom string, and apply the change."
     },

@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - retrieve-current-tick-label-direction-log-it-then-change-direction-to-horizontal-for-better-readability.cs
 - apply-a-custom-date-axis-to-the-x-axis-for-time-series-data-specifying-date-format-pattern.cs
 - switch-the-x-axis-from-category-to-date-axis-to-correctly-display-chronological-data-points.cs
+- programmatically-hide-tick-marks-on-the-secondary-y-axis-to-reduce-visual-clutter-in-mixed-charts.cs
