@@ -9696,6 +9696,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "convert-a-table-to-a-range-and-copy-the-resulting-range-to-another-worksheet-using-rangecopy.cs",
+      "title": "Convert a table to a range and copy the resulting range to another worksheet using Range.Copy."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-a-table-to-a-range-preserving-formatting-for-the-first-three-rows-then-save-as-ods.cs",
       "title": "Convert a table to a range preserving formatting for the first three rows, then save as ODS."
     },
