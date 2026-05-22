@@ -9671,6 +9671,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "import-json-data-into-a-new-table-automatically-creating-columns-based-on-json-object-properties.cs",
+      "title": "Import JSON data into a new table, automatically creating columns based on JSON object properties."
+    },
+    {
+      "category": "working-with-tables",
       "file": "insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs",
       "title": "Insert a new row into a table and automatically copy the formatting from the previous row."
     },
