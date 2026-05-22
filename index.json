@@ -3796,6 +3796,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-predefined-theme-to-a-column-chart-and-customize-individual-series-colors.cs",
+      "title": "Apply a predefined theme to a column chart and customize individual series colors."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-radial-gradient-fill-to-the-chart-using-three-color-stops-for-smooth-transition.cs",
       "title": "Apply a radial gradient fill to the chart using three color stops for smooth transition."
     },
