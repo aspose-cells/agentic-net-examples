@@ -2556,6 +2556,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs",
+      "title": "Apply a uniform column width to all columns by assigning Cells.StandardWidth."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "apply-a-uniform-row-height-to-all-rows-in-a-worksheet-by-assigning-cellsstandardheight.cs",
       "title": "Apply a uniform row height to all rows in a worksheet by assigning Cells.StandardHeight."
     },
