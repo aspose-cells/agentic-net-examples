@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs
 - enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs
 - create-a-table-with-a-calculated-column-that-concatenates-first-and-last-name-fields-for-each-row.cs
+- apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs
