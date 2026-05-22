@@ -473,3 +473,4 @@ Output files are written to the working directory.
 - set-data-labels-to-show-percentages-on-a-stacked-column-chart-and-adjust-label-font-size.cs
 - remove-all-gridlines-from-a-pie-chart-to-achieve-a-cleaner-visual-presentation.cs
 - hide-the-chart-legend-entirely-to-produce-a-minimalist-chart-layout-for-presentation-slides.cs
+- set-the-legend-position-to-the-top-right-corner-of-the-chart-area-for-better-readability.cs
