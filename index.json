@@ -4066,6 +4066,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-the-chart-to-a-width-of-400-points-and-height-of-300-points.cs",
+      "title": "Resize the chart to a width of 400 points and height of 300 points."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-the-chart-to-width-500-points-and-height-300-points-positioning-it-at-cell-d5.cs",
       "title": "Resize the chart to width 500 points and height 300 points, positioning it at cell D5."
     },
