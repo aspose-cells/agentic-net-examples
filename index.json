@@ -4791,6 +4791,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-entry-fill-to-none-for-all-charts-in-a-template-workbook-before-user-customization.cs",
+      "title": "Set legend entry fill to none for all charts in a template workbook before user customization."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-legend-entry-fill-to-none-for-all-charts-in-a-workbook-using-a-loop-construct.cs",
       "title": "Set legend entry fill to none for all charts in a workbook using a loop construct."
     },
