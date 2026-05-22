@@ -4896,6 +4896,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-hide-the-pivotchart-legend-using-pivotoptions-then-save-the-file.cs",
+      "title": "Load a workbook, hide the PivotChart legend using PivotOptions, then save the file."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-replace-the-existing-chart-series-colors-with-a-custom-palette-then-save-to-xlsx.cs",
       "title": "Load a workbook, replace the existing chart series colors with a custom palette, then save to XLSX."
     },
