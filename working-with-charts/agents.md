@@ -498,3 +498,4 @@ Output files are written to the working directory.
 - load-a-workbook-configure-the-newly-added-pivotchart-layout-to-tabular-using-pivotoptions-then-save.cs
 - open-an-xlsx-workbook-set-the-pivotchart-legend-position-to-bottom-via-pivotoptions-and-save.cs
 - load-a-workbook-hide-the-pivotchart-legend-using-pivotoptions-then-save-the-file.cs
+- open-an-xls-file-display-pivotchart-data-as-percentages-by-setting-pivotoptions-and-save.cs
