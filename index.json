@@ -5901,6 +5901,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-setchartdatarange-to-bind-a-chart-to-a-range-that-includes-merged-cells-handling-merged-data-correctly.cs",
+      "title": "Use SetChartDataRange to bind a chart to a range that includes merged cells, handling merged data correctly."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-custom-label-text-length-does-not-exceed-excels-maximum-character-limit-before-assignment.cs",
       "title": "Validate custom label text length does not exceed Excel's maximum character limit before assignment."
     },
