@@ -483,3 +483,4 @@ Output files are written to the working directory.
 - create-multiple-charts-on-a-single-worksheet-each-using-different-data-ranges-and-chart-types.cs
 - clone-an-existing-chart-modify-its-data-source-and-insert-the-clone-into-another-worksheet.cs
 - insert-a-chart-into-a-specific-cell-range-ensuring-it-occupies-exactly-three-rows-and-five-columns.cs
+- programmatically-set-the-chart-background-color-to-light-gray-and-remove-any-default-fill-patterns.cs
