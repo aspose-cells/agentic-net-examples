@@ -2671,6 +2671,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "copy-rows-while-preserving-embedded-images-and-drawing-objects-using-default-copy-behavior.cs",
+      "title": "Copy rows while preserving embedded images and drawing objects using default copy behavior."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs",
       "title": "Create a custom AutoFitterOptions instance that disables auto\u2011fit for hidden rows and apply it to a specific row range."
     },
