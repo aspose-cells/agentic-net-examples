@@ -4941,6 +4941,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-xlsx-workbook-add-a-trendline-to-the-first-chart-series-retrieve-its-equation-and-log.cs",
+      "title": "Load an XLSX workbook, add a trendline to the first chart series, retrieve its equation, and log."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-xlsx-workbook-change-the-first-chart-series-color-using-monochromaticpalette6-and-save.cs",
       "title": "Load an XLSX workbook, change the first chart series color using MonochromaticPalette6, and save."
     },
