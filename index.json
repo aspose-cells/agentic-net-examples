@@ -9565,6 +9565,11 @@
       "title": "Write code to set a picture's anchor to a merged cell range, ensuring it moves with merged cells."
     },
     {
+      "category": "working-with-tables",
+      "file": "create-a-new-worksheet-table-from-a-range-of-cells-and-assign-a-custom-name.cs",
+      "title": "Create a new worksheet table from a range of cells and assign a custom name."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
