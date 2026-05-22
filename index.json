@@ -9571,6 +9571,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "add-a-column-to-a-table-and-set-its-validation-to-a-list-sourced-from-a-table-column.cs",
+      "title": "Add a column to a table and set its validation to a list sourced from a table column."
+    },
+    {
+      "category": "working-with-tables",
       "file": "add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs",
       "title": "Add a comment to the table object describing its purpose and retrieve the comment text programmatically."
     },
