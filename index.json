@@ -2706,6 +2706,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs",
+      "title": "Parse semicolon\u2011separated strings in a column using TextToColumns with semicolon delimiter."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "programmatically-set-a-row-height-then-autofit-the-next-row-based-on-its-content.cs",
       "title": "Programmatically set a row height, then auto\u2011fit the next row based on its content."
     },
