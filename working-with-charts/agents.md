@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - center-the-chart-within-the-pdf-page-during-conversion-to-achieve-balanced-layout.cs
 - align-the-chart-to-the-topleft-corner-of-the-pdf-page-before-exporting.cs
 - export-the-chart-to-a-pdf-file-using-an-85-11-inch-custom-page-size.cs
+- export-the-chart-to-pdf-with-an-a4-page-size-and-portrait-orientation.cs
