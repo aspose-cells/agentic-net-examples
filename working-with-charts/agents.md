@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - update-a-richtext-data-label-to-include-italic-text-for-enhanced-emphasis.cs
 - set-the-z-axis-maximum-to-100-and-minimum-to-0-for-standardized-scaling.cs
 - change-the-chart-type-to-cone3d-and-adjust-the-z-axis-depth-for-better-perspective.cs
+- clone-the-existing-chart-object-and-modify-its-data-source-to-reference-a-different-worksheet.cs

@@ -3841,6 +3841,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "clone-the-existing-chart-object-and-modify-its-data-source-to-reference-a-different-worksheet.cs",
+      "title": "Clone the existing chart object and modify its data source to reference a different worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "combine-area-and-line-chart-types-in-one-chart-to-visualize-trends-alongside-volume-data.cs",
       "title": "Combine area and line chart types in one chart to visualize trends alongside volume data."
     },
