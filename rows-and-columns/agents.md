@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - combine-setrowheight-with-autofitrow-to-set-a-minimum-height-before-autofitting-a-row.cs
 - after-autofitting-a-column-finetune-its-width-with-setcolumnwidthpixel-for-precise-pixel-control.cs
 - iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs
+- batch-process-multiple-worksheets-to-apply-standardwidth-for-consistent-column-sizing.cs
