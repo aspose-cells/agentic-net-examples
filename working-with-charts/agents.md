@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - switch-the-x-axis-from-category-to-date-axis-to-correctly-display-chronological-data-points.cs
 - programmatically-hide-tick-marks-on-the-secondary-y-axis-to-reduce-visual-clutter-in-mixed-charts.cs
 - set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs
+- enable-automatic-scaling-for-secondary-axis-allowing-asposecells-to-calculate-optimal-minimum-and-maximum-values.cs
