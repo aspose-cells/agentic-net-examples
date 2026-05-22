@@ -2575,6 +2575,11 @@
       "title": "Set the width of a specific column (e.g., column 3) using Cells.SetColumnWidth."
     },
     {
+      "category": "rows-and-columns",
+      "file": "set-the-width-of-a-specific-column-in-pixels-using-cellssetcolumnwidthpixel.cs",
+      "title": "Set the width of a specific column in pixels using Cells.SetColumnWidthPixel."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
