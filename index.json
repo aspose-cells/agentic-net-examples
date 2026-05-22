@@ -9601,6 +9601,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "after-conversion-attempt-to-apply-a-filter-to-the-former-table-range-and-capture-the-expected-exception.cs",
+      "title": "After conversion, attempt to apply a filter to the former table range and capture the expected exception."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs",
       "title": "Apply a built\u2011in table style that matches the workbook's theme for consistent visual appearance."
     },
