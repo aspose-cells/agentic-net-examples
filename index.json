@@ -146,6 +146,11 @@
     },
     {
       "category": "conversion",
+      "file": "produce-png-images-with-transparent-background-from-a-csv-workbook.cs",
+      "title": "Produce PNG images with transparent background from a CSV workbook."
+    },
+    {
+      "category": "conversion",
       "file": "read-a-csv-file-and-export-each-worksheet-as-separate-png-images.cs",
       "title": "Read a CSV file and export each worksheet as separate PNG images."
     },

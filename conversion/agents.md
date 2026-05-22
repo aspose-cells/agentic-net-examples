@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - batch-convert-multiple-xlsx-files-to-pdf-and-store-results-in-an-output-folder.cs
 - export-each-sheet-as-jpeg-images-with-300-dpi-resolution-for-printing.cs
 - read-a-csv-file-and-export-each-worksheet-as-separate-png-images.cs
+- produce-png-images-with-transparent-background-from-a-csv-workbook.cs
