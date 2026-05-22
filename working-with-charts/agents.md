@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - export-the-chart-to-a-pdf-file-using-an-85-11-inch-custom-page-size.cs
 - export-the-chart-to-pdf-with-an-a4-page-size-and-portrait-orientation.cs
 - write-the-chart-pdf-output-to-a-memorystream-for-further-inmemory-processing.cs
+- use-charthasaxis-to-determine-if-a-category-axis-is-present-in-the-current-chart.cs
