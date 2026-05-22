@@ -274,3 +274,4 @@ Output files are written to the working directory.
 - set-the-shape-type-of-data-labels-to-rounded-rectangle-for-a-line-chart.cs
 - set-the-shape-type-of-data-labels-to-ellipse-for-a-bubble-chart.cs
 - set-the-shape-type-of-data-labels-to-triangle-for-a-custom-chart-type.cs
+- change-data-label-font-size-to-twelve-points-and-color-to-blue-for-a-radar-chart.cs
