@@ -3831,6 +3831,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-a-secondary-axis-to-the-line-series-in-a-combo-chart-to-improve-data-readability.cs",
+      "title": "Assign a secondary axis to the line series in a Combo chart to improve data readability."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-a-secondary-yaxis-type-of-value-and-link-appropriate-series-to-it.cs",
       "title": "Assign a secondary Y\u2011axis type of Value and link appropriate series to it."
     },
