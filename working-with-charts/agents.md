@@ -516,3 +516,4 @@ Output files are written to the working directory.
 - create-a-new-column-chart-and-assign-its-data-source-using-setchartdatarange-method.cs
 - set-the-chart-title-programmatically-after-creating-the-chart-properly.cs
 - generate-a-line-chart-from-a-workbook-template-by-processing-smart-markers-with-workbookdesigner.cs
+- save-the-workbook-containing-the-generated-chart-as-an-xlsx-file.cs

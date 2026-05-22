@@ -5446,6 +5446,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-containing-the-generated-chart-as-an-xlsx-file.cs",
+      "title": "Save the workbook containing the generated chart as an XLSX file."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-containing-the-modified-chart-as-an-xlsx-file-to-preserve-formatting.cs",
       "title": "Save the workbook containing the modified chart as an XLSX file to preserve formatting."
     },
