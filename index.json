@@ -5741,6 +5741,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-istotal-flag-on-the-last-data-point-of-a-stacked-area-chart-to-display-cumulative-total.cs",
+      "title": "Set the IsTotal flag on the last data point of a stacked area chart to display cumulative total."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-isvisible-property-of-a-series-based-on-a-runtime-condition-evaluating-data-completeness.cs",
       "title": "Set the IsVisible property of a series based on a runtime condition evaluating data completeness."
     },
