@@ -272,3 +272,4 @@ Output files are written to the working directory.
 - assign-custom-text-to-each-data-point-in-a-series-using-datapointlabeltext-property.cs
 - assign-custom-label-to-the-first-data-point-of-each-series-within-a-loop.cs
 - set-the-shape-type-of-data-labels-to-rounded-rectangle-for-a-line-chart.cs
+- set-the-shape-type-of-data-labels-to-ellipse-for-a-bubble-chart.cs
