@@ -3796,6 +3796,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-an-instance-of-chartchinesesettings-to-the-charts-globalizationsettings-property-before-exporting.cs",
+      "title": "Assign an instance of ChartChineseSettings to the chart's GlobalizationSettings property before exporting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-custom-colors-to-each-series-in-a-stacked-bar-chart-using-the-seriesstyle-property.cs",
       "title": "Assign custom colors to each series in a stacked bar chart using the Series.Style property."
     },
