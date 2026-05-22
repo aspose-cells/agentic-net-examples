@@ -4126,6 +4126,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-the-label-contains-value-from-cells-option-for-a-pie-chart-and-link-labels-to-cells.cs",
+      "title": "Enable the \u201cLabel Contains \u2013 Value From Cells\u201d option for a pie chart and link labels to cells."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs",
       "title": "Export all charts in the workbook as separate SVG files for scalable vector graphics usage."
     },
