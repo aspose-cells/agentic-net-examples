@@ -4481,6 +4481,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-background-fill-from-legend-entries-while-keeping-text-color-unchanged-for-contrast.cs",
+      "title": "Remove background fill from legend entries while keeping text color unchanged for contrast."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-the-legend-entirely-to-maximize-plotting-area-for-data-visualization.cs",
       "title": "Remove the legend entirely to maximize plotting area for data visualization."
     },
