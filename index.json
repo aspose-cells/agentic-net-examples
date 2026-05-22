@@ -5051,6 +5051,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-all-gridlines-from-a-pie-chart-to-achieve-a-cleaner-visual-presentation.cs",
+      "title": "Remove all gridlines from a pie chart to achieve a cleaner visual presentation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-any-existing-trendlines-from-a-chart-before-adding-new-analytical-lines.cs",
       "title": "Remove any existing trendlines from a chart before adding new analytical lines."
     },
