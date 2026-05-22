@@ -9906,6 +9906,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "generate-a-pivot-table-based-on-an-existing-worksheet-table-and-place-it-on-a-new-worksheet.cs",
+      "title": "Generate a pivot table based on an existing worksheet table and place it on a new worksheet."
+    },
+    {
+      "category": "working-with-tables",
       "file": "generate-a-summary-worksheet-that-aggregates-values-from-multiple-tables-using-structured-reference-formulas.cs",
       "title": "Generate a summary worksheet that aggregates values from multiple tables using structured reference formulas."
     },
