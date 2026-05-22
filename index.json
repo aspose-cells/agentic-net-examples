@@ -4131,6 +4131,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "render-the-modified-chart-to-a-png-image-and-save-it-in-the-output-directory.cs",
+      "title": "Render the modified chart to a PNG image and save it in the output directory."
+    },
+    {
+      "category": "working-with-charts",
       "file": "reorder-chart-series-to-display-the-most-important-data-first-using-the-seriescollection.cs",
       "title": "Reorder chart series to display the most important data first using the SeriesCollection."
     },
