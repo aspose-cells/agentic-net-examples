@@ -4071,6 +4071,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "format-data-labels-of-the-second-series-with-bold-font-red-color-and-yellow-background.cs",
+      "title": "Format data labels of the second series with bold font, red color, and yellow background."
+    },
+    {
+      "category": "working-with-charts",
       "file": "format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs",
       "title": "Format data labels to show percentages with one decimal place on a pie chart."
     },
