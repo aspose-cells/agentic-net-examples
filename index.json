@@ -10081,6 +10081,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "verify-that-after-conversion-the-table-no-longer-supports-sorting-by-checking-listobjectistable-property.cs",
+      "title": "Verify that after conversion the table no longer supports sorting by checking ListObject.IsTable property."
+    },
+    {
+      "category": "working-with-tables",
       "file": "write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs",
       "title": "Write a DataTable object into a new worksheet table, mapping column names to table headers automatically."
     },
