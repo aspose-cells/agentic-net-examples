@@ -265,3 +265,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-to-a-new-file-named-chartreportxlsx-after-completing-chart-updates.cs
 - link-each-series-data-label-number-format-to-its-corresponding-source-column-for-consistency.cs
 - create-a-workbook-add-a-worksheet-and-insert-a-column-chart.cs
+- disable-data-label-text-wrapping-for-the-chart-using-datalabelsistextwrapped-false.cs
