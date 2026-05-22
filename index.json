@@ -9711,6 +9711,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-generate-a-chart-that-uses-the-tables-totals-row-as-the-data-series-source.cs",
+      "title": "Create a table, then generate a chart that uses the table's totals row as the data series source."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-then-generate-a-data-validation-rule-restricting-entries-to-values-present-in-another-table-column.cs",
       "title": "Create a table, then generate a data validation rule restricting entries to values present in another table column."
     },
