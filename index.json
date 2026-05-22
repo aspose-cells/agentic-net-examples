@@ -5031,6 +5031,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "programmatically-set-the-chart-background-color-to-light-gray-and-remove-any-default-fill-patterns.cs",
+      "title": "Programmatically set the chart background color to light gray and remove any default fill patterns."
+    },
+    {
+      "category": "working-with-charts",
       "file": "programmatically-toggle-data-label-visibility-based-on-a-configuration-flag.cs",
       "title": "Programmatically toggle data label visibility based on a configuration flag."
     },
