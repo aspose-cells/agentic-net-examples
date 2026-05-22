@@ -3626,6 +3626,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-data-labels-to-a-histogram-source-values-from-a-calculation-range-and-ensure-shapes-fit-text.cs",
+      "title": "Add data labels to a histogram, source values from a calculation range, and ensure shapes fit text."
+    },
+    {
+      "category": "working-with-charts",
       "file": "adjust-data-label-position-to-outsideend-to-avoid-overlap-with-leader-lines.cs",
       "title": "Adjust data label position to OutsideEnd to avoid overlap with leader lines."
     },
