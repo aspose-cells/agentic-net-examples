@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - copy-rows-with-conditional-formatting-and-ensure-formatting-rules-apply-to-destination-rows.cs
 - transfer-rows-containing-data-validation-lists-and-verify-validation-rules-remain-functional-after-copy.cs
 - copy-rows-that-include-hyperlinks-and-confirm-hyperlinks-point-to-correct-targets-in-new-location.cs
+- use-cellscopyrow-to-duplicate-a-header-row-and-then-freeze-the-copied-header-for-scrolling.cs
