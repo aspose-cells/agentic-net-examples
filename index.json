@@ -5591,6 +5591,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-a-memory-stream-to-create-a-chart-image-without-writing-intermediate-files-to-disk.cs",
+      "title": "Use a memory stream to create a chart image without writing intermediate files to disk."
+    },
+    {
+      "category": "working-with-charts",
       "file": "use-charthasaxis-to-check-for-the-existence-of-a-value-axis-on-the-chart.cs",
       "title": "Use chart.HasAxis to check for the existence of a value axis on the chart."
     },
