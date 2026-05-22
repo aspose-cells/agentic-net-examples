@@ -2711,6 +2711,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "copy-rows-with-conditional-formatting-and-ensure-formatting-rules-apply-to-destination-rows.cs",
+      "title": "Copy rows with conditional formatting and ensure formatting rules apply to destination rows."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs",
       "title": "Create a custom AutoFitterOptions instance that disables auto\u2011fit for hidden rows and apply it to a specific row range."
     },
