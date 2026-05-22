@@ -4191,6 +4191,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "document-the-steps-to-set-a-localized-region-for-chart-rendering-and-convert-the-chart-to-an-image.cs",
+      "title": "Document the steps to set a localized region for chart rendering and convert the chart to an image."
+    },
+    {
+      "category": "working-with-charts",
       "file": "duplicate-an-existing-chart-modify-its-legend-position-and-save-both-charts-in-the-workbook.cs",
       "title": "Duplicate an existing chart, modify its legend position, and save both charts in the workbook."
     },
