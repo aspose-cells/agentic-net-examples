@@ -319,3 +319,4 @@ Output files are written to the working directory.
 - set-legend-position-to-bottom-left-and-adjust-its-x-offset-to-align-with-chart-margins.cs
 - remove-background-fill-from-legend-entries-while-keeping-text-color-unchanged-for-contrast.cs
 - programmatically-toggle-legend-visibility-based-on-a-userdefined-boolean-flag.cs
+- resize-data-label-shapes-for-a-bubble-chart-after-increasing-bubble-sizes-to-test-scaling.cs
