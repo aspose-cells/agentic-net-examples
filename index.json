@@ -9611,6 +9611,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "enable-the-list-objects-header-row-and-customize-its-background-color-using-a-predefined-style.cs",
+      "title": "Enable the list object's header row and customize its background color using a predefined style."
+    },
+    {
+      "category": "working-with-tables",
       "file": "group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs",
       "title": "Group rows within the table based on category column and collapse the groups for compact view."
     },
