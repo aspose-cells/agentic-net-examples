@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs
 - set-standardwidth-then-autofit-a-range-of-columns-to-observe-overridden-settings.cs
 - create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs
+- after-autofitting-rows-export-the-worksheet-to-pdf-and-compare-file-size-with-a-nonfitted-version.cs
