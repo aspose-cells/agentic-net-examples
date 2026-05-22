@@ -9626,6 +9626,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "load-an-existing-excel-workbook-containing-query-tables-and-enumerate-all-tables-linked-to-external-data-sources.cs",
+      "title": "Load an existing Excel workbook containing query tables and enumerate all tables linked to external data sources."
+    },
+    {
+      "category": "working-with-tables",
       "file": "lock-specific-columns-in-the-table-to-prevent-accidental-modification-while-allowing-other-columns-to-edit.cs",
       "title": "Lock specific columns in the table to prevent accidental modification while allowing other columns to edit."
     },
