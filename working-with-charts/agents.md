@@ -297,3 +297,4 @@ Output files are written to the working directory.
 - configure-the-chart-to-show-category-names-as-data-labels-using-a-separate-column-of-cells.cs
 - resize-each-data-label-shape-automatically-to-fit-its-text-after-updating-label-values.cs
 - apply-a-custom-font-style-to-data-labels-and-ensure-shapes-resize-to-accommodate-the-new-style.cs
+- set-the-chart-legend-position-to-the-top-right-corner-and-verify-its-coordinates.cs
