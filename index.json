@@ -4976,6 +4976,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-xlsx-workbook-retrieve-confidence-interval-values-of-a-chart-trendline-and-log-them.cs",
+      "title": "Load an XLSX workbook, retrieve confidence interval values of a chart trendline and log them."
+    },
+    {
+      "category": "working-with-charts",
       "file": "localize-legend-titles-to-french-using-chartglobalizationsettings-and-verify-correct-language-rendering.cs",
       "title": "Localize legend titles to French using ChartGlobalizationSettings and verify correct language rendering."
     },
