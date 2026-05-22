@@ -5921,6 +5921,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-the-chart-filtering-api-to-hide-series-with-zero-values-across-multiple-charts-in-a-workbook.cs",
+      "title": "Use the chart filtering API to hide series with zero values across multiple charts in a workbook."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-custom-label-text-length-does-not-exceed-excels-maximum-character-limit-before-assignment.cs",
       "title": "Validate custom label text length does not exceed Excel's maximum character limit before assignment."
     },
