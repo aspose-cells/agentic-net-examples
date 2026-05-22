@@ -4001,6 +4001,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "build-a-waterfall-chart-and-mark-the-final-data-point-as-total-using-the-istotal-flag.cs",
+      "title": "Build a waterfall chart and mark the final data point as total using the IsTotal flag."
+    },
+    {
+      "category": "working-with-charts",
       "file": "catch-and-log-an-exception-when-an-invalid-numeric-format-code-is-assigned-to-a-series.cs",
       "title": "Catch and log an exception when an invalid numeric format code is assigned to a series."
     },
