@@ -5411,6 +5411,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "update-the-data-source-of-a-combo-chart-series-after-modifying-the-underlying-worksheet-table.cs",
+      "title": "Update the data source of a Combo chart series after modifying the underlying worksheet table."
+    },
+    {
+      "category": "working-with-charts",
       "file": "update-the-data-source-of-all-waterfall-charts-in-a-workbook-after-a-bulk-data-import.cs",
       "title": "Update the data source of all Waterfall charts in a workbook after a bulk data import."
     },
