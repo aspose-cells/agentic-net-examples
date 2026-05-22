@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - autofit-a-range-of-columns-eg-columns-cf-using-worksheetautofitcolumns.cs
 - autofit-rows-that-contain-merged-cells-by-configuring-autofitteroptionsautofitmergedcellstype-and-passing-it-to-worksheetautofitrows.cs
 - combine-setrowheight-with-autofitrow-to-set-a-minimum-height-before-autofitting-a-row.cs
+- after-autofitting-a-column-finetune-its-width-with-setcolumnwidthpixel-for-precise-pixel-control.cs
