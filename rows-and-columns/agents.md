@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - after-copying-rows-apply-autofitrows-to-header-rows-separately-to-maintain-consistent-header-height.cs
 - copy-rows-from-a-protected-worksheet-by-temporarily-disabling-protection-then-reenable-after-copy.cs
 - programmatically-unprotect-a-worksheet-copy-rows-and-protect-worksheet-again-with-same-password.cs
+- copy-rows-containing-merged-cells-and-verify-merged-regions-are-preserved-in-the-destination.cs

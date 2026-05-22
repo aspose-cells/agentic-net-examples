@@ -2701,6 +2701,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "copy-rows-containing-merged-cells-and-verify-merged-regions-are-preserved-in-the-destination.cs",
+      "title": "Copy rows containing merged cells and verify merged regions are preserved in the destination."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "copy-rows-from-a-protected-worksheet-by-temporarily-disabling-protection-then-reenable-after-copy.cs",
       "title": "Copy rows from a protected worksheet by temporarily disabling protection, then re\u2011enable after copy."
     },
