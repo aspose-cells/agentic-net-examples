@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - read-a-workbook-insert-five-rows-at-position-thirty-with-all-formatting-copied-and-generate-pdf.cs
 - load-a-file-insert-a-new-column-at-index-three-then-export-the-worksheet-as-pdf.cs
 - open-an-excel-workbook-delete-row-eight-and-save-the-updated-document-in-pdf-format.cs
+- read-a-spreadsheet-delete-rows-ten-through-fifteen-then-create-a-pdf-of-the-cleaned-sheet.cs
