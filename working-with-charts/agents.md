@@ -409,3 +409,4 @@ Output files are written to the working directory.
 - add-axis-titles-to-both-x-and-y-axes-using-bold-formatting-and-a-twelvepoint-font-size.cs
 - format-the-yaxis-number-format-to-display-currency-with-two-decimal-places.cs
 - export-a-specific-chart-to-a-png-image-file-with-a-resolution-of-three-hundred-dpi.cs
+- save-the-workbook-containing-modified-charts-to-an-xlsx-file-while-preserving-all-chart-controls.cs
