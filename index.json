@@ -9776,6 +9776,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-tables-show-header-row-option-to-false-for-a-compact-layout-in-a-dashboard-view.cs",
+      "title": "Set the table's show header row option to false for a compact layout in a dashboard view."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs",
       "title": "Set the table's show totals row option to false, removing the totals row from the display."
     },
