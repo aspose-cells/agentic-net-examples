@@ -487,3 +487,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-to-series-values-greater-than-500-changing-their-fill-color-to-red.cs
 - create-a-line-chart-with-markers-then-hide-the-markers-for-the-first-series-only.cs
 - add-a-custom-data-label-formatter-that-appends-a-percentage-sign-to-each-label-on-a-pie-chart.cs
+- load-an-xlsx-workbook-change-the-first-chart-series-color-using-monochromaticpalette6-and-save.cs
