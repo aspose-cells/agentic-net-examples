@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - unprotect-the-previously-secured-table-using-the-correct-password-to-enable-editing-operations.cs
 - lock-specific-columns-in-the-table-to-prevent-accidental-modification-while-allowing-other-columns-to-edit.cs
 - add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs
+- update-the-existing-table-comment-to-include-version-information-and-author-initials-for-documentation-tracking.cs
