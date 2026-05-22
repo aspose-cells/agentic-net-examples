@@ -425,3 +425,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-add-a-stacked-bar-chart-and-configure-it-as-a-gantt-chart.cs
 - populate-gantt-chart-series-with-task-start-dates-and-durations-extracted-from-worksheet-cells.cs
 - adjust-series-overlap-and-gap-width-to-visually-separate-gantt-bars-for-overlapping-tasks.cs
+- apply-a-custom-color-palette-to-gantt-chart-bars-based-on-task-priority-levels.cs
