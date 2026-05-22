@@ -9581,6 +9581,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
+      "title": "Convert the existing list object into a structured table to leverage advanced table features."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-new-worksheet-table-from-a-range-of-cells-and-assign-a-custom-name.cs",
       "title": "Create a new worksheet table from a range of cells and assign a custom name."
     },
