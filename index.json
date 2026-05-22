@@ -2881,6 +2881,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "open-a-spreadsheet-hide-columns-five-through-eight-then-unhide-columns-six-and-seven-with-width-export-pdf.cs",
+      "title": "Open a spreadsheet, hide columns five through eight, then unhide columns six and seven with width, export PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "open-a-spreadsheet-hide-rows-twentyone-to-twentyfive-then-save-the-view-as-pdf.cs",
       "title": "Open a spreadsheet, hide rows twenty\u2011one to twenty\u2011five, then save the view as PDF."
     },

@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - open-an-excel-document-delete-rows-sixty-through-sixtyfive-and-save-the-result-as-pdf.cs
 - read-a-workbook-delete-column-q-then-create-a-pdf-of-the-modified-worksheet.cs
 - load-a-workbook-hide-rows-ten-to-twenty-then-unhide-rows-fifteen-to-eighteen-with-height-save-pdf.cs
+- open-a-spreadsheet-hide-columns-five-through-eight-then-unhide-columns-six-and-seven-with-width-export-pdf.cs
