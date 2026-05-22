@@ -4661,6 +4661,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "translate-axis-labels-using-an-external-service-and-update-chart-axis-texts-accordingly.cs",
+      "title": "Translate axis labels using an external service and update chart axis texts accordingly."
+    },
+    {
+      "category": "working-with-charts",
       "file": "update-a-richtext-data-label-to-include-italic-text-for-enhanced-emphasis.cs",
       "title": "Update a rich\u2011text data label to include italic text for enhanced emphasis."
     },
