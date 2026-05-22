@@ -331,3 +331,4 @@ Output files are written to the working directory.
 - create-a-waterfall-chart-link-its-data-labels-to-a-summary-range-and-adjust-label-shapes-to-fit.cs
 - resize-data-label-shapes-for-a-heat-map-chart-after-applying-a-custom-color-gradient-to-the-series.cs
 - hide-legend-for-a-3d-pie-chart-and-observe-impact-on-chart-readability.cs
+- create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs
