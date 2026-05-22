@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - hide-a-table-column-programmatically-and-later-unhide-it-based-on-user-interaction-criteria.cs
 - create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs
 - validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs
+- insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs

@@ -9656,6 +9656,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs",
+      "title": "Insert a new row into a table and automatically copy the formatting from the previous row."
+    },
+    {
+      "category": "working-with-tables",
       "file": "load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs",
       "title": "Load a workbook, locate a table by name, and export its contents to an HTML fragment."
     },
