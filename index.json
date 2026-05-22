@@ -4531,6 +4531,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-shape-type-of-data-labels-to-rounded-rectangle-for-a-line-chart.cs",
+      "title": "Set the shape type of data labels to rounded rectangle for a line chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-vertical-axis-maximum-value-to-200-and-minimum-value-to-0-for-consistent-scaling.cs",
       "title": "Set the vertical axis maximum value to 200 and minimum value to 0 for consistent scaling."
     },
