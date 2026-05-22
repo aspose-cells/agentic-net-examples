@@ -257,3 +257,4 @@ Output files are written to the working directory.
 - add-a-data-label-to-the-charts-highest-value-point-to-highlight-peak-performance.cs
 - remove-all-data-labels-from-the-chart-before-exporting-to-reduce-file-size.cs
 - set-the-datalabelsnumberformatlinked-property-to-true-for-the-first-series-to-bind-formatting.cs
+- update-a-richtext-data-label-to-include-italic-text-for-enhanced-emphasis.cs
