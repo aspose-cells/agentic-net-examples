@@ -9641,6 +9641,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "hide-a-table-column-programmatically-and-later-unhide-it-based-on-user-interaction-criteria.cs",
+      "title": "Hide a table column programmatically and later unhide it based on user interaction criteria."
+    },
+    {
+      "category": "working-with-tables",
       "file": "hide-the-table-header-row-while-keeping-the-data-rows-visible-for-reporting-purposes.cs",
       "title": "Hide the table header row while keeping the data rows visible for reporting purposes."
     },
