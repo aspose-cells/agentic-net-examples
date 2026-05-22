@@ -3566,6 +3566,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "access-a-charts-parent-worksheet-via-chartworksheet-and-log-its-name-for-diagnostic-tracking.cs",
+      "title": "Access a chart\u2019s parent worksheet via Chart.Worksheet and log its name for diagnostic tracking."
+    },
+    {
+      "category": "working-with-charts",
       "file": "access-the-ticklabels-object-of-the-primary-y-axis-and-rotate-labels-ninety-degrees-clockwise.cs",
       "title": "Access the TickLabels object of the primary Y axis and rotate labels ninety degrees clockwise."
     },
