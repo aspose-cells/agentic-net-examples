@@ -4076,6 +4076,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-new-chart-sheet-and-add-a-stock-chart-of-type-ohlc.cs",
+      "title": "Create a new chart sheet and add a stock chart of type OHLC."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-new-workbook-and-populate-worksheet-cells-with-sales-data-for-the-chart.cs",
       "title": "Create a new Workbook and populate worksheet cells with sales data for the chart."
     },
