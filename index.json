@@ -3761,6 +3761,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-custom-locale-to-chart-legend-to-display-month-names-in-spanish-and-verify-formatting.cs",
+      "title": "Apply custom locale to chart legend to display month names in Spanish and verify formatting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-scientific-notation-number-format-to-data-labels-of-the-fourth-series-for-high-magnitude-values.cs",
       "title": "Apply scientific notation number format to data labels of the fourth series for high magnitude values."
     },
