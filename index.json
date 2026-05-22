@@ -3711,6 +3711,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-thousandseparator-number-format-to-data-labels-of-the-fourth-series-for-readability.cs",
+      "title": "Apply a thousand\u2011separator number format to data labels of the fourth series for readability."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-scientific-notation-number-format-to-data-labels-of-the-fourth-series-for-high-magnitude-values.cs",
       "title": "Apply scientific notation number format to data labels of the fourth series for high magnitude values."
     },
