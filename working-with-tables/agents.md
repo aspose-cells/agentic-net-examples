@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - update-the-existing-table-comment-to-include-version-information-and-author-initials-for-documentation-tracking.cs
 - delete-the-comment-attached-to-the-table-to-clean-up-metadata-after-final-review.cs
 - convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs
+- create-a-list-object-from-a-dynamic-range-and-enable-automatic-expansion-when-new-rows-are-added.cs
