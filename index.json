@@ -4076,6 +4076,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-to-display-values-from-a-specified-cell-range-for-the-first-chart-series.cs",
+      "title": "Enable data labels to display values from a specified cell range for the first chart series."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-to-show-percentages-by-setting-chartdatalabelshowpercentage-to-true.cs",
       "title": "Enable data labels to show percentages by setting ChartDataLabel.ShowPercentage to true."
     },
