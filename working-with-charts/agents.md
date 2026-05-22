@@ -488,3 +488,4 @@ Output files are written to the working directory.
 - create-a-line-chart-with-markers-then-hide-the-markers-for-the-first-series-only.cs
 - add-a-custom-data-label-formatter-that-appends-a-percentage-sign-to-each-label-on-a-pie-chart.cs
 - load-an-xlsx-workbook-change-the-first-chart-series-color-using-monochromaticpalette6-and-save.cs
+- open-an-xls-file-apply-a-custom-chartcolorpalettetype-to-all-chart-series-then-save.cs
