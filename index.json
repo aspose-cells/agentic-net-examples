@@ -9571,6 +9571,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs",
+      "title": "Add a slicer linked to a table column to provide interactive filtering in the worksheet."
+    },
+    {
+      "category": "working-with-tables",
       "file": "add-a-totals-row-to-the-table-and-configure-sum-formulas-for-numeric-columns.cs",
       "title": "Add a totals row to the table and configure sum formulas for numeric columns."
     },
