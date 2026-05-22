@@ -4871,6 +4871,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-add-a-linear-trendline-to-a-chart-series-extract-the-formula-and-output-to-console.cs",
+      "title": "Load a workbook, add a linear trendline to a chart series, extract the formula, and output to console."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-apply-a-custom-number-format-to-pivotchart-axis-labels-then-save.cs",
       "title": "Load a workbook, apply a custom number format to PivotChart axis labels, then save."
     },
