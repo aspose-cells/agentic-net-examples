@@ -3856,6 +3856,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-new-workbook-instance-and-add-a-single-worksheet-to-it.cs",
+      "title": "Create a new Workbook instance and add a single Worksheet to it."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-pyramid-chart-and-assign-distinct-colors-to-each-level-for-visual-distinction.cs",
       "title": "Create a pyramid chart and assign distinct colors to each level for visual distinction."
     },

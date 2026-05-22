@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - apply-a-logarithmic-scale-to-the-primary-y-axis-to-better-visualize-data-with-large-value-ranges.cs
 - set-the-secondary-axis-to-display-values-in-percentage-format-by-applying-a-custom-number-format-string.cs
 - export-chart-to-emf-format-for-highresolution-printing-in-windows-applications-compatible.cs
+- create-a-new-workbook-instance-and-add-a-single-worksheet-to-it.cs
