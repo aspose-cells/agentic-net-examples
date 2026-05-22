@@ -9741,6 +9741,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-with-a-calculated-column-using-the-today-function-to-display-days-since-a-start-date.cs",
+      "title": "Create a table with a calculated column using the TODAY function to display days since a start date."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs",
       "title": "Create a table with a header row that uses merged cells to span multiple columns for a title."
     },

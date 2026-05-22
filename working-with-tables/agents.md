@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - create-a-table-then-generate-a-chart-that-uses-the-tables-totals-row-as-the-data-series-source.cs
 - apply-conditional-formatting-to-highlight-duplicate-values-within-a-specific-table-column-for-data-quality-checks.cs
 - set-the-tables-show-header-row-option-to-true-and-apply-a-bold-font-style-to-header-cells.cs
+- create-a-table-with-a-calculated-column-using-the-today-function-to-display-days-since-a-start-date.cs
