@@ -4186,6 +4186,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "implement-error-handling-for-axisgetaxistexts-method-when-called-before-chartcalculate.cs",
+      "title": "Implement error handling for Axis.GetAxisTexts method when called before Chart.Calculate()."
+    },
+    {
+      "category": "working-with-charts",
       "file": "insert-a-new-row-into-the-listobject-with-q4-data-chart-automatically-extends.cs",
       "title": "Insert a new row into the ListObject with Q4 data; chart automatically extends."
     },
