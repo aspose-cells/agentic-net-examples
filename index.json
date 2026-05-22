@@ -3996,6 +3996,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "build-a-progress-bar-chart-by-configuring-a-stacked-column-chart-with-completed-and-remaining-work-series.cs",
+      "title": "Build a progress bar chart by configuring a stacked column chart with completed and remaining work series."
+    },
+    {
+      "category": "working-with-charts",
       "file": "catch-and-log-an-exception-when-an-invalid-numeric-format-code-is-assigned-to-a-series.cs",
       "title": "Catch and log an exception when an invalid numeric format code is assigned to a series."
     },
