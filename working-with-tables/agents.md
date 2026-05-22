@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - create-a-list-object-from-a-dynamic-range-and-enable-automatic-expansion-when-new-rows-are-added.cs
 - disable-the-ability-for-users-to-add-new-rows-to-the-list-object-to-enforce-fixed-dataset-size.cs
 - enable-the-list-objects-header-row-and-customize-its-background-color-using-a-predefined-style.cs
+- set-the-list-object-to-display-a-totals-row-and-configure-count-aggregation-for-a-text-column.cs
