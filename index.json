@@ -3731,6 +3731,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-gradient-fill-to-the-chart-plot-area-transitioning-from-white-at-the-top-to-gray-bottom.cs",
+      "title": "Apply a gradient fill to the chart plot area, transitioning from white at the top to gray bottom."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-gradient-fill-to-the-wordart-watermark-transitioning-from-light-gray-to-dark-blue.cs",
       "title": "Apply a gradient fill to the WordArt watermark, transitioning from light gray to dark blue."
     },
