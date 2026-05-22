@@ -4731,6 +4731,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "position-the-chart-legend-at-the-bottom-right-corner-and-set-its-font-to-calibri-size-ten.cs",
+      "title": "Position the chart legend at the bottom right corner and set its font to Calibri, size ten."
+    },
+    {
+      "category": "working-with-charts",
       "file": "programmatically-generate-ten-worksheets-each-with-a-chart-bound-to-its-own-data-table-using-a-loop.cs",
       "title": "Programmatically generate ten worksheets, each with a chart bound to its own data table using a loop."
     },

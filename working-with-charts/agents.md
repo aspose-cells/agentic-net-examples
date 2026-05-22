@@ -405,3 +405,4 @@ Output files are written to the working directory.
 - populate-the-ohlc-stock-chart-series-with-open-high-low-and-close-values-from-a-datatable.cs
 - change-the-stock-chart-type-to-candlestick-and-adjust-the-candle-width-to-twenty-percent-of-bar-spacing.cs
 - apply-the-predefined-chart-style-style1-to-improve-visual-appearance-of-all-charts-in-the-workbook.cs
+- position-the-chart-legend-at-the-bottom-right-corner-and-set-its-font-to-calibri-size-ten.cs
