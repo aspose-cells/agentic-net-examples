@@ -3751,6 +3751,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-conditional-rule-that-changes-legend-entry-fill-to-none-when-series-color-matches-a-threshold.cs",
+      "title": "Apply conditional rule that changes legend entry fill to none when series color matches a threshold."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-custom-color-to-legend-font-based-on-series-index-and-maintain-transparent-entry-fill.cs",
       "title": "Apply custom color to legend font based on series index and maintain transparent entry fill."
     },
