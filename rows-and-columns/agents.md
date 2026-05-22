@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - open-a-worksheet-delete-all-blank-rows-then-save-the-compacted-workbook-as-pdf.cs
 - read-an-excel-file-delete-all-blank-columns-and-generate-a-pdf-of-the-trimmed-sheet.cs
 - load-a-workbook-remove-duplicate-rows-while-preserving-formulas-then-export-the-cleaned-file-as-pdf.cs
+- open-a-spreadsheet-hide-rows-twentyone-to-twentyfive-then-save-the-view-as-pdf.cs
