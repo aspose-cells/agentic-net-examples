@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - create-a-deleteoptions-instance-to-control-reference-updating-behavior-during-deletion.cs
 - set-the-deleteoptionsupdatereference-property-to-true-to-enable-formula-updates.cs
 - verify-that-the-deleteoptionsupdatereference-property-is-set-to-true-before-deletion.cs
+- invoke-deleteblankrowsandcolumns-on-the-first-worksheet-using-the-configured-deleteoptions.cs
