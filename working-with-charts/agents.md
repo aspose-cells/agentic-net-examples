@@ -313,3 +313,4 @@ Output files are written to the working directory.
 - set-legend-entry-fill-to-transparent-only-for-entries-representing-negative-values.cs
 - enable-automatic-resizing-of-data-label-shapes-for-a-radar-chart-with-long-category-names.cs
 - hide-the-legend-for-a-doughnut-chart-and-confirm-the-chart-area-expands-to-fill-space.cs
+- add-a-secondary-axis-to-a-combo-chart-and-display-data-labels-from-cells-on-the-secondary-axis.cs
