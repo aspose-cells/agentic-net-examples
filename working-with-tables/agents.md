@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - enable-the-tables-autofilter-feature-and-set-a-custom-criteria-that-filters-text-containing-a-specific-substring.cs
 - add-a-new-row-to-a-table-and-populate-it-with-values-from-a-dictionary-object.cs
 - delete-all-rows-from-a-table-that-have-a-null-value-in-a-required-column-using-a-loop.cs
+- create-a-table-then-generate-a-pivot-chart-from-its-data-and-place-it-on-a-dashboard-sheet.cs
