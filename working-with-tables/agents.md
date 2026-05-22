@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - add-a-slicer-linked-to-a-table-column-and-configure-it-to-allow-multiselection-for-flexible-filtering.cs
 - remove-all-slicers-associated-with-a-specific-table-to-simplify-the-worksheet-interface.cs
 - create-a-table-then-generate-a-data-validation-rule-restricting-entries-to-values-present-in-another-table-column.cs
+- programmatically-copy-a-tables-style-to-another-table-to-ensure-consistent-visual-formatting-across-sheets.cs
