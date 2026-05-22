@@ -9701,6 +9701,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "convert-a-query-table-into-a-regular-worksheet-table-retaining-its-data-and-formatting-attributes.cs",
+      "title": "Convert a query table into a regular worksheet table, retaining its data and formatting attributes."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-a-table-to-a-range-and-copy-the-resulting-range-to-another-worksheet-using-rangecopy.cs",
       "title": "Convert a table to a range and copy the resulting range to another worksheet using Range.Copy."
     },
