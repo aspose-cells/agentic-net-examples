@@ -9596,6 +9596,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "lock-specific-columns-in-the-table-to-prevent-accidental-modification-while-allowing-other-columns-to-edit.cs",
+      "title": "Lock specific columns in the table to prevent accidental modification while allowing other columns to edit."
+    },
+    {
+      "category": "working-with-tables",
       "file": "protect-the-entire-table-with-a-password-allowing-only-readonly-access-for-external-users.cs",
       "title": "Protect the entire table with a password, allowing only read\u2011only access for external users."
     },
