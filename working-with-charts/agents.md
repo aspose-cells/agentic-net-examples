@@ -346,3 +346,4 @@ Output files are written to the working directory.
 - set-legend-text-alignment-to-center-and-verify-transparent-fill-does-not-affect-alignment.cs
 - resize-data-label-shapes-for-column-chart-after-rotating-label-text-by-fortyfive-degrees.cs
 - enable-data-labels-for-radar-chart-source-values-from-a-transposed-cell-range-and-fit-shapes.cs
+- hide-legend-for-chart-placed-in-a-dashboard-sheet-to-maximize-available-display-area.cs
