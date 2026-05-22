@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - programmatically-copy-a-tables-style-to-another-table-to-ensure-consistent-visual-formatting-across-sheets.cs
 - set-a-tables-column-to-use-a-custom-date-format-ddmmmyyyy-for-standardized-display-across-reports.cs
 - enable-the-tables-autofilter-and-apply-a-custom-filter-showing-rows-where-the-amount-is-between-two-values.cs
+- create-a-table-then-attach-a-comment-that-includes-the-creation-timestamp-and-author-information-for-audit.cs
