@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - programmatically-detect-tables-lacking-a-header-row-and-add-a-default-header-with-generic-column-names.cs
 - add-a-column-to-a-table-and-set-its-validation-to-a-list-sourced-from-a-table-column.cs
 - remove-a-tables-totals-row-and-then-readd-it-with-custom-formulas-for-each-numeric-column.cs
+- create-a-table-then-generate-a-named-range-that-references-only-the-header-row-for-use-in-formulas.cs
