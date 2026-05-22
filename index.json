@@ -2831,6 +2831,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "programmatically-unprotect-a-worksheet-copy-rows-and-protect-worksheet-again-with-same-password.cs",
+      "title": "Programmatically unprotect a worksheet, copy rows, and protect worksheet again with same password."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs",
       "title": "Retrieve source row height with GetRowHeight and explicitly set destination height using SetRowHeight."
     },
