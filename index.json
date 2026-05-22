@@ -4446,6 +4446,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "programmatically-toggle-legend-visibility-based-on-a-userdefined-boolean-flag.cs",
+      "title": "Programmatically toggle legend visibility based on a user\u2011defined boolean flag."
+    },
+    {
+      "category": "working-with-charts",
       "file": "read-axis-labels-after-chart-calculation-by-calling-chartcalculate-then-axisgetaxistexts.cs",
       "title": "Read axis labels after chart calculation by calling Chart.Calculate() then Axis.GetAxisTexts()."
     },
