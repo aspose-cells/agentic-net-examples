@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - calculate-all-formulas-in-the-workbook-after-the-deletion-operation.cs
 - read-the-formula-of-cell-e3-in-the-second-worksheet-after-deletion.cs
 - verify-that-the-formula-now-references-the-first-worksheet-cell-a1.cs
+- write-the-updated-formula-and-its-calculated-value-of-cell-e3-to-the-console.cs

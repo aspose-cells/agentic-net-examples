@@ -3190,6 +3190,11 @@
       "title": "Verify that the formula now references the first worksheet cell A1."
     },
     {
+      "category": "rows-and-columns",
+      "file": "write-the-updated-formula-and-its-calculated-value-of-cell-e3-to-the-console.cs",
+      "title": "Write the updated formula and its calculated value of cell E3 to the console."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
