@@ -9876,6 +9876,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "remove-all-slicers-associated-with-a-specific-table-to-simplify-the-worksheet-interface.cs",
+      "title": "Remove all slicers associated with a specific table to simplify the worksheet interface."
+    },
+    {
+      "category": "working-with-tables",
       "file": "remove-an-existing-slicer-from-a-table-and-clean-up-associated-connections.cs",
       "title": "Remove an existing slicer from a table and clean up associated connections."
     },
