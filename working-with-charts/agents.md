@@ -316,3 +316,4 @@ Output files are written to the working directory.
 - add-a-secondary-axis-to-a-combo-chart-and-display-data-labels-from-cells-on-the-secondary-axis.cs
 - configure-data-labels-to-show-both-cell-values-and-series-name-concatenated-with-a-hyphen-separator.cs
 - resize-data-label-shapes-after-applying-bold-font-weight-to-prevent-text-overflow.cs
+- set-legend-position-to-bottom-left-and-adjust-its-x-offset-to-align-with-chart-margins.cs
