@@ -4121,6 +4121,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "link-data-label-number-format-to-corresponding-worksheet-cells-for-dynamic-formatting-inheritance.cs",
+      "title": "Link data label number format to corresponding worksheet cells for dynamic formatting inheritance."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-custom-image-and-use-it-as-a-tiled-texture-fill-for-the-chart-area.cs",
       "title": "Load a custom image and use it as a tiled texture fill for the chart area."
     },
