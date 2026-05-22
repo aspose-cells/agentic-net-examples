@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - after-autofitting-rows-export-the-worksheet-to-pdf-and-compare-file-size-with-a-nonfitted-version.cs
 - set-row-height-for-the-header-row-to-improve-visual-emphasis-then-autofit-remaining-rows.cs
 - autofit-all-rows-in-a-worksheet-by-calling-autofitrows-with-startrow-0-and-endrow-maxrow.cs
+- apply-setcolumnwidthpixel-to-a-column-before-adding-numeric-data-to-control-column-width-precisely.cs
