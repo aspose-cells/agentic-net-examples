@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - sort-the-table-by-two-columns-first-ascending-by-date-then-descending-by-amount.cs
 - group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs
 - protect-the-entire-table-with-a-password-allowing-only-readonly-access-for-external-users.cs
+- unprotect-the-previously-secured-table-using-the-correct-password-to-enable-editing-operations.cs
