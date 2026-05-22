@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - group-columns-autofit-rows-within-grouped-columns-and-export-the-worksheet-to-pdf.cs
 - ungroup-columns-after-modifications-and-ensure-column-widths-remain-consistent-across-the-worksheet.cs
 - apply-autofitrows-after-inserting-new-data-rows-to-maintain-uniform-row-height-throughout-sheet.cs
+- validate-that-autofitted-rows-do-not-exceed-a-maximum-height-limit-by-checking-row-heights.cs
