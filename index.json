@@ -4511,6 +4511,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-a-scatter-chart-to-pdf-file-while-preserving-chart-dimensions-and-resolution.cs",
+      "title": "Export a scatter chart to PDF file while preserving chart dimensions and resolution."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-a-specific-chart-to-a-png-image-file-with-a-resolution-of-three-hundred-dpi.cs",
       "title": "Export a specific chart to a PNG image file with a resolution of three hundred DPI."
     },
