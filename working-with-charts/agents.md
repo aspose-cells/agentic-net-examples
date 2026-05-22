@@ -388,3 +388,4 @@ Output files are written to the working directory.
 - ensure-memory-usage-remains-stable-when-processing-multiple-localized-chart-exports-in-a-multithreaded-environment.cs
 - log-the-applied-localization-region-and-chart-name-to-a-diagnostics-file-for-audit-purposes.cs
 - verify-that-default-english-text-appears-when-no-localization-settings-are-assigned-to-a-chart.cs
+- ensure-that-only-chart-titles-legends-and-axis-labels-are-affected-by-localization-leaving-data-values-unchanged.cs

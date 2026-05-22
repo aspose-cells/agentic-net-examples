@@ -4311,6 +4311,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "ensure-that-only-chart-titles-legends-and-axis-labels-are-affected-by-localization-leaving-data-values-unchanged.cs",
+      "title": "Ensure that only chart titles, legends, and axis labels are affected by localization, leaving data values unchanged."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs",
       "title": "Export all charts in the workbook as separate SVG files for scalable vector graphics usage."
     },
