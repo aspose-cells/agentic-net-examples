@@ -4876,6 +4876,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-add-trendlines-to-each-bar-chart-series-collect-equations-and-write-to-a-log-file.cs",
+      "title": "Load a workbook, add trendlines to each bar chart series, collect equations, and write to a log file."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-apply-a-custom-number-format-to-pivotchart-axis-labels-then-save.cs",
       "title": "Load a workbook, apply a custom number format to PivotChart axis labels, then save."
     },
