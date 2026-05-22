@@ -461,3 +461,4 @@ Output files are written to the working directory.
 - apply-a-custom-font-family-to-all-chart-titles-across-the-workbook-for-consistent-branding.cs
 - set-the-legend-position-of-each-chart-to-the-bottom-right-corner-to-avoid-overlapping-data.cs
 - load-an-existing-xlsx-workbook-add-a-stacked-bar-chart-and-save-the-file.cs
+- create-a-tornado-chart-from-a-sales-data-range-apply-custom-colors-and-export-as-png-image.cs
