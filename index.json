@@ -4066,6 +4066,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-chart-set-legend-position-to-bottom-then-shift-it-upward-by-a-fixed-offset.cs",
+      "title": "Create chart, set legend position to bottom, then shift it upward by a fixed offset."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs",
       "title": "Create chart, set legend to auto position, then override to a fixed top left location."
     },
