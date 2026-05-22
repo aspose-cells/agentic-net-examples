@@ -136,6 +136,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-multiple-csv-files-to-json-with-formatted-dates-and-store-in-target-folder.cs",
+      "title": "Convert multiple CSV files to JSON with formatted dates and store in target folder."
+    },
+    {
+      "category": "conversion",
       "file": "export-each-sheet-as-jpeg-images-with-300-dpi-resolution-for-printing.cs",
       "title": "Export each sheet as JPEG images with 300\u202fDPI resolution for printing."
     },
