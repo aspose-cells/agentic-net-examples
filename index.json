@@ -4506,6 +4506,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "update-a-richtext-data-label-to-include-italic-text-for-enhanced-emphasis.cs",
+      "title": "Update a rich\u2011text data label to include italic text for enhanced emphasis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "update-the-chart-data-source-dynamically-based-on-userselected-date-range-values.cs",
       "title": "Update the chart data source dynamically based on user\u2011selected date range values."
     },
