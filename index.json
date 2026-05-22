@@ -9596,6 +9596,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "protect-the-entire-table-with-a-password-allowing-only-readonly-access-for-external-users.cs",
+      "title": "Protect the entire table with a password, allowing only read\u2011only access for external users."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-a-custom-formula-in-the-totals-row-to-calculate-average-of-a-specific-column.cs",
       "title": "Set a custom formula in the totals row to calculate average of a specific column."
     },
