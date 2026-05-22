@@ -357,3 +357,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-after-increasing-chart-overall-width-to-maintain-proportional-label-size.cs
 - set-legend-rotation-angle-to-ninety-degrees-and-ensure-transparent-entry-fill-remains-unaffected.cs
 - resize-data-label-shapes-for-funnel-chart-after-applying-custom-shape-outline-to-each-label.cs
+- set-legend-entry-fill-to-none-for-all-charts-in-a-template-workbook-before-user-customization.cs
