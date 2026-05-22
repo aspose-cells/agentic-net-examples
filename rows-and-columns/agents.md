@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - read-the-formula-of-cell-e3-in-the-second-worksheet-after-the-second-deletion.cs
 - verify-that-the-formula-remains-unchanged-and-its-value-becomes-zero.cs
 - write-the-unchanged-formula-and-zero-value-of-cell-e3-to-the-console.cs
+- delete-blank-rows-on-the-first-worksheet-using-default-deleteoptions-without-updatereference.cs
