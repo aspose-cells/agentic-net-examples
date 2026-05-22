@@ -4166,6 +4166,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-pdf-page-orientation-to-landscape-before-converting-the-chart-to-ensure-full-width-usage.cs",
+      "title": "Set PDF page orientation to landscape before converting the chart to ensure full width usage."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-series-data-source-from-an-inmemory-list-of-objects-to-enable-dynamic-chart-updates.cs",
       "title": "Set series data source from an in\u2011memory list of objects to enable dynamic chart updates."
     },
