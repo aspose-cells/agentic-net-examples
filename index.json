@@ -4361,6 +4361,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-localized-chart-to-a-highresolution-png-image-to-evaluate-text-clarity.cs",
+      "title": "Export the localized chart to a high\u2011resolution PNG image to evaluate text clarity."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-localized-chart-to-a-jpeg-image-file-using-the-toimage-method.cs",
       "title": "Export the localized chart to a JPEG image file using the ToImage method."
     },
