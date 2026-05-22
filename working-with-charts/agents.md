@@ -362,3 +362,4 @@ Output files are written to the working directory.
 - hide-legend-for-charts-with-a-single-series-to-avoid-redundant-information.cs
 - create-chart-set-legend-to-fixed-size-then-programmatically-adjust-size-based-on-content.cs
 - resize-data-label-shapes-after-adding-hyperlink-to-each-label-that-points-to-an-external-resource.cs
+- enable-data-labels-for-boxandwhisker-chart-source-values-from-a-statistical-summary-range.cs
