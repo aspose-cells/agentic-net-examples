@@ -232,3 +232,4 @@ Output files are written to the working directory.
 - detect-if-charts-x-axis-is-value-axis-and-if-not-convert-it-to-support-numeric-data.cs
 - set-charts-secondary-axis-title-to-revenue-usd-and-format-the-font-to-bold-italic.cs
 - adjust-the-gap-width-of-column-series-on-the-primary-axis-to-improve-spacing-between-bars.cs
+- save-the-workbook-after-chart-modifications-to-a-cloud-storage-location-using-a-stream-api.cs
