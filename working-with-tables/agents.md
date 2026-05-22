@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - export-a-table-to-a-json-file-with-indentation-for-readability-and-include-column-headers-as-keys.cs
 - import-a-json-array-into-a-table-automatically-creating-rows-and-mapping-json-fields-to-columns.cs
 - apply-a-custom-cell-style-to-a-tables-totals-row-to-differentiate-it-visually-from-data-rows.cs
+- set-the-tables-show-totals-row-option-and-configure-a-custom-formula-that-calculates-median-value.cs
