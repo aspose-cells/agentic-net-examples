@@ -3751,6 +3751,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-x-axis-type-to-category-to-display-sequential-text-labels-on-the-chart.cs",
+      "title": "Change the X axis type to Category to display sequential text labels on the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "check-whether-the-chart-already-contains-a-secondary-axis-before-adding-one.cs",
       "title": "Check whether the chart already contains a secondary axis before adding one."
     },
