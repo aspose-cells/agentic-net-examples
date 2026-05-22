@@ -5581,6 +5581,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-title-programmatically-after-creating-the-chart-properly.cs",
+      "title": "Set the chart title programmatically after creating the chart properly."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-title-text-to-quarterly-revenue-and-apply-bold-formatting.cs",
       "title": "Set the chart title text to \"Quarterly Revenue\" and apply bold formatting."
     },

@@ -514,3 +514,4 @@ Output files are written to the working directory.
 - retrieve-the-worksheet-that-contains-a-specific-chart-using-the-chartworksheet-property.cs
 - verify-the-retrieved-worksheet-name-matches-the-expected-chart-parent-worksheet.cs
 - create-a-new-column-chart-and-assign-its-data-source-using-setchartdatarange-method.cs
+- set-the-chart-title-programmatically-after-creating-the-chart-properly.cs
