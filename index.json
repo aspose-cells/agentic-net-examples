@@ -9831,6 +9831,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "remove-duplicate-rows-from-a-table-based-on-a-composite-key-of-two-columns-using-builtin-method.cs",
+      "title": "Remove duplicate rows from a table based on a composite key of two columns using built\u2011in method."
+    },
+    {
+      "category": "working-with-tables",
       "file": "reorder-columns-in-a-table-to-match-a-predefined-layout-required-by-downstream-processing-scripts.cs",
       "title": "Reorder columns in a table to match a predefined layout required by downstream processing scripts."
     },
