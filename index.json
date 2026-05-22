@@ -4266,6 +4266,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-through-all-charts-in-a-workbook-and-set-each-legends-visibility-based-on-chart-type.cs",
+      "title": "Iterate through all charts in a workbook and set each legend's visibility based on chart type."
+    },
+    {
+      "category": "working-with-charts",
       "file": "iterate-through-all-charts-in-the-workbook-and-set-each-title-font-to-arial-size-12.cs",
       "title": "Iterate through all charts in the workbook and set each title font to Arial, size 12."
     },
