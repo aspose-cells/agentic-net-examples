@@ -5076,6 +5076,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-with-the-gantt-chart-as-a-new-xlsx-file-in-a-specified-output-folder.cs",
+      "title": "Save the workbook with the Gantt chart as a new XLSX file in a specified output folder."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-a-custom-numeric-format-for-z-axis-labels-showing-values-with-two-decimal-places.cs",
       "title": "Set a custom numeric format for Z axis labels, showing values with two decimal places."
     },
