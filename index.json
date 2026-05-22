@@ -4036,6 +4036,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-waterfall-chart-link-its-data-labels-to-a-summary-range-and-adjust-label-shapes-to-fit.cs",
+      "title": "Create a waterfall chart, link its data labels to a summary range, and adjust label shapes to fit."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-workbook-add-a-worksheet-and-insert-a-column-chart.cs",
       "title": "Create a workbook, add a worksheet, and insert a column chart."
     },
