@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - retrieve-the-formula-of-cell-e3-in-the-second-worksheet-before-deletion.cs
 - create-a-deleteoptions-instance-to-control-reference-updating-behavior-during-deletion.cs
 - set-the-deleteoptionsupdatereference-property-to-true-to-enable-formula-updates.cs
+- verify-that-the-deleteoptionsupdatereference-property-is-set-to-true-before-deletion.cs
