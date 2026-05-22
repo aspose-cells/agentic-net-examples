@@ -4116,6 +4116,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "rotate-xaxis-labels-by-fortyfive-degrees-to-prevent-overlapping-text-in-dense-charts.cs",
+      "title": "Rotate X\u2011axis labels by forty\u2011five degrees to prevent overlapping text in dense charts."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-each-generated-chart-image-as-a-jpeg-file-named-after-its-worksheet-for-easy-identification.cs",
       "title": "Save each generated chart image as a JPEG file named after its worksheet for easy identification."
     },
