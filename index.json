@@ -3951,6 +3951,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-for-the-first-series-of-the-chart-to-display-point-values.cs",
+      "title": "Enable data labels for the first series of the chart to display point values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-to-show-percentages-by-setting-chartdatalabelshowpercentage-to-true.cs",
       "title": "Enable data labels to show percentages by setting ChartDataLabel.ShowPercentage to true."
     },
