@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - copy-rows-between-worksheets-then-autofit-destination-rows-to-match-source-row-heights.cs
 - retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs
 - batch-process-multiple-worksheets-by-autofitting-rows-for-rendering-before-saving-each-as-pdf.cs
+- create-a-template-row-with-formulas-copy-it-to-several-sheets-and-validate-calculated-results.cs
