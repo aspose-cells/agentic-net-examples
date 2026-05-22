@@ -4871,6 +4871,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-a-workbook-apply-a-custom-number-format-to-pivotchart-axis-labels-then-save.cs",
+      "title": "Load a workbook, apply a custom number format to PivotChart axis labels, then save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-a-workbook-apply-a-uniform-chart-color-palette-across-all-worksheets-then-save-as-xls.cs",
       "title": "Load a workbook, apply a uniform chart color palette across all worksheets, then save as XLS."
     },
