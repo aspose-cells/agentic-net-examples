@@ -4086,6 +4086,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-chart-set-legend-to-fixed-size-then-programmatically-adjust-size-based-on-content.cs",
+      "title": "Create chart, set legend to fixed size, then programmatically adjust size based on content."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-chart-with-secondary-y-axis-enable-cellbased-labels-for-secondary-series-and-position-legend-centrally.cs",
       "title": "Create chart with secondary Y axis, enable cell\u2011based labels for secondary series, and position legend centrally."
     },
