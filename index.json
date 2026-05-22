@@ -3981,6 +3981,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-second-series-type-from-column-to-line-after-initial-chart-creation-for-a-combo-chart.cs",
+      "title": "Change the second series type from column to line after initial chart creation for a Combo chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-stock-chart-type-to-candlestick-and-adjust-the-candle-width-to-twenty-percent-of-bar-spacing.cs",
       "title": "Change the stock chart type to candlestick and adjust the candle width to twenty percent of bar spacing."
     },
