@@ -2871,6 +2871,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "transfer-rows-containing-data-validation-lists-and-verify-validation-rules-remain-functional-after-copy.cs",
+      "title": "Transfer rows containing data validation lists and verify validation rules remain functional after copy."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "ungroup-columns-after-modifications-and-ensure-column-widths-remain-consistent-across-the-worksheet.cs",
       "title": "Ungroup columns after modifications and ensure column widths remain consistent across the worksheet."
     },
