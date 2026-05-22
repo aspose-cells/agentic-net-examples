@@ -320,3 +320,4 @@ Output files are written to the working directory.
 - remove-background-fill-from-legend-entries-while-keeping-text-color-unchanged-for-contrast.cs
 - programmatically-toggle-legend-visibility-based-on-a-userdefined-boolean-flag.cs
 - resize-data-label-shapes-for-a-bubble-chart-after-increasing-bubble-sizes-to-test-scaling.cs
+- set-legend-font-color-to-dark-gray-and-ensure-transparent-fill-does-not-affect-readability.cs

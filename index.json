@@ -4631,6 +4631,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-font-color-to-dark-gray-and-ensure-transparent-fill-does-not-affect-readability.cs",
+      "title": "Set legend font color to dark gray and ensure transparent fill does not affect readability."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-legend-position-to-bottom-left-and-adjust-its-x-offset-to-align-with-chart-margins.cs",
       "title": "Set legend position to bottom left and adjust its X offset to align with chart margins."
     },
