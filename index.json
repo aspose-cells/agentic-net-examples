@@ -9581,6 +9581,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "hide-the-table-header-row-while-keeping-the-data-rows-visible-for-reporting-purposes.cs",
+      "title": "Hide the table header row while keeping the data rows visible for reporting purposes."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-a-custom-formula-in-the-totals-row-to-calculate-average-of-a-specific-column.cs",
       "title": "Set a custom formula in the totals row to calculate average of a specific column."
     },
