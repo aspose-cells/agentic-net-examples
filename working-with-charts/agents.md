@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs
 - enable-automatic-scaling-for-secondary-axis-allowing-asposecells-to-calculate-optimal-minimum-and-maximum-values.cs
 - export-chart-as-svg-vector-graphic-to-preserve-scalability-when-embedding-in-web-pages.cs
+- clone-an-existing-chart-modify-its-secondary-axis-settings-and-insert-the-clone-into-a-new-worksheet.cs
