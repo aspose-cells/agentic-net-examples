@@ -3726,6 +3726,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-gradient-fill-to-the-wordart-watermark-transitioning-from-light-gray-to-dark-blue.cs",
+      "title": "Apply a gradient fill to the WordArt watermark, transitioning from light gray to dark blue."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-logarithmic-scale-to-the-primary-y-axis-to-better-visualize-data-with-large-value-ranges.cs",
       "title": "Apply a logarithmic scale to the primary Y axis to better visualize data with large value ranges."
     },
