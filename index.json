@@ -9576,6 +9576,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs",
+      "title": "Apply a built\u2011in table style that matches the workbook's theme for consistent visual appearance."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-predefined-table-style-to-the-created-table-and-preserve-the-original-formatting.cs",
       "title": "Apply a predefined table style to the created table and preserve the original formatting."
     },
