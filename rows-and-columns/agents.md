@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs
 - duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs
 - transfer-a-row-from-a-source-worksheet-to-a-destination-worksheet-using-cellscopyrow.cs
+- copy-a-column-from-one-worksheet-to-another-while-maintaining-column-width-and-data-types.cs

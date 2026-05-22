@@ -2661,6 +2661,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "copy-a-column-from-one-worksheet-to-another-while-maintaining-column-width-and-data-types.cs",
+      "title": "Copy a column from one worksheet to another while maintaining column width and data types."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs",
       "title": "Create a custom AutoFitterOptions instance that disables auto\u2011fit for hidden rows and apply it to a specific row range."
     },
