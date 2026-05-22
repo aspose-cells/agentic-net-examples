@@ -309,3 +309,4 @@ Output files are written to the working directory.
 - create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs
 - change-the-chart-type-from-column-to-area-while-preserving-existing-data-label-configurations.cs
 - validate-that-data-labels-display-correct-cell-values-after-modifying-the-source-cell-range-programmatically.cs
+- localize-legend-titles-to-french-using-chartglobalizationsettings-and-verify-correct-language-rendering.cs

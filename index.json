@@ -4351,6 +4351,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "localize-legend-titles-to-french-using-chartglobalizationsettings-and-verify-correct-language-rendering.cs",
+      "title": "Localize legend titles to French using ChartGlobalizationSettings and verify correct language rendering."
+    },
+    {
+      "category": "working-with-charts",
       "file": "lock-the-chart-object-programmatically-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs",
       "title": "Lock the chart object programmatically to prevent users from moving or resizing it in the Excel UI."
     },
