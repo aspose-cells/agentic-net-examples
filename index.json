@@ -2786,6 +2786,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "transfer-rows-containing-comments-and-verify-comments-appear-correctly-in-the-destination-worksheet.cs",
+      "title": "Transfer rows containing comments and verify comments appear correctly in the destination worksheet."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs",
       "title": "Use AutoFitColumn on a column after inserting multiline text to ensure full visibility."
     },
