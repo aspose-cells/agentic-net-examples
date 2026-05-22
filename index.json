@@ -2821,6 +2821,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "load-a-worksheet-unhide-column-b-specifying-width-fifty-points-then-export-to-pdf.cs",
+      "title": "Load a worksheet, unhide column B specifying width fifty points, then export to PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-an-excel-workbook-hide-rows-five-through-ten-and-export-the-result-as-pdf.cs",
       "title": "Load an Excel workbook, hide rows five through ten, and export the result as PDF."
     },
