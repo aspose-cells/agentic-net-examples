@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs
 - autofit-a-single-row-based-on-its-content-using-worksheetautofitrow.cs
 - autofit-a-range-of-rows-eg-rows-1520-using-worksheetautofitrows.cs
+- autofit-a-single-column-based-on-its-content-using-worksheetautofitcolumn.cs

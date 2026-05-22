@@ -2571,6 +2571,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "autofit-a-single-column-based-on-its-content-using-worksheetautofitcolumn.cs",
+      "title": "Auto\u2011fit a single column based on its content using Worksheet.AutoFitColumn."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "autofit-a-single-row-based-on-its-content-using-worksheetautofitrow.cs",
       "title": "Auto\u2011fit a single row based on its content using Worksheet.AutoFitRow."
     },
