@@ -254,3 +254,4 @@ Output files are written to the working directory.
 - format-data-labels-of-the-second-series-with-bold-font-red-color-and-yellow-background.cs
 - create-a-richtext-data-label-for-a-specific-chart-point-using-mixed-font-sizes.cs
 - assign-unique-richtext-labels-to-each-data-point-within-a-series-for-detailed-annotation.cs
+- add-a-data-label-to-the-charts-highest-value-point-to-highlight-peak-performance.cs

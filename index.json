@@ -3576,6 +3576,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-a-data-label-to-the-charts-highest-value-point-to-highlight-peak-performance.cs",
+      "title": "Add a data label to the chart's highest value point to highlight peak performance."
+    },
+    {
+      "category": "working-with-charts",
       "file": "add-a-new-series-to-the-chart-using-a-worksheet-range-as-data-source.cs",
       "title": "Add a new series to the chart using a worksheet range as data source."
     },
