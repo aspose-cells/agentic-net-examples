@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - apply-pasteoptions-to-copy-only-values-from-source-rows-ignoring-formulas-and-formatting.cs
 - copy-rows-while-preserving-embedded-images-and-drawing-objects-using-default-copy-behavior.cs
 - transfer-rows-containing-comments-and-verify-comments-appear-correctly-in-the-destination-worksheet.cs
+- copy-rows-between-worksheets-then-autofit-destination-rows-to-match-source-row-heights.cs
