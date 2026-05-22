@@ -3756,6 +3756,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-custom-text-to-each-data-point-in-a-series-using-datapointlabeltext-property.cs",
+      "title": "Assign custom text to each data point in a series using DataPoint.Label.Text property."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-unique-richtext-labels-to-each-data-point-within-a-series-for-detailed-annotation.cs",
       "title": "Assign unique rich\u2011text labels to each data point within a series for detailed annotation."
     },
