@@ -4061,6 +4061,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "insert-a-threedimensional-column-chart-object-onto-the-previously-created-worksheet.cs",
+      "title": "Insert a three\u2011dimensional column chart object onto the previously created worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "instantiate-a-workbook-add-a-worksheet-and-populate-cells-with-sales-data.cs",
       "title": "Instantiate a Workbook, add a worksheet, and populate cells with sales data."
     },

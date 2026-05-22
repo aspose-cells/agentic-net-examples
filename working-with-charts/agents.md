@@ -239,3 +239,4 @@ Output files are written to the working directory.
 - export-chart-to-emf-format-for-highresolution-printing-in-windows-applications-compatible.cs
 - create-a-new-workbook-instance-and-add-a-single-worksheet-to-it.cs
 - populate-the-worksheet-cells-with-the-required-source-data-that-will-drive-the-chart.cs
+- insert-a-threedimensional-column-chart-object-onto-the-previously-created-worksheet.cs
