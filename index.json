@@ -4751,6 +4751,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "remove-a-chart-control-from-a-chart-sheet-by-calling-shapecollectionremoveat-with-the-appropriate-index.cs",
+      "title": "Remove a chart control from a chart sheet by calling ShapeCollection.RemoveAt with the appropriate index."
+    },
+    {
+      "category": "working-with-charts",
       "file": "remove-a-specific-series-from-the-chart-by-index-to-simplify-the-visual-representation.cs",
       "title": "Remove a specific series from the chart by index to simplify the visual representation."
     },

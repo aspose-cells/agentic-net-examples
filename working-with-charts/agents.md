@@ -398,3 +398,4 @@ Output files are written to the working directory.
 - add-a-checkbox-control-to-a-chart-sheet-defaulting-its-state-to-unchecked-and-labeling-it-select.cs
 - update-the-text-of-an-existing-label-control-on-a-chart-to-display-the-current-date.cs
 - toggle-the-visibility-of-a-picture-control-inside-a-chart-based-on-a-boolean-flag.cs
+- remove-a-chart-control-from-a-chart-sheet-by-calling-shapecollectionremoveat-with-the-appropriate-index.cs
