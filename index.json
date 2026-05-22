@@ -9716,6 +9716,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-a-sharepoint-document-for-reference.cs",
+      "title": "Create a table, then attach a comment that includes a hyperlink to a SharePoint document for reference."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-external-documentation-for-reference.cs",
       "title": "Create a table, then attach a comment that includes a hyperlink to external documentation for reference."
     },
