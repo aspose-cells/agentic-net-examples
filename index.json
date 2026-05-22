@@ -4191,6 +4191,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-for-scatter-plot-link-each-label-to-a-cell-containing-a-descriptive-note.cs",
+      "title": "Enable data labels for scatter plot, link each label to a cell containing a descriptive note."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-labels-for-the-first-series-of-the-chart-to-display-point-values.cs",
       "title": "Enable data labels for the first series of the chart to display point values."
     },
