@@ -3921,6 +3921,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "disable-data-labels-for-the-third-series-in-the-chart-to-keep-the-view-uncluttered.cs",
+      "title": "Disable data labels for the third series in the chart to keep the view uncluttered."
+    },
+    {
+      "category": "working-with-charts",
       "file": "dispose-of-the-workbook-object-within-a-using-block-to-release-unmanaged-resources-promptly.cs",
       "title": "Dispose of the Workbook object within a using block to release unmanaged resources promptly."
     },
