@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - read-a-csv-file-and-export-each-worksheet-as-separate-png-images.cs
 - produce-png-images-with-transparent-background-from-a-csv-workbook.cs
 - convert-multiple-csv-files-to-json-with-formatted-dates-and-store-in-target-folder.cs
+- export-a-workbook-to-json-using-camelcase-property-naming-for-consistency.cs
