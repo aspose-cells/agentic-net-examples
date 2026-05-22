@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - overwrite-an-existing-value-in-a-table-cell-using-cellputvalue-after-retrieving-the-table-with-cellgettable.cs
 - use-listobjectputcellvalue-to-insert-a-string-value-into-a-table-cell-using-specific-row-and-column-offsets.cs
 - after-converting-a-table-to-a-range-attempt-to-apply-sorting-and-confirm-it-affects-only-the-range.cs
+- convert-a-query-table-into-a-regular-worksheet-table-retaining-its-data-and-formatting-attributes.cs
