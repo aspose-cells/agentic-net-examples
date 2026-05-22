@@ -3856,6 +3856,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-chart-type-from-column-to-area-while-preserving-existing-data-label-configurations.cs",
+      "title": "Change the chart type from column to area while preserving existing data label configurations."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-chart-type-from-column-to-line-programmatically-before-exporting-to-pdf.cs",
       "title": "Change the chart type from column to line programmatically before exporting to PDF."
     },
