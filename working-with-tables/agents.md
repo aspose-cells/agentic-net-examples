@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - convert-a-table-to-a-range-preserving-formatting-up-to-the-last-data-row-then-save-as-ods.cs
 - apply-tabletorangeoptionslastrow-to-retain-formatting-for-the-header-and-first-data-row-only-before-conversion.cs
 - retrieve-a-table-with-cellgettable-and-enumerate-its-rows-to-compute-the-sum-of-a-numeric-column.cs
+- use-listobjectputcellvalue-to-add-a-boolean-value-at-a-specific-row-and-column-offset-within-the-table.cs
