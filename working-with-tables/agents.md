@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-a-numeric-column-in-a-table-to-display-values-as-currency.cs
 - set-the-tables-show-totals-row-option-and-configure-a-custom-formula-that-counts-distinct-values.cs
 - create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs
+- programmatically-detect-tables-that-lack-a-totals-row-and-add-one-with-default-sum-calculations.cs

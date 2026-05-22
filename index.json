@@ -9781,6 +9781,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "programmatically-detect-tables-that-lack-a-totals-row-and-add-one-with-default-sum-calculations.cs",
+      "title": "Programmatically detect tables that lack a totals row and add one with default sum calculations."
+    },
+    {
+      "category": "working-with-tables",
       "file": "programmatically-retrieve-the-address-range-of-a-table-and-use-it-as-a-named-range-for-formulas.cs",
       "title": "Programmatically retrieve the address range of a table and use it as a named range for formulas."
     },
