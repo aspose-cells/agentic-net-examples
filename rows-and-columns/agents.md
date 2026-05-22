@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - autofit-rows-that-contain-merged-cells-by-specifying-autofitmergedcellstype-in-autofitteroptions-during-processing.cs
 - programmatically-set-a-row-height-then-autofit-the-next-row-based-on-its-content.cs
 - apply-setcolumnwidth-to-a-column-then-autofit-an-adjacent-column-for-comparison.cs
+- load-a-workbook-with-onlyauto-enabled-then-iterate-through-each-sheet-to-verify-row-heights-are-adjusted.cs
