@@ -9931,6 +9931,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "insert-a-multi-line-string-into-a-table-cell-using-listobjectputcellvalue-with-newline-characters.cs",
+      "title": "Insert a multi-line string into a table cell using ListObject.PutCellValue with newline characters."
+    },
+    {
+      "category": "working-with-tables",
       "file": "insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs",
       "title": "Insert a new row into a table and automatically copy the formatting from the previous row."
     },
