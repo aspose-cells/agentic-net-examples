@@ -5376,6 +5376,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "update-the-data-source-of-all-waterfall-charts-in-a-workbook-after-a-bulk-data-import.cs",
+      "title": "Update the data source of all Waterfall charts in a workbook after a bulk data import."
+    },
+    {
+      "category": "working-with-charts",
       "file": "update-the-text-of-an-existing-label-control-on-a-chart-to-display-the-current-date.cs",
       "title": "Update the text of an existing label control on a chart to display the current date."
     },
