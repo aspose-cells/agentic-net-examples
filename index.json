@@ -2821,6 +2821,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "invoke-deleteblankrowsandcolumns-on-the-first-worksheet-with-updatereference-disabled-to-preserve-formulas.cs",
+      "title": "Invoke DeleteBlankRowsAndColumns on the first worksheet with UpdateReference disabled to preserve formulas."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs",
       "title": "Iterate through each worksheet in a workbook and set StandardHeight to enforce a consistent row height."
     },
