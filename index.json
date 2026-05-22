@@ -9856,6 +9856,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-tables-show-header-row-option-to-true-and-lock-the-header-cells-to-prevent-editing.cs",
+      "title": "Set the table's show header row option to true and lock the header cells to prevent editing."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-tables-show-totals-row-option-and-configure-a-custom-formula-that-counts-distinct-values.cs",
       "title": "Set the table's show totals row option and configure a custom formula that counts distinct values."
     },
