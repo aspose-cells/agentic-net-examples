@@ -2826,6 +2826,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "load-a-workbook-remove-duplicate-rows-while-preserving-formulas-then-export-the-cleaned-file-as-pdf.cs",
+      "title": "Load a workbook, remove duplicate rows while preserving formulas, then export the cleaned file as PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-a-workbook-with-loadoptionsautofitteroptionsonlyauto-set-to-true-to-automatically-adjust-all-row-heights.cs",
       "title": "Load a workbook with LoadOptions.AutoFitterOptions.OnlyAuto set to true to automatically adjust all row heights."
     },
