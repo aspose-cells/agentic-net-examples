@@ -4541,6 +4541,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-after-applying-text-wrap-setting-to-accommodate-multiline-labels.cs",
+      "title": "Resize data label shapes after applying text wrap setting to accommodate multi\u2011line labels."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-for-a-bubble-chart-after-increasing-bubble-sizes-to-test-scaling.cs",
       "title": "Resize data label shapes for a bubble chart after increasing bubble sizes to test scaling."
     },
