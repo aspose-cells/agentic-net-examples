@@ -2560,6 +2560,11 @@
       "title": "Load a workbook with LoadOptions.AutoFitterOptions.OnlyAuto set to true to automatically adjust all row heights."
     },
     {
+      "category": "rows-and-columns",
+      "file": "set-the-height-of-a-specific-row-eg-row-5-to-a-defined-point-value-using-cellssetrowheight.cs",
+      "title": "Set the height of a specific row (e.g., row 5) to a defined point value using Cells.SetRowHeight."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
