@@ -3231,6 +3231,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "verify-that-formulas-referencing-deleted-rows-are-updated-accordingly-after-row-deletion.cs",
+      "title": "Verify that formulas referencing deleted rows are updated accordingly after row deletion."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "verify-that-the-deleteoptionsupdatereference-property-is-set-to-true-before-deletion.cs",
       "title": "Verify that the DeleteOptions.UpdateReference property is set to true before deletion."
     },
