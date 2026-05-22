@@ -3716,6 +3716,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-a-specific-cell-range-to-serve-as-the-charts-category-axis-values.cs",
+      "title": "Assign a specific cell range to serve as the chart's category axis values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-custom-colors-to-each-series-in-a-stacked-bar-chart-using-the-seriesstyle-property.cs",
       "title": "Assign custom colors to each series in a stacked bar chart using the Series.Style property."
     },

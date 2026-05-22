@@ -240,3 +240,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-instance-and-add-a-single-worksheet-to-it.cs
 - populate-the-worksheet-cells-with-the-required-source-data-that-will-drive-the-chart.cs
 - insert-a-threedimensional-column-chart-object-onto-the-previously-created-worksheet.cs
+- assign-a-specific-cell-range-to-serve-as-the-charts-category-axis-values.cs
