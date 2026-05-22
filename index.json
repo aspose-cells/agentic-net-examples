@@ -9761,6 +9761,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "reorder-columns-in-a-table-to-match-a-predefined-layout-required-by-downstream-processing-scripts.cs",
+      "title": "Reorder columns in a table to match a predefined layout required by downstream processing scripts."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-a-custom-column-width-for-a-specific-table-column-to-accommodate-long-text-strings.cs",
       "title": "Set a custom column width for a specific table column to accommodate long text strings."
     },

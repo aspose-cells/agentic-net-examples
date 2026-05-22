@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - create-a-data-validation-list-that-pulls-its-items-directly-from-a-column-in-a-worksheet-table.cs
 - set-the-tables-show-header-row-option-to-false-for-a-compact-layout-in-a-dashboard-view.cs
 - enable-the-tables-show-header-row-option-and-customize-the-header-font-color-for-emphasis.cs
+- reorder-columns-in-a-table-to-match-a-predefined-layout-required-by-downstream-processing-scripts.cs
