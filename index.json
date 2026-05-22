@@ -2736,6 +2736,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "split-spacedelimited-text-in-column-a-into-separate-columns-using-texttocolumns.cs",
+      "title": "Split space\u2011delimited text in column A into separate columns using TextToColumns."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs",
       "title": "Use AutoFitColumn on a column after inserting multiline text to ensure full visibility."
     },
