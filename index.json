@@ -2905,6 +2905,11 @@
       "title": "Validate that auto\u2011fitted rows do not exceed a maximum height limit by checking row heights."
     },
     {
+      "category": "rows-and-columns",
+      "file": "validate-that-comments-attached-to-original-rows-are-correctly-transferred-to-copied-rows.cs",
+      "title": "Validate that comments attached to original rows are correctly transferred to copied rows."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
