@@ -333,3 +333,4 @@ Output files are written to the working directory.
 - hide-legend-for-a-3d-pie-chart-and-observe-impact-on-chart-readability.cs
 - create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs
 - read-legend-current-position-programmatically-switch-to-opposite-corner-and-save-changes.cs
+- enable-data-labels-to-show-percentages-from-cells-for-a-pie-chart-and-adjust-shape-size-accordingly.cs

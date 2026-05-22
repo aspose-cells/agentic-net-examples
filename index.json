@@ -4166,6 +4166,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-labels-to-show-percentages-from-cells-for-a-pie-chart-and-adjust-shape-size-accordingly.cs",
+      "title": "Enable data labels to show percentages from cells for a pie chart and adjust shape size accordingly."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-data-markers-on-a-line-series-and-set-marker-shape-to-triangle.cs",
       "title": "Enable data markers on a line series and set marker shape to triangle."
     },
