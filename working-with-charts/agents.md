@@ -299,3 +299,4 @@ Output files are written to the working directory.
 - apply-a-custom-font-style-to-data-labels-and-ensure-shapes-resize-to-accommodate-the-new-style.cs
 - set-the-chart-legend-position-to-the-top-right-corner-and-verify-its-coordinates.cs
 - make-the-chart-legend-invisible-and-confirm-no-legend-entries-are-rendered.cs
+- assign-a-transparent-fill-to-all-legend-entries-to-achieve-a-clear-background-effect.cs
