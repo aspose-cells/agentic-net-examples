@@ -9681,6 +9681,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "enable-the-tables-show-header-row-option-and-customize-the-header-font-color-for-emphasis.cs",
+      "title": "Enable the table's show header row option and customize the header font color for emphasis."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-a-worksheet-table-to-a-json-string-preserving-column-names-as-json-object-keys.cs",
       "title": "Export a worksheet table to a JSON string, preserving column names as JSON object keys."
     },
