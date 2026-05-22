@@ -2821,6 +2821,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "load-an-excel-workbook-hide-rows-five-through-ten-and-export-the-result-as-pdf.cs",
+      "title": "Load an Excel workbook, hide rows five through ten, and export the result as PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-an-xlsx-workbook-apply-autofitteroptionsforrendering-and-save-it-as-pdf.cs",
       "title": "Load an XLSX workbook, apply AutoFitterOptions.ForRendering, and save it as PDF."
     },
