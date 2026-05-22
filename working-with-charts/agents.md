@@ -443,3 +443,4 @@ Output files are written to the working directory.
 - customize-marker-styles-for-the-line-series-in-a-combo-chart-to-highlight-key-data-points.cs
 - apply-distinct-fill-colors-to-column-and-line-series-in-a-combo-chart-for-visual-differentiation.cs
 - export-the-combo-chart-to-pdf-with-embedded-fonts-to-ensure-consistent-rendering-across-platforms.cs
+- retrieve-the-chart-object-from-a-worksheet-and-programmatically-list-all-its-series-names.cs
