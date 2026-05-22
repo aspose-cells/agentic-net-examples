@@ -315,3 +315,4 @@ Output files are written to the working directory.
 - hide-the-legend-for-a-doughnut-chart-and-confirm-the-chart-area-expands-to-fill-space.cs
 - add-a-secondary-axis-to-a-combo-chart-and-display-data-labels-from-cells-on-the-secondary-axis.cs
 - configure-data-labels-to-show-both-cell-values-and-series-name-concatenated-with-a-hyphen-separator.cs
+- resize-data-label-shapes-after-applying-bold-font-weight-to-prevent-text-overflow.cs
