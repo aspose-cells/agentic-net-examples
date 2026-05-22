@@ -5121,6 +5121,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-custom-number-formats-for-the-waterfall-chart-axis-to-display-currency-values.cs",
+      "title": "Set custom number formats for the Waterfall chart axis to display currency values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-data-label-text-alignment-to-rightjustify-for-a-horizontal-bar-chart.cs",
       "title": "Set data label text alignment to right\u2011justify for a horizontal bar chart."
     },
