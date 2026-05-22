@@ -4681,6 +4681,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-the-chart-legend-entirely-to-produce-a-minimalist-chart-layout-for-presentation-slides.cs",
+      "title": "Hide the chart legend entirely to produce a minimalist chart layout for presentation slides."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-the-chart-legend-when-the-number-of-series-exceeds-five-to-reduce-visual-clutter.cs",
       "title": "Hide the chart legend when the number of series exceeds five to reduce visual clutter."
     },
