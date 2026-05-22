@@ -4076,6 +4076,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-chart-position-its-legend-at-the-center-of-the-plot-area-and-verify-no-overlap-occurs.cs",
+      "title": "Create chart, position its legend at the center of the plot area, and verify no overlap occurs."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-chart-set-legend-position-to-bottom-then-shift-it-upward-by-a-fixed-offset.cs",
       "title": "Create chart, set legend position to bottom, then shift it upward by a fixed offset."
     },

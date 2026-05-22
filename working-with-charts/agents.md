@@ -365,3 +365,4 @@ Output files are written to the working directory.
 - enable-data-labels-for-boxandwhisker-chart-source-values-from-a-statistical-summary-range.cs
 - hide-legend-when-generating-a-series-of-charts-for-a-slideshow-presentation-to-reduce-visual-noise.cs
 - resize-data-label-shapes-after-enabling-data-label-background-color-to-test-contrast-with-transparent-fill.cs
+- create-chart-position-its-legend-at-the-center-of-the-plot-area-and-verify-no-overlap-occurs.cs
