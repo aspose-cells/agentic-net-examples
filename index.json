@@ -4751,6 +4751,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-text-alignment-to-center-and-verify-transparent-fill-does-not-affect-alignment.cs",
+      "title": "Set legend text alignment to center and verify transparent fill does not affect alignment."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs",
       "title": "Set major unit interval on primary Y axis to 10 to standardize chart grid lines across series."
     },
