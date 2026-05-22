@@ -5346,6 +5346,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-a-chart-to-occupy-ten-rows-and-fifteen-columns-by-adjusting-height-and-width-properties.cs",
+      "title": "Resize a chart to occupy ten rows and fifteen columns by adjusting Height and Width properties."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-after-adding-a-background-image-to-the-label-shape-for-branding-purposes.cs",
       "title": "Resize data label shapes after adding a background image to the label shape for branding purposes."
     },
