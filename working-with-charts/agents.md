@@ -404,3 +404,4 @@ Output files are written to the working directory.
 - create-a-new-chart-sheet-and-add-a-stock-chart-of-type-ohlc.cs
 - populate-the-ohlc-stock-chart-series-with-open-high-low-and-close-values-from-a-datatable.cs
 - change-the-stock-chart-type-to-candlestick-and-adjust-the-candle-width-to-twenty-percent-of-bar-spacing.cs
+- apply-the-predefined-chart-style-style1-to-improve-visual-appearance-of-all-charts-in-the-workbook.cs
