@@ -262,3 +262,4 @@ Output files are written to the working directory.
 - change-the-chart-type-to-cone3d-and-adjust-the-z-axis-depth-for-better-perspective.cs
 - clone-the-existing-chart-object-and-modify-its-data-source-to-reference-a-different-worksheet.cs
 - batch-process-multiple-worksheets-inserting-identical-charts-with-distinct-data-ranges-on-each-sheet.cs
+- save-the-modified-workbook-to-a-new-file-named-chartreportxlsx-after-completing-chart-updates.cs
