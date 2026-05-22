@@ -9916,6 +9916,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-all-tables-in-a-workbook-to-separate-csv-files-naming-each-file-after-its-corresponding-table-name.cs",
+      "title": "Export all tables in a workbook to separate CSV files, naming each file after its corresponding table name."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-the-data-from-a-query-table-to-a-csv-file-while-preserving-column-headers-and-data-types.cs",
       "title": "Export the data from a query table to a CSV file while preserving column headers and data types."
     },
