@@ -2611,6 +2611,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "create-a-new-workbook-add-data-to-a-column-and-autofit-that-column-to-accommodate-the-longest-entry.cs",
+      "title": "Create a new workbook, add data to a column, and auto\u2011fit that column to accommodate the longest entry."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "iterate-through-each-worksheet-in-a-workbook-and-set-standardheight-to-enforce-a-consistent-row-height.cs",
       "title": "Iterate through each worksheet in a workbook and set StandardHeight to enforce a consistent row height."
     },
