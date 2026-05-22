@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - after-copying-rows-adjust-column-widths-using-autofitcolumns-to-accommodate-newly-copied-data.cs
 - batch-copy-a-template-row-to-multiple-target-rows-across-several-worksheets-using-a-loop.cs
 - load-an-excel-workbook-hide-rows-five-through-ten-and-export-the-result-as-pdf.cs
+- open-a-spreadsheet-hide-column-c-then-save-the-modified-file-in-pdf-format.cs
