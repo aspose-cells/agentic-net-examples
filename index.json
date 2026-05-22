@@ -5461,6 +5461,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "retrieve-the-x-and-y-coordinates-of-a-chart-object-within-its-worksheet-for-precise-alignment.cs",
+      "title": "Retrieve the X and Y coordinates of a chart object within its worksheet for precise alignment."
+    },
+    {
+      "category": "working-with-charts",
       "file": "rotate-xaxis-labels-by-fortyfive-degrees-to-prevent-overlapping-text-in-dense-charts.cs",
       "title": "Rotate X\u2011axis labels by forty\u2011five degrees to prevent overlapping text in dense charts."
     },
