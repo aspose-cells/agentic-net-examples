@@ -5076,6 +5076,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "retrieve-the-chart-object-from-a-worksheet-and-programmatically-list-all-its-series-names.cs",
+      "title": "Retrieve the chart object from a worksheet and programmatically list all its series names."
+    },
+    {
+      "category": "working-with-charts",
       "file": "retrieve-the-charts-x-axis-and-change-its-type-to-value-for-continuous-numeric-scaling.cs",
       "title": "Retrieve the chart's X axis and change its type to Value for continuous numeric scaling."
     },
