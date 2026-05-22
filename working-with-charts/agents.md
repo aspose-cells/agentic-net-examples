@@ -493,3 +493,4 @@ Output files are written to the working directory.
 - load-a-workbook-apply-a-uniform-chart-color-palette-across-all-worksheets-then-save-as-xls.cs
 - open-an-xls-file-change-the-theme-colors-of-a-specific-chart-using-chartcolorpalettetypemonochromaticpalette6-and-save.cs
 - load-a-workbook-replace-the-existing-chart-series-colors-with-a-custom-palette-then-save-to-xlsx.cs
+- load-an-xlsx-workbook-create-a-pivottable-from-range-a1e20-then-add-a-linked-pivotchart-and-save.cs

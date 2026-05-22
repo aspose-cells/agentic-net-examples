@@ -4931,6 +4931,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-xlsx-workbook-create-a-pivottable-from-range-a1e20-then-add-a-linked-pivotchart-and-save.cs",
+      "title": "Load an XLSX workbook, create a PivotTable from range A1:E20, then add a linked PivotChart, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-obtain-the-first-chart-object.cs",
       "title": "Load an XLSX workbook from a file path and obtain the first chart object."
     },
