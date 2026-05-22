@@ -4346,6 +4346,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-localized-chart-to-a-jpeg-image-file-using-the-toimage-method.cs",
+      "title": "Export the localized chart to a JPEG image file using the ToImage method."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-localized-chart-to-a-png-image-file-using-the-toimage-method.cs",
       "title": "Export the localized chart to a PNG image file using the ToImage method."
     },
