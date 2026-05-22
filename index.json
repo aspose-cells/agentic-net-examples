@@ -5161,6 +5161,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "toggle-the-visibility-of-a-picture-control-inside-a-chart-based-on-a-boolean-flag.cs",
+      "title": "Toggle the visibility of a picture control inside a chart based on a Boolean flag."
+    },
+    {
+      "category": "working-with-charts",
       "file": "toggle-visibility-of-a-specific-series-to-hide-it-from-the-rendered-chart.cs",
       "title": "Toggle visibility of a specific series to hide it from the rendered chart."
     },
