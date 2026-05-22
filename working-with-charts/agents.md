@@ -376,3 +376,4 @@ Output files are written to the working directory.
 - override-getaxistitle-in-chartjapanesesettings-to-return-japanese-text-for-x-and-y-axes.cs
 - assign-an-instance-of-chartjapanesesettings-to-the-charts-globalizationsettings-property-before-exporting.cs
 - export-the-localized-chart-to-a-jpeg-image-file-using-the-toimage-method.cs
+- verify-that-the-chart-title-appears-in-japanese-characters-within-the-exported-jpeg-image.cs

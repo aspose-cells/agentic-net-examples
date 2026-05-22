@@ -5171,6 +5171,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "verify-that-the-chart-title-appears-in-japanese-characters-within-the-exported-jpeg-image.cs",
+      "title": "Verify that the chart title appears in Japanese characters within the exported JPEG image."
+    },
+    {
+      "category": "working-with-charts",
       "file": "write-the-chart-pdf-output-to-a-memorystream-for-further-inmemory-processing.cs",
       "title": "Write the chart PDF output to a MemoryStream for further in\u2011memory processing."
     },
