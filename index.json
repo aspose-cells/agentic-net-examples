@@ -4301,6 +4301,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-a-custom-numeric-format-for-z-axis-labels-showing-values-with-two-decimal-places.cs",
+      "title": "Set a custom numeric format for Z axis labels, showing values with two decimal places."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-a-predefined-texture-fill-on-the-chart-background-to-give-it-a-fabric-appearance.cs",
       "title": "Set a predefined texture fill on the chart background to give it a fabric appearance."
     },

@@ -243,3 +243,4 @@ Output files are written to the working directory.
 - assign-a-specific-cell-range-to-serve-as-the-charts-category-axis-values.cs
 - set-the-charts-category-axis-using-a-string-array-containing-the-desired-categories.cs
 - change-the-category-axis-type-to-dateaxis-to-correctly-display-timebased-data.cs
+- set-a-custom-numeric-format-for-z-axis-labels-showing-values-with-two-decimal-places.cs
