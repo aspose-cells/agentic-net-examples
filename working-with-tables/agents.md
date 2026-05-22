@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - retrieve-a-table-with-cellgettable-and-enumerate-its-rows-to-compute-the-sum-of-a-numeric-column.cs
 - use-listobjectputcellvalue-to-add-a-boolean-value-at-a-specific-row-and-column-offset-within-the-table.cs
 - convert-a-table-to-a-range-preserving-formatting-for-the-first-three-rows-then-save-as-ods.cs
+- insert-a-multi-line-string-into-a-table-cell-using-listobjectputcellvalue-with-newline-characters.cs
