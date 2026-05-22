@@ -9626,6 +9626,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-with-a-calculated-column-that-concatenates-first-and-last-name-fields-for-each-row.cs",
+      "title": "Create a table with a calculated column that concatenates first and last name fields for each row."
+    },
+    {
+      "category": "working-with-tables",
       "file": "delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs",
       "title": "Delete a specific row from a table using its primary key value to locate the target."
     },
