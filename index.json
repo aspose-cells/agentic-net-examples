@@ -4656,6 +4656,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "filter-chart-data-to-exclude-categories-containing-the-word-total-using-the-category-filter-method.cs",
+      "title": "Filter chart data to exclude categories containing the word \u201cTotal\u201d using the category filter method."
+    },
+    {
+      "category": "working-with-charts",
       "file": "format-data-labels-of-the-second-series-with-bold-font-red-color-and-yellow-background.cs",
       "title": "Format data labels of the second series with bold font, red color, and yellow background."
     },
