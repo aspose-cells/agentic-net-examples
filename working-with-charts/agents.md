@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - access-the-ticklabels-object-of-the-primary-y-axis-and-rotate-labels-ninety-degrees-clockwise.cs
 - assign-a-line-series-to-the-secondary-vertical-axis-by-setting-its-axisgroup-property-to-two.cs
 - configure-secondary-axis-minimum-maximum-and-major-unit-values-to-align-with-primary-axis-scaling.cs
+- render-the-modified-chart-to-a-png-image-and-save-it-in-the-output-directory.cs
