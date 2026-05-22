@@ -9891,6 +9891,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "refresh-a-query-table-after-modifying-its-underlying-sql-command-to-reflect-updated-query-results.cs",
+      "title": "Refresh a query table after modifying its underlying SQL command to reflect updated query results."
+    },
+    {
+      "category": "working-with-tables",
       "file": "refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs",
       "title": "Refresh all pivot tables that reference a specific worksheet table after updating its underlying data."
     },
