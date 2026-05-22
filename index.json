@@ -3976,6 +3976,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-workbook-containing-the-updated-chart-to-a-pdf-file-preserving-chart-formatting.cs",
+      "title": "Export the workbook containing the updated chart to a PDF file preserving chart formatting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs",
       "title": "Format data labels to show percentages with one decimal place on a pie chart."
     },
