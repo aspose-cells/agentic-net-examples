@@ -3811,6 +3811,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-distinct-fill-colors-to-column-and-line-series-in-a-combo-chart-for-visual-differentiation.cs",
+      "title": "Apply distinct fill colors to column and line series in a Combo chart for visual differentiation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-scientific-notation-number-format-to-data-labels-of-the-fourth-series-for-high-magnitude-values.cs",
       "title": "Apply scientific notation number format to data labels of the fourth series for high magnitude values."
     },
