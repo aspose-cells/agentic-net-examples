@@ -4466,6 +4466,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "implement-a-unit-test-that-confirms-chartchinesesettings-returns-expected-chinese-strings-for-title-and-legend.cs",
+      "title": "Implement a unit test that confirms ChartChineseSettings returns expected Chinese strings for title and legend."
+    },
+    {
+      "category": "working-with-charts",
       "file": "implement-error-handling-for-axisgetaxistexts-method-when-called-before-chartcalculate.cs",
       "title": "Implement error handling for Axis.GetAxisTexts method when called before Chart.Calculate()."
     },
