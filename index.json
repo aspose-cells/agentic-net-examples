@@ -161,6 +161,11 @@
     },
     {
       "category": "conversion",
+      "file": "generate-an-mhtml-document-with-utf8-encoding-and-embedded-resources.cs",
+      "title": "Generate an MHTML document with UTF\u20118 encoding and embedded resources."
+    },
+    {
+      "category": "conversion",
       "file": "generate-githubflavored-markdown-tables-from-a-workbook-for-documentation-purposes.cs",
       "title": "Generate GitHub\u2011flavored Markdown tables from a workbook for documentation purposes."
     },
