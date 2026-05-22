@@ -3996,6 +3996,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "disable-data-label-background-fill-for-a-doughnut-chart-to-improve-clarity.cs",
+      "title": "Disable data label background fill for a doughnut chart to improve clarity."
+    },
+    {
+      "category": "working-with-charts",
       "file": "disable-data-label-text-wrapping-for-the-chart-using-datalabelsistextwrapped-false.cs",
       "title": "Disable data label text wrapping for the chart using DataLabels.IsTextWrapped = false."
     },
