@@ -448,3 +448,4 @@ Output files are written to the working directory.
 - hide-the-gridlines-of-the-chart-plot-area-in-a-combo-chart-to-reduce-visual-clutter.cs
 - add-a-trendline-to-a-line-series-in-a-combo-chart-and-display-its-equation-on-the-chart.cs
 - bind-progress-percentages-from-a-worksheet-column-to-the-visible-series-of-the-progress-bar-chart.cs
+- set-the-invisible-series-of-the-progress-bar-chart-to-a-transparent-fill-to-simulate-progress-effect.cs

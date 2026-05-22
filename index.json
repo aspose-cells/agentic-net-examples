@@ -5331,6 +5331,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-invisible-series-of-the-progress-bar-chart-to-a-transparent-fill-to-simulate-progress-effect.cs",
+      "title": "Set the invisible series of the Progress Bar chart to a transparent fill to simulate progress effect."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
       "title": "Set the scatter chart marker size to 8 points and color to teal."
     },
