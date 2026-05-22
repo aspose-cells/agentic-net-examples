@@ -2781,6 +2781,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "delete-blank-rows-on-the-first-worksheet-using-default-deleteoptions-without-updatereference.cs",
+      "title": "Delete blank rows on the first worksheet using default DeleteOptions without UpdateReference."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "disable-formula-adjustment-in-pasteoptions-to-copy-rows-with-absolute-references-unchanged.cs",
       "title": "Disable formula adjustment in PasteOptions to copy rows with absolute references unchanged."
     },
