@@ -5851,6 +5851,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "verify-the-retrieved-worksheet-name-matches-the-expected-chart-parent-worksheet.cs",
+      "title": "Verify the retrieved worksheet name matches the expected chart parent worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "write-the-chart-pdf-output-to-a-memorystream-for-further-inmemory-processing.cs",
       "title": "Write the chart PDF output to a MemoryStream for further in\u2011memory processing."
     },
