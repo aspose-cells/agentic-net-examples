@@ -4376,6 +4376,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "enable-data-point-labels-only-for-the-total-point-in-a-waterfall-chart-to-highlight-summary-values.cs",
+      "title": "Enable data point labels only for the total point in a Waterfall chart to highlight summary values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "enable-leader-lines-on-the-pie-chart-by-setting-chartshowleaderlines-property-to-true.cs",
       "title": "Enable leader lines on the pie chart by setting Chart.ShowLeaderLines property to true."
     },

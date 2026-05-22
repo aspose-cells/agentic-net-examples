@@ -434,3 +434,4 @@ Output files are written to the working directory.
 - convert-the-workbook-containing-the-waterfall-chart-to-pdf-while-embedding-the-chart-image.cs
 - programmatically-toggle-the-visibility-of-individual-waterfall-series-based-on-user-preferences.cs
 - set-custom-number-formats-for-the-waterfall-chart-axis-to-display-currency-values.cs
+- enable-data-point-labels-only-for-the-total-point-in-a-waterfall-chart-to-highlight-summary-values.cs
