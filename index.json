@@ -3211,6 +3211,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "verify-that-formulas-in-other-worksheets-remain-unchanged-after-default-row-deletion.cs",
+      "title": "Verify that formulas in other worksheets remain unchanged after default row deletion."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "verify-that-the-deleteoptionsupdatereference-property-is-set-to-true-before-deletion.cs",
       "title": "Verify that the DeleteOptions.UpdateReference property is set to true before deletion."
     },
