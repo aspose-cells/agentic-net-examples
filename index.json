@@ -4161,6 +4161,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-waterfall-chart-and-designate-a-specific-data-point-as-the-total-segment.cs",
+      "title": "Create a Waterfall chart and designate a specific data point as the total segment."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-waterfall-chart-link-its-data-labels-to-a-summary-range-and-adjust-label-shapes-to-fit.cs",
       "title": "Create a waterfall chart, link its data labels to a summary range, and adjust label shapes to fit."
     },
