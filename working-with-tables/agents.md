@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - after-converting-a-table-to-a-range-attempt-to-apply-sorting-and-confirm-it-affects-only-the-range.cs
 - convert-a-query-table-into-a-regular-worksheet-table-retaining-its-data-and-formatting-attributes.cs
 - generate-a-pivot-table-based-on-an-existing-worksheet-table-and-place-it-on-a-new-worksheet.cs
+- disable-autoexpand-for-a-table-to-keep-its-range-fixed-despite-additional-rows-being-entered.cs

@@ -9846,6 +9846,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "disable-autoexpand-for-a-table-to-keep-its-range-fixed-despite-additional-rows-being-entered.cs",
+      "title": "Disable auto\u2011expand for a table to keep its range fixed despite additional rows being entered."
+    },
+    {
+      "category": "working-with-tables",
       "file": "disable-the-ability-for-users-to-add-new-rows-to-the-list-object-to-enforce-fixed-dataset-size.cs",
       "title": "Disable the ability for users to add new rows to the list object to enforce fixed dataset size."
     },
