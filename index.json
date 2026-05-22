@@ -3971,6 +3971,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-yaxis-gridlines-to-create-a-cleaner-visual-appearance-for-the-chart.cs",
+      "title": "Hide Y\u2011axis gridlines to create a cleaner visual appearance for the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "insert-a-new-row-into-the-listobject-with-q4-data-chart-automatically-extends.cs",
       "title": "Insert a new row into the ListObject with Q4 data; chart automatically extends."
     },
