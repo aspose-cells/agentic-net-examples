@@ -3071,6 +3071,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "set-the-deleteoptionsupdatereference-property-to-true-to-enable-formula-updates.cs",
+      "title": "Set the DeleteOptions.UpdateReference property to true to enable formula updates."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "set-the-height-of-a-specific-row-eg-row-5-to-a-defined-point-value-using-cellssetrowheight.cs",
       "title": "Set the height of a specific row (e.g., row 5) to a defined point value using Cells.SetRowHeight."
     },
