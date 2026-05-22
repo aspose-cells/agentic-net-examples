@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - convert-multiple-csv-files-to-json-with-formatted-dates-and-store-in-target-folder.cs
 - export-a-workbook-to-json-using-camelcase-property-naming-for-consistency.cs
 - export-a-workbook-as-xml-with-a-custom-root-element.cs
+- convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs
