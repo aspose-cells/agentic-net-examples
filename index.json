@@ -9761,6 +9761,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-a-table-to-a-json-file-with-indentation-for-readability-and-include-column-headers-as-keys.cs",
+      "title": "Export a table to a JSON file with indentation for readability and include column headers as keys."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs",
       "title": "Export a worksheet containing multiple tables to a single PDF file, preserving each table's layout."
     },
