@@ -4451,6 +4451,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "format-the-yaxis-number-format-to-display-currency-with-two-decimal-places.cs",
+      "title": "Format the Y\u2011axis number format to display currency with two decimal places."
+    },
+    {
+      "category": "working-with-charts",
       "file": "generate-a-chart-with-a-dynamic-number-of-series-based-on-the-count-of-data-rows.cs",
       "title": "Generate a chart with a dynamic number of series based on the count of data rows."
     },

@@ -407,3 +407,4 @@ Output files are written to the working directory.
 - apply-the-predefined-chart-style-style1-to-improve-visual-appearance-of-all-charts-in-the-workbook.cs
 - position-the-chart-legend-at-the-bottom-right-corner-and-set-its-font-to-calibri-size-ten.cs
 - add-axis-titles-to-both-x-and-y-axes-using-bold-formatting-and-a-twelvepoint-font-size.cs
+- format-the-yaxis-number-format-to-display-currency-with-two-decimal-places.cs
