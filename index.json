@@ -9821,6 +9821,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-with-a-dynamic-named-range-that-expands-automatically-when-new-rows-are-added.cs",
+      "title": "Create a table with a dynamic named range that expands automatically when new rows are added."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs",
       "title": "Create a table with a header row that uses merged cells to span multiple columns for a title."
     },
