@@ -9586,6 +9586,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-list-object-from-a-dynamic-range-and-enable-automatic-expansion-when-new-rows-are-added.cs",
+      "title": "Create a list object from a dynamic range and enable automatic expansion when new rows are added."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-new-worksheet-table-from-a-range-of-cells-and-assign-a-custom-name.cs",
       "title": "Create a new worksheet table from a range of cells and assign a custom name."
     },
