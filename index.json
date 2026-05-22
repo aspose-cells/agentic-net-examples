@@ -4361,6 +4361,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-a-specific-chart-to-a-png-image-file-with-a-resolution-of-three-hundred-dpi.cs",
+      "title": "Export a specific chart to a PNG image file with a resolution of three hundred DPI."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs",
       "title": "Export all charts in the workbook as separate SVG files for scalable vector graphics usage."
     },
