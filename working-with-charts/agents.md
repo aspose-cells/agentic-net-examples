@@ -480,3 +480,4 @@ Output files are written to the working directory.
 - generate-a-chart-thumbnail-image-of-200x150-pixels-for-use-in-a-web-dashboard.cs
 - use-a-memory-stream-to-create-a-chart-image-without-writing-intermediate-files-to-disk.cs
 - implement-asynchronous-chart-creation-to-improve-ui-responsiveness-in-a-windows-forms-application.cs
+- create-multiple-charts-on-a-single-worksheet-each-using-different-data-ranges-and-chart-types.cs

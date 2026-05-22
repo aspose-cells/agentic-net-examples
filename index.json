@@ -4301,6 +4301,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-multiple-charts-on-a-single-worksheet-each-using-different-data-ranges-and-chart-types.cs",
+      "title": "Create multiple charts on a single worksheet, each using different data ranges and chart types."
+    },
+    {
+      "category": "working-with-charts",
       "file": "customize-marker-styles-for-the-line-series-in-a-combo-chart-to-highlight-key-data-points.cs",
       "title": "Customize marker styles for the line series in a Combo chart to highlight key data points."
     },
