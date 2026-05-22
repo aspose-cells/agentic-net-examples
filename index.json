@@ -3766,6 +3766,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "change-the-category-axis-type-to-dateaxis-to-correctly-display-timebased-data.cs",
+      "title": "Change the category axis type to DateAxis to correctly display time\u2011based data."
+    },
+    {
+      "category": "working-with-charts",
       "file": "change-the-chart-theme-to-the-builtin-office-theme-programmatically-for-consistent-styling.cs",
       "title": "Change the chart theme to the built\u2011in \"Office\" theme programmatically for consistent styling."
     },
