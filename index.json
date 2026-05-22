@@ -4616,6 +4616,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-legend-position-to-bottom-left-and-adjust-its-x-offset-to-align-with-chart-margins.cs",
+      "title": "Set legend position to bottom left and adjust its X offset to align with chart margins."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs",
       "title": "Set major unit interval on primary Y axis to 10 to standardize chart grid lines across series."
     },
