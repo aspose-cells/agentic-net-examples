@@ -4606,6 +4606,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "measure-the-performance-impact-of-applying-localization-to-charts-by-timing-export-duration-for-large-workbooks.cs",
+      "title": "Measure the performance impact of applying localization to charts by timing export duration for large workbooks."
+    },
+    {
+      "category": "working-with-charts",
       "file": "move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs",
       "title": "Move the chart legend to the bottom position and hide its border for cleaner layout."
     },
