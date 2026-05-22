@@ -523,3 +523,4 @@ Output files are written to the working directory.
 - filter-chart-data-to-display-only-series-with-values-exceeding-a-defined-threshold.cs
 - filter-chart-data-to-exclude-categories-containing-the-word-total-using-the-category-filter-method.cs
 - hide-a-specific-series-in-a-stacked-bar-chart-by-setting-its-isvisible-property-to-false.cs
+- set-the-isvisible-property-of-a-series-based-on-a-runtime-condition-evaluating-data-completeness.cs
