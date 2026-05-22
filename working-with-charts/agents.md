@@ -338,3 +338,4 @@ Output files are written to the working directory.
 - create-chart-with-secondary-y-axis-enable-cellbased-labels-for-secondary-series-and-position-legend-centrally.cs
 - hide-legend-for-charts-that-contain-more-than-ten-data-points-to-simplify-presentation.cs
 - apply-custom-color-to-legend-font-based-on-series-index-and-maintain-transparent-entry-fill.cs
+- resize-data-label-shapes-for-line-chart-after-enabling-markers-with-large-size-values.cs
