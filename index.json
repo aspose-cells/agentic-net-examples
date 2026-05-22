@@ -9891,6 +9891,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "programmatically-detect-tables-lacking-a-header-row-and-add-a-default-header-with-generic-column-names.cs",
+      "title": "Programmatically detect tables lacking a header row and add a default header with generic column names."
+    },
+    {
+      "category": "working-with-tables",
       "file": "programmatically-detect-tables-that-lack-a-totals-row-and-add-one-with-default-sum-calculations.cs",
       "title": "Programmatically detect tables that lack a totals row and add one with default sum calculations."
     },
