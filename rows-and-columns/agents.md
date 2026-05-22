@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - set-the-width-of-a-specific-column-eg-column-3-using-cellssetcolumnwidth.cs
 - set-the-width-of-a-specific-column-in-pixels-using-cellssetcolumnwidthpixel.cs
 - apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs
+- autofit-a-single-row-based-on-its-content-using-worksheetautofitrow.cs
