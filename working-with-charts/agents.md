@@ -394,3 +394,4 @@ Output files are written to the working directory.
 - change-a-charts-subtitle-to-a-custom-string-and-verify-the-update-by-reading-the-property.cs
 - add-a-label-control-inside-a-chart-with-arial-font-size-twelve-and-bold-style.cs
 - insert-a-multiline-text-box-control-into-a-chart-positioning-it-at-the-plot-areas-top-right.cs
+- place-a-picture-control-on-a-chart-using-an-image-stream-and-set-width-to-one-hundred-points.cs
