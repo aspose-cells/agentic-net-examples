@@ -335,3 +335,4 @@ Output files are written to the working directory.
 - read-legend-current-position-programmatically-switch-to-opposite-corner-and-save-changes.cs
 - enable-data-labels-to-show-percentages-from-cells-for-a-pie-chart-and-adjust-shape-size-accordingly.cs
 - add-data-labels-to-a-histogram-source-values-from-a-calculation-range-and-ensure-shapes-fit-text.cs
+- create-chart-with-secondary-y-axis-enable-cellbased-labels-for-secondary-series-and-position-legend-centrally.cs

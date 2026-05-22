@@ -4056,6 +4056,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-chart-with-secondary-y-axis-enable-cellbased-labels-for-secondary-series-and-position-legend-centrally.cs",
+      "title": "Create chart with secondary Y axis, enable cell\u2011based labels for secondary series, and position legend centrally."
+    },
+    {
+      "category": "working-with-charts",
       "file": "define-a-custom-color-palette-and-assign-specific-colors-to-each-chart-series-programmatically.cs",
       "title": "Define a custom color palette and assign specific colors to each chart series programmatically."
     },
