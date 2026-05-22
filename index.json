@@ -2571,6 +2571,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "after-copying-rows-recalculate-the-worksheet-to-update-any-dependent-formulas-automatically.cs",
+      "title": "After copying rows, recalculate the worksheet to update any dependent formulas automatically."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "after-loading-a-workbook-set-standardheight-and-then-autofit-rows-that-contain-formulas.cs",
       "title": "After loading a workbook, set StandardHeight and then auto\u2011fit rows that contain formulas."
     },

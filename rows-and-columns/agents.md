@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - copy-rows-while-preserving-hidden-row-states-ensuring-hidden-rows-remain-hidden-after-duplication.cs
 - exclude-hidden-rows-from-copy-operation-by-filtering-rows-before-invoking-copyrows-method.cs
 - copy-rows-that-are-part-of-an-autofiltered-range-and-verify-only-visible-rows-are-duplicated.cs
+- after-copying-rows-recalculate-the-worksheet-to-update-any-dependent-formulas-automatically.cs
