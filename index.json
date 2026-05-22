@@ -3686,6 +3686,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-a-secondary-yaxis-type-of-value-and-link-appropriate-series-to-it.cs",
+      "title": "Assign a secondary Y\u2011axis type of Value and link appropriate series to it."
+    },
+    {
+      "category": "working-with-charts",
       "file": "assign-custom-colors-to-each-series-in-a-stacked-bar-chart-using-the-seriesstyle-property.cs",
       "title": "Assign custom colors to each series in a stacked bar chart using the Series.Style property."
     },
