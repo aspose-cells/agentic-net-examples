@@ -5211,6 +5211,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "verify-that-default-english-text-appears-when-no-localization-settings-are-assigned-to-a-chart.cs",
+      "title": "Verify that default English text appears when no localization settings are assigned to a chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "verify-that-exporting-chart-without-setting-data-source-throws-an-appropriate-exception.cs",
       "title": "Verify that exporting chart without setting data source throws an appropriate exception."
     },
