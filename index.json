@@ -3701,6 +3701,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-color-palette-to-gantt-chart-bars-based-on-task-priority-levels.cs",
+      "title": "Apply a custom color palette to Gantt chart bars based on task priority levels."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-currency-number-format-to-all-data-labels-in-the-first-chart-series.cs",
       "title": "Apply a custom currency number format to all data labels in the first chart series."
     },
