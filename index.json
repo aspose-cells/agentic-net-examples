@@ -3971,6 +3971,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-chart-on-a-hidden-worksheet-enable-cellbased-labels-then-make-the-worksheet-visible.cs",
+      "title": "Create a chart on a hidden worksheet, enable cell\u2011based labels, then make the worksheet visible."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs",
       "title": "Create a chart template that includes predefined legend position and data label settings."
     },
