@@ -2555,6 +2555,11 @@
       "title": "Write a utility that lists all worksheets containing query tables and outputs their names."
     },
     {
+      "category": "rows-and-columns",
+      "file": "load-a-workbook-with-loadoptionsautofitteroptionsonlyauto-set-to-true-to-automatically-adjust-all-row-heights.cs",
+      "title": "Load a workbook with LoadOptions.AutoFitterOptions.OnlyAuto set to true to automatically adjust all row heights."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
