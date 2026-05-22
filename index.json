@@ -5181,6 +5181,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "update-the-text-of-an-existing-label-control-on-a-chart-to-display-the-current-date.cs",
+      "title": "Update the text of an existing label control on a chart to display the current date."
+    },
+    {
+      "category": "working-with-charts",
       "file": "use-a-formula-as-the-data-source-for-a-chart-series-to-calculate-moving-averages.cs",
       "title": "Use a formula as the data source for a chart series to calculate moving averages."
     },
