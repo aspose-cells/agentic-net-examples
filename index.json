@@ -4651,6 +4651,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "filter-chart-data-to-display-only-series-with-values-exceeding-a-defined-threshold.cs",
+      "title": "Filter chart data to display only series with values exceeding a defined threshold."
+    },
+    {
+      "category": "working-with-charts",
       "file": "format-data-labels-of-the-second-series-with-bold-font-red-color-and-yellow-background.cs",
       "title": "Format data labels of the second series with bold font, red color, and yellow background."
     },
