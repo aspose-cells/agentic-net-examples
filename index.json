@@ -4651,6 +4651,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-after-increasing-chart-overall-width-to-maintain-proportional-label-size.cs",
+      "title": "Resize data label shapes after increasing chart overall width to maintain proportional label size."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-data-label-shapes-for-a-bubble-chart-after-increasing-bubble-sizes-to-test-scaling.cs",
       "title": "Resize data label shapes for a bubble chart after increasing bubble sizes to test scaling."
     },
