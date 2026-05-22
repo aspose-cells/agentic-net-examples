@@ -9586,6 +9586,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs",
+      "title": "Group rows within the table based on category column and collapse the groups for compact view."
+    },
+    {
+      "category": "working-with-tables",
       "file": "hide-the-table-header-row-while-keeping-the-data-rows-visible-for-reporting-purposes.cs",
       "title": "Hide the table header row while keeping the data rows visible for reporting purposes."
     },

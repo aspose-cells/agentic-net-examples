@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - hide-the-table-header-row-while-keeping-the-data-rows-visible-for-reporting-purposes.cs
 - enable-autofilter-on-the-table-and-define-a-filter-to-show-only-rows-with-values-above-threshold.cs
 - sort-the-table-by-two-columns-first-ascending-by-date-then-descending-by-amount.cs
+- group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs
