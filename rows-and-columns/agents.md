@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs
 - parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs
 - duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs
+- transfer-a-row-from-a-source-worksheet-to-a-destination-worksheet-using-cellscopyrow.cs

@@ -2756,6 +2756,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "transfer-a-row-from-a-source-worksheet-to-a-destination-worksheet-using-cellscopyrow.cs",
+      "title": "Transfer a row from a source worksheet to a destination worksheet using Cells.CopyRow."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "use-autofitcolumn-on-a-column-after-inserting-multiline-text-to-ensure-full-visibility.cs",
       "title": "Use AutoFitColumn on a column after inserting multiline text to ensure full visibility."
     },
