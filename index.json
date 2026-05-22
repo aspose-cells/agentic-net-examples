@@ -10106,6 +10106,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "use-tabletorangeoptions-to-preserve-formatting-for-the-header-row-only-before-converting-the-table.cs",
+      "title": "Use TableToRangeOptions to preserve formatting for the header row only before converting the table."
+    },
+    {
+      "category": "working-with-tables",
       "file": "validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs",
       "title": "Validate that a table contains no duplicate rows based on a combination of key columns."
     },
