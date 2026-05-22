@@ -2566,6 +2566,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "after-autofitting-rows-export-the-worksheet-to-pdf-and-compare-file-size-with-a-nonfitted-version.cs",
+      "title": "After auto\u2011fitting rows, export the worksheet to PDF and compare file size with a non\u2011fitted version."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "after-loading-a-workbook-set-standardheight-and-then-autofit-rows-that-contain-formulas.cs",
       "title": "After loading a workbook, set StandardHeight and then auto\u2011fit rows that contain formulas."
     },
