@@ -145,6 +145,11 @@
       "title": "Load an XLSX workbook and convert it to a high\u2011resolution PDF file."
     },
     {
+      "category": "conversion",
+      "file": "read-a-csv-file-and-export-each-worksheet-as-separate-png-images.cs",
+      "title": "Read a CSV file and export each worksheet as separate PNG images."
+    },
+    {
       "category": "document-properties",
       "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
       "title": "Add a custom property containing an array of string tags to categorize workbook content."
