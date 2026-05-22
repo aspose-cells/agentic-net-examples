@@ -9756,6 +9756,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs",
+      "title": "Import data from an XML file into a new table, mapping XML elements to table columns automatically."
+    },
+    {
+      "category": "working-with-tables",
       "file": "import-json-data-into-a-new-table-automatically-creating-columns-based-on-json-object-properties.cs",
       "title": "Import JSON data into a new table, automatically creating columns based on JSON object properties."
     },
