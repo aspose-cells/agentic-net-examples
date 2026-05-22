@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - use-autofitrows-with-forrendering-on-a-worksheet-containing-wrapped-text-to-avoid-clipping.cs
 - compare-row-heights-before-and-after-autofitrows-to-confirm-height-adjustments-were-applied.cs
 - implement-error-handling-when-copying-rows-that-exceed-worksheet-row-limit-to-prevent-exceptions.cs
+- copy-rows-while-preserving-hidden-row-states-ensuring-hidden-rows-remain-hidden-after-duplication.cs
