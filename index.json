@@ -2586,6 +2586,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "autofit-rows-that-contain-merged-cells-by-configuring-autofitteroptionsautofitmergedcellstype-and-passing-it-to-worksheetautofitrows.cs",
+      "title": "Auto\u2011fit rows that contain merged cells by configuring AutoFitterOptions.AutoFitMergedCellsType and passing it to Worksheet.AutoFitRows."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-a-workbook-with-loadoptionsautofitteroptionsonlyauto-set-to-true-to-automatically-adjust-all-row-heights.cs",
       "title": "Load a workbook with LoadOptions.AutoFitterOptions.OnlyAuto set to true to automatically adjust all row heights."
     },
