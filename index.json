@@ -4521,6 +4521,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "insert-wordart-as-a-watermark-over-the-plot-area-rotating-it-thirty-degrees-for-a-diagonal-effect.cs",
+      "title": "Insert WordArt as a watermark over the plot area, rotating it thirty degrees for a diagonal effect."
+    },
+    {
+      "category": "working-with-charts",
       "file": "instantiate-a-workbook-add-a-worksheet-and-populate-cells-with-sales-data.cs",
       "title": "Instantiate a Workbook, add a worksheet, and populate cells with sales data."
     },
