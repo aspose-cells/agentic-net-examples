@@ -10076,6 +10076,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "remove-an-unwanted-column-from-a-table-while-preserving-the-data-in-other-columns.cs",
+      "title": "Remove an unwanted column from a table while preserving the data in other columns."
+    },
+    {
+      "category": "working-with-tables",
       "file": "remove-duplicate-rows-from-a-table-based-on-a-composite-key-of-two-columns-using-builtin-method.cs",
       "title": "Remove duplicate rows from a table based on a composite key of two columns using built\u2011in method."
     },
