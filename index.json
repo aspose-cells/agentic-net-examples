@@ -4771,6 +4771,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "implement-a-custom-chartglobalizationsettings-class-overriding-gettitle-to-provide-french-chart-titles.cs",
+      "title": "Implement a custom ChartGlobalizationSettings class overriding GetTitle to provide French chart titles."
+    },
+    {
+      "category": "working-with-charts",
       "file": "implement-a-unit-test-that-confirms-chartchinesesettings-returns-expected-chinese-strings-for-title-and-legend.cs",
       "title": "Implement a unit test that confirms ChartChineseSettings returns expected Chinese strings for title and legend."
     },

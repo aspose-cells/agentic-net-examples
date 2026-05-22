@@ -517,3 +517,4 @@ Output files are written to the working directory.
 - set-the-chart-title-programmatically-after-creating-the-chart-properly.cs
 - generate-a-line-chart-from-a-workbook-template-by-processing-smart-markers-with-workbookdesigner.cs
 - save-the-workbook-containing-the-generated-chart-as-an-xlsx-file.cs
+- implement-a-custom-chartglobalizationsettings-class-overriding-gettitle-to-provide-french-chart-titles.cs
