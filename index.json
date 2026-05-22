@@ -9580,6 +9580,11 @@
       "title": "Create a new worksheet table from a range of cells and assign a custom name."
     },
     {
+      "category": "working-with-tables",
+      "file": "set-a-custom-formula-in-the-totals-row-to-calculate-average-of-a-specific-column.cs",
+      "title": "Set a custom formula in the totals row to calculate average of a specific column."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
