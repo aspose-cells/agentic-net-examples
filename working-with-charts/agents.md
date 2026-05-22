@@ -241,3 +241,4 @@ Output files are written to the working directory.
 - populate-the-worksheet-cells-with-the-required-source-data-that-will-drive-the-chart.cs
 - insert-a-threedimensional-column-chart-object-onto-the-previously-created-worksheet.cs
 - assign-a-specific-cell-range-to-serve-as-the-charts-category-axis-values.cs
+- set-the-charts-category-axis-using-a-string-array-containing-the-desired-categories.cs

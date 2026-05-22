@@ -4366,6 +4366,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-charts-category-axis-using-a-string-array-containing-the-desired-categories.cs",
+      "title": "Set the chart's category axis using a string array containing the desired categories."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-charts-data-label-position-to-inside-end-for-column-series-to-improve-readability.cs",
       "title": "Set the chart's data label position to inside end for column series to improve readability."
     },
