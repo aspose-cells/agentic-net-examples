@@ -4216,6 +4216,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-tornado-chart-from-a-sales-data-range-apply-custom-colors-and-export-as-png-image.cs",
+      "title": "Create a tornado chart from a sales data range, apply custom colors, and export as PNG image."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-waterfall-chart-and-designate-a-specific-data-point-as-the-total-segment.cs",
       "title": "Create a Waterfall chart and designate a specific data point as the total segment."
     },
