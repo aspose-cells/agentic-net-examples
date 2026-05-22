@@ -3626,6 +3626,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "adjust-the-gap-width-of-column-series-on-the-primary-axis-to-improve-spacing-between-bars.cs",
+      "title": "Adjust the gap width of column series on the primary axis to improve spacing between bars."
+    },
+    {
+      "category": "working-with-charts",
       "file": "align-the-chart-to-the-topleft-corner-of-the-pdf-page-before-exporting.cs",
       "title": "Align the chart to the top\u2011left corner of the PDF page before exporting."
     },
