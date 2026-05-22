@@ -4041,6 +4041,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "copy-a-chart-from-one-chart-sheet-to-another-preserving-all-attached-controls-and-formatting.cs",
+      "title": "Copy a chart from one chart sheet to another, preserving all attached controls and formatting."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-batch-process-that-generates-pie-charts-for-each-data-table-across-multiple-worksheets.cs",
       "title": "Create a batch process that generates pie charts for each data table across multiple worksheets."
     },
