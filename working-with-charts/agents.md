@@ -464,3 +464,4 @@ Output files are written to the working directory.
 - create-a-tornado-chart-from-a-sales-data-range-apply-custom-colors-and-export-as-png-image.cs
 - generate-a-dynamic-chart-linked-to-a-named-range-then-update-the-range-programmatically.cs
 - add-a-dropdown-list-control-to-the-worksheet-and-bind-it-to-the-chart-data-source-for-updates.cs
+- validate-that-chart-data-range-does-not-contain-empty-cells-before-generating-the-chart.cs

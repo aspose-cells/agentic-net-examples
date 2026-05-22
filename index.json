@@ -5561,6 +5561,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-chart-data-range-does-not-contain-empty-cells-before-generating-the-chart.cs",
+      "title": "Validate that chart data range does not contain empty cells before generating the chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-custom-slice-colors-persist-after-saving-and-reloading-the-workbook.cs",
       "title": "Validate that custom slice colors persist after saving and reloading the workbook."
     },
