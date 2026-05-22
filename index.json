@@ -2896,6 +2896,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "read-a-workbook-insert-five-rows-at-position-thirty-with-all-formatting-copied-and-generate-pdf.cs",
+      "title": "Read a workbook, insert five rows at position thirty with all formatting copied, and generate PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "read-a-workbook-unhide-row-twelve-with-height-twenty-points-and-generate-a-pdf.cs",
       "title": "Read a workbook, unhide row twelve with height twenty points, and generate a PDF."
     },
