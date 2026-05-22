@@ -9596,6 +9596,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "calculate-a-running-total-column-within-a-table-using-a-formula-that-references-previous-rows.cs",
+      "title": "Calculate a running total column within a table using a formula that references previous rows."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
       "title": "Convert the existing list object into a structured table to leverage advanced table features."
     },
