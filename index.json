@@ -2676,6 +2676,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "disable-formula-adjustment-in-pasteoptions-to-copy-rows-with-absolute-references-unchanged.cs",
+      "title": "Disable formula adjustment in PasteOptions to copy rows with absolute references unchanged."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs",
       "title": "Duplicate multiple consecutive rows using CopyRows and verify formula references update correctly."
     },
