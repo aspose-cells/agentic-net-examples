@@ -4691,6 +4691,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-xlsx-workbook-add-a-stacked-bar-chart-and-configure-it-as-a-gantt-chart.cs",
+      "title": "Load an XLSX workbook, add a stacked bar chart, and configure it as a Gantt chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-xlsx-workbook-containing-a-chart-and-retrieve-the-first-chart-object.cs",
       "title": "Load an XLSX workbook containing a chart and retrieve the first chart object."
     },
