@@ -9591,6 +9591,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-a-filter-that-excludes-rows-where-the-date-column-falls-outside-the-current-quarter.cs",
+      "title": "Apply a filter that excludes rows where the date column falls outside the current quarter."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-filter-that-selects-rows-where-the-status-column-equals-completed-and-hide-the-rest.cs",
       "title": "Apply a filter that selects rows where the status column equals 'Completed' and hide the rest."
     },

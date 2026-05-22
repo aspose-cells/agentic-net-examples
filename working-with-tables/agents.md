@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs
 - programmatically-detect-tables-that-lack-a-totals-row-and-add-one-with-default-sum-calculations.cs
 - import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs
+- apply-a-filter-that-excludes-rows-where-the-date-column-falls-outside-the-current-quarter.cs
