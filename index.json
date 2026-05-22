@@ -5166,6 +5166,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-containing-the-progress-bar-chart-to-xlsx-while-preserving-cell-formulas.cs",
+      "title": "Save the workbook containing the Progress Bar chart to XLSX while preserving cell formulas."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-with-the-gantt-chart-as-a-new-xlsx-file-in-a-specified-output-folder.cs",
       "title": "Save the workbook with the Gantt chart as a new XLSX file in a specified output folder."
     },

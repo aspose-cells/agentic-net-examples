@@ -450,3 +450,4 @@ Output files are written to the working directory.
 - bind-progress-percentages-from-a-worksheet-column-to-the-visible-series-of-the-progress-bar-chart.cs
 - set-the-invisible-series-of-the-progress-bar-chart-to-a-transparent-fill-to-simulate-progress-effect.cs
 - apply-conditional-formatting-to-the-progress-bar-chart-colors-based-on-threshold-values.cs
+- save-the-workbook-containing-the-progress-bar-chart-to-xlsx-while-preserving-cell-formulas.cs
