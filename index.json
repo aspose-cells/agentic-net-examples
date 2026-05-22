@@ -4026,6 +4026,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "generate-a-report-that-lists-each-charts-axis-type-and-tick-label-direction-for-auditing-purposes.cs",
+      "title": "Generate a report that lists each chart's axis type and tick label direction for auditing purposes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs",
       "title": "Hide the horizontal axis gridlines to produce a cleaner appearance for the scatter plot."
     },
