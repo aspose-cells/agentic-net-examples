@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "convert-a-table-to-a-range-retaining-formatting-only-for-the-first-five-rows-then-save-as-ods.cs",
+      "title": "Convert a table to a range retaining formatting only for the first five rows, then save as ODS."
+    },
+    {
+      "category": "working-with-tables",
       "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
       "title": "Convert the existing list object into a structured table to leverage advanced table features."
     },
