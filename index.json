@@ -4631,6 +4631,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "generate-a-chart-thumbnail-image-of-200x150-pixels-for-use-in-a-web-dashboard.cs",
+      "title": "Generate a chart thumbnail image of 200x150 pixels for use in a web dashboard."
+    },
+    {
+      "category": "working-with-charts",
       "file": "generate-a-chart-with-a-dynamic-number-of-series-based-on-the-count-of-data-rows.cs",
       "title": "Generate a chart with a dynamic number of series based on the count of data rows."
     },
