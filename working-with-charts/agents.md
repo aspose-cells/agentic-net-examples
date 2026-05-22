@@ -460,3 +460,4 @@ Output files are written to the working directory.
 - set-the-charts-dpi-to-300-when-exporting-to-png-for-highquality-print-production.cs
 - apply-a-custom-font-family-to-all-chart-titles-across-the-workbook-for-consistent-branding.cs
 - set-the-legend-position-of-each-chart-to-the-bottom-right-corner-to-avoid-overlapping-data.cs
+- load-an-existing-xlsx-workbook-add-a-stacked-bar-chart-and-save-the-file.cs
