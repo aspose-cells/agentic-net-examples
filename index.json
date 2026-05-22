@@ -2671,6 +2671,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "compare-row-heights-before-and-after-autofitrows-to-confirm-height-adjustments-were-applied.cs",
+      "title": "Compare row heights before and after AutoFitRows to confirm height adjustments were applied."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs",
       "title": "Convert comma\u2011separated values in column B to individual columns by specifying comma delimiter."
     },
