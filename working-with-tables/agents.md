@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - read-the-metadata-of-a-query-table-including-connection-string-command-type-and-refresh-interval.cs
 - write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs
 - load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs
+- create-a-chart-that-uses-a-worksheet-table-as-its-data-source-and-apply-a-predefined-chart-style.cs
