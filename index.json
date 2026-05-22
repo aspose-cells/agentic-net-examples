@@ -4306,6 +4306,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "hide-legend-for-charts-that-contain-more-than-ten-data-points-to-simplify-presentation.cs",
+      "title": "Hide legend for charts that contain more than ten data points to simplify presentation."
+    },
+    {
+      "category": "working-with-charts",
       "file": "hide-the-chart-legend-when-the-number-of-series-exceeds-five-to-reduce-visual-clutter.cs",
       "title": "Hide the chart legend when the number of series exceeds five to reduce visual clutter."
     },
