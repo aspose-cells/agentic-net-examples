@@ -9866,6 +9866,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "import-an-html-table-into-a-worksheet-converting-it-into-a-structured-table-with-proper-column-headers.cs",
+      "title": "Import an HTML table into a worksheet, converting it into a structured table with proper column headers."
+    },
+    {
+      "category": "working-with-tables",
       "file": "import-data-from-a-csv-file-into-a-new-table-and-automatically-detect-column-data-types-during-import.cs",
       "title": "Import data from a CSV file into a new table and automatically detect column data types during import."
     },
