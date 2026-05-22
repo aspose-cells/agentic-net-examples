@@ -374,3 +374,4 @@ Output files are written to the working directory.
 - verify-that-the-chart-title-appears-in-chinese-characters-within-the-exported-png-image.cs
 - create-a-chartjapanesesettings-subclass-of-chartglobalizationsettings-to-provide-japanese-translations.cs
 - override-getaxistitle-in-chartjapanesesettings-to-return-japanese-text-for-x-and-y-axes.cs
+- assign-an-instance-of-chartjapanesesettings-to-the-charts-globalizationsettings-property-before-exporting.cs
