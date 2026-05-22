@@ -511,3 +511,4 @@ Output files are written to the working directory.
 - load-a-workbook-add-a-moving-average-trendline-to-a-line-chart-and-store-its-equation.cs
 - open-an-xlsx-workbook-retrieve-the-equation-text-of-a-chart-trendline-after-refreshing-data-and-log-it.cs
 - load-a-workbook-add-a-polynomial-order-three-trendline-to-a-scatter-chart-series-and-capture-its-equation.cs
+- retrieve-the-worksheet-that-contains-a-specific-chart-using-the-chartworksheet-property.cs
