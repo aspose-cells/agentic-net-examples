@@ -3726,6 +3726,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-color-palette-to-a-chart-by-setting-specific-rgb-values-for-each-series-style.cs",
+      "title": "Apply a custom color palette to a chart by setting specific RGB values for each series style."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-color-palette-to-gantt-chart-bars-based-on-task-priority-levels.cs",
       "title": "Apply a custom color palette to Gantt chart bars based on task priority levels."
     },
