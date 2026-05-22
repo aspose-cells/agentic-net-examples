@@ -9636,6 +9636,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "apply-conditional-formatting-to-highlight-duplicate-values-within-a-specific-table-column-for-data-quality-checks.cs",
+      "title": "Apply conditional formatting to highlight duplicate values within a specific table column for data quality checks."
+    },
+    {
+      "category": "working-with-tables",
       "file": "autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs",
       "title": "Auto\u2011fit all columns of a table to match the longest cell content for optimal display."
     },
