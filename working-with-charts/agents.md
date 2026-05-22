@@ -395,3 +395,4 @@ Output files are written to the working directory.
 - add-a-label-control-inside-a-chart-with-arial-font-size-twelve-and-bold-style.cs
 - insert-a-multiline-text-box-control-into-a-chart-positioning-it-at-the-plot-areas-top-right.cs
 - place-a-picture-control-on-a-chart-using-an-image-stream-and-set-width-to-one-hundred-points.cs
+- add-a-checkbox-control-to-a-chart-sheet-defaulting-its-state-to-unchecked-and-labeling-it-select.cs
