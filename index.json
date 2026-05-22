@@ -9901,6 +9901,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "insert-a-formula-into-a-table-cell-using-cellputvalue-with-a-formula-string.cs",
+      "title": "Insert a formula into a table cell using Cell.PutValue with a formula string."
+    },
+    {
+      "category": "working-with-tables",
       "file": "insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs",
       "title": "Insert a new row into a table and automatically copy the formatting from the previous row."
     },
