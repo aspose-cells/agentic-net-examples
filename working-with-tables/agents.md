@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - convert-a-table-to-a-range-preserving-formatting-for-the-header-row-only-then-save-as-ods.cs
 - overwrite-an-existing-value-in-a-table-cell-using-cellputvalue-after-retrieving-the-table-with-cellgettable.cs
 - use-listobjectputcellvalue-to-insert-a-string-value-into-a-table-cell-using-specific-row-and-column-offsets.cs
+- after-converting-a-table-to-a-range-attempt-to-apply-sorting-and-confirm-it-affects-only-the-range.cs

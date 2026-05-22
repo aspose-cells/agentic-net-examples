@@ -9606,6 +9606,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "after-converting-a-table-to-a-range-attempt-to-apply-sorting-and-confirm-it-affects-only-the-range.cs",
+      "title": "After converting a table to a range, attempt to apply sorting and confirm it affects only the range."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs",
       "title": "Apply a built\u2011in table style that matches the workbook's theme for consistent visual appearance."
     },
