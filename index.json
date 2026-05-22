@@ -4586,6 +4586,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "load-an-ods-workbook-retrieve-the-first-chart-and-read-its-subtitle-text.cs",
+      "title": "Load an ODS workbook, retrieve the first chart, and read its subtitle text."
+    },
+    {
+      "category": "working-with-charts",
       "file": "load-an-xlsx-workbook-containing-a-chart-and-retrieve-the-first-chart-object.cs",
       "title": "Load an XLSX workbook containing a chart and retrieve the first chart object."
     },
