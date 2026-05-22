@@ -5386,6 +5386,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-legend-position-of-each-chart-to-the-bottom-right-corner-to-avoid-overlapping-data.cs",
+      "title": "Set the legend position of each chart to the bottom right corner to avoid overlapping data."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
       "title": "Set the scatter chart marker size to 8 points and color to teal."
     },
