@@ -4571,6 +4571,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-legend-position-to-the-top-right-corner-and-verify-its-coordinates.cs",
+      "title": "Set the chart legend position to the top right corner and verify its coordinates."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-title-dynamically-based-on-worksheet-name-using-charttitletext-property.cs",
       "title": "Set the chart title dynamically based on worksheet name using Chart.Title.Text property."
     },
