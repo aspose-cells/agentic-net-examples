@@ -2571,6 +2571,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "after-copying-rows-adjust-column-widths-using-autofitcolumns-to-accommodate-newly-copied-data.cs",
+      "title": "After copying rows, adjust column widths using AutoFitColumns to accommodate newly copied data."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "after-copying-rows-apply-autofitrows-to-header-rows-separately-to-maintain-consistent-header-height.cs",
       "title": "After copying rows, apply AutoFitRows to header rows separately to maintain consistent header height."
     },
