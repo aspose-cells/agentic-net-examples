@@ -9595,6 +9595,11 @@
       "title": "Set a custom formula in the totals row to calculate average of a specific column."
     },
     {
+      "category": "working-with-tables",
+      "file": "sort-the-table-by-two-columns-first-ascending-by-date-then-descending-by-amount.cs",
+      "title": "Sort the table by two columns, first ascending by date then descending by amount."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
