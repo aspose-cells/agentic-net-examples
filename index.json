@@ -4741,6 +4741,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "implement-asynchronous-chart-creation-to-improve-ui-responsiveness-in-a-windows-forms-application.cs",
+      "title": "Implement asynchronous chart creation to improve UI responsiveness in a Windows Forms application."
+    },
+    {
+      "category": "working-with-charts",
       "file": "implement-error-handling-for-axisgetaxistexts-method-when-called-before-chartcalculate.cs",
       "title": "Implement error handling for Axis.GetAxisTexts method when called before Chart.Calculate()."
     },
