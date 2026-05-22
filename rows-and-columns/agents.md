@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - read-a-spreadsheet-unhide-rows-thirty-to-thirtyfive-with-default-height-and-export-pdf.cs
 - open-a-workbook-unhide-columns-h-through-j-using-fiftypoint-width-then-save-pdf.cs
 - load-an-excel-document-insert-a-new-row-at-index-fifteen-and-output-the-file-as-pdf.cs
+- open-a-spreadsheet-insert-three-rows-starting-at-row-twenty-preserving-formatting-then-save-pdf.cs

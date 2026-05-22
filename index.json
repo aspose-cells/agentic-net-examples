@@ -2851,6 +2851,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "open-a-spreadsheet-insert-three-rows-starting-at-row-twenty-preserving-formatting-then-save-pdf.cs",
+      "title": "Open a spreadsheet, insert three rows starting at row twenty, preserving formatting, then save PDF."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "open-a-workbook-unhide-columns-h-through-j-using-fiftypoint-width-then-save-pdf.cs",
       "title": "Open a workbook, unhide columns H through J using fifty\u2011point width, then save PDF."
     },
