@@ -4476,6 +4476,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "iterate-through-a-folder-of-xlsx-files-converting-each-chart-to-a-localized-png-using-chinese-settings.cs",
+      "title": "Iterate through a folder of XLSX files, converting each chart to a localized PNG using Chinese settings."
+    },
+    {
+      "category": "working-with-charts",
       "file": "iterate-through-all-charts-in-a-workbook-and-set-each-legends-visibility-based-on-chart-type.cs",
       "title": "Iterate through all charts in a workbook and set each legend's visibility based on chart type."
     },
