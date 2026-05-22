@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - disable-the-ability-for-users-to-add-new-rows-to-the-list-object-to-enforce-fixed-dataset-size.cs
 - enable-the-list-objects-header-row-and-customize-its-background-color-using-a-predefined-style.cs
 - set-the-list-object-to-display-a-totals-row-and-configure-count-aggregation-for-a-text-column.cs
+- load-an-existing-excel-workbook-containing-query-tables-and-enumerate-all-tables-linked-to-external-data-sources.cs
