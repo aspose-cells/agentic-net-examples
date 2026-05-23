@@ -81,6 +81,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "assign-the-custom-monitor-to-workbooksettingscalculationmonitor-before-loading-the-workbook.cs",
+      "title": "Assign the custom monitor to Workbook.Settings.CalculationMonitor before loading the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "cache-results-of-a-custom-function-to-improve-performance-on-repeated-calls-with-identical-inputs.cs",
       "title": "Cache results of a custom function to improve performance on repeated calls with identical inputs."
     },
