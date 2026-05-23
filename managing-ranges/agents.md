@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - retrieve-the-range-object-of-the-named-range-salesdata-and-iterate-through-its-cells.cs
 - update-the-reference-of-the-existing-named-range-reportperiod-to-span-cells-c5c15.cs
 - delete-the-named-range-obsoleterange-from-the-workbook-and-verify-its-removal.cs
+- search-for-the-text-total-within-range-a1c30-using-findoptions.cs
