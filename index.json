@@ -121,6 +121,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-icustomfunction-interface-to-create-a-custom-function-that-returns-a-multicell-range.cs",
+      "title": "Implement ICustomFunction interface to create a custom function that returns a multi\u2011cell range."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs",
       "title": "In BeforeCalculate, call Interrupt() when a specific cell address meets a predefined condition."
     },

@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - optimize-custom-function-logic-to-reduce-execution-time-of-cellcalculate-calls-significantly.cs
 - cache-results-of-a-custom-function-to-improve-performance-on-repeated-calls-with-identical-inputs.cs
 - invalidate-cached-custom-function-results-automatically-when-dependent-cells-are-modified-in-the-workbook.cs
+- implement-icustomfunction-interface-to-create-a-custom-function-that-returns-a-multicell-range.cs
