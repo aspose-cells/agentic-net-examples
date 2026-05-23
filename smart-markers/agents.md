@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs
 - load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs
 - configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs
+- apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs
