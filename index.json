@@ -3741,6 +3741,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "generate-an-xml-representation-of-all-named-ranges-and-their-references-for-external-processing.cs",
+      "title": "Generate an XML representation of all named ranges and their references for external processing."
+    },
+    {
+      "category": "managing-ranges",
       "file": "implement-error-handling-for-attempts-to-access-a-nonexistent-named-range-and-log-the-exception.cs",
       "title": "Implement error handling for attempts to access a non\u2011existent named range and log the exception."
     },
