@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - import-a-subset-of-an-array-using-slicer-syntax-such-as-orders13quantity.cs
 - map-a-json-document-to-a-workbook-and-apply-smart-markers-to-populate-cells-with-nested-properties.cs
 - load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs
+- process-multiple-worksheets-in-a-single-workbook-each-containing-distinct-smart-markers-to-generate-a-multisheet-report.cs

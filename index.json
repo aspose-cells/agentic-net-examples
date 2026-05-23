@@ -6836,6 +6836,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "process-multiple-worksheets-in-a-single-workbook-each-containing-distinct-smart-markers-to-generate-a-multisheet-report.cs",
+      "title": "Process multiple worksheets in a single workbook, each containing distinct smart markers, to generate a multi\u2011sheet report."
+    },
+    {
+      "category": "smart-markers",
       "file": "provide-a-custom-collection-of-objects-as-the-data-source-to-workbookdesigner-for-flexible-objectoriented-merging.cs",
       "title": "Provide a custom collection of objects as the data source to WorkbookDesigner for flexible object\u2011oriented merging."
     },
