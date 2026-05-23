@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - delete-multiple-noncontiguous-ranges-in-a-single-operation-using-a-unionrange-to-specify-them.cs
 - load-an-excel-workbook-and-obtain-the-address-string-of-the-range-a1c5.cs
 - retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs
+- create-an-offset-range-by-shifting-d4f10-three-rows-down-and-two-columns-right.cs
