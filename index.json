@@ -346,6 +346,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-page-scaling-to-none-to-preserve-original-dimensions-exactly.cs",
+      "title": "Convert a workbook to PDF and set page scaling to none to preserve original dimensions exactly."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-security-permissions-to-restrict-editing-and-copying.cs",
       "title": "Convert a workbook to PDF and set security permissions to restrict editing and copying."
     },
