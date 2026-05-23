@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-embed-a-custom-opentype-font-loaded-from-memory-stream.cs
 - convert-a-workbook-to-pdf-using-system-default-font-substitution-when-original-fonts-are-unavailable.cs
 - convert-a-workbook-to-pdf-and-disable-font-embedding-to-reduce-output-file-size.cs
+- convert-a-workbook-to-pdf-and-set-image-dpi-to-300-for-highresolution-printing-needs.cs
