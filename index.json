@@ -501,6 +501,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-while-trimming-trailing-blank-rows-to-reduce-file-length.cs",
+      "title": "Export a workbook to CSV while trimming trailing blank rows to reduce file length."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-csv-with-date-cells-formatted-as-iso-8601-strings-for-standardization.cs",
       "title": "Export a workbook to CSV with date cells formatted as ISO 8601 strings for standardization."
     },
