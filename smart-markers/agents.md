@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - provide-a-custom-collection-of-objects-as-the-data-source-to-workbookdesigner-for-flexible-objectoriented-merging.cs
 - set-the-processing-range-by-calling-workbookdesignersetrange-with-a-named-range-to-limit-smart-marker-scope.cs
 - restrict-smart-marker-processing-to-the-first-one-hundred-rows-using-the-range-parameter-for-performance.cs
+- group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs
