@@ -3361,6 +3361,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "add-a-comment-to-every-cell-within-named-range-reviewnotes-indicating-pending-review.cs",
+      "title": "Add a comment to every cell within named range \"ReviewNotes\" indicating pending review."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs",
       "title": "Apply a custom number format to all cells in named range \"CurrencyValues\"."
     },
