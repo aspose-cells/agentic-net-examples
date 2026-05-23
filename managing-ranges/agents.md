@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - delete-the-named-range-obsoleterange-from-the-workbook-and-verify-its-removal.cs
 - search-for-the-text-total-within-range-a1c30-using-findoptions.cs
 - replace-all-occurrences-of-pending-with-completed-inside-range-d5d25-using-findoptions.cs
+- configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs
