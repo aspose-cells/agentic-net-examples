@@ -3391,6 +3391,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "compare-named-ranges-between-two-workbooks-and-generate-a-report-listing-differences.cs",
+      "title": "Compare named ranges between two workbooks and generate a report listing differences."
+    },
+    {
+      "category": "managing-ranges",
       "file": "configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs",
       "title": "Configure FindOptions to perform a case\u2011sensitive search within range E1:E100."
     },
