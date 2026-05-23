@@ -136,6 +136,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs",
+      "title": "Implement a progress callback that reports percentage completion during extensive calculations."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-icustomfunction-interface-to-create-a-custom-function-that-returns-a-multicell-range.cs",
       "title": "Implement ICustomFunction interface to create a custom function that returns a multi\u2011cell range."
     },
