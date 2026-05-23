@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - use-the-if-parameter-to-display-a-warning-message-when-a-numeric-field-falls-below-a-defined-minimum.cs
 - use-the-setvariable-method-to-pass-a-boolean-flag-that-smart-markers-use-to-toggle-visibility-of-sections.cs
 - configure-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-and-then-unhide-them-after-processing.cs
+- use-the-formula-parameter-to-calculate-weighted-averages-across-rows-referencing-multiple-smart-marker-fields-for-each-calculation.cs
