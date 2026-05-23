@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs
 - generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs
 - use-the-if-parameter-to-display-a-custom-message-when-a-collection-is-empty-during-smart-marker-processing.cs
+- create-a-template-that-generates-invoices-with-line-items-totals-and-a-company-logo-image-using-smart-markers.cs
