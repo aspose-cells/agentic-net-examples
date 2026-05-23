@@ -56,6 +56,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "apply-a-custom-function-within-an-array-formula-to-compute-results-for-an-entire-data-table.cs",
+      "title": "Apply a custom function within an array formula to compute results for an entire data table."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "apply-formulatext-on-a-range-of-cells-to-extract-each-formulas-text-for-bulk-analysis.cs",
       "title": "Apply FormulaText on a range of cells to extract each formula's text for bulk analysis."
     },
