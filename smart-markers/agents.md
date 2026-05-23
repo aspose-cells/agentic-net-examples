@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - use-the-formula-parameter-to-compute-running-totals-across-rows-updating-each-cell-as-data-is-imported.cs
 - create-a-template-that-generates-a-calendar-view-filling-dates-based-on-a-start-date-variable.cs
 - implement-a-unit-test-that-verifies-overflow-rows-are-correctly-transferred-to-a-secondary-worksheet-after-processing.cs
+- use-the-if-parameter-to-conditionally-hide-columns-when-a-flag-field-is-false-in-the-data-source.cs

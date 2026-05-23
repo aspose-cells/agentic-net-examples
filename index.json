@@ -6681,6 +6681,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-if-parameter-to-conditionally-hide-columns-when-a-flag-field-is-false-in-the-data-source.cs",
+      "title": "Use the If parameter to conditionally hide columns when a flag field is false in the data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-to-display-a-custom-message-when-a-collection-is-empty-during-smart-marker-processing.cs",
       "title": "Use the If parameter to display a custom message when a collection is empty during smart marker processing."
     },
