@@ -491,6 +491,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-preserving-empty-cells-as-empty-strings-for-consistent-column-counts.cs",
+      "title": "Export a workbook to CSV preserving empty cells as empty strings for consistent column counts."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-csv-rounding-numeric-values-to-two-decimal-places-for-financial-reporting.cs",
       "title": "Export a workbook to CSV rounding numeric values to two decimal places for financial reporting."
     },

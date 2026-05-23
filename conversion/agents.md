@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-csv-using-double-quotes-as-text-qualifiers-to-handle-commas-inside-data.cs
 - export-a-workbook-to-csv-handling-line-breaks-inside-cells-by-replacing-them-with-spaces.cs
 - export-a-workbook-to-csv-while-trimming-trailing-blank-rows-to-reduce-file-length.cs
+- export-a-workbook-to-csv-preserving-empty-cells-as-empty-strings-for-consistent-column-counts.cs
