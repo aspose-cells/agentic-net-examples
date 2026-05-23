@@ -6651,6 +6651,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-workbook-options-to-recalculate-formulas-after-smart-marker-insertion-guaranteeing-uptodate-calculations.cs",
+      "title": "Configure workbook options to recalculate formulas after smart marker insertion, guaranteeing up\u2011to\u2011date calculations."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs",
       "title": "Configure WorkbookDesigner to ignore empty smart markers, preventing unnecessary row creation when source collections are empty."
     },
