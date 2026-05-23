@@ -6891,6 +6891,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-retry-mechanism-for-smart-marker-population-when-networkbased-data-sources-experience-transient-failures.cs",
+      "title": "Implement a retry mechanism for smart marker population when network\u2011based data sources experience transient failures."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-unit-test-that-verifies-overflow-rows-are-correctly-transferred-to-a-secondary-worksheet-after-processing.cs",
       "title": "Implement a unit test that verifies overflow rows are correctly transferred to a secondary worksheet after processing."
     },
