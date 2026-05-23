@@ -6531,6 +6531,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs",
+      "title": "Implement error handling to catch exceptions when a smart marker references a missing field in the data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs",
       "title": "Insert a Formula parameter that calculates each row's total by multiplying quantity and unit price fields."
     },
