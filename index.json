@@ -146,6 +146,11 @@
     },
     {
       "category": "conversion",
+      "file": "configure-txtloadoptionsseparator-to-a-semicolon-load-a-csv-file-and-export-it-to-xlsx.cs",
+      "title": "Configure TxtLoadOptions.Separator to a semicolon, load a CSV file, and export it to XLSX."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-an-xps-document-for-highquality-printing.cs",
       "title": "Convert a workbook to an XPS document for high\u2011quality printing."
     },
