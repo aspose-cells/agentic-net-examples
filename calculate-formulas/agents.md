@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - improve-performance-by-setting-workbooksettingsenablefastformulacalculation-true-before-invoking-cellcalculate-on-large-datasets.cs
 - reduce-overhead-in-simple-workbooks-by-setting-workbooksettingsusethreadedcalculation-false-to-improve-stability.cs
 - iterate-through-each-worksheet-enable-fast-formula-calculation-and-compare-total-calculation-time-before-and-after.cs
+- create-a-benchmark-measuring-cellcalculate-latency-with-and-without-enablefastformulacalculation-across-multiple-workbook-sizes.cs

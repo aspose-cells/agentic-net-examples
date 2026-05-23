@@ -136,6 +136,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "create-a-benchmark-measuring-cellcalculate-latency-with-and-without-enablefastformulacalculation-across-multiple-workbook-sizes.cs",
+      "title": "Create a benchmark measuring Cell.Calculate latency with and without EnableFastFormulaCalculation across multiple workbook sizes."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs",
       "title": "Create a class derived from AbstractCalculationMonitor and override BeforeCalculate to inspect each cell."
     },
