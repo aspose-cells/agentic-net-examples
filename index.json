@@ -216,6 +216,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-disable-fast-web-view-to-produce-a-single-continuous-stream.cs",
+      "title": "Convert a workbook to PDF and disable fast web view to produce a single continuous stream."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-disable-font-embedding-to-reduce-output-file-size.cs",
       "title": "Convert a workbook to PDF and disable font embedding to reduce output file size."
     },
