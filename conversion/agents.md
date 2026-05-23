@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - extract-all-cell-formulas-into-a-json-document-preserving-sheet-names-and-cell-addresses.cs
 - save-a-workbook-as-pdf-using-custom-save-options-to-enforce-pdfa2b-compliance-level.cs
 - save-a-workbook-as-csv-using-custom-save-options-to-define-semicolon-as-column-delimiter.cs
+- save-a-workbook-as-csv-using-custom-save-options-to-specify-utf32-encoding-for-large-datasets.cs
