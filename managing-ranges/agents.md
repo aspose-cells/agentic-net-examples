@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - programmatically-enumerate-all-named-ranges-in-a-workbook-and-output-their-addresses-to-the-console.cs
 - create-a-dynamic-named-range-whose-reference-adjusts-based-on-the-number-of-filled-rows-in-column-a.cs
 - update-a-dynamic-named-range-automatically-after-inserting-new-rows-into-the-worksheet.cs
+- set-the-refersto-property-of-a-named-range-using-an-absolute-address-to-prevent-relative-shifts.cs
