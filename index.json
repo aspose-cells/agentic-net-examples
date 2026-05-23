@@ -166,6 +166,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-an-excel-workbook-containing-multiple-sheets-to-separate-tsv-files-one-per-worksheet.cs",
+      "title": "Convert an Excel workbook containing multiple sheets to separate TSV files, one per worksheet."
+    },
+    {
+      "category": "conversion",
       "file": "convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs",
       "title": "Convert an XLS workbook to a Markdown document with aligned tables."
     },
