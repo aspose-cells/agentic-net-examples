@@ -3901,6 +3901,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "search-for-the-string-na-within-a-named-range-and-replace-it-with-an-empty-string.cs",
+      "title": "Search for the string \"#N/A\" within a named range and replace it with an empty string."
+    },
+    {
+      "category": "managing-ranges",
       "file": "search-for-the-text-total-within-range-a1c30-using-findoptions.cs",
       "title": "Search for the text \"Total\" within range A1:C30 using FindOptions."
     },
