@@ -4046,6 +4046,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "set-the-refersto-property-of-a-named-range-using-a-named-formula-for-advanced-calculations.cs",
+      "title": "Set the RefersTo property of a named range using a named formula for advanced calculations."
+    },
+    {
+      "category": "managing-ranges",
       "file": "set-the-refersto-property-of-a-named-range-using-an-absolute-address-to-prevent-relative-shifts.cs",
       "title": "Set the RefersTo property of a named range using an absolute address to prevent relative shifts."
     },
