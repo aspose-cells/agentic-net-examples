@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs
 - compare-named-ranges-between-two-workbooks-and-generate-a-report-listing-differences.cs
 - export-the-contents-of-named-range-employeelist-to-a-csv-file-for-external-analysis.cs
+- use-a-named-range-as-chart-data-source-and-refresh-the-chart-after-modifying-the-range.cs
