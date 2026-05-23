@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - use-workbookdesignersetdatasource-with-a-datatable-to-populate-smart-markers-from-relational-database-results.cs
 - configure-smart-marker-options-to-ignore-empty-rows-when-processing-a-detail-list-that-contains-gaps.cs
 - add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs
+- create-a-custom-class-implementing-icustomtypeprovider-to-expose-additional-properties-for-smart-marker-binding.cs
