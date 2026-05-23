@@ -6571,6 +6571,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs",
+      "title": "Implement a custom logger that records each smart marker replacement operation for audit purposes."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-unit-test-that-verifies-smart-marker-replacement-results-match-expected-cell-values-for-a-data-set.cs",
       "title": "Implement a unit test that verifies smart marker replacement results match expected cell values for a data set."
     },
