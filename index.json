@@ -3476,6 +3476,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "load-a-workbook-from-a-file-and-copy-only-formatting-from-range-a1b5-to-c1d5.cs",
+      "title": "Load a workbook from a file and copy only formatting from range A1:B5 to C1:D5."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs",
       "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
     },
