@@ -6486,6 +6486,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs",
+      "title": "Add a smart marker that calculates age from a birthdate field using the Formula parameter with date functions."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs",
       "title": "Apply conditional formatting rules that depend on smart marker values, such as highlighting rows with high priority."
     },
