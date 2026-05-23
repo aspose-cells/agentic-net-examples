@@ -225,3 +225,4 @@ Output files are written to the working directory.
 - set-smart-marker-processing-mode-to-ignore-errors-allowing-partial-data-insertion-without-halting-execution.cs
 - apply-a-dateformatting-smart-marker-to-display-dates-in-mmmm-dd-yyyy-style-throughout-the-report.cs
 - populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs
+- implement-a-retry-mechanism-for-smart-marker-population-when-networkbased-data-sources-experience-transient-failures.cs
