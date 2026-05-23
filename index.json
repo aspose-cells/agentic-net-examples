@@ -3706,6 +3706,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "retrieve-the-address-of-a-range-after-applying-the-entirerow-property-to-ensure-correct-row-reference.cs",
+      "title": "Retrieve the address of a range after applying the EntireRow property to ensure correct row reference."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-the-address-of-a-range-after-moving-it-to-verify-the-new-address-reflects-the-target-location.cs",
       "title": "Retrieve the address of a range after moving it to verify the new address reflects the target location."
     },
