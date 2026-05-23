@@ -7131,6 +7131,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-workbookdesignersetdatasource-with-a-datatable-to-populate-smart-markers-from-relational-database-results.cs",
+      "title": "Use WorkbookDesigner.SetDataSource with a DataTable to populate smart markers from relational database results."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-if-parameter-to-hide-entire-rows-when-a-status-field-equals-inactive-in-the-data-source.cs",
       "title": "Utilize the If parameter to hide entire rows when a status field equals 'Inactive' in the data source."
     },
