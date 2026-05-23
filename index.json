@@ -3491,6 +3491,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-that-sets-a-custom-background-pattern-of-diagonal-stripes-and-apply-it-to-range-v1v10.cs",
+      "title": "Create a Style that sets a custom background pattern of diagonal stripes and apply it to range V1:V10."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-style-that-sets-a-red-border-on-the-left-side-and-apply-it-to-column-t.cs",
       "title": "Create a Style that sets a red border on the left side and apply it to column T."
     },
