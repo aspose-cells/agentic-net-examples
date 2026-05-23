@@ -301,6 +301,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "programmatically-disable-automatic-calculation-import-a-csv-file-then-enable-calculation-mode-to-recompute-dependent-cells.cs",
+      "title": "Programmatically disable automatic calculation, import a CSV file, then enable calculation mode to recompute dependent cells."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "provide-a-public-method-to-clear-the-custom-engines-cache-ensuring-fresh-computation-after-data-changes.cs",
       "title": "Provide a public method to clear the custom engine\u2019s cache, ensuring fresh computation after data changes."
     },

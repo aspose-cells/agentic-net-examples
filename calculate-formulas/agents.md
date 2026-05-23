@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs
 - set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs
 - disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs
+- programmatically-disable-automatic-calculation-import-a-csv-file-then-enable-calculation-mode-to-recompute-dependent-cells.cs
