@@ -705,6 +705,11 @@
       "title": "Write a utility that enumerates all worksheets, sets CalculationMode to Manual, and logs the previous mode for each."
     },
     {
+      "category": "calculate-formulas",
+      "file": "write-a-utility-that-iterates-through-all-worksheets-sets-each-to-manual-mode-and-saves-changes.cs",
+      "title": "Write a utility that iterates through all worksheets, sets each to Manual mode, and saves changes."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
