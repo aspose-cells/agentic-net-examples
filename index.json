@@ -6511,6 +6511,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs",
+      "title": "Calculate a running total using the Formula parameter that adds the current value to the previous subtotal cell."
+    },
+    {
+      "category": "smart-markers",
       "file": "calculate-subtotals-using-subtotal1columnname-syntax-to-sum-values-within-each-grouped-column.cs",
       "title": "Calculate subtotals using (subtotal1:ColumnName) syntax to sum values within each grouped column."
     },

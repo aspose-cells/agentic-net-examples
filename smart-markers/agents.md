@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - insert-a-company-logo-at-the-sheet-top-via-an-image-marker-referencing-the-logo-byte-array.cs
 - generate-a-qr-code-image-using-an-image-marker-by-converting-a-base64-string-into-a-bitmap.cs
 - include-a-formula-parameter-in-a-smart-marker-field-to-evaluate-excel-formulas-dynamically-during-data-population.cs
+- calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs
