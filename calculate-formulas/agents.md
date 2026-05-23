@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs
 - test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs
 - use-worksheetcalculateformula-with-a-custom-calculationoptions-instance-to-evaluate-a-formula-string-without-adding-it-to-the-sheet.cs
+- register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs
