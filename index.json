@@ -176,6 +176,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "create-a-commandline-tool-that-accepts-a-folder-path-recalculates-all-workbooks-and-outputs-summary-statistics.cs",
+      "title": "Create a command\u2011line tool that accepts a folder path, recalculates all workbooks, and outputs summary statistics."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-subclass-of-abstractcalculationengine-that-overrides-calculate-to-replace-today-with-a-fixed-date.cs",
       "title": "Create a subclass of AbstractCalculationEngine that overrides Calculate to replace TODAY with a fixed date."
     },
