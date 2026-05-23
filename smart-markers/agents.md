@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs
 - calculate-subtotals-using-subtotal1columnname-syntax-to-sum-values-within-each-grouped-column.cs
 - create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs
+- specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs

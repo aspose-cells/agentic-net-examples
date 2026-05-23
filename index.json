@@ -6721,6 +6721,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs",
+      "title": "Specify Label and LabelPosition attributes to place group labels before data rows for clear section headings."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-formula-parameter-to-calculate-weighted-averages-across-rows-referencing-multiple-smart-marker-fields-for-each-calculation.cs",
       "title": "Use the Formula parameter to calculate weighted averages across rows, referencing multiple smart marker fields for each calculation."
     },
