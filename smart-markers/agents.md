@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - embed-comments-in-cells-using-smart-markers-pulling-comment-text-from-a-related-data-source-field.cs
 - implement-a-progress-callback-that-reports-percentage-completion-during-largescale-smart-marker-population.cs
 - create-dynamic-dropdown-lists-populated-from-a-reference-data-table-using-smart-marker-syntax.cs
+- run-smart-marker-processing-in-parallel-threads-to-accelerate-population-of-massive-data-sets.cs

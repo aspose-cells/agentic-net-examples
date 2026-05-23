@@ -7161,6 +7161,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "run-smart-marker-processing-in-parallel-threads-to-accelerate-population-of-massive-data-sets.cs",
+      "title": "Run smart marker processing in parallel threads to accelerate population of massive data sets."
+    },
+    {
+      "category": "smart-markers",
       "file": "save-the-merged-workbook-as-xlsx-and-optionally-export-a-pdf-copy-for-reporting-purposes.cs",
       "title": "Save the merged workbook as XLSX and optionally export a PDF copy for reporting purposes."
     },
