@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs
 - apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs
 - generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs
+- create-a-template-that-uses-the-range-parameter-to-fill-a-matrix-layout-from-a-twodimensional-array-source.cs
