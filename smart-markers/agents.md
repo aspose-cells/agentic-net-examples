@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - create-a-smart-marker-that-calculates-running-totals-using-the-formula-parameter-referencing-previous-row-values.cs
 - use-a-foreach-smart-marker-to-generate-a-variablelength-list-of-project-milestones-on-a-timeline-sheet.cs
 - add-a-smart-marker-that-inserts-the-current-date-using-the-formula-parameter-with-today-function.cs
+- configure-the-workbook-designer-to-treat-empty-strings-as-blanks-when-merging-string-properties-from-data-source.cs
