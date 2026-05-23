@@ -206,6 +206,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-preserve-formulas-as-text-strings-for-later-analysis.cs",
+      "title": "Convert a workbook to CSV and preserve formulas as text strings for later analysis."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-add-a-digital-signature-using-a-certificate-stored-in-windows-store.cs",
       "title": "Convert a workbook to PDF and add a digital signature using a certificate stored in Windows store."
     },
