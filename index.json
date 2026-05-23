@@ -3371,6 +3371,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-and-protect-the-sheet-with-a-password-for-editing.cs",
+      "title": "Copy a range to a new workbook and protect the sheet with a password for editing."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-with-formulas-to-another-workbook-updating-external-references-to-point-to-the-new-file.cs",
       "title": "Copy a range with formulas to another workbook, updating external references to point to the new file."
     },
