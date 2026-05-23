@@ -3676,6 +3676,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "export-a-named-range-as-an-image-file-and-embed-it-into-a-word-document.cs",
+      "title": "Export a named range as an image file and embed it into a Word document."
+    },
+    {
+      "category": "managing-ranges",
       "file": "export-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs",
       "title": "Export a range as a PDF page with custom margins and page orientation settings applied."
     },
