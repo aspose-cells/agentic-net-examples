@@ -226,6 +226,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-modification-date-to-reflect-last-processing-time.cs",
+      "title": "Convert a workbook to PDF and set modification date to reflect last processing time."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-security-permissions-to-restrict-editing-and-copying.cs",
       "title": "Convert a workbook to PDF and set security permissions to restrict editing and copying."
     },

@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-define-the-subject-property-for-categorization-purposes.cs
 - convert-a-workbook-to-pdf-and-add-relevant-keywords-to-improve-searchability-in-archives.cs
 - convert-a-workbook-to-pdf-and-set-creation-date-to-current-timestamp-for-audit-tracking.cs
+- convert-a-workbook-to-pdf-and-set-modification-date-to-reflect-last-processing-time.cs
