@@ -96,6 +96,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "register-the-custom-calculation-engine-with-the-workbooks-calculationengine-before-invoking-any-formulas.cs",
+      "title": "Register the custom calculation engine with the workbook's CalculationEngine before invoking any formulas."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs",
       "title": "Replace ICustomFunction implementation with an AbstractCalculationEngine subclass for newer API support."
     },
