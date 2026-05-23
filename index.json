@@ -6561,6 +6561,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs",
+      "title": "Replace placeholder text in merged cells using smart markers while preserving the original cell merge settings."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-a-custom-data-source-object-on-workbookdesigner-when-default-sources-cannot-represent-complex-hierarchical-structures.cs",
       "title": "Set a custom data source object on WorkbookDesigner when default sources cannot represent complex hierarchical structures."
     },
