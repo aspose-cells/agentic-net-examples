@@ -186,6 +186,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-include-custom-header-and-footer-text-on-every-page.cs",
+      "title": "Convert a workbook to PDF and include custom header and footer text on every page."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-using-custom-page-margins-of-05-inches-on-each-side.cs",
       "title": "Convert a workbook to PDF using custom page margins of 0.5 inches on each side."
     },
