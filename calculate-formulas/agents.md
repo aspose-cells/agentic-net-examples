@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - disable-automatic-recalculation-in-workbook-settings-to-control-when-formulas-are-evaluated.cs
 - trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs
 - use-cellcalculate-method-to-evaluate-a-single-cells-formula-independently-of-the-workbook.cs
+- compare-results-of-cellcalculate-with-those-obtained-from-workbookcalculate-for-consistency.cs

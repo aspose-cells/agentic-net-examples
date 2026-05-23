@@ -96,6 +96,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "compare-results-of-cellcalculate-with-those-obtained-from-workbookcalculate-for-consistency.cs",
+      "title": "Compare results of cell.Calculate with those obtained from workbook.Calculate for consistency."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "configure-the-workbook-to-use-automatic-calculation-mode-and-verify-dependent-cells-update-instantly.cs",
       "title": "Configure the workbook to use Automatic calculation mode and verify dependent cells update instantly."
     },
