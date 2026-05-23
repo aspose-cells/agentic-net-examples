@@ -276,6 +276,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-logger-that-records-the-order-of-formula-evaluations-during-workbookcalculateformula-for-debugging.cs",
+      "title": "Implement a logger that records the order of formula evaluations during Workbook.CalculateFormula for debugging."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs",
       "title": "Implement a progress callback that reports percentage completion during extensive calculations."
     },
