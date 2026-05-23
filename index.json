@@ -3881,6 +3881,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "update-a-dynamic-named-range-automatically-after-inserting-new-rows-into-the-worksheet.cs",
+      "title": "Update a dynamic named range automatically after inserting new rows into the worksheet."
+    },
+    {
+      "category": "managing-ranges",
       "file": "update-the-reference-of-the-existing-named-range-reportperiod-to-span-cells-c5c15.cs",
       "title": "Update the reference of the existing named range \"ReportPeriod\" to span cells C5:C15."
     },
