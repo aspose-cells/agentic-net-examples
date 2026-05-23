@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - copy-a-range-to-a-new-workbook-and-set-the-workbooks-creation-date-metadata-to-the-current-timestamp.cs
 - copy-a-ranges-data-and-formatting-to-another-worksheet-using-copy-options-to-retain-styles.cs
 - copy-a-range-to-a-new-workbook-and-preserve-both-cell-values-and-formatting-using-copy-with-style.cs
+- copy-a-range-to-a-new-workbook-and-apply-a-password-to-protect-the-sheet-for-readonly-access.cs
