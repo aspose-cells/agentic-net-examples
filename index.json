@@ -6776,6 +6776,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs",
+      "title": "Load a workbook from a memory stream, process smart markers, and save the result to a byte array."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs",
       "title": "Load a workbook template and apply the CopyStyle attribute to inherit cell formatting for generated records."
     },
