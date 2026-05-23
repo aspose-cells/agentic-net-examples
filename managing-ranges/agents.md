@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs
 - retrieve-the-address-of-a-range-after-moving-it-to-verify-the-new-address-reflects-the-target-location.cs
 - offset-a-range-by-five-rows-upward-and-copy-its-formatting-back-to-the-original-location.cs
+- merge-cells-in-a-range-that-spans-the-header-row-and-set-its-fill-color-to-navy-blue.cs

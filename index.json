@@ -3656,6 +3656,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-cells-in-a-range-that-spans-the-header-row-and-set-its-fill-color-to-navy-blue.cs",
+      "title": "Merge cells in a range that spans the header row and set its fill color to navy blue."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-cells-within-range-a2d2-to-create-a-single-header-cell-and-center-its-text.cs",
       "title": "Merge cells within range A2:D2 to create a single header cell and center its text."
     },
