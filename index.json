@@ -211,6 +211,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-replace-formulas-with-their-evaluated-results-for-static-data-export.cs",
+      "title": "Convert a workbook to CSV and replace formulas with their evaluated results for static data export."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-add-a-digital-signature-using-a-certificate-stored-in-windows-store.cs",
       "title": "Convert a workbook to PDF and add a digital signature using a certificate stored in Windows store."
     },
