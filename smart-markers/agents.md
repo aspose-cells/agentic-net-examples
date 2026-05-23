@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs
 - use-workbookdesignersetdatasource-with-a-datatable-to-populate-smart-markers-from-relational-database-results.cs
 - configure-smart-marker-options-to-ignore-empty-rows-when-processing-a-detail-list-that-contains-gaps.cs
+- add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs

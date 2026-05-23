@@ -6486,6 +6486,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs",
+      "title": "Add a conditional formula smart marker that displays \u201cHigh\u201d when sales exceed a threshold and \u201cLow\u201d otherwise."
+    },
+    {
+      "category": "smart-markers",
       "file": "add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs",
       "title": "Add a noadd parameter to the first template row to keep header static during merging."
     },
