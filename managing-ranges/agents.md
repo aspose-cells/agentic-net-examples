@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-and-copy-style-between-two-ranges-without-saving-to-disk.cs
 - create-a-custom-style-with-bold-font-and-yellow-background-and-apply-it-to-range-e2e10.cs
 - define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs
+- create-a-style-object-that-sets-thin-borders-on-all-sides-and-apply-it-to-range-n5n15.cs
