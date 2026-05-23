@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs
 - save-the-workbook-to-an-excel-file-after-configuring-the-watch-window-for-later-inspection.cs
 - open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
+- use-formulatext-to-obtain-the-exact-textual-representation-of-a-cells-formula.cs

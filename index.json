@@ -211,6 +211,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-formulatext-to-obtain-the-exact-textual-representation-of-a-cells-formula.cs",
+      "title": "Use FormulaText to obtain the exact textual representation of a cell's formula."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs",
       "title": "Use ReferredArea.GetValue(rowOffset, colOffset) to obtain a single cell value from a reference argument."
     },
