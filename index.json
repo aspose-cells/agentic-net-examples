@@ -176,6 +176,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-using-custom-page-margins-of-05-inches-on-each-side.cs",
+      "title": "Convert a workbook to PDF using custom page margins of 0.5 inches on each side."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-with-grayscale-rendering-for-reduced-file-size-and-printing-speed.cs",
       "title": "Convert a workbook to PDF with grayscale rendering for reduced file size and printing speed."
     },
