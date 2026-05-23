@@ -201,6 +201,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-specific-worksheet-to-a-txt-file-using-tab-delimiters-and-utf8-encoding.cs",
+      "title": "Export a specific worksheet to a TXT file using tab delimiters and UTF\u20118 encoding."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-as-xml-with-a-custom-root-element.cs",
       "title": "Export a workbook as XML with a custom root element."
     },
