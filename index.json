@@ -316,6 +316,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-passwordprotected-xls-file-and-export-it-to-pdf-with-embedded-fonts-for-printing.cs",
+      "title": "Load a password\u2011protected XLS file and export it to PDF with embedded fonts for printing."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-tsv-file-using-loadformattsv-and-export-its-content-to-a-csv-file-with-commas.cs",
       "title": "Load a TSV file using LoadFormat.Tsv and export its content to a CSV file with commas."
     },
