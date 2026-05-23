@@ -6516,6 +6516,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-workbook-from-a-nested-object-hierarchy-where-child-collections-are-mapped-using-smart-marker-range-syntax.cs",
+      "title": "Generate a workbook from a nested object hierarchy where child collections are mapped using smart marker range syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs",
       "title": "Group master\u2011detail data using smart marker grouping syntax to create hierarchical tables across rows."
     },
