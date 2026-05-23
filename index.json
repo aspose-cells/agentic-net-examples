@@ -6751,6 +6751,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-dynamic-dropdown-lists-populated-from-a-reference-data-table-using-smart-marker-syntax.cs",
+      "title": "Create dynamic dropdown lists populated from a reference data table using smart marker syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs",
       "title": "Create hierarchical grouping by nesting multiple group parameters in the smart marker expression for two\u2011column aggregation."
     },
