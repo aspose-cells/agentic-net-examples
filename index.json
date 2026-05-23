@@ -356,6 +356,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs",
+      "title": "Recalculate all formulas using Workbook.CalculateFormula after modifying worksheet data in the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "reduce-overhead-in-simple-workbooks-by-setting-workbooksettingsusethreadedcalculation-false-to-improve-stability.cs",
       "title": "Reduce overhead in simple workbooks by setting Workbook.Settings.UseThreadedCalculation false to improve stability."
     },
