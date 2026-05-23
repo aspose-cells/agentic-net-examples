@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs
 - create-an-offset-range-by-shifting-d4f10-three-rows-down-and-two-columns-right.cs
 - generate-a-range-representing-the-entire-column-of-g3h3-and-apply-bold-formatting.cs
+- produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs
