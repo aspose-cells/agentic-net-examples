@@ -2056,6 +2056,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-multiple-workbooks-synchronize-their-theme-palettes-to-a-master-theme-and-save-changes.cs",
+      "title": "Load multiple workbooks, synchronize their theme palettes to a master theme, and save changes."
+    },
+    {
+      "category": "format-cells",
       "file": "measure-the-time-taken-to-update-all-theme-colors-in-a-large-workbook-with-thousands-of-cells.cs",
       "title": "Measure the time taken to update all theme colors in a large workbook with thousands of cells."
     },
