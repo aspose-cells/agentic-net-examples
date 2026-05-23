@@ -286,6 +286,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-remove-all-form-fields-to-produce-a-noneditable-final-version.cs",
+      "title": "Convert a workbook to PDF and remove all form fields to produce a non\u2011editable final version."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-remove-hyperlinks-to-create-a-static-printable-version.cs",
       "title": "Convert a workbook to PDF and remove hyperlinks to create a static, printable version."
     },
