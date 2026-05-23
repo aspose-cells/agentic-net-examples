@@ -131,6 +131,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs",
+      "title": "Retrieve the list of cells currently monitored by the Watch Window for reporting purposes."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "retrieve-the-range-of-values-returned-by-the-custom-function-from-the-evaluated-cell.cs",
       "title": "Retrieve the range of values returned by the custom function from the evaluated cell."
     },
