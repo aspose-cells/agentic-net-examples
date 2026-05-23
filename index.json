@@ -3591,6 +3591,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "generate-a-range-representing-the-entire-column-of-g3h3-and-apply-bold-formatting.cs",
+      "title": "Generate a range representing the entire column of G3:H3 and apply bold formatting."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-unionrange-consisting-of-three-separate-blocks-and-use-it-to-clear-contents-across-all-blocks.cs",
       "title": "Generate a UnionRange consisting of three separate blocks and use it to clear contents across all blocks."
     },
