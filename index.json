@@ -3826,6 +3826,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "list-all-workbookscoped-named-ranges-and-output-their-names-to-the-console.cs",
+      "title": "List all workbook\u2011scoped named ranges and output their names to the console."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-a-passwordprotected-workbook-and-copy-only-the-formatting-from-range-o1o5-to-p1p5.cs",
       "title": "Load a password\u2011protected workbook and copy only the formatting from range O1:O5 to P1:P5."
     },
