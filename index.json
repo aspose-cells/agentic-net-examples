@@ -200,6 +200,11 @@
       "title": "Read a CSV file and export each worksheet as separate PNG images."
     },
     {
+      "category": "conversion",
+      "file": "set-html-image-options-dpi-to-200-and-export-html-with-highresolution-images.cs",
+      "title": "Set HTML image options DPI to 200 and export HTML with high\u2011resolution images."
+    },
+    {
       "category": "document-properties",
       "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
       "title": "Add a custom property containing an array of string tags to categorize workbook content."
