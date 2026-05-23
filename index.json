@@ -4026,6 +4026,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-a-named-range-to-define-the-print-area-of-a-worksheet-before-printing-to-pdf.cs",
+      "title": "Use a named range to define the print area of a worksheet before printing to PDF."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs",
       "title": "Use FindOptions to locate cells containing formulas that reference a specific named range."
     },

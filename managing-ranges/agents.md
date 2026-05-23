@@ -202,3 +202,4 @@ Output files are written to the working directory.
 - load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs
 - add-a-hyperlink-to-each-cell-within-a-named-range-that-points-to-its-documentation-page.cs
 - validate-that-the-address-of-each-named-range-conforms-to-the-a1-reference-style.cs
+- use-a-named-range-to-define-the-print-area-of-a-worksheet-before-printing-to-pdf.cs
