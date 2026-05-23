@@ -821,6 +821,11 @@
     },
     {
       "category": "conversion",
+      "file": "perform-batch-conversion-with-progress-callback-that-reports-percentage-completed-for-each-file.cs",
+      "title": "Perform batch conversion with progress callback that reports percentage completed for each file."
+    },
+    {
+      "category": "conversion",
       "file": "produce-png-images-with-transparent-background-from-a-csv-workbook.cs",
       "title": "Produce PNG images with transparent background from a CSV workbook."
     },
