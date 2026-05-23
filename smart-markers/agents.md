@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - implement-pagination-by-limiting-smart-marker-row-output-per-worksheet-and-automatically-creating-new-sheets-for-overflow.cs
 - use-the-setvariable-method-to-pass-a-locale-identifier-that-influences-date-and-number-formatting-in-smart-markers.cs
 - validate-that-conditional-formatting-applied-via-smart-markers-correctly-highlights-cells-based-on-imported-status-values.cs
+- create-a-workflow-that-reads-json-files-populates-a-template-and-saves-each-workbook-with-a-timestamp.cs
