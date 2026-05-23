@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - measure-performance-difference-between-automatic-and-manual-modes-by-timing-workbookcalculateformula-execution.cs
 - measure-memory-consumption-differences-between-automatic-and-automaticexcepttables-modes-on-large-workbooks.cs
 - log-time-taken-for-each-cell-calculation-when-using-cellcalculate-within-a-processing-loop.cs
+- create-a-utility-that-toggles-calculation-mode-based-on-workbook-size-to-optimize-memory-usage.cs
