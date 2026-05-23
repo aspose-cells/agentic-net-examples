@@ -4081,6 +4081,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-findoptions-to-locate-cells-containing-dates-older-than-one-year-within-a-named-range.cs",
+      "title": "Use FindOptions to locate cells containing dates older than one year within a named range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs",
       "title": "Use FindOptions to locate cells containing formulas that reference a specific named range."
     },
