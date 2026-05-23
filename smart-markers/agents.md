@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - insert-hyperlinks-via-smart-markers-that-point-to-external-web-resources-based-on-dynamic-url-fields.cs
 - generate-a-table-of-contents-sheet-using-smart-markers-that-lists-all-populated-worksheets-with-hyperlinks.cs
 - apply-a-custom-number-format-smart-marker-to-display-currency-values-with-localespecific-symbols-and-separators.cs
+- populate-a-chart-series-using-smart-markers-linked-to-a-data-source-then-adjust-chart-title-dynamically.cs
