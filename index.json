@@ -6646,6 +6646,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-setvariable-method-to-pass-a-locale-identifier-that-influences-date-and-number-formatting-in-smart-markers.cs",
+      "title": "Use the SetVariable method to pass a locale identifier that influences date and number formatting in smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-if-parameter-to-hide-entire-rows-when-a-status-field-equals-inactive-in-the-data-source.cs",
       "title": "Utilize the If parameter to hide entire rows when a status field equals 'Inactive' in the data source."
     },
