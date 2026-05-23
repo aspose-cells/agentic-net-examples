@@ -2021,6 +2021,11 @@
     },
     {
       "category": "format-cells",
+      "file": "programmatically-compare-two-workbooks-theme-palettes-and-highlight-differences-in-a-report.cs",
+      "title": "Programmatically compare two workbooks\u2019 theme palettes and highlight differences in a report."
+    },
+    {
+      "category": "format-cells",
       "file": "programmatically-reset-a-workbooks-theme-to-the-default-office-theme-and-verify-cell-colors.cs",
       "title": "Programmatically reset a workbook\u2019s theme to the default Office theme and verify cell colors."
     },
