@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - use-the-setvariable-method-to-inject-runtime-values-that-influence-smart-marker-calculations-across-the-workbook.cs
 - map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs
 - replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs
+- utilize-the-if-parameter-to-hide-entire-rows-when-a-status-field-equals-inactive-in-the-data-source.cs
