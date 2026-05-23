@@ -6526,6 +6526,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs",
+      "title": "Apply conditional smart marker syntax to display rows only when numeric column values exceed a defined threshold."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs",
       "title": "Apply conditional smart markers that display \u201cPass\u201d or \u201cFail\u201d based on a numeric score property."
     },
