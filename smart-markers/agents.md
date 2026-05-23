@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - set-a-custom-icustomdatasource-that-retrieves-data-from-a-rest-api-then-populate-smart-markers-with-the-response.cs
 - create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs
 - use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs
+- implement-a-retry-mechanism-for-setdatasource-calls-when-transient-database-connectivity-issues-occur-during-smart-marker-preparation.cs

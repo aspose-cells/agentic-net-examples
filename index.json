@@ -6591,6 +6591,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-retry-mechanism-for-setdatasource-calls-when-transient-database-connectivity-issues-occur-during-smart-marker-preparation.cs",
+      "title": "Implement a retry mechanism for SetDataSource calls when transient database connectivity issues occur during smart marker preparation."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-unit-test-that-verifies-smart-marker-replacement-results-match-expected-cell-values-for-a-data-set.cs",
       "title": "Implement a unit test that verifies smart marker replacement results match expected cell values for a data set."
     },
