@@ -6496,6 +6496,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-copystyle-to-inherit-number-formats-ensuring-generated-records-retain-currency-symbols-and-formatting.cs",
+      "title": "Apply CopyStyle to inherit number formats, ensuring generated records retain currency symbols and formatting."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs",
       "title": "Apply the Range parameter to map a collection of objects to a specific cell block in the worksheet."
     },
