@@ -2066,6 +2066,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-the-themes-dark2-color-as-the-default-border-color-for-all-tables-in-the-workbook.cs",
+      "title": "Set the theme\u2019s Dark2 color as the default border color for all tables in the workbook."
+    },
+    {
+      "category": "format-cells",
       "file": "update-the-hyperlink-theme-color-to-a-new-shade-of-blue-and-save-the-workbook.cs",
       "title": "Update the Hyperlink theme color to a new shade of blue and save the workbook."
     },
