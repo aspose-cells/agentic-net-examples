@@ -3541,6 +3541,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "cut-the-range-b2c4-from-the-source-sheet-and-paste-it-into-g5h7-on-a-different-worksheet.cs",
+      "title": "Cut the range B2:C4 from the source sheet and paste it into G5:H7 on a different worksheet."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
