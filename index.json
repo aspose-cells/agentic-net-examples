@@ -6591,6 +6591,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs",
+      "title": "Group data by adding (group:normal,skip:1) to the smart marker expression to insert blank rows between groups."
+    },
+    {
+      "category": "smart-markers",
       "file": "group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs",
       "title": "Group master\u2011detail data using smart marker grouping syntax to create hierarchical tables across rows."
     },
