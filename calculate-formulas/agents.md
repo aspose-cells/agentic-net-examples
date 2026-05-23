@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs
 - in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs
 - assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs
+- set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs
