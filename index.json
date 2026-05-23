@@ -1925,6 +1925,11 @@
       "title": "Validate that the Title built\u2011in property is not empty before exporting the workbook to any external format."
     },
     {
+      "category": "format-cells",
+      "file": "load-an-xlsx-workbook-verify-theme-usage-and-extract-all-theme-color-definitions.cs",
+      "title": "Load an XLSX workbook, verify theme usage, and extract all theme color definitions."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "add-subtotal-rows-to-the-worksheet-after-assigning-custom-globalizationsettings-verifying-localized-total-labels.cs",
       "title": "Add subtotal rows to the worksheet after assigning custom GlobalizationSettings, verifying localized total labels."
