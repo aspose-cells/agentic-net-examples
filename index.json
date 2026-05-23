@@ -171,6 +171,11 @@
     },
     {
       "category": "conversion",
+      "file": "enable-txtloadoptionsismultiencoded-read-a-mixedencoding-csv-and-verify-unicode-characters-persist.cs",
+      "title": "Enable TxtLoadOptions.IsMultiEncoded, read a mixed\u2011encoding CSV, and verify Unicode characters persist."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-as-xml-with-a-custom-root-element.cs",
       "title": "Export a workbook as XML with a custom root element."
     },
