@@ -416,6 +416,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculation-mode-to-automaticexcepttables-to-exclude-table-formulas-from-automatic-updates.cs",
+      "title": "Set calculation mode to AutomaticExceptTables to exclude table formulas from automatic updates."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs",
       "title": "Set CalculationMode to SemiAutomatic to recalculate only dependent cells after each modification."
     },
