@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - create-a-dynamic-named-range-whose-reference-adjusts-based-on-the-number-of-filled-rows-in-column-a.cs
 - update-a-dynamic-named-range-automatically-after-inserting-new-rows-into-the-worksheet.cs
 - set-the-refersto-property-of-a-named-range-using-an-absolute-address-to-prevent-relative-shifts.cs
+- remove-a-named-range-only-if-it-references-cells-outside-the-used-range-of-the-worksheet.cs
