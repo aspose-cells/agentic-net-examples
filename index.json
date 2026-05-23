@@ -6586,6 +6586,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs",
+      "title": "Use the SetDataSource overload that accepts an IEnumerable to populate smart markers from a list of DTO objects."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-setvariable-method-to-inject-runtime-values-that-influence-smart-marker-calculations-across-the-workbook.cs",
       "title": "Use the SetVariable method to inject runtime values that influence smart marker calculations across the workbook."
     },
