@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - restrict-smart-marker-processing-to-the-first-one-hundred-rows-using-the-range-parameter-for-performance.cs
 - group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs
 - calculate-subtotals-using-subtotal1columnname-syntax-to-sum-values-within-each-grouped-column.cs
+- create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs

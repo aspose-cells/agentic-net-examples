@@ -6561,6 +6561,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs",
+      "title": "Create hierarchical grouping by nesting multiple group parameters in the smart marker expression for two\u2011column aggregation."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs",
       "title": "Define a variable in the Excel template and set its value programmatically before processing."
     },
