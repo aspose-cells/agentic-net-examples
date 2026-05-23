@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs
 - iterate-through-a-folder-of-xlsx-files-replace-accent3-with-a-custom-green-shade-and-save.cs
 - generate-a-report-listing-each-workbooks-theme-color-palette-before-and-after-applying-changes.cs
+- use-the-api-to-enumerate-all-theme-color-types-and-output-their-default-rgb-values.cs

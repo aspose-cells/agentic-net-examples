@@ -1976,6 +1976,11 @@
     },
     {
       "category": "format-cells",
+      "file": "use-the-api-to-enumerate-all-theme-color-types-and-output-their-default-rgb-values.cs",
+      "title": "Use the API to enumerate all theme color types and output their default RGB values."
+    },
+    {
+      "category": "format-cells",
       "file": "validate-that-cells-using-accent1-automatically-reflect-the-updated-theme-color-after-modification.cs",
       "title": "Validate that cells using Accent1 automatically reflect the updated theme color after modification."
     },
