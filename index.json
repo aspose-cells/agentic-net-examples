@@ -166,6 +166,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "demonstrate-worksheetcalculateformula-with-a-formula-referencing-external-workbook-cells-by-providing-appropriate-options.cs",
+      "title": "Demonstrate Worksheet.CalculateFormula with a formula referencing external workbook cells by providing appropriate options."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "detect-circular-references-during-formula-evaluation-and-log-the-offending-cell-addresses.cs",
       "title": "Detect circular references during formula evaluation and log the offending cell addresses."
     },
