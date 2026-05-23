@@ -3586,6 +3586,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-worksheetcollectioncreateunionrange-to-combine-address-b2b10f2f10-and-apply-a-light-yellow-fill.cs",
+      "title": "Use WorksheetCollection.CreateUnionRange to combine address \"B2:B10,F2:F10\" and apply a light yellow fill."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-worksheetcollectioncreateunionrange-to-merge-address-g1g3i1i3-for-batch-formatting-across-worksheets.cs",
       "title": "Use WorksheetCollection.CreateUnionRange to merge address \"G1:G3,I1:I3\" for batch formatting across worksheets."
     },

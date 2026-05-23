@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - create-a-unionrange-that-includes-a-named-range-and-a-regular-address-then-apply-a-background-color.cs
 - use-worksheetcollectioncreateunionrange-to-combine-address-a1b2d4e5-and-apply-a-bold-font-style-to-all-cells.cs
 - use-worksheetcollectioncreateunionrange-to-merge-address-g1g3i1i3-for-batch-formatting-across-worksheets.cs
+- use-worksheetcollectioncreateunionrange-to-combine-address-b2b10f2f10-and-apply-a-light-yellow-fill.cs
