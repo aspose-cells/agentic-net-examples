@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - import-a-list-of-named-range-definitions-from-a-json-file-and-create-them-programmatically.cs
 - validate-that-all-named-ranges-reference-existing-cells-and-report-any-invalid-references.cs
 - apply-a-custom-style-to-all-cells-within-a-named-range-to-standardize-formatting.cs
+- search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs
