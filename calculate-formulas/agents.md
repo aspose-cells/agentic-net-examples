@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - interrupt-an-ongoing-workbookcalculateformula-operation-using-a-cancellation-token-after-a-timeout.cs
 - implement-a-cancellation-token-that-stops-formula-calculation-when-the-user-requests-an-abort-operation.cs
 - handle-calculationexception-during-formula-recalculation-to-detect-circular-reference-errors.cs
+- extract-and-log-the-formula-dependency-graph-after-calling-workbookcalculateformula-for-debugging.cs
