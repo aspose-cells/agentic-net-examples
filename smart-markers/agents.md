@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - use-the-formula-parameter-to-calculate-weighted-averages-across-rows-referencing-multiple-smart-marker-fields-for-each-calculation.cs
 - load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs
 - assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs
+- provide-a-custom-collection-of-objects-as-the-data-source-to-workbookdesigner-for-flexible-objectoriented-merging.cs
