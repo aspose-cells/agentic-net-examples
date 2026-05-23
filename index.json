@@ -66,6 +66,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationoptionsconvergencethreshold-to-0001-to-define-precision-for-iterative-calculations.cs",
+      "title": "Set CalculationOptions.ConvergenceThreshold to 0.001 to define precision for iterative calculations."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationoptionsenableiterativecalculation-to-true-to-allow-circular-reference-evaluation-during-calculations.cs",
       "title": "Set CalculationOptions.EnableIterativeCalculation to true to allow circular reference evaluation during calculations."
     },
