@@ -186,6 +186,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-apply-lossless-image-compression-to-preserve-visual-fidelity.cs",
+      "title": "Convert a workbook to PDF and apply lossless image compression to preserve visual fidelity."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-assign-the-author-property-to-reflect-content-creator.cs",
       "title": "Convert a workbook to PDF and assign the author property to reflect content creator."
     },
