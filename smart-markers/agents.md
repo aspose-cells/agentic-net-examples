@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs
 - insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs
 - process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs
+- group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs
