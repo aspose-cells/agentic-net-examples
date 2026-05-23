@@ -7150,6 +7150,11 @@
       "title": "Validate that conditional formatting applied via smart markers correctly highlights cells based on imported status values."
     },
     {
+      "category": "smart-markers",
+      "file": "validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs",
+      "title": "Validate that each generated detail worksheet contains the expected number of rows matching the source collection count."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
