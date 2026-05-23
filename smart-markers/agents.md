@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs
 - implement-a-retry-mechanism-for-setdatasource-calls-when-transient-database-connectivity-issues-occur-during-smart-marker-preparation.cs
 - use-the-formula-parameter-to-compute-running-totals-across-rows-updating-each-cell-as-data-is-imported.cs
+- create-a-template-that-generates-a-calendar-view-filling-dates-based-on-a-start-date-variable.cs
