@@ -6581,6 +6581,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "combine-variable-array-markers-with-a-slicer-to-populate-a-rectangular-block-of-cells-from-a-twodimensional-array.cs",
+      "title": "Combine variable array markers with a slicer to populate a rectangular block of cells from a two\u2011dimensional array."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs",
       "title": "Configure WorkbookDesigner to ignore empty smart markers, preventing unnecessary row creation when source collections are empty."
     },

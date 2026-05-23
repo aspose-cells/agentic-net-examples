@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs
 - sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs
 - apply-a-custom-cell-style-to-smart-marker-cells-after-processing-to-maintain-consistent-formatting-across-the-workbook.cs
+- combine-variable-array-markers-with-a-slicer-to-populate-a-rectangular-block-of-cells-from-a-twodimensional-array.cs
