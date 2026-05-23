@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - apply-a-custom-calculation-engine-that-substitutes-missing-functions-with-userdefined-equivalents-during-evaluation.cs
 - interrupt-an-ongoing-workbookcalculateformula-operation-using-a-cancellation-token-after-a-timeout.cs
 - implement-a-cancellation-token-that-stops-formula-calculation-when-the-user-requests-an-abort-operation.cs
+- handle-calculationexception-during-formula-recalculation-to-detect-circular-reference-errors.cs

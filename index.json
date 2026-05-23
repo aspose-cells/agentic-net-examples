@@ -236,6 +236,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "handle-calculationexception-during-formula-recalculation-to-detect-circular-reference-errors.cs",
+      "title": "Handle CalculationException during formula recalculation to detect circular reference errors."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs",
       "title": "Highlight cells with error values after calculation using conditional formatting rules automatically."
     },
