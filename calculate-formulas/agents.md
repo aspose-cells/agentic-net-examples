@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs
 - pause-calculation-after-a-predefined-time-threshold-and-resume-it-later-without-data-loss.cs
 - resume-a-paused-calculation-session-and-verify-that-results-match-uninterrupted-execution.cs
+- disable-automatic-recalculation-in-workbook-settings-to-control-when-formulas-are-evaluated.cs
