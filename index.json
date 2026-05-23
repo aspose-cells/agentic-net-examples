@@ -101,6 +101,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "capture-calculation-errors-by-setting-calculationoptionsignoreerror-false-and-handling-exceptions-thrown-from-calculateformula-calls.cs",
+      "title": "Capture calculation errors by setting CalculationOptions.IgnoreError false and handling exceptions thrown from CalculateFormula calls."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "compare-formula-text-before-and-after-modification-to-ensure-intended-changes-were-applied.cs",
       "title": "Compare formula text before and after modification to ensure intended changes were applied."
     },
