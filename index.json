@@ -286,6 +286,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-document-language-to-french-to-support-multilingual-documents.cs",
+      "title": "Convert a workbook to PDF and set document language to French to support multilingual documents."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-image-dpi-to-300-for-highresolution-printing-needs.cs",
       "title": "Convert a workbook to PDF and set image DPI to 300 for high\u2011resolution printing needs."
     },
