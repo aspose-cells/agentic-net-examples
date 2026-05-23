@@ -6526,6 +6526,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs",
+      "title": "Apply conditional smart markers that display \u201cPass\u201d or \u201cFail\u201d based on a numeric score property."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-copystyle-to-inherit-date-formatting-so-generated-dates-display-in-the-same-localespecific-format-as-the-template.cs",
       "title": "Apply CopyStyle to inherit date formatting so generated dates display in the same locale\u2011specific format as the template."
     },
