@@ -181,6 +181,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "create-a-utility-that-toggles-calculation-mode-based-on-workbook-size-to-optimize-memory-usage.cs",
+      "title": "Create a utility that toggles calculation mode based on workbook size to optimize memory usage."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "demonstrate-worksheetcalculateformula-with-a-formula-referencing-external-workbook-cells-by-providing-appropriate-options.cs",
       "title": "Demonstrate Worksheet.CalculateFormula with a formula referencing external workbook cells by providing appropriate options."
     },
