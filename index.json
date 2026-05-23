@@ -231,6 +231,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-a-cancellation-token-with-workbookcalculate-to-abort-calculation-after-a-predefined-timeout.cs",
+      "title": "Use a cancellation token with workbook.Calculate to abort calculation after a predefined timeout."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs",
       "title": "Use CalculationOptions to ignore errors and then evaluate a formula containing #REF! references."
     },
