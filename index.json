@@ -346,6 +346,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-workbook-from-cloud-storage-and-convert-it-to-csv.cs",
+      "title": "Load a workbook from cloud storage and convert it to CSV."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-workbook-with-custom-load-options-to-ignore-missing-fonts-during-conversion-process.cs",
       "title": "Load a workbook with custom load options to ignore missing fonts during conversion process."
     },
