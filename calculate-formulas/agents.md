@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - apply-a-custom-function-within-an-array-formula-to-compute-results-for-an-entire-data-table.cs
 - calculate-an-array-formula-for-a-data-table-that-aggregates-values-across-multiple-rows.cs
 - validate-array-formula-syntax-programmatically-before-triggering-workbookcalculate-to-avoid-runtime-errors.cs
+- set-iterative-calculation-settings-including-maximum-iterations-and-precision-tolerance-for-circular-reference-handling.cs
