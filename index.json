@@ -6496,6 +6496,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-copystyle-to-inherit-date-formatting-so-generated-dates-display-in-the-same-localespecific-format-as-the-template.cs",
+      "title": "Apply CopyStyle to inherit date formatting so generated dates display in the same locale\u2011specific format as the template."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-copystyle-to-inherit-number-formats-ensuring-generated-records-retain-currency-symbols-and-formatting.cs",
       "title": "Apply CopyStyle to inherit number formats, ensuring generated records retain currency symbols and formatting."
     },

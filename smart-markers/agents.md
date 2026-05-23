@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs
 - embed-a-formula-that-references-other-cells-to-enable-dynamic-calculations-during-smart-marker-processing.cs
 - apply-copystyle-to-inherit-number-formats-ensuring-generated-records-retain-currency-symbols-and-formatting.cs
+- apply-copystyle-to-inherit-date-formatting-so-generated-dates-display-in-the-same-localespecific-format-as-the-template.cs
