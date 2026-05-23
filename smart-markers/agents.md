@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - define-a-custom-label-that-concatenates-static-text-with-aggregated-values-for-each-summary-row.cs
 - generate-sequential-invoice-numbers-using-a-custom-label-that-combines-a-prefix-with-the-autoincremented-record-index.cs
 - insert-images-by-adding-the-image-parameter-to-a-smart-marker-tag-and-supplying-a-byte-array-source.cs
+- insert-a-company-logo-at-the-sheet-top-via-an-image-marker-referencing-the-logo-byte-array.cs
