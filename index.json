@@ -176,6 +176,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-json-with-prettyprinted-indentation-for-readability.cs",
+      "title": "Export a workbook to JSON with pretty\u2011printed indentation for readability."
+    },
+    {
+      "category": "conversion",
       "file": "export-each-sheet-as-jpeg-images-with-300-dpi-resolution-for-printing.cs",
       "title": "Export each sheet as JPEG images with 300\u202fDPI resolution for printing."
     },
