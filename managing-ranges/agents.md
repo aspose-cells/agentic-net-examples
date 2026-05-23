@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - copy-a-range-to-a-new-workbook-then-remove-all-formulas-leaving-only-static-values.cs
 - copy-a-range-to-a-new-workbook-then-apply-password-protection-to-the-entire-file.cs
 - copy-a-range-to-a-new-workbook-while-preserving-column-widths-and-row-heights.cs
+- copy-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs
