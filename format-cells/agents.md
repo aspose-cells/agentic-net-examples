@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - use-the-api-to-enumerate-all-theme-color-types-and-output-their-default-rgb-values.cs
 - apply-a-conditional-formatting-rule-that-colors-cells-based-on-the-accent4-theme-color-intensity.cs
 - create-a-chart-and-set-its-series-colors-to-use-the-workbooks-theme-accent5-colors.cs
+- assign-the-themes-dark1-color-to-the-fill-of-a-pivot-tables-row-headers.cs
