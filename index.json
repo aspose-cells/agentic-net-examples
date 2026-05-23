@@ -26,6 +26,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs",
+      "title": "Invoke Workbook.CalculateFormula(calculationOptions) to recalculate formulas with custom monitor enabled for each calculation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs",
       "title": "Load a workbook from a file stream, modify cells, then call Workbook.CalculateFormula to recalculate."
     },

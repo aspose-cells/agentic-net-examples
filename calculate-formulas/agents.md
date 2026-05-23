@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs
 - assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs
 - set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs
+- invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs
