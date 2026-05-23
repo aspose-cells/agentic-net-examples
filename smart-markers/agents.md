@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - apply-a-dateformatting-smart-marker-to-display-dates-in-mmmm-dd-yyyy-style-throughout-the-report.cs
 - populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs
 - implement-a-retry-mechanism-for-smart-marker-population-when-networkbased-data-sources-experience-transient-failures.cs
+- configure-workbook-options-to-recalculate-formulas-after-smart-marker-insertion-guaranteeing-uptodate-calculations.cs
