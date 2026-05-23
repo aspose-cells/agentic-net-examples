@@ -116,6 +116,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "retrieve-the-range-of-values-returned-by-the-custom-function-from-the-evaluated-cell.cs",
+      "title": "Retrieve the range of values returned by the custom function from the evaluated cell."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs",
       "title": "Return a scalar numeric result from a custom function after processing reference values."
     },
