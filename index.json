@@ -116,6 +116,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "disable-automatic-recalculation-in-workbook-settings-to-control-when-formulas-are-evaluated.cs",
+      "title": "Disable automatic recalculation in workbook settings to control when formulas are evaluated."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "enable-circularreference-detection-in-workbook-calculation-settings-to-prevent-infinite-evaluation-loops.cs",
       "title": "Enable circular\u2011reference detection in workbook calculation settings to prevent infinite evaluation loops."
     },
