@@ -6681,6 +6681,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-multithreaded-processing-by-creating-separate-workbookdesigner-instances-for-each-template-then-merging-data-concurrently.cs",
+      "title": "Enable multi\u2011threaded processing by creating separate WorkbookDesigner instances for each template, then merging data concurrently."
+    },
+    {
+      "category": "smart-markers",
       "file": "enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs",
       "title": "Enable overflow handling so excess rows automatically continue onto a secondary worksheet during processing."
     },
