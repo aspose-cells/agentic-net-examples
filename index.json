@@ -181,6 +181,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-include-only-column-headers-without-any-data-rows.cs",
+      "title": "Convert a workbook to CSV and include only column headers without any data rows."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-add-a-digital-signature-using-a-certificate-stored-in-windows-store.cs",
       "title": "Convert a workbook to PDF and add a digital signature using a certificate stored in Windows store."
     },
