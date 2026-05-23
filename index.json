@@ -181,6 +181,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-compress-embedded-images-using-lossless-compression-technique.cs",
+      "title": "Convert a workbook to PDF and compress embedded images using lossless compression technique."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-embed-javascript-that-triggers-automatic-printing-on-open.cs",
       "title": "Convert a workbook to PDF and embed JavaScript that triggers automatic printing on open."
     },
