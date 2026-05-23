@@ -1946,6 +1946,11 @@
     },
     {
       "category": "format-cells",
+      "file": "check-if-any-cells-use-the-themecolorindex-enumeration-and-log-their-addresses-for-review.cs",
+      "title": "Check if any cells use the ThemeColorIndex enumeration and log their addresses for review."
+    },
+    {
+      "category": "format-cells",
       "file": "check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs",
       "title": "Check whether a workbook contains theme colors before applying bulk theme updates to multiple files."
     },

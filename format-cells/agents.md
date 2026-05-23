@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - apply-a-custom-theme-color-to-the-border-of-a-range-of-cells-in-the-second-worksheet.cs
 - extract-the-themes-font-scheme-and-list-the-primary-and-secondary-font-families-used.cs
 - replace-the-workbooks-theme-font-with-a-custom-font-family-and-update-all-cell-styles.cs
+- check-if-any-cells-use-the-themecolorindex-enumeration-and-log-their-addresses-for-review.cs
