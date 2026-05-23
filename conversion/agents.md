@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-url-and-convert-it-to-pdf.cs
 - load-a-workbook-from-cloud-storage-and-convert-it-to-csv.cs
 - convert-workbook-to-pdf-while-preserving-original-layout-and-cell-formatting-accurately.cs
+- convert-a-workbook-to-pdf-with-grayscale-rendering-for-reduced-file-size-and-printing-speed.cs

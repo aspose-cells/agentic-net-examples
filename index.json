@@ -176,6 +176,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-with-grayscale-rendering-for-reduced-file-size-and-printing-speed.cs",
+      "title": "Convert a workbook to PDF with grayscale rendering for reduced file size and printing speed."
+    },
+    {
+      "category": "conversion",
       "file": "convert-an-excel-workbook-containing-multiple-sheets-to-separate-tsv-files-one-per-worksheet.cs",
       "title": "Convert an Excel workbook containing multiple sheets to separate TSV files, one per worksheet."
     },
