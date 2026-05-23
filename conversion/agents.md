@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - load-a-csv-file-split-a-combined-address-column-into-separate-street-city-and-zip-columns.cs
 - convert-an-excel-workbook-to-a-pipedelimited-txt-file-by-setting-saveformattxt-and-custom-separator.cs
 - use-txtloadoptions-to-specify-utf16-encoding-when-loading-a-csv-file-containing-asian-characters.cs
+- load-a-csv-file-compute-running-total-for-a-numeric-column-and-write-totals-to-new-column.cs

@@ -271,6 +271,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-csv-file-compute-running-total-for-a-numeric-column-and-write-totals-to-new-column.cs",
+      "title": "Load a CSV file, compute running total for a numeric column, and write totals to new column."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-csv-file-containing-formulas-without-loaddataonly-flag-and-ensure-formulas-remain-functional.cs",
       "title": "Load a CSV file containing formulas without LoadDataOnly flag and ensure formulas remain functional."
     },
