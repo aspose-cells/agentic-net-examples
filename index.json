@@ -831,6 +831,11 @@
     },
     {
       "category": "conversion",
+      "file": "remove-empty-rows-and-columns-from-a-workbook-before-saving-it-as-ods-format.cs",
+      "title": "Remove empty rows and columns from a workbook before saving it as ODS format."
+    },
+    {
+      "category": "conversion",
       "file": "replace-invalid-characters-automatically-during-csv-load-and-confirm-no-exceptions-are-thrown.cs",
       "title": "Replace invalid characters automatically during CSV load and confirm no exceptions are thrown."
     },
