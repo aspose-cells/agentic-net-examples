@@ -6536,6 +6536,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "capture-a-callback-after-each-group-is-processed-to-log-group-identifiers-and-record-counts-for-auditing.cs",
+      "title": "Capture a callback after each group is processed to log group identifiers and record counts for auditing."
+    },
+    {
+      "category": "smart-markers",
       "file": "capture-each-record-processing-event-in-the-ismartmarkercallback-implementation-to-build-a-detailed-merge-log.cs",
       "title": "Capture each record processing event in the ISmartMarkerCallBack implementation to build a detailed merge log."
     },
