@@ -2016,6 +2016,11 @@
     },
     {
       "category": "format-cells",
+      "file": "generate-a-summary-sheet-listing-each-theme-color-name-and-its-hexadecimal-representation.cs",
+      "title": "Generate a summary sheet listing each theme color name and its hexadecimal representation."
+    },
+    {
+      "category": "format-cells",
       "file": "import-a-json-defined-color-scheme-and-apply-it-as-the-workbooks-new-theme-colors.cs",
       "title": "Import a JSON-defined color scheme and apply it as the workbook\u2019s new theme colors."
     },

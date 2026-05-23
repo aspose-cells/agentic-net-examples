@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - export-the-modified-workbook-to-xlsx-and-verify-that-the-theme-xml-reflects-new-colors.cs
 - load-a-workbook-remove-its-existing-theme-and-assign-a-fresh-theme-with-default-colors.cs
 - create-a-function-that-maps-business-status-values-to-specific-theme-accent-colors-for-cell-fill.cs
+- generate-a-summary-sheet-listing-each-theme-color-name-and-its-hexadecimal-representation.cs
