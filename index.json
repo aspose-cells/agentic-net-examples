@@ -331,6 +331,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-cellcalculate-method-to-evaluate-a-single-cells-formula-independently-of-the-workbook.cs",
+      "title": "Use cell.Calculate method to evaluate a single cell's formula independently of the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-formulatext-to-obtain-the-exact-textual-representation-of-a-cells-formula.cs",
       "title": "Use FormulaText to obtain the exact textual representation of a cell's formula."
     },

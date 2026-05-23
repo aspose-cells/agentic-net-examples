@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - resume-a-paused-calculation-session-and-verify-that-results-match-uninterrupted-execution.cs
 - disable-automatic-recalculation-in-workbook-settings-to-control-when-formulas-are-evaluated.cs
 - trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs
+- use-cellcalculate-method-to-evaluate-a-single-cells-formula-independently-of-the-workbook.cs
