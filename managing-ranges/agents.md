@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs
 - configure-findoptions-to-ignore-hidden-rows-while-searching-within-range-k1k500.cs
 - create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs
+- apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs

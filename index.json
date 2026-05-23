@@ -3361,6 +3361,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs",
+      "title": "Apply a custom number format to all cells in named range \"CurrencyValues\"."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-a-custom-number-format-to-the-entire-column-c-after-offsetting-the-original-range-by-two-rows.cs",
       "title": "Apply a custom number format to the entire column C after offsetting the original range by two rows."
     },
