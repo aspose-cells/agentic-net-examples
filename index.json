@@ -201,6 +201,11 @@
     },
     {
       "category": "conversion",
+      "file": "set-html-image-options-dpi-to-150-and-export-html-with-sharper-images.cs",
+      "title": "Set HTML image options DPI to 150 and export HTML with sharper images."
+    },
+    {
+      "category": "conversion",
       "file": "set-html-image-options-dpi-to-200-and-export-html-with-highresolution-images.cs",
       "title": "Set HTML image options DPI to 200 and export HTML with high\u2011resolution images."
     },
