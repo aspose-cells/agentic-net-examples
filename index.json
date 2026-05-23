@@ -3386,6 +3386,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-and-preserve-both-cell-values-and-formatting-using-copy-with-style.cs",
+      "title": "Copy a range to a new workbook and preserve both cell values and formatting using copy with style."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-workbook-and-protect-the-sheet-with-a-password-for-editing.cs",
       "title": "Copy a range to a new workbook and protect the sheet with a password for editing."
     },
