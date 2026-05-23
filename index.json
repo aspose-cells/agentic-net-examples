@@ -6646,6 +6646,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs",
+      "title": "Enable the notify parameter on a smart marker to receive callbacks for each row insertion."
+    },
+    {
+      "category": "smart-markers",
       "file": "export-the-final-workbook-to-xlsx-format-after-smart-marker-processing-ensuring-all-formulas-remain-editable.cs",
       "title": "Export the final workbook to XLSX format after smart marker processing, ensuring all formulas remain editable."
     },
