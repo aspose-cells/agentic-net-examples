@@ -116,6 +116,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs",
+      "title": "Open the saved workbook in Excel and verify that the specified cells appear in the Watch Window."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "register-the-custom-calculation-engine-with-the-workbooks-calculationengine-before-invoking-any-formulas.cs",
       "title": "Register the custom calculation engine with the workbook's CalculationEngine before invoking any formulas."
     },
