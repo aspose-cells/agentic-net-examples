@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - set-findoptions-to-search-using-wildcards-for-patterns-like-2023-inside-range-l1l100.cs
 - add-a-comment-to-every-cell-within-named-range-reviewnotes-indicating-pending-review.cs
 - use-a-named-range-as-the-source-for-data-consolidation-across-multiple-worksheets.cs
+- detect-and-remove-any-named-ranges-that-reference-deleted-worksheets-to-prevent-errors.cs

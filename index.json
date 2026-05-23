@@ -3671,6 +3671,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "detect-and-remove-any-named-ranges-that-reference-deleted-worksheets-to-prevent-errors.cs",
+      "title": "Detect and remove any named ranges that reference deleted worksheets to prevent errors."
+    },
+    {
+      "category": "managing-ranges",
       "file": "ensure-that-moving-a-range-does-not-shift-any-frozen-panes-in-the-destination-worksheet.cs",
       "title": "Ensure that moving a range does not shift any frozen panes in the destination worksheet."
     },
