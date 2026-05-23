@@ -6901,6 +6901,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "place-a-marker-string-defining-array-index-placeholders-in-a-cell-before-calling-process.cs",
+      "title": "Place a marker string defining array index placeholders in a cell before calling Process."
+    },
+    {
+      "category": "smart-markers",
       "file": "place-a-master-smart-marker-in-the-template-to-repeat-rows-for-each-master-record.cs",
       "title": "Place a master smart marker in the template to repeat rows for each master record."
     },

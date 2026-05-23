@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - set-workbookdesignerlinebyline-to-false-when-merging-nested-objects-to-process-them-as-grouped-records.cs
 - bind-a-nested-object-hierarchy-such-as-employee-address-using-dot-notation-in-smart-markers.cs
 - use-foreach-syntax-in-smart-markers-to-import-variablelength-collections-like-product-reviews.cs
+- place-a-marker-string-defining-array-index-placeholders-in-a-cell-before-calling-process.cs
