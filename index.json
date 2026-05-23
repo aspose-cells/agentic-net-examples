@@ -6641,6 +6641,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-a-custom-icustomdatasource-that-retrieves-data-from-a-rest-api-then-populate-smart-markers-with-the-response.cs",
+      "title": "Set a custom ICustomDataSource that retrieves data from a REST API, then populate smart markers with the response."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-up-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-ensuring-hidden-data-is-also-populated.cs",
       "title": "Set up WorkbookDesigner to process smart markers in hidden worksheets, ensuring hidden data is also populated."
     },
