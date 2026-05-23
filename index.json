@@ -3971,6 +3971,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-outdated-urls-in-named-range-links-with-new-domain-addresses-using-batch-replace.cs",
+      "title": "Replace outdated URLs in named range \"Links\" with new domain addresses using batch replace."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-the-address-of-a-dynamic-named-range-salesdata-and-log-the-result.cs",
       "title": "Retrieve the address of a dynamic named range \"SalesData\" and log the result."
     },

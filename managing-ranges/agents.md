@@ -215,3 +215,4 @@ Output files are written to the working directory.
 - add-a-timestamp-comment-to-each-cell-in-a-named-range-after-performing-a-bulk-update.cs
 - create-a-named-range-that-references-a-dynamic-list-generated-by-the-offset-function.cs
 - use-findoptions-to-locate-cells-containing-dates-older-than-one-year-within-a-named-range.cs
+- replace-outdated-urls-in-named-range-links-with-new-domain-addresses-using-batch-replace.cs
