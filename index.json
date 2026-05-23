@@ -3526,6 +3526,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs",
+      "title": "Create a named range that spans an entire column and use it to calculate the average."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs",
       "title": "Create a new workbook, add a worksheet\u2011scoped named range, and save the file in XLSX format."
     },
