@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs
 - measure-performance-difference-between-automatic-and-manual-modes-by-timing-workbookcalculateformula-execution.cs
 - measure-memory-consumption-differences-between-automatic-and-automaticexcepttables-modes-on-large-workbooks.cs
+- log-time-taken-for-each-cell-calculation-when-using-cellcalculate-within-a-processing-loop.cs
