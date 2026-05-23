@@ -151,6 +151,11 @@
     },
     {
       "category": "conversion",
+      "file": "batch-convert-multiple-excel-files-to-csv-trimming-leading-blanks-and-preserving-column-headers-consistently.cs",
+      "title": "Batch convert multiple Excel files to CSV, trimming leading blanks and preserving column headers consistently."
+    },
+    {
+      "category": "conversion",
       "file": "batch-convert-multiple-xlsx-files-to-pdf-and-store-results-in-an-output-folder.cs",
       "title": "Batch convert multiple XLSX files to PDF and store results in an output folder."
     },
