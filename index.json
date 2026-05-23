@@ -6696,6 +6696,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-if-parameter-to-display-a-warning-message-when-a-numeric-field-falls-below-a-defined-minimum.cs",
+      "title": "Use the If parameter to display a warning message when a numeric field falls below a defined minimum."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs",
       "title": "Use the If parameter to display discount information only when the discount percentage exceeds zero."
     },
