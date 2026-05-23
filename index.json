@@ -6946,6 +6946,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs",
+      "title": "Use LINQ to filter a collection before assigning it to WorkbookDesigner, ensuring rows appear via smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-formula-parameter-to-calculate-weighted-averages-across-rows-referencing-multiple-smart-marker-fields-for-each-calculation.cs",
       "title": "Use the Formula parameter to calculate weighted averages across rows, referencing multiple smart marker fields for each calculation."
     },
