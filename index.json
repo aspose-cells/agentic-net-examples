@@ -6846,6 +6846,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-excel-template-workbook-from-file-or-stream-before-configuring-smart-markers.cs",
+      "title": "Load an Excel template workbook from file or stream before configuring smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-json-from-a-web-service-map-to-an-object-and-merge-with-smart-markers-in-the-template.cs",
       "title": "Load JSON from a web service, map to an object, and merge with smart markers in the template."
     },
