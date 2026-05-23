@@ -216,6 +216,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-multiple-csv-files-and-convert-each-to-ods-using-default-odf-version-verifying-compliance.cs",
+      "title": "Load multiple CSV files and convert each to ODS using default ODF version, verifying compliance."
+    },
+    {
+      "category": "conversion",
       "file": "open-an-ods-workbook-set-odfstrictversion-to-11-and-save-with-odf-11-compliance.cs",
       "title": "Open an ODS workbook, set OdfStrictVersion to 1.1, and save with ODF 1.1 compliance."
     },
