@@ -4006,6 +4006,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs",
+      "title": "Use FindOptions to locate cells containing formulas that reference a specific named range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-findoptions-to-search-for-numeric-values-greater-than-1000-within-named-range-budget.cs",
       "title": "Use FindOptions to search for numeric values greater than 1000 within named range \"Budget\"."
     },
