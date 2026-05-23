@@ -291,6 +291,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-retain-interactive-form-fields-for-user-input-after-distribution.cs",
+      "title": "Convert a workbook to PDF and retain interactive form fields for user input after distribution."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-creation-date-to-current-timestamp-for-audit-tracking.cs",
       "title": "Convert a workbook to PDF and set creation date to current timestamp for audit tracking."
     },
