@@ -6606,6 +6606,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-sequential-invoice-numbers-using-a-custom-label-that-combines-a-prefix-with-the-autoincremented-record-index.cs",
+      "title": "Generate sequential invoice numbers using a custom label that combines a prefix with the auto\u2011incremented record index."
+    },
+    {
+      "category": "smart-markers",
       "file": "group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs",
       "title": "Group data by adding (group:normal,skip:1) to the smart marker expression to insert blank rows between groups."
     },
