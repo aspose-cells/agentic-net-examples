@@ -401,6 +401,11 @@
     },
     {
       "category": "conversion",
+      "file": "use-txtloadoptions-to-specify-utf16-encoding-when-loading-a-csv-file-containing-asian-characters.cs",
+      "title": "Use TxtLoadOptions to specify UTF\u201116 encoding when loading a CSV file containing Asian characters."
+    },
+    {
+      "category": "conversion",
       "file": "validate-numeric-columns-after-loading-csv-by-checking-cell-data-types-and-logging-mismatches.cs",
       "title": "Validate numeric columns after loading CSV by checking cell data types and logging mismatches."
     },
