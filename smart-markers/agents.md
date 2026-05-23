@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs
 - use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs
 - implement-a-retry-mechanism-for-setdatasource-calls-when-transient-database-connectivity-issues-occur-during-smart-marker-preparation.cs
+- use-the-formula-parameter-to-compute-running-totals-across-rows-updating-each-cell-as-data-is-imported.cs

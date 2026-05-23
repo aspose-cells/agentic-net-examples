@@ -6666,6 +6666,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-formula-parameter-to-compute-running-totals-across-rows-updating-each-cell-as-data-is-imported.cs",
+      "title": "Use the Formula parameter to compute running totals across rows, updating each cell as data is imported."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-to-display-a-custom-message-when-a-collection-is-empty-during-smart-marker-processing.cs",
       "title": "Use the If parameter to display a custom message when a collection is empty during smart marker processing."
     },
