@@ -216,6 +216,11 @@
     },
     {
       "category": "conversion",
+      "file": "retrieve-the-odspagebackground-color-from-an-ods-file-for-auditing.cs",
+      "title": "Retrieve the OdsPageBackground color from an ODS file for auditing."
+    },
+    {
+      "category": "conversion",
       "file": "save-a-workbook-as-fods-format-flat-ods-using-odssaveoptions.cs",
       "title": "Save a workbook as FODS format (Flat ODS) using OdsSaveOptions."
     },
