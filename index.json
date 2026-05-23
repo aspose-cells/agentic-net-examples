@@ -241,6 +241,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "generate-a-report-listing-all-cells-containing-volatile-functions-after-workbook-recalculation.cs",
+      "title": "Generate a report listing all cells containing volatile functions after workbook recalculation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "handle-calculationexception-during-formula-recalculation-to-detect-circular-reference-errors.cs",
       "title": "Handle CalculationException during formula recalculation to detect circular reference errors."
     },
