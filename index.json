@@ -3646,6 +3646,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "offset-a-range-by-negative-rows-to-select-cells-above-the-original-range-and-apply-italic-style.cs",
+      "title": "Offset a range by negative rows to select cells above the original range and apply italic style."
+    },
+    {
+      "category": "managing-ranges",
       "file": "produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs",
       "title": "Produce a range covering the entire rows of C5:C9 and set background color to light gray."
     },
