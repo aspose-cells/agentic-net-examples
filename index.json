@@ -186,6 +186,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-apply-jpeg-compression-with-quality-level-set-to-80-percent.cs",
+      "title": "Convert a workbook to PDF and apply JPEG compression with quality level set to 80 percent."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-apply-lossless-image-compression-to-preserve-visual-fidelity.cs",
       "title": "Convert a workbook to PDF and apply lossless image compression to preserve visual fidelity."
     },
