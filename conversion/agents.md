@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - validate-numeric-columns-after-loading-csv-by-checking-cell-data-types-and-logging-mismatches.cs
 - configure-txtloadoptionspreferredparsers-to-a-custom-numeric-parser-and-load-csv-to-enforce-precision.cs
 - create-a-custom-parser-to-interpret-dates-in-ddmmyyyy-format-and-assign-it-to-preferredparsers.cs
+- load-a-csv-file-containing-formulas-without-loaddataonly-flag-and-ensure-formulas-remain-functional.cs
