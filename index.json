@@ -176,6 +176,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs",
+      "title": "Implement a class inheriting AbstractCalculationMonitor and override OnCircular to log cell addresses."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs",
       "title": "Implement a progress callback that reports percentage completion during extensive calculations."
     },
