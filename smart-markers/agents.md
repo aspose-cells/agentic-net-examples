@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - generate-a-table-of-contents-sheet-using-smart-markers-that-lists-all-populated-worksheets-with-hyperlinks.cs
 - apply-a-custom-number-format-smart-marker-to-display-currency-values-with-localespecific-symbols-and-separators.cs
 - populate-a-chart-series-using-smart-markers-linked-to-a-data-source-then-adjust-chart-title-dynamically.cs
+- embed-comments-in-cells-using-smart-markers-pulling-comment-text-from-a-related-data-source-field.cs
