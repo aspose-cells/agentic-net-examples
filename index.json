@@ -36,6 +36,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "after-unprotecting-a-worksheet-call-workbookcalculateformula-to-reenable-full-calculation-of-all-cells.cs",
+      "title": "After unprotecting a worksheet, call Workbook.CalculateFormula to re\u2011enable full calculation of all cells."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "after-updating-a-named-range-call-workbookcalculateformula-to-propagate-changes-to-dependent-formulas.cs",
       "title": "After updating a named range, call Workbook.CalculateFormula to propagate changes to dependent formulas."
     },
