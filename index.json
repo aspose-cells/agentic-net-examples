@@ -6506,6 +6506,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs",
+      "title": "Apply a custom number format to cells populated via smart markers to display currency values consistently."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs",
       "title": "Apply conditional formatting rules that depend on smart marker values, such as highlighting rows with high priority."
     },
