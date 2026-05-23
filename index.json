@@ -6676,6 +6676,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "place-group-labels-after-data-rows-by-setting-labelposition-attribute-to-after-in-the-smart-marker-definition.cs",
+      "title": "Place group labels after data rows by setting LabelPosition attribute to \"After\" in the smart marker definition."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs",
       "title": "Process multiple worksheets containing identical smart markers by invoking WorkbookDesigner.Process for each sheet index."
     },

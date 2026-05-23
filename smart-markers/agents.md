@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - calculate-subtotals-using-subtotal1columnname-syntax-to-sum-values-within-each-grouped-column.cs
 - create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs
 - specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs
+- place-group-labels-after-data-rows-by-setting-labelposition-attribute-to-after-in-the-smart-marker-definition.cs
