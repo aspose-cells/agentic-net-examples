@@ -3356,6 +3356,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "access-a-global-named-range-from-sheet3-and-read-its-address-using-the-workbook-names-collection.cs",
+      "title": "Access a global named range from Sheet3 and read its address using the workbook Names collection."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-a-custom-number-format-to-the-entire-column-c-after-offsetting-the-original-range-by-two-rows.cs",
       "title": "Apply a custom number format to the entire column C after offsetting the original range by two rows."
     },
