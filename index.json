@@ -6591,6 +6591,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-qr-code-image-using-an-image-marker-by-converting-a-base64-string-into-a-bitmap.cs",
+      "title": "Generate a QR code image using an image marker by converting a base64 string into a bitmap."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs",
       "title": "Generate a summary sheet that aggregates totals from multiple smart marker populated worksheets using Excel formulas."
     },
