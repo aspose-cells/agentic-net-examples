@@ -6681,6 +6681,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-formula-parameter-to-calculate-weighted-averages-across-rows-referencing-multiple-smart-marker-fields-for-each-calculation.cs",
+      "title": "Use the Formula parameter to calculate weighted averages across rows, referencing multiple smart marker fields for each calculation."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs",
       "title": "Use the Formula parameter to compute cumulative totals across rows as smart markers import financial data."
     },
