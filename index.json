@@ -6566,6 +6566,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "define-a-custom-label-that-concatenates-static-text-with-aggregated-values-for-each-summary-row.cs",
+      "title": "Define a custom label that concatenates static text with aggregated values for each summary row."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs",
       "title": "Define a variable in the Excel template and set its value programmatically before processing."
     },
