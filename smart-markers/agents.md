@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs
 - apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs
 - place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs
+- use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs
