@@ -706,6 +706,11 @@
     },
     {
       "category": "conversion",
+      "file": "save-an-entire-workbook-as-csv-while-keeping-separators-for-blank-rows-to-maintain-structure.cs",
+      "title": "Save an entire workbook as CSV while keeping separators for blank rows to maintain structure."
+    },
+    {
+      "category": "conversion",
       "file": "set-html-image-options-dpi-to-150-and-export-html-with-sharper-images.cs",
       "title": "Set HTML image options DPI to 150 and export HTML with sharper images."
     },
