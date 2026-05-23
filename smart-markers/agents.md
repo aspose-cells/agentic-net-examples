@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-an-excel-template-with-smart-markers-and-populate-it-using-a-datatable-source.cs
+- assign-a-json-string-to-workbookdesigner-and-process-smart-markers-to-generate-a-populated-workbook.cs
