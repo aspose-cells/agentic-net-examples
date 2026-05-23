@@ -1971,6 +1971,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-new-workbook-assign-a-custom-theme-and-populate-it-with-sample-data-using-theme-colors.cs",
+      "title": "Create a new workbook, assign a custom theme, and populate it with sample data using theme colors."
+    },
+    {
+      "category": "format-cells",
       "file": "extract-the-themes-font-scheme-and-list-the-primary-and-secondary-font-families-used.cs",
       "title": "Extract the theme\u2019s font scheme and list the primary and secondary font families used."
     },
