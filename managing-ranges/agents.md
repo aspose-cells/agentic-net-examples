@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - load-a-passwordprotected-workbook-and-copy-only-the-formatting-from-range-o1o5-to-p1p5.cs
 - load-a-workbook-from-a-memory-stream-and-copy-style-between-two-ranges-without-saving-to-disk.cs
 - create-a-custom-style-with-bold-font-and-yellow-background-and-apply-it-to-range-e2e10.cs
+- define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs
