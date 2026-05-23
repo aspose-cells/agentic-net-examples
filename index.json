@@ -146,6 +146,11 @@
     },
     {
       "category": "conversion",
+      "file": "configure-txtloadoptionspreferredparsers-to-a-custom-numeric-parser-and-load-csv-to-enforce-precision.cs",
+      "title": "Configure TxtLoadOptions.PreferredParsers to a custom numeric parser and load CSV to enforce precision."
+    },
+    {
+      "category": "conversion",
       "file": "configure-txtloadoptionsseparator-to-a-semicolon-load-a-csv-file-and-export-it-to-xlsx.cs",
       "title": "Configure TxtLoadOptions.Separator to a semicolon, load a CSV file, and export it to XLSX."
     },
