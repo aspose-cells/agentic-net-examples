@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - use-worksheetcollectioncreateunionrange-to-combine-address-b2b10f2f10-and-apply-a-light-yellow-fill.cs
 - create-a-unionrange-using-address-m1m5o1o5-and-set-a-uniform-number-format-for-all-cells.cs
 - create-a-unionrange-spanning-rows-10-to-20-and-columns-a-to-c-then-set-an-outer-border.cs
+- generate-a-unionrange-covering-cells-x1x5-and-z1z5-then-apply-a-light-green-fill-to-both-areas.cs
