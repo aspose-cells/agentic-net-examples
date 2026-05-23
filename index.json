@@ -366,6 +366,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-a-custom-function-to-perform-a-lookup-across-multiple-worksheets-and-return-matching-range.cs",
+      "title": "Use a custom function to perform a lookup across multiple worksheets and return matching range."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs",
       "title": "Use CalculationOptions to ignore errors and then evaluate a formula containing #REF! references."
     },
