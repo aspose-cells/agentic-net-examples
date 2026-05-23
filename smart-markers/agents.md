@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - insert-images-stored-as-byte-arrays-into-designated-cells-using-smart-markers-while-maintaining-aspect-ratio.cs
 - generate-a-pivot-table-programmatically-after-smart-marker-population-to-summarize-imported-financial-data.cs
 - validate-that-all-smart-marker-placeholders-have-been-replaced-by-checking-for-remaining-marker-patterns-after-processing.cs
+- export-the-populated-workbook-to-pdf-format-while-preserving-charts-and-graphics-generated-by-smart-markers.cs
