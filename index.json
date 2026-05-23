@@ -21,6 +21,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs",
+      "title": "Replace ICustomFunction implementation with an AbstractCalculationEngine subclass for newer API support."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs",
       "title": "Return a scalar numeric result from a custom function after processing reference values."
     },

@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - use-referredareagetvalues-to-retrieve-a-twodimensional-array-of-values-from-a-range-argument.cs
 - return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs
 - return-a-twodimensional-object-array-from-a-custom-function-to-populate-a-worksheet-range.cs
+- replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs
