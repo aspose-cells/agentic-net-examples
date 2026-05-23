@@ -6586,6 +6586,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-the-detailtable-parameter-to-map-detail-data-into-a-predefined-table-on-the-target-sheet.cs",
+      "title": "Configure the DetailTable parameter to map detail data into a predefined table on the target sheet."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs",
       "title": "Configure WorkbookDesigner to ignore empty smart markers, preventing unnecessary row creation when source collections are empty."
     },
