@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - copy-a-range-to-a-new-workbook-and-protect-the-workbook-structure-with-a-password.cs
 - copy-a-range-to-a-new-workbook-and-apply-a-table-style-to-enable-filtering-and-sorting.cs
 - copy-a-range-to-a-new-workbook-and-set-the-worksheets-tab-color-based-on-range-content-type.cs
+- copy-a-range-to-a-new-workbook-and-set-the-workbooks-creation-date-metadata-to-the-current-timestamp.cs
