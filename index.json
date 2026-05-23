@@ -156,6 +156,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs",
+      "title": "Enable iterative calculation by setting CalculationOptions.EnableIterativeCalculation true for formulas with recursive dependencies."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "enable-iterative-calculation-for-circular-references-and-define-convergence-criteria-in-workbook-settings.cs",
       "title": "Enable iterative calculation for circular references and define convergence criteria in workbook settings."
     },
