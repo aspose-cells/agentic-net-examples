@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - group-smart-markers-to-aggregate-sales-data-by-region-and-insert-subtotal-rows-within-the-worksheet.cs
 - set-smart-marker-option-to-preserve-original-cell-formatting-while-inserting-data-from-a-custom-object-list.cs
 - enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs
+- define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs

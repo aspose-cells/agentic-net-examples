@@ -6731,6 +6731,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs",
+      "title": "Define a custom data source reading JSON files and mapping properties to smart marker fields for reports."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-custom-label-that-concatenates-static-text-with-aggregated-values-for-each-summary-row.cs",
       "title": "Define a custom label that concatenates static text with aggregated values for each summary row."
     },
