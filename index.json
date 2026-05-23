@@ -6491,6 +6491,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-anonymous-net-objects-set-them-as-data-source-and-apply-conditional-logic-in-smart-markers.cs",
+      "title": "Create anonymous .NET objects, set them as data source, and apply conditional logic in smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-excel-template-with-smart-markers-and-populate-it-using-a-datatable-source.cs",
       "title": "Load an Excel template with smart markers and populate it using a DataTable source."
     },
