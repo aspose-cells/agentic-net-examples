@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - identify-cells-that-participate-in-circular-references-and-highlight-them-for-user-correction.cs
 - highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs
 - apply-conditional-formatting-based-on-formula-results-to-visually-emphasize-threshold-breaches.cs
+- programmatically-clear-the-watch-window-before-adding-a-new-set-of-cells-for-monitoring.cs
