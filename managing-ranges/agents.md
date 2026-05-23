@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - validate-that-the-address-returned-by-rangeaddress-matches-the-expected-a1d4-format-after-modifications.cs
 - apply-a-custom-number-format-to-the-entire-column-c-after-offsetting-the-original-range-by-two-rows.cs
 - use-the-entirerow-property-to-select-rows-20-through-25-and-protect-them-with-a-password.cs
+- offset-a-range-by-zero-rows-and-columns-to-create-a-duplicate-reference-for-further-processing.cs

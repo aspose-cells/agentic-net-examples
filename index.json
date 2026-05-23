@@ -3671,6 +3671,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "offset-a-range-by-zero-rows-and-columns-to-create-a-duplicate-reference-for-further-processing.cs",
+      "title": "Offset a range by zero rows and columns to create a duplicate reference for further processing."
+    },
+    {
+      "category": "managing-ranges",
       "file": "produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs",
       "title": "Produce a range covering the entire rows of C5:C9 and set background color to light gray."
     },
