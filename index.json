@@ -261,6 +261,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "iterate-through-each-worksheet-enable-fast-formula-calculation-and-compare-total-calculation-time-before-and-after.cs",
+      "title": "Iterate through each worksheet, enable fast formula calculation, and compare total calculation time before and after."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "limit-calculation-threads-by-setting-calculationoptionsthreadcount-to-4-for-controlled-parallelism.cs",
       "title": "Limit calculation threads by setting CalculationOptions.ThreadCount to 4 for controlled parallelism."
     },
