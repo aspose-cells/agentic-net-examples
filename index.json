@@ -266,6 +266,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-enable-document-encryption-with-a-user-password.cs",
+      "title": "Convert a workbook to PDF and enable document encryption with a user password."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-enable-fast-web-view-for-quicker-loading-in-browsers.cs",
       "title": "Convert a workbook to PDF and enable fast web view for quicker loading in browsers."
     },
