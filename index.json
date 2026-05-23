@@ -6981,6 +6981,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs",
+      "title": "Set the HTML property on a smart marker to render bold text inside the resulting cell."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-the-processing-range-by-calling-workbookdesignersetrange-with-a-named-range-to-limit-smart-marker-scope.cs",
       "title": "Set the processing range by calling WorkbookDesigner.SetRange with a named range to limit smart marker scope."
     },
