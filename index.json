@@ -226,6 +226,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "in-the-overridden-calculate-method-fallback-to-basecalculate-for-any-unsupported-functions.cs",
+      "title": "In the overridden Calculate method, fallback to base.Calculate for any unsupported functions."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "interrupt-an-ongoing-workbookcalculate-operation-using-calculationenginecancel-to-stop-longrunning-calculations.cs",
       "title": "Interrupt an ongoing workbook.Calculate operation using CalculationEngine.Cancel to stop long\u2011running calculations."
     },
