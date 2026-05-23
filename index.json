@@ -286,6 +286,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-document-direction-to-lefttoright-for-western-scripts.cs",
+      "title": "Convert a workbook to PDF and set document direction to left\u2011to\u2011right for Western scripts."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-document-direction-to-righttoleft-for-arabic-scripts.cs",
       "title": "Convert a workbook to PDF and set document direction to right\u2011to\u2011left for Arabic scripts."
     },
