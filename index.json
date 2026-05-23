@@ -151,6 +151,11 @@
     },
     {
       "category": "conversion",
+      "file": "batch-convert-a-folder-of-xlsx-files-to-pdf-preserving-page-margins-and-orientation-settings.cs",
+      "title": "Batch convert a folder of XLSX files to PDF, preserving page margins and orientation settings."
+    },
+    {
+      "category": "conversion",
       "file": "batch-convert-multiple-excel-files-to-csv-trimming-leading-blanks-and-preserving-column-headers-consistently.cs",
       "title": "Batch convert multiple Excel files to CSV, trimming leading blanks and preserving column headers consistently."
     },
