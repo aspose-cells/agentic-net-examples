@@ -3621,6 +3621,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-workbookscoped-named-range-that-points-to-an-external-workbook-file-location.cs",
+      "title": "Create a workbook\u2011scoped named range that points to an external workbook file location."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-an-offset-range-by-shifting-d4f10-three-rows-down-and-two-columns-right.cs",
       "title": "Create an offset range by shifting D4:F10 three rows down and two columns right."
     },
