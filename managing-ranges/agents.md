@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs
 - batch-process-ten-workbooks-adding-the-same-global-named-range-quarter-to-each-file.cs
 - clone-a-workbook-containing-named-ranges-and-verify-that-all-named-ranges-are-preserved-in-the-clone.cs
+- merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs

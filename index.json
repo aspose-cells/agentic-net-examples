@@ -3731,6 +3731,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs",
+      "title": "Merge two workbooks, retain their distinct named ranges, and resolve any naming conflicts."
+    },
+    {
+      "category": "managing-ranges",
       "file": "move-a-range-containing-formulas-from-sheet1-to-sheet2-and-update-external-references-automatically.cs",
       "title": "Move a range containing formulas from sheet1 to sheet2 and update external references automatically."
     },
