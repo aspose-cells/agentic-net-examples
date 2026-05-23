@@ -75,6 +75,11 @@
       "title": "Use ReferredArea.GetValues() to retrieve a two\u2011dimensional array of values from a range argument."
     },
     {
+      "category": "calculate-formulas",
+      "file": "use-workbookcalculateformula-without-options-to-compute-all-formulas-using-default-calculation-settings.cs",
+      "title": "Use Workbook.CalculateFormula without options to compute all formulas using default calculation settings."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
