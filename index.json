@@ -116,6 +116,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "compare-memory-consumption-of-default-versus-custom-calculation-engines-by-profiling-heap-usage-during-large-workbook-evaluation.cs",
+      "title": "Compare memory consumption of default versus custom calculation engines by profiling heap usage during large workbook evaluation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "compare-results-of-cellcalculate-with-those-obtained-from-workbookcalculate-for-consistency.cs",
       "title": "Compare results of cell.Calculate with those obtained from workbook.Calculate for consistency."
     },
