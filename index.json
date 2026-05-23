@@ -6536,6 +6536,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-a-custom-data-source-object-on-workbookdesigner-when-default-sources-cannot-represent-complex-hierarchical-structures.cs",
+      "title": "Set a custom data source object on WorkbookDesigner when default sources cannot represent complex hierarchical structures."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs",
       "title": "Use the If parameter within a smart marker to display data only when a field exceeds a threshold."
     },
