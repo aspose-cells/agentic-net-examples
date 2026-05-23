@@ -3486,6 +3486,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-that-sets-cell-indentation-to-two-levels-and-apply-it-to-a-nested-list-range.cs",
+      "title": "Create a Style that sets cell indentation to two levels and apply it to a nested list range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-style-that-sets-number-format-to-currency-for-the-range-r2r20.cs",
       "title": "Create a Style that sets number format to currency for the range R2:R20."
     },
