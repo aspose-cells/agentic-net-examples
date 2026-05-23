@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs
 - process-multiple-worksheets-in-a-single-workbook-each-containing-distinct-smart-markers-to-generate-a-multisheet-report.cs
 - apply-smart-marker-parameters-to-control-row-insertion-when-merging-a-large-dataset-with-related-tables.cs
+- use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs
