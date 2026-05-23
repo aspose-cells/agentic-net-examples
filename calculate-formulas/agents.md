@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - evaluate-the-builtin-ifna-function-by-writing-ifnaa1-fallback-and-calling-workbookcalculateformula.cs
 - use-workbookcalculateformula-without-options-to-compute-all-formulas-using-default-calculation-settings.cs
 - set-calculationoptionsenableiterativecalculation-to-true-to-allow-circular-reference-evaluation-during-calculations.cs
+- set-calculationoptionsmaxiterationcount-to-100-to-limit-the-number-of-iterative-calculation-cycles.cs
