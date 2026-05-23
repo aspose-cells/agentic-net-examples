@@ -7096,6 +7096,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "populate-a-chart-series-using-smart-markers-linked-to-a-data-source-then-adjust-chart-title-dynamically.cs",
+      "title": "Populate a chart series using smart markers linked to a data source, then adjust chart title dynamically."
+    },
+    {
+      "category": "smart-markers",
       "file": "populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs",
       "title": "Populate merged cells using smart markers and ensure merged ranges expand correctly when data rows increase."
     },
