@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - log-each-modification-to-named-ranges-including-timestamp-and-old-versus-new-references-to-a-text-file.cs
 - validate-that-all-named-ranges-in-a-workbook-have-unique-names-and-report-any-duplicates.cs
 - programmatically-enumerate-all-named-ranges-in-a-workbook-and-output-their-addresses-to-the-console.cs
+- create-a-dynamic-named-range-whose-reference-adjusts-based-on-the-number-of-filled-rows-in-column-a.cs
