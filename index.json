@@ -286,6 +286,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-csv-file-split-a-combined-address-column-into-separate-street-city-and-zip-columns.cs",
+      "title": "Load a CSV file, split a combined address column into separate street, city, and zip columns."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-csv-file-transpose-its-rows-and-columns-programmatically-and-save-the-transposed-matrix-as-csv.cs",
       "title": "Load a CSV file, transpose its rows and columns programmatically, and save the transposed matrix as CSV."
     },
