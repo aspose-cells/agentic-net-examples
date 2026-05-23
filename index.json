@@ -3386,6 +3386,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "clone-a-workbook-containing-named-ranges-and-verify-that-all-named-ranges-are-preserved-in-the-clone.cs",
+      "title": "Clone a workbook containing named ranges and verify that all named ranges are preserved in the clone."
+    },
+    {
+      "category": "managing-ranges",
       "file": "configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs",
       "title": "Configure FindOptions to perform a case\u2011sensitive search within range E1:E100."
     },

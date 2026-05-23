@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - load-workbook-reportxlsx-modify-a-named-range-and-save-as-reportupdatedxlsx.cs
 - create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs
 - batch-process-ten-workbooks-adding-the-same-global-named-range-quarter-to-each-file.cs
+- clone-a-workbook-containing-named-ranges-and-verify-that-all-named-ranges-are-preserved-in-the-clone.cs
