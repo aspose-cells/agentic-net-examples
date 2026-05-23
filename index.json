@@ -311,6 +311,11 @@
     },
     {
       "category": "conversion",
+      "file": "read-a-txt-file-with-tab-delimiters-convert-it-to-an-excel-workbook-and-save-as-xlsx.cs",
+      "title": "Read a TXT file with tab delimiters, convert it to an Excel workbook, and save as XLSX."
+    },
+    {
+      "category": "conversion",
       "file": "read-odspagebackground-graphic-data-from-an-ods-file-and-write-it-to-a-jpeg-file.cs",
       "title": "Read OdsPageBackground graphic data from an ODS file and write it to a JPEG file."
     },
