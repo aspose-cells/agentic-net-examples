@@ -3356,6 +3356,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-an-autofill-pattern-that-repeats-a-custom-text-string-across-a-range-of-cells.cs",
+      "title": "Apply an autofill pattern that repeats a custom text string across a range of cells."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs",
       "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
     },
