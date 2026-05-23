@@ -3601,6 +3601,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "delete-the-named-range-obsoleterange-from-the-workbook-and-verify-its-removal.cs",
+      "title": "Delete the named range \"ObsoleteRange\" from the workbook and verify its removal."
+    },
+    {
+      "category": "managing-ranges",
       "file": "delete-the-range-f1f20-and-shift-remaining-cells-upward-to-fill-the-gap.cs",
       "title": "Delete the range F1:F20 and shift remaining cells upward to fill the gap."
     },
