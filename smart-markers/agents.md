@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs
 - implement-error-handling-around-workbookdesignerprocess-to-catch-and-log-exceptions-caused-by-malformed-smart-marker-syntax.cs
 - batch-process-a-folder-of-template-files-applying-the-same-data-source-to-each-workbook-using-smart-markers.cs
+- create-a-function-that-accepts-a-data-object-and-a-template-path-then-returns-a-populated-workbook-stream.cs
