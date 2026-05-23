@@ -3636,6 +3636,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-cells-across-multiple-rows-and-columns-to-create-a-title-block-covering-a1f2.cs",
+      "title": "Merge cells across multiple rows and columns to create a title block covering A1:F2."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-cells-within-range-a2d2-to-create-a-single-header-cell-and-center-its-text.cs",
       "title": "Merge cells within range A2:D2 to create a single header cell and center its text."
     },
