@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs
 - save-the-merged-workbook-as-xlsx-and-optionally-export-a-pdf-copy-for-reporting-purposes.cs
 - iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs
+- validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs
