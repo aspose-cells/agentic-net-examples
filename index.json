@@ -181,6 +181,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-exclude-column-headers-to-produce-raw-data-files-for-import.cs",
+      "title": "Convert a workbook to CSV and exclude column headers to produce raw data files for import."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-csv-and-include-only-column-headers-without-any-data-rows.cs",
       "title": "Convert a workbook to CSV and include only column headers without any data rows."
     },
