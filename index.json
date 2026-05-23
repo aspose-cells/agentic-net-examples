@@ -3361,6 +3361,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-of-cells-to-a-new-workbook-and-save-the-result-as-an-xlsx-file.cs",
+      "title": "Copy a range of cells to a new workbook and save the result as an XLSX file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-source-range-containing-formulas-to-a-destination-range-while-preserving-calculation-dependencies.cs",
       "title": "Copy a source range containing formulas to a destination range while preserving calculation dependencies."
     },

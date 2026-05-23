@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - apply-an-autofill-pattern-that-repeats-a-custom-text-string-across-a-range-of-cells.cs
 - copy-a-source-range-containing-formulas-to-a-destination-range-while-preserving-calculation-dependencies.cs
 - transfer-only-cell-values-from-one-worksheet-range-to-another-worksheet-without-copying-formatting-styles.cs
+- copy-a-range-of-cells-to-a-new-workbook-and-save-the-result-as-an-xlsx-file.cs
