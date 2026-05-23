@@ -276,6 +276,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-generate-outline-bookmarks-based-on-worksheet-names-for-easy-navigation.cs",
+      "title": "Convert a workbook to PDF and generate outline bookmarks based on worksheet names for easy navigation."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-include-all-cell-comments-as-footnotes-in-the-output.cs",
       "title": "Convert a workbook to PDF and include all cell comments as footnotes in the output."
     },
