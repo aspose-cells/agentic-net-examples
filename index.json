@@ -6831,6 +6831,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-json-from-a-web-service-map-to-an-object-and-merge-with-smart-markers-in-the-template.cs",
+      "title": "Load JSON from a web service, map to an object, and merge with smart markers in the template."
+    },
+    {
+      "category": "smart-markers",
       "file": "log-start-and-end-timestamps-of-smart-marker-processing-within-the-callback-to-measure-total-execution-time.cs",
       "title": "Log start and end timestamps of smart marker processing within the callback to measure total execution time."
     },
