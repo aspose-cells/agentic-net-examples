@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - apply-copystyle-to-inherit-date-formatting-so-generated-dates-display-in-the-same-localespecific-format-as-the-template.cs
 - preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs
 - inherit-background-color-using-copystyle-so-that-generated-rows-match-the-templates-shading-scheme.cs
+- apply-text-wrap-inheritance-with-copystyle-so-that-long-text-fields-automatically-wrap-within-generated-cells.cs
