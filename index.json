@@ -181,6 +181,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-apply-custom-cell-value-formatter-to-standardize-phone-numbers.cs",
+      "title": "Convert a workbook to CSV and apply custom cell value formatter to standardize phone numbers."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-csv-and-exclude-column-headers-to-produce-raw-data-files-for-import.cs",
       "title": "Convert a workbook to CSV and exclude column headers to produce raw data files for import."
     },
