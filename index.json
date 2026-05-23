@@ -1976,6 +1976,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-function-that-maps-business-status-values-to-specific-theme-accent-colors-for-cell-fill.cs",
+      "title": "Create a function that maps business status values to specific theme accent colors for cell fill."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-macrofree-template-workbook-with-predefined-theme-colors-for-downstream-processing.cs",
       "title": "Create a macro\u2011free template workbook with predefined theme colors for downstream processing."
     },
