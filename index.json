@@ -3731,6 +3731,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "export-the-list-of-named-ranges-and-their-formulas-to-an-excel-sheet-for-auditing.cs",
+      "title": "Export the list of named ranges and their formulas to an Excel sheet for auditing."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-pdf-of-the-workbook-that-includes-only-the-area-defined-by-a-named-range.cs",
       "title": "Generate a PDF of the workbook that includes only the area defined by a named range."
     },
