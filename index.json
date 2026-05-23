@@ -296,6 +296,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "register-the-custom-engine-via-workbooksettingscustomengine-and-verify-all-formulas-use-the-overridden-today-implementation.cs",
+      "title": "Register the custom engine via Workbook.Settings.CustomEngine and verify all formulas use the overridden TODAY implementation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs",
       "title": "Remove a cell from the Watch Window programmatically after its evaluation completes."
     },
