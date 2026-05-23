@@ -3626,6 +3626,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs",
+      "title": "Retrieve the total cell count for range B2:E7 after populating it with sample data."
+    },
+    {
+      "category": "managing-ranges",
       "file": "transfer-only-cell-values-from-one-worksheet-range-to-another-worksheet-without-copying-formatting-styles.cs",
       "title": "Transfer only cell values from one worksheet range to another worksheet without copying formatting styles."
     },
