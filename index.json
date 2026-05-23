@@ -451,6 +451,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-worksheetcalculateformula-with-a-custom-calculationoptions-instance-to-evaluate-a-formula-string-without-adding-it-to-the-sheet.cs",
+      "title": "Use Worksheet.CalculateFormula with a custom CalculationOptions instance to evaluate a formula string without adding it to the sheet."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "validate-array-formula-syntax-programmatically-before-triggering-workbookcalculate-to-avoid-runtime-errors.cs",
       "title": "Validate array formula syntax programmatically before triggering workbook.Calculate to avoid runtime errors."
     },
