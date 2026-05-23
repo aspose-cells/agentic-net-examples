@@ -211,6 +211,11 @@
     },
     {
       "category": "conversion",
+      "file": "save-a-workbook-as-sxc-format-using-odssaveoptions-for-opendocument-spreadsheet-compatibility.cs",
+      "title": "Save a workbook as SXC format using OdsSaveOptions for OpenDocument Spreadsheet compatibility."
+    },
+    {
+      "category": "conversion",
       "file": "set-html-image-options-dpi-to-150-and-export-html-with-sharper-images.cs",
       "title": "Set HTML image options DPI to 150 and export HTML with sharper images."
     },
