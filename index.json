@@ -6501,6 +6501,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "add-a-smart-marker-that-inserts-the-current-date-using-the-formula-parameter-with-today-function.cs",
+      "title": "Add a smart marker that inserts the current date using the Formula parameter with TODAY() function."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs",
       "title": "Apply a custom cell style after processing to highlight rows where the total exceeds a threshold."
     },

@@ -202,3 +202,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-url-process-smart-markers-and-save-the-result-to-azure-blob-storage.cs
 - create-a-smart-marker-that-calculates-running-totals-using-the-formula-parameter-referencing-previous-row-values.cs
 - use-a-foreach-smart-marker-to-generate-a-variablelength-list-of-project-milestones-on-a-timeline-sheet.cs
+- add-a-smart-marker-that-inserts-the-current-date-using-the-formula-parameter-with-today-function.cs
