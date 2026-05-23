@@ -651,6 +651,11 @@
     },
     {
       "category": "conversion",
+      "file": "extract-all-cell-formulas-into-a-json-document-preserving-sheet-names-and-cell-addresses.cs",
+      "title": "Extract all cell formulas into a JSON document, preserving sheet names and cell addresses."
+    },
+    {
+      "category": "conversion",
       "file": "extract-all-embedded-chart-images-from-a-workbook-and-store-them-as-separate-png-files.cs",
       "title": "Extract all embedded chart images from a workbook and store them as separate PNG files."
     },
