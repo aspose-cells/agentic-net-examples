@@ -6811,6 +6811,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-pivot-table-programmatically-after-smart-marker-population-to-summarize-imported-financial-data.cs",
+      "title": "Generate a pivot table programmatically after smart marker population to summarize imported financial data."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-a-qr-code-image-using-an-image-marker-by-converting-a-base64-string-into-a-bitmap.cs",
       "title": "Generate a QR code image using an image marker by converting a base64 string into a bitmap."
     },

@@ -219,3 +219,4 @@ Output files are written to the working directory.
 - apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs
 - configure-workbookdesigner-to-treat-leading-apostrophes-as-literal-characters-preserving-original-text-formatting.cs
 - insert-images-stored-as-byte-arrays-into-designated-cells-using-smart-markers-while-maintaining-aspect-ratio.cs
+- generate-a-pivot-table-programmatically-after-smart-marker-population-to-summarize-imported-financial-data.cs
