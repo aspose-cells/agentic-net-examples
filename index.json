@@ -121,6 +121,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "enable-iterative-calculation-for-circular-references-and-define-convergence-criteria-in-workbook-settings.cs",
+      "title": "Enable iterative calculation for circular references and define convergence criteria in workbook settings."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs",
       "title": "Enable rounding to displayed format by setting CalculationOptions.PrecisionAsDisplayed to true."
     },
