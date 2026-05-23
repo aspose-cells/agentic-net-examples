@@ -1926,6 +1926,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-custom-color-scheme-assigning-new-rgb-values-to-accent1-and-accent2-theme-colors.cs",
+      "title": "Create a custom color scheme assigning new RGB values to Accent1 and Accent2 theme colors."
+    },
+    {
+      "category": "format-cells",
       "file": "load-an-xlsx-workbook-verify-theme-usage-and-extract-all-theme-color-definitions.cs",
       "title": "Load an XLSX workbook, verify theme usage, and extract all theme color definitions."
     },

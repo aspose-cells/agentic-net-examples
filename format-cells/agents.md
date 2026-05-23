@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-an-xlsx-workbook-verify-theme-usage-and-extract-all-theme-color-definitions.cs
+- create-a-custom-color-scheme-assigning-new-rgb-values-to-accent1-and-accent2-theme-colors.cs
