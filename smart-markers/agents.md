@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - use-the-html-property-to-embed-an-image-tag-within-a-cell-rendering-the-picture-after-merge.cs
 - create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
 - generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
+- apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs

@@ -6501,6 +6501,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs",
+      "title": "Apply a custom cell style after processing to highlight rows where the total exceeds a threshold."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-a-custom-cell-style-to-smart-marker-cells-after-processing-to-maintain-consistent-formatting-across-the-workbook.cs",
       "title": "Apply a custom cell style to smart marker cells after processing to maintain consistent formatting across the workbook."
     },
