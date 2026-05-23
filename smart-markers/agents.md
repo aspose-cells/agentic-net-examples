@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - export-the-populated-workbook-to-pdf-format-while-preserving-charts-and-graphics-generated-by-smart-markers.cs
 - set-smart-marker-processing-mode-to-ignore-errors-allowing-partial-data-insertion-without-halting-execution.cs
 - apply-a-dateformatting-smart-marker-to-display-dates-in-mmmm-dd-yyyy-style-throughout-the-report.cs
+- populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs

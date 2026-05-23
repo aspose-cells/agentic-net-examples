@@ -7071,6 +7071,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs",
+      "title": "Populate merged cells using smart markers and ensure merged ranges expand correctly when data rows increase."
+    },
+    {
+      "category": "smart-markers",
       "file": "preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs",
       "title": "Preserve original cell borders while copying style by ensuring the CopyStyle attribute includes border properties."
     },
