@@ -1931,6 +1931,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-theme-color-to-the-border-of-a-range-of-cells-in-the-second-worksheet.cs",
+      "title": "Apply a custom theme color to the border of a range of cells in the second worksheet."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-custom-accent1-theme-color-to-the-background-of-cells-in-the-first-worksheet.cs",
       "title": "Apply the custom Accent1 theme color to the background of cells in the first worksheet."
     },
