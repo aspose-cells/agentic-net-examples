@@ -3646,6 +3646,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "move-a-range-containing-formulas-from-sheet1-to-sheet2-and-update-external-references-automatically.cs",
+      "title": "Move a range containing formulas from sheet1 to sheet2 and update external references automatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs",
       "title": "Move the range E5:G10 to a new location starting at cell J5 while preserving original formulas."
     },

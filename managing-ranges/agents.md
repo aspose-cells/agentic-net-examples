@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - offset-a-range-by-negative-rows-to-select-cells-above-the-original-range-and-apply-italic-style.cs
 - merge-cells-across-multiple-rows-and-columns-to-create-a-title-block-covering-a1f2.cs
 - unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs
+- move-a-range-containing-formulas-from-sheet1-to-sheet2-and-update-external-references-automatically.cs
