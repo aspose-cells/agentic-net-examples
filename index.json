@@ -3706,6 +3706,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-rangeoffset-to-create-a-new-range-three-columns-left-of-the-original-and-copy-values.cs",
+      "title": "Use Range.Offset to create a new range three columns left of the original and copy values."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-the-entirecolumn-property-to-select-column-b-and-hide-it-from-view-in-the-workbook.cs",
       "title": "Use the EntireColumn property to select column B and hide it from view in the workbook."
     },
