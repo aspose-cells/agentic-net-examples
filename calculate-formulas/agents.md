@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - load-a-previously-saved-watch-window-configuration-and-apply-it-to-the-active-workbook.cs
 - use-a-custom-function-to-perform-a-lookup-across-multiple-worksheets-and-return-matching-range.cs
 - implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs
+- assign-the-custom-monitor-to-workbooksettingscalculationmonitor-before-loading-the-workbook.cs
