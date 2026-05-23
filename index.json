@@ -496,6 +496,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "verify-workbooksettingscustomengine-is-null-after-resetting-settings-to-default-confirming-no-residual-custom-logic.cs",
+      "title": "Verify Workbook.Settings.CustomEngine is null after resetting settings to default, confirming no residual custom logic."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "write-a-formula-to-a-cell-and-store-its-text-in-another-cell-using-formulatext.cs",
       "title": "Write a formula to a cell and store its text in another cell using FormulaText."
     },
