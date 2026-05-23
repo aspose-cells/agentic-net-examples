@@ -3436,6 +3436,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "render-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs",
+      "title": "Render a range as a PDF page with custom margins and page orientation settings applied."
+    },
+    {
+      "category": "managing-ranges",
       "file": "transfer-only-cell-values-from-one-worksheet-range-to-another-worksheet-without-copying-formatting-styles.cs",
       "title": "Transfer only cell values from one worksheet range to another worksheet without copying formatting styles."
     },
