@@ -816,6 +816,11 @@
     },
     {
       "category": "conversion",
+      "file": "perform-batch-conversion-of-excel-files-to-pdf-using-parallel-processing-to-improve-throughput.cs",
+      "title": "Perform batch conversion of Excel files to PDF using parallel processing to improve throughput."
+    },
+    {
+      "category": "conversion",
       "file": "produce-png-images-with-transparent-background-from-a-csv-workbook.cs",
       "title": "Produce PNG images with transparent background from a CSV workbook."
     },
