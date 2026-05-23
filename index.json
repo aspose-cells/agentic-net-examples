@@ -6506,6 +6506,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs",
+      "title": "Insert a Formula parameter that calculates each row's total by multiplying quantity and unit price fields."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-excel-template-with-smart-markers-and-populate-it-using-a-datatable-source.cs",
       "title": "Load an Excel template with smart markers and populate it using a DataTable source."
     },
