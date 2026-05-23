@@ -1950,6 +1950,11 @@
       "title": "Set the custom Accent2 theme color as the font color for header rows across all worksheets."
     },
     {
+      "category": "format-cells",
+      "file": "update-the-hyperlink-theme-color-to-a-new-shade-of-blue-and-save-the-workbook.cs",
+      "title": "Update the Hyperlink theme color to a new shade of blue and save the workbook."
+    },
+    {
       "category": "globalization-and-localization",
       "file": "add-subtotal-rows-to-the-worksheet-after-assigning-custom-globalizationsettings-verifying-localized-total-labels.cs",
       "title": "Add subtotal rows to the worksheet after assigning custom GlobalizationSettings, verifying localized total labels."
