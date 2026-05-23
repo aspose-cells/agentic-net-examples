@@ -296,6 +296,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "serialize-the-watch-window-configuration-to-json-for-external-storage-and-later-restoration.cs",
+      "title": "Serialize the Watch Window configuration to JSON for external storage and later restoration."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationoptionscalculationmode-to-automatic-and-call-workbookcalculateformula-to-trigger-full-recalculation.cs",
       "title": "Set CalculationOptions.CalculationMode to Automatic and call Workbook.CalculateFormula to trigger full recalculation."
     },
