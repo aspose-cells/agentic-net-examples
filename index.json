@@ -251,6 +251,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-embed-external-linked-images-directly-into-the-pdf-document.cs",
+      "title": "Convert a workbook to PDF and embed external linked images directly into the PDF document."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-embed-javascript-that-triggers-automatic-printing-on-open.cs",
       "title": "Convert a workbook to PDF and embed JavaScript that triggers automatic printing on open."
     },
