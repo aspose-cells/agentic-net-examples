@@ -211,6 +211,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-include-all-cell-comments-as-footnotes-in-the-output.cs",
+      "title": "Convert a workbook to PDF and include all cell comments as footnotes in the output."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-include-custom-document-properties-for-applicationspecific-data.cs",
       "title": "Convert a workbook to PDF and include custom document properties for application\u2011specific data."
     },
