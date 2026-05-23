@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - include-a-formula-parameter-in-a-smart-marker-field-to-evaluate-excel-formulas-dynamically-during-data-population.cs
 - calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs
 - embed-a-formula-that-references-other-cells-to-enable-dynamic-calculations-during-smart-marker-processing.cs
+- apply-copystyle-to-inherit-number-formats-ensuring-generated-records-retain-currency-symbols-and-formatting.cs
