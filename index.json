@@ -6656,6 +6656,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-workbookdesigner-to-treat-leading-apostrophes-as-literal-characters-preserving-original-text-formatting.cs",
+      "title": "Configure WorkbookDesigner to treat leading apostrophes as literal characters, preserving original text formatting."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-use-a-custom-datatable-as-the-data-source-before-processing.cs",
       "title": "Configure WorkbookDesigner to use a custom DataTable as the data source before processing."
     },
