@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-csv-applying-localespecific-number-formatting-for-european-decimal-separators.cs
 - export-a-workbook-to-csv-using-utf16-encoding-to-support-wide-character-sets.cs
 - export-a-workbook-to-csv-with-a-byte-order-mark-to-ensure-correct-encoding-detection.cs
+- convert-a-workbook-to-csv-and-include-only-column-headers-without-any-data-rows.cs
