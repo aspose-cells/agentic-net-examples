@@ -251,6 +251,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-pdf-ignoring-cell-background-colors-to-produce-a-minimalist-layout.cs",
+      "title": "Export a workbook to PDF ignoring cell background colors to produce a minimalist layout."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-pdf-while-including-hidden-rows-and-columns-for-complete-data-capture.cs",
       "title": "Export a workbook to PDF while including hidden rows and columns for complete data capture."
     },
