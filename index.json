@@ -131,6 +131,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "invalidate-cached-custom-function-results-automatically-when-dependent-cells-are-modified-in-the-workbook.cs",
+      "title": "Invalidate cached custom function results automatically when dependent cells are modified in the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs",
       "title": "Invoke Workbook.CalculateFormula(calculationOptions) to recalculate formulas with custom monitor enabled for each calculation."
     },
