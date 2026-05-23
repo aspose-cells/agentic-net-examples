@@ -6681,6 +6681,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-ismartmarkercallback-and-register-it-with-workbookdesigner-to-receive-detailed-processing-notifications.cs",
+      "title": "Implement ISmartMarkerCallBack and register it with WorkbookDesigner to receive detailed processing notifications."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-pagination-by-limiting-smart-marker-row-output-per-worksheet-and-automatically-creating-new-sheets-for-overflow.cs",
       "title": "Implement pagination by limiting smart marker row output per worksheet and automatically creating new sheets for overflow."
     },
