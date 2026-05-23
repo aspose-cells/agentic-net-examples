@@ -6550,6 +6550,11 @@
       "title": "Use the If parameter within a smart marker to display data only when a field exceeds a threshold."
     },
     {
+      "category": "smart-markers",
+      "file": "validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs",
+      "title": "Validate that all smart marker tags have been resolved after processing by checking the workbook for unresolved markers."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
