@@ -176,6 +176,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-add-a-digital-signature-using-a-certificate-stored-in-windows-store.cs",
+      "title": "Convert a workbook to PDF and add a digital signature using a certificate stored in Windows store."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-add-a-semitransparent-watermark-across-each-page.cs",
       "title": "Convert a workbook to PDF and add a semi\u2011transparent watermark across each page."
     },
