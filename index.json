@@ -636,6 +636,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "validate-minifs-functions-return-correct-results-after-setting-workbook-to-excel-2016-compatibility-mode.cs",
+      "title": "Validate MINIFS functions return correct results after setting workbook to Excel 2016 compatibility mode."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "verify-workbooksettingscustomengine-is-null-after-resetting-settings-to-default-confirming-no-residual-custom-logic.cs",
       "title": "Verify Workbook.Settings.CustomEngine is null after resetting settings to default, confirming no residual custom logic."
     },
