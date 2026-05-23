@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - log-start-and-end-timestamps-of-smart-marker-processing-within-the-callback-to-measure-total-execution-time.cs
 - capture-a-callback-after-each-group-is-processed-to-log-group-identifiers-and-record-counts-for-auditing.cs
 - process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs
+- enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs
