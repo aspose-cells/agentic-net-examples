@@ -3821,6 +3821,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "protect-a-worksheet-while-allowing-edits-only-within-named-range-editablesection.cs",
+      "title": "Protect a worksheet while allowing edits only within named range \"EditableSection\"."
+    },
+    {
+      "category": "managing-ranges",
       "file": "reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs",
       "title": "Reference a workbook\u2011scoped named range in a formula to calculate the sum of its cells."
     },
