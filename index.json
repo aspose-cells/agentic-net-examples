@@ -6641,6 +6641,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-range-parameter-to-fill-a-data-layout-by-swapping-rows-and-columns-during-smart-marker-import.cs",
+      "title": "Use the Range parameter to fill a data layout by swapping rows and columns during smart marker import."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-setdatasource-method-to-bind-a-dataset-containing-multiple-tables-each-mapped-to-different-smart-marker-groups.cs",
       "title": "Use the SetDataSource method to bind a DataSet containing multiple tables, each mapped to different smart marker groups."
     },
