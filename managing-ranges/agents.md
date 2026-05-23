@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - create-a-style-that-sets-a-custom-background-pattern-of-diagonal-stripes-and-apply-it-to-range-v1v10.cs
 - create-a-style-that-sets-a-font-family-and-size-and-apply-it-to-cells-in-the-sheet.cs
 - create-a-unionrange-covering-a1a3-and-d1d3-on-the-first-worksheet-using-worksheetcollection.cs
+- generate-a-unionrange-consisting-of-three-separate-blocks-and-use-it-to-clear-contents-across-all-blocks.cs
