@@ -229,3 +229,4 @@ Output files are written to the working directory.
 - configure-workbook-options-to-recalculate-formulas-after-smart-marker-insertion-guaranteeing-uptodate-calculations.cs
 - insert-hyperlinks-via-smart-markers-that-point-to-external-web-resources-based-on-dynamic-url-fields.cs
 - generate-a-table-of-contents-sheet-using-smart-markers-that-lists-all-populated-worksheets-with-hyperlinks.cs
+- apply-a-custom-number-format-smart-marker-to-display-currency-values-with-localespecific-symbols-and-separators.cs
