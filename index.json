@@ -486,6 +486,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-handling-line-breaks-inside-cells-by-replacing-them-with-spaces.cs",
+      "title": "Export a workbook to CSV handling line breaks inside cells by replacing them with spaces."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-csv-rounding-numeric-values-to-two-decimal-places-for-financial-reporting.cs",
       "title": "Export a workbook to CSV rounding numeric values to two decimal places for financial reporting."
     },
