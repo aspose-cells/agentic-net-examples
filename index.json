@@ -1976,6 +1976,11 @@
     },
     {
       "category": "format-cells",
+      "file": "programmatically-reset-a-workbooks-theme-to-the-default-office-theme-and-verify-cell-colors.cs",
+      "title": "Programmatically reset a workbook\u2019s theme to the default Office theme and verify cell colors."
+    },
+    {
+      "category": "format-cells",
       "file": "retrieve-the-current-rgb-value-of-the-hyperlink-theme-color-from-a-loaded-workbook.cs",
       "title": "Retrieve the current RGB value of the Hyperlink theme color from a loaded workbook."
     },

@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - apply-a-conditional-formatting-rule-that-colors-cells-based-on-the-accent4-theme-color-intensity.cs
 - create-a-chart-and-set-its-series-colors-to-use-the-workbooks-theme-accent5-colors.cs
 - assign-the-themes-dark1-color-to-the-fill-of-a-pivot-tables-row-headers.cs
+- programmatically-reset-a-workbooks-theme-to-the-default-office-theme-and-verify-cell-colors.cs
