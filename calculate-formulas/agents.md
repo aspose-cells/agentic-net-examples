@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - limit-calculation-threads-by-setting-calculationoptionsthreadcount-to-4-for-controlled-parallelism.cs
 - enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs
 - use-calculationoptionsuse1904datesystem-true-to-calculate-dates-based-on-the-1904-epoch.cs
+- after-inserting-a-new-row-call-workbookcalculateformula-to-update-dependent-formulas-automatically.cs
