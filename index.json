@@ -1946,6 +1946,11 @@
     },
     {
       "category": "format-cells",
+      "file": "generate-a-report-listing-each-workbooks-theme-color-palette-before-and-after-applying-changes.cs",
+      "title": "Generate a report listing each workbook\u2019s theme color palette before and after applying changes."
+    },
+    {
+      "category": "format-cells",
       "file": "iterate-through-a-folder-of-xlsx-files-replace-accent3-with-a-custom-green-shade-and-save.cs",
       "title": "Iterate through a folder of XLSX files, replace Accent3 with a custom green shade, and save."
     },
