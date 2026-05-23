@@ -6731,6 +6731,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs",
+      "title": "Preserve original cell borders while copying style by ensuring the CopyStyle attribute includes border properties."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs",
       "title": "Process multiple worksheets containing identical smart markers by invoking WorkbookDesigner.Process for each sheet index."
     },
