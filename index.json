@@ -381,6 +381,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-pdf-version-to-17-for-compatibility.cs",
+      "title": "Convert a workbook to PDF and set PDF version to 1.7 for compatibility."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-security-permissions-to-restrict-editing-and-copying.cs",
       "title": "Convert a workbook to PDF and set security permissions to restrict editing and copying."
     },

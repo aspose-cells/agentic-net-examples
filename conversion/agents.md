@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-generate-outline-bookmarks-based-on-named-ranges-for-detailed-sections.cs
 - convert-a-workbook-to-pdf-and-embed-external-linked-images-directly-into-the-pdf-document.cs
 - convert-a-workbook-to-pdf-and-exclude-external-linked-images-to-keep-the-file-size-minimal.cs
+- convert-a-workbook-to-pdf-and-set-pdf-version-to-17-for-compatibility.cs
