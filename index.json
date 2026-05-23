@@ -6521,6 +6521,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-dateformatting-smart-marker-to-display-dates-in-mmmm-dd-yyyy-style-throughout-the-report.cs",
+      "title": "Apply a date\u2011formatting smart marker to display dates in \"MMMM dd, yyyy\" style throughout the report."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs",
       "title": "Apply a smart marker filter to exclude records with null values before rendering them into the Excel output."
     },
