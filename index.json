@@ -6516,6 +6516,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-template-that-generates-a-calendar-view-filling-dates-based-on-a-start-date-variable.cs",
+      "title": "Create a template that generates a calendar view, filling dates based on a start date variable."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-template-that-generates-invoices-with-line-items-totals-and-a-company-logo-image-using-smart-markers.cs",
       "title": "Create a template that generates invoices with line items, totals, and a company logo image using smart markers."
     },
