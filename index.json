@@ -6486,6 +6486,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs",
+      "title": "Add a noadd parameter to the first template row to keep header static during merging."
+    },
+    {
+      "category": "smart-markers",
       "file": "add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs",
       "title": "Add a smart marker that calculates age from a birthdate field using the Formula parameter with date functions."
     },

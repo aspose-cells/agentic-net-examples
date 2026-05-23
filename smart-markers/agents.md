@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs
 - enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs
 - save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs
+- add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs
