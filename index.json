@@ -3916,6 +3916,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-findoptions-to-search-for-numeric-values-greater-than-1000-within-named-range-budget.cs",
+      "title": "Use FindOptions to search for numeric values greater than 1000 within named range \"Budget\"."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs",
       "title": "Use Range.EntireColumn to select columns D through F and set each column width to 20 characters."
     },

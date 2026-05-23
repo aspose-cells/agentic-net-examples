@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - remove-a-named-range-only-if-it-references-cells-outside-the-used-range-of-the-worksheet.cs
 - copy-a-named-range-from-one-worksheet-to-another-preserving-its-name-and-reference.cs
 - rename-an-existing-named-range-from-oldname-to-newname-and-update-all-formula-references.cs
+- use-findoptions-to-search-for-numeric-values-greater-than-1000-within-named-range-budget.cs
