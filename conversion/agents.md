@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - load-a-tsv-workbook-and-convert-it-to-an-html-page-with-external-css.cs
 - embed-images-as-base64-in-a-single-html-file-during-export.cs
 - generate-separate-html-files-per-worksheet-during-export-for-easier-navigation.cs
+- set-html-image-options-dpi-to-200-and-export-html-with-highresolution-images.cs
