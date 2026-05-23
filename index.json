@@ -1931,6 +1931,11 @@
     },
     {
       "category": "format-cells",
+      "file": "check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs",
+      "title": "Check whether a workbook contains theme colors before applying bulk theme updates to multiple files."
+    },
+    {
+      "category": "format-cells",
       "file": "clone-the-theme-from-a-template-workbook-and-assign-it-to-a-newly-created-workbook.cs",
       "title": "Clone the theme from a template workbook and assign it to a newly created workbook."
     },
