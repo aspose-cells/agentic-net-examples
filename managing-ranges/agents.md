@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - export-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs
 - render-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs
 - copy-a-range-to-a-new-workbook-and-set-the-workbooks-author-property-using-document-metadata.cs
+- copy-a-range-to-a-new-workbook-and-protect-the-workbook-structure-with-a-password.cs
