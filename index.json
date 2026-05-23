@@ -6981,6 +6981,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs",
+      "title": "Use the skip parameter to omit every other row while populating a template with alternating entries."
+    },
+    {
+      "category": "smart-markers",
       "file": "utilize-the-if-parameter-to-hide-entire-rows-when-a-status-field-equals-inactive-in-the-data-source.cs",
       "title": "Utilize the If parameter to hide entire rows when a status field equals 'Inactive' in the data source."
     },
