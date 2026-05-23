@@ -7136,6 +7136,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-smart-marker-processing-mode-to-ignore-errors-allowing-partial-data-insertion-without-halting-execution.cs",
+      "title": "Set smart marker processing mode to ignore errors, allowing partial data insertion without halting execution."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs",
       "title": "Set the HTML property on a smart marker to render bold text inside the resulting cell."
     },
