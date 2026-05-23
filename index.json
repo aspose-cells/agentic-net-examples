@@ -306,6 +306,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "validate-array-formula-syntax-programmatically-before-triggering-workbookcalculate-to-avoid-runtime-errors.cs",
+      "title": "Validate array formula syntax programmatically before triggering workbook.Calculate to avoid runtime errors."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "write-a-formula-to-a-cell-and-store-its-text-in-another-cell-using-formulatext.cs",
       "title": "Write a formula to a cell and store its text in another cell using FormulaText."
     },
