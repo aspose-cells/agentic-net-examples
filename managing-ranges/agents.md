@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - create-a-style-object-that-sets-thin-borders-on-all-sides-and-apply-it-to-range-n5n15.cs
 - create-a-style-that-defines-a-date-number-format-and-apply-it-to-a-column-containing-date-values.cs
 - create-a-style-that-sets-number-format-to-currency-for-the-range-r2r20.cs
+- create-a-style-that-adds-a-light-blue-fill-and-thin-bottom-border-to-the-footer-row.cs
