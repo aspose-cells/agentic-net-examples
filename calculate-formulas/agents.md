@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - add-a-custom-function-that-returns-the-user-name-register-it-and-invoke-via-calculateformula-for-audit-logs.cs
 - create-a-subclass-of-abstractcalculationengine-that-overrides-calculate-to-replace-today-with-a-fixed-date.cs
 - register-the-custom-engine-via-workbooksettingscustomengine-and-verify-all-formulas-use-the-overridden-today-implementation.cs
+- in-the-overridden-calculate-method-fallback-to-basecalculate-for-any-unsupported-functions.cs
