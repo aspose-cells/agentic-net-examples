@@ -211,6 +211,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-exclude-cell-comments-to-produce-a-cleaner-document.cs",
+      "title": "Convert a workbook to PDF and exclude cell comments to produce a cleaner document."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-include-all-cell-comments-as-footnotes-in-the-output.cs",
       "title": "Convert a workbook to PDF and include all cell comments as footnotes in the output."
     },
