@@ -6881,6 +6881,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "place-a-master-smart-marker-in-the-template-to-repeat-rows-for-each-master-record.cs",
+      "title": "Place a master smart marker in the template to repeat rows for each master record."
+    },
+    {
+      "category": "smart-markers",
       "file": "place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs",
       "title": "Place a variable marker in a cell to populate it with a scalar value from the data source."
     },

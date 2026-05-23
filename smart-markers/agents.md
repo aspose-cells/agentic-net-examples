@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - optimize-memory-usage-by-processing-smart-markers-in-streaming-mode-loading-only-required-worksheet-sections-at-a-time.cs
 - validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs
 - load-an-excel-template-workbook-from-file-or-stream-before-configuring-smart-markers.cs
+- place-a-master-smart-marker-in-the-template-to-repeat-rows-for-each-master-record.cs
