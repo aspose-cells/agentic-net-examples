@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - return-a-twodimensional-object-array-from-a-custom-function-to-populate-a-worksheet-range.cs
 - replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs
 - create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs
+- in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs

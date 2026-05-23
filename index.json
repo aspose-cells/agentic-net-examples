@@ -16,6 +16,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs",
+      "title": "In BeforeCalculate, call Interrupt() when a specific cell address meets a predefined condition."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs",
       "title": "Load a workbook from a file stream, modify cells, then call Workbook.CalculateFormula to recalculate."
     },
