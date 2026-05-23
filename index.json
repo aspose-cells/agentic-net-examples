@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "calculate-formulas",
+      "file": "after-deleting-a-column-call-workbookcalculateformula-to-ensure-remaining-formulas-recalculate-correctly.cs",
+      "title": "After deleting a column, call Workbook.CalculateFormula to ensure remaining formulas recalculate correctly."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "after-inserting-a-new-row-call-workbookcalculateformula-to-update-dependent-formulas-automatically.cs",
       "title": "After inserting a new row, call Workbook.CalculateFormula to update dependent formulas automatically."
     },
