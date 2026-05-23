@@ -6831,6 +6831,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "group-smart-markers-to-aggregate-sales-data-by-region-and-insert-subtotal-rows-within-the-worksheet.cs",
+      "title": "Group smart markers to aggregate sales data by region and insert subtotal rows within the worksheet."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-callback-that-modifies-cell-values-after-smart-marker-processing-but-before-saving-the-workbook.cs",
       "title": "Implement a callback that modifies cell values after smart marker processing but before saving the workbook."
     },
