@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - copy-a-range-of-cells-to-a-new-workbook-and-save-the-result-as-an-xlsx-file.cs
 - copy-a-range-with-formulas-to-another-workbook-updating-external-references-to-point-to-the-new-file.cs
 - copy-a-range-to-a-new-location-and-transpose-rows-to-columns-during-the-operation.cs
+- copy-only-the-formatting-of-a-source-range-to-a-destination-range-without-altering-cell-values.cs
