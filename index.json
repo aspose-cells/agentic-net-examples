@@ -2046,6 +2046,11 @@
     },
     {
       "category": "format-cells",
+      "file": "update-the-themes-hyperlink-color-to-a-dark-gray-and-ensure-all-links-display-correctly.cs",
+      "title": "Update the theme\u2019s hyperlink color to a dark gray and ensure all links display correctly."
+    },
+    {
+      "category": "format-cells",
       "file": "use-the-api-to-enumerate-all-theme-color-types-and-output-their-default-rgb-values.cs",
       "title": "Use the API to enumerate all theme color types and output their default RGB values."
     },
