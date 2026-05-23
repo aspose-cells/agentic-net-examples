@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs
 - retrieve-the-range-of-values-returned-by-the-custom-function-from-the-evaluated-cell.cs
 - add-a-specific-cell-to-the-formula-watch-window-using-worksheetcellwatchesadd-after-setting-its-formula.cs
+- add-multiple-cells-to-the-watch-window-in-a-loop-to-monitor-a-batch-of-formulas.cs
