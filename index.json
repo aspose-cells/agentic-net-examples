@@ -291,6 +291,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-apply-a-grayscale-color-profile-for-printing-consistency.cs",
+      "title": "Convert a workbook to PDF and apply a grayscale color profile for printing consistency."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-apply-jpeg-compression-with-quality-level-set-to-50-percent.cs",
       "title": "Convert a workbook to PDF and apply JPEG compression with quality level set to 50 percent."
     },

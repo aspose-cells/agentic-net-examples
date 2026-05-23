@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - perform-batch-conversion-and-generate-a-summary-report-listing-successful-conversions-and-failures.cs
 - perform-batch-conversion-of-excel-files-to-pdf-with-per-file-custom-options.cs
 - perform-batch-conversion-of-excel-files-to-csv-with-progress-reporting.cs
+- convert-a-workbook-to-pdf-and-apply-a-grayscale-color-profile-for-printing-consistency.cs
