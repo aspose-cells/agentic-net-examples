@@ -291,6 +291,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "interrupt-an-ongoing-workbookcalculateformula-operation-using-a-cancellation-token-after-a-timeout.cs",
+      "title": "Interrupt an ongoing Workbook.CalculateFormula operation using a cancellation token after a timeout."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "invalidate-cached-custom-function-results-automatically-when-dependent-cells-are-modified-in-the-workbook.cs",
       "title": "Invalidate cached custom function results automatically when dependent cells are modified in the workbook."
     },
