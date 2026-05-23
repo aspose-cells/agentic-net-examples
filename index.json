@@ -6686,6 +6686,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "inherit-background-color-using-copystyle-so-that-generated-rows-match-the-templates-shading-scheme.cs",
+      "title": "Inherit background color using CopyStyle so that generated rows match the template\u2019s shading scheme."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-a-company-logo-at-the-sheet-top-via-an-image-marker-referencing-the-logo-byte-array.cs",
       "title": "Insert a company logo at the sheet top via an image marker referencing the logo byte array."
     },
