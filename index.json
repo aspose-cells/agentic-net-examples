@@ -6516,6 +6516,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs",
+      "title": "Apply the formula parameter to a smart marker so Excel formulas adjust for each inserted row."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs",
       "title": "Apply the Range parameter to map a collection of objects to a specific cell block in the worksheet."
     },

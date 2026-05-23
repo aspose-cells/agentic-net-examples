@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs
 - add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs
 - combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs
+- apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs
