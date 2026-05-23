@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - apply-smart-marker-parameters-to-control-row-insertion-when-merging-a-large-dataset-with-related-tables.cs
 - use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs
 - insert-a-dynamic-excel-formula-that-references-the-previous-row-using-the-formula-parameter-to-calculate-running-totals.cs
+- create-a-smart-marker-that-populates-a-chart-data-range-enabling-automatic-chart-updates-based-on-merged-data.cs
