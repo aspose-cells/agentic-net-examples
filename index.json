@@ -6501,6 +6501,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs",
+      "title": "Assign a DataTable object to WorkbookDesigner.DataSource before processing to use a custom tabular data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "assign-a-json-string-to-workbookdesigner-and-process-smart-markers-to-generate-a-populated-workbook.cs",
       "title": "Assign a JSON string to WorkbookDesigner and process smart markers to generate a populated workbook."
     },

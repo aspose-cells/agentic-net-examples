@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - configure-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-and-then-unhide-them-after-processing.cs
 - use-the-formula-parameter-to-calculate-weighted-averages-across-rows-referencing-multiple-smart-marker-fields-for-each-calculation.cs
 - load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs
+- assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs
