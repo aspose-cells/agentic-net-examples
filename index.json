@@ -146,6 +146,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "filter-formulas-that-contain-specific-functions-such-as-vlookup-or-sumifs-for-targeted-review.cs",
+      "title": "Filter formulas that contain specific functions such as VLOOKUP or SUMIFS for targeted review."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "generate-a-csv-file-containing-all-formulas-in-the-workbook-along-with-their-cell-addresses.cs",
       "title": "Generate a CSV file containing all formulas in the workbook along with their cell addresses."
     },
