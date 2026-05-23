@@ -3646,6 +3646,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs",
+      "title": "Limit a search operation to non\u2011contiguous ranges G1:G10 and H1:H10 using SetRange."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-a-passwordprotected-workbook-and-copy-only-the-formatting-from-range-o1o5-to-p1p5.cs",
       "title": "Load a password\u2011protected workbook and copy only the formatting from range O1:O5 to P1:P5."
     },
