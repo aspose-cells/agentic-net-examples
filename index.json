@@ -3580,6 +3580,11 @@
       "title": "Transfer only cell values from one worksheet range to another worksheet without copying formatting styles."
     },
     {
+      "category": "managing-ranges",
+      "file": "use-worksheetcollectioncreateunionrange-to-combine-address-a1b2d4e5-and-apply-a-bold-font-style-to-all-cells.cs",
+      "title": "Use WorksheetCollection.CreateUnionRange to combine address \"A1:B2,D4:E5\" and apply a bold font style to all cells."
+    },
+    {
       "category": "open-workbook",
       "file": "after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs",
       "title": "After loading, iterate through workbook.LoadWarnings collection and output each warning message to console."

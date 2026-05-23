@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - create-a-unionrange-covering-a1a3-and-d1d3-on-the-first-worksheet-using-worksheetcollection.cs
 - generate-a-unionrange-consisting-of-three-separate-blocks-and-use-it-to-clear-contents-across-all-blocks.cs
 - create-a-unionrange-that-includes-a-named-range-and-a-regular-address-then-apply-a-background-color.cs
+- use-worksheetcollectioncreateunionrange-to-combine-address-a1b2d4e5-and-apply-a-bold-font-style-to-all-cells.cs
