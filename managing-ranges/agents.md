@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - generate-a-unionrange-covering-cells-x1x5-and-z1z5-then-apply-a-light-green-fill-to-both-areas.cs
 - cut-the-range-b2c4-from-the-source-sheet-and-paste-it-into-g5h7-on-a-different-worksheet.cs
 - cut-a-range-containing-formulas-and-paste-it-to-a-new-location-preserving-formula-references.cs
+- cut-a-range-that-includes-a-chart-and-paste-it-into-a-new-workbook-preserving-chart-data.cs
