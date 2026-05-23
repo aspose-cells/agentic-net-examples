@@ -3496,6 +3496,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs",
+      "title": "Create a new workbook, add a worksheet\u2011scoped named range, and save the file in XLSX format."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-style-object-that-sets-thin-borders-on-all-sides-and-apply-it-to-range-n5n15.cs",
       "title": "Create a Style object that sets thin borders on all sides and apply it to range N5:N15."
     },
