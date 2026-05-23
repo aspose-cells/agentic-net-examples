@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - programmatically-disable-automatic-calculation-import-a-csv-file-then-enable-calculation-mode-to-recompute-dependent-cells.cs
 - improve-performance-by-setting-workbooksettingsenablefastformulacalculation-true-before-invoking-cellcalculate-on-large-datasets.cs
 - reduce-overhead-in-simple-workbooks-by-setting-workbooksettingsusethreadedcalculation-false-to-improve-stability.cs
+- iterate-through-each-worksheet-enable-fast-formula-calculation-and-compare-total-calculation-time-before-and-after.cs
