@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - use-the-range-parameter-to-fill-a-matrix-mapping-dates-to-rows-and-columns-on-a-start-date.cs
 - use-the-if-parameter-to-display-a-warning-message-when-a-numeric-field-falls-below-a-defined-minimum.cs
 - use-the-setvariable-method-to-pass-a-boolean-flag-that-smart-markers-use-to-toggle-visibility-of-sections.cs
+- configure-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-and-then-unhide-them-after-processing.cs

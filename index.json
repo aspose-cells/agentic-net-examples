@@ -6506,6 +6506,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-and-then-unhide-them-after-processing.cs",
+      "title": "Configure WorkbookDesigner to process smart markers in hidden worksheets and then unhide them after processing."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-batch-job-that-processes-a-folder-of-excel-templates-each-populated-with-distinct-json-data-sources.cs",
       "title": "Create a batch job that processes a folder of Excel templates, each populated with distinct JSON data sources."
     },
