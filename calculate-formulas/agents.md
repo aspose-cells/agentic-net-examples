@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - create-a-benchmark-measuring-cellcalculate-latency-with-and-without-enablefastformulacalculation-across-multiple-workbook-sizes.cs
 - compare-memory-consumption-of-default-versus-custom-calculation-engines-by-profiling-heap-usage-during-large-workbook-evaluation.cs
 - create-a-test-suite-verifying-custom-engine-correctly-overrides-builtin-sum-function-while-leaving-other-functions-unchanged.cs
+- write-a-utility-that-enumerates-all-worksheets-sets-calculationmode-to-manual-and-logs-the-previous-mode-for-each.cs
