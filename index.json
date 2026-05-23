@@ -3401,6 +3401,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-and-set-the-workbooks-creation-date-metadata-to-the-current-timestamp.cs",
+      "title": "Copy a range to a new workbook and set the workbook's creation date metadata to the current timestamp."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-workbook-and-set-the-worksheets-tab-color-based-on-range-content-type.cs",
       "title": "Copy a range to a new workbook and set the worksheet's tab color based on range content type."
     },
