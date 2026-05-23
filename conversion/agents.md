@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-csv-and-include-only-column-headers-without-any-data-rows.cs
 - convert-a-workbook-to-csv-and-exclude-column-headers-to-produce-raw-data-files-for-import.cs
 - convert-a-workbook-to-csv-and-prepend-row-numbers-as-first-column-for-easy-reference.cs
+- convert-a-workbook-to-csv-and-omit-row-numbers-to-keep-original-column-structure-unchanged.cs

@@ -191,6 +191,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-omit-row-numbers-to-keep-original-column-structure-unchanged.cs",
+      "title": "Convert a workbook to CSV and omit row numbers to keep original column structure unchanged."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-csv-and-prepend-row-numbers-as-first-column-for-easy-reference.cs",
       "title": "Convert a workbook to CSV and prepend row numbers as first column for easy reference."
     },
