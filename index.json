@@ -3431,6 +3431,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-ranges-data-and-formatting-to-another-worksheet-using-copy-options-to-retain-styles.cs",
+      "title": "Copy a range's data and formatting to another worksheet using copy options to retain styles."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-ranges-formulas-to-another-range-while-converting-relative-references-to-absolute-references.cs",
       "title": "Copy a range's formulas to another range while converting relative references to absolute references."
     },
