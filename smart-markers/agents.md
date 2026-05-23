@@ -215,3 +215,4 @@ Output files are written to the working directory.
 - set-smart-marker-option-to-preserve-original-cell-formatting-while-inserting-data-from-a-custom-object-list.cs
 - enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs
 - define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs
+- implement-batch-processing-to-load-multiple-workbook-templates-assign-distinct-data-sources-and-save-populated-files.cs
