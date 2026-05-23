@@ -196,6 +196,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-compress-output-file-using-gzip.cs",
+      "title": "Convert a workbook to CSV and compress output file using GZIP."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-csv-and-exclude-column-headers-to-produce-raw-data-files-for-import.cs",
       "title": "Convert a workbook to CSV and exclude column headers to produce raw data files for import."
     },
