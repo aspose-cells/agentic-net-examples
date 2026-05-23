@@ -221,6 +221,11 @@
     },
     {
       "category": "conversion",
+      "file": "read-odspagebackground-graphic-data-from-an-ods-file-and-write-it-to-a-jpeg-file.cs",
+      "title": "Read OdsPageBackground graphic data from an ODS file and write it to a JPEG file."
+    },
+    {
+      "category": "conversion",
       "file": "retrieve-the-odspagebackground-color-from-an-ods-file-for-auditing.cs",
       "title": "Retrieve the OdsPageBackground color from an ODS file for auditing."
     },
