@@ -255,6 +255,11 @@
       "title": "Set HTML image options DPI to 200 and export HTML with high\u2011resolution images."
     },
     {
+      "category": "conversion",
+      "file": "verify-that-an-ods-background-graphic-appears-in-the-exported-pdf.cs",
+      "title": "Verify that an ODS background graphic appears in the exported PDF."
+    },
+    {
       "category": "document-properties",
       "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
       "title": "Add a custom property containing an array of string tags to categorize workbook content."
