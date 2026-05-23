@@ -6661,6 +6661,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-a-custom-data-source-that-merges-multiple-json-arrays-into-a-single-collection-for-smart-marker-consumption.cs",
+      "title": "Set a custom data source that merges multiple JSON arrays into a single collection for smart marker consumption."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-a-custom-icustomdatasource-that-retrieves-data-from-a-rest-api-then-populate-smart-markers-with-the-response.cs",
       "title": "Set a custom ICustomDataSource that retrieves data from a REST API, then populate smart markers with the response."
     },
