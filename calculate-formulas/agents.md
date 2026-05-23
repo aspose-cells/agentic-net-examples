@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - count-the-number-of-array-formulas-present-in-a-worksheet-and-report-the-total.cs
 - identify-cells-that-participate-in-circular-references-and-highlight-them-for-user-correction.cs
 - highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs
+- apply-conditional-formatting-based-on-formula-results-to-visually-emphasize-threshold-breaches.cs

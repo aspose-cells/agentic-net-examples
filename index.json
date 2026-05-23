@@ -61,6 +61,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "apply-conditional-formatting-based-on-formula-results-to-visually-emphasize-threshold-breaches.cs",
+      "title": "Apply conditional formatting based on formula results to visually emphasize threshold breaches."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "apply-formulatext-on-a-range-of-cells-to-extract-each-formulas-text-for-bulk-analysis.cs",
       "title": "Apply FormulaText on a range of cells to extract each formula's text for bulk analysis."
     },
