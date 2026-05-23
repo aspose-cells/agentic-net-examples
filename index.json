@@ -211,6 +211,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "develop-a-plugin-that-replaces-the-default-calculation-engine-with-a-parallelized-version-to-accelerate-large-workbooks.cs",
+      "title": "Develop a plugin that replaces the default calculation engine with a parallelized version to accelerate large workbooks."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs",
       "title": "Disable automatic calculation, import data from a database, then manually trigger calculation for consistency."
     },
