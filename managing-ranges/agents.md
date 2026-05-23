@@ -200,3 +200,4 @@ Output files are written to the working directory.
 - replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs
 - generate-an-xml-representation-of-all-named-ranges-and-their-references-for-external-processing.cs
 - load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs
+- add-a-hyperlink-to-each-cell-within-a-named-range-that-points-to-its-documentation-page.cs
