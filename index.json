@@ -161,6 +161,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "identify-cells-that-participate-in-circular-references-and-highlight-them-for-user-correction.cs",
+      "title": "Identify cells that participate in circular references and highlight them for user correction."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs",
       "title": "Implement a progress callback that reports percentage completion during extensive calculations."
     },
