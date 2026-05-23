@@ -6551,6 +6551,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-unit-test-that-verifies-smart-marker-replacement-results-match-expected-cell-values-for-a-data-set.cs",
+      "title": "Implement a unit test that verifies smart marker replacement results match expected cell values for a data set."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs",
       "title": "Implement error handling to catch exceptions when a smart marker references a missing field in the data source."
     },
