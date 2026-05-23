@@ -701,6 +701,11 @@
     },
     {
       "category": "conversion",
+      "file": "save-a-workbook-as-csv-while-preserving-original-cell-data-types-for-accurate-downstream-processing.cs",
+      "title": "Save a workbook as CSV while preserving original cell data types for accurate downstream processing."
+    },
+    {
+      "category": "conversion",
       "file": "save-a-workbook-as-fods-format-flat-ods-using-odssaveoptions.cs",
       "title": "Save a workbook as FODS format (Flat ODS) using OdsSaveOptions."
     },
