@@ -3371,6 +3371,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "add-a-timestamp-comment-to-each-cell-in-a-named-range-after-performing-a-bulk-update.cs",
+      "title": "Add a timestamp comment to each cell in a named range after performing a bulk update."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs",
       "title": "Apply a custom number format to all cells in named range \"CurrencyValues\"."
     },

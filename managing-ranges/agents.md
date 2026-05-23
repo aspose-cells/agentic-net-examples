@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs
 - replace-formulas-that-return-text-na-with-blank-cells-within-a-specific-named-range.cs
 - generate-a-summary-sheet-that-lists-each-named-range-its-scope-and-its-address.cs
+- add-a-timestamp-comment-to-each-cell-in-a-named-range-after-performing-a-bulk-update.cs
