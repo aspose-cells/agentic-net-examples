@@ -6581,6 +6581,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "embed-a-formula-that-references-other-cells-to-enable-dynamic-calculations-during-smart-marker-processing.cs",
+      "title": "Embed a formula that references other cells to enable dynamic calculations during smart marker processing."
+    },
+    {
+      "category": "smart-markers",
       "file": "embed-images-into-cells-using-image-markers-that-reference-binary-data-from-a-custom-object-source.cs",
       "title": "Embed images into cells using image markers that reference binary data from a custom object source."
     },
