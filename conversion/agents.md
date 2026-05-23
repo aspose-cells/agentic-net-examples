@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-embed-external-linked-images-directly-into-the-pdf-document.cs
 - convert-a-workbook-to-pdf-and-exclude-external-linked-images-to-keep-the-file-size-minimal.cs
 - convert-a-workbook-to-pdf-and-set-pdf-version-to-17-for-compatibility.cs
+- convert-a-workbook-to-pdf-and-enable-document-encryption-with-a-user-password.cs
