@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - use-formulatext-to-obtain-the-exact-textual-representation-of-a-cells-formula.cs
 - write-a-formula-to-a-cell-and-store-its-text-in-another-cell-using-formulatext.cs
 - apply-formulatext-on-a-range-of-cells-to-extract-each-formulas-text-for-bulk-analysis.cs
+- compare-formula-text-before-and-after-modification-to-ensure-intended-changes-were-applied.cs

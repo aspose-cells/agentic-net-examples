@@ -76,6 +76,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "compare-formula-text-before-and-after-modification-to-ensure-intended-changes-were-applied.cs",
+      "title": "Compare formula text before and after modification to ensure intended changes were applied."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs",
       "title": "Create a class derived from AbstractCalculationMonitor and override BeforeCalculate to inspect each cell."
     },
