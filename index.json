@@ -221,6 +221,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-csv-file-remove-rows-where-the-first-column-is-empty-then-export-back-to-csv.cs",
+      "title": "Load a CSV file, remove rows where the first column is empty, then export back to CSV."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-csv-file-replace-all-occurrences-of-a-specific-substring-in-text-cells-and-export-cleaned-csv.cs",
       "title": "Load a CSV file, replace all occurrences of a specific substring in text cells, and export cleaned CSV."
     },
