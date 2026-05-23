@@ -3566,6 +3566,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "delete-multiple-noncontiguous-ranges-in-a-single-operation-using-a-unionrange-to-specify-them.cs",
+      "title": "Delete multiple non\u2011contiguous ranges in a single operation using a UnionRange to specify them."
+    },
+    {
+      "category": "managing-ranges",
       "file": "delete-the-range-f1f20-and-shift-remaining-cells-upward-to-fill-the-gap.cs",
       "title": "Delete the range F1:F20 and shift remaining cells upward to fill the gap."
     },
