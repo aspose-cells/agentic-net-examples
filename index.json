@@ -206,6 +206,11 @@
     },
     {
       "category": "conversion",
+      "file": "save-a-workbook-as-ods-complying-with-odf-12-using-odfversionversion12.cs",
+      "title": "Save a workbook as ODS complying with ODF 1.2 using OdfVersion.Version12."
+    },
+    {
+      "category": "conversion",
       "file": "set-html-image-options-dpi-to-150-and-export-html-with-sharper-images.cs",
       "title": "Set HTML image options DPI to 150 and export HTML with sharper images."
     },
