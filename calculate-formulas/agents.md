@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs
 - assign-the-custom-monitor-to-workbooksettingscalculationmonitor-before-loading-the-workbook.cs
 - trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs
+- use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs

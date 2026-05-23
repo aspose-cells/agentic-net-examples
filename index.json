@@ -386,6 +386,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs",
+      "title": "Use CalculationCell objects from OnCircular to extract row and column indices for detailed error reporting."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs",
       "title": "Use CalculationOptions to ignore errors and then evaluate a formula containing #REF! references."
     },
