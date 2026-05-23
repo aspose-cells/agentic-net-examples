@@ -376,6 +376,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "measure-memory-consumption-differences-between-automatic-and-automaticexcepttables-modes-on-large-workbooks.cs",
+      "title": "Measure memory consumption differences between Automatic and AutomaticExceptTables modes on large workbooks."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "measure-performance-difference-between-automatic-and-manual-modes-by-timing-workbookcalculateformula-execution.cs",
       "title": "Measure performance difference between Automatic and Manual modes by timing Workbook.CalculateFormula execution."
     },
