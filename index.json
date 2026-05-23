@@ -3776,6 +3776,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "update-the-reference-of-the-existing-named-range-reportperiod-to-span-cells-c5c15.cs",
+      "title": "Update the reference of the existing named range \"ReportPeriod\" to span cells C5:C15."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs",
       "title": "Use Range.EntireColumn to select columns D through F and set each column width to 20 characters."
     },
