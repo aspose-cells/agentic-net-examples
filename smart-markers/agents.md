@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - set-a-custom-data-source-object-on-workbookdesigner-when-default-sources-cannot-represent-complex-hierarchical-structures.cs
 - maintain-conditional-formatting-rules-in-the-template-as-smart-markers-replace-placeholder-values-with-actual-data.cs
 - validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs
+- generate-a-workbook-from-a-nested-object-hierarchy-where-child-collections-are-mapped-using-smart-marker-range-syntax.cs
