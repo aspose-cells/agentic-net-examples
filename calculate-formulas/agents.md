@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - implement-a-logger-that-records-the-order-of-formula-evaluations-during-workbookcalculateformula-for-debugging.cs
 - generate-a-report-listing-all-cells-containing-volatile-functions-after-workbook-recalculation.cs
 - validate-minifs-functions-return-correct-results-after-setting-workbook-to-excel-2016-compatibility-mode.cs
+- verify-minifs-calculations-respect-filtered-rows-by-applying-a-filter-before-invoking-workbookcalculateformula.cs
