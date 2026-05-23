@@ -7106,6 +7106,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-a-smart-marker-with-index-syntax-to-fill-a-matrix-of-attendance-records-for-each-day.cs",
+      "title": "Use a smart marker with index syntax to fill a matrix of attendance records for each day."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs",
       "title": "Use a variable array marker across a range to fill a table with a one\u2011dimensional collection."
     },
