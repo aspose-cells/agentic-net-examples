@@ -6521,6 +6521,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs",
+      "title": "Apply a smart marker filter to exclude records with null values before rendering them into the Excel output."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs",
       "title": "Apply conditional formatting rules that depend on smart marker values, such as highlighting rows with high priority."
     },

@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs
 - define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs
 - implement-batch-processing-to-load-multiple-workbook-templates-assign-distinct-data-sources-and-save-populated-files.cs
+- apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs
