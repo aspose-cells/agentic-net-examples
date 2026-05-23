@@ -3481,6 +3481,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-that-applies-a-strikethrough-font-effect-and-assign-it-to-completed-task-rows.cs",
+      "title": "Create a Style that applies a strikethrough font effect and assign it to completed task rows."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-style-that-defines-a-date-number-format-and-apply-it-to-a-column-containing-date-values.cs",
       "title": "Create a Style that defines a date number format and apply it to a column containing date values."
     },

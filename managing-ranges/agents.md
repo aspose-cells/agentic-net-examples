@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - create-a-style-that-adds-a-light-blue-fill-and-thin-bottom-border-to-the-footer-row.cs
 - create-a-style-that-sets-text-rotation-to-45-degrees-and-apply-it-to-a-vertical-header-range.cs
 - create-a-style-that-sets-cell-indentation-to-two-levels-and-apply-it-to-a-nested-list-range.cs
+- create-a-style-that-applies-a-strikethrough-font-effect-and-assign-it-to-completed-task-rows.cs
