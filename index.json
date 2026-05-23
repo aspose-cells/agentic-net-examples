@@ -276,6 +276,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-generate-outline-bookmarks-based-on-named-ranges-for-detailed-sections.cs",
+      "title": "Convert a workbook to PDF and generate outline bookmarks based on named ranges for detailed sections."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-generate-outline-bookmarks-based-on-worksheet-names-for-easy-navigation.cs",
       "title": "Convert a workbook to PDF and generate outline bookmarks based on worksheet names for easy navigation."
     },
