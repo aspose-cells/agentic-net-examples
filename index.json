@@ -61,6 +61,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "apply-a-custom-calculation-engine-that-substitutes-missing-functions-with-userdefined-equivalents-during-evaluation.cs",
+      "title": "Apply a custom calculation engine that substitutes missing functions with user\u2011defined equivalents during evaluation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "apply-a-custom-function-within-an-array-formula-to-compute-results-for-an-entire-data-table.cs",
       "title": "Apply a custom function within an array formula to compute results for an entire data table."
     },
