@@ -211,6 +211,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-generate-a-summary-statistics-file-alongside.cs",
+      "title": "Convert a workbook to CSV and generate a summary statistics file alongside."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-csv-and-ignore-cell-comments-to-keep-output-focused-on-raw-data-only.cs",
       "title": "Convert a workbook to CSV and ignore cell comments to keep output focused on raw data only."
     },
