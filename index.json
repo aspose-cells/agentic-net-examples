@@ -3361,6 +3361,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-source-range-containing-formulas-to-a-destination-range-while-preserving-calculation-dependencies.cs",
+      "title": "Copy a source range containing formulas to a destination range while preserving calculation dependencies."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs",
       "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
     },
