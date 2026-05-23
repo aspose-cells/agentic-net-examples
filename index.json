@@ -211,6 +211,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-the-document-title-property-for-easier-identification.cs",
+      "title": "Convert a workbook to PDF and set the document title property for easier identification."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-using-custom-page-margins-of-05-inches-on-each-side.cs",
       "title": "Convert a workbook to PDF using custom page margins of 0.5 inches on each side."
     },

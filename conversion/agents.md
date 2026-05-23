@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-compress-embedded-images-using-lossless-compression-technique.cs
 - convert-a-workbook-to-pdf-and-set-image-quality-to-80-percent-for-balanced-size-and-clarity.cs
 - convert-a-workbook-to-pdf-and-embed-document-metadata-such-as-author-title-and-keywords.cs
+- convert-a-workbook-to-pdf-and-set-the-document-title-property-for-easier-identification.cs
