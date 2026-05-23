@@ -3376,6 +3376,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "batch-process-ten-workbooks-adding-the-same-global-named-range-quarter-to-each-file.cs",
+      "title": "Batch process ten workbooks, adding the same global named range \"Quarter\" to each file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "calculate-the-total-number-of-cells-in-the-merged-range-a1c3-after-performing-the-merge.cs",
       "title": "Calculate the total number of cells in the merged range A1:C3 after performing the merge."
     },
