@@ -1936,6 +1936,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-gradient-fill-to-a-range-using-the-themes-accent3-and-accent4-colors.cs",
+      "title": "Apply a gradient fill to a range using the theme\u2019s Accent3 and Accent4 colors."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-custom-accent1-theme-color-to-the-background-of-cells-in-the-first-worksheet.cs",
       "title": "Apply the custom Accent1 theme color to the background of cells in the first worksheet."
     },
