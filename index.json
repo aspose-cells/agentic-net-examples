@@ -641,6 +641,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "verify-minifs-calculations-respect-filtered-rows-by-applying-a-filter-before-invoking-workbookcalculateformula.cs",
+      "title": "Verify MINIFS calculations respect filtered rows by applying a filter before invoking Workbook.CalculateFormula."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "verify-workbooksettingscustomengine-is-null-after-resetting-settings-to-default-confirming-no-residual-custom-logic.cs",
       "title": "Verify Workbook.Settings.CustomEngine is null after resetting settings to default, confirming no residual custom logic."
     },
