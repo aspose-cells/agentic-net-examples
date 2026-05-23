@@ -826,6 +826,11 @@
     },
     {
       "category": "conversion",
+      "file": "perform-batch-conversion-of-excel-files-to-pdf-with-per-file-custom-options.cs",
+      "title": "Perform batch conversion of Excel files to PDF with per-file custom options."
+    },
+    {
+      "category": "conversion",
       "file": "perform-batch-conversion-with-error-handling-that-logs-corrupted-files-and-continues-processing-remaining-items.cs",
       "title": "Perform batch conversion with error handling that logs corrupted files and continues processing remaining items."
     },
