@@ -181,6 +181,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-add-relevant-keywords-to-improve-searchability-in-archives.cs",
+      "title": "Convert a workbook to PDF and add relevant keywords to improve searchability in archives."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-assign-the-author-property-to-reflect-content-creator.cs",
       "title": "Convert a workbook to PDF and assign the author property to reflect content creator."
     },

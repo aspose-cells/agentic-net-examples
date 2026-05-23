@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-set-the-document-title-property-for-easier-identification.cs
 - convert-a-workbook-to-pdf-and-assign-the-author-property-to-reflect-content-creator.cs
 - convert-a-workbook-to-pdf-and-define-the-subject-property-for-categorization-purposes.cs
+- convert-a-workbook-to-pdf-and-add-relevant-keywords-to-improve-searchability-in-archives.cs
