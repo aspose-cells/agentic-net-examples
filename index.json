@@ -6981,6 +6981,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-workbookdesignerlinebyline-to-false-when-merging-nested-objects-to-process-them-as-grouped-records.cs",
+      "title": "Set WorkbookDesigner.LineByLine to false when merging nested objects to process them as grouped records."
+    },
+    {
+      "category": "smart-markers",
       "file": "sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs",
       "title": "Sort objects by a property before merging so smart markers output rows in the required order."
     },
