@@ -171,6 +171,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "derive-a-custom-calculation-engine-from-abstractcalculationengine-and-assign-it-to-the-workbook.cs",
+      "title": "Derive a custom calculation engine from AbstractCalculationEngine and assign it to the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "detect-circular-references-during-formula-evaluation-and-log-the-offending-cell-addresses.cs",
       "title": "Detect circular references during formula evaluation and log the offending cell addresses."
     },
