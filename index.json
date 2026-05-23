@@ -3376,6 +3376,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-ranges-formulas-to-another-range-while-converting-relative-references-to-absolute-references.cs",
+      "title": "Copy a range's formulas to another range while converting relative references to absolute references."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-source-range-containing-formulas-to-a-destination-range-while-preserving-calculation-dependencies.cs",
       "title": "Copy a source range containing formulas to a destination range while preserving calculation dependencies."
     },
