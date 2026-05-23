@@ -76,6 +76,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationoptionsignoreerrorvalue-to-true-to-skip-errors-during-formula-evaluation.cs",
+      "title": "Set CalculationOptions.IgnoreErrorValue to true to skip errors during formula evaluation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationoptionsmaxiterationcount-to-100-to-limit-the-number-of-iterative-calculation-cycles.cs",
       "title": "Set CalculationOptions.MaxIterationCount to 100 to limit the number of iterative calculation cycles."
     },
