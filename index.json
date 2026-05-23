@@ -2001,6 +2001,11 @@
     },
     {
       "category": "format-cells",
+      "file": "iterate-over-all-worksheets-set-each-header-rows-font-color-to-the-themes-accent1.cs",
+      "title": "Iterate over all worksheets, set each header row\u2019s font color to the theme\u2019s Accent1."
+    },
+    {
+      "category": "format-cells",
       "file": "iterate-through-a-folder-of-xlsx-files-replace-accent3-with-a-custom-green-shade-and-save.cs",
       "title": "Iterate through a folder of XLSX files, replace Accent3 with a custom green shade, and save."
     },

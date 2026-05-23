@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - update-the-themes-hyperlink-color-to-a-dark-gray-and-ensure-all-links-display-correctly.cs
 - programmatically-compare-two-workbooks-theme-palettes-and-highlight-differences-in-a-report.cs
 - load-a-workbook-apply-a-custom-theme-and-generate-a-pdf-preview-of-the-first-sheet.cs
+- iterate-over-all-worksheets-set-each-header-rows-font-color-to-the-themes-accent1.cs
