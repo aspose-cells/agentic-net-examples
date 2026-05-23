@@ -3491,6 +3491,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-that-sets-text-rotation-to-45-degrees-and-apply-it-to-a-vertical-header-range.cs",
+      "title": "Create a Style that sets text rotation to 45 degrees and apply it to a vertical header range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
