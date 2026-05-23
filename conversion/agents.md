@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - configure-txtloadoptionsseparator-to-a-semicolon-load-a-csv-file-and-export-it-to-xlsx.cs
 - set-txtloadoptionsseparator-to-a-pipe-character-load-a-pipedelimited-file-and-save-as-xlsx.cs
 - enable-txtloadoptionsismultiencoded-read-a-mixedencoding-csv-and-verify-unicode-characters-persist.cs
+- load-a-csv-file-with-a-custom-comment-character-ignore-commented-lines-and-export-clean-data-to-tsv.cs
