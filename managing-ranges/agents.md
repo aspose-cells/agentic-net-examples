@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs
 - replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs
 - generate-an-xml-representation-of-all-named-ranges-and-their-references-for-external-processing.cs
+- load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs
