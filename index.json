@@ -6541,6 +6541,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs",
+      "title": "Load a template from a stream, set marker data sources, and write the result to a byte array."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-excel-template-with-smart-markers-and-populate-it-using-a-datatable-source.cs",
       "title": "Load an Excel template with smart markers and populate it using a DataTable source."
     },
