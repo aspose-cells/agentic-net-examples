@@ -3521,6 +3521,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-unionrange-covering-a1a3-and-d1d3-on-the-first-worksheet-using-worksheetcollection.cs",
+      "title": "Create a UnionRange covering A1:A3 and D1:D3 on the first worksheet using WorksheetCollection."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
