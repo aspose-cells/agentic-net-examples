@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - apply-text-wrap-inheritance-with-copystyle-so-that-long-text-fields-automatically-wrap-within-generated-cells.cs
 - implement-ismartmarkercallback-and-register-it-with-workbookdesigner-to-receive-detailed-processing-notifications.cs
 - capture-each-record-processing-event-in-the-ismartmarkercallback-implementation-to-build-a-detailed-merge-log.cs
+- log-start-and-end-timestamps-of-smart-marker-processing-within-the-callback-to-measure-total-execution-time.cs
