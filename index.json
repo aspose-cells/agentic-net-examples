@@ -6536,6 +6536,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "export-the-final-workbook-to-xlsx-format-after-smart-marker-processing-ensuring-all-formulas-remain-editable.cs",
+      "title": "Export the final workbook to XLSX format after smart marker processing, ensuring all formulas remain editable."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-a-workbook-from-a-nested-object-hierarchy-where-child-collections-are-mapped-using-smart-marker-range-syntax.cs",
       "title": "Generate a workbook from a nested object hierarchy where child collections are mapped using smart marker range syntax."
     },
