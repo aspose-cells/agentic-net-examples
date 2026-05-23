@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - merge-cells-within-range-a2d2-to-create-a-single-header-cell-and-center-its-text.cs
 - unmerge-previously-merged-cells-in-range-b1b4-and-restore-individual-cell-borders.cs
 - move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs
+- validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs
