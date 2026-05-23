@@ -6486,6 +6486,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs",
+      "title": "Apply the Range parameter to map a collection of objects to a specific cell block in the worksheet."
+    },
+    {
+      "category": "smart-markers",
       "file": "assign-a-json-string-to-workbookdesigner-and-process-smart-markers-to-generate-a-populated-workbook.cs",
       "title": "Assign a JSON string to WorkbookDesigner and process smart markers to generate a populated workbook."
     },

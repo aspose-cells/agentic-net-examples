@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - create-anonymous-net-objects-set-them-as-data-source-and-apply-conditional-logic-in-smart-markers.cs
 - define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs
 - use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs
+- apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs
