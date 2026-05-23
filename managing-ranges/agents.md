@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-references-a-dynamic-list-generated-by-the-offset-function.cs
 - use-findoptions-to-locate-cells-containing-dates-older-than-one-year-within-a-named-range.cs
 - replace-outdated-urls-in-named-range-links-with-new-domain-addresses-using-batch-replace.cs
+- create-a-named-range-that-serves-as-a-lookup-table-for-multiple-worksheets-across-the-workbook.cs

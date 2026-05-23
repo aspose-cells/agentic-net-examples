@@ -3576,6 +3576,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-serves-as-a-lookup-table-for-multiple-worksheets-across-the-workbook.cs",
+      "title": "Create a named range that serves as a lookup table for multiple worksheets across the workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs",
       "title": "Create a named range that spans an entire column and use it to calculate the average."
     },
