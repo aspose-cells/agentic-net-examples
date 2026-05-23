@@ -3486,6 +3486,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "load-a-workbook-from-a-memory-stream-and-copy-style-between-two-ranges-without-saving-to-disk.cs",
+      "title": "Load a workbook from a memory stream and copy style between two ranges without saving to disk."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs",
       "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
     },
