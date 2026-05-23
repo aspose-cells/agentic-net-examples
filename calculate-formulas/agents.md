@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs
 - set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs
 - invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs
+- evaluate-the-builtin-ifna-function-by-writing-ifnaa1-fallback-and-calling-workbookcalculateformula.cs

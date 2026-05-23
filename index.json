@@ -21,6 +21,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "evaluate-the-builtin-ifna-function-by-writing-ifnaa1-fallback-and-calling-workbookcalculateformula.cs",
+      "title": "Evaluate the built\u2011in IFNA function by writing =IFNA(A1, \"fallback\") and calling Workbook.CalculateFormula."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs",
       "title": "In BeforeCalculate, call Interrupt() when a specific cell address meets a predefined condition."
     },
