@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - validate-that-cells-using-accent1-automatically-reflect-the-updated-theme-color-after-modification.cs
 - clone-the-theme-from-a-template-workbook-and-assign-it-to-a-newly-created-workbook.cs
 - check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs
+- iterate-through-a-folder-of-xlsx-files-replace-accent3-with-a-custom-green-shade-and-save.cs
