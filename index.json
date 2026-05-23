@@ -3370,6 +3370,11 @@
       "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
     },
     {
+      "category": "managing-ranges",
+      "file": "transfer-only-cell-values-from-one-worksheet-range-to-another-worksheet-without-copying-formatting-styles.cs",
+      "title": "Transfer only cell values from one worksheet range to another worksheet without copying formatting styles."
+    },
+    {
       "category": "open-workbook",
       "file": "after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs",
       "title": "After loading, iterate through workbook.LoadWarnings collection and output each warning message to console."
