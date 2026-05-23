@@ -176,6 +176,11 @@
     },
     {
       "category": "conversion",
+      "file": "extract-the-graphic-background-stream-from-an-ods-file-and-save-as-png.cs",
+      "title": "Extract the graphic background stream from an ODS file and save as PNG."
+    },
+    {
+      "category": "conversion",
       "file": "generate-an-mhtml-document-with-utf8-encoding-and-embedded-resources.cs",
       "title": "Generate an MHTML document with UTF\u20118 encoding and embedded resources."
     },
