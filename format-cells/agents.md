@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - detect-if-a-workbook-uses-theme-colors-and-fallback-to-direct-rgb-formatting-when-absent.cs
 - update-the-themes-hyperlink-color-to-a-dark-gray-and-ensure-all-links-display-correctly.cs
 - programmatically-compare-two-workbooks-theme-palettes-and-highlight-differences-in-a-report.cs
+- load-a-workbook-apply-a-custom-theme-and-generate-a-pdf-preview-of-the-first-sheet.cs
