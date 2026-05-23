@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - capture-a-callback-after-each-group-is-processed-to-log-group-identifiers-and-record-counts-for-auditing.cs
 - process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs
 - enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs
+- save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs
