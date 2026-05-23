@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - load-an-encrypted-workbook-using-a-password-and-convert-it-to-pdf-with-watermark-overlay.cs
 - load-a-workbook-with-custom-load-options-to-ignore-missing-fonts-during-conversion-process.cs
 - load-a-workbook-with-custom-load-options-to-preserve-all-formula-calculations-accurately.cs
+- load-a-workbook-with-custom-load-options-to-retain-vba-macros-while-exporting-to-pdf.cs
