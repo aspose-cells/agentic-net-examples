@@ -3366,6 +3366,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs",
+      "title": "Copy a range to a CSV file while preserving delimiters and text qualifiers."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-location-and-transpose-rows-to-columns-during-the-operation.cs",
       "title": "Copy a range to a new location and transpose rows to columns during the operation."
     },
