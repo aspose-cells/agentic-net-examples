@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - assign-a-formula-that-calls-the-custom-function-to-a-target-cell-with-required-parameters.cs
 - call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs
 - retrieve-the-range-of-values-returned-by-the-custom-function-from-the-evaluated-cell.cs
+- add-a-specific-cell-to-the-formula-watch-window-using-worksheetcellwatchesadd-after-setting-its-formula.cs

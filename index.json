@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "calculate-formulas",
+      "file": "add-a-specific-cell-to-the-formula-watch-window-using-worksheetcellwatchesadd-after-setting-its-formula.cs",
+      "title": "Add a specific cell to the Formula Watch Window using Worksheet.CellWatches.Add after setting its formula."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "after-applying-conditional-formatting-call-workbookcalculateformula-to-ensure-conditional-formulas-recalculate.cs",
       "title": "After applying conditional formatting, call Workbook.CalculateFormula to ensure conditional formulas recalculate."
     },
