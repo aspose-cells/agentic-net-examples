@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - after-applying-data-validation-call-workbookcalculateformula-to-evaluate-any-dependent-formulas.cs
 - after-applying-conditional-formatting-call-workbookcalculateformula-to-ensure-conditional-formulas-recalculate.cs
 - after-protecting-a-worksheet-call-workbookcalculateformula-to-verify-that-protected-cells-still-calculate.cs
+- after-unprotecting-a-worksheet-call-workbookcalculateformula-to-reenable-full-calculation-of-all-cells.cs
