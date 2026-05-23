@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - create-a-workbookscoped-named-range-that-points-to-an-external-workbook-file-location.cs
 - implement-error-handling-for-attempts-to-access-a-nonexistent-named-range-and-log-the-exception.cs
 - measure-the-time-taken-to-search-within-a-large-named-range-and-output-the-duration.cs
+- apply-a-filter-to-a-table-using-a-named-range-as-the-criteria-range.cs
