@@ -205,3 +205,4 @@ Output files are written to the working directory.
 - add-a-smart-marker-that-inserts-the-current-date-using-the-formula-parameter-with-today-function.cs
 - configure-the-workbook-designer-to-treat-empty-strings-as-blanks-when-merging-string-properties-from-data-source.cs
 - export-the-merged-workbook-to-xls-format-to-ensure-compatibility-with-older-spreadsheet-applications.cs
+- implement-a-callback-that-modifies-cell-values-after-smart-marker-processing-but-before-saving-the-workbook.cs

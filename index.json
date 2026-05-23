@@ -6816,6 +6816,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-callback-that-modifies-cell-values-after-smart-marker-processing-but-before-saving-the-workbook.cs",
+      "title": "Implement a callback that modifies cell values after smart marker processing but before saving the workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-custom-icustomdatasource-to-provide-smart-marker-values-from-a-web-service-response.cs",
       "title": "Implement a custom ICustomDataSource to provide smart marker values from a web service response."
     },
