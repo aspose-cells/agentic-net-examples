@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - create-a-template-that-uses-the-range-parameter-to-fill-a-matrix-layout-from-a-twodimensional-array-source.cs
 - use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs
 - implement-a-unit-test-that-verifies-smart-marker-replacement-results-match-expected-cell-values-for-a-data-set.cs
+- use-the-setdatasource-method-to-bind-a-dataset-containing-multiple-tables-each-mapped-to-different-smart-marker-groups.cs
