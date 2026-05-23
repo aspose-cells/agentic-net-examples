@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs
 - create-a-custom-class-implementing-icustomtypeprovider-to-expose-additional-properties-for-smart-marker-binding.cs
 - set-workbookdesignerlinebyline-to-true-for-simple-list-merging-while-keeping-master-markers-linebyline.cs
+- insert-a-smart-marker-referencing-a-nested-list-of-phone-numbers-using-contacts0number-syntax.cs

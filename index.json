@@ -6851,6 +6851,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-a-smart-marker-referencing-a-nested-list-of-phone-numbers-using-contacts0number-syntax.cs",
+      "title": "Insert a smart marker referencing a nested list of phone numbers using contacts[0].number syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs",
       "title": "Insert an image smart marker with the image parameter to embed pictures from file paths."
     },
