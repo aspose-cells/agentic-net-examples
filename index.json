@@ -281,6 +281,11 @@
     },
     {
       "category": "conversion",
+      "file": "set-txtloadoptionsseparator-to-a-pipe-character-load-a-pipedelimited-file-and-save-as-xlsx.cs",
+      "title": "Set TxtLoadOptions.Separator to a pipe character, load a pipe\u2011delimited file, and save as XLSX."
+    },
+    {
+      "category": "conversion",
       "file": "verify-that-an-ods-background-graphic-appears-in-the-exported-pdf.cs",
       "title": "Verify that an ODS background graphic appears in the exported PDF."
     },
