@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - update-the-reference-of-the-existing-named-range-reportperiod-to-span-cells-c5c15.cs
 - delete-the-named-range-obsoleterange-from-the-workbook-and-verify-its-removal.cs
 - search-for-the-text-total-within-range-a1c30-using-findoptions.cs
+- replace-all-occurrences-of-pending-with-completed-inside-range-d5d25-using-findoptions.cs

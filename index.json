@@ -3731,6 +3731,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-all-occurrences-of-pending-with-completed-inside-range-d5d25-using-findoptions.cs",
+      "title": "Replace all occurrences of \"Pending\" with \"Completed\" inside range D5:D25 using FindOptions."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-the-address-of-a-dynamic-named-range-salesdata-and-log-the-result.cs",
       "title": "Retrieve the address of a dynamic named range \"SalesData\" and log the result."
     },
