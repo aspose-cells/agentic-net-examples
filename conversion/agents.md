@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - use-txtloadoptions-to-specify-utf16-encoding-when-loading-a-csv-file-containing-asian-characters.cs
 - load-a-csv-file-compute-running-total-for-a-numeric-column-and-write-totals-to-new-column.cs
 - load-a-workbook-from-a-memory-stream-and-save-it-as-png-image-with-300-dpi-resolution.cs
+- load-a-workbook-from-a-byte-array-and-convert-it-directly-to-csv-with-default-options.cs

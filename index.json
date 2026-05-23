@@ -326,6 +326,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-workbook-from-a-byte-array-and-convert-it-directly-to-csv-with-default-options.cs",
+      "title": "Load a workbook from a byte array and convert it directly to CSV with default options."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-workbook-from-a-memory-stream-and-save-it-as-png-image-with-300-dpi-resolution.cs",
       "title": "Load a workbook from a memory stream and save it as PNG image with 300 DPI resolution."
     },
