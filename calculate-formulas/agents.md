@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - use-a-custom-function-to-perform-a-lookup-across-multiple-worksheets-and-return-matching-range.cs
 - implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs
 - assign-the-custom-monitor-to-workbooksettingscalculationmonitor-before-loading-the-workbook.cs
+- trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs

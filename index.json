@@ -366,6 +366,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs",
+      "title": "Trigger circular reference detection by invoking Workbook.Calculate after modifying interdependent formulas."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs",
       "title": "Trigger manual recalculation only for cells that have changed since the last calculation."
     },
