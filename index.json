@@ -6711,6 +6711,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-range-parameter-to-fill-a-matrix-mapping-dates-to-rows-and-columns-on-a-start-date.cs",
+      "title": "Use the Range parameter to fill a matrix, mapping dates to rows and columns on a start date."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-range-parameter-to-map-a-collection-of-quarterly-results-into-a-preformatted-financial-statement-layout.cs",
       "title": "Use the Range parameter to map a collection of quarterly results into a pre\u2011formatted financial statement layout."
     },
