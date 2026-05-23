@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs
 - save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs
 - add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs
+- combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs
