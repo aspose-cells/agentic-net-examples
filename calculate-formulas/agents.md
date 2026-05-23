@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - configure-calculationoptionsignoreerror-to-true-when-evaluating-formulas-that-may-cause-divisionbyzero.cs
 - capture-calculation-errors-by-setting-calculationoptionsignoreerror-false-and-handling-exceptions-thrown-from-calculateformula-calls.cs
 - enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs
+- test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs

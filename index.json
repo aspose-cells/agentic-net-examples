@@ -381,6 +381,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs",
+      "title": "Test iterative calculation stability by configuring CalculationOptions.MaxIterations to 100 and observing convergence."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs",
       "title": "Trigger circular reference detection by invoking Workbook.Calculate after modifying interdependent formulas."
     },
