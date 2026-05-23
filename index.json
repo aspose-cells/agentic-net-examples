@@ -3471,6 +3471,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-object-that-sets-thin-borders-on-all-sides-and-apply-it-to-range-n5n15.cs",
+      "title": "Create a Style object that sets thin borders on all sides and apply it to range N5:N15."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
