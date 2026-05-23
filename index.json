@@ -111,6 +111,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "configure-calculationoptionsignoreerror-to-true-when-evaluating-formulas-that-may-cause-divisionbyzero.cs",
+      "title": "Configure CalculationOptions.IgnoreError to true when evaluating formulas that may cause division\u2011by\u2011zero."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "configure-the-workbook-to-use-automatic-calculation-mode-and-verify-dependent-cells-update-instantly.cs",
       "title": "Configure the workbook to use Automatic calculation mode and verify dependent cells update instantly."
     },
