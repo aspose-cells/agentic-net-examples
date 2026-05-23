@@ -3366,6 +3366,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-csv-file-ensuring-that-commas-within-cell-text-are-properly-escaped.cs",
+      "title": "Copy a range to a CSV file, ensuring that commas within cell text are properly escaped."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs",
       "title": "Copy a range to a CSV file while preserving delimiters and text qualifiers."
     },
