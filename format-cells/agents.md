@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - export-the-theme-color-palette-to-a-json-file-for-external-analysis-and-documentation.cs
 - import-a-json-defined-color-scheme-and-apply-it-as-the-workbooks-new-theme-colors.cs
 - detect-if-a-workbook-uses-theme-colors-and-fallback-to-direct-rgb-formatting-when-absent.cs
+- update-the-themes-hyperlink-color-to-a-dark-gray-and-ensure-all-links-display-correctly.cs
