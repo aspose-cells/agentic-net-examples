@@ -213,3 +213,4 @@ Output files are written to the working directory.
 - save-a-workbook-as-csv-using-custom-save-options-to-define-semicolon-as-column-delimiter.cs
 - save-a-workbook-as-csv-using-custom-save-options-to-specify-utf32-encoding-for-large-datasets.cs
 - save-a-workbook-as-csv-using-custom-save-options-to-trim-leading-blanks-before-writing-rows.cs
+- save-a-workbook-as-csv-using-custom-save-options-to-keep-separators-for-blank-rows-intact.cs
