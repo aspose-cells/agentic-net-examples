@@ -2036,6 +2036,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-a-workbook-remove-its-existing-theme-and-assign-a-fresh-theme-with-default-colors.cs",
+      "title": "Load a workbook, remove its existing theme, and assign a fresh theme with default colors."
+    },
+    {
+      "category": "format-cells",
       "file": "load-an-xlsx-workbook-verify-theme-usage-and-extract-all-theme-color-definitions.cs",
       "title": "Load an XLSX workbook, verify theme usage, and extract all theme color definitions."
     },
