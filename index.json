@@ -3721,6 +3721,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs",
+      "title": "Use Range.EntireColumn to select columns D through F and set each column width to 20 characters."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-rangeoffset-to-create-a-new-range-three-columns-left-of-the-original-and-copy-values.cs",
       "title": "Use Range.Offset to create a new range three columns left of the original and copy values."
     },
