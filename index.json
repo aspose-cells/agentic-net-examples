@@ -3366,6 +3366,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-location-and-transpose-rows-to-columns-during-the-operation.cs",
+      "title": "Copy a range to a new location and transpose rows to columns during the operation."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-with-formulas-to-another-workbook-updating-external-references-to-point-to-the-new-file.cs",
       "title": "Copy a range with formulas to another workbook, updating external references to point to the new file."
     },
