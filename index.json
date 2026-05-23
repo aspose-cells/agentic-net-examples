@@ -3421,6 +3421,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "export-the-contents-of-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs",
+      "title": "Export the contents of a range to a CSV file while preserving delimiters and text qualifiers."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs",
       "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
     },
