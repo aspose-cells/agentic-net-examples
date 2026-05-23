@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - assign-the-themes-dark1-color-to-the-fill-of-a-pivot-tables-row-headers.cs
 - programmatically-reset-a-workbooks-theme-to-the-default-office-theme-and-verify-cell-colors.cs
 - load-a-workbook-disable-theme-usage-and-convert-all-themed-cells-to-explicit-rgb-formatting.cs
+- measure-the-time-taken-to-update-all-theme-colors-in-a-large-workbook-with-thousands-of-cells.cs

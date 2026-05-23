@@ -1981,6 +1981,11 @@
     },
     {
       "category": "format-cells",
+      "file": "measure-the-time-taken-to-update-all-theme-colors-in-a-large-workbook-with-thousands-of-cells.cs",
+      "title": "Measure the time taken to update all theme colors in a large workbook with thousands of cells."
+    },
+    {
+      "category": "format-cells",
       "file": "programmatically-reset-a-workbooks-theme-to-the-default-office-theme-and-verify-cell-colors.cs",
       "title": "Programmatically reset a workbook\u2019s theme to the default Office theme and verify cell colors."
     },
