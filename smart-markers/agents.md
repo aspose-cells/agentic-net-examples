@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - embed-images-into-cells-using-image-markers-that-reference-binary-data-from-a-custom-object-source.cs
 - enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs
 - set-a-custom-data-source-object-on-workbookdesigner-when-default-sources-cannot-represent-complex-hierarchical-structures.cs
+- maintain-conditional-formatting-rules-in-the-template-as-smart-markers-replace-placeholder-values-with-actual-data.cs
