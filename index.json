@@ -211,6 +211,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "load-a-previously-saved-watch-window-configuration-and-apply-it-to-the-active-workbook.cs",
+      "title": "Load a previously saved Watch Window configuration and apply it to the active workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs",
       "title": "Load a workbook from a file stream, modify cells, then call Workbook.CalculateFormula to recalculate."
     },
