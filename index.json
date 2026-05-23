@@ -296,6 +296,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "provide-a-public-method-to-clear-the-custom-engines-cache-ensuring-fresh-computation-after-data-changes.cs",
+      "title": "Provide a public method to clear the custom engine\u2019s cache, ensuring fresh computation after data changes."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs",
       "title": "Register a custom function implementing ICustomFunction (e.g., MySum) and call it via CalculateFormula for testing."
     },
