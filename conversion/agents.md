@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - convert-an-excel-workbook-to-a-pipedelimited-txt-file-by-setting-saveformattxt-and-custom-separator.cs
 - use-txtloadoptions-to-specify-utf16-encoding-when-loading-a-csv-file-containing-asian-characters.cs
 - load-a-csv-file-compute-running-total-for-a-numeric-column-and-write-totals-to-new-column.cs
+- load-a-workbook-from-a-memory-stream-and-save-it-as-png-image-with-300-dpi-resolution.cs
