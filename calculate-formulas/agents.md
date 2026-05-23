@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-change-a-formula-and-invoke-workbookcalculateformula-with-options.cs
 - create-a-class-implementing-icustomfunction-and-override-calculatecustomfunction-to-define-custom-logic.cs
 - use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs
+- use-referredareagetvalues-to-retrieve-a-twodimensional-array-of-values-from-a-range-argument.cs
