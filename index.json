@@ -211,6 +211,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-custom-engine-that-caches-intermediate-results-to-avoid-redundant-calculations-for-identical-subexpressions.cs",
+      "title": "Implement a custom engine that caches intermediate results to avoid redundant calculations for identical sub\u2011expressions."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs",
       "title": "Implement a progress callback that reports percentage completion during extensive calculations."
     },

@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - create-a-subclass-of-abstractcalculationengine-that-overrides-calculate-to-replace-today-with-a-fixed-date.cs
 - register-the-custom-engine-via-workbooksettingscustomengine-and-verify-all-formulas-use-the-overridden-today-implementation.cs
 - in-the-overridden-calculate-method-fallback-to-basecalculate-for-any-unsupported-functions.cs
+- implement-a-custom-engine-that-caches-intermediate-results-to-avoid-redundant-calculations-for-identical-subexpressions.cs
