@@ -466,6 +466,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-the-workbooks-calculation-mode-to-automatic-for-immediate-formula-updates.cs",
+      "title": "Set the workbook's calculation mode to Automatic for immediate formula updates."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-the-workbooks-formula-calculation-mode-to-manual-for-selective-recalculation-control.cs",
       "title": "Set the workbook's formula calculation mode to Manual for selective recalculation control."
     },
