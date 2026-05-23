@@ -6636,6 +6636,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs",
+      "title": "Load a workbook template and apply the CopyStyle attribute to inherit cell formatting for generated records."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-excel-template-with-smart-markers-and-populate-it-using-a-datatable-source.cs",
       "title": "Load an Excel template with smart markers and populate it using a DataTable source."
     },
