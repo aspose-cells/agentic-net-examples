@@ -6531,6 +6531,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "maintain-conditional-formatting-rules-in-the-template-as-smart-markers-replace-placeholder-values-with-actual-data.cs",
+      "title": "Maintain conditional formatting rules in the template as smart markers replace placeholder values with actual data."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs",
       "title": "Process multiple worksheets containing identical smart markers by invoking WorkbookDesigner.Process for each sheet index."
     },
