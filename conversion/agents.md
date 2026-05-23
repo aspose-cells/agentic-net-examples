@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-set-document-direction-to-righttoleft-for-arabic-scripts.cs
 - convert-a-workbook-to-pdf-and-set-document-direction-to-lefttoright-for-western-scripts.cs
 - convert-a-workbook-to-pdf-and-add-a-digital-signature-using-a-certificate-stored-in-windows-store.cs
+- convert-a-workbook-to-pdf-and-validate-an-existing-digital-signature-to-ensure-document-integrity.cs
