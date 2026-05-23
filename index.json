@@ -261,6 +261,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-iterative-calculation-settings-including-maximum-iterations-and-precision-tolerance-for-circular-reference-handling.cs",
+      "title": "Set iterative calculation settings, including maximum iterations and precision tolerance, for circular reference handling."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-the-workbooks-formula-calculation-mode-to-manual-for-selective-recalculation-control.cs",
       "title": "Set the workbook's formula calculation mode to Manual for selective recalculation control."
     },
