@@ -146,6 +146,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-an-xps-document-for-highquality-printing.cs",
+      "title": "Convert a workbook to an XPS document for high\u2011quality printing."
+    },
+    {
+      "category": "conversion",
       "file": "convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs",
       "title": "Convert an XLS workbook to a Markdown document with aligned tables."
     },
