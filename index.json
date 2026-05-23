@@ -3526,6 +3526,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-unionrange-that-includes-a-named-range-and-a-regular-address-then-apply-a-background-color.cs",
+      "title": "Create a UnionRange that includes a named range and a regular address, then apply a background color."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
