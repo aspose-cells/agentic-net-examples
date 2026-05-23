@@ -226,6 +226,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-split-worksheet-by-column-count-creating-separate-files-for-each-group.cs",
+      "title": "Convert a workbook to CSV and split worksheet by column count, creating separate files for each group."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-add-a-digital-signature-using-a-certificate-stored-in-windows-store.cs",
       "title": "Convert a workbook to PDF and add a digital signature using a certificate stored in Windows store."
     },

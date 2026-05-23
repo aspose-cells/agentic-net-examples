@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-csv-and-replace-formulas-with-their-evaluated-results-for-static-data-export.cs
 - convert-a-workbook-to-csv-and-mask-sensitive-data-using-regular-expression-patterns-for-privacy.cs
 - convert-a-workbook-to-csv-and-split-large-worksheet-into-multiple-files-each-containing-10000-rows.cs
+- convert-a-workbook-to-csv-and-split-worksheet-by-column-count-creating-separate-files-for-each-group.cs
