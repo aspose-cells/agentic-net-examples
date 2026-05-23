@@ -201,6 +201,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-embed-a-custom-truetype-font-loaded-from-external-file.cs",
+      "title": "Convert a workbook to PDF and embed a custom TrueType font loaded from external file."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-embed-document-metadata-such-as-author-title-and-keywords.cs",
       "title": "Convert a workbook to PDF and embed document metadata such as author, title, and keywords."
     },
