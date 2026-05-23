@@ -6776,6 +6776,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs",
+      "title": "Place a variable marker in a cell to populate it with a scalar value from the data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "place-group-labels-after-data-rows-by-setting-labelposition-attribute-to-after-in-the-smart-marker-definition.cs",
       "title": "Place group labels after data rows by setting LabelPosition attribute to \"After\" in the smart marker definition."
     },
