@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - replace-all-instances-of-the-character-with-an-empty-string-inside-a-named-range.cs
 - use-findoptions-to-perform-a-caseinsensitive-search-for-the-abbreviation-fy-within-a-range.cs
 - generate-a-pdf-that-includes-only-the-area-defined-by-a-worksheetscoped-named-range.cs
+- log-the-creation-modification-and-deletion-events-of-named-ranges-to-a-centralized-audit-file.cs

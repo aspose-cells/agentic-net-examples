@@ -3866,6 +3866,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "log-the-creation-modification-and-deletion-events-of-named-ranges-to-a-centralized-audit-file.cs",
+      "title": "Log the creation, modification, and deletion events of named ranges to a centralized audit file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "measure-the-time-taken-to-search-within-a-large-named-range-and-output-the-duration.cs",
       "title": "Measure the time taken to search within a large named range and output the duration."
     },
