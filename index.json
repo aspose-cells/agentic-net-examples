@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "calculate-formulas",
+      "file": "create-a-class-implementing-icustomfunction-and-override-calculatecustomfunction-to-define-custom-logic.cs",
+      "title": "Create a class implementing ICustomFunction and override CalculateCustomFunction to define custom logic."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs",
       "title": "Load a workbook from a file stream, modify cells, then call Workbook.CalculateFormula to recalculate."
     },
