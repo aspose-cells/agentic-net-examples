@@ -1991,6 +1991,11 @@
     },
     {
       "category": "format-cells",
+      "file": "export-the-modified-workbook-to-xlsx-and-verify-that-the-theme-xml-reflects-new-colors.cs",
+      "title": "Export the modified workbook to XLSX and verify that the theme XML reflects new colors."
+    },
+    {
+      "category": "format-cells",
       "file": "export-the-theme-color-palette-to-a-json-file-for-external-analysis-and-documentation.cs",
       "title": "Export the theme color palette to a JSON file for external analysis and documentation."
     },

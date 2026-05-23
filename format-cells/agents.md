@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - validate-that-after-changing-the-theme-conditional-formatting-rules-still-reference-correct-color-indices.cs
 - apply-a-gradient-fill-to-a-range-using-the-themes-accent3-and-accent4-colors.cs
 - set-the-themes-dark2-color-as-the-default-border-color-for-all-tables-in-the-workbook.cs
+- export-the-modified-workbook-to-xlsx-and-verify-that-the-theme-xml-reflects-new-colors.cs
