@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs
 - replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs
 - utilize-the-if-parameter-to-hide-entire-rows-when-a-status-field-equals-inactive-in-the-data-source.cs
+- load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs
