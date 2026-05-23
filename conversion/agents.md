@@ -204,3 +204,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-csv-and-ignore-cell-hyperlinks-to-avoid-exposing-external-links-in-data.cs
 - convert-a-workbook-to-csv-and-apply-localespecific-date-format-conversion-for-japanese-calendar.cs
 - convert-a-workbook-to-csv-and-apply-localespecific-number-format-conversion-for-indian-numbering-system.cs
+- convert-a-workbook-to-csv-and-compress-output-file-using-gzip.cs
