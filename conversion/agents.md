@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-pdf-while-including-hidden-rows-and-columns-for-complete-data-capture.cs
 - export-a-workbook-to-pdf-while-preserving-cell-background-colors-for-visual-consistency.cs
 - export-a-workbook-to-pdf-ignoring-cell-background-colors-to-produce-a-minimalist-layout.cs
+- convert-a-workbook-to-pdf-and-embed-javascript-that-triggers-automatic-printing-on-open.cs

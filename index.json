@@ -176,6 +176,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-embed-javascript-that-triggers-automatic-printing-on-open.cs",
+      "title": "Convert a workbook to PDF and embed JavaScript that triggers automatic printing on open."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-using-custom-page-margins-of-05-inches-on-each-side.cs",
       "title": "Convert a workbook to PDF using custom page margins of 0.5 inches on each side."
     },
