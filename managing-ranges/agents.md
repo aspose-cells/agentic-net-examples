@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - create-a-macrolike-routine-that-updates-a-named-range-based-on-the-current-date-each-day.cs
 - export-the-list-of-named-ranges-and-their-formulas-to-an-excel-sheet-for-auditing.cs
 - import-a-list-of-named-range-definitions-from-a-json-file-and-create-them-programmatically.cs
+- validate-that-all-named-ranges-reference-existing-cells-and-report-any-invalid-references.cs
