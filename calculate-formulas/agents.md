@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - write-a-formula-to-a-cell-and-store-its-text-in-another-cell-using-formulatext.cs
 - apply-formulatext-on-a-range-of-cells-to-extract-each-formulas-text-for-bulk-analysis.cs
 - compare-formula-text-before-and-after-modification-to-ensure-intended-changes-were-applied.cs
+- enable-circularreference-detection-in-workbook-calculation-settings-to-prevent-infinite-evaluation-loops.cs

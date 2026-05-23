@@ -91,6 +91,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "enable-circularreference-detection-in-workbook-calculation-settings-to-prevent-infinite-evaluation-loops.cs",
+      "title": "Enable circular\u2011reference detection in workbook calculation settings to prevent infinite evaluation loops."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs",
       "title": "Enable rounding to displayed format by setting CalculationOptions.PrecisionAsDisplayed to true."
     },
