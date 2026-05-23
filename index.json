@@ -6626,6 +6626,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-up-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-ensuring-hidden-data-is-also-populated.cs",
+      "title": "Set up WorkbookDesigner to process smart markers in hidden worksheets, ensuring hidden data is also populated."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs",
       "title": "Use the Formula parameter to compute cumulative totals across rows as smart markers import financial data."
     },
