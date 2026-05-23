@@ -156,6 +156,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "create-a-batch-process-that-loads-workbooks-applies-a-custom-function-recalculates-and-saves-results.cs",
+      "title": "Create a batch process that loads workbooks, applies a custom function, recalculates, and saves results."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-benchmark-measuring-cellcalculate-latency-with-and-without-enablefastformulacalculation-across-multiple-workbook-sizes.cs",
       "title": "Create a benchmark measuring Cell.Calculate latency with and without EnableFastFormulaCalculation across multiple workbook sizes."
     },
