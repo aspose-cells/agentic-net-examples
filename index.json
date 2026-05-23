@@ -6521,6 +6521,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-workflow-that-reads-json-files-populates-a-template-and-saves-each-workbook-with-a-timestamp.cs",
+      "title": "Create a workflow that reads JSON files, populates a template, and saves each workbook with a timestamp."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-anonymous-net-objects-set-them-as-data-source-and-apply-conditional-logic-in-smart-markers.cs",
       "title": "Create anonymous .NET objects, set them as data source, and apply conditional logic in smart markers."
     },
