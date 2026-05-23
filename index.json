@@ -6551,6 +6551,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs",
+      "title": "Map a collection of objects to a table using smart markers, then calculate salaries with a formula marker."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs",
       "title": "Process multiple worksheets containing identical smart markers by invoking WorkbookDesigner.Process for each sheet index."
     },
