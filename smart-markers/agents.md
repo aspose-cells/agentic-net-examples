@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - create-a-template-that-generates-invoices-with-line-items-totals-and-a-company-logo-image-using-smart-markers.cs
 - use-the-range-parameter-to-map-a-collection-of-quarterly-results-into-a-preformatted-financial-statement-layout.cs
 - set-a-custom-icustomdatasource-that-retrieves-data-from-a-rest-api-then-populate-smart-markers-with-the-response.cs
+- create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs
