@@ -201,6 +201,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-disable-font-embedding-to-reduce-output-file-size.cs",
+      "title": "Convert a workbook to PDF and disable font embedding to reduce output file size."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-embed-a-custom-opentype-font-loaded-from-memory-stream.cs",
       "title": "Convert a workbook to PDF and embed a custom OpenType font loaded from memory stream."
     },
