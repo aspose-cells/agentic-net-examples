@@ -6871,6 +6871,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "optimize-memory-usage-by-processing-smart-markers-in-streaming-mode-loading-only-required-worksheet-sections-at-a-time.cs",
+      "title": "Optimize memory usage by processing smart markers in streaming mode, loading only required worksheet sections at a time."
+    },
+    {
+      "category": "smart-markers",
       "file": "place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs",
       "title": "Place a variable marker in a cell to populate it with a scalar value from the data source."
     },
