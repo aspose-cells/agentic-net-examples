@@ -3531,6 +3531,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-unionrange-using-address-m1m5o1o5-and-set-a-uniform-number-format-for-all-cells.cs",
+      "title": "Create a UnionRange using address \"M1:M5,O1:O5\" and set a uniform number format for all cells."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
