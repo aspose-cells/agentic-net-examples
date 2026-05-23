@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs
 - use-the-html-property-to-embed-an-image-tag-within-a-cell-rendering-the-picture-after-merge.cs
 - create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
+- generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
