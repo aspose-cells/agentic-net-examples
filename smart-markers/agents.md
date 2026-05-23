@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - create-a-batch-job-that-processes-a-folder-of-excel-templates-each-populated-with-distinct-json-data-sources.cs
 - implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs
 - use-the-setvariable-method-to-inject-runtime-values-that-influence-smart-marker-calculations-across-the-workbook.cs
+- map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs
