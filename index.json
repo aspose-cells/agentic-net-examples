@@ -3686,6 +3686,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "offset-a-range-by-three-rows-and-five-columns-then-clear-all-cell-comments-within-the-new-range.cs",
+      "title": "Offset a range by three rows and five columns then clear all cell comments within the new range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "offset-a-range-by-zero-rows-and-columns-to-create-a-duplicate-reference-for-further-processing.cs",
       "title": "Offset a range by zero rows and columns to create a duplicate reference for further processing."
     },
