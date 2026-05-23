@@ -121,6 +121,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "interrupt-an-ongoing-workbookcalculate-operation-using-calculationenginecancel-to-stop-longrunning-calculations.cs",
+      "title": "Interrupt an ongoing workbook.Calculate operation using CalculationEngine.Cancel to stop long\u2011running calculations."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs",
       "title": "Invoke Workbook.CalculateFormula(calculationOptions) to recalculate formulas with custom monitor enabled for each calculation."
     },
