@@ -6666,6 +6666,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "provide-a-custom-collection-of-objects-as-the-data-source-to-workbookdesigner-for-flexible-objectoriented-merging.cs",
+      "title": "Provide a custom collection of objects as the data source to WorkbookDesigner for flexible object\u2011oriented merging."
+    },
+    {
+      "category": "smart-markers",
       "file": "replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs",
       "title": "Replace placeholder text in merged cells using smart markers while preserving the original cell merge settings."
     },
