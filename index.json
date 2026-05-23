@@ -196,6 +196,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-mask-sensitive-data-using-regular-expression-patterns-for-privacy.cs",
+      "title": "Convert a workbook to CSV and mask sensitive data using regular expression patterns for privacy."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-csv-and-omit-row-numbers-to-keep-original-column-structure-unchanged.cs",
       "title": "Convert a workbook to CSV and omit row numbers to keep original column structure unchanged."
     },
