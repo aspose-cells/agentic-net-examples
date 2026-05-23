@@ -6661,6 +6661,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-smart-marker-that-calculates-running-totals-using-the-formula-parameter-referencing-previous-row-values.cs",
+      "title": "Create a smart marker that calculates running totals using the Formula parameter referencing previous row values."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-smart-marker-that-populates-a-chart-data-range-enabling-automatic-chart-updates-based-on-merged-data.cs",
       "title": "Create a smart marker that populates a chart data range, enabling automatic chart updates based on merged data."
     },
