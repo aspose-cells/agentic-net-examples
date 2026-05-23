@@ -3735,6 +3735,11 @@
       "title": "Validate that moving range H1:H5 to I1:I5 does not overlap existing data in the destination worksheet."
     },
     {
+      "category": "managing-ranges",
+      "file": "validate-that-the-address-returned-by-rangeaddress-matches-the-expected-a1d4-format-after-modifications.cs",
+      "title": "Validate that the address returned by Range.Address matches the expected A1:D4 format after modifications."
+    },
+    {
       "category": "open-workbook",
       "file": "after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs",
       "title": "After loading, iterate through workbook.LoadWarnings collection and output each warning message to console."
