@@ -6741,6 +6741,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-setvariable-method-to-pass-a-boolean-flag-that-smart-markers-use-to-toggle-visibility-of-sections.cs",
+      "title": "Use the SetVariable method to pass a boolean flag that smart markers use to toggle visibility of sections."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-setvariable-method-to-pass-a-locale-identifier-that-influences-date-and-number-formatting-in-smart-markers.cs",
       "title": "Use the SetVariable method to pass a locale identifier that influences date and number formatting in smart markers."
     },
