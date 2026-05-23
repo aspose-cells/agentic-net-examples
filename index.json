@@ -276,6 +276,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-exclude-external-linked-images-to-keep-the-file-size-minimal.cs",
+      "title": "Convert a workbook to PDF and exclude external linked images to keep the file size minimal."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-flatten-all-annotations-to-make-them-part-of-the-page-content.cs",
       "title": "Convert a workbook to PDF and flatten all annotations to make them part of the page content."
     },
