@@ -2006,6 +2006,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-a-workbook-apply-a-custom-theme-and-generate-a-pdf-preview-of-the-first-sheet.cs",
+      "title": "Load a workbook, apply a custom theme, and generate a PDF preview of the first sheet."
+    },
+    {
+      "category": "format-cells",
       "file": "load-a-workbook-disable-theme-usage-and-convert-all-themed-cells-to-explicit-rgb-formatting.cs",
       "title": "Load a workbook, disable theme usage, and convert all themed cells to explicit RGB formatting."
     },
