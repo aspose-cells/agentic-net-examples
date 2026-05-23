@@ -6631,6 +6631,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-custom-class-implementing-icustomtypeprovider-to-expose-additional-properties-for-smart-marker-binding.cs",
+      "title": "Create a custom class implementing ICustomTypeProvider to expose additional properties for smart marker binding."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-function-that-accepts-a-data-object-and-a-template-path-then-returns-a-populated-workbook-stream.cs",
       "title": "Create a function that accepts a data object and a template path, then returns a populated workbook stream."
     },
