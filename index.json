@@ -591,6 +591,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "test-that-manual-calculation-mode-prevents-any-formula-evaluation-until-workbookcalculateformula-is-called.cs",
+      "title": "Test that Manual calculation mode prevents any formula evaluation until Workbook.CalculateFormula is called."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs",
       "title": "Trigger circular reference detection by invoking Workbook.Calculate after modifying interdependent formulas."
     },
