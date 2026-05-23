@@ -6596,6 +6596,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-smart-marker-options-to-ignore-empty-rows-when-processing-a-detail-list-that-contains-gaps.cs",
+      "title": "Configure smart marker options to ignore empty rows when processing a detail list that contains gaps."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-the-detailtable-parameter-to-map-detail-data-into-a-predefined-table-on-the-target-sheet.cs",
       "title": "Configure the DetailTable parameter to map detail data into a predefined table on the target sheet."
     },
