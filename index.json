@@ -861,6 +861,11 @@
     },
     {
       "category": "conversion",
+      "file": "save-a-workbook-as-csv-using-custom-save-options-to-trim-leading-blanks-before-writing-rows.cs",
+      "title": "Save a workbook as CSV using custom save options to trim leading blanks before writing rows."
+    },
+    {
+      "category": "conversion",
       "file": "save-a-workbook-as-csv-while-preserving-original-cell-data-types-for-accurate-downstream-processing.cs",
       "title": "Save a workbook as CSV while preserving original cell data types for accurate downstream processing."
     },
