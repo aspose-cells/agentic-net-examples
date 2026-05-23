@@ -321,6 +321,11 @@
     },
     {
       "category": "conversion",
+      "file": "validate-numeric-columns-after-loading-csv-by-checking-cell-data-types-and-logging-mismatches.cs",
+      "title": "Validate numeric columns after loading CSV by checking cell data types and logging mismatches."
+    },
+    {
+      "category": "conversion",
       "file": "verify-that-an-ods-background-graphic-appears-in-the-exported-pdf.cs",
       "title": "Verify that an ODS background graphic appears in the exported PDF."
     },
