@@ -3836,6 +3836,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs",
+      "title": "Replace numeric values less than zero with zero inside named range \"ProfitMargins\"."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-the-address-of-a-dynamic-named-range-salesdata-and-log-the-result.cs",
       "title": "Retrieve the address of a dynamic named range \"SalesData\" and log the result."
     },
