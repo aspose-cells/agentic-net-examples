@@ -6966,6 +6966,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "save-the-merged-workbook-as-xlsx-and-optionally-export-a-pdf-copy-for-reporting-purposes.cs",
+      "title": "Save the merged workbook as XLSX and optionally export a PDF copy for reporting purposes."
+    },
+    {
+      "category": "smart-markers",
       "file": "save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs",
       "title": "Save the processed workbook as an XLSX file to preserve all smart marker generated content and formatting."
     },
