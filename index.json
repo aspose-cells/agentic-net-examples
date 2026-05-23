@@ -521,6 +521,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-with-a-byte-order-mark-to-ensure-correct-encoding-detection.cs",
+      "title": "Export a workbook to CSV with a Byte Order Mark to ensure correct encoding detection."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-csv-with-date-cells-formatted-as-iso-8601-strings-for-standardization.cs",
       "title": "Export a workbook to CSV with date cells formatted as ISO 8601 strings for standardization."
     },
