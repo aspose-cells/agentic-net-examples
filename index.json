@@ -261,6 +261,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-flatten-all-annotations-to-make-them-part-of-the-page-content.cs",
+      "title": "Convert a workbook to PDF and flatten all annotations to make them part of the page content."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-include-all-cell-comments-as-footnotes-in-the-output.cs",
       "title": "Convert a workbook to PDF and include all cell comments as footnotes in the output."
     },
