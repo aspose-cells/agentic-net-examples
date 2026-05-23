@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs
 - apply-conditional-formatting-based-on-formula-results-to-visually-emphasize-threshold-breaches.cs
 - programmatically-clear-the-watch-window-before-adding-a-new-set-of-cells-for-monitoring.cs
+- serialize-the-watch-window-configuration-to-json-for-external-storage-and-later-restoration.cs
