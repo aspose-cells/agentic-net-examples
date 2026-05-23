@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - log-each-step-of-formula-evaluation-using-custom-callbacks-attached-to-the-calculation-engine.cs
 - subscribe-to-calculation-engine-events-to-monitor-progress-of-longrunning-formula-evaluations.cs
 - implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs
+- pause-calculation-after-a-predefined-time-threshold-and-resume-it-later-without-data-loss.cs
