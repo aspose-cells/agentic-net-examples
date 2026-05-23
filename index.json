@@ -3661,6 +3661,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "export-the-contents-of-named-range-employeelist-to-a-csv-file-for-external-analysis.cs",
+      "title": "Export the contents of named range \"EmployeeList\" to a CSV file for external analysis."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-range-representing-the-entire-column-of-g3h3-and-apply-bold-formatting.cs",
       "title": "Generate a range representing the entire column of G3:H3 and apply bold formatting."
     },

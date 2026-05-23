@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - clone-a-workbook-containing-named-ranges-and-verify-that-all-named-ranges-are-preserved-in-the-clone.cs
 - merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs
 - compare-named-ranges-between-two-workbooks-and-generate-a-report-listing-differences.cs
+- export-the-contents-of-named-range-employeelist-to-a-csv-file-for-external-analysis.cs
