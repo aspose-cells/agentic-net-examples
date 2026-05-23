@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs
 - set-findoptions-to-match-whole-cell-contents-when-locating-the-value-yes-in-range-f1f50.cs
 - limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs
+- execute-a-backward-search-for-error-in-range-i1i200-by-setting-findoptionssearchdirection.cs
