@@ -3721,6 +3721,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "log-each-modification-to-named-ranges-including-timestamp-and-old-versus-new-references-to-a-text-file.cs",
+      "title": "Log each modification to named ranges, including timestamp and old versus new references, to a text file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs",
       "title": "Merge a range that spans the first worksheet row to create a header covering all columns."
     },

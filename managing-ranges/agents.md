@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs
 - insert-a-pivot-table-that-uses-named-range-salesregion-as-its-source-data.cs
 - refresh-a-pivot-table-after-expanding-the-underlying-named-range-to-include-new-rows.cs
+- log-each-modification-to-named-ranges-including-timestamp-and-old-versus-new-references-to-a-text-file.cs
