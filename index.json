@@ -6676,6 +6676,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "restrict-smart-marker-processing-to-the-first-one-hundred-rows-using-the-range-parameter-for-performance.cs",
+      "title": "Restrict smart marker processing to the first one hundred rows using the Range parameter for performance."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-a-custom-data-source-object-on-workbookdesigner-when-default-sources-cannot-represent-complex-hierarchical-structures.cs",
       "title": "Set a custom data source object on WorkbookDesigner when default sources cannot represent complex hierarchical structures."
     },
