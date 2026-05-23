@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - rename-an-existing-named-range-from-oldname-to-newname-and-update-all-formula-references.cs
 - use-findoptions-to-search-for-numeric-values-greater-than-1000-within-named-range-budget.cs
 - replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs
+- configure-findoptions-to-ignore-hidden-rows-while-searching-within-range-k1k500.cs
