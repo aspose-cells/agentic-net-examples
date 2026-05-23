@@ -121,6 +121,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs",
+      "title": "Remove a cell from the Watch Window programmatically after its evaluation completes."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs",
       "title": "Replace ICustomFunction implementation with an AbstractCalculationEngine subclass for newer API support."
     },
