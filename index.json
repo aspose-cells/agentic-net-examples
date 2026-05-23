@@ -421,6 +421,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs",
+      "title": "Switch Workbook.Settings.CalculationMode to Manual, perform bulk updates, then call Workbook.Calculate once."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs",
       "title": "Test iterative calculation stability by configuring CalculationOptions.MaxIterations to 100 and observing convergence."
     },
