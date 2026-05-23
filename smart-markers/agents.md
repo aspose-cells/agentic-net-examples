@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - use-the-setdatasource-method-to-bind-a-dataset-containing-multiple-tables-each-mapped-to-different-smart-marker-groups.cs
 - add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs
 - export-the-final-workbook-to-xlsx-format-after-smart-marker-processing-ensuring-all-formulas-remain-editable.cs
+- create-a-template-that-uses-image-markers-to-embed-photos-stored-as-base64-strings-in-the-data-source.cs
