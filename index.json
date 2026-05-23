@@ -146,6 +146,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "generate-a-csv-file-containing-all-formulas-in-the-workbook-along-with-their-cell-addresses.cs",
+      "title": "Generate a CSV file containing all formulas in the workbook along with their cell addresses."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs",
       "title": "Implement a progress callback that reports percentage completion during extensive calculations."
     },
