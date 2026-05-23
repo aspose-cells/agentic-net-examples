@@ -226,6 +226,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "extract-and-log-the-formula-dependency-graph-after-calling-workbookcalculateformula-for-debugging.cs",
+      "title": "Extract and log the formula dependency graph after calling Workbook.CalculateFormula for debugging."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "filter-formulas-that-contain-specific-functions-such-as-vlookup-or-sumifs-for-targeted-review.cs",
       "title": "Filter formulas that contain specific functions such as VLOOKUP or SUMIFS for targeted review."
     },
