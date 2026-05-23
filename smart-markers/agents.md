@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - generate-sequential-invoice-numbers-using-a-custom-label-that-combines-a-prefix-with-the-autoincremented-record-index.cs
 - insert-images-by-adding-the-image-parameter-to-a-smart-marker-tag-and-supplying-a-byte-array-source.cs
 - insert-a-company-logo-at-the-sheet-top-via-an-image-marker-referencing-the-logo-byte-array.cs
+- generate-a-qr-code-image-using-an-image-marker-by-converting-a-base64-string-into-a-bitmap.cs
