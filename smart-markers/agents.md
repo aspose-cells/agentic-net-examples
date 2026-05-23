@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - implement-a-unit-test-that-verifies-overflow-rows-are-correctly-transferred-to-a-secondary-worksheet-after-processing.cs
 - use-the-if-parameter-to-conditionally-hide-columns-when-a-flag-field-is-false-in-the-data-source.cs
 - set-a-custom-data-source-that-merges-multiple-json-arrays-into-a-single-collection-for-smart-marker-consumption.cs
+- use-the-range-parameter-to-fill-a-matrix-mapping-dates-to-rows-and-columns-on-a-start-date.cs
