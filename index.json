@@ -4021,6 +4021,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "search-for-cells-containing-the-word-confidential-within-a-named-range-and-mask-the-text.cs",
+      "title": "Search for cells containing the word \"confidential\" within a named range and mask the text."
+    },
+    {
+      "category": "managing-ranges",
       "file": "search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs",
       "title": "Search for numeric values formatted as currency within a named range and convert them to plain numbers."
     },

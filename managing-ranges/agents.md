@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - export-the-values-of-a-named-range-to-a-separate-workbook-while-preserving-original-formatting.cs
 - import-values-from-another-workbook-into-a-named-range-overwriting-existing-data-safely.cs
 - set-the-refersto-property-of-a-named-range-using-a-named-formula-for-advanced-calculations.cs
+- search-for-cells-containing-the-word-confidential-within-a-named-range-and-mask-the-text.cs
