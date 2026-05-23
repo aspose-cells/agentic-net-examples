@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs
 - process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs
 - group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs
+- embed-images-into-cells-using-image-markers-that-reference-binary-data-from-a-custom-object-source.cs
