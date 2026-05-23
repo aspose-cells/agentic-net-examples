@@ -486,6 +486,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-applying-localespecific-number-formatting-for-european-decimal-separators.cs",
+      "title": "Export a workbook to CSV applying locale\u2011specific number formatting for European decimal separators."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-csv-handling-line-breaks-inside-cells-by-replacing-them-with-spaces.cs",
       "title": "Export a workbook to CSV handling line breaks inside cells by replacing them with spaces."
     },
