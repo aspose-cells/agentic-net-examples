@@ -6511,6 +6511,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs",
+      "title": "Apply data validation rules to cells filled by smart markers to restrict user input after generation."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-smart-marker-parameters-to-control-row-insertion-when-merging-a-large-dataset-with-related-tables.cs",
       "title": "Apply smart marker parameters to control row insertion when merging a large DataSet with related tables."
     },
