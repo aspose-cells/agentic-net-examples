@@ -7006,6 +7006,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-foreach-syntax-in-smart-markers-to-import-variablelength-collections-like-product-reviews.cs",
+      "title": "Use foreach syntax in smart markers to import variable\u2011length collections like product reviews."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs",
       "title": "Use LINQ to filter a collection before assigning it to WorkbookDesigner, ensuring rows appear via smart markers."
     },

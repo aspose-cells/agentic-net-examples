@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - enable-the-detaillink-parameter-to-create-hyperlinks-from-master-rows-to-their-corresponding-detail-worksheets.cs
 - set-workbookdesignerlinebyline-to-false-when-merging-nested-objects-to-process-them-as-grouped-records.cs
 - bind-a-nested-object-hierarchy-such-as-employee-address-using-dot-notation-in-smart-markers.cs
+- use-foreach-syntax-in-smart-markers-to-import-variablelength-collections-like-product-reviews.cs
