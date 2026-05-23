@@ -3391,6 +3391,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-and-freeze-the-top-row-in-the-worksheet-view.cs",
+      "title": "Copy a range to a new workbook and freeze the top row in the worksheet view."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-workbook-and-preserve-both-cell-values-and-formatting-using-copy-with-style.cs",
       "title": "Copy a range to a new workbook and preserve both cell values and formatting using copy with style."
     },
