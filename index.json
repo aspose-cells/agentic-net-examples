@@ -3401,6 +3401,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-and-set-the-worksheets-tab-color-based-on-range-content-type.cs",
+      "title": "Copy a range to a new workbook and set the worksheet's tab color based on range content type."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-workbook-then-apply-password-protection-to-the-entire-file.cs",
       "title": "Copy a range to a new workbook, then apply password protection to the entire file."
     },
