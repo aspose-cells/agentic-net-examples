@@ -181,6 +181,11 @@
     },
     {
       "category": "conversion",
+      "file": "create-a-utility-that-monitors-a-folder-and-automatically-converts-newly-added-csv-files-to-xlsx.cs",
+      "title": "Create a utility that monitors a folder and automatically converts newly added CSV files to XLSX."
+    },
+    {
+      "category": "conversion",
       "file": "embed-images-as-base64-in-a-single-html-file-during-export.cs",
       "title": "Embed images as base64 in a single HTML file during export."
     },
