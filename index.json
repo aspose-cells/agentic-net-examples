@@ -3636,6 +3636,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs",
+      "title": "Move the range E5:G10 to a new location starting at cell J5 while preserving original formulas."
+    },
+    {
+      "category": "managing-ranges",
       "file": "produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs",
       "title": "Produce a range covering the entire rows of C5:C9 and set background color to light gray."
     },
