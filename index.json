@@ -231,6 +231,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-preserve-all-hyperlinks-for-interactive-navigation.cs",
+      "title": "Convert a workbook to PDF and preserve all hyperlinks for interactive navigation."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-creation-date-to-current-timestamp-for-audit-tracking.cs",
       "title": "Convert a workbook to PDF and set creation date to current timestamp for audit tracking."
     },
