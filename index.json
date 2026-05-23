@@ -216,6 +216,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "resume-a-paused-calculation-session-and-verify-that-results-match-uninterrupted-execution.cs",
+      "title": "Resume a paused calculation session and verify that results match uninterrupted execution."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs",
       "title": "Retrieve the list of cells currently monitored by the Watch Window for reporting purposes."
     },
