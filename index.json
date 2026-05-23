@@ -256,6 +256,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-pdf-while-preserving-cell-background-colors-for-visual-consistency.cs",
+      "title": "Export a workbook to PDF while preserving cell background colors for visual consistency."
+    },
+    {
+      "category": "conversion",
       "file": "export-each-sheet-as-jpeg-images-with-300-dpi-resolution-for-printing.cs",
       "title": "Export each sheet as JPEG images with 300\u202fDPI resolution for printing."
     },
