@@ -6486,6 +6486,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs",
+      "title": "Apply conditional formatting rules that depend on smart marker values, such as highlighting rows with high priority."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs",
       "title": "Apply the Range parameter to map a collection of objects to a specific cell block in the worksheet."
     },

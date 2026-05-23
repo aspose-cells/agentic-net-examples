@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs
 - implement-a-custom-icustomdatasource-to-provide-smart-marker-values-from-a-web-service-response.cs
 - use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs
+- apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs
