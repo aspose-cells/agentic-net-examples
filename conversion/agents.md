@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - generate-githubflavored-markdown-tables-from-a-workbook-for-documentation-purposes.cs
 - generate-an-mhtml-document-with-utf8-encoding-and-embedded-resources.cs
 - load-a-tsv-workbook-and-convert-it-to-an-html-page-with-external-css.cs
+- embed-images-as-base64-in-a-single-html-file-during-export.cs
