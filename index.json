@@ -6506,6 +6506,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-template-that-uses-the-range-parameter-to-fill-a-matrix-layout-from-a-twodimensional-array-source.cs",
+      "title": "Create a template that uses the Range parameter to fill a matrix layout from a two\u2011dimensional array source."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-anonymous-net-objects-set-them-as-data-source-and-apply-conditional-logic-in-smart-markers.cs",
       "title": "Create anonymous .NET objects, set them as data source, and apply conditional logic in smart markers."
     },
