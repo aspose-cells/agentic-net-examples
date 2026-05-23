@@ -311,6 +311,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "load-multiple-xlsx-files-from-a-directory-set-each-to-automatic-and-recalculate-formulas.cs",
+      "title": "Load multiple XLSX files from a directory, set each to Automatic, and recalculate formulas."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "log-each-step-of-formula-evaluation-using-custom-callbacks-attached-to-the-calculation-engine.cs",
       "title": "Log each step of formula evaluation using custom callbacks attached to the calculation engine."
     },
