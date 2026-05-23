@@ -6651,6 +6651,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs",
+      "title": "Configure WorkbookDesigner to use an IEnumerable collection as data source for populating smart markers across worksheets."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-batch-job-that-processes-a-folder-of-excel-templates-each-populated-with-distinct-json-data-sources.cs",
       "title": "Create a batch job that processes a folder of Excel templates, each populated with distinct JSON data sources."
     },
