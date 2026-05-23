@@ -281,6 +281,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-csv-file-transpose-its-rows-and-columns-programmatically-and-save-the-transposed-matrix-as-csv.cs",
+      "title": "Load a CSV file, transpose its rows and columns programmatically, and save the transposed matrix as CSV."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-csv-file-trim-whitespace-from-all-string-cells-and-save-the-cleaned-data-as-csv.cs",
       "title": "Load a CSV file, trim whitespace from all string cells, and save the cleaned data as CSV."
     },

@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - export-a-specific-worksheet-to-a-txt-file-using-tab-delimiters-and-utf8-encoding.cs
 - after-converting-csv-to-xlsx-add-a-data-validation-rule-to-restrict-values-in-a-column.cs
 - read-a-csv-file-calculate-sum-of-a-numeric-column-and-write-the-result-into-a-new-cell.cs
+- load-a-csv-file-transpose-its-rows-and-columns-programmatically-and-save-the-transposed-matrix-as-csv.cs
