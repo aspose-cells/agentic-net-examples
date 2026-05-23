@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - verify-workbooksettingscustomengine-is-null-after-resetting-settings-to-default-confirming-no-residual-custom-logic.cs
 - set-calculationoptionsprecision-to-a-higher-value-when-evaluating-financial-formulas-requiring-exact-decimal-handling.cs
 - switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs
+- set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs

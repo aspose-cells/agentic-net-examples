@@ -366,6 +366,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs",
+      "title": "Set CalculationMode to SemiAutomatic to recalculate only dependent cells after each modification."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationoptionscalculationmode-to-automatic-and-call-workbookcalculateformula-to-trigger-full-recalculation.cs",
       "title": "Set CalculationOptions.CalculationMode to Automatic and call Workbook.CalculateFormula to trigger full recalculation."
     },
