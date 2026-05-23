@@ -3901,6 +3901,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs",
+      "title": "Replace formulas that reference \"OldRange\" with references to \"NewRange\" across the workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs",
       "title": "Replace numeric values less than zero with zero inside named range \"ProfitMargins\"."
     },

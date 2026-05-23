@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - apply-a-filter-to-a-table-using-a-named-range-as-the-criteria-range.cs
 - create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-right.cs
 - use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs
+- replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs
