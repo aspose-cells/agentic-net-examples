@@ -7091,6 +7091,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-smart-marker-option-to-preserve-original-cell-formatting-while-inserting-data-from-a-custom-object-list.cs",
+      "title": "Set smart marker option to preserve original cell formatting while inserting data from a custom object list."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs",
       "title": "Set the HTML property on a smart marker to render bold text inside the resulting cell."
     },

@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs
 - apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs
 - group-smart-markers-to-aggregate-sales-data-by-region-and-insert-subtotal-rows-within-the-worksheet.cs
+- set-smart-marker-option-to-preserve-original-cell-formatting-while-inserting-data-from-a-custom-object-list.cs
