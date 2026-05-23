@@ -1976,6 +1976,11 @@
     },
     {
       "category": "format-cells",
+      "file": "detect-if-a-workbook-uses-theme-colors-and-fallback-to-direct-rgb-formatting-when-absent.cs",
+      "title": "Detect if a workbook uses theme colors and fallback to direct RGB formatting when absent."
+    },
+    {
+      "category": "format-cells",
       "file": "export-the-theme-color-palette-to-a-json-file-for-external-analysis-and-documentation.cs",
       "title": "Export the theme color palette to a JSON file for external analysis and documentation."
     },
