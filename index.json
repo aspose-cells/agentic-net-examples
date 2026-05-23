@@ -3696,6 +3696,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "retrieve-the-address-of-a-range-after-moving-it-to-verify-the-new-address-reflects-the-target-location.cs",
+      "title": "Retrieve the address of a range after moving it to verify the new address reflects the target location."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-the-entire-row-range-for-row-10-and-set-its-height-to-30-points.cs",
       "title": "Retrieve the entire row range for row 10 and set its height to 30 points."
     },
