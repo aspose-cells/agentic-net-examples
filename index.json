@@ -2001,6 +2001,11 @@
     },
     {
       "category": "format-cells",
+      "file": "replace-the-workbooks-theme-font-with-a-custom-font-family-and-update-all-cell-styles.cs",
+      "title": "Replace the workbook\u2019s theme font with a custom font family and update all cell styles."
+    },
+    {
+      "category": "format-cells",
       "file": "retrieve-the-current-rgb-value-of-the-hyperlink-theme-color-from-a-loaded-workbook.cs",
       "title": "Retrieve the current RGB value of the Hyperlink theme color from a loaded workbook."
     },
