@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs
 - create-a-template-that-uses-the-range-parameter-to-fill-a-matrix-layout-from-a-twodimensional-array-source.cs
 - use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs
+- implement-a-unit-test-that-verifies-smart-marker-replacement-results-match-expected-cell-values-for-a-data-set.cs
