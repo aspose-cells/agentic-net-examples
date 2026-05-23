@@ -81,6 +81,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "calculate-an-array-formula-for-a-data-table-that-aggregates-values-across-multiple-rows.cs",
+      "title": "Calculate an array formula for a data table that aggregates values across multiple rows."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs",
       "title": "Call workbook.Calculate to evaluate all formulas using the registered custom calculation engine."
     },
