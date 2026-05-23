@@ -6766,6 +6766,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs",
+      "title": "Process multiple template files in a batch, assigning distinct data sources to each WorkbookDesigner instance."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs",
       "title": "Process multiple worksheets containing identical smart markers by invoking WorkbookDesigner.Process for each sheet index."
     },

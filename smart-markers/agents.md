@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - capture-each-record-processing-event-in-the-ismartmarkercallback-implementation-to-build-a-detailed-merge-log.cs
 - log-start-and-end-timestamps-of-smart-marker-processing-within-the-callback-to-measure-total-execution-time.cs
 - capture-a-callback-after-each-group-is-processed-to-log-group-identifiers-and-record-counts-for-auditing.cs
+- process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs
