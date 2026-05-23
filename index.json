@@ -1946,6 +1946,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-chart-and-set-its-series-colors-to-use-the-workbooks-theme-accent5-colors.cs",
+      "title": "Create a chart and set its series colors to use the workbook\u2019s theme Accent5 colors."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-custom-color-scheme-assigning-new-rgb-values-to-accent1-and-accent2-theme-colors.cs",
       "title": "Create a custom color scheme assigning new RGB values to Accent1 and Accent2 theme colors."
     },
