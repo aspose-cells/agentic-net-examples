@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - check-if-any-cells-use-the-themecolorindex-enumeration-and-log-their-addresses-for-review.cs
 - create-a-new-workbook-assign-a-custom-theme-and-populate-it-with-sample-data-using-theme-colors.cs
 - export-the-theme-color-palette-to-a-json-file-for-external-analysis-and-documentation.cs
+- import-a-json-defined-color-scheme-and-apply-it-as-the-workbooks-new-theme-colors.cs

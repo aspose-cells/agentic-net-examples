@@ -1991,6 +1991,11 @@
     },
     {
       "category": "format-cells",
+      "file": "import-a-json-defined-color-scheme-and-apply-it-as-the-workbooks-new-theme-colors.cs",
+      "title": "Import a JSON-defined color scheme and apply it as the workbook\u2019s new theme colors."
+    },
+    {
+      "category": "format-cells",
       "file": "iterate-through-a-folder-of-xlsx-files-replace-accent3-with-a-custom-green-shade-and-save.cs",
       "title": "Iterate through a folder of XLSX files, replace Accent3 with a custom green shade, and save."
     },
