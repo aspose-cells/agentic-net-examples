@@ -131,6 +131,11 @@
     },
     {
       "category": "conversion",
+      "file": "assign-a-graphic-stream-to-odspagebackground-and-save-the-workbook-as-ods-with-colored-background.cs",
+      "title": "Assign a graphic stream to OdsPageBackground and save the workbook as ODS with colored background."
+    },
+    {
+      "category": "conversion",
       "file": "batch-convert-multiple-xlsx-files-to-pdf-and-store-results-in-an-output-folder.cs",
       "title": "Batch convert multiple XLSX files to PDF and store results in an output folder."
     },
