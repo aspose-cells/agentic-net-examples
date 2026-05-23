@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - copy-a-range-to-a-new-workbook-while-preserving-column-widths-and-row-heights.cs
 - copy-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs
 - copy-a-range-to-a-csv-file-ensuring-that-commas-within-cell-text-are-properly-escaped.cs
+- export-the-contents-of-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs
