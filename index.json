@@ -6851,6 +6851,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs",
+      "title": "Use a variable array marker across a range to fill a table with a one\u2011dimensional collection."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-formula-parameter-to-calculate-weighted-averages-across-rows-referencing-multiple-smart-marker-fields-for-each-calculation.cs",
       "title": "Use the Formula parameter to calculate weighted averages across rows, referencing multiple smart marker fields for each calculation."
     },
