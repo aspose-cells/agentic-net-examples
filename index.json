@@ -6766,6 +6766,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "export-the-merged-workbook-to-xls-format-to-ensure-compatibility-with-older-spreadsheet-applications.cs",
+      "title": "Export the merged workbook to XLS format to ensure compatibility with older spreadsheet applications."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs",
       "title": "Generate a PDF report from the processed workbook and embed hyperlinks that open the corresponding Excel worksheets."
     },
