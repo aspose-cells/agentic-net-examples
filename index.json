@@ -241,6 +241,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-custom-worksheet-function-by-creating-a-class-that-implements-icustomfunction.cs",
+      "title": "Implement a custom worksheet function by creating a class that implements ICustomFunction."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs",
       "title": "Implement a progress callback that reports percentage completion during extensive calculations."
     },
