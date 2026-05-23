@@ -3761,6 +3761,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "search-for-the-text-total-within-range-a1c30-using-findoptions.cs",
+      "title": "Search for the text \"Total\" within range A1:C30 using FindOptions."
+    },
+    {
+      "category": "managing-ranges",
       "file": "transfer-only-cell-values-from-one-worksheet-range-to-another-worksheet-without-copying-formatting-styles.cs",
       "title": "Transfer only cell values from one worksheet range to another worksheet without copying formatting styles."
     },
