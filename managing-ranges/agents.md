@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs
 - validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs
 - use-the-entirecolumn-property-to-select-column-b-and-hide-it-from-view-in-the-workbook.cs
+- retrieve-the-address-of-a-dynamic-named-range-salesdata-and-log-the-result.cs
