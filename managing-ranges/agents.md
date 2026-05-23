@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - create-a-workbookscoped-named-range-covering-cells-a1-to-d10-on-the-first-worksheet.cs
 - define-a-worksheetscoped-named-range-for-cells-b2b20-on-sheet2-including-the-sheet-name.cs
 - access-a-global-named-range-from-sheet3-and-read-its-address-using-the-workbook-names-collection.cs
+- retrieve-the-range-object-of-the-named-range-salesdata-and-iterate-through-its-cells.cs
