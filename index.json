@@ -3496,6 +3496,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-that-sets-a-font-family-and-size-and-apply-it-to-cells-in-the-sheet.cs",
+      "title": "Create a Style that sets a font family and size and apply it to cells in the sheet."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-style-that-sets-a-red-border-on-the-left-side-and-apply-it-to-column-t.cs",
       "title": "Create a Style that sets a red border on the left side and apply it to column T."
     },
