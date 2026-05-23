@@ -1936,6 +1936,11 @@
     },
     {
       "category": "format-cells",
+      "file": "assign-the-themes-dark1-color-to-the-fill-of-a-pivot-tables-row-headers.cs",
+      "title": "Assign the theme\u2019s Dark1 color to the fill of a pivot table\u2019s row headers."
+    },
+    {
+      "category": "format-cells",
       "file": "check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs",
       "title": "Check whether a workbook contains theme colors before applying bulk theme updates to multiple files."
     },
