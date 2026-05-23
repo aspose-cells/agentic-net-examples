@@ -3586,6 +3586,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "define-a-worksheetscoped-named-range-for-cells-b2b20-on-sheet2-including-the-sheet-name.cs",
+      "title": "Define a worksheet\u2011scoped named range for cells B2:B20 on Sheet2, including the sheet name."
+    },
+    {
+      "category": "managing-ranges",
       "file": "delete-multiple-noncontiguous-ranges-in-a-single-operation-using-a-unionrange-to-specify-them.cs",
       "title": "Delete multiple non\u2011contiguous ranges in a single operation using a UnionRange to specify them."
     },
