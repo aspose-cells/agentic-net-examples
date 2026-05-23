@@ -4086,6 +4086,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "validate-that-the-address-of-each-named-range-conforms-to-the-a1-reference-style.cs",
+      "title": "Validate that the address of each named range conforms to the A1 reference style."
+    },
+    {
+      "category": "managing-ranges",
       "file": "validate-that-the-address-returned-by-rangeaddress-matches-the-expected-a1d4-format-after-modifications.cs",
       "title": "Validate that the address returned by Range.Address matches the expected A1:D4 format after modifications."
     },
