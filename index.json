@@ -376,6 +376,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "measure-performance-difference-between-automatic-and-manual-modes-by-timing-workbookcalculateformula-execution.cs",
+      "title": "Measure performance difference between Automatic and Manual modes by timing Workbook.CalculateFormula execution."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs",
       "title": "Open the saved workbook in Excel and verify that the specified cells appear in the Watch Window."
     },
