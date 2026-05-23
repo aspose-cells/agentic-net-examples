@@ -1971,6 +1971,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-a-workbook-disable-theme-usage-and-convert-all-themed-cells-to-explicit-rgb-formatting.cs",
+      "title": "Load a workbook, disable theme usage, and convert all themed cells to explicit RGB formatting."
+    },
+    {
+      "category": "format-cells",
       "file": "load-an-xlsx-workbook-verify-theme-usage-and-extract-all-theme-color-definitions.cs",
       "title": "Load an XLSX workbook, verify theme usage, and extract all theme color definitions."
     },
