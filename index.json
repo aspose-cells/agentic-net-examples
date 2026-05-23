@@ -821,6 +821,11 @@
     },
     {
       "category": "conversion",
+      "file": "perform-batch-conversion-with-error-handling-that-logs-corrupted-files-and-continues-processing-remaining-items.cs",
+      "title": "Perform batch conversion with error handling that logs corrupted files and continues processing remaining items."
+    },
+    {
+      "category": "conversion",
       "file": "perform-batch-conversion-with-progress-callback-that-reports-percentage-completed-for-each-file.cs",
       "title": "Perform batch conversion with progress callback that reports percentage completed for each file."
     },
