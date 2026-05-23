@@ -196,6 +196,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-workbook-to-pdf-while-preserving-original-layout-and-cell-formatting-accurately.cs",
+      "title": "Convert workbook to PDF while preserving original layout and cell formatting accurately."
+    },
+    {
+      "category": "conversion",
       "file": "create-a-custom-parser-to-interpret-dates-in-ddmmyyyy-format-and-assign-it-to-preferredparsers.cs",
       "title": "Create a custom parser to interpret dates in dd/MM/yyyy format and assign it to PreferredParsers."
     },
