@@ -3546,6 +3546,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-macrolike-routine-that-updates-a-named-range-based-on-the-current-date-each-day.cs",
+      "title": "Create a macro\u2011like routine that updates a named range based on the current date each day."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-right.cs",
       "title": "Create a named range that automatically expands when new columns are added to the right."
     },

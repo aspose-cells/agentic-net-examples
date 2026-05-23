@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - add-a-hyperlink-to-each-cell-within-a-named-range-that-points-to-its-documentation-page.cs
 - validate-that-the-address-of-each-named-range-conforms-to-the-a1-reference-style.cs
 - use-a-named-range-to-define-the-print-area-of-a-worksheet-before-printing-to-pdf.cs
+- create-a-macrolike-routine-that-updates-a-named-range-based-on-the-current-date-each-day.cs
