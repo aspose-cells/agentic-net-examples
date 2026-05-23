@@ -176,6 +176,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "log-each-step-of-formula-evaluation-using-custom-callbacks-attached-to-the-calculation-engine.cs",
+      "title": "Log each step of formula evaluation using custom callbacks attached to the calculation engine."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs",
       "title": "Open the saved workbook in Excel and verify that the specified cells appear in the Watch Window."
     },
