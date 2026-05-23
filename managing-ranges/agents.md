@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - retrieve-the-address-of-a-range-after-moving-it-to-verify-the-new-address-reflects-the-target-location.cs
 - offset-a-range-by-five-rows-upward-and-copy-its-formatting-back-to-the-original-location.cs
 - merge-cells-in-a-range-that-spans-the-header-row-and-set-its-fill-color-to-navy-blue.cs
+- validate-that-after-moving-a-range-the-source-range-becomes-empty-and-contains-no-residual-data.cs
