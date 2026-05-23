@@ -6546,6 +6546,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "batch-process-a-folder-of-template-files-applying-the-same-data-source-to-each-workbook-using-smart-markers.cs",
+      "title": "Batch process a folder of template files, applying the same data source to each workbook using smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs",
       "title": "Calculate a running total using the Formula parameter that adds the current value to the previous subtotal cell."
     },
