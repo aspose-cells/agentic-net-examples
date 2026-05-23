@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - retrieve-the-entire-row-range-for-row-10-and-set-its-height-to-30-points.cs
 - use-rangeoffset-to-create-a-new-range-three-columns-left-of-the-original-and-copy-values.cs
 - validate-that-the-address-returned-by-rangeaddress-matches-the-expected-a1d4-format-after-modifications.cs
+- apply-a-custom-number-format-to-the-entire-column-c-after-offsetting-the-original-range-by-two-rows.cs

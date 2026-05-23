@@ -3356,6 +3356,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-a-custom-number-format-to-the-entire-column-c-after-offsetting-the-original-range-by-two-rows.cs",
+      "title": "Apply a custom number format to the entire column C after offsetting the original range by two rows."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-an-autofill-pattern-that-repeats-a-custom-text-string-across-a-range-of-cells.cs",
       "title": "Apply an autofill pattern that repeats a custom text string across a range of cells."
     },
