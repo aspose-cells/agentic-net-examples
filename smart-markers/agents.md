@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs
 - generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs
 - create-a-template-that-uses-the-range-parameter-to-fill-a-matrix-layout-from-a-twodimensional-array-source.cs
+- use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs
