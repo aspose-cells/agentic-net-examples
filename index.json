@@ -3681,6 +3681,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "insert-a-pivot-table-that-uses-named-range-salesregion-as-its-source-data.cs",
+      "title": "Insert a pivot table that uses named range \"SalesRegion\" as its source data."
+    },
+    {
+      "category": "managing-ranges",
       "file": "limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs",
       "title": "Limit a search operation to non\u2011contiguous ranges G1:G10 and H1:H10 using SetRange."
     },

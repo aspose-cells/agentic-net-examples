@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - export-the-contents-of-named-range-employeelist-to-a-csv-file-for-external-analysis.cs
 - use-a-named-range-as-chart-data-source-and-refresh-the-chart-after-modifying-the-range.cs
 - reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs
+- insert-a-pivot-table-that-uses-named-range-salesregion-as-its-source-data.cs
