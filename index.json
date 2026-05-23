@@ -216,6 +216,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-the-workbooks-formula-calculation-mode-to-manual-for-selective-recalculation-control.cs",
+      "title": "Set the workbook's formula calculation mode to Manual for selective recalculation control."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs",
       "title": "Use CalculationOptions to ignore errors and then evaluate a formula containing #REF! references."
     },
