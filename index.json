@@ -266,6 +266,11 @@
     },
     {
       "category": "conversion",
+      "file": "replace-invalid-characters-automatically-during-csv-load-and-confirm-no-exceptions-are-thrown.cs",
+      "title": "Replace invalid characters automatically during CSV load and confirm no exceptions are thrown."
+    },
+    {
+      "category": "conversion",
       "file": "retrieve-the-odspagebackground-color-from-an-ods-file-for-auditing.cs",
       "title": "Retrieve the OdsPageBackground color from an ODS file for auditing."
     },
