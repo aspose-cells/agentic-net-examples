@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-apply-jpeg-compression-with-quality-level-set-to-50-percent.cs
 - convert-a-workbook-to-pdf-and-enable-fast-web-view-for-quicker-loading-in-browsers.cs
 - convert-a-workbook-to-pdf-and-disable-fast-web-view-to-produce-a-single-continuous-stream.cs
+- convert-a-workbook-to-pdf-and-set-document-language-to-french-to-support-multilingual-documents.cs
