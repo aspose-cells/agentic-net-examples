@@ -396,6 +396,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationoptionsprecision-to-a-higher-value-when-evaluating-financial-formulas-requiring-exact-decimal-handling.cs",
+      "title": "Set CalculationOptions.Precision to a higher value when evaluating financial formulas requiring exact decimal handling."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationoptionstreattextaszero-to-true-to-convert-textual-values-to-zero-during-evaluation.cs",
       "title": "Set CalculationOptions.TreatTextAsZero to true to convert textual values to zero during evaluation."
     },
