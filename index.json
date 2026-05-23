@@ -511,6 +511,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-using-utf16-encoding-to-support-wide-character-sets.cs",
+      "title": "Export a workbook to CSV using UTF\u201116 encoding to support wide character sets."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-csv-while-trimming-trailing-blank-rows-to-reduce-file-length.cs",
       "title": "Export a workbook to CSV while trimming trailing blank rows to reduce file length."
     },
