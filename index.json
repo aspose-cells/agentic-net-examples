@@ -121,6 +121,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs",
+      "title": "Compare MAXIFS calculation accuracy between default engine and a custom engine with advanced caching."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "compare-memory-consumption-of-default-versus-custom-calculation-engines-by-profiling-heap-usage-during-large-workbook-evaluation.cs",
       "title": "Compare memory consumption of default versus custom calculation engines by profiling heap usage during large workbook evaluation."
     },
