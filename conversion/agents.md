@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - save-a-workbook-as-csv-using-custom-save-options-to-keep-separators-for-blank-rows-intact.cs
 - batch-convert-a-folder-of-xlsx-files-to-pdf-preserving-page-margins-and-orientation-settings.cs
 - perform-batch-conversion-of-excel-files-to-pdf-using-parallel-processing-to-improve-throughput.cs
+- perform-batch-conversion-with-progress-callback-that-reports-percentage-completed-for-each-file.cs
