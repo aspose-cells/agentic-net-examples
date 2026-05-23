@@ -136,6 +136,11 @@
     },
     {
       "category": "conversion",
+      "file": "apply-a-filter-to-hide-rows-where-a-status-column-equals-inactive-after-importing-csv-data.cs",
+      "title": "Apply a filter to hide rows where a status column equals 'Inactive' after importing CSV data."
+    },
+    {
+      "category": "conversion",
       "file": "apply-odspagebackground-solid-blue-color-and-save-ods-with-background.cs",
       "title": "Apply OdsPageBackground solid blue color and save ODS with background."
     },
