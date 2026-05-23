@@ -346,6 +346,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-workbook-with-custom-load-options-to-preserve-all-formula-calculations-accurately.cs",
+      "title": "Load a workbook with custom load options to preserve all formula calculations accurately."
+    },
+    {
+      "category": "conversion",
       "file": "load-an-encrypted-workbook-using-a-password-and-convert-it-to-pdf-with-watermark-overlay.cs",
       "title": "Load an encrypted workbook using a password and convert it to PDF with watermark overlay."
     },
