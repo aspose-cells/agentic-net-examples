@@ -316,6 +316,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-routine-that-clears-all-cached-calculation-results-before-invoking-a-fresh-workbookcalculateformula-run.cs",
+      "title": "Implement a routine that clears all cached calculation results before invoking a fresh Workbook.CalculateFormula run."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-icustomfunction-interface-to-create-a-custom-function-that-returns-a-multicell-range.cs",
       "title": "Implement ICustomFunction interface to create a custom function that returns a multi\u2011cell range."
     },
