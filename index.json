@@ -6531,6 +6531,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-custom-icustomdatasource-to-provide-smart-marker-values-from-a-web-service-response.cs",
+      "title": "Implement a custom ICustomDataSource to provide smart marker values from a web service response."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs",
       "title": "Implement error handling to catch exceptions when a smart marker references a missing field in the data source."
     },
