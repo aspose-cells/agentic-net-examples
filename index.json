@@ -3721,6 +3721,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-the-entirerow-property-to-select-rows-20-through-25-and-protect-them-with-a-password.cs",
+      "title": "Use the EntireRow property to select rows 20 through 25 and protect them with a password."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-worksheetcollectioncreateunionrange-to-combine-address-a1b2d4e5-and-apply-a-bold-font-style-to-all-cells.cs",
       "title": "Use WorksheetCollection.CreateUnionRange to combine address \"A1:B2,D4:E5\" and apply a bold font style to all cells."
     },
