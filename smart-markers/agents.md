@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - use-foreach-syntax-in-smart-markers-to-import-variablelength-collections-like-product-reviews.cs
 - place-a-marker-string-defining-array-index-placeholders-in-a-cell-before-calling-process.cs
 - set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs
+- apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs

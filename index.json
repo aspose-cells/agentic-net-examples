@@ -6536,6 +6536,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs",
+      "title": "Apply the Formula parameter to calculate total price by multiplying quantity and unit price during merge."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs",
       "title": "Apply the Range parameter to map a collection of objects to a specific cell block in the worksheet."
     },
