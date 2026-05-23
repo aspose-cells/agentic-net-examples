@@ -521,6 +521,11 @@
     },
     {
       "category": "conversion",
+      "file": "generate-csv-files-from-each-worksheet-applying-custom-delimiter-and-utf-8-encoding-for-compatibility.cs",
+      "title": "Generate CSV files from each worksheet, applying custom delimiter and UTF-8 encoding for compatibility."
+    },
+    {
+      "category": "conversion",
       "file": "generate-githubflavored-markdown-tables-from-a-workbook-for-documentation-purposes.cs",
       "title": "Generate GitHub\u2011flavored Markdown tables from a workbook for documentation purposes."
     },
