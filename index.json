@@ -326,6 +326,11 @@
     },
     {
       "category": "conversion",
+      "file": "read-a-csv-file-calculate-sum-of-a-numeric-column-and-write-the-result-into-a-new-cell.cs",
+      "title": "Read a CSV file, calculate sum of a numeric column, and write the result into a new cell."
+    },
+    {
+      "category": "conversion",
       "file": "read-a-txt-file-with-tab-delimiters-convert-it-to-an-excel-workbook-and-save-as-xlsx.cs",
       "title": "Read a TXT file with tab delimiters, convert it to an Excel workbook, and save as XLSX."
     },
