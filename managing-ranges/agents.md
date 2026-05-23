@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - copy-only-the-formatting-of-a-source-range-to-a-destination-range-without-altering-cell-values.cs
 - copy-a-ranges-formulas-to-another-range-while-converting-relative-references-to-absolute-references.cs
 - copy-a-range-to-a-new-workbook-and-protect-the-sheet-with-a-password-for-editing.cs
+- copy-a-range-to-a-new-workbook-then-remove-all-formulas-leaving-only-static-values.cs
