@@ -7071,6 +7071,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs",
+      "title": "Validate that all required smart markers are present in the template before processing to avoid runtime merge errors."
+    },
+    {
+      "category": "smart-markers",
       "file": "validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs",
       "title": "Validate that all smart marker tags have been resolved after processing by checking the workbook for unresolved markers."
     },

@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - combine-variable-array-markers-with-a-slicer-to-populate-a-rectangular-block-of-cells-from-a-twodimensional-array.cs
 - enable-multithreaded-processing-by-creating-separate-workbookdesigner-instances-for-each-template-then-merging-data-concurrently.cs
 - optimize-memory-usage-by-processing-smart-markers-in-streaming-mode-loading-only-required-worksheet-sections-at-a-time.cs
+- validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs
