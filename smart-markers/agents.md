@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs
 - configure-workbookdesigner-to-use-a-custom-datatable-as-the-data-source-before-processing.cs
 - enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs
+- group-masterdetail-data-by-placing-a-parent-smart-marker-above-a-child-marker-range.cs
