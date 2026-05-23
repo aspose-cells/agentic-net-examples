@@ -111,6 +111,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationoptionscalculationmode-to-automatic-and-call-workbookcalculateformula-to-trigger-full-recalculation.cs",
+      "title": "Set CalculationOptions.CalculationMode to Automatic and call Workbook.CalculateFormula to trigger full recalculation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs",
       "title": "Set CalculationOptions.CalculationMode to Manual before invoking Workbook.CalculateFormula for controlled execution."
     },
