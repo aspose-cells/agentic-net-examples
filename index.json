@@ -6796,6 +6796,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs",
+      "title": "Save the processed workbook as an XLSX file to preserve all smart marker generated content and formatting."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-a-custom-data-source-object-on-workbookdesigner-when-default-sources-cannot-represent-complex-hierarchical-structures.cs",
       "title": "Set a custom data source object on WorkbookDesigner when default sources cannot represent complex hierarchical structures."
     },
