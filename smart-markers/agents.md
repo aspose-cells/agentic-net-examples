@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - load-json-from-a-web-service-map-to-an-object-and-merge-with-smart-markers-in-the-template.cs
 - use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs
 - sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs
+- apply-a-custom-cell-style-to-smart-marker-cells-after-processing-to-maintain-consistent-formatting-across-the-workbook.cs

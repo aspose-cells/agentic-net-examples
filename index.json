@@ -6496,6 +6496,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-custom-cell-style-to-smart-marker-cells-after-processing-to-maintain-consistent-formatting-across-the-workbook.cs",
+      "title": "Apply a custom cell style to smart marker cells after processing to maintain consistent formatting across the workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-formatting-rules-that-depend-on-smart-marker-values-such-as-highlighting-rows-with-high-priority.cs",
       "title": "Apply conditional formatting rules that depend on smart marker values, such as highlighting rows with high priority."
     },
