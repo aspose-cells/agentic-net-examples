@@ -3646,6 +3646,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs",
+      "title": "Merge a range that spans the first worksheet row to create a header covering all columns."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-cells-across-multiple-rows-and-columns-to-create-a-title-block-covering-a1f2.cs",
       "title": "Merge cells across multiple rows and columns to create a title block covering A1:F2."
     },
