@@ -3806,6 +3806,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "import-values-from-another-workbook-into-a-named-range-overwriting-existing-data-safely.cs",
+      "title": "Import values from another workbook into a named range, overwriting existing data safely."
+    },
+    {
+      "category": "managing-ranges",
       "file": "insert-a-pivot-table-that-uses-named-range-salesregion-as-its-source-data.cs",
       "title": "Insert a pivot table that uses named range \"SalesRegion\" as its source data."
     },
