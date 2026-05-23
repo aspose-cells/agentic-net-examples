@@ -341,6 +341,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-page-scaling-to-fit-printable-area-for-optimal-paper-usage.cs",
+      "title": "Convert a workbook to PDF and set page scaling to fit printable area for optimal paper usage."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-security-permissions-to-restrict-editing-and-copying.cs",
       "title": "Convert a workbook to PDF and set security permissions to restrict editing and copying."
     },
