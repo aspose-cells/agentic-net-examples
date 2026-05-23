@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - validate-array-formula-syntax-programmatically-before-triggering-workbookcalculate-to-avoid-runtime-errors.cs
 - set-iterative-calculation-settings-including-maximum-iterations-and-precision-tolerance-for-circular-reference-handling.cs
 - enable-iterative-calculation-for-circular-references-and-define-convergence-criteria-in-workbook-settings.cs
+- log-each-step-of-formula-evaluation-using-custom-callbacks-attached-to-the-calculation-engine.cs
