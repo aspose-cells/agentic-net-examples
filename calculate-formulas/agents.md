@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - configure-the-workbook-to-use-automatic-calculation-mode-and-verify-dependent-cells-update-instantly.cs
 - interrupt-an-ongoing-workbookcalculate-operation-using-calculationenginecancel-to-stop-longrunning-calculations.cs
 - use-a-cancellation-token-with-workbookcalculate-to-abort-calculation-after-a-predefined-timeout.cs
+- optimize-custom-function-logic-to-reduce-execution-time-of-cellcalculate-calls-significantly.cs
