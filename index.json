@@ -651,6 +651,11 @@
     },
     {
       "category": "conversion",
+      "file": "extract-all-embedded-chart-images-from-a-workbook-and-store-them-as-separate-png-files.cs",
+      "title": "Extract all embedded chart images from a workbook and store them as separate PNG files."
+    },
+    {
+      "category": "conversion",
       "file": "extract-the-graphic-background-stream-from-an-ods-file-and-save-as-png.cs",
       "title": "Extract the graphic background stream from an ODS file and save as PNG."
     },
