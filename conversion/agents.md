@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - remove-empty-rows-and-columns-from-a-workbook-before-saving-it-as-ods-format.cs
 - extract-all-cell-formulas-into-a-json-document-preserving-sheet-names-and-cell-addresses.cs
 - save-a-workbook-as-pdf-using-custom-save-options-to-enforce-pdfa2b-compliance-level.cs
+- save-a-workbook-as-csv-using-custom-save-options-to-define-semicolon-as-column-delimiter.cs
