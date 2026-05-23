@@ -209,3 +209,4 @@ Output files are written to the working directory.
 - validate-that-all-named-ranges-reference-existing-cells-and-report-any-invalid-references.cs
 - apply-a-custom-style-to-all-cells-within-a-named-range-to-standardize-formatting.cs
 - search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs
+- create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs

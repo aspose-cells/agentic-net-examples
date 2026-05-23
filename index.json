@@ -3561,6 +3561,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs",
+      "title": "Create a named range that includes only cells with data validation rules applied."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs",
       "title": "Create a named range that spans an entire column and use it to calculate the average."
     },
