@@ -3355,6 +3355,11 @@
       "title": "Wrap workbook loading and saving inside a using statement to guarantee deterministic disposal of resources."
     },
     {
+      "category": "managing-ranges",
+      "file": "load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs",
+      "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
+    },
+    {
       "category": "open-workbook",
       "file": "after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs",
       "title": "After loading, iterate through workbook.LoadWarnings collection and output each warning message to console."
