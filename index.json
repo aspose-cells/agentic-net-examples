@@ -151,6 +151,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "save-the-workbook-to-an-excel-file-after-configuring-the-watch-window-for-later-inspection.cs",
+      "title": "Save the workbook to an Excel file after configuring the Watch Window for later inspection."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "set-calculationoptionscalculationmode-to-automatic-and-call-workbookcalculateformula-to-trigger-full-recalculation.cs",
       "title": "Set CalculationOptions.CalculationMode to Automatic and call Workbook.CalculateFormula to trigger full recalculation."
     },
