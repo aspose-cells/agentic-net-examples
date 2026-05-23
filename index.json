@@ -3366,6 +3366,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-with-formulas-to-another-workbook-updating-external-references-to-point-to-the-new-file.cs",
+      "title": "Copy a range with formulas to another workbook, updating external references to point to the new file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-source-range-containing-formulas-to-a-destination-range-while-preserving-calculation-dependencies.cs",
       "title": "Copy a source range containing formulas to a destination range while preserving calculation dependencies."
     },
