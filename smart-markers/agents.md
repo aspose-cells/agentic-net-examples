@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - insert-images-by-adding-the-image-parameter-to-a-smart-marker-tag-and-supplying-a-byte-array-source.cs
 - insert-a-company-logo-at-the-sheet-top-via-an-image-marker-referencing-the-logo-byte-array.cs
 - generate-a-qr-code-image-using-an-image-marker-by-converting-a-base64-string-into-a-bitmap.cs
+- include-a-formula-parameter-in-a-smart-marker-field-to-evaluate-excel-formulas-dynamically-during-data-population.cs
