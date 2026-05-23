@@ -3396,6 +3396,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "configure-findoptions-to-ignore-hidden-rows-while-searching-within-range-k1k500.cs",
+      "title": "Configure FindOptions to ignore hidden rows while searching within range K1:K500."
+    },
+    {
+      "category": "managing-ranges",
       "file": "configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs",
       "title": "Configure FindOptions to perform a case\u2011sensitive search within range E1:E100."
     },
