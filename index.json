@@ -316,6 +316,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "reduce-overhead-in-simple-workbooks-by-setting-workbooksettingsusethreadedcalculation-false-to-improve-stability.cs",
+      "title": "Reduce overhead in simple workbooks by setting Workbook.Settings.UseThreadedCalculation false to improve stability."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs",
       "title": "Register a custom function implementing ICustomFunction (e.g., MySum) and call it via CalculateFormula for testing."
     },
