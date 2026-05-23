@@ -3511,6 +3511,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-dynamic-named-range-whose-reference-adjusts-based-on-the-number-of-filled-rows-in-column-a.cs",
+      "title": "Create a dynamic named range whose reference adjusts based on the number of filled rows in column A."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs",
       "title": "Create a new workbook, add a worksheet\u2011scoped named range, and save the file in XLSX format."
     },
