@@ -56,6 +56,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "apply-formulatext-on-a-range-of-cells-to-extract-each-formulas-text-for-bulk-analysis.cs",
+      "title": "Apply FormulaText on a range of cells to extract each formula's text for bulk analysis."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs",
       "title": "Assign a custom monitor instance to CalculationOptions.CalculationMonitor to enable interruption."
     },

@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
 - use-formulatext-to-obtain-the-exact-textual-representation-of-a-cells-formula.cs
 - write-a-formula-to-a-cell-and-store-its-text-in-another-cell-using-formulatext.cs
+- apply-formulatext-on-a-range-of-cells-to-extract-each-formulas-text-for-bulk-analysis.cs
