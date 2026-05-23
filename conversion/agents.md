@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-csv-and-compress-output-file-using-gzip.cs
 - convert-a-workbook-to-csv-and-generate-a-summary-statistics-file-alongside.cs
 - extract-all-embedded-chart-images-from-a-workbook-and-store-them-as-separate-png-files.cs
+- remove-empty-rows-and-columns-from-a-workbook-before-saving-it-as-ods-format.cs
