@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "calculate-formulas",
+      "file": "add-a-custom-function-that-returns-the-user-name-register-it-and-invoke-via-calculateformula-for-audit-logs.cs",
+      "title": "Add a custom function that returns the user name, register it, and invoke via CalculateFormula for audit logs."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "add-a-specific-cell-to-the-formula-watch-window-using-worksheetcellwatchesadd-after-setting-its-formula.cs",
       "title": "Add a specific cell to the Formula Watch Window using Worksheet.CellWatches.Add after setting its formula."
     },
