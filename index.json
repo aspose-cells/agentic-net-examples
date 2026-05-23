@@ -6626,6 +6626,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-the-workbook-designer-to-treat-empty-strings-as-blanks-when-merging-string-properties-from-data-source.cs",
+      "title": "Configure the workbook designer to treat empty strings as blanks when merging string properties from data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs",
       "title": "Configure WorkbookDesigner to ignore empty smart markers, preventing unnecessary row creation when source collections are empty."
     },
