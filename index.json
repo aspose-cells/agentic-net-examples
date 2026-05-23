@@ -221,6 +221,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-csv-file-detect-duplicate-rows-based-on-a-key-column-and-remove-them-before-saving.cs",
+      "title": "Load a CSV file, detect duplicate rows based on a key column, and remove them before saving."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-csv-file-remove-rows-where-the-first-column-is-empty-then-export-back-to-csv.cs",
       "title": "Load a CSV file, remove rows where the first column is empty, then export back to CSV."
     },
