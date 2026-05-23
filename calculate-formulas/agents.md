@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - compare-formula-text-before-and-after-modification-to-ensure-intended-changes-were-applied.cs
 - enable-circularreference-detection-in-workbook-calculation-settings-to-prevent-infinite-evaluation-loops.cs
 - detect-circular-references-during-formula-evaluation-and-log-the-offending-cell-addresses.cs
+- set-the-workbooks-formula-calculation-mode-to-manual-for-selective-recalculation-control.cs
