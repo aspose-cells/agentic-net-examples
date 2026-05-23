@@ -6511,6 +6511,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "calculate-subtotals-using-subtotal1columnname-syntax-to-sum-values-within-each-grouped-column.cs",
+      "title": "Calculate subtotals using (subtotal1:ColumnName) syntax to sum values within each grouped column."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-and-then-unhide-them-after-processing.cs",
       "title": "Configure WorkbookDesigner to process smart markers in hidden worksheets and then unhide them after processing."
     },
