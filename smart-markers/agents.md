@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - implement-a-retry-mechanism-for-smart-marker-population-when-networkbased-data-sources-experience-transient-failures.cs
 - configure-workbook-options-to-recalculate-formulas-after-smart-marker-insertion-guaranteeing-uptodate-calculations.cs
 - insert-hyperlinks-via-smart-markers-that-point-to-external-web-resources-based-on-dynamic-url-fields.cs
+- generate-a-table-of-contents-sheet-using-smart-markers-that-lists-all-populated-worksheets-with-hyperlinks.cs

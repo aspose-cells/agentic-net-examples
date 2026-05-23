@@ -6841,6 +6841,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-table-of-contents-sheet-using-smart-markers-that-lists-all-populated-worksheets-with-hyperlinks.cs",
+      "title": "Generate a table of contents sheet using smart markers that lists all populated worksheets with hyperlinks."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-a-workbook-from-a-nested-object-hierarchy-where-child-collections-are-mapped-using-smart-marker-range-syntax.cs",
       "title": "Generate a workbook from a nested object hierarchy where child collections are mapped using smart marker range syntax."
     },
