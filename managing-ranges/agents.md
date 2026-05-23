@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - retrieve-the-address-of-a-range-after-applying-the-entirerow-property-to-ensure-correct-row-reference.cs
 - offset-a-range-by-three-rows-and-five-columns-then-clear-all-cell-comments-within-the-new-range.cs
 - merge-cells-in-a-range-that-includes-hidden-rows-and-verify-hidden-rows-remain-hidden-after-merging.cs
+- create-a-workbookscoped-named-range-covering-cells-a1-to-d10-on-the-first-worksheet.cs

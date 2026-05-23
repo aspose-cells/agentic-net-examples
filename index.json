@@ -3551,6 +3551,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-workbookscoped-named-range-covering-cells-a1-to-d10-on-the-first-worksheet.cs",
+      "title": "Create a workbook\u2011scoped named range covering cells A1 to D10 on the first worksheet."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-an-offset-range-by-shifting-d4f10-three-rows-down-and-two-columns-right.cs",
       "title": "Create an offset range by shifting D4:F10 three rows down and two columns right."
     },
