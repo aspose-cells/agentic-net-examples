@@ -231,6 +231,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "improve-performance-by-setting-workbooksettingsenablefastformulacalculation-true-before-invoking-cellcalculate-on-large-datasets.cs",
+      "title": "Improve performance by setting Workbook.Settings.EnableFastFormulaCalculation true before invoking Cell.Calculate on large datasets."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs",
       "title": "In BeforeCalculate, call Interrupt() when a specific cell address meets a predefined condition."
     },
