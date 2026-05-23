@@ -221,6 +221,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-csv-file-replace-all-occurrences-of-a-specific-substring-in-text-cells-and-export-cleaned-csv.cs",
+      "title": "Load a CSV file, replace all occurrences of a specific substring in text cells, and export cleaned CSV."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-csv-file-trim-whitespace-from-all-string-cells-and-save-the-cleaned-data-as-csv.cs",
       "title": "Load a CSV file, trim whitespace from all string cells, and save the cleaned data as CSV."
     },
