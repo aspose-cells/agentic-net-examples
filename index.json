@@ -3551,6 +3551,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "cut-a-range-that-includes-a-pivot-table-and-paste-it-into-a-new-location-preserving-pivot-structure.cs",
+      "title": "Cut a range that includes a pivot table and paste it into a new location, preserving pivot structure."
+    },
+    {
+      "category": "managing-ranges",
       "file": "cut-the-range-b2c4-from-the-source-sheet-and-paste-it-into-g5h7-on-a-different-worksheet.cs",
       "title": "Cut the range B2:C4 from the source sheet and paste it into G5:H7 on a different worksheet."
     },
