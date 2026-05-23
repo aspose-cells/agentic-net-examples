@@ -86,6 +86,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationoptionstreattextaszero-to-true-to-convert-textual-values-to-zero-during-evaluation.cs",
+      "title": "Set CalculationOptions.TreatTextAsZero to true to convert textual values to zero during evaluation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs",
       "title": "Use ReferredArea.GetValue(rowOffset, colOffset) to obtain a single cell value from a reference argument."
     },

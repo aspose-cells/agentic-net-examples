@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - set-calculationoptionsmaxiterationcount-to-100-to-limit-the-number-of-iterative-calculation-cycles.cs
 - set-calculationoptionsconvergencethreshold-to-0001-to-define-precision-for-iterative-calculations.cs
 - set-calculationoptionsignoreerrorvalue-to-true-to-skip-errors-during-formula-evaluation.cs
+- set-calculationoptionstreattextaszero-to-true-to-convert-textual-values-to-zero-during-evaluation.cs
