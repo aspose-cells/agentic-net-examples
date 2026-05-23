@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - move-a-range-containing-formulas-from-sheet1-to-sheet2-and-update-external-references-automatically.cs
 - ensure-that-moving-a-range-does-not-shift-any-frozen-panes-in-the-destination-worksheet.cs
 - retrieve-the-entire-row-range-for-row-10-and-set-its-height-to-30-points.cs
+- use-rangeoffset-to-create-a-new-range-three-columns-left-of-the-original-and-copy-values.cs
