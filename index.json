@@ -6936,6 +6936,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs",
+      "title": "Sort objects by a property before merging so smart markers output rows in the required order."
+    },
+    {
+      "category": "smart-markers",
       "file": "specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs",
       "title": "Specify Label and LabelPosition attributes to place group labels before data rows for clear section headings."
     },
