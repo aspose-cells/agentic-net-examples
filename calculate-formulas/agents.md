@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - set-calculationoptionsignoreerrorvalue-to-true-to-skip-errors-during-formula-evaluation.cs
 - set-calculationoptionstreattextaszero-to-true-to-convert-textual-values-to-zero-during-evaluation.cs
 - limit-calculation-threads-by-setting-calculationoptionsthreadcount-to-4-for-controlled-parallelism.cs
+- enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs
