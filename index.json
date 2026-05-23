@@ -71,6 +71,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "cache-results-of-a-custom-function-to-improve-performance-on-repeated-calls-with-identical-inputs.cs",
+      "title": "Cache results of a custom function to improve performance on repeated calls with identical inputs."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs",
       "title": "Call workbook.Calculate to evaluate all formulas using the registered custom calculation engine."
     },
