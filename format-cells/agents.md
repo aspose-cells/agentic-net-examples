@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - programmatically-reset-a-workbooks-theme-to-the-default-office-theme-and-verify-cell-colors.cs
 - load-a-workbook-disable-theme-usage-and-convert-all-themed-cells-to-explicit-rgb-formatting.cs
 - measure-the-time-taken-to-update-all-theme-colors-in-a-large-workbook-with-thousands-of-cells.cs
+- apply-a-custom-theme-color-to-the-border-of-a-range-of-cells-in-the-second-worksheet.cs
