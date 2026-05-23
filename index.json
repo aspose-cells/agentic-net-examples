@@ -3971,6 +3971,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-a-named-range-as-the-source-for-data-consolidation-across-multiple-worksheets.cs",
+      "title": "Use a named range as the source for data consolidation across multiple worksheets."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-findoptions-to-search-for-numeric-values-greater-than-1000-within-named-range-budget.cs",
       "title": "Use FindOptions to search for numeric values greater than 1000 within named range \"Budget\"."
     },
