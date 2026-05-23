@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-csv-and-split-large-worksheet-into-multiple-files-each-containing-10000-rows.cs
 - convert-a-workbook-to-csv-and-split-worksheet-by-column-count-creating-separate-files-for-each-group.cs
 - convert-a-workbook-to-csv-and-generate-a-manifest-file-listing-all-split-parts-and-their-sizes.cs
+- convert-a-workbook-to-csv-and-preserve-cell-comments-by-adding-a-separate-column-for-each-comment.cs

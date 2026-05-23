@@ -216,6 +216,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-csv-and-preserve-cell-comments-by-adding-a-separate-column-for-each-comment.cs",
+      "title": "Convert a workbook to CSV and preserve cell comments by adding a separate column for each comment."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-csv-and-preserve-formulas-as-text-strings-for-later-analysis.cs",
       "title": "Convert a workbook to CSV and preserve formulas as text strings for later analysis."
     },
