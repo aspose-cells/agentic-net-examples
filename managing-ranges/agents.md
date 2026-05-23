@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - generate-a-range-representing-the-entire-column-of-g3h3-and-apply-bold-formatting.cs
 - produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs
 - merge-cells-within-range-a2d2-to-create-a-single-header-cell-and-center-its-text.cs
+- unmerge-previously-merged-cells-in-range-b1b4-and-restore-individual-cell-borders.cs
