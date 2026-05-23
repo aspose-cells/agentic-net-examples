@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
 - generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
 - apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs
+- load-a-workbook-from-a-url-process-smart-markers-and-save-the-result-to-azure-blob-storage.cs
