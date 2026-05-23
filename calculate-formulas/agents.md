@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - create-a-class-implementing-icustomfunction-and-override-calculatecustomfunction-to-define-custom-logic.cs
 - use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs
 - use-referredareagetvalues-to-retrieve-a-twodimensional-array-of-values-from-a-range-argument.cs
+- return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs

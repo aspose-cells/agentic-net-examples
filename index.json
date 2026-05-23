@@ -21,6 +21,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs",
+      "title": "Return a scalar numeric result from a custom function after processing reference values."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs",
       "title": "Use ReferredArea.GetValue(rowOffset, colOffset) to obtain a single cell value from a reference argument."
     },
