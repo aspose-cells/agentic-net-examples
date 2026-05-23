@@ -3611,6 +3611,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "load-an-excel-workbook-and-obtain-the-address-string-of-the-range-a1c5.cs",
+      "title": "Load an Excel workbook and obtain the address string of the range A1:C5."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs",
       "title": "Load an Excel workbook from a file stream and autofill a numeric series across a range."
     },
