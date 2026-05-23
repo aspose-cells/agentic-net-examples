@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-embed-javascript-that-triggers-automatic-printing-on-open.cs
 - convert-a-workbook-to-pdf-and-add-a-semitransparent-watermark-across-each-page.cs
 - convert-a-workbook-to-pdf-and-include-custom-header-and-footer-text-on-every-page.cs
+- convert-a-workbook-to-pdf-and-set-security-permissions-to-restrict-editing-and-copying.cs
