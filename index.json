@@ -146,6 +146,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs",
+      "title": "Use CalculationOptions to ignore errors and then evaluate a formula containing #REF! references."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-calculationoptionsuse1904datesystem-true-to-calculate-dates-based-on-the-1904-epoch.cs",
       "title": "Use CalculationOptions.Use1904DateSystem true to calculate dates based on the 1904 epoch."
     },
