@@ -6551,6 +6551,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs",
+      "title": "Combine noadd and skip parameters on alternating rows to create staggered data layout."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-and-then-unhide-them-after-processing.cs",
       "title": "Configure WorkbookDesigner to process smart markers in hidden worksheets and then unhide them after processing."
     },
