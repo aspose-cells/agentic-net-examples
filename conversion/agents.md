@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - save-an-entire-workbook-as-csv-while-keeping-separators-for-blank-rows-to-maintain-structure.cs
 - generate-csv-files-from-each-worksheet-applying-custom-delimiter-and-utf-8-encoding-for-compatibility.cs
 - batch-convert-multiple-excel-files-to-csv-trimming-leading-blanks-and-preserving-column-headers-consistently.cs
+- save-a-workbook-as-csv-while-preserving-original-cell-data-types-for-accurate-downstream-processing.cs
