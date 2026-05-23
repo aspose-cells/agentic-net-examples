@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs
 - create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs
 - replace-formulas-that-return-text-na-with-blank-cells-within-a-specific-named-range.cs
+- generate-a-summary-sheet-that-lists-each-named-range-its-scope-and-its-address.cs

@@ -3756,6 +3756,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "generate-a-summary-sheet-that-lists-each-named-range-its-scope-and-its-address.cs",
+      "title": "Generate a summary sheet that lists each named range, its scope, and its address."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-unionrange-consisting-of-three-separate-blocks-and-use-it-to-clear-contents-across-all-blocks.cs",
       "title": "Generate a UnionRange consisting of three separate blocks and use it to clear contents across all blocks."
     },
