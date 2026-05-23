@@ -3481,6 +3481,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-that-sets-number-format-to-currency-for-the-range-r2r20.cs",
+      "title": "Create a Style that sets number format to currency for the range R2:R20."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
