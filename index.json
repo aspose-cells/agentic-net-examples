@@ -3766,6 +3766,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "import-a-list-of-named-range-definitions-from-a-json-file-and-create-them-programmatically.cs",
+      "title": "Import a list of named range definitions from a JSON file and create them programmatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "insert-a-pivot-table-that-uses-named-range-salesregion-as-its-source-data.cs",
       "title": "Insert a pivot table that uses named range \"SalesRegion\" as its source data."
     },
