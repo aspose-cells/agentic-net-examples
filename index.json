@@ -3946,6 +3946,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-formulas-that-return-text-na-with-blank-cells-within-a-specific-named-range.cs",
+      "title": "Replace formulas that return text \"N/A\" with blank cells within a specific named range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs",
       "title": "Replace numeric values less than zero with zero inside named range \"ProfitMargins\"."
     },

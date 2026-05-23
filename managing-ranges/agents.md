@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - apply-a-custom-style-to-all-cells-within-a-named-range-to-standardize-formatting.cs
 - search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs
 - create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs
+- replace-formulas-that-return-text-na-with-blank-cells-within-a-specific-named-range.cs
