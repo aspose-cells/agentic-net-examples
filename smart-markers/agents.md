@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - configure-workbookdesigner-to-treat-leading-apostrophes-as-literal-characters-preserving-original-text-formatting.cs
 - insert-images-stored-as-byte-arrays-into-designated-cells-using-smart-markers-while-maintaining-aspect-ratio.cs
 - generate-a-pivot-table-programmatically-after-smart-marker-population-to-summarize-imported-financial-data.cs
+- validate-that-all-smart-marker-placeholders-have-been-replaced-by-checking-for-remaining-marker-patterns-after-processing.cs
