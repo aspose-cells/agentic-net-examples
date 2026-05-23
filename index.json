@@ -3681,6 +3681,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "retrieve-the-entire-row-range-for-row-10-and-set-its-height-to-30-points.cs",
+      "title": "Retrieve the entire row range for row 10 and set its height to 30 points."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs",
       "title": "Retrieve the total cell count for range B2:E7 after populating it with sample data."
     },

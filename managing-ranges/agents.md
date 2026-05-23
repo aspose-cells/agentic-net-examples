@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs
 - move-a-range-containing-formulas-from-sheet1-to-sheet2-and-update-external-references-automatically.cs
 - ensure-that-moving-a-range-does-not-shift-any-frozen-panes-in-the-destination-worksheet.cs
+- retrieve-the-entire-row-range-for-row-10-and-set-its-height-to-30-points.cs
