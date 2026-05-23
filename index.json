@@ -26,6 +26,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "return-a-twodimensional-object-array-from-a-custom-function-to-populate-a-worksheet-range.cs",
+      "title": "Return a two\u2011dimensional object array from a custom function to populate a worksheet range."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs",
       "title": "Use ReferredArea.GetValue(rowOffset, colOffset) to obtain a single cell value from a reference argument."
     },

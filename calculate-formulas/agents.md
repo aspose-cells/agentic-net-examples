@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs
 - use-referredareagetvalues-to-retrieve-a-twodimensional-array-of-values-from-a-range-argument.cs
 - return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs
+- return-a-twodimensional-object-array-from-a-custom-function-to-populate-a-worksheet-range.cs
