@@ -866,6 +866,11 @@
     },
     {
       "category": "conversion",
+      "file": "save-a-workbook-as-pdf-using-custom-save-options-to-enforce-pdfa2b-compliance-level.cs",
+      "title": "Save a workbook as PDF using custom save options to enforce PDF/A\u20112b compliance level."
+    },
+    {
+      "category": "conversion",
       "file": "save-a-workbook-as-sxc-format-using-odssaveoptions-for-opendocument-spreadsheet-compatibility.cs",
       "title": "Save a workbook as SXC format using OdsSaveOptions for OpenDocument Spreadsheet compatibility."
     },
