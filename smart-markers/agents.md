@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs
 - implement-a-unit-test-that-verifies-smart-marker-replacement-results-match-expected-cell-values-for-a-data-set.cs
 - use-the-setdatasource-method-to-bind-a-dataset-containing-multiple-tables-each-mapped-to-different-smart-marker-groups.cs
+- add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs
