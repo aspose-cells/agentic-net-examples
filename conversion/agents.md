@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - save-a-workbook-as-csv-while-preserving-original-cell-data-types-for-accurate-downstream-processing.cs
 - export-a-workbook-to-csv-with-date-cells-formatted-as-iso-8601-strings-for-standardization.cs
 - export-a-workbook-to-csv-rounding-numeric-values-to-two-decimal-places-for-financial-reporting.cs
+- export-a-workbook-to-csv-using-double-quotes-as-text-qualifiers-to-handle-commas-inside-data.cs
