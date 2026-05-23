@@ -6906,6 +6906,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-progress-callback-that-reports-percentage-completion-during-largescale-smart-marker-population.cs",
+      "title": "Implement a progress callback that reports percentage completion during large\u2011scale smart marker population."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-retry-mechanism-for-setdatasource-calls-when-transient-database-connectivity-issues-occur-during-smart-marker-preparation.cs",
       "title": "Implement a retry mechanism for SetDataSource calls when transient database connectivity issues occur during smart marker preparation."
     },
