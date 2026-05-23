@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - generate-a-report-listing-all-cells-containing-volatile-functions-after-workbook-recalculation.cs
 - validate-minifs-functions-return-correct-results-after-setting-workbook-to-excel-2016-compatibility-mode.cs
 - verify-minifs-calculations-respect-filtered-rows-by-applying-a-filter-before-invoking-workbookcalculateformula.cs
+- compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs
