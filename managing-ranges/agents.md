@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - set-findoptions-to-match-whole-cell-contents-when-locating-the-value-yes-in-range-f1f50.cs
 - limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs
 - execute-a-backward-search-for-error-in-range-i1i200-by-setting-findoptionssearchdirection.cs
+- apply-a-regular-expression-search-for-dates-formatted-as-ddmmyyyy-within-range-j1j30.cs
