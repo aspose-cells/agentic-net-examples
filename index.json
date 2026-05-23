@@ -6741,6 +6741,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs",
+      "title": "Insert an image smart marker with the image parameter to embed pictures from file paths."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-images-by-adding-the-image-parameter-to-a-smart-marker-tag-and-supplying-a-byte-array-source.cs",
       "title": "Insert images by adding the Image parameter to a smart marker tag and supplying a byte array source."
     },
