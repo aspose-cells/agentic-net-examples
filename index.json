@@ -6861,6 +6861,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs",
+      "title": "Protect the worksheet after processing smart markers, allowing only unlocked cells to be edited by end users."
+    },
+    {
+      "category": "smart-markers",
       "file": "provide-a-custom-collection-of-objects-as-the-data-source-to-workbookdesigner-for-flexible-objectoriented-merging.cs",
       "title": "Provide a custom collection of objects as the data source to WorkbookDesigner for flexible object\u2011oriented merging."
     },
