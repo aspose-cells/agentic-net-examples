@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - configure-findoptions-to-ignore-hidden-rows-while-searching-within-range-k1k500.cs
 - create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs
 - apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs
+- protect-a-worksheet-while-allowing-edits-only-within-named-range-editablesection.cs
