@@ -206,6 +206,11 @@
     },
     {
       "category": "conversion",
+      "file": "save-a-workbook-as-fods-format-flat-ods-using-odssaveoptions.cs",
+      "title": "Save a workbook as FODS format (Flat ODS) using OdsSaveOptions."
+    },
+    {
+      "category": "conversion",
       "file": "save-a-workbook-as-ods-complying-with-odf-12-using-odfversionversion12.cs",
       "title": "Save a workbook as ODS complying with ODF 1.2 using OdfVersion.Version12."
     },
