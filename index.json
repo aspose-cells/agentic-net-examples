@@ -146,6 +146,11 @@
     },
     {
       "category": "conversion",
+      "file": "batch-process-all-csv-files-in-a-directory-applying-a-custom-delimiter-and-generate-xlsx-files.cs",
+      "title": "Batch process all CSV files in a directory, applying a custom delimiter, and generate XLSX files."
+    },
+    {
+      "category": "conversion",
       "file": "configure-txtloadoptionspreferredparsers-to-a-custom-numeric-parser-and-load-csv-to-enforce-precision.cs",
       "title": "Configure TxtLoadOptions.PreferredParsers to a custom numeric parser and load CSV to enforce precision."
     },
