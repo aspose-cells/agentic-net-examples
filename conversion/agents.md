@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - read-a-txt-file-with-tab-delimiters-convert-it-to-an-excel-workbook-and-save-as-xlsx.cs
 - convert-an-excel-workbook-containing-multiple-sheets-to-separate-tsv-files-one-per-worksheet.cs
 - export-a-specific-worksheet-to-a-txt-file-using-tab-delimiters-and-utf8-encoding.cs
+- after-converting-csv-to-xlsx-add-a-data-validation-rule-to-restrict-values-in-a-column.cs
