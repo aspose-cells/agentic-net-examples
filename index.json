@@ -6616,6 +6616,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs",
+      "title": "Enable auto\u2011populate to additional worksheets when data exceeds a single sheet\u2019s row limit, ensuring seamless continuation."
+    },
+    {
+      "category": "smart-markers",
       "file": "enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs",
       "title": "Enable overflow handling so excess rows automatically continue onto a secondary worksheet during processing."
     },
