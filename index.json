@@ -7031,6 +7031,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-workbookdesignerlinebyline-to-true-for-simple-list-merging-while-keeping-master-markers-linebyline.cs",
+      "title": "Set WorkbookDesigner.LineByLine to true for simple list merging while keeping master markers line\u2011by\u2011line."
+    },
+    {
+      "category": "smart-markers",
       "file": "sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs",
       "title": "Sort objects by a property before merging so smart markers output rows in the required order."
     },
