@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs
 - assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs
 - provide-a-custom-collection-of-objects-as-the-data-source-to-workbookdesigner-for-flexible-objectoriented-merging.cs
+- set-the-processing-range-by-calling-workbookdesignersetrange-with-a-named-range-to-limit-smart-marker-scope.cs
