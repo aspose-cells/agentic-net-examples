@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - merge-cells-in-a-range-that-spans-the-header-row-and-set-its-fill-color-to-navy-blue.cs
 - validate-that-after-moving-a-range-the-source-range-becomes-empty-and-contains-no-residual-data.cs
 - unmerge-a-range-containing-formulas-and-ensure-each-resulting-cell-retains-its-original-formula.cs
+- retrieve-the-address-of-a-range-after-applying-the-entirerow-property-to-ensure-correct-row-reference.cs
