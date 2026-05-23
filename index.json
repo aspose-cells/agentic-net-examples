@@ -6741,6 +6741,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-error-handling-around-workbookdesignerprocess-to-catch-and-log-exceptions-caused-by-malformed-smart-marker-syntax.cs",
+      "title": "Implement error handling around WorkbookDesigner.Process to catch and log exceptions caused by malformed smart marker syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs",
       "title": "Implement error handling to catch exceptions when a smart marker references a missing field in the data source."
     },

@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs
 - use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs
 - configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs
+- implement-error-handling-around-workbookdesignerprocess-to-catch-and-log-exceptions-caused-by-malformed-smart-marker-syntax.cs
