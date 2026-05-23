@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - set-calculation-mode-to-automaticexcepttables-to-exclude-table-formulas-from-automatic-updates.cs
 - programmatically-disable-automatic-calculation-for-tables-only-while-keeping-other-formulas-in-automatic-mode.cs
 - load-multiple-xlsx-files-from-a-directory-set-each-to-automatic-and-recalculate-formulas.cs
+- recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs
