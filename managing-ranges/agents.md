@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs
 - use-the-entirecolumn-property-to-select-column-b-and-hide-it-from-view-in-the-workbook.cs
 - retrieve-the-address-of-a-dynamic-named-range-salesdata-and-log-the-result.cs
+- calculate-the-total-number-of-cells-in-the-merged-range-a1c3-after-performing-the-merge.cs
