@@ -216,6 +216,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-creation-date-to-current-timestamp-for-audit-tracking.cs",
+      "title": "Convert a workbook to PDF and set creation date to current timestamp for audit tracking."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-image-quality-to-80-percent-for-balanced-size-and-clarity.cs",
       "title": "Convert a workbook to PDF and set image quality to 80 percent for balanced size and clarity."
     },
