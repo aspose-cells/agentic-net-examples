@@ -1941,6 +1941,11 @@
     },
     {
       "category": "format-cells",
+      "file": "retrieve-the-current-rgb-value-of-the-hyperlink-theme-color-from-a-loaded-workbook.cs",
+      "title": "Retrieve the current RGB value of the Hyperlink theme color from a loaded workbook."
+    },
+    {
+      "category": "format-cells",
       "file": "set-the-custom-accent2-theme-color-as-the-font-color-for-header-rows-across-all-worksheets.cs",
       "title": "Set the custom Accent2 theme color as the font color for header rows across all worksheets."
     },
