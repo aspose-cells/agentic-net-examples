@@ -6596,6 +6596,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs",
+      "title": "Use the Formula parameter to compute cumulative totals across rows as smart markers import financial data."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs",
       "title": "Use the If parameter within a smart marker to display data only when a field exceeds a threshold."
     },
