@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - embed-a-formula-that-references-other-cells-to-enable-dynamic-calculations-during-smart-marker-processing.cs
 - apply-copystyle-to-inherit-number-formats-ensuring-generated-records-retain-currency-symbols-and-formatting.cs
 - apply-copystyle-to-inherit-date-formatting-so-generated-dates-display-in-the-same-localespecific-format-as-the-template.cs
+- preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs
