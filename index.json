@@ -196,6 +196,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-image-quality-to-80-percent-for-balanced-size-and-clarity.cs",
+      "title": "Convert a workbook to PDF and set image quality to 80 percent for balanced size and clarity."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-security-permissions-to-restrict-editing-and-copying.cs",
       "title": "Convert a workbook to PDF and set security permissions to restrict editing and copying."
     },

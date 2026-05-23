@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-include-custom-header-and-footer-text-on-every-page.cs
 - convert-a-workbook-to-pdf-and-set-security-permissions-to-restrict-editing-and-copying.cs
 - convert-a-workbook-to-pdf-and-compress-embedded-images-using-lossless-compression-technique.cs
+- convert-a-workbook-to-pdf-and-set-image-quality-to-80-percent-for-balanced-size-and-clarity.cs
