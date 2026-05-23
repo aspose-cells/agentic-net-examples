@@ -51,6 +51,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "assign-a-formula-that-calls-the-custom-function-to-a-target-cell-with-required-parameters.cs",
+      "title": "Assign a formula that calls the custom function to a target cell with required parameters."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs",
       "title": "Create a class derived from AbstractCalculationMonitor and override BeforeCalculate to inspect each cell."
     },
