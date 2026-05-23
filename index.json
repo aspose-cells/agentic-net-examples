@@ -161,6 +161,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs",
+      "title": "Highlight cells with error values after calculation using conditional formatting rules automatically."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "identify-cells-that-participate-in-circular-references-and-highlight-them-for-user-correction.cs",
       "title": "Identify cells that participate in circular references and highlight them for user correction."
     },
