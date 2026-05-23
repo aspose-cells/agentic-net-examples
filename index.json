@@ -6556,6 +6556,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "bind-a-nested-object-hierarchy-such-as-employee-address-using-dot-notation-in-smart-markers.cs",
+      "title": "Bind a nested object hierarchy, such as employee address, using dot notation in smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs",
       "title": "Calculate a running total using the Formula parameter that adds the current value to the previous subtotal cell."
     },
