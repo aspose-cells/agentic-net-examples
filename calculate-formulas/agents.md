@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - set-calculationoptionsprecision-to-a-higher-value-when-evaluating-financial-formulas-requiring-exact-decimal-handling.cs
 - switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs
 - set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs
+- disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs

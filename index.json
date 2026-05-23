@@ -156,6 +156,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs",
+      "title": "Disable automatic calculation, import data from a database, then manually trigger calculation for consistency."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "disable-automatic-recalculation-in-workbook-settings-to-control-when-formulas-are-evaluated.cs",
       "title": "Disable automatic recalculation in workbook settings to control when formulas are evaluated."
     },
