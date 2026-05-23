@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - merge-cells-across-multiple-rows-and-columns-to-create-a-title-block-covering-a1f2.cs
 - unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs
 - move-a-range-containing-formulas-from-sheet1-to-sheet2-and-update-external-references-automatically.cs
+- ensure-that-moving-a-range-does-not-shift-any-frozen-panes-in-the-destination-worksheet.cs

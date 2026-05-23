@@ -3586,6 +3586,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "ensure-that-moving-a-range-does-not-shift-any-frozen-panes-in-the-destination-worksheet.cs",
+      "title": "Ensure that moving a range does not shift any frozen panes in the destination worksheet."
+    },
+    {
+      "category": "managing-ranges",
       "file": "export-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs",
       "title": "Export a range as a PDF page with custom margins and page orientation settings applied."
     },
