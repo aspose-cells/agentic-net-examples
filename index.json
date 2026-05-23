@@ -6516,6 +6516,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-custom-number-format-smart-marker-to-display-currency-values-with-localespecific-symbols-and-separators.cs",
+      "title": "Apply a custom number format smart marker to display currency values with locale\u2011specific symbols and separators."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs",
       "title": "Apply a custom number format to cells populated via smart markers to display currency values consistently."
     },
