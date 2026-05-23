@@ -221,6 +221,11 @@
     },
     {
       "category": "conversion",
+      "file": "load-a-csv-file-with-a-custom-comment-character-ignore-commented-lines-and-export-clean-data-to-tsv.cs",
+      "title": "Load a CSV file with a custom comment character, ignore commented lines, and export clean data to TSV."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-tsv-workbook-and-convert-it-to-an-html-page-with-external-css.cs",
       "title": "Load a TSV workbook and convert it to an HTML page with external CSS."
     },
