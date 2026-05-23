@@ -181,6 +181,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-an-excel-workbook-to-a-pipedelimited-txt-file-by-setting-saveformattxt-and-custom-separator.cs",
+      "title": "Convert an Excel workbook to a pipe\u2011delimited TXT file by setting SaveFormat.Txt and custom separator."
+    },
+    {
+      "category": "conversion",
       "file": "convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs",
       "title": "Convert an XLS workbook to a Markdown document with aligned tables."
     },
