@@ -171,6 +171,11 @@
     },
     {
       "category": "conversion",
+      "file": "create-a-custom-parser-to-interpret-dates-in-ddmmyyyy-format-and-assign-it-to-preferredparsers.cs",
+      "title": "Create a custom parser to interpret dates in dd/MM/yyyy format and assign it to PreferredParsers."
+    },
+    {
+      "category": "conversion",
       "file": "embed-images-as-base64-in-a-single-html-file-during-export.cs",
       "title": "Embed images as base64 in a single HTML file during export."
     },
