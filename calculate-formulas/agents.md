@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - retrieve-the-range-of-values-returned-by-the-custom-function-from-the-evaluated-cell.cs
 - add-a-specific-cell-to-the-formula-watch-window-using-worksheetcellwatchesadd-after-setting-its-formula.cs
 - add-multiple-cells-to-the-watch-window-in-a-loop-to-monitor-a-batch-of-formulas.cs
+- remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs
