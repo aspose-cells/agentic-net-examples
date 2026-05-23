@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - offset-a-range-by-five-rows-upward-and-copy-its-formatting-back-to-the-original-location.cs
 - merge-cells-in-a-range-that-spans-the-header-row-and-set-its-fill-color-to-navy-blue.cs
 - validate-that-after-moving-a-range-the-source-range-becomes-empty-and-contains-no-residual-data.cs
+- unmerge-a-range-containing-formulas-and-ensure-each-resulting-cell-retains-its-original-formula.cs
