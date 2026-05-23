@@ -6485,6 +6485,11 @@
       "title": "Write a unit test verifying that Slicer.Refresh updates the linked pivot table\u2019s row count as expected."
     },
     {
+      "category": "smart-markers",
+      "file": "load-an-excel-template-with-smart-markers-and-populate-it-using-a-datatable-source.cs",
+      "title": "Load an Excel template with smart markers and populate it using a DataTable source."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
