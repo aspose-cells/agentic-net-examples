@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-set-image-dpi-to-600-for-detailed-engineering-drawings.cs
 - convert-a-workbook-to-pdf-and-apply-lossless-image-compression-to-preserve-visual-fidelity.cs
 - convert-a-workbook-to-pdf-and-apply-jpeg-compression-with-quality-level-set-to-80-percent.cs
+- convert-a-workbook-to-pdf-and-apply-jpeg-compression-with-quality-level-set-to-50-percent.cs
