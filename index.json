@@ -6906,6 +6906,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-a-workbook-from-a-url-process-smart-markers-and-save-the-result-to-azure-blob-storage.cs",
+      "title": "Load a workbook from a URL, process smart markers, and save the result to Azure Blob storage."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs",
       "title": "Load a workbook template and apply the CopyStyle attribute to inherit cell formatting for generated records."
     },
