@@ -246,6 +246,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-cancellation-token-that-stops-formula-calculation-when-the-user-requests-an-abort-operation.cs",
+      "title": "Implement a cancellation token that stops formula calculation when the user requests an abort operation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs",
       "title": "Implement a class inheriting AbstractCalculationMonitor and override OnCircular to log cell addresses."
     },

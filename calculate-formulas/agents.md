@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - configure-the-custom-engine-to-log-each-cell-evaluation-for-performance-analysis.cs
 - apply-a-custom-calculation-engine-that-substitutes-missing-functions-with-userdefined-equivalents-during-evaluation.cs
 - interrupt-an-ongoing-workbookcalculateformula-operation-using-a-cancellation-token-after-a-timeout.cs
+- implement-a-cancellation-token-that-stops-formula-calculation-when-the-user-requests-an-abort-operation.cs
