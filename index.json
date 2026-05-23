@@ -560,6 +560,11 @@
       "title": "Write a formula to a cell and store its text in another cell using FormulaText."
     },
     {
+      "category": "calculate-formulas",
+      "file": "write-a-utility-that-enumerates-all-worksheets-sets-calculationmode-to-manual-and-logs-the-previous-mode-for-each.cs",
+      "title": "Write a utility that enumerates all worksheets, sets CalculationMode to Manual, and logs the previous mode for each."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
