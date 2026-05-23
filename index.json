@@ -3861,6 +3861,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "set-the-refersto-property-of-a-named-range-using-an-absolute-address-to-prevent-relative-shifts.cs",
+      "title": "Set the RefersTo property of a named range using an absolute address to prevent relative shifts."
+    },
+    {
+      "category": "managing-ranges",
       "file": "transfer-only-cell-values-from-one-worksheet-range-to-another-worksheet-without-copying-formatting-styles.cs",
       "title": "Transfer only cell values from one worksheet range to another worksheet without copying formatting styles."
     },
