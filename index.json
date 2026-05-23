@@ -336,6 +336,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "programmatically-disable-automatic-calculation-for-tables-only-while-keeping-other-formulas-in-automatic-mode.cs",
+      "title": "Programmatically disable automatic calculation for tables only while keeping other formulas in Automatic mode."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "programmatically-disable-automatic-calculation-import-a-csv-file-then-enable-calculation-mode-to-recompute-dependent-cells.cs",
       "title": "Programmatically disable automatic calculation, import a CSV file, then enable calculation mode to recompute dependent cells."
     },
