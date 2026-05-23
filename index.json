@@ -251,6 +251,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-enable-accessibility-tags-for-screen-readers-and-compliance-standards.cs",
+      "title": "Convert a workbook to PDF and enable accessibility tags for screen readers and compliance standards."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-enable-fast-web-view-for-quicker-loading-in-browsers.cs",
       "title": "Convert a workbook to PDF and enable fast web view for quicker loading in browsers."
     },
