@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs
 - generate-a-workbook-from-a-nested-object-hierarchy-where-child-collections-are-mapped-using-smart-marker-range-syntax.cs
 - create-a-batch-job-that-processes-a-folder-of-excel-templates-each-populated-with-distinct-json-data-sources.cs
+- implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs
