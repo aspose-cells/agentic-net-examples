@@ -266,6 +266,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-set-image-dpi-to-600-for-detailed-engineering-drawings.cs",
+      "title": "Convert a workbook to PDF and set image DPI to 600 for detailed engineering drawings."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-set-image-quality-to-80-percent-for-balanced-size-and-clarity.cs",
       "title": "Convert a workbook to PDF and set image quality to 80 percent for balanced size and clarity."
     },
