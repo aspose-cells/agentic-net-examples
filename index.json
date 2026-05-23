@@ -201,6 +201,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-embed-a-custom-opentype-font-loaded-from-memory-stream.cs",
+      "title": "Convert a workbook to PDF and embed a custom OpenType font loaded from memory stream."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-embed-a-custom-truetype-font-loaded-from-external-file.cs",
       "title": "Convert a workbook to PDF and embed a custom TrueType font loaded from external file."
     },
