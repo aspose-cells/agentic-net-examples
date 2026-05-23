@@ -3376,6 +3376,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-then-apply-password-protection-to-the-entire-file.cs",
+      "title": "Copy a range to a new workbook, then apply password protection to the entire file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-workbook-then-remove-all-formulas-leaving-only-static-values.cs",
       "title": "Copy a range to a new workbook, then remove all formulas leaving only static values."
     },
