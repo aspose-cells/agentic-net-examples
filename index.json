@@ -6696,6 +6696,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-the-detaillink-parameter-to-create-hyperlinks-from-master-rows-to-their-corresponding-detail-worksheets.cs",
+      "title": "Enable the DetailLink parameter to create hyperlinks from master rows to their corresponding detail worksheets."
+    },
+    {
+      "category": "smart-markers",
       "file": "enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs",
       "title": "Enable the notify parameter on a smart marker to receive callbacks for each row insertion."
     },

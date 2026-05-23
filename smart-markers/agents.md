@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - place-a-master-smart-marker-in-the-template-to-repeat-rows-for-each-master-record.cs
 - insert-detail-smart-markers-and-set-the-detailsheet-parameter-to-target-a-separate-worksheet.cs
 - configure-the-detailtable-parameter-to-map-detail-data-into-a-predefined-table-on-the-target-sheet.cs
+- enable-the-detaillink-parameter-to-create-hyperlinks-from-master-rows-to-their-corresponding-detail-worksheets.cs
