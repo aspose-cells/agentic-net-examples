@@ -6506,6 +6506,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-text-wrap-inheritance-with-copystyle-so-that-long-text-fields-automatically-wrap-within-generated-cells.cs",
+      "title": "Apply text wrap inheritance with CopyStyle so that long text fields automatically wrap within generated cells."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-range-parameter-to-map-a-collection-of-objects-to-a-specific-cell-block-in-the-worksheet.cs",
       "title": "Apply the Range parameter to map a collection of objects to a specific cell block in the worksheet."
     },
