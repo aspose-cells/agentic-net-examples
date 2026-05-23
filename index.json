@@ -3916,6 +3916,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "set-findoptions-to-search-using-wildcards-for-patterns-like-2023-inside-range-l1l100.cs",
+      "title": "Set FindOptions to search using wildcards for patterns like \"*2023*\" inside range L1:L100."
+    },
+    {
+      "category": "managing-ranges",
       "file": "set-the-refersto-property-of-a-named-range-using-an-absolute-address-to-prevent-relative-shifts.cs",
       "title": "Set the RefersTo property of a named range using an absolute address to prevent relative shifts."
     },
