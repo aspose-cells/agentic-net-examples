@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs
 - execute-a-backward-search-for-error-in-range-i1i200-by-setting-findoptionssearchdirection.cs
 - apply-a-regular-expression-search-for-dates-formatted-as-ddmmyyyy-within-range-j1j30.cs
+- load-workbook-reportxlsx-modify-a-named-range-and-save-as-reportupdatedxlsx.cs
