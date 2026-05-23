@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-set-page-scaling-to-fit-printable-area-for-optimal-paper-usage.cs
 - convert-a-workbook-to-pdf-and-set-page-scaling-to-none-to-preserve-original-dimensions-exactly.cs
 - convert-a-workbook-to-pdf-and-enable-accessibility-tags-for-screen-readers-and-compliance-standards.cs
+- convert-a-workbook-to-pdf-and-disable-accessibility-tags-to-produce-a-simpler-document-structure.cs

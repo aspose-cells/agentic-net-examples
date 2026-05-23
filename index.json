@@ -221,6 +221,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-disable-accessibility-tags-to-produce-a-simpler-document-structure.cs",
+      "title": "Convert a workbook to PDF and disable accessibility tags to produce a simpler document structure."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-disable-fast-web-view-to-produce-a-single-continuous-stream.cs",
       "title": "Convert a workbook to PDF and disable fast web view to produce a single continuous stream."
     },
