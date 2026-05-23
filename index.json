@@ -3746,6 +3746,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "retrieve-the-range-object-of-the-named-range-salesdata-and-iterate-through-its-cells.cs",
+      "title": "Retrieve the Range object of the named range \"SalesData\" and iterate through its cells."
+    },
+    {
+      "category": "managing-ranges",
       "file": "retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs",
       "title": "Retrieve the total cell count for range B2:E7 after populating it with sample data."
     },
