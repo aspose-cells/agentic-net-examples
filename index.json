@@ -471,6 +471,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-specific-worksheet-to-csv-trimming-leading-blank-rows-and-columns-during-export.cs",
+      "title": "Export a specific worksheet to CSV, trimming leading blank rows and columns during export."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-as-xml-with-a-custom-root-element.cs",
       "title": "Export a workbook as XML with a custom root element."
     },
