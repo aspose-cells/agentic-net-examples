@@ -6961,6 +6961,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-images-stored-as-byte-arrays-into-designated-cells-using-smart-markers-while-maintaining-aspect-ratio.cs",
+      "title": "Insert images stored as byte arrays into designated cells using smart markers while maintaining aspect ratio."
+    },
+    {
+      "category": "smart-markers",
       "file": "iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs",
       "title": "Iterate over multiple template files, applying identical master\u2011detail smart markers to generate batch reports."
     },
