@@ -6531,6 +6531,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs",
+      "title": "Generate separate worksheets for each group in master\u2011detail data by using smart marker grouping with sheet break syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs",
       "title": "Group master\u2011detail data using smart marker grouping syntax to create hierarchical tables across rows."
     },
