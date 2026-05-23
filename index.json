@@ -3921,6 +3921,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "validate-that-all-named-ranges-in-a-workbook-have-unique-names-and-report-any-duplicates.cs",
+      "title": "Validate that all named ranges in a workbook have unique names and report any duplicates."
+    },
+    {
+      "category": "managing-ranges",
       "file": "validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs",
       "title": "Validate that moving range H1:H5 to I1:I5 does not overlap existing data in the destination worksheet."
     },
