@@ -3541,6 +3541,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-right.cs",
+      "title": "Create a named range that automatically expands when new columns are added to the right."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs",
       "title": "Create a named range that spans an entire column and use it to calculate the average."
     },
