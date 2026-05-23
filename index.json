@@ -2076,6 +2076,11 @@
     },
     {
       "category": "format-cells",
+      "file": "validate-that-after-changing-the-theme-conditional-formatting-rules-still-reference-correct-color-indices.cs",
+      "title": "Validate that after changing the theme, conditional formatting rules still reference correct color indices."
+    },
+    {
+      "category": "format-cells",
       "file": "validate-that-cells-using-accent1-automatically-reflect-the-updated-theme-color-after-modification.cs",
       "title": "Validate that cells using Accent1 automatically reflect the updated theme color after modification."
     },
