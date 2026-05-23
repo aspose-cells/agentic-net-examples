@@ -6661,6 +6661,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-images-by-adding-the-image-parameter-to-a-smart-marker-tag-and-supplying-a-byte-array-source.cs",
+      "title": "Insert images by adding the Image parameter to a smart marker tag and supplying a byte array source."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs",
       "title": "Load a template from a stream, set marker data sources, and write the result to a byte array."
     },

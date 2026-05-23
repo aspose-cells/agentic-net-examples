@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - place-group-labels-after-data-rows-by-setting-labelposition-attribute-to-after-in-the-smart-marker-definition.cs
 - define-a-custom-label-that-concatenates-static-text-with-aggregated-values-for-each-summary-row.cs
 - generate-sequential-invoice-numbers-using-a-custom-label-that-combines-a-prefix-with-the-autoincremented-record-index.cs
+- insert-images-by-adding-the-image-parameter-to-a-smart-marker-tag-and-supplying-a-byte-array-source.cs
