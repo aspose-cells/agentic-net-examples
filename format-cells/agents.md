@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - generate-a-report-listing-each-workbooks-theme-color-palette-before-and-after-applying-changes.cs
 - use-the-api-to-enumerate-all-theme-color-types-and-output-their-default-rgb-values.cs
 - apply-a-conditional-formatting-rule-that-colors-cells-based-on-the-accent4-theme-color-intensity.cs
+- create-a-chart-and-set-its-series-colors-to-use-the-workbooks-theme-accent5-colors.cs
