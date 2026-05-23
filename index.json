@@ -281,6 +281,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-using-system-default-font-substitution-when-original-fonts-are-unavailable.cs",
+      "title": "Convert a workbook to PDF using system default font substitution when original fonts are unavailable."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-with-grayscale-rendering-for-reduced-file-size-and-printing-speed.cs",
       "title": "Convert a workbook to PDF with grayscale rendering for reduced file size and printing speed."
     },
