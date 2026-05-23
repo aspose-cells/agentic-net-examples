@@ -3476,6 +3476,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-style-that-defines-a-date-number-format-and-apply-it-to-a-column-containing-date-values.cs",
+      "title": "Create a Style that defines a date number format and apply it to a column containing date values."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
