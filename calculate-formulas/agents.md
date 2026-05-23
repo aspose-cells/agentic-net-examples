@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - after-inserting-a-new-row-call-workbookcalculateformula-to-update-dependent-formulas-automatically.cs
 - after-deleting-a-column-call-workbookcalculateformula-to-ensure-remaining-formulas-recalculate-correctly.cs
 - after-renaming-a-worksheet-call-workbookcalculateformula-to-refresh-formulas-that-reference-the-sheet.cs
+- after-updating-a-named-range-call-workbookcalculateformula-to-propagate-changes-to-dependent-formulas.cs

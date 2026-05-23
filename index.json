@@ -21,6 +21,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "after-updating-a-named-range-call-workbookcalculateformula-to-propagate-changes-to-dependent-formulas.cs",
+      "title": "After updating a named range, call Workbook.CalculateFormula to propagate changes to dependent formulas."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs",
       "title": "Assign a custom monitor instance to CalculationOptions.CalculationMonitor to enable interruption."
     },
