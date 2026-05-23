@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs
 - apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs
 - save-the-merged-workbook-as-xlsx-and-optionally-export-a-pdf-copy-for-reporting-purposes.cs
+- iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs
