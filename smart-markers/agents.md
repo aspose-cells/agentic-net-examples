@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - implement-a-callback-that-modifies-cell-values-after-smart-marker-processing-but-before-saving-the-workbook.cs
 - use-a-smart-marker-with-index-syntax-to-fill-a-matrix-of-attendance-records-for-each-day.cs
 - apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs
+- load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs
