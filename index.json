@@ -586,6 +586,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "test-that-automaticexcepttables-mode-does-not-recalculate-formulas-inside-structured-tables.cs",
+      "title": "Test that AutomaticExceptTables mode does not recalculate formulas inside structured tables."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs",
       "title": "Trigger circular reference detection by invoking Workbook.Calculate after modifying interdependent formulas."
     },
