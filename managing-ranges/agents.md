@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - search-for-the-text-total-within-range-a1c30-using-findoptions.cs
 - replace-all-occurrences-of-pending-with-completed-inside-range-d5d25-using-findoptions.cs
 - configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs
+- set-findoptions-to-match-whole-cell-contents-when-locating-the-value-yes-in-range-f1f50.cs
