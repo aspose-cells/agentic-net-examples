@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - copy-a-range-to-a-csv-file-ensuring-that-commas-within-cell-text-are-properly-escaped.cs
 - export-the-contents-of-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs
 - export-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs
+- render-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs
