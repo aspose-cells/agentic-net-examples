@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-and-save-it-as-png-image-with-300-dpi-resolution.cs
 - load-a-workbook-from-a-byte-array-and-convert-it-directly-to-csv-with-default-options.cs
 - load-a-passwordprotected-xls-file-and-export-it-to-pdf-with-embedded-fonts-for-printing.cs
+- load-an-encrypted-workbook-using-a-password-and-convert-it-to-pdf-with-watermark-overlay.cs
