@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-csv-and-omit-row-numbers-to-keep-original-column-structure-unchanged.cs
 - convert-a-workbook-to-csv-and-apply-custom-cell-value-formatter-to-standardize-phone-numbers.cs
 - convert-a-workbook-to-csv-and-preserve-formulas-as-text-strings-for-later-analysis.cs
+- convert-a-workbook-to-csv-and-replace-formulas-with-their-evaluated-results-for-static-data-export.cs
