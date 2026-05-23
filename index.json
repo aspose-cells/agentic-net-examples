@@ -3386,6 +3386,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-and-set-the-workbooks-author-property-using-document-metadata.cs",
+      "title": "Copy a range to a new workbook and set the workbook's author property using document metadata."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-workbook-then-apply-password-protection-to-the-entire-file.cs",
       "title": "Copy a range to a new workbook, then apply password protection to the entire file."
     },
