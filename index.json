@@ -3631,6 +3631,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-cells-within-range-a2d2-to-create-a-single-header-cell-and-center-its-text.cs",
+      "title": "Merge cells within range A2:D2 to create a single header cell and center its text."
+    },
+    {
+      "category": "managing-ranges",
       "file": "produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs",
       "title": "Produce a range covering the entire rows of C5:C9 and set background color to light gray."
     },
