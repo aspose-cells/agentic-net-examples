@@ -1971,6 +1971,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-macrofree-template-workbook-with-predefined-theme-colors-for-downstream-processing.cs",
+      "title": "Create a macro\u2011free template workbook with predefined theme colors for downstream processing."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-new-workbook-assign-a-custom-theme-and-populate-it-with-sample-data-using-theme-colors.cs",
       "title": "Create a new workbook, assign a custom theme, and populate it with sample data using theme colors."
     },

@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - programmatically-compare-two-workbooks-theme-palettes-and-highlight-differences-in-a-report.cs
 - load-a-workbook-apply-a-custom-theme-and-generate-a-pdf-preview-of-the-first-sheet.cs
 - iterate-over-all-worksheets-set-each-header-rows-font-color-to-the-themes-accent1.cs
+- create-a-macrofree-template-workbook-with-predefined-theme-colors-for-downstream-processing.cs
