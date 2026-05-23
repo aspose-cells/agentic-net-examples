@@ -6511,6 +6511,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-template-that-generates-invoices-with-line-items-totals-and-a-company-logo-image-using-smart-markers.cs",
+      "title": "Create a template that generates invoices with line items, totals, and a company logo image using smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-template-that-uses-image-markers-to-embed-photos-stored-as-base64-strings-in-the-data-source.cs",
       "title": "Create a template that uses image markers to embed photos stored as base64 strings in the data source."
     },
