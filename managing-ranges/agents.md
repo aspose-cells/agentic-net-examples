@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - copy-a-range-to-a-new-workbook-and-apply-a-password-to-protect-the-sheet-for-readonly-access.cs
 - copy-a-range-to-a-new-workbook-and-freeze-the-top-row-in-the-worksheet-view.cs
 - load-a-workbook-from-a-file-and-copy-only-formatting-from-range-a1b5-to-c1d5.cs
+- load-a-passwordprotected-workbook-and-copy-only-the-formatting-from-range-o1o5-to-p1p5.cs
