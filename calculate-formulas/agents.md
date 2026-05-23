@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-based-on-formula-results-to-visually-emphasize-threshold-breaches.cs
 - programmatically-clear-the-watch-window-before-adding-a-new-set-of-cells-for-monitoring.cs
 - serialize-the-watch-window-configuration-to-json-for-external-storage-and-later-restoration.cs
+- load-a-previously-saved-watch-window-configuration-and-apply-it-to-the-active-workbook.cs
