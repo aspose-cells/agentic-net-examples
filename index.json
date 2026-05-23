@@ -3766,6 +3766,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs",
+      "title": "Load a workbook, delete all worksheet\u2011scoped named ranges, and save the cleaned file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-a-workbook-from-a-file-and-copy-only-formatting-from-range-a1b5-to-c1d5.cs",
       "title": "Load a workbook from a file and copy only formatting from range A1:B5 to C1:D5."
     },
