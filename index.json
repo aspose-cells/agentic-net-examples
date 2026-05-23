@@ -6551,6 +6551,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs",
+      "title": "Generate a summary sheet that aggregates totals from multiple smart marker populated worksheets using Excel formulas."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-a-workbook-from-a-nested-object-hierarchy-where-child-collections-are-mapped-using-smart-marker-range-syntax.cs",
       "title": "Generate a workbook from a nested object hierarchy where child collections are mapped using smart marker range syntax."
     },
