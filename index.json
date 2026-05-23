@@ -3976,6 +3976,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs",
+      "title": "Search for numeric values formatted as currency within a named range and convert them to plain numbers."
+    },
+    {
+      "category": "managing-ranges",
       "file": "search-for-the-string-na-within-a-named-range-and-replace-it-with-an-empty-string.cs",
       "title": "Search for the string \"#N/A\" within a named range and replace it with an empty string."
     },
