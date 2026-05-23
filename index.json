@@ -56,6 +56,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs",
+      "title": "Call workbook.Calculate to evaluate all formulas using the registered custom calculation engine."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs",
       "title": "Create a class derived from AbstractCalculationMonitor and override BeforeCalculate to inspect each cell."
     },
