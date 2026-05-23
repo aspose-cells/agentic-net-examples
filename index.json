@@ -6666,6 +6666,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-range-parameter-to-map-a-collection-of-quarterly-results-into-a-preformatted-financial-statement-layout.cs",
+      "title": "Use the Range parameter to map a collection of quarterly results into a pre\u2011formatted financial statement layout."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-setdatasource-method-to-bind-a-dataset-containing-multiple-tables-each-mapped-to-different-smart-marker-groups.cs",
       "title": "Use the SetDataSource method to bind a DataSet containing multiple tables, each mapped to different smart marker groups."
     },

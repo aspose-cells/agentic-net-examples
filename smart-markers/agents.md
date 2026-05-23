@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs
 - use-the-if-parameter-to-display-a-custom-message-when-a-collection-is-empty-during-smart-marker-processing.cs
 - create-a-template-that-generates-invoices-with-line-items-totals-and-a-company-logo-image-using-smart-markers.cs
+- use-the-range-parameter-to-map-a-collection-of-quarterly-results-into-a-preformatted-financial-statement-layout.cs
