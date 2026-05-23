@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - cut-a-range-that-includes-a-pivot-table-and-paste-it-into-a-new-location-preserving-pivot-structure.cs
 - delete-the-range-f1f20-and-shift-remaining-cells-upward-to-fill-the-gap.cs
 - delete-multiple-noncontiguous-ranges-in-a-single-operation-using-a-unionrange-to-specify-them.cs
+- load-an-excel-workbook-and-obtain-the-address-string-of-the-range-a1c5.cs
