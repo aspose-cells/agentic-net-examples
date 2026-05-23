@@ -3541,6 +3541,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-an-offset-range-by-shifting-d4f10-three-rows-down-and-two-columns-right.cs",
+      "title": "Create an offset range by shifting D4:F10 three rows down and two columns right."
+    },
+    {
+      "category": "managing-ranges",
       "file": "cut-a-range-containing-formulas-and-paste-it-to-a-new-location-preserving-formula-references.cs",
       "title": "Cut a range containing formulas and paste it to a new location, preserving formula references."
     },
