@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - load-an-excel-workbook-from-a-file-stream-and-autofill-a-numeric-series-across-a-range.cs
 - apply-an-autofill-pattern-that-repeats-a-custom-text-string-across-a-range-of-cells.cs
+- copy-a-source-range-containing-formulas-to-a-destination-range-while-preserving-calculation-dependencies.cs
