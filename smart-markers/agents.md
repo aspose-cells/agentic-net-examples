@@ -209,3 +209,4 @@ Output files are written to the working directory.
 - use-a-smart-marker-with-index-syntax-to-fill-a-matrix-of-attendance-records-for-each-day.cs
 - apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs
 - load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs
+- configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs
