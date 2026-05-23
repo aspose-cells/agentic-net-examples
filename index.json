@@ -6611,6 +6611,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-setdatasource-method-to-bind-a-dataset-containing-multiple-tables-each-mapped-to-different-smart-marker-groups.cs",
+      "title": "Use the SetDataSource method to bind a DataSet containing multiple tables, each mapped to different smart marker groups."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs",
       "title": "Use the SetDataSource overload that accepts an IEnumerable to populate smart markers from a list of DTO objects."
     },
