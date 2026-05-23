@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - save-the-merged-workbook-as-xlsx-and-optionally-export-a-pdf-copy-for-reporting-purposes.cs
 - iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs
 - validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs
+- use-workbookdesignersetdatasource-with-a-datatable-to-populate-smart-markers-from-relational-database-results.cs
