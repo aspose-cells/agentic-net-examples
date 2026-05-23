@@ -222,3 +222,4 @@ Output files are written to the working directory.
 - set-the-refersto-property-of-a-named-range-using-a-named-formula-for-advanced-calculations.cs
 - search-for-cells-containing-the-word-confidential-within-a-named-range-and-mask-the-text.cs
 - replace-all-instances-of-the-character-with-an-empty-string-inside-a-named-range.cs
+- use-findoptions-to-perform-a-caseinsensitive-search-for-the-abbreviation-fy-within-a-range.cs

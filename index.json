@@ -4126,6 +4126,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-findoptions-to-perform-a-caseinsensitive-search-for-the-abbreviation-fy-within-a-range.cs",
+      "title": "Use FindOptions to perform a case\u2011insensitive search for the abbreviation \"FY\" within a range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-findoptions-to-search-for-numeric-values-greater-than-1000-within-named-range-budget.cs",
       "title": "Use FindOptions to search for numeric values greater than 1000 within named range \"Budget\"."
     },
