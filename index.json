@@ -306,6 +306,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "load-an-xlsx-workbook-from-a-file-path-and-set-calculation-mode-to-manual.cs",
+      "title": "Load an XLSX workbook from a file path and set calculation mode to Manual."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "log-each-step-of-formula-evaluation-using-custom-callbacks-attached-to-the-calculation-engine.cs",
       "title": "Log each step of formula evaluation using custom callbacks attached to the calculation engine."
     },
