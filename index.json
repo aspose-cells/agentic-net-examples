@@ -486,6 +486,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-rounding-numeric-values-to-two-decimal-places-for-financial-reporting.cs",
+      "title": "Export a workbook to CSV rounding numeric values to two decimal places for financial reporting."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-csv-with-date-cells-formatted-as-iso-8601-strings-for-standardization.cs",
       "title": "Export a workbook to CSV with date cells formatted as ISO 8601 strings for standardization."
     },

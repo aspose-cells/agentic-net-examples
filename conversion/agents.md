@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - batch-convert-multiple-excel-files-to-csv-trimming-leading-blanks-and-preserving-column-headers-consistently.cs
 - save-a-workbook-as-csv-while-preserving-original-cell-data-types-for-accurate-downstream-processing.cs
 - export-a-workbook-to-csv-with-date-cells-formatted-as-iso-8601-strings-for-standardization.cs
+- export-a-workbook-to-csv-rounding-numeric-values-to-two-decimal-places-for-financial-reporting.cs
