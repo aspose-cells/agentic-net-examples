@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - export-the-list-of-named-ranges-and-their-formulas-to-an-excel-sheet-for-auditing.cs
 - import-a-list-of-named-range-definitions-from-a-json-file-and-create-them-programmatically.cs
 - validate-that-all-named-ranges-reference-existing-cells-and-report-any-invalid-references.cs
+- apply-a-custom-style-to-all-cells-within-a-named-range-to-standardize-formatting.cs

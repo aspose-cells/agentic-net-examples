@@ -3381,6 +3381,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-a-custom-style-to-all-cells-within-a-named-range-to-standardize-formatting.cs",
+      "title": "Apply a custom style to all cells within a named range to standardize formatting."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-a-filter-to-a-table-using-a-named-range-as-the-criteria-range.cs",
       "title": "Apply a filter to a table using a named range as the criteria range."
     },
