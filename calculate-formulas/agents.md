@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs
 - retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs
 - save-the-workbook-to-an-excel-file-after-configuring-the-watch-window-for-later-inspection.cs
+- open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
