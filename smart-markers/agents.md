@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - create-a-smart-marker-that-populates-a-chart-data-range-enabling-automatic-chart-updates-based-on-merged-data.cs
 - apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs
 - protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs
+- use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs
