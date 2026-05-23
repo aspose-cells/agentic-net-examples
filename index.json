@@ -3381,6 +3381,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-range-to-a-new-workbook-and-apply-a-password-to-protect-the-sheet-for-readonly-access.cs",
+      "title": "Copy a range to a new workbook and apply a password to protect the sheet for read\u2011only access."
+    },
+    {
+      "category": "managing-ranges",
       "file": "copy-a-range-to-a-new-workbook-and-apply-a-table-style-to-enable-filtering-and-sorting.cs",
       "title": "Copy a range to a new workbook and apply a table style to enable filtering and sorting."
     },
