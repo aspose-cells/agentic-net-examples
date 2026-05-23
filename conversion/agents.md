@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - read-a-csv-file-calculate-sum-of-a-numeric-column-and-write-the-result-into-a-new-cell.cs
 - load-a-csv-file-transpose-its-rows-and-columns-programmatically-and-save-the-transposed-matrix-as-csv.cs
 - apply-a-filter-to-hide-rows-where-a-status-column-equals-inactive-after-importing-csv-data.cs
+- load-a-csv-file-split-a-combined-address-column-into-separate-street-city-and-zip-columns.cs
