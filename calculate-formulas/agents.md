@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - invalidate-cached-custom-function-results-automatically-when-dependent-cells-are-modified-in-the-workbook.cs
 - implement-icustomfunction-interface-to-create-a-custom-function-that-returns-a-multicell-range.cs
 - return-a-twodimensional-array-from-a-custom-function-to-populate-a-range-of-cells-dynamically.cs
+- apply-a-custom-function-within-an-array-formula-to-compute-results-for-an-entire-data-table.cs
