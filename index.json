@@ -1966,6 +1966,11 @@
     },
     {
       "category": "format-cells",
+      "file": "extract-the-themes-font-scheme-and-list-the-primary-and-secondary-font-families-used.cs",
+      "title": "Extract the theme\u2019s font scheme and list the primary and secondary font families used."
+    },
+    {
+      "category": "format-cells",
       "file": "generate-a-report-listing-each-workbooks-theme-color-palette-before-and-after-applying-changes.cs",
       "title": "Generate a report listing each workbook\u2019s theme color palette before and after applying changes."
     },
