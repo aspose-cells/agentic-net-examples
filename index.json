@@ -821,6 +821,11 @@
     },
     {
       "category": "conversion",
+      "file": "perform-batch-conversion-of-excel-files-to-csv-with-progress-reporting.cs",
+      "title": "Perform batch conversion of Excel files to CSV with progress reporting."
+    },
+    {
+      "category": "conversion",
       "file": "perform-batch-conversion-of-excel-files-to-pdf-using-parallel-processing-to-improve-throughput.cs",
       "title": "Perform batch conversion of Excel files to PDF using parallel processing to improve throughput."
     },

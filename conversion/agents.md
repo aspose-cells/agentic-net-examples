@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - perform-batch-conversion-with-error-handling-that-logs-corrupted-files-and-continues-processing-remaining-items.cs
 - perform-batch-conversion-and-generate-a-summary-report-listing-successful-conversions-and-failures.cs
 - perform-batch-conversion-of-excel-files-to-pdf-with-per-file-custom-options.cs
+- perform-batch-conversion-of-excel-files-to-csv-with-progress-reporting.cs
