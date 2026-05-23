@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs
 - embed-images-into-cells-using-image-markers-that-reference-binary-data-from-a-custom-object-source.cs
 - enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs
+- set-a-custom-data-source-object-on-workbookdesigner-when-default-sources-cannot-represent-complex-hierarchical-structures.cs
