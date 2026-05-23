@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs
 - specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs
 - place-group-labels-after-data-rows-by-setting-labelposition-attribute-to-after-in-the-smart-marker-definition.cs
+- define-a-custom-label-that-concatenates-static-text-with-aggregated-values-for-each-summary-row.cs
