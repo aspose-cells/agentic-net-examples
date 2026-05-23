@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - inherit-background-color-using-copystyle-so-that-generated-rows-match-the-templates-shading-scheme.cs
 - apply-text-wrap-inheritance-with-copystyle-so-that-long-text-fields-automatically-wrap-within-generated-cells.cs
 - implement-ismartmarkercallback-and-register-it-with-workbookdesigner-to-receive-detailed-processing-notifications.cs
+- capture-each-record-processing-event-in-the-ismartmarkercallback-implementation-to-build-a-detailed-merge-log.cs
