@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs
 - group-masterdetail-data-by-placing-a-parent-smart-marker-above-a-child-marker-range.cs
 - import-a-subset-of-an-array-using-slicer-syntax-such-as-orders13quantity.cs
+- map-a-json-document-to-a-workbook-and-apply-smart-markers-to-populate-cells-with-nested-properties.cs
