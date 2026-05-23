@@ -3791,6 +3791,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "programmatically-enumerate-all-named-ranges-in-a-workbook-and-output-their-addresses-to-the-console.cs",
+      "title": "Programmatically enumerate all named ranges in a workbook and output their addresses to the console."
+    },
+    {
+      "category": "managing-ranges",
       "file": "reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs",
       "title": "Reference a workbook\u2011scoped named range in a formula to calculate the sum of its cells."
     },

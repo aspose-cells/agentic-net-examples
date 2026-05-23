@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - refresh-a-pivot-table-after-expanding-the-underlying-named-range-to-include-new-rows.cs
 - log-each-modification-to-named-ranges-including-timestamp-and-old-versus-new-references-to-a-text-file.cs
 - validate-that-all-named-ranges-in-a-workbook-have-unique-names-and-report-any-duplicates.cs
+- programmatically-enumerate-all-named-ranges-in-a-workbook-and-output-their-addresses-to-the-console.cs
