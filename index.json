@@ -3926,6 +3926,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "unprotect-a-worksheet-modify-a-named-range-and-reapply-protection-with-a-password.cs",
+      "title": "Unprotect a worksheet, modify a named range, and re\u2011apply protection with a password."
+    },
+    {
+      "category": "managing-ranges",
       "file": "update-a-dynamic-named-range-automatically-after-inserting-new-rows-into-the-worksheet.cs",
       "title": "Update a dynamic named range automatically after inserting new rows into the worksheet."
     },
