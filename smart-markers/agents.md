@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - process-multiple-worksheets-containing-identical-smart-markers-by-invoking-workbookdesignerprocess-for-each-sheet-index.cs
 - group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs
 - embed-images-into-cells-using-image-markers-that-reference-binary-data-from-a-custom-object-source.cs
+- enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs
