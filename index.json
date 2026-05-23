@@ -131,6 +131,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "configure-the-custom-engine-to-log-each-cell-evaluation-for-performance-analysis.cs",
+      "title": "Configure the custom engine to log each cell evaluation for performance analysis."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "configure-the-workbook-to-use-automatic-calculation-mode-and-verify-dependent-cells-update-instantly.cs",
       "title": "Configure the workbook to use Automatic calculation mode and verify dependent cells update instantly."
     },

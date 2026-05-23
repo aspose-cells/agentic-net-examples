@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs
 - implement-a-custom-worksheet-function-by-creating-a-class-that-implements-icustomfunction.cs
 - derive-a-custom-calculation-engine-from-abstractcalculationengine-and-assign-it-to-the-workbook.cs
+- configure-the-custom-engine-to-log-each-cell-evaluation-for-performance-analysis.cs
