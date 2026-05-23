@@ -6736,6 +6736,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "import-a-subset-of-an-array-using-slicer-syntax-such-as-orders13quantity.cs",
+      "title": "Import a subset of an array using slicer syntax such as &=Orders[1..3].Quantity."
+    },
+    {
+      "category": "smart-markers",
       "file": "include-a-formula-parameter-in-a-smart-marker-field-to-evaluate-excel-formulas-dynamically-during-data-population.cs",
       "title": "Include a Formula parameter in a smart marker field to evaluate Excel formulas dynamically during data population."
     },
