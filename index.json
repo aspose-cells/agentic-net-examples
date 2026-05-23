@@ -191,6 +191,11 @@
     },
     {
       "category": "conversion",
+      "file": "open-an-ods-workbook-set-odfstrictversion-to-11-and-save-with-odf-11-compliance.cs",
+      "title": "Open an ODS workbook, set OdfStrictVersion to 1.1, and save with ODF 1.1 compliance."
+    },
+    {
+      "category": "conversion",
       "file": "produce-png-images-with-transparent-background-from-a-csv-workbook.cs",
       "title": "Produce PNG images with transparent background from a CSV workbook."
     },
