@@ -486,6 +486,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-csv-with-date-cells-formatted-as-iso-8601-strings-for-standardization.cs",
+      "title": "Export a workbook to CSV with date cells formatted as ISO 8601 strings for standardization."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-json-using-camelcase-property-naming-for-consistency.cs",
       "title": "Export a workbook to JSON using camelCase property naming for consistency."
     },
