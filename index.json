@@ -21,6 +21,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs",
+      "title": "Enable rounding to displayed format by setting CalculationOptions.PrecisionAsDisplayed to true."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "evaluate-the-builtin-ifna-function-by-writing-ifnaa1-fallback-and-calling-workbookcalculateformula.cs",
       "title": "Evaluate the built\u2011in IFNA function by writing =IFNA(A1, \"fallback\") and calling Workbook.CalculateFormula."
     },
