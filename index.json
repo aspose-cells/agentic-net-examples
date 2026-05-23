@@ -6776,6 +6776,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "embed-comments-in-cells-using-smart-markers-pulling-comment-text-from-a-related-data-source-field.cs",
+      "title": "Embed comments in cells using smart markers, pulling comment text from a related data source field."
+    },
+    {
+      "category": "smart-markers",
       "file": "embed-images-into-cells-using-image-markers-that-reference-binary-data-from-a-custom-object-source.cs",
       "title": "Embed images into cells using image markers that reference binary data from a custom object source."
     },
