@@ -6981,6 +6981,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-hyperlinks-via-smart-markers-that-point-to-external-web-resources-based-on-dynamic-url-fields.cs",
+      "title": "Insert hyperlinks via smart markers that point to external web resources based on dynamic URL fields."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-images-by-adding-the-image-parameter-to-a-smart-marker-tag-and-supplying-a-byte-array-source.cs",
       "title": "Insert images by adding the Image parameter to a smart marker tag and supplying a byte array source."
     },
