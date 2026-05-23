@@ -7081,6 +7081,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-a-foreach-smart-marker-to-generate-a-variablelength-list-of-project-milestones-on-a-timeline-sheet.cs",
+      "title": "Use a foreach smart marker to generate a variable\u2011length list of project milestones on a timeline sheet."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs",
       "title": "Use a variable array marker across a range to fill a table with a one\u2011dimensional collection."
     },
