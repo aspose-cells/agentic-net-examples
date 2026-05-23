@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - set-iterative-calculation-settings-including-maximum-iterations-and-precision-tolerance-for-circular-reference-handling.cs
 - enable-iterative-calculation-for-circular-references-and-define-convergence-criteria-in-workbook-settings.cs
 - log-each-step-of-formula-evaluation-using-custom-callbacks-attached-to-the-calculation-engine.cs
+- subscribe-to-calculation-engine-events-to-monitor-progress-of-longrunning-formula-evaluations.cs

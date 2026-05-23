@@ -281,6 +281,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "subscribe-to-calculation-engine-events-to-monitor-progress-of-longrunning-formula-evaluations.cs",
+      "title": "Subscribe to calculation engine events to monitor progress of long\u2011running formula evaluations."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-a-cancellation-token-with-workbookcalculate-to-abort-calculation-after-a-predefined-timeout.cs",
       "title": "Use a cancellation token with workbook.Calculate to abort calculation after a predefined timeout."
     },
