@@ -3686,6 +3686,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "load-workbook-reportxlsx-modify-a-named-range-and-save-as-reportupdatedxlsx.cs",
+      "title": "Load workbook \"Report.xlsx\", modify a named range, and save as \"ReportUpdated.xlsx\"."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs",
       "title": "Merge a range that spans the first worksheet row to create a header covering all columns."
     },
