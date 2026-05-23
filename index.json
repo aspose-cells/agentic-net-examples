@@ -3656,6 +3656,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "unmerge-previously-merged-cells-in-range-b1b4-and-restore-individual-cell-borders.cs",
+      "title": "Unmerge previously merged cells in range B1:B4 and restore individual cell borders."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-worksheetcollectioncreateunionrange-to-combine-address-a1b2d4e5-and-apply-a-bold-font-style-to-all-cells.cs",
       "title": "Use WorksheetCollection.CreateUnionRange to combine address \"A1:B2,D4:E5\" and apply a bold font style to all cells."
     },
