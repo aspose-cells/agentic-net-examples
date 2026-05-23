@@ -1976,6 +1976,11 @@
     },
     {
       "category": "format-cells",
+      "file": "export-the-theme-color-palette-to-a-json-file-for-external-analysis-and-documentation.cs",
+      "title": "Export the theme color palette to a JSON file for external analysis and documentation."
+    },
+    {
+      "category": "format-cells",
       "file": "extract-the-themes-font-scheme-and-list-the-primary-and-secondary-font-families-used.cs",
       "title": "Extract the theme\u2019s font scheme and list the primary and secondary font families used."
     },
