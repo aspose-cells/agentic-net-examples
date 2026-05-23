@@ -81,6 +81,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "configure-the-workbook-to-use-automatic-calculation-mode-and-verify-dependent-cells-update-instantly.cs",
+      "title": "Configure the workbook to use Automatic calculation mode and verify dependent cells update instantly."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs",
       "title": "Create a class derived from AbstractCalculationMonitor and override BeforeCalculate to inspect each cell."
     },
