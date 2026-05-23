@@ -6571,6 +6571,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs",
+      "title": "Configure WorkbookDesigner to ignore empty smart markers, preventing unnecessary row creation when source collections are empty."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-and-then-unhide-them-after-processing.cs",
       "title": "Configure WorkbookDesigner to process smart markers in hidden worksheets and then unhide them after processing."
     },
