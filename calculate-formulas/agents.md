@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs
 - return-a-twodimensional-object-array-from-a-custom-function-to-populate-a-worksheet-range.cs
 - replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs
+- create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs
