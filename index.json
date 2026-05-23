@@ -3776,6 +3776,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "set-findoptions-to-match-whole-cell-contents-when-locating-the-value-yes-in-range-f1f50.cs",
+      "title": "Set FindOptions to match whole cell contents when locating the value \"Yes\" in range F1:F50."
+    },
+    {
+      "category": "managing-ranges",
       "file": "transfer-only-cell-values-from-one-worksheet-range-to-another-worksheet-without-copying-formatting-styles.cs",
       "title": "Transfer only cell values from one worksheet range to another worksheet without copying formatting styles."
     },
