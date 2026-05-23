@@ -6686,6 +6686,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "group-masterdetail-data-by-placing-a-parent-smart-marker-above-a-child-marker-range.cs",
+      "title": "Group master\u2011detail data by placing a parent smart marker above a child marker range."
+    },
+    {
+      "category": "smart-markers",
       "file": "group-masterdetail-data-using-smart-marker-grouping-syntax-to-create-hierarchical-tables-across-rows.cs",
       "title": "Group master\u2011detail data using smart marker grouping syntax to create hierarchical tables across rows."
     },
