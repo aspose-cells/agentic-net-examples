@@ -4215,6 +4215,11 @@
       "title": "Write validation errors to a text file for later analysis and compliance reporting."
     },
     {
+      "category": "manage-formulas",
+      "file": "load-an-existing-workbook-then-assign-a-sum-formula-to-cell-b2-using-cellformula.cs",
+      "title": "Load an existing workbook, then assign a SUM formula to cell B2 using Cell.Formula."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
