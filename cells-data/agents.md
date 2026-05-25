@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - create-a-workbook-add-a-worksheet-and-import-custom-objects-while-preserving-html-formatting-in-description-fields.cs
 - after-importing-data-iterate-through-cells-to-count-how-many-contain-nonempty-html-content.cs
 - use-getstringvalue-with-withformatting-to-generate-a-userfriendly-report-line-that-includes-currency-symbols.cs
+- import-a-twodimensional-array-of-booleans-and-set-cell-style-to-display-checkmarks-for-true-values.cs
