@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - add-a-diagonal-text-watermark-using-times-new-roman-24point-size-and-30-opacity.cs
 - add-a-text-watermark-with-45degree-rotation-and-60-opacity-on-oddnumbered-pages.cs
 - add-a-text-watermark-with-no-rotation-and-20-opacity-on-evennumbered-pages.cs
+- add-a-text-watermark-with-30point-size-and-40-opacity-on-all-pdf-pages.cs
