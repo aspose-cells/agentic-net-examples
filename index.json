@@ -991,6 +991,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-summary-report-of-data-types-present-in-the-sheet-by-counting-occurrences-during-cell-enumeration.cs",
+      "title": "Create a summary report of data types present in the sheet by counting occurrences during cell enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-validation-allowing-dates-between-01012020-and-12312025-in-column-n.cs",
       "title": "Create a validation allowing dates between 01/01/2020 and 12/31/2025 in column N."
     },
