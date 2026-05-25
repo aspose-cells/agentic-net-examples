@@ -10831,6 +10831,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "instantiate-pdfsaveoptions-and-configure-desired-pdf-export-settings-for-the-workbook-conversion-process.cs",
+      "title": "Instantiate PdfSaveOptions and configure desired PDF export settings for the workbook conversion process."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs",
       "title": "Iterate through all worksheets and add a PDF bookmark for each using worksheet names as destinations."
     },
