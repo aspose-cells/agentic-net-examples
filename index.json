@@ -816,6 +816,11 @@
     },
     {
       "category": "cells-data",
+      "file": "after-importing-html-remove-all-script-tags-to-prevent-execution-of-embedded-scripts-within-cells.cs",
+      "title": "After importing HTML, remove all <script> tags to prevent execution of embedded scripts within cells."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
