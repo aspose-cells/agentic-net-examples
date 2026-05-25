@@ -1331,6 +1331,11 @@
     },
     {
       "category": "cells-data",
+      "file": "log-cell-address-value-and-data-type-for-auditing-by-writing-entries-to-a-csv-file-during-enumeration.cs",
+      "title": "Log cell address, value, and data type for auditing by writing entries to a CSV file during enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "log-each-cells-address-data-type-and-value-to-a-text-file-during-enumeration-for-auditing.cs",
       "title": "Log each cell's address, data type, and value to a text file during enumeration for auditing."
     },
