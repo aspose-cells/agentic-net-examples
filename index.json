@@ -1316,6 +1316,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-an-audit-log-detailing-each-modification-to-quoteprefix-properties-across-multiple-workbook-versions.cs",
+      "title": "Generate an audit log detailing each modification to QuotePrefix properties across multiple workbook versions."
+    },
+    {
+      "category": "cells-data",
       "file": "group-numeric-cell-values-into-bins-to-generate-histogram-data-while-enumerating-a-specific-column.cs",
       "title": "Group numeric cell values into bins to generate histogram data while enumerating a specific column."
     },
