@@ -736,6 +736,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-summing-column-d-for-rows-2100-placing-results-at-each-groups-bottom.cs",
+      "title": "Add subtotals summing column D for rows 2\u2011100, placing results at each group's bottom."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
       "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
     },
