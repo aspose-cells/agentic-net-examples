@@ -1271,6 +1271,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-importtableoptionscheckmergedcells-to-true-then-import-data-that-spans-across-merged-cell-ranges.cs",
+      "title": "Set ImportTableOptions.CheckMergedCells to true, then import data that spans across merged cell ranges."
+    },
+    {
+      "category": "cells-data",
       "file": "set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs",
       "title": "Set the firstRow offset to zero to overwrite existing data when importing a new dataset."
     },

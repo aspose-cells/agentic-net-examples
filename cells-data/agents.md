@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - create-a-hyperlink-that-references-an-external-pdf-file-ensuring-the-link-opens-in-a-new-browser-tab.cs
 - retrieve-formatted-cell-text-detect-numeric-patterns-and-replace-them-with-localized-number-formats-for-display.cs
 - use-importcustomobjects-with-preservehtml-enabled-to-keep-bold-tags-when-importing-product-descriptions.cs
+- set-importtableoptionscheckmergedcells-to-true-then-import-data-that-spans-across-merged-cell-ranges.cs
