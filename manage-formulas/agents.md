@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs
 - assign-the-same-formula-to-each-cell-in-column-b-using-a-loop-and-verify-correct-relative-references.cs
 - set-workbooksettingsmaxrowsofsharedformula-to-100-to-allow-larger-shared-formula-blocks.cs
+- use-cellformula-property-to-set-a-vlookup-formula-with-comma-separators-in-a-new-worksheet.cs
