@@ -10636,6 +10636,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-tsv-document-to-pdf-while-applying-pdfa2b-compliance-for-archival-purposes.cs",
+      "title": "Convert a TSV document to PDF while applying PDF/A\u20112b compliance for archival purposes."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs",
       "title": "Convert a TXT workbook to PDF, inserting page breaks after each paragraph for clarity."
     },
