@@ -901,6 +901,11 @@
     },
     {
       "category": "cells-data",
+      "file": "perform-caseinsensitive-sort-on-column-af-while-treating-numeric-strings-as-numbers.cs",
+      "title": "Perform case\u2011insensitive sort on column AF while treating numeric strings as numbers."
+    },
+    {
+      "category": "cells-data",
       "file": "perform-multilevel-sorting-first-column-e-ascending-then-column-f-descending.cs",
       "title": "Perform multi\u2011level sorting: first column E ascending, then column F descending."
     },
