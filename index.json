@@ -10660,6 +10660,11 @@
       "title": "Convert an XLSX workbook to PDF using default settings and verify output file size."
     },
     {
+      "category": "working-with-pdf",
+      "file": "set-pdf-compliance-to-pdfa3u-and-embed-xml-metadata-for-enhanced-accessibility.cs",
+      "title": "Set PDF compliance to PDF/A\u20113u and embed XML metadata for enhanced accessibility."
+    },
+    {
       "category": "working-with-shapes",
       "file": "access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs",
       "title": "Access connection points of shape FlowConnector and attach them to cells A1 and B2 for dynamic linking."

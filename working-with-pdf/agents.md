@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - convert-an-xls-workbook-to-pdfa1b-compliant-file-and-verify-compliance-with-external-validator.cs
 - convert-an-xlsm-workbook-to-pdfa2a-format-while-preserving-embedded-images-throughout-conversion.cs
 - convert-an-xlsb-file-to-pdf-and-set-pdf-creation-time-to-current-utc-timestamp.cs
+- set-pdf-compliance-to-pdfa3u-and-embed-xml-metadata-for-enhanced-accessibility.cs
