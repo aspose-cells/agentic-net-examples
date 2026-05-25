@@ -238,3 +238,4 @@ Output files are written to the working directory.
 - create-a-chart-data-series-from-column-values-by-enumerating-the-column-and-collecting-numeric-entries.cs
 - measure-pixel-dimensions-of-cell-text-during-enumeration-and-adjust-column-width-to-fit-content-without-clipping.cs
 - benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs
+- test-impact-of-maxdatarow-and-maxdatacolumn-limits-on-iteration-time-by-measuring-duration-with-and-without-constraints.cs
