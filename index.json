@@ -10626,6 +10626,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-csv-file-to-pdf-and-set-pdf-creation-time-to-a-specific-historical-date.cs",
+      "title": "Convert a CSV file to PDF and set PDF creation time to a specific historical date."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs",
       "title": "Convert a TSV document to PDF applying custom page margins for better readability."
     },
