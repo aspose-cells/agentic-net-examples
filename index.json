@@ -851,6 +851,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-datasorter-instance-with-stable-sorting-enabled-to-maintain-relative-order-of-equal-keys.cs",
+      "title": "Create a DataSorter instance with stable sorting enabled to maintain relative order of equal keys."
+    },
+    {
+      "category": "cells-data",
       "file": "find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs",
       "title": "Find all numeric values greater than 1000 across the worksheet and collect their addresses."
     },
