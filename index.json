@@ -10911,6 +10911,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsonepagepersheet-to-true-to-generate-a-separate-pdf-page-for-each-worksheet.cs",
+      "title": "Set PdfSaveOptions.OnePagePerSheet to true to generate a separate PDF page for each worksheet."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs",
       "title": "Set PdfSaveOptions.OutputBlankPageWhenNothingToPrint to false to trigger CellsException on empty workbooks."
     },
