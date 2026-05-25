@@ -217,3 +217,4 @@ Output files are written to the working directory.
 - generate-a-json-representation-of-all-cell-addresses-and-values-by-iterating-with-a-cells-enumerator.cs
 - create-a-summary-report-of-data-types-present-in-the-sheet-by-counting-occurrences-during-cell-enumeration.cs
 - compute-the-standard-deviation-of-numeric-values-in-a-column-using-a-columns-enumerator.cs
+- group-numeric-cell-values-into-bins-to-generate-histogram-data-while-enumerating-a-specific-column.cs
