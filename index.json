@@ -10656,6 +10656,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-an-image-watermark-that-retains-original-size-and-appears-in-the-lowerright-corner.cs",
+      "title": "Add an image watermark that retains original size and appears in the lower\u2011right corner."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-an-image-watermark-that-scales-to-fill-the-entire-page-while-maintaining-aspect-ratio.cs",
       "title": "Add an image watermark that scales to fill the entire page while maintaining aspect ratio."
     },

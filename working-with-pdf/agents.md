@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - add-an-image-watermark-from-png-byte-array-scaling-to-page-size-with-40-opacity.cs
 - add-an-image-watermark-from-jpeg-bytes-maintaining-original-dimensions-and-20-opacity.cs
 - add-an-image-watermark-that-scales-to-fill-the-entire-page-while-maintaining-aspect-ratio.cs
+- add-an-image-watermark-that-retains-original-size-and-appears-in-the-lowerright-corner.cs
