@@ -10846,6 +10846,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-workbook-containing-sparklines-ensuring-they-appear-as-inline-graphics-in-the-pdf.cs",
+      "title": "Convert a workbook containing sparklines, ensuring they appear as inline graphics in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-ods-spreadsheet-to-pdf-using-default-options-and-ensure-correct-rendering.cs",
       "title": "Convert an ODS spreadsheet to PDF using default options and ensure correct rendering."
     },
