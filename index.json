@@ -4286,6 +4286,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "define-a-named-range-with-an-index-formula-that-dynamically-adjusts-based-on-another-cells-value.cs",
+      "title": "Define a named range with an INDEX formula that dynamically adjusts based on another cell's value."
+    },
+    {
+      "category": "manage-formulas",
       "file": "detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs",
       "title": "Detect cells containing calculation errors after evaluation and log their addresses for investigation."
     },
