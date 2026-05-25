@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - set-maxrowsofsharedformula-to-zero-to-disable-shared-formulas-for-the-entire-workbook.cs
 - calculate-all-formulas-in-the-workbook-programmatically-using-workbookcalculate-and-retrieve-updated-cell-values.cs
 - read-the-calculated-result-of-cell-d5-after-invoking-the-worksheetcalculate-method.cs
+- use-calculateformula-method-to-evaluate-a-single-complex-formula-without-recalculating-the-whole-worksheet.cs
