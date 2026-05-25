@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - handle-an-outofrange-column-index-in-cellssubtotal-gracefully-by-catching-the-exception.cs
 - validate-that-cellssubtotal-throws-an-informative-error-when-startrow-exceeds-endrow.cs
 - clear-the-autofilter-criteria-on-column-aj-and-display-all-rows-again.cs
+- save-the-modified-workbook-to-an-xlsx-file-while-preserving-original-formatting.cs
