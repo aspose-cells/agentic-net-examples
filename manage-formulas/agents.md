@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - verify-that-vlookup-function-is-supported-by-consulting-the-supported-excel-functions-documentation.cs
 - create-a-unit-test-confirming-sumproduct-function-returns-expected-results-for-a-given-data-set.cs
 - apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs
+- create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs
