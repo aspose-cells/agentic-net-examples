@@ -10901,6 +10901,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs",
+      "title": "Save the workbook to PDF using workbook.Save(outputPath, SaveFormat.Pdf, pdfSaveOptions) for the configured export options."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs",
       "title": "Set PDF compliance to PDF/A\u20111a and ensure all fonts are embedded correctly."
     },
