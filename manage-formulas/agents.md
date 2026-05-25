@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - update-the-refersto-property-of-an-existing-named-range-to-include-a-new-column-in-its-formula.cs
 - generate-a-report-of-all-named-ranges-and-their-associated-formulas-for-documentation-purposes.cs
 - ensure-formula-strings-begin-with-an-equal-sign-before-setting-them-programmatically-to-avoid-parsing-errors.cs
+- use-the-setformula-method-to-assign-a-formula-that-references-an-external-workbook-in-a-cell.cs

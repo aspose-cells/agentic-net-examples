@@ -4406,6 +4406,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "use-the-setformula-method-to-assign-a-formula-that-references-an-external-workbook-in-a-cell.cs",
+      "title": "Use the SetFormula method to assign a formula that references an external workbook in a cell."
+    },
+    {
+      "category": "manage-formulas",
       "file": "verify-that-the-assigned-formula-uses-english-us-function-names-and-commas-as-argument-separators.cs",
       "title": "Verify that the assigned formula uses English (US) function names and commas as argument separators."
     },
