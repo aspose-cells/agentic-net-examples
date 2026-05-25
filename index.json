@@ -1186,6 +1186,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-getstringvalue-with-withformatting-to-generate-a-userfriendly-report-line-that-includes-currency-symbols.cs",
+      "title": "Use GetStringValue with WithFormatting to generate a user\u2011friendly report line that includes currency symbols."
+    },
+    {
+      "category": "cells-data",
       "file": "use-importarraylist-to-add-values-from-an-arraylist-into-a-worksheet-beginning-at-row-three.cs",
       "title": "Use ImportArrayList to add values from an ArrayList into a worksheet beginning at row three."
     },
