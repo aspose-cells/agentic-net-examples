@@ -11151,6 +11151,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "produce-a-landscapeoriented-pdf-for-wide-excel-sheets-to-improve-readability.cs",
+      "title": "Produce a landscape\u2011oriented PDF for wide Excel sheets to improve readability."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs",
       "title": "Programmatically remove a specific worksheet before saving the workbook as PDF to exclude its content."
     },
