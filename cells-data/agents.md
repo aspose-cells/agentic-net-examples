@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - add-subtotals-using-the-stddev-function-on-column-h-and-set-summary-position-to-bottom.cs
 - add-subtotals-using-the-var-function-on-column-i-with-outline-enabled-for-hierarchical-display.cs
 - add-subtotals-using-the-product-function-on-column-j-placing-summary-rows-at-the-top-of-groups.cs
+- add-subtotals-using-the-countnumbers-function-on-column-k-without-creating-outline-levels.cs
