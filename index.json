@@ -11025,6 +11025,11 @@
       "title": "Verify that embedded attachments are accessible from the generated PDF using a PDF viewer."
     },
     {
+      "category": "working-with-pdf",
+      "file": "verify-that-no-exceptions-are-thrown-during-export-when-ignoreerrors-is-enabled-and-source-errors-exist.cs",
+      "title": "Verify that no exceptions are thrown during export when IgnoreErrors is enabled and source errors exist."
+    },
+    {
       "category": "working-with-shapes",
       "file": "access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs",
       "title": "Access connection points of shape FlowConnector and attach them to cells A1 and B2 for dynamic linking."
