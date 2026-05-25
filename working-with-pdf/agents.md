@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - convert-a-tsv-workbook-to-pdf-with-one-page-per-sheet-and-no-blank-pages.cs
 - apply-aes256-encryption-with-user-and-owner-passwords-to-secure-the-pdf.cs
 - apply-aes256-encryption-with-only-a-user-password-to-protect-the-pdf.cs
+- apply-aes256-encryption-with-both-user-and-owner-passwords-then-save-workbook-as-pdf.cs
