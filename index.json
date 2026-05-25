@@ -10746,6 +10746,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-pdfsaveoptionsimageresample-to-150-dpi-to-reduce-pdf-size-while-maintaining-image-clarity.cs",
+      "title": "Configure PdfSaveOptions.ImageResample to 150 DPI to reduce PDF size while maintaining image clarity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-pdfsaveoptionspassword-and-encryptiontype-to-encrypt-pdf-with-a-strong-password.cs",
       "title": "Configure PdfSaveOptions.Password and EncryptionType to encrypt PDF with a strong password."
     },
