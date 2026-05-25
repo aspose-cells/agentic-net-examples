@@ -1321,6 +1321,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-error-handling-for-setcharacters-when-the-specified-range-exceeds-the-cells-text-length.cs",
+      "title": "Implement error handling for SetCharacters when the specified range exceeds the cell's text length."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-progress-reporting-by-raising-events-after-processing-each-hundred-cells-during-enumeration.cs",
       "title": "Implement progress reporting by raising events after processing each hundred cells during enumeration."
     },
