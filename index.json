@@ -1241,6 +1241,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs",
+      "title": "Set firstRow offset to five, then import a data table, pushing existing rows down without overwriting."
+    },
+    {
+      "category": "cells-data",
       "file": "set-importtableoptionscheckmergedcells-to-false-to-intentionally-skip-writing-into-merged-cell-ranges.cs",
       "title": "Set ImportTableOptions.CheckMergedCells to false to intentionally skip writing into merged cell ranges."
     },
