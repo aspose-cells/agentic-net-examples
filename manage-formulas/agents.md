@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - ensure-formula-strings-begin-with-an-equal-sign-before-setting-them-programmatically-to-avoid-parsing-errors.cs
 - use-the-setformula-method-to-assign-a-formula-that-references-an-external-workbook-in-a-cell.cs
 - disable-automatic-calculation-insert-formulas-then-manually-trigger-calculation-for-specific-worksheets-using-worksheetcalculateformula.cs
+- enable-the-calculation-chain-run-workbook-wide-calculation-and-measure-performance-improvement-over-default-mode.cs
