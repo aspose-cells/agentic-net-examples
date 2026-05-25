@@ -10731,6 +10731,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-print-titles-to-repeat-header-rows-on-each-pdf-page-for-better-readability.cs",
+      "title": "Apply print titles to repeat header rows on each PDF page for better readability."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs",
       "title": "Assign specific worksheet indices to PdfSaveOptions.SheetSet to export selected sheets as a single PDF."
     },
