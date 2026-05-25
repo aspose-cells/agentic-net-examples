@@ -761,6 +761,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-using-the-var-function-on-column-i-with-outline-enabled-for-hierarchical-display.cs",
+      "title": "Add subtotals using the Var function on column I, with outline enabled for hierarchical display."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
       "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
     },

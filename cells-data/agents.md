@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - add-subtotals-that-calculate-the-average-of-column-f-positioning-the-summary-rows-at-the-top.cs
 - add-subtotals-using-the-max-function-on-column-c-with-summary-rows-placed-after-each-group.cs
 - add-subtotals-using-the-stddev-function-on-column-h-and-set-summary-position-to-bottom.cs
+- add-subtotals-using-the-var-function-on-column-i-with-outline-enabled-for-hierarchical-display.cs
