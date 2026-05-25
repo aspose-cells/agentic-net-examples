@@ -282,3 +282,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-that-highlights-cells-with-quoteprefix-false-using-a-distinct-background-color.cs
 - programmatically-insert-an-apostrophe-prefix-into-numeric-cells-to-force-text-interpretation.cs
 - remove-the-leading-apostrophe-from-a-cell-by-setting-stylequoteprefix-to-false-via-styleflag.cs
+- ensure-that-disabling-quoteprefix-updates-does-not-affect-cell-comments-or-data-validation-dropdowns.cs
