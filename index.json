@@ -10726,6 +10726,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-a-custom-pdf-compression-level-to-reduce-file-size-while-maintaining-image-quality.cs",
+      "title": "Apply a custom PDF compression level to reduce file size while maintaining image quality."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-aes256-encryption-with-both-user-and-owner-passwords-then-save-workbook-as-pdf.cs",
       "title": "Apply AES\u2011256 encryption with both user and owner passwords, then save workbook as PDF."
     },

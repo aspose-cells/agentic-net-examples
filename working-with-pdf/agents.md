@@ -229,3 +229,4 @@ Output files are written to the working directory.
 - include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
 - convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs
 - enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs
+- apply-a-custom-pdf-compression-level-to-reduce-file-size-while-maintaining-image-quality.cs
