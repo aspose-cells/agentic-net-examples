@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs
 - enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs
 - apply-a-custom-pdf-compression-level-to-reduce-file-size-while-maintaining-image-quality.cs
+- add-a-digital-signature-to-the-pdf-generated-from-an-excel-workbook-for-authenticity.cs
