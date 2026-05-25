@@ -11166,6 +11166,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsx-workbook-set-pdfsaveoptionsoptimizationtype-to-standardsize-and-save-as-pdf.cs",
+      "title": "Load an XLSX workbook, set PdfSaveOptions.OptimizationType to StandardSize, and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "log-the-names-of-all-pdf-bookmarks-created-during-workbook-export-for-audit-purposes.cs",
       "title": "Log the names of all PDF bookmarks created during workbook export for audit purposes."
     },
