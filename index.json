@@ -1036,6 +1036,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-an-array-of-timestamps-then-format-cells-to-display-time-in-hhmmss-format-for-readability.cs",
+      "title": "Import an array of timestamps, then format cells to display time in HH:mm:ss format for readability."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-from-a-csv-file-into-a-worksheet-using-importdata-with-a-custom-icellsdatatable-implementation.cs",
       "title": "Import data from a CSV file into a worksheet using ImportData with a custom ICellsDataTable implementation."
     },
