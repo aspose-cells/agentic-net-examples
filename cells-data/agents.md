@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - use-importcustomobjects-with-a-mapping-dictionary-to-rename-columns-during-data-import-from-objects.cs
 - set-importtableoptionscheckmergedcells-to-false-to-intentionally-skip-writing-into-merged-cell-ranges.cs
 - after-importing-html-content-replace-all-br-tags-with-line-feed-characters-to-improve-cell-display.cs
+- retrieve-a-cells-formatted-string-detect-if-it-contains-a-url-and-convert-it-into-a-clickable-hyperlink.cs
