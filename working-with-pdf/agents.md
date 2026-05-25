@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs
 - configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs
 - set-custom-pdf-margins-of-05-inches-on-all-sides-using-pdfsaveoptions.cs
+- compress-pdf-content-using-flate-compression-to-reduce-file-size-while-preserving-quality.cs
