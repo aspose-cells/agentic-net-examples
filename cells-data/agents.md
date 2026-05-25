@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - apply-subtotals-with-isoutline-set-to-false-producing-a-flat-list-of-summary-rows.cs
 - apply-subtotals-with-summaryposition-set-to-top-inserting-summary-rows-before-each-group.cs
 - apply-subtotals-with-summaryposition-set-to-bottom-inserting-summary-rows-after-each-group.cs
+- use-cellssubtotal-with-column-index-derived-from-column-name-sales-to-sum-sales-figures.cs
