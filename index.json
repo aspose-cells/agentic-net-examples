@@ -1331,6 +1331,11 @@
     },
     {
       "category": "cells-data",
+      "file": "measure-pixel-dimensions-of-cell-text-during-enumeration-and-adjust-column-width-to-fit-content-without-clipping.cs",
+      "title": "Measure pixel dimensions of cell text during enumeration and adjust column width to fit content without clipping."
+    },
+    {
+      "category": "cells-data",
       "file": "obtain-a-cells-raw-numeric-string-by-calling-getstringvalue-with-the-withoutformatting-option.cs",
       "title": "Obtain a cell's raw numeric string by calling GetStringValue with the WithoutFormatting option."
     },
