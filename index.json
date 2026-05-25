@@ -4311,6 +4311,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-multiple-workbooks-in-a-batch-update-external-link-formulas-to-new-file-locations-and-save-each.cs",
+      "title": "Load multiple workbooks in a batch, update external link formulas to new file locations, and save each."
+    },
+    {
+      "category": "manage-formulas",
       "file": "loop-through-column-a-assign-incremental-row-references-in-a-multiplication-formula-and-store-results.cs",
       "title": "Loop through column A, assign incremental row references in a multiplication formula, and store results."
     },
