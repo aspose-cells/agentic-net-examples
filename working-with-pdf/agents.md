@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - validate-that-all-columns-fit-within-a-single-page-for-each-worksheet-when-fitallcolumnsononepage-is-true.cs
 - confirm-that-the-pdf-contains-the-expected-number-of-pages-respecting-the-maxpages-limit.cs
 - verify-that-no-exceptions-are-thrown-during-export-when-ignoreerrors-is-enabled-and-source-errors-exist.cs
+- confirm-that-string-crossing-behavior-follows-the-crossstringinpdf-setting-in-the-final-pdf.cs
