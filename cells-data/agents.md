@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs
 - enable-preservehtml-option-in-importtableoptions-to-keep-html-formatting-when-importing-rich-text-data.cs
 - set-checkmergedcells-to-true-before-importing-custom-objects-to-correctly-populate-merged-cell-ranges.cs
+- adjust-the-firstrow-parameter-to-shift-existing-rows-down-before-inserting-a-new-data-table.cs
