@@ -10731,6 +10731,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-custom-pdf-page-margins-to-control-content-positioning-during-excel-conversion.cs",
+      "title": "Apply custom PDF page margins to control content positioning during Excel conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-pdf-encryption-with-a-user-password-and-restrict-printing-using-pdfsaveoptionsencryptionoptions.cs",
       "title": "Apply PDF encryption with a user password and restrict printing using PdfSaveOptions.EncryptionOptions."
     },
