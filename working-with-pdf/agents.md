@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - convert-a-tsv-document-to-pdf-while-applying-pdfa2b-compliance-for-archival-purposes.cs
 - add-a-centered-text-watermark-with-arial-font-30point-size-and-50-opacity.cs
 - add-a-diagonal-text-watermark-using-times-new-roman-24point-size-and-30-opacity.cs
+- add-a-text-watermark-with-45degree-rotation-and-60-opacity-on-oddnumbered-pages.cs
