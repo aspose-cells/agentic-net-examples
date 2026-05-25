@@ -10746,6 +10746,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs",
+      "title": "Save the workbook to PDF using PdfSaveOptions with configured settings and verify output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs",
       "title": "Set PDF compliance to PDF/A\u20111a and ensure all fonts are embedded correctly."
     },
