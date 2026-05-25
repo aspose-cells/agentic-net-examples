@@ -270,3 +270,4 @@ Output files are written to the working directory.
 - apply-a-styleflag-that-updates-only-the-quoteprefix-property-while-leaving-other-style-attributes-unchanged.cs
 - use-a-styleflag-to-batch-update-quoteprefix-settings-for-every-cell-in-a-specified-worksheet.cs
 - validate-that-cells-containing-mixed-formatting-retain-their-quote-prefix-after-a-styleflag-update.cs
+- convert-the-workbook-to-html-and-verify-that-leading-apostrophes-appear-correctly-in-rendered-cells.cs

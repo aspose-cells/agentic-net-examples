@@ -1011,6 +1011,11 @@
     },
     {
       "category": "cells-data",
+      "file": "convert-the-workbook-to-html-and-verify-that-leading-apostrophes-appear-correctly-in-rendered-cells.cs",
+      "title": "Convert the workbook to HTML and verify that leading apostrophes appear correctly in rendered cells."
+    },
+    {
+      "category": "cells-data",
       "file": "count-cells-containing-a-specific-keyword-by-scanning-each-cells-text-during-enumeration.cs",
       "title": "Count cells containing a specific keyword by scanning each cell's text during enumeration."
     },
