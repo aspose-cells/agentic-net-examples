@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - import-a-twodimensional-array-of-strings-then-apply-a-custom-font-style-to-header-row-for-emphasis.cs
 - create-a-hyperlink-that-links-to-a-specific-cell-in-another-workbook-using-external-reference-syntax.cs
 - use-getstringvalue-without-formatting-to-extract-raw-percentage-strings-for-statistical-analysis-in-external-module.cs
+- import-data-from-an-arraylist-of-decimal-numbers-then-round-each-cell-value-to-two-decimal-places.cs
