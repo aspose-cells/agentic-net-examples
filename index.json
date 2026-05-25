@@ -10971,6 +10971,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs",
+      "title": "Hide rows and columns marked as hidden in Excel when generating the PDF output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs",
       "title": "Implement batch conversion of multiple XLSX files in a directory to individual PDF files."
     },

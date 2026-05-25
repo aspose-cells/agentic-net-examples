@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - maintain-conditional-formatting-colors-in-the-pdf-by-enabling-appropriate-rendering-options.cs
 - include-data-validation-dropdowns-as-static-text-in-the-pdf-to-reflect-cell-constraints.cs
 - render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs
+- hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs
