@@ -871,6 +871,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-conditional-formatting-that-highlights-cells-with-quoteprefix-false-using-a-distinct-background-color.cs",
+      "title": "Apply conditional formatting that highlights cells with QuotePrefix false using a distinct background color."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-descending-sort-on-column-d-while-preserving-original-row-grouping-via-addkey-method.cs",
       "title": "Apply descending sort on column D while preserving original row grouping via AddKey method."
     },
