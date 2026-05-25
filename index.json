@@ -861,6 +861,11 @@
     },
     {
       "category": "cells-data",
+      "file": "search-for-cells-containing-the-text-pending-and-highlight-them-with-yellow-fill.cs",
+      "title": "Search for cells containing the text 'Pending' and highlight them with yellow fill."
+    },
+    {
+      "category": "cells-data",
       "file": "select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs",
       "title": "Select a worksheet by name and obtain its Cells collection for further operations."
     },
