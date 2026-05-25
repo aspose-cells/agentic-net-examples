@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - validate-that-cellssubtotal-throws-an-informative-error-when-startrow-exceeds-endrow.cs
 - clear-the-autofilter-criteria-on-column-aj-and-display-all-rows-again.cs
 - save-the-modified-workbook-to-an-xlsx-file-while-preserving-original-formatting.cs
+- save-the-workbook-to-a-csv-file-ensuring-numeric-values-are-not-quoted-unnecessarily.cs
