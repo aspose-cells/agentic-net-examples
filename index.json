@@ -11166,6 +11166,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsm-file-apply-standardsize-optimization-and-export-to-pdf.cs",
+      "title": "Load an XLSM file, apply StandardSize optimization, and export to PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsx-workbook-calculate-formulas-and-save-as-a-passwordprotected-pdf.cs",
       "title": "Load an XLSX workbook, calculate formulas, and save as a password\u2011protected PDF."
     },
