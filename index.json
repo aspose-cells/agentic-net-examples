@@ -10941,6 +10941,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs",
+      "title": "Limit PDF output to ten pages by setting PdfSaveOptions.MaxPageCount to 10."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-a-tsv-workbook-enable-onepagepersheet-and-export-to-pdf-with-default-security.cs",
       "title": "Load a TSV workbook, enable OnePagePerSheet, and export to PDF with default security."
     },

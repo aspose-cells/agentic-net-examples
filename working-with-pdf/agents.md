@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs
 - configure-pdfsaveoptionsimageresample-to-150-dpi-to-reduce-pdf-size-while-maintaining-image-clarity.cs
 - set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs
+- limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs
