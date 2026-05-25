@@ -1021,6 +1021,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-from-an-arraylist-containing-mixed-types-specifying-column-data-types-to-ensure-correct-cell-formatting.cs",
+      "title": "Import data from an ArrayList containing mixed types, specifying column data types to ensure correct cell formatting."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs",
       "title": "Insert a hyperlink into a cell using the HyperlinkCollection.Add method with display text and URL."
     },
