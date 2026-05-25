@@ -10896,6 +10896,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-only-selected-ranges-of-an-excel-worksheet-to-pdf-excluding-hidden-rows-and-columns.cs",
+      "title": "Convert only selected ranges of an Excel worksheet to PDF, excluding hidden rows and columns."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-a-named-destination-for-a-chart-object-and-link-a-pdf-bookmark-to-it.cs",
       "title": "Create a named destination for a chart object and link a PDF bookmark to it."
     },
