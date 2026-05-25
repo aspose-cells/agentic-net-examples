@@ -233,3 +233,4 @@ Output files are written to the working directory.
 - adjust-column-width-based-on-measured-pixel-width-of-cell-contents-using-the-measurement-api-during-enumeration.cs
 - set-row-height-dynamically-according-to-the-tallest-cell-content-measured-in-pixels-while-enumerating-rows.cs
 - profile-cpu-usage-while-enumerating-a-large-worksheet-to-identify-performance-bottlenecks-in-the-iteration-loop.cs
+- detect-and-log-cells-containing-null-values-during-enumeration-to-assist-in-data-completeness-analysis.cs
