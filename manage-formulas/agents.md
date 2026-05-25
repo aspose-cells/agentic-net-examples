@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - verify-that-the-npv-function-is-supported-and-correctly-calculates-net-present-value-for-sample-cash-flows.cs
 - convert-all-formulas-to-english-us-syntax-with-commas-and-validate-successful-calculation-across-the-workbook.cs
 - generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs
+- load-an-existing-workbook-set-a-formula-referencing-an-external-file-and-save-changes.cs
