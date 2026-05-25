@@ -781,6 +781,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-validation-restricting-column-g-values-to-integers-between-10-and-500.cs",
+      "title": "Add validation restricting column G values to integers between 10 and 500."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
