@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - add-subtotals-summing-column-d-for-rows-2100-placing-results-at-each-groups-bottom.cs
 - add-subtotals-that-count-entries-in-column-b-for-rows-5200-using-outline-grouping.cs
 - add-subtotals-that-calculate-the-average-of-column-f-positioning-the-summary-rows-at-the-top.cs
+- add-subtotals-using-the-max-function-on-column-c-with-summary-rows-placed-after-each-group.cs

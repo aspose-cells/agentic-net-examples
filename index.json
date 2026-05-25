@@ -751,6 +751,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-using-the-max-function-on-column-c-with-summary-rows-placed-after-each-group.cs",
+      "title": "Add subtotals using the Max function on column C, with summary rows placed after each group."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
       "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
     },
