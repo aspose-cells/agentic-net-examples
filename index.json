@@ -806,6 +806,11 @@
     },
     {
       "category": "cells-data",
+      "file": "after-importing-data-iterate-through-cells-to-count-how-many-contain-nonempty-html-content.cs",
+      "title": "After importing data, iterate through cells to count how many contain non\u2011empty HTML content."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
