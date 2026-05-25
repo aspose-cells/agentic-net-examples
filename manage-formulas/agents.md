@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs
 - create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs
 - assign-the-same-formula-to-each-cell-in-column-b-using-a-loop-and-verify-correct-relative-references.cs
+- set-workbooksettingsmaxrowsofsharedformula-to-100-to-allow-larger-shared-formula-blocks.cs

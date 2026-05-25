@@ -4291,6 +4291,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-workbooksettingsmaxrowsofsharedformula-to-100-to-allow-larger-shared-formula-blocks.cs",
+      "title": "Set Workbook.Settings.MaxRowsOfSharedFormula to 100 to allow larger shared formula blocks."
+    },
+    {
+      "category": "manage-formulas",
       "file": "use-calculateformula-method-to-evaluate-a-single-complex-formula-without-recalculating-the-whole-worksheet.cs",
       "title": "Use CalculateFormula method to evaluate a single complex formula without recalculating the whole worksheet."
     },
