@@ -4301,6 +4301,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "enable-the-calculation-chain-run-workbook-wide-calculation-and-measure-performance-improvement-over-default-mode.cs",
+      "title": "Enable the calculation chain, run workbook-wide calculation, and measure performance improvement over default mode."
+    },
+    {
+      "category": "manage-formulas",
       "file": "ensure-formula-strings-begin-with-an-equal-sign-before-setting-them-programmatically-to-avoid-parsing-errors.cs",
       "title": "Ensure formula strings begin with an equal sign before setting them programmatically to avoid parsing errors."
     },
