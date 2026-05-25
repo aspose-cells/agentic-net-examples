@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - import-a-twodimensional-array-of-timestamps-then-sort-rows-based-on-the-earliest-timestamp-column.cs
 - use-getstringvalue-without-formatting-to-extract-scientific-notation-strings-for-further-numeric-conversion.cs
 - import-custom-objects-with-nested-collections-flattening-nested-data-into-separate-columns-using-a-custom-mapping-function.cs
+- retrieve-formatted-cell-text-replace-commas-with-semicolons-and-write-the-modified-string-back-to-the-same-cell.cs

@@ -1166,6 +1166,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-formatted-cell-text-replace-commas-with-semicolons-and-write-the-modified-string-back-to-the-same-cell.cs",
+      "title": "Retrieve formatted cell text, replace commas with semicolons, and write the modified string back to the same cell."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-raw-string-values-from-merged-cells-concatenate-them-and-store-the-result-in-a-separate-summary-cell.cs",
       "title": "Retrieve raw string values from merged cells, concatenate them, and store the result in a separate summary cell."
     },
