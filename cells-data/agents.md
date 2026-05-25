@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - group-numeric-cell-values-into-bins-to-generate-histogram-data-while-enumerating-a-specific-column.cs
 - export-numeric-column-data-to-a-binary-file-after-enumerating-cells-and-converting-values-to-littleendian-format.cs
 - demonstrate-data-inconsistencies-by-reading-cell-values-without-enabling-multithreadreading-in-a-multithreaded-scenario.cs
+- test-thread-safety-by-having-multiple-threads-read-the-same-cell-simultaneously-after-setting-multithreadreading-true.cs
