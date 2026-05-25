@@ -756,6 +756,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-using-the-product-function-on-column-j-placing-summary-rows-at-the-top-of-groups.cs",
+      "title": "Add subtotals using the Product function on column J, placing summary rows at the top of groups."
+    },
+    {
+      "category": "cells-data",
       "file": "add-subtotals-using-the-stddev-function-on-column-h-and-set-summary-position-to-bottom.cs",
       "title": "Add subtotals using the StdDev function on column H, and set summary position to bottom."
     },
