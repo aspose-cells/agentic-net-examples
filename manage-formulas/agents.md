@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - measure-memory-usage-while-calculating-formulas-with-and-without-the-calculation-chain-enabled-on-large-datasets.cs
 - use-the-cellcalculate-method-to-evaluate-a-formula-that-references-a-previously-defined-named-range.cs
 - retrieve-precedent-cells-for-a-specific-formula-cell-using-the-getprecedents-method-and-log-their-addresses.cs
+- retrieve-dependent-cells-for-a-formula-using-the-getdependents-method-and-export-the-list-to-a-csv-file.cs
