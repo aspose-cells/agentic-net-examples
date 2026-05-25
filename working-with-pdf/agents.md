@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs
+- convert-an-ods-spreadsheet-to-pdf-using-default-options-and-ensure-correct-rendering.cs
