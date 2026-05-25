@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - configure-pdfsaveoptionspassword-and-encryptiontype-to-encrypt-pdf-with-a-strong-password.cs
 - use-crossstring-to-position-a-logo-image-at-coordinates-100200-in-the-pdf.cs
 - use-crossstring-to-overlay-the-word-confidential-at-the-bottom-of-each-pdf-page.cs
+- specify-crossstring-coordinates-to-place-custom-text-precisely-within-the-generated-pdf.cs
