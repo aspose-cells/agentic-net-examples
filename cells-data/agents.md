@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - detect-duplicate-text-entries-in-a-column-by-enumerating-the-column-and-tracking-occurrences.cs
 - log-each-cells-address-data-type-and-value-to-a-text-file-during-enumeration-for-auditing.cs
 - calculate-average-of-numeric-cells-per-column-using-a-columns-enumerator-and-store-results-in-a-summary-row.cs
+- generate-a-json-representation-of-all-cell-addresses-and-values-by-iterating-with-a-cells-enumerator.cs
