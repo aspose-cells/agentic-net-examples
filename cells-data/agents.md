@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs
 - locate-cells-with-formulas-that-return-div0-errors-and-replace-them-with-zero.cs
 - identify-duplicate-entries-in-column-q-and-mark-them-with-red-background.cs
+- search-for-cells-containing-the-word-error-ignoring-case-and-highlight-them-orange.cs
