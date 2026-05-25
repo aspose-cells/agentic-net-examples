@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - update-external-link-paths-in-formulas-after-moving-source-workbooks-to-a-new-directory.cs
 - programmatically-remove-all-external-references-from-formulas-in-a-workbook-to-prepare-for-distribution.cs
 - load-multiple-workbooks-in-a-batch-update-external-link-formulas-to-new-file-locations-and-save-each.cs
+- create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs
