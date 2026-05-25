@@ -1451,6 +1451,11 @@
     },
     {
       "category": "cells-data",
+      "file": "read-the-stylequoteprefix-property-of-the-cell-and-log-its-value.cs",
+      "title": "Read the Style.QuotePrefix property of the cell and log its value."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cells-formatted-string-detect-currency-symbols-and-replace-them-with-localized-equivalents.cs",
       "title": "Retrieve a cell's formatted string, detect currency symbols, and replace them with localized equivalents."
     },
