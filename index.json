@@ -1541,6 +1541,11 @@
     },
     {
       "category": "cells-data",
+      "file": "test-impact-of-maxdatarow-and-maxdatacolumn-limits-on-iteration-time-by-measuring-duration-with-and-without-constraints.cs",
+      "title": "Test impact of MaxDataRow and MaxDataColumn limits on iteration time by measuring duration with and without constraints."
+    },
+    {
+      "category": "cells-data",
       "file": "test-thread-safety-by-having-multiple-threads-read-the-same-cell-simultaneously-after-setting-multithreadreading-true.cs",
       "title": "Test thread safety by having multiple threads read the same cell simultaneously after setting MultiThreadReading true."
     },
