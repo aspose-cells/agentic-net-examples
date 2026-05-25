@@ -4241,6 +4241,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "read-the-calculated-result-of-cell-d5-after-invoking-the-worksheetcalculate-method.cs",
+      "title": "Read the calculated result of cell D5 after invoking the Worksheet.Calculate method."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-maxrowsofsharedformula-to-zero-to-disable-shared-formulas-for-the-entire-workbook.cs",
       "title": "Set MaxRowsOfSharedFormula to zero to disable shared formulas for the entire workbook."
     },
