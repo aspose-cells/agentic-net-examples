@@ -781,6 +781,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
+      "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-descending-sort-on-column-d-while-preserving-original-row-grouping-via-addkey-method.cs",
       "title": "Apply descending sort on column D while preserving original row grouping via AddKey method."
     },
