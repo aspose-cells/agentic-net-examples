@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs
 - programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs
 - load-a-workbook-modify-a-formula-to-reference-a-different-cell-and-recalculate-to-verify-updated-value.cs
+- check-that-the-sumproduct-function-appears-in-the-supported-excel-functions-list-before-using-it.cs
