@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsignoreerrors-to-true-to-continue-pdf-generation-despite-rendering-errors.cs
 - create-a-pdfbookmarkentry-pointing-to-cell-a1-on-a-chart-sheet-and-assign-it-to-the-sheets-bookmark.cs
 - enable-pdfsaveoptionsaddpdfbookmarks-to-include-pdf-bookmarks-for-each-worksheet-in-the-output.cs
+- set-pdfsaveoptionscrossstringinpdf-to-true-to-prevent-string-splitting-across-lines-in-the-pdf.cs
