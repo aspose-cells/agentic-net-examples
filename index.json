@@ -1016,6 +1016,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-a-cells-formatted-string-value-using-getstringvalue-with-the-withformatting-strategy.cs",
+      "title": "Retrieve a cell's formatted string value using GetStringValue with the WithFormatting strategy."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-the-worksheets-maximum-display-range-and-use-it-to-define-a-print-area.cs",
       "title": "Retrieve the worksheet's maximum display range and use it to define a print area."
     },
