@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - add-validation-restricting-column-g-values-to-integers-between-10-and-500.cs
 - enable-incell-dropdown-for-column-h-by-setting-validationincelldropdown-to-true.cs
 - retrieve-validation-details-of-cell-j5-and-log-its-type-and-formula-values.cs
+- check-whether-cell-k10-uses-an-incell-dropdown-and-output-the-result-to-console.cs
