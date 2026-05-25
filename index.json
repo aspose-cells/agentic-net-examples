@@ -10786,6 +10786,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "create-a-pdfbookmarkentry-pointing-to-cell-a1-on-a-chart-sheet-and-assign-it-to-the-sheets-bookmark.cs",
+      "title": "Create a PdfBookmarkEntry pointing to cell A1 on a chart sheet and assign it to the sheet\u2019s Bookmark."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs",
       "title": "Create hierarchical PDF bookmarks with parent chapter and child section entries for navigation."
     },
