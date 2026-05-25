@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - add-validation-that-disallows-blank-entries-in-column-v-and-displays-an-error-alert.cs
 - validate-that-column-ak-contains-unique-email-addresses-and-display-an-error-for-duplicates.cs
 - create-a-validation-that-only-permits-time-values-between-0900-and-1700-in-column-t.cs
+- add-validation-restricting-column-s-values-to-a-predefined-array-of-strings.cs
