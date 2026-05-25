@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - compare-two-worksheets-cell-by-cell-using-enumerators-and-generate-a-diff-report-highlighting-mismatches.cs
 - synchronize-changes-from-a-source-worksheet-to-a-target-worksheet-by-iterating-cells-and-copying-modified-values.cs
 - calculate-the-total-number-of-merged-regions-by-counting-merge-occurrences-while-enumerating-the-worksheet.cs
+- adjust-column-width-based-on-measured-pixel-width-of-cell-contents-using-the-measurement-api-during-enumeration.cs
