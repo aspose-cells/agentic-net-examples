@@ -10841,6 +10841,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "ensure-that-each-worksheet-starts-on-a-new-pdf-page-when-onepagepersheet-is-set.cs",
+      "title": "Ensure that each worksheet starts on a new PDF page when OnePagePerSheet is set."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "export-a-workbook-containing-embedded-hyperlinks-and-verify-that-links-remain-functional-in-the-pdf.cs",
       "title": "Export a workbook containing embedded hyperlinks and verify that links remain functional in the PDF."
     },
