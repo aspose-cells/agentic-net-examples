@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - confirm-that-the-pdf-contains-the-expected-number-of-pages-respecting-the-maxpages-limit.cs
 - verify-that-no-exceptions-are-thrown-during-export-when-ignoreerrors-is-enabled-and-source-errors-exist.cs
 - confirm-that-string-crossing-behavior-follows-the-crossstringinpdf-setting-in-the-final-pdf.cs
+- validate-that-draw-object-bounds-captured-during-rendering-match-the-visual-positions-in-the-pdf.cs

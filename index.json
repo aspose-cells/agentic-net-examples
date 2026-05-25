@@ -11021,6 +11021,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "validate-that-draw-object-bounds-captured-during-rendering-match-the-visual-positions-in-the-pdf.cs",
+      "title": "Validate that draw object bounds captured during rendering match the visual positions in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "validate-that-the-exported-pdf-contains-the-expected-number-of-pages-using-a-pdf-inspection-library.cs",
       "title": "Validate that the exported PDF contains the expected number of pages using a PDF inspection library."
     },
