@@ -806,6 +806,11 @@
     },
     {
       "category": "cells-data",
+      "file": "adjust-column-widths-dynamically-based-on-measured-pixel-width-of-longest-cell-content-during-column-enumeration.cs",
+      "title": "Adjust column widths dynamically based on measured pixel width of longest cell content during column enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "adjust-the-firstrow-parameter-to-shift-existing-rows-down-before-inserting-a-new-data-table.cs",
       "title": "Adjust the firstRow parameter to shift existing rows down before inserting a new data table."
     },
