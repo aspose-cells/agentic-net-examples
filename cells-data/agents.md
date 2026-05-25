@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs
 - convert-string-numeric-values-only-in-the-first-worksheet-while-leaving-other-sheets-unchanged.cs
 - convert-numeric-strings-within-range-a1c10-on-a-worksheet-and-verify-conversion.cs
+- convert-numeric-strings-in-a-range-using-culturespecific-decimal-separators-and-ensure-correct-parsing.cs
