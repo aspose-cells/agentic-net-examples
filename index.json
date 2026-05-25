@@ -4301,6 +4301,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "use-cellformula-property-to-set-a-vlookup-formula-with-comma-separators-in-a-new-worksheet.cs",
+      "title": "Use Cell.Formula property to set a VLOOKUP formula with comma separators in a new worksheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "verify-that-the-assigned-formula-uses-english-us-function-names-and-commas-as-argument-separators.cs",
       "title": "Verify that the assigned formula uses English (US) function names and commas as argument separators."
     },
