@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - apply-a-custom-font-substitution-rule-via-pdfsaveoptions-to-handle-missing-fonts-during-pdf-generation.cs
 - implement-error-handling-that-retries-pdf-export-with-outputblankpagewhennothingtoprint-set-to-true-after-failure.cs
 - extract-the-list-of-named-destinations-from-an-exported-pdf-using-a-pdf-parsing-library.cs
+- programmatically-set-the-pdf-document-title-metadata-based-on-the-workbooks-name-property.cs
