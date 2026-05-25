@@ -10916,6 +10916,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs",
+      "title": "Embed all fonts used in the workbook into the PDF to ensure consistent rendering on any device."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsaddpdfbookmarks-to-include-pdf-bookmarks-for-each-worksheet-in-the-output.cs",
       "title": "Enable PdfSaveOptions.AddPdfBookmarks to include PDF bookmarks for each worksheet in the output."
     },
