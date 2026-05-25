@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - disable-automatic-calculation-insert-formulas-then-manually-trigger-calculation-for-specific-worksheets-using-worksheetcalculateformula.cs
 - enable-the-calculation-chain-run-workbook-wide-calculation-and-measure-performance-improvement-over-default-mode.cs
 - disable-the-calculation-chain-recalculate-a-single-worksheet-and-compare-execution-time-with-chain-enabled.cs
+- benchmark-calculation-time-for-a-workbook-using-direct-evaluation-versus-calculation-chain-on-identical-formula-sets.cs
