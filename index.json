@@ -786,6 +786,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-validation-restricting-column-s-values-to-a-predefined-array-of-strings.cs",
+      "title": "Add validation restricting column S values to a predefined array of strings."
+    },
+    {
+      "category": "cells-data",
       "file": "add-validation-that-disallows-blank-entries-in-column-v-and-displays-an-error-alert.cs",
       "title": "Add validation that disallows blank entries in column V and displays an error alert."
     },
