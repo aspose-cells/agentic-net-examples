@@ -816,6 +816,11 @@
     },
     {
       "category": "cells-data",
+      "file": "after-importing-html-content-verify-that-image-tags-are-ignored-and-do-not-affect-cell-formatting.cs",
+      "title": "After importing HTML content, verify that image tags are ignored and do not affect cell formatting."
+    },
+    {
+      "category": "cells-data",
       "file": "after-importing-html-remove-all-script-tags-to-prevent-execution-of-embedded-scripts-within-cells.cs",
       "title": "After importing HTML, remove all <script> tags to prevent execution of embedded scripts within cells."
     },
