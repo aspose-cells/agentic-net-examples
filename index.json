@@ -1066,6 +1066,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-a-rows-enumerator-traverse-each-row-and-sum-values-in-the-first-column.cs",
+      "title": "Generate a Rows enumerator, traverse each row, and sum values in the first column."
+    },
+    {
+      "category": "cells-data",
       "file": "handle-an-outofrange-column-index-in-cellssubtotal-gracefully-by-catching-the-exception.cs",
       "title": "Handle an out\u2011of\u2011range column index in Cells.Subtotal gracefully by catching the exception."
     },
