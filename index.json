@@ -1216,6 +1216,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-importcustomobjects-with-a-mapping-dictionary-to-rename-columns-during-data-import-from-objects.cs",
+      "title": "Use ImportCustomObjects with a mapping dictionary to rename columns during data import from objects."
+    },
+    {
+      "category": "cells-data",
       "file": "validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs",
       "title": "Validate cell content by retrieving raw string values and comparing them against expected numeric strings."
     },
