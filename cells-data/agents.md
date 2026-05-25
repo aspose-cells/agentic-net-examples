@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - set-row-height-dynamically-according-to-the-tallest-cell-content-measured-in-pixels-while-enumerating-rows.cs
 - profile-cpu-usage-while-enumerating-a-large-worksheet-to-identify-performance-bottlenecks-in-the-iteration-loop.cs
 - detect-and-log-cells-containing-null-values-during-enumeration-to-assist-in-data-completeness-analysis.cs
+- generate-a-summary-of-empty-versus-filled-cells-by-counting-each-type-during-full-worksheet-enumeration.cs
