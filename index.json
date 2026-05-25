@@ -10686,6 +10686,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "call-workbookcalculateformula-to-recalculate-all-formulas-before-exporting-to-pdf.cs",
+      "title": "Call Workbook.CalculateFormula to recalculate all formulas before exporting to PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "catch-cellsexception-during-pdf-save-to-handle-cases-where-nothing-was-printed.cs",
       "title": "Catch CellsException during PDF save to handle cases where nothing was printed."
     },

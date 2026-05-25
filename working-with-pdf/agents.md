@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - programmatically-set-the-pdf-document-title-metadata-based-on-the-workbooks-name-property.cs
 - create-a-pdf-bookmark-that-navigates-to-a-specific-cell-range-using-a-named-destination-reference.cs
 - load-an-excel-workbook-xls-or-xlsx-using-the-workbook-constructor-or-workbookload-method.cs
+- call-workbookcalculateformula-to-recalculate-all-formulas-before-exporting-to-pdf.cs
