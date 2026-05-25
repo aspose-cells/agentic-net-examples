@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsonepagepersheet-to-true-to-generate-a-separate-pdf-page-for-each-worksheet.cs
 - enable-pdfsaveoptionsrendersolidgridlines-to-draw-solid-gridlines-in-the-exported-pdf.cs
 - add-file-attachments-to-pdfsaveoptionsattachments-collection-to-embed-external-documents-in-the-pdf.cs
+- set-pdfsaveoptionscompliance-to-pdfcompliancepdfa1a-for-pdfa1a-compliant-output-that-meets-archival-standards.cs

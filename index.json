@@ -10911,6 +10911,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionscompliance-to-pdfcompliancepdfa1a-for-pdfa1a-compliant-output-that-meets-archival-standards.cs",
+      "title": "Set PdfSaveOptions.Compliance to PdfCompliance.PdfA1a for PDF/A\u20111a compliant output that meets archival standards."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionscompressionlevel-to-maximum-to-reduce-the-size-of-the-generated-pdf-file.cs",
       "title": "Set PdfSaveOptions.CompressionLevel to maximum to reduce the size of the generated PDF file."
     },
