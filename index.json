@@ -786,6 +786,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-subtotals-on-filtered-data-confirming-that-only-visible-rows-are-included-in-calculations.cs",
+      "title": "Apply subtotals on filtered data, confirming that only visible rows are included in calculations."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
       "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
     },
