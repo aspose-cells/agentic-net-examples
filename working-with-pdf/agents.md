@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs
 - apply-print-titles-to-repeat-header-rows-on-each-pdf-page-for-better-readability.cs
 - set-pdf-page-breaks-based-on-excel-page-breaks-to-maintain-original-pagination.cs
+- include-row-and-column-headings-on-each-pdf-page-for-reference-using-pdfsaveoptions.cs

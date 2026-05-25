@@ -10996,6 +10996,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "include-row-and-column-headings-on-each-pdf-page-for-reference-using-pdfsaveoptions.cs",
+      "title": "Include row and column headings on each PDF page for reference using PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs",
       "title": "Increase image resampling quality to 300 DPI for sharper images in the generated PDF."
     },
