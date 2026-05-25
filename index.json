@@ -4296,6 +4296,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "disable-automatic-calculation-insert-formulas-then-manually-trigger-calculation-for-specific-worksheets-using-worksheetcalculateformula.cs",
+      "title": "Disable automatic calculation, insert formulas, then manually trigger calculation for specific worksheets using Worksheet.CalculateFormula."
+    },
+    {
+      "category": "manage-formulas",
       "file": "ensure-formula-strings-begin-with-an-equal-sign-before-setting-them-programmatically-to-avoid-parsing-errors.cs",
       "title": "Ensure formula strings begin with an equal sign before setting them programmatically to avoid parsing errors."
     },
