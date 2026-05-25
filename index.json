@@ -4391,6 +4391,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-precedent-cells-for-a-specific-formula-cell-using-the-getprecedents-method-and-log-their-addresses.cs",
+      "title": "Retrieve precedent cells for a specific formula cell using the GetPrecedents method and log their addresses."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs",
       "title": "Retrieve the formula string from cell E10 and log it for audit purposes."
     },
