@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - count-cells-containing-a-specific-keyword-by-scanning-each-cells-text-during-enumeration.cs
 - generate-a-list-of-unique-column-headers-by-enumerating-the-first-row-and-storing-distinct-values.cs
 - map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs
+- compute-a-checksum-of-all-cell-values-by-concatenating-string-representations-during-enumeration-and-applying-a-hash-function.cs
