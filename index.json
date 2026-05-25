@@ -10776,6 +10776,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs",
+      "title": "Implement batch conversion of multiple XLSX files in a directory to individual PDF files."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs",
       "title": "Iterate through all worksheets and add a PDF bookmark for each using worksheet names as destinations."
     },
