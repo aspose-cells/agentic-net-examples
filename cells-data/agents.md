@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - add-subtotals-using-the-product-function-on-column-j-placing-summary-rows-at-the-top-of-groups.cs
 - add-subtotals-using-the-countnumbers-function-on-column-k-without-creating-outline-levels.cs
 - add-subtotals-for-multiple-columns-simultaneously-summing-columns-m-and-n-together.cs
+- apply-subtotals-after-sorting-the-worksheet-by-column-a-to-ensure-grouped-data-is-correct.cs
