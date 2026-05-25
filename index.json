@@ -10646,6 +10646,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-an-xlsb-file-to-pdf-and-set-pdf-creation-time-to-current-utc-timestamp.cs",
+      "title": "Convert an XLSB file to PDF and set PDF creation time to current UTC timestamp."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-xlsm-workbook-to-pdfa2a-format-while-preserving-embedded-images-throughout-conversion.cs",
       "title": "Convert an XLSM workbook to PDF/A\u20112a format while preserving embedded images throughout conversion."
     },
