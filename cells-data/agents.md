@@ -244,3 +244,4 @@ Output files are written to the working directory.
 - log-cell-address-value-and-data-type-for-auditing-by-writing-entries-to-a-csv-file-during-enumeration.cs
 - create-a-lookup-table-of-cell-addresses-to-values-for-fast-retrieval-by-populating-a-dictionary-during-enumeration.cs
 - count-the-number-of-cells-per-data-type-by-iterating-all-cells-and-incrementing-typespecific-counters.cs
+- create-a-checksum-for-each-row-by-concatenating-cell-values-and-applying-a-hash-function-during-row-enumeration.cs
