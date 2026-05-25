@@ -751,6 +751,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-using-the-countnumbers-function-on-column-k-without-creating-outline-levels.cs",
+      "title": "Add subtotals using the CountNumbers function on column K, without creating outline levels."
+    },
+    {
+      "category": "cells-data",
       "file": "add-subtotals-using-the-max-function-on-column-c-with-summary-rows-placed-after-each-group.cs",
       "title": "Add subtotals using the Max function on column C, with summary rows placed after each group."
     },
