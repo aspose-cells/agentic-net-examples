@@ -4216,6 +4216,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-workbooksettingsmaxrowsofsharedformula-to-limit-shared-formula-rows-to-fifty-in-the-workbook.cs",
+      "title": "Configure Workbook.Settings.MaxRowsOfSharedFormula to limit shared formula rows to fifty in the workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs",
       "title": "Create a shared formula for range C3:C12 by invoking Cell.SetSharedFormula on the first cell."
     },
