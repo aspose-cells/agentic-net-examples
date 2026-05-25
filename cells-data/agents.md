@@ -219,3 +219,4 @@ Output files are written to the working directory.
 - compute-the-standard-deviation-of-numeric-values-in-a-column-using-a-columns-enumerator.cs
 - group-numeric-cell-values-into-bins-to-generate-histogram-data-while-enumerating-a-specific-column.cs
 - export-numeric-column-data-to-a-binary-file-after-enumerating-cells-and-converting-values-to-littleendian-format.cs
+- demonstrate-data-inconsistencies-by-reading-cell-values-without-enabling-multithreadreading-in-a-multithreaded-scenario.cs
