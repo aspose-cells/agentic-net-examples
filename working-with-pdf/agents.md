@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - validate-that-draw-object-bounds-captured-during-rendering-match-the-visual-positions-in-the-pdf.cs
 - review-the-generated-pdf-to-confirm-that-all-configured-options-have-been-applied-correctly.cs
 - load-an-xlsx-workbook-calculate-formulas-and-save-as-a-passwordprotected-pdf.cs
+- load-an-xls-file-calculate-formulas-and-save-as-an-encrypted-pdf-with-owner-password.cs
