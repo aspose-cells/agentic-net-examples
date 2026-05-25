@@ -1366,6 +1366,11 @@
     },
     {
       "category": "cells-data",
+      "file": "iterate-through-all-richtextportion-objects-in-a-cell-and-modify-each-portions-font-name.cs",
+      "title": "Iterate through all RichTextPortion objects in a cell and modify each portion's font name."
+    },
+    {
+      "category": "cells-data",
       "file": "load-a-onedimensional-string-array-into-cells-beginning-at-the-first-row-and-first-column.cs",
       "title": "Load a one\u2011dimensional string array into cells beginning at the first row and first column."
     },
