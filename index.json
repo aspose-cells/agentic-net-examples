@@ -10856,6 +10856,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionscompressionlevel-to-maximum-to-reduce-the-size-of-the-generated-pdf-file.cs",
+      "title": "Set PdfSaveOptions.CompressionLevel to maximum to reduce the size of the generated PDF file."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsonepagepersheet-to-true-to-force-each-worksheet-onto-a-separate-pdf-page.cs",
       "title": "Set PdfSaveOptions.OnePagePerSheet to true to force each worksheet onto a separate PDF page."
     },
