@@ -10716,6 +10716,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs",
+      "title": "Create hierarchical PDF bookmarks with parent chapter and child section entries for navigation."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-pdf-bookmarks-for-each-worksheet-using-worksheet-names-as-bookmark-titles.cs",
       "title": "Create PDF bookmarks for each worksheet using worksheet names as bookmark titles."
     },
