@@ -906,6 +906,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-worksheet-data-to-json-format-using-custom-serialization-of-cell-values-and-styles.cs",
+      "title": "Export worksheet data to JSON format using custom serialization of cell values and styles."
+    },
+    {
+      "category": "cells-data",
       "file": "export-worksheet-rows-150-and-columns-ad-to-a-csv-string.cs",
       "title": "Export worksheet rows 1\u201150 and columns A\u2011D to a CSV string."
     },

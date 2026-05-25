@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - create-a-validation-that-only-permits-time-values-between-0900-and-1700-in-column-t.cs
 - add-validation-restricting-column-s-values-to-a-predefined-array-of-strings.cs
 - export-worksheet-rows-150-and-columns-ad-to-a-csv-string.cs
+- export-worksheet-data-to-json-format-using-custom-serialization-of-cell-values-and-styles.cs
