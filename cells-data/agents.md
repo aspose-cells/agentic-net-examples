@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - after-importing-html-remove-all-script-tags-to-prevent-execution-of-embedded-scripts-within-cells.cs
 - create-a-hyperlink-that-points-to-a-network-share-location-using-unc-path-syntax-for-accessibility.cs
 - import-a-twodimensional-array-of-timestamps-then-sort-rows-based-on-the-earliest-timestamp-column.cs
+- use-getstringvalue-without-formatting-to-extract-scientific-notation-strings-for-further-numeric-conversion.cs
