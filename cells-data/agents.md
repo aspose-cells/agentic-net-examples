@@ -257,3 +257,4 @@ Output files are written to the working directory.
 - access-the-desired-worksheet-within-the-workbook-and-obtain-a-reference-to-a-target-cell.cs
 - read-the-stylequoteprefix-property-of-the-cell-and-log-its-value.cs
 - apply-a-styleflag-with-quoteprefix-set-to-false-to-preserve-existing-apostrophe-prefixes.cs
+- apply-a-styleflag-with-quoteprefix-set-to-true-to-add-a-leading-apostrophe-to-the-cell-value.cs
