@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - specify-crossstring-coordinates-to-place-custom-text-precisely-within-the-generated-pdf.cs
 - activate-pdfsaveoptionscrossstring-to-customize-text-placement-coordinates-for-precise-pdf-layout-control.cs
 - use-crossstring-to-place-a-confidential-stamp-over-the-center-of-each-pdf-page.cs
+- apply-crossstring-to-place-a-watermark-text-at-coordinates-50400-on-each-pdf-page.cs
