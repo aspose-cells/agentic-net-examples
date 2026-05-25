@@ -10815,6 +10815,11 @@
       "title": "Set PdfSaveOptions.OutputBlankPageWhenNothingToPrint to false to trigger CellsException on empty workbooks."
     },
     {
+      "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionspdfcompliance-to-pdfa1a-to-produce-pdfa1a-compliant-output-for-archival-purposes.cs",
+      "title": "Set PdfSaveOptions.PdfCompliance to PdfA1a to produce PDF/A\u20111a compliant output for archival purposes."
+    },
+    {
       "category": "working-with-shapes",
       "file": "access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs",
       "title": "Access connection points of shape FlowConnector and attach them to cells A1 and B2 for dynamic linking."
