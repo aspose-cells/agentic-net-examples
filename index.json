@@ -10736,6 +10736,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "disable-printing-of-cell-comments-during-pdf-conversion-to-produce-cleaner-document-layout.cs",
+      "title": "Disable printing of cell comments during PDF conversion to produce cleaner document layout."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-printing-of-cell-comments-while-saving-workbook-to-pdf-preserving-comment-formatting.cs",
       "title": "Enable printing of cell comments while saving workbook to PDF, preserving comment formatting."
     },
