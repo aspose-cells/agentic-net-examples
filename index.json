@@ -10981,6 +10981,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-javascript-in-the-pdf-to-open-a-specific-url-when-the-document-loads.cs",
+      "title": "Embed JavaScript in the PDF to open a specific URL when the document loads."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs",
       "title": "Enable hyperlink preservation so that clickable links remain functional in the generated PDF."
     },
