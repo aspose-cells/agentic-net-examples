@@ -981,6 +981,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-checksum-for-each-row-by-concatenating-cell-values-and-applying-a-hash-function-during-row-enumeration.cs",
+      "title": "Create a checksum for each row by concatenating cell values and applying a hash function during row enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-custom-sort-list-for-months-and-sort-column-c-according-to-that-list.cs",
       "title": "Create a custom sort list for months and sort column C according to that list."
     },
