@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - create-a-validation-allowing-dates-between-01012020-and-12312025-in-column-n.cs
 - configure-validation-to-show-input-message-prompting-users-to-enter-a-valid-email-address.cs
 - add-validation-that-disallows-blank-entries-in-column-v-and-displays-an-error-alert.cs
+- validate-that-column-ak-contains-unique-email-addresses-and-display-an-error-for-duplicates.cs
