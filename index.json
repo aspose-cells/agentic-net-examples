@@ -10956,6 +10956,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-onepagepersheet-to-true-then-save-each-worksheet-on-a-single-pdf-page.cs",
+      "title": "Set OnePagePerSheet to true, then save each worksheet on a single PDF page."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs",
       "title": "Set PDF compliance to PDF/A\u20111a and ensure all fonts are embedded correctly."
     },

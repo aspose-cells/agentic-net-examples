@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-calculate-formulas-and-save-as-a-passwordprotected-pdf.cs
 - load-an-xls-file-calculate-formulas-and-save-as-an-encrypted-pdf-with-owner-password.cs
 - load-a-tsv-workbook-enable-onepagepersheet-and-export-to-pdf-with-default-security.cs
+- set-onepagepersheet-to-true-then-save-each-worksheet-on-a-single-pdf-page.cs
