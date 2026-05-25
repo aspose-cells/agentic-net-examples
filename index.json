@@ -916,6 +916,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-workbook-add-a-worksheet-and-import-custom-objects-while-preserving-html-formatting-in-description-fields.cs",
+      "title": "Create a workbook, add a worksheet, and import custom objects while preserving HTML formatting in description fields."
+    },
+    {
+      "category": "cells-data",
       "file": "define-a-cellarea-covering-rows-2100-and-apply-wholenumber-validation-to-that-range.cs",
       "title": "Define a CellArea covering rows 2\u2011100 and apply whole\u2011number validation to that range."
     },
