@@ -11101,6 +11101,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-custom-pdf-margins-of-05-inches-on-all-sides-using-pdfsaveoptions.cs",
+      "title": "Set custom PDF margins of 0.5 inches on all sides using PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-onepagepersheet-to-true-and-fit-all-columns-on-one-pdf-page.cs",
       "title": "Set OnePagePerSheet to true and fit all columns on one PDF page."
     },
