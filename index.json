@@ -11001,6 +11001,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-office-addins-with-a-custom-scaling-factor-to-adjust-their-size-in-the-pdf-output.cs",
+      "title": "Render Office Add\u2011Ins with a custom scaling factor to adjust their size in the PDF output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-with-default-settings-during-pdf-conversion-to-verify-basic-functionality.cs",
       "title": "Render Office Add\u2011Ins with default settings during PDF conversion to verify basic functionality."
     },
