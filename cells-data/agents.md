@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - retrieve-formatted-cell-text-detect-numeric-patterns-and-replace-them-with-localized-number-formats-for-display.cs
 - use-importcustomobjects-with-preservehtml-enabled-to-keep-bold-tags-when-importing-product-descriptions.cs
 - set-importtableoptionscheckmergedcells-to-true-then-import-data-that-spans-across-merged-cell-ranges.cs
+- retrieve-raw-string-from-a-date-cell-convert-it-to-iso-8601-format-and-store-in-another-column.cs

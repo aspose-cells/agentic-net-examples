@@ -1201,6 +1201,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-raw-string-from-a-date-cell-convert-it-to-iso-8601-format-and-store-in-another-column.cs",
+      "title": "Retrieve raw string from a date cell, convert it to ISO 8601 format, and store in another column."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-raw-string-values-from-a-column-count-occurrences-of-a-specific-keyword-and-log-the-total.cs",
       "title": "Retrieve raw string values from a column, count occurrences of a specific keyword, and log the total."
     },
