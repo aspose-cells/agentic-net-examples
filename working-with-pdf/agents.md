@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - add-header-and-footer-with-page-numbers-to-each-pdf-page-derived-from-excel.cs
 - preserve-hyperlinks-so-that-links-in-excel-cells-remain-clickable-in-the-pdf-output.cs
 - convert-only-selected-ranges-of-an-excel-worksheet-to-pdf-excluding-hidden-rows-and-columns.cs
+- apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs

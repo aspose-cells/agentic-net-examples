@@ -10736,6 +10736,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs",
+      "title": "Apply conditional formatting during conversion to reflect cell color changes in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-crossstring-to-place-a-watermark-text-at-coordinates-50400-on-each-pdf-page.cs",
       "title": "Apply cross\u2011string to place a watermark text at coordinates (50,400) on each PDF page."
     },
