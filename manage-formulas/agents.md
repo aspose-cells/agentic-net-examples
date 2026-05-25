@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - implement-a-routine-that-reads-cellvalue-after-calculation-to-confirm-formula-evaluation-result.cs
 - create-a-batch-script-that-opens-multiple-workbooks-sets-a-shared-formula-and-saves-each-file.cs
 - verify-that-the-npv-function-is-supported-and-correctly-calculates-net-present-value-for-sample-cash-flows.cs
+- convert-all-formulas-to-english-us-syntax-with-commas-and-validate-successful-calculation-across-the-workbook.cs

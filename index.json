@@ -4251,6 +4251,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "convert-all-formulas-to-english-us-syntax-with-commas-and-validate-successful-calculation-across-the-workbook.cs",
+      "title": "Convert all formulas to English (US) syntax with commas and validate successful calculation across the workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-batch-script-that-opens-multiple-workbooks-sets-a-shared-formula-and-saves-each-file.cs",
       "title": "Create a batch script that opens multiple workbooks, sets a shared formula, and saves each file."
     },
