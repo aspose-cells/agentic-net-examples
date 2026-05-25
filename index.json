@@ -10701,6 +10701,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-header-and-footer-with-page-numbers-to-each-pdf-page-derived-from-excel.cs",
+      "title": "Add header and footer with page numbers to each PDF page derived from Excel."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-pdf-bookmarks-with-named-destinations-matching-specific-cell-ranges-for-quick-access.cs",
       "title": "Add PDF bookmarks with named destinations matching specific cell ranges for quick access."
     },
