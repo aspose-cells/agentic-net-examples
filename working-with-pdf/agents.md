@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - convert-an-ods-spreadsheet-to-pdf-using-default-options-and-ensure-correct-rendering.cs
 - convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs
 - convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs
+- convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs
