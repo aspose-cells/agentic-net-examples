@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - add-an-image-watermark-that-scales-to-fill-the-entire-page-while-maintaining-aspect-ratio.cs
 - add-an-image-watermark-that-retains-original-size-and-appears-in-the-lowerright-corner.cs
 - create-pdf-bookmarks-for-each-worksheet-using-worksheet-names-as-bookmark-titles.cs
+- create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs
