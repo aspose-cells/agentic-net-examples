@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - convert-string-numeric-values-only-in-the-first-worksheet-while-leaving-other-sheets-unchanged.cs
 - convert-numeric-strings-within-range-a1c10-on-a-worksheet-and-verify-conversion.cs
 - convert-numeric-strings-in-a-range-using-culturespecific-decimal-separators-and-ensure-correct-parsing.cs
+- add-subtotals-summing-column-d-for-rows-2100-placing-results-at-each-groups-bottom.cs
