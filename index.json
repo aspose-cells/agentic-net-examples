@@ -10861,6 +10861,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs",
+      "title": "Create hierarchical PDF bookmarks for each worksheet by populating PdfSaveOptions.Bookmarks collection."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs",
       "title": "Create hierarchical PDF bookmarks with parent chapter and child section entries for navigation."
     },
