@@ -218,3 +218,4 @@ Output files are written to the working directory.
 - merge-multiple-excel-worksheets-into-a-single-pdf-while-preserving-original-sheet-order.cs
 - encrypt-the-generated-pdf-with-a-user-password-and-restrict-printing-permissions.cs
 - decrypt-a-passwordprotected-pdf-generated-from-excel-and-programmatically-extract-its-text.cs
+- produce-a-landscapeoriented-pdf-for-wide-excel-sheets-to-improve-readability.cs
