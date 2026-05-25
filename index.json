@@ -931,6 +931,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-custom-sort-order-for-priority-levels-high-medium-low-and-sort-column-m.cs",
+      "title": "Set custom sort order for priority levels High, Medium, Low and sort column M."
+    },
+    {
+      "category": "cells-data",
       "file": "sort-data-based-on-cell-background-colors-in-column-b-using-sortkey-cellcolor-property.cs",
       "title": "Sort data based on cell background colors in column B using SortKey CellColor property."
     },
