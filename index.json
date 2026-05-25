@@ -936,6 +936,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-validation-details-of-cell-j5-and-log-its-type-and-formula-values.cs",
+      "title": "Retrieve validation details of cell J5 and log its type and formula values."
+    },
+    {
+      "category": "cells-data",
       "file": "save-the-modified-workbook-to-an-xlsx-file-while-preserving-original-formatting.cs",
       "title": "Save the modified workbook to an XLSX file while preserving original formatting."
     },
