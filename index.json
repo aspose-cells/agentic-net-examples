@@ -1466,6 +1466,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-maxdatarow-and-maxdatacolumn-limits-to-iterate-only-populated-cells-ignoring-empty-rows.cs",
+      "title": "Use MaxDataRow and MaxDataColumn limits to iterate only populated cells, ignoring empty rows."
+    },
+    {
+      "category": "cells-data",
       "file": "validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs",
       "title": "Validate cell content by retrieving raw string values and comparing them against expected numeric strings."
     },

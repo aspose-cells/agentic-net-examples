@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - enable-multithreadreading-then-launch-multiple-threads-to-read-random-cells-concurrently.cs
 - measure-execution-time-for-columnmajor-versus-rowmajor-data-population-to-determine-optimal-ordering.cs
 - set-displayrange-to-a-specific-area-and-enumerate-only-cells-within-that-visible-region.cs
+- use-maxdatarow-and-maxdatacolumn-limits-to-iterate-only-populated-cells-ignoring-empty-rows.cs
