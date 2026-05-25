@@ -1226,6 +1226,11 @@
     },
     {
       "category": "cells-data",
+      "file": "identify-and-process-cells-belonging-to-merged-ranges-by-checking-the-ismerged-property-during-enumeration.cs",
+      "title": "Identify and process cells belonging to merged ranges by checking the IsMerged property during enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "identify-duplicate-entries-in-column-q-and-mark-them-with-red-background.cs",
       "title": "Identify duplicate entries in column Q and mark them with red background."
     },
