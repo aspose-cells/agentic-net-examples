@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - use-importarraylist-to-add-a-list-of-guid-strings-then-format-cells-to-display-them-as-uppercase.cs
 - retrieve-a-cells-formatted-string-detect-currency-symbols-and-replace-them-with-localized-equivalents.cs
 - after-importing-html-remove-all-script-tags-to-prevent-execution-of-embedded-scripts-within-cells.cs
+- create-a-hyperlink-that-points-to-a-network-share-location-using-unc-path-syntax-for-accessibility.cs

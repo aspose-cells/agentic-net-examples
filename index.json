@@ -916,6 +916,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-hyperlink-that-points-to-a-network-share-location-using-unc-path-syntax-for-accessibility.cs",
+      "title": "Create a hyperlink that points to a network share location, using UNC path syntax for accessibility."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-hyperlink-that-references-a-cell-in-another-worksheet-using-the-internal-excel-address-format.cs",
       "title": "Create a hyperlink that references a cell in another worksheet, using the internal Excel address format."
     },
