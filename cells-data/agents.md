@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - generate-a-summary-of-empty-versus-filled-cells-by-counting-each-type-during-full-worksheet-enumeration.cs
 - create-a-chart-data-series-from-column-values-by-enumerating-the-column-and-collecting-numeric-entries.cs
 - measure-pixel-dimensions-of-cell-text-during-enumeration-and-adjust-column-width-to-fit-content-without-clipping.cs
+- benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs

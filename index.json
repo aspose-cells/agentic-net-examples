@@ -876,6 +876,11 @@
     },
     {
       "category": "cells-data",
+      "file": "benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs",
+      "title": "Benchmark enumeration speed when using DisplayRange versus full sheet traversal to evaluate performance gains."
+    },
+    {
+      "category": "cells-data",
       "file": "build-a-dictionary-mapping-cell-addresses-to-their-values-by-enumerating-the-cells-collection.cs",
       "title": "Build a dictionary mapping cell addresses to their values by enumerating the Cells collection."
     },
