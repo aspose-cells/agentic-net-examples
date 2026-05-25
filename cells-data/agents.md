@@ -265,3 +265,4 @@ Output files are written to the working directory.
 - add-a-new-richtextportion-with-bold-formatting-to-a-cell-that-currently-contains-plain-text.cs
 - extract-the-font-color-of-each-richtextportion-and-store-the-colors-in-a-dictionary.cs
 - serialize-the-richtextportion-collection-of-a-cell-to-json-for-later-reuse.cs
+- deserialize-previously-saved-json-and-reapply-the-richtext-portions-to-the-same-cell.cs
