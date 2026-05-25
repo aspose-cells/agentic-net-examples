@@ -4321,6 +4321,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs",
+      "title": "Export the list of dependent cells for a given formula to a CSV file for external analysis."
+    },
+    {
+      "category": "manage-formulas",
       "file": "generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs",
       "title": "Generate a report of all formulas using unsupported functions by cross\u2011referencing the Supported Excel Functions list."
     },
