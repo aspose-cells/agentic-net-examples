@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - decrypt-a-passwordprotected-pdf-generated-from-excel-and-programmatically-extract-its-text.cs
 - produce-a-landscapeoriented-pdf-for-wide-excel-sheets-to-improve-readability.cs
 - set-a-custom-pdf-page-size-matching-excel-worksheet-dimensions-for-precise-layout-rendering.cs
+- add-header-and-footer-with-page-numbers-to-each-pdf-page-derived-from-excel.cs
