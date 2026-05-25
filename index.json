@@ -1356,6 +1356,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-getstringvalue-with-withformatting-to-extract-currency-strings-then-strip-symbols-for-backend-processing.cs",
+      "title": "Use GetStringValue with WithFormatting to extract currency strings, then strip symbols for backend processing."
+    },
+    {
+      "category": "cells-data",
       "file": "use-getstringvalue-with-withformatting-to-extract-date-strings-then-parse-them-into-datetime-objects-for-sorting.cs",
       "title": "Use GetStringValue with WithFormatting to extract date strings, then parse them into DateTime objects for sorting."
     },
