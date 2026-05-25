@@ -736,6 +736,11 @@
     },
     {
       "category": "cells-data",
+      "file": "iterate-through-all-cells-in-the-maximum-display-range-to-count-nonempty-cells.cs",
+      "title": "Iterate through all cells in the maximum display range to count non\u2011empty cells."
+    },
+    {
+      "category": "cells-data",
       "file": "load-an-excel-workbook-from-a-file-path-and-verify-it-opens-successfully.cs",
       "title": "Load an Excel workbook from a file path and verify it opens successfully."
     },
