@@ -811,6 +811,11 @@
     },
     {
       "category": "cells-data",
+      "file": "after-importing-html-content-replace-all-br-tags-with-line-feed-characters-to-improve-cell-display.cs",
+      "title": "After importing HTML content, replace all <br> tags with line feed characters to improve cell display."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
