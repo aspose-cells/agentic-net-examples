@@ -1006,6 +1006,11 @@
     },
     {
       "category": "cells-data",
+      "file": "detect-duplicate-text-entries-in-a-column-by-enumerating-the-column-and-tracking-occurrences.cs",
+      "title": "Detect duplicate text entries in a column by enumerating the column and tracking occurrences."
+    },
+    {
+      "category": "cells-data",
       "file": "enable-incell-dropdown-for-column-h-by-setting-validationincelldropdown-to-true.cs",
       "title": "Enable in\u2011cell dropdown for column H by setting Validation.InCellDropDown to true."
     },
