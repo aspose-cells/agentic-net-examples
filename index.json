@@ -1476,6 +1476,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-row-height-dynamically-according-to-the-tallest-cell-content-measured-in-pixels-while-enumerating-rows.cs",
+      "title": "Set row height dynamically according to the tallest cell content measured in pixels while enumerating rows."
+    },
+    {
+      "category": "cells-data",
       "file": "set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs",
       "title": "Set the firstRow offset to zero to overwrite existing data when importing a new dataset."
     },
