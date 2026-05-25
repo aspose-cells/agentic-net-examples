@@ -4231,6 +4231,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "benchmark-calculation-time-for-a-workbook-using-direct-evaluation-versus-calculation-chain-on-identical-formula-sets.cs",
+      "title": "Benchmark calculation time for a workbook using direct evaluation versus calculation chain on identical formula sets."
+    },
+    {
+      "category": "manage-formulas",
       "file": "calculate-all-formulas-in-the-workbook-programmatically-using-workbookcalculate-and-retrieve-updated-cell-values.cs",
       "title": "Calculate all formulas in the workbook programmatically using Workbook.Calculate and retrieve updated cell values."
     },
