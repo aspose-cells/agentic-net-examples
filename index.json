@@ -4351,6 +4351,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "verify-that-the-npv-function-is-supported-and-correctly-calculates-net-present-value-for-sample-cash-flows.cs",
+      "title": "Verify that the NPV function is supported and correctly calculates net present value for sample cash flows."
+    },
+    {
+      "category": "manage-formulas",
       "file": "verify-that-vlookup-function-is-supported-by-consulting-the-supported-excel-functions-documentation.cs",
       "title": "Verify that VLOOKUP function is supported by consulting the Supported Excel Functions documentation."
     },
