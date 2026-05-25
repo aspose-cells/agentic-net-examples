@@ -11006,6 +11006,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "validate-that-all-columns-fit-within-a-single-page-for-each-worksheet-when-fitallcolumnsononepage-is-true.cs",
+      "title": "Validate that all columns fit within a single page for each worksheet when FitAllColumnsOnOnePage is true."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "validate-that-the-exported-pdf-contains-the-expected-number-of-pages-using-a-pdf-inspection-library.cs",
       "title": "Validate that the exported PDF contains the expected number of pages using a PDF inspection library."
     },

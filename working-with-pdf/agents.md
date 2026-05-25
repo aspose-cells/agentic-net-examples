@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - confirm-that-solid-gridlines-appear-correctly-in-the-pdf-when-rendersolidgridlines-is-enabled.cs
 - ensure-that-each-worksheet-starts-on-a-new-pdf-page-when-onepagepersheet-is-set.cs
 - check-that-the-pdf-complies-with-pdfa1a-standards-when-compliance-is-set-accordingly.cs
+- validate-that-all-columns-fit-within-a-single-page-for-each-worksheet-when-fitallcolumnsononepage-is-true.cs
