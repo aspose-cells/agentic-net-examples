@@ -1101,6 +1101,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-custom-objects-with-date-properties-then-apply-a-custom-number-format-to-display-dates-as-dd-mmm-yyyy.cs",
+      "title": "Import custom objects with date properties, then apply a custom number format to display dates as 'dd-MMM-yyyy'."
+    },
+    {
+      "category": "cells-data",
       "file": "import-custom-objects-with-nested-collections-flattening-nested-data-into-separate-columns-using-a-custom-mapping-function.cs",
       "title": "Import custom objects with nested collections, flattening nested data into separate columns using a custom mapping function."
     },
