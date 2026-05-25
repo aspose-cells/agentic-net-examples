@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - retrieve-a-cells-formatted-string-parse-currency-symbols-and-store-numeric-value-in-adjacent-cell-for-calculations.cs
 - import-data-from-an-arraylist-containing-mixed-types-specifying-column-data-types-to-ensure-correct-cell-formatting.cs
 - create-a-workbook-add-a-worksheet-and-import-custom-objects-while-preserving-html-formatting-in-description-fields.cs
+- after-importing-data-iterate-through-cells-to-count-how-many-contain-nonempty-html-content.cs
