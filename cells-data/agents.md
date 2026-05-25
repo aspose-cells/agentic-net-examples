@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - import-a-twodimensional-double-array-into-a-worksheet-starting-at-row-five-and-column-two.cs
 - load-a-onedimensional-string-array-into-cells-beginning-at-the-first-row-and-first-column.cs
 - use-importarraylist-to-add-values-from-an-arraylist-into-a-worksheet-beginning-at-row-three.cs
+- import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs
