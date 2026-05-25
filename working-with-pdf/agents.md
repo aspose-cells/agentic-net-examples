@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - instantiate-pdfsaveoptions-and-configure-desired-pdf-export-settings-for-the-workbook-conversion-process.cs
 - set-pdfsaveoptionsonepagepersheet-to-true-to-generate-a-separate-pdf-page-for-each-worksheet.cs
 - enable-pdfsaveoptionsrendersolidgridlines-to-draw-solid-gridlines-in-the-exported-pdf.cs
+- add-file-attachments-to-pdfsaveoptionsattachments-collection-to-embed-external-documents-in-the-pdf.cs
