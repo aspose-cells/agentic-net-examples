@@ -10981,6 +10981,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-office-addins-while-converting-an-xlsm-workbook-to-pdf-preserving-macros-ui-elements.cs",
+      "title": "Render Office Add\u2011Ins while converting an XLSM workbook to PDF, preserving macros' UI elements."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-while-converting-an-xlsx-workbook-to-pdf-preserving-interactive-controls.cs",
       "title": "Render Office Add\u2011Ins while converting an XLSX workbook to PDF, preserving interactive controls."
     },
