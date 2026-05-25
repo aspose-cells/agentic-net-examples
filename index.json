@@ -10636,6 +10636,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-header-containing-the-workbook-name-on-each-pdf-page-via-pdfsaveoptions.cs",
+      "title": "Add a header containing the workbook name on each PDF page via PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-pdf-bookmark-that-points-to-the-first-visible-cell-of-a-worksheet-using-a-named-destination.cs",
       "title": "Add a PDF bookmark that points to the first visible cell of a worksheet using a named destination."
     },
