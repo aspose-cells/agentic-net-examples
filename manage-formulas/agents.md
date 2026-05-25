@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - replace-all-instances-of-the-today-function-with-a-static-date-string-to-freeze-calculations.cs
 - replace-all-occurrences-of-concatenate-with-concat-function-across-the-workbook-for-modern-syntax.cs
 - verify-that-vlookup-function-is-supported-by-consulting-the-supported-excel-functions-documentation.cs
+- create-a-unit-test-confirming-sumproduct-function-returns-expected-results-for-a-given-data-set.cs

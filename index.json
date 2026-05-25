@@ -4231,6 +4231,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-unit-test-confirming-sumproduct-function-returns-expected-results-for-a-given-data-set.cs",
+      "title": "Create a unit test confirming SUMPRODUCT function returns expected results for a given data set."
+    },
+    {
+      "category": "manage-formulas",
       "file": "detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs",
       "title": "Detect cells containing calculation errors after evaluation and log their addresses for investigation."
     },
