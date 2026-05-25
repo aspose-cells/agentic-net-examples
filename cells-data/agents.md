@@ -267,3 +267,4 @@ Output files are written to the working directory.
 - serialize-the-richtextportion-collection-of-a-cell-to-json-for-later-reuse.cs
 - deserialize-previously-saved-json-and-reapply-the-richtext-portions-to-the-same-cell.cs
 - generate-a-summary-of-all-richtextportion-objects-in-a-worksheet-including-start-index-length-and-font-name.cs
+- apply-a-styleflag-that-updates-only-the-quoteprefix-property-while-leaving-other-style-attributes-unchanged.cs
