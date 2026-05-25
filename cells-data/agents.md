@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - create-a-custom-sort-list-for-months-and-sort-column-c-according-to-that-list.cs
 - perform-multilevel-sorting-first-column-e-ascending-then-column-f-descending.cs
 - configure-datasorter-to-ignore-hidden-rows-while-sorting-column-l-in-descending-order.cs
+- set-custom-sort-order-for-priority-levels-high-medium-low-and-sort-column-m.cs
