@@ -1201,6 +1201,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-a-custom-iterator-that-skips-hidden-rows-by-checking-the-rowishidden-property-during-enumeration.cs",
+      "title": "Implement a custom iterator that skips hidden rows by checking the Row.IsHidden property during enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "implement-progress-reporting-by-raising-events-after-processing-each-hundred-cells-during-enumeration.cs",
       "title": "Implement progress reporting by raising events after processing each hundred cells during enumeration."
     },
