@@ -1001,6 +1001,11 @@
     },
     {
       "category": "cells-data",
+      "file": "obtain-a-cells-raw-numeric-string-by-calling-getstringvalue-with-the-withoutformatting-option.cs",
+      "title": "Obtain a cell's raw numeric string by calling GetStringValue with the WithoutFormatting option."
+    },
+    {
+      "category": "cells-data",
       "file": "perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs",
       "title": "Perform case\u2011insensitive search for 'total revenue' and replace it with 'Revenue Total'."
     },
