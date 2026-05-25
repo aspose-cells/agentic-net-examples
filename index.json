@@ -936,6 +936,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-hyperlink-that-references-an-external-pdf-file-ensuring-the-link-opens-in-a-new-browser-tab.cs",
+      "title": "Create a hyperlink that references an external PDF file, ensuring the link opens in a new browser tab."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-hyperlink-that-triggers-a-mailto-email-composition-when-the-user-clicks-the-cell.cs",
       "title": "Create a hyperlink that triggers a mailto: email composition when the user clicks the cell."
     },

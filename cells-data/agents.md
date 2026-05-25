@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - retrieve-raw-string-values-from-a-column-count-occurrences-of-a-specific-keyword-and-log-the-total.cs
 - use-getstringvalue-with-withformatting-to-generate-a-formatted-address-line-combining-street-city-and-zip.cs
 - import-an-array-of-boolean-values-then-set-cell-background-green-for-true-and-red-for-false.cs
+- create-a-hyperlink-that-references-an-external-pdf-file-ensuring-the-link-opens-in-a-new-browser-tab.cs
