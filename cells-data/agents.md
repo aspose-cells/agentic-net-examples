@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs
 - create-a-new-worksheet-import-an-array-of-dates-and-format-cells-to-display-short-date-pattern.cs
 - read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs
+- import-data-from-a-csv-file-into-a-worksheet-using-importdata-with-a-custom-icellsdatatable-implementation.cs
