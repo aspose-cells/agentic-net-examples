@@ -720,6 +720,11 @@
       "title": "Write a utility that iterates through all worksheets, sets each to Manual mode, and saves changes."
     },
     {
+      "category": "cells-data",
+      "file": "load-an-excel-workbook-from-a-file-path-and-verify-it-opens-successfully.cs",
+      "title": "Load an Excel workbook from a file path and verify it opens successfully."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
