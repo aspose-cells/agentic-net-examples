@@ -10936,6 +10936,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionscrossstringinpdf-to-true-to-prevent-string-splitting-across-lines-in-the-pdf.cs",
+      "title": "Set PdfSaveOptions.CrossStringInPdf to true to prevent string splitting across lines in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsfitallcolumnsononepage-to-true-to-fit-all-worksheet-columns-onto-a-single-pdf-page.cs",
       "title": "Set PdfSaveOptions.FitAllColumnsOnOnePage to true to fit all worksheet columns onto a single PDF page."
     },
