@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - import-an-array-of-boolean-values-then-set-cell-background-green-for-true-and-red-for-false.cs
 - create-a-hyperlink-that-references-an-external-pdf-file-ensuring-the-link-opens-in-a-new-browser-tab.cs
 - retrieve-formatted-cell-text-detect-numeric-patterns-and-replace-them-with-localized-number-formats-for-display.cs
+- use-importcustomobjects-with-preservehtml-enabled-to-keep-bold-tags-when-importing-product-descriptions.cs

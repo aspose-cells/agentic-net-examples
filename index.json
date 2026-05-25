@@ -1346,6 +1346,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-importcustomobjects-with-preservehtml-enabled-to-keep-bold-tags-when-importing-product-descriptions.cs",
+      "title": "Use ImportCustomObjects with PreserveHtml enabled to keep bold tags when importing product descriptions."
+    },
+    {
+      "category": "cells-data",
       "file": "validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs",
       "title": "Validate cell content by retrieving raw string values and comparing them against expected numeric strings."
     },
