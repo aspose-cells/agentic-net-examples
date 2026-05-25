@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - use-workbookcalculateformula-to-ensure-all-formulas-are-evaluated-before-exporting-to-pdf.cs
 - apply-a-custom-font-substitution-rule-via-pdfsaveoptions-to-handle-missing-fonts-during-pdf-generation.cs
 - implement-error-handling-that-retries-pdf-export-with-outputblankpagewhennothingtoprint-set-to-true-after-failure.cs
+- extract-the-list-of-named-destinations-from-an-exported-pdf-using-a-pdf-parsing-library.cs
