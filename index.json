@@ -10671,6 +10671,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-a-custom-page-margin-setting-via-pdfsaveoptions-to-control-pdf-page-layout.cs",
+      "title": "Apply a custom page margin setting via PdfSaveOptions to control PDF page layout."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "catch-cellsexception-during-pdf-save-to-handle-cases-where-nothing-was-printed.cs",
       "title": "Catch CellsException during PDF save to handle cases where nothing was printed."
     },
