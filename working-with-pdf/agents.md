@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - set-onepagepersheet-to-true-then-iterate-worksheets-and-save-each-as-individual-pdf-files.cs
 - convert-a-tsv-workbook-to-pdf-with-one-page-per-sheet-and-no-blank-pages.cs
 - apply-aes256-encryption-with-user-and-owner-passwords-to-secure-the-pdf.cs
+- apply-aes256-encryption-with-only-a-user-password-to-protect-the-pdf.cs

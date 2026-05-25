@@ -10691,6 +10691,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-aes256-encryption-with-only-a-user-password-to-protect-the-pdf.cs",
+      "title": "Apply AES\u2011256 encryption with only a user password to protect the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-aes256-encryption-with-user-and-owner-passwords-to-secure-the-pdf.cs",
       "title": "Apply AES\u2011256 encryption with user and owner passwords to secure the PDF."
     },
