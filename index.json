@@ -911,6 +911,11 @@
     },
     {
       "category": "cells-data",
+      "file": "compare-cell-values-between-two-worksheets-and-output-mismatched-addresses-to-a-log-file.cs",
+      "title": "Compare cell values between two worksheets and output mismatched addresses to a log file."
+    },
+    {
+      "category": "cells-data",
       "file": "compare-two-worksheets-cell-by-cell-using-enumerators-and-generate-a-diff-report-highlighting-mismatches.cs",
       "title": "Compare two worksheets cell by cell using enumerators and generate a diff report highlighting mismatches."
     },
