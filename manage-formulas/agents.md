@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - convert-all-formulas-to-english-us-syntax-with-commas-and-validate-successful-calculation-across-the-workbook.cs
 - generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs
 - load-an-existing-workbook-set-a-formula-referencing-an-external-file-and-save-changes.cs
+- set-a-formula-string-that-includes-a-vlookup-referencing-another-workbook-with-correct-path-syntax.cs
