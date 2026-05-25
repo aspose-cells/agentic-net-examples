@@ -851,6 +851,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-a-styleflag-that-updates-only-the-quoteprefix-property-while-leaving-other-style-attributes-unchanged.cs",
+      "title": "Apply a StyleFlag that updates only the QuotePrefix property while leaving other style attributes unchanged."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-a-styleflag-with-quoteprefix-set-to-false-to-preserve-existing-apostrophe-prefixes.cs",
       "title": "Apply a StyleFlag with QuotePrefix set to false to preserve existing apostrophe prefixes."
     },
