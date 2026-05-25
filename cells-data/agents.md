@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - import-data-from-a-csv-file-into-a-worksheet-using-importdata-with-a-custom-icellsdatatable-implementation.cs
 - set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs
 - retrieve-a-cells-formatted-string-parse-currency-symbols-and-store-numeric-value-in-adjacent-cell-for-calculations.cs
+- import-data-from-an-arraylist-containing-mixed-types-specifying-column-data-types-to-ensure-correct-cell-formatting.cs
