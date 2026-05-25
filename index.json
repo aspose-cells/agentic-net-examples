@@ -10766,6 +10766,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs",
+      "title": "Detect empty worksheets and skip them when generating PDF to avoid unnecessary blank pages."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "disable-printing-of-cell-comments-during-pdf-conversion-to-produce-cleaner-document-layout.cs",
       "title": "Disable printing of cell comments during PDF conversion to produce cleaner document layout."
     },
