@@ -1066,6 +1066,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-a-twodimensional-array-of-strings-then-apply-a-custom-font-style-to-header-row-for-emphasis.cs",
+      "title": "Import a two\u2011dimensional array of strings, then apply a custom font style to header row for emphasis."
+    },
+    {
+      "category": "cells-data",
       "file": "import-a-twodimensional-array-of-strings-then-apply-text-wrap-to-all-cells-to-prevent-truncation.cs",
       "title": "Import a two\u2011dimensional array of strings, then apply text wrap to all cells to prevent truncation."
     },
