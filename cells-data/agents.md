@@ -235,3 +235,4 @@ Output files are written to the working directory.
 - profile-cpu-usage-while-enumerating-a-large-worksheet-to-identify-performance-bottlenecks-in-the-iteration-loop.cs
 - detect-and-log-cells-containing-null-values-during-enumeration-to-assist-in-data-completeness-analysis.cs
 - generate-a-summary-of-empty-versus-filled-cells-by-counting-each-type-during-full-worksheet-enumeration.cs
+- create-a-chart-data-series-from-column-values-by-enumerating-the-column-and-collecting-numeric-entries.cs
