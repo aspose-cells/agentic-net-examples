@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - convert-an-xlsb-file-to-pdf-and-set-pdf-creation-time-to-current-utc-timestamp.cs
 - set-pdf-compliance-to-pdfa3u-and-embed-xml-metadata-for-enhanced-accessibility.cs
 - set-pdf-compliance-to-pdfa2b-while-preserving-original-color-profiles-for-accurate-color-reproduction.cs
+- set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs
