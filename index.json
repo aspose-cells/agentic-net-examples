@@ -10626,6 +10626,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-diagonal-text-watermark-using-times-new-roman-24point-size-and-30-opacity.cs",
+      "title": "Add a diagonal text watermark using Times New Roman, 24\u2011point size, and 30% opacity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs",
       "title": "Convert a CSV file to PDF and ensure column alignment matches source data."
     },
