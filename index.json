@@ -11071,6 +11071,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "specify-crossstring-coordinates-to-place-custom-text-precisely-within-the-generated-pdf.cs",
+      "title": "Specify cross\u2011string coordinates to place custom text precisely within the generated PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "subscribe-to-workbookdrawobjecteventhandler-to-capture-draw-object-types-and-bounds-during-pdf-rendering.cs",
       "title": "Subscribe to workbook.DrawObjectEventHandler to capture draw object types and bounds during PDF rendering."
     },
