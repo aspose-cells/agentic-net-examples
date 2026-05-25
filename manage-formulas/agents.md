@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - replace-all-occurrences-of-concatenate-with-concat-function-across-the-workbook-for-modern-syntax.cs
 - verify-that-vlookup-function-is-supported-by-consulting-the-supported-excel-functions-documentation.cs
 - create-a-unit-test-confirming-sumproduct-function-returns-expected-results-for-a-given-data-set.cs
+- apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs
