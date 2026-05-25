@@ -10721,6 +10721,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "create-a-named-destination-for-a-chart-object-and-link-a-pdf-bookmark-to-it.cs",
+      "title": "Create a named destination for a chart object and link a PDF bookmark to it."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs",
       "title": "Create a PdfBookmarkEntry for a specific worksheet and assign a stable destination name."
     },

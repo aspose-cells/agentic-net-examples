@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - load-an-xls-workbook-containing-charts-then-export-it-to-pdf-preserving-chart-rendering.cs
 - create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs
 - iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs
+- create-a-named-destination-for-a-chart-object-and-link-a-pdf-bookmark-to-it.cs
