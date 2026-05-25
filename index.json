@@ -10956,6 +10956,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-onepagepersheet-to-true-and-limit-pdf-to-a-maximum-of-ten-pages.cs",
+      "title": "Set OnePagePerSheet to true and limit PDF to a maximum of ten pages."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-onepagepersheet-to-true-then-save-each-worksheet-on-a-single-pdf-page.cs",
       "title": "Set OnePagePerSheet to true, then save each worksheet on a single PDF page."
     },
