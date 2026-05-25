@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - export-numeric-column-data-to-a-binary-file-after-enumerating-cells-and-converting-values-to-littleendian-format.cs
 - demonstrate-data-inconsistencies-by-reading-cell-values-without-enabling-multithreadreading-in-a-multithreaded-scenario.cs
 - test-thread-safety-by-having-multiple-threads-read-the-same-cell-simultaneously-after-setting-multithreadreading-true.cs
+- implement-progress-reporting-by-raising-events-after-processing-each-hundred-cells-during-enumeration.cs
