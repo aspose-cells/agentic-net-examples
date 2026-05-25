@@ -281,3 +281,4 @@ Output files are written to the working directory.
 - create-a-utility-that-scans-a-workbook-for-cells-where-quoteprefix-is-unintentionally-set-to-true.cs
 - apply-conditional-formatting-that-highlights-cells-with-quoteprefix-false-using-a-distinct-background-color.cs
 - programmatically-insert-an-apostrophe-prefix-into-numeric-cells-to-force-text-interpretation.cs
+- remove-the-leading-apostrophe-from-a-cell-by-setting-stylequoteprefix-to-false-via-styleflag.cs

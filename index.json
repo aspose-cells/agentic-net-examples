@@ -1551,6 +1551,11 @@
     },
     {
       "category": "cells-data",
+      "file": "remove-the-leading-apostrophe-from-a-cell-by-setting-stylequoteprefix-to-false-via-styleflag.cs",
+      "title": "Remove the leading apostrophe from a cell by setting Style.QuotePrefix to false via StyleFlag."
+    },
+    {
+      "category": "cells-data",
       "file": "replace-characters-in-a-richtextportion-using-cellsetcharacters-with-a-new-string.cs",
       "title": "Replace characters in a RichTextPortion using Cell.SetCharacters with a new string."
     },
