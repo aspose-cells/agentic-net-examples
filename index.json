@@ -876,6 +876,11 @@
     },
     {
       "category": "cells-data",
+      "file": "backup-worksheet-data-to-a-json-file-by-enumerating-cells-and-serializing-addressvalue-pairs.cs",
+      "title": "Backup worksheet data to a JSON file by enumerating cells and serializing address\u2011value pairs."
+    },
+    {
+      "category": "cells-data",
       "file": "benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs",
       "title": "Benchmark enumeration speed when using DisplayRange versus full sheet traversal to evaluate performance gains."
     },
