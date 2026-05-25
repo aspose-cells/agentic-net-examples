@@ -1201,6 +1201,11 @@
     },
     {
       "category": "cells-data",
+      "file": "extract-the-font-color-of-each-richtextportion-and-store-the-colors-in-a-dictionary.cs",
+      "title": "Extract the font color of each RichTextPortion and store the colors in a dictionary."
+    },
+    {
+      "category": "cells-data",
       "file": "filter-enumerated-cells-to-include-only-stringtype-cells-and-collect-them-into-a-list.cs",
       "title": "Filter enumerated cells to include only string\u2011type cells and collect them into a list."
     },
