@@ -736,6 +736,11 @@
     },
     {
       "category": "cells-data",
+      "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
+      "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
+    },
+    {
+      "category": "cells-data",
       "file": "iterate-through-all-cells-in-the-maximum-display-range-to-count-nonempty-cells.cs",
       "title": "Iterate through all cells in the maximum display range to count non\u2011empty cells."
     },
