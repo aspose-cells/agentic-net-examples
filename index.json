@@ -741,6 +741,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-the-worksheets-maximum-display-range-and-use-it-to-define-a-print-area.cs",
+      "title": "Retrieve the worksheet's maximum display range and use it to define a print area."
+    },
+    {
+      "category": "cells-data",
       "file": "select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs",
       "title": "Select a worksheet by name and obtain its Cells collection for further operations."
     },
