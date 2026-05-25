@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs
 - replace-all-instances-of-the-today-function-with-a-static-date-string-to-freeze-calculations.cs
 - replace-all-occurrences-of-concatenate-with-concat-function-across-the-workbook-for-modern-syntax.cs
+- verify-that-vlookup-function-is-supported-by-consulting-the-supported-excel-functions-documentation.cs
