@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - render-office-addins-while-converting-an-xlsb-workbook-to-pdf-preserving-interactive-elements.cs
 - render-office-addins-while-converting-an-xlsm-workbook-to-pdf-preserving-macros-ui-elements.cs
 - render-office-addins-while-converting-a-csv-file-to-pdf-preserving-interactive-controls.cs
+- render-office-addins-while-converting-a-csv-file-to-pdf-ensuring-addins-appear-correctly.cs
