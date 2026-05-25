@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - set-checkmergedcells-to-true-before-importing-custom-objects-to-correctly-populate-merged-cell-ranges.cs
 - adjust-the-firstrow-parameter-to-shift-existing-rows-down-before-inserting-a-new-data-table.cs
 - validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs
+- combine-importarray-and-importcustomobjects-calls-to-populate-a-worksheet-from-heterogeneous-data-sources-in-one-workflow.cs
