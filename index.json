@@ -1151,6 +1151,11 @@
     },
     {
       "category": "cells-data",
+      "file": "detect-cells-that-contain-both-a-leading-apostrophe-and-richtext-and-log-their-addresses.cs",
+      "title": "Detect cells that contain both a leading apostrophe and rich\u2011text, and log their addresses."
+    },
+    {
+      "category": "cells-data",
       "file": "detect-duplicate-text-entries-in-a-column-by-enumerating-the-column-and-tracking-occurrences.cs",
       "title": "Detect duplicate text entries in a column by enumerating the column and tracking occurrences."
     },
