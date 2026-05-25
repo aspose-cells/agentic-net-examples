@@ -10896,6 +10896,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "retrieve-draw-object-and-bound-information-from-the-drawobjecteventhandler-callback-for-custom-processing.cs",
+      "title": "Retrieve draw object and bound information from the DrawObjectEventHandler callback for custom processing."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs",
       "title": "Save the workbook to PDF using PdfSaveOptions with configured settings and verify output."
     },

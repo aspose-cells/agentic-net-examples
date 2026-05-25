@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionscrossstringinpdf-to-true-to-prevent-string-splitting-across-lines-in-the-pdf.cs
 - subscribe-to-workbookdrawobjecteventhandler-to-capture-draw-object-types-and-bounds-during-pdf-rendering.cs
 - save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs
+- retrieve-draw-object-and-bound-information-from-the-drawobjecteventhandler-callback-for-custom-processing.cs
