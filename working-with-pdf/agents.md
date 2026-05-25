@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs
 - hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs
 - apply-print-titles-to-repeat-header-rows-on-each-pdf-page-for-better-readability.cs
+- set-pdf-page-breaks-based-on-excel-page-breaks-to-maintain-original-pagination.cs
