@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - set-importtableoptionspreservehtml-to-false-import-data-and-verify-that-all-html-tags-are-removed-from-cells.cs
 - use-importarraylist-to-add-enum-values-then-format-cells-to-display-enum-names-instead-of-numbers.cs
 - create-a-hyperlink-that-links-to-a-specific-cell-range-in-the-same-worksheet-using-the-a1b10-syntax.cs
+- import-data-into-a-worksheet-then-generate-a-summary-sheet-that-aggregates-totals-from-each-imported-table.cs
