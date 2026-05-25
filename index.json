@@ -11166,6 +11166,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsb-file-apply-minimumsize-optimization-and-save-as-pdf.cs",
+      "title": "Load an XLSB file, apply MinimumSize optimization, and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsm-file-apply-standardsize-optimization-and-export-to-pdf.cs",
       "title": "Load an XLSM file, apply StandardSize optimization, and export to PDF."
     },
