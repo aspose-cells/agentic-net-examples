@@ -4301,6 +4301,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-an-existing-workbook-set-a-formula-referencing-an-external-file-and-save-changes.cs",
+      "title": "Load an existing workbook, set a formula referencing an external file, and save changes."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-existing-workbook-then-assign-a-sum-formula-to-cell-b2-using-cellformula.cs",
       "title": "Load an existing workbook, then assign a SUM formula to cell B2 using Cell.Formula."
     },
