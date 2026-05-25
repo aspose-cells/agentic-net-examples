@@ -1191,6 +1191,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-formatted-cell-text-detect-numeric-patterns-and-replace-them-with-localized-number-formats-for-display.cs",
+      "title": "Retrieve formatted cell text, detect numeric patterns, and replace them with localized number formats for display."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-formatted-cell-text-replace-commas-with-semicolons-and-write-the-modified-string-back-to-the-same-cell.cs",
       "title": "Retrieve formatted cell text, replace commas with semicolons, and write the modified string back to the same cell."
     },
