@@ -205,3 +205,4 @@ Output files are written to the working directory.
 - obtain-a-columns-enumerator-iterate-each-column-and-record-the-maximum-numeric-cell-value.cs
 - enable-multithreadreading-then-launch-multiple-threads-to-read-random-cells-concurrently.cs
 - measure-execution-time-for-columnmajor-versus-rowmajor-data-population-to-determine-optimal-ordering.cs
+- set-displayrange-to-a-specific-area-and-enumerate-only-cells-within-that-visible-region.cs
