@@ -4221,6 +4221,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs",
+      "title": "Apply SetSharedFormula to a range spanning multiple rows and columns, then validate calculated results."
+    },
+    {
+      "category": "manage-formulas",
       "file": "assign-the-same-formula-to-each-cell-in-column-b-using-a-loop-and-verify-correct-relative-references.cs",
       "title": "Assign the same formula to each cell in column B using a loop and verify correct relative references."
     },
