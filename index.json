@@ -1066,6 +1066,11 @@
     },
     {
       "category": "cells-data",
+      "file": "read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs",
+      "title": "Read a cell's formatted string, replace placeholder tokens, and write the updated string back to the cell."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cells-formatted-string-value-using-getstringvalue-with-the-withformatting-strategy.cs",
       "title": "Retrieve a cell's formatted string value using GetStringValue with the WithFormatting strategy."
     },
