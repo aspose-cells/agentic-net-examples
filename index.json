@@ -1126,6 +1126,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-from-an-arraylist-of-decimal-numbers-then-round-each-cell-value-to-two-decimal-places.cs",
+      "title": "Import data from an ArrayList of decimal numbers, then round each cell value to two decimal places."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs",
       "title": "Insert a hyperlink into a cell using the HyperlinkCollection.Add method with display text and URL."
     },
