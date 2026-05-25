@@ -1035,6 +1035,11 @@
       "title": "Validate that Cells.Subtotal throws an informative error when startRow exceeds endRow."
     },
     {
+      "category": "cells-data",
+      "file": "validate-that-column-ak-contains-unique-email-addresses-and-display-an-error-for-duplicates.cs",
+      "title": "Validate that column AK contains unique email addresses and display an error for duplicates."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
