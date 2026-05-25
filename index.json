@@ -1431,6 +1431,11 @@
     },
     {
       "category": "cells-data",
+      "file": "profile-memory-consumption-while-enumerating-large-worksheets-to-identify-potential-leaks-in-the-iteration-process.cs",
+      "title": "Profile memory consumption while enumerating large worksheets to identify potential leaks in the iteration process."
+    },
+    {
+      "category": "cells-data",
       "file": "read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs",
       "title": "Read a cell's formatted string, replace placeholder tokens, and write the updated string back to the cell."
     },
