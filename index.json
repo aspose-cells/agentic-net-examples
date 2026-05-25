@@ -4251,6 +4251,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-batch-script-that-opens-multiple-workbooks-sets-a-shared-formula-and-saves-each-file.cs",
+      "title": "Create a batch script that opens multiple workbooks, sets a shared formula, and saves each file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs",
       "title": "Create a conditional formula using IFERROR to display a default value when division by zero occurs."
     },
