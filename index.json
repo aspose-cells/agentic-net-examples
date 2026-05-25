@@ -896,6 +896,11 @@
     },
     {
       "category": "cells-data",
+      "file": "compute-the-standard-deviation-of-numeric-values-in-a-column-using-a-columns-enumerator.cs",
+      "title": "Compute the standard deviation of numeric values in a column using a Columns enumerator."
+    },
+    {
+      "category": "cells-data",
       "file": "configure-datasorter-to-ignore-hidden-rows-while-sorting-column-l-in-descending-order.cs",
       "title": "Configure DataSorter to ignore hidden rows while sorting column L in descending order."
     },
