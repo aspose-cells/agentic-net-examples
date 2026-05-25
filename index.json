@@ -801,6 +801,11 @@
     },
     {
       "category": "cells-data",
+      "file": "adjust-column-width-based-on-measured-pixel-width-of-cell-contents-using-the-measurement-api-during-enumeration.cs",
+      "title": "Adjust column width based on measured pixel width of cell contents using the measurement API during enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "adjust-the-firstrow-parameter-to-shift-existing-rows-down-before-inserting-a-new-data-table.cs",
       "title": "Adjust the firstRow parameter to shift existing rows down before inserting a new data table."
     },
