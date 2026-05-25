@@ -866,6 +866,11 @@
     },
     {
       "category": "cells-data",
+      "file": "locate-cells-with-leading-or-trailing-spaces-and-trim-the-whitespace-programmatically.cs",
+      "title": "Locate cells with leading or trailing spaces and trim the whitespace programmatically."
+    },
+    {
+      "category": "cells-data",
       "file": "perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs",
       "title": "Perform case\u2011insensitive search for 'total revenue' and replace it with 'Revenue Total'."
     },
