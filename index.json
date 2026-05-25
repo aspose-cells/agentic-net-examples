@@ -741,6 +741,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-that-count-entries-in-column-b-for-rows-5200-using-outline-grouping.cs",
+      "title": "Add subtotals that count entries in column B for rows 5\u2011200, using outline grouping."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
       "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
     },
