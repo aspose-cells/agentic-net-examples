@@ -229,3 +229,4 @@ Output files are written to the working directory.
 - compute-a-checksum-of-all-cell-values-by-concatenating-string-representations-during-enumeration-and-applying-a-hash-function.cs
 - compare-two-worksheets-cell-by-cell-using-enumerators-and-generate-a-diff-report-highlighting-mismatches.cs
 - synchronize-changes-from-a-source-worksheet-to-a-target-worksheet-by-iterating-cells-and-copying-modified-values.cs
+- calculate-the-total-number-of-merged-regions-by-counting-merge-occurrences-while-enumerating-the-worksheet.cs
