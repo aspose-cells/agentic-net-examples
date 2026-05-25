@@ -1136,6 +1136,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-a-list-of-unique-column-headers-by-enumerating-the-first-row-and-storing-distinct-values.cs",
+      "title": "Generate a list of unique column headers by enumerating the first row and storing distinct values."
+    },
+    {
+      "category": "cells-data",
       "file": "generate-a-rows-enumerator-traverse-each-row-and-sum-values-in-the-first-column.cs",
       "title": "Generate a Rows enumerator, traverse each row, and sum values in the first column."
     },
