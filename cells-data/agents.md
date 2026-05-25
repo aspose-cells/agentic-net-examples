@@ -262,3 +262,4 @@ Output files are written to the working directory.
 - iterate-through-all-richtextportion-objects-in-a-cell-and-modify-each-portions-font-name.cs
 - change-the-font-size-of-a-specific-richtextportion-to-twelve-points.cs
 - replace-characters-in-a-richtextportion-using-cellsetcharacters-with-a-new-string.cs
+- add-a-new-richtextportion-with-bold-formatting-to-a-cell-that-currently-contains-plain-text.cs

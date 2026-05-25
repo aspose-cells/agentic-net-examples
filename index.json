@@ -741,6 +741,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-a-new-richtextportion-with-bold-formatting-to-a-cell-that-currently-contains-plain-text.cs",
+      "title": "Add a new RichTextPortion with bold formatting to a cell that currently contains plain text."
+    },
+    {
+      "category": "cells-data",
       "file": "add-subtotals-for-multiple-columns-simultaneously-summing-columns-m-and-n-together.cs",
       "title": "Add subtotals for multiple columns simultaneously, summing columns M and N together."
     },
