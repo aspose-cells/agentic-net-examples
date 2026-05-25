@@ -10971,6 +10971,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-office-addins-while-converting-a-csv-file-to-pdf-ensuring-addins-appear-correctly.cs",
+      "title": "Render Office Add\u2011Ins while converting a CSV file to PDF, ensuring add\u2011ins appear correctly."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-while-converting-a-csv-file-to-pdf-preserving-interactive-controls.cs",
       "title": "Render Office Add\u2011Ins while converting a CSV file to PDF, preserving interactive controls."
     },
