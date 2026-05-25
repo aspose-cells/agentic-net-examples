@@ -4236,6 +4236,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "confirm-that-the-if-function-is-listed-in-the-supported-excel-functions-documentation.cs",
+      "title": "Confirm that the IF function is listed in the Supported Excel Functions documentation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs",
       "title": "Create a conditional formula using IFERROR to display a default value when division by zero occurs."
     },
