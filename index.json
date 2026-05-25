@@ -1041,6 +1041,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-numeric-column-data-to-a-binary-file-after-enumerating-cells-and-converting-values-to-littleendian-format.cs",
+      "title": "Export numeric column data to a binary file after enumerating cells and converting values to little\u2011endian format."
+    },
+    {
+      "category": "cells-data",
       "file": "export-only-validated-cells-from-a-worksheet-to-a-json-array-for-downstream-processing.cs",
       "title": "Export only validated cells from a worksheet to a JSON array for downstream processing."
     },
