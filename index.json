@@ -10721,6 +10721,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "confirm-that-the-pdf-contains-the-expected-number-of-pages-respecting-the-maxpages-limit.cs",
+      "title": "Confirm that the PDF contains the expected number of pages, respecting the MaxPages limit."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "control-loading-of-external-resources-by-disabling-them-during-pdf-rendering-to-improve-performance.cs",
       "title": "Control loading of external resources by disabling them during PDF rendering to improve performance."
     },
