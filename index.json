@@ -10621,6 +10621,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs",
+      "title": "Convert a CSV file to PDF and ensure column alignment matches source data."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-ods-spreadsheet-to-pdf-using-default-options-and-ensure-correct-rendering.cs",
       "title": "Convert an ODS spreadsheet to PDF using default options and ensure correct rendering."
     },
