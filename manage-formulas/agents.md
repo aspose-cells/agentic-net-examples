@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - retrieve-dependent-cells-for-a-formula-using-the-getdependents-method-and-export-the-list-to-a-csv-file.cs
 - export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs
 - generate-a-csv-file-listing-each-formula-cell-its-precedents-and-dependent-counts-for-audit-purposes.cs
+- extract-the-textual-representation-of-a-complex-array-formula-using-the-formulatext-function-for-debugging.cs
