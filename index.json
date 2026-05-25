@@ -756,6 +756,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-using-the-stddev-function-on-column-h-and-set-summary-position-to-bottom.cs",
+      "title": "Add subtotals using the StdDev function on column H, and set summary position to bottom."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
       "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
     },
