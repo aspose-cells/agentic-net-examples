@@ -10621,6 +10621,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-centered-text-watermark-with-arial-font-30point-size-and-50-opacity.cs",
+      "title": "Add a centered text watermark with Arial font, 30\u2011point size, and 50% opacity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs",
       "title": "Convert a CSV file to PDF and ensure column alignment matches source data."
     },
