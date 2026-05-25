@@ -4271,6 +4271,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-a-workbook-modify-a-formula-to-reference-a-different-cell-and-recalculate-to-verify-updated-value.cs",
+      "title": "Load a workbook, modify a formula to reference a different cell, and recalculate to verify updated value."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-existing-workbook-then-assign-a-sum-formula-to-cell-b2-using-cellformula.cs",
       "title": "Load an existing workbook, then assign a SUM formula to cell B2 using Cell.Formula."
     },

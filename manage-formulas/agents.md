@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - create-a-unit-test-verifying-that-the-date-function-returns-correct-serial-numbers-for-valid-dates.cs
 - apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs
 - programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs
+- load-a-workbook-modify-a-formula-to-reference-a-different-cell-and-recalculate-to-verify-updated-value.cs
