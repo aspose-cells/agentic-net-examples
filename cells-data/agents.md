@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - count-nonempty-cells-in-each-row-using-a-rows-enumerator-and-output-totals-per-row.cs
 - find-the-cell-with-the-highest-numeric-value-across-the-sheet-by-scanning-with-a-cells-enumerator.cs
 - detect-duplicate-text-entries-in-a-column-by-enumerating-the-column-and-tracking-occurrences.cs
+- log-each-cells-address-data-type-and-value-to-a-text-file-during-enumeration-for-auditing.cs
