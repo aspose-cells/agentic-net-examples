@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - subscribe-to-workbookdrawobjecteventhandler-to-capture-draw-object-types-and-bounds-during-pdf-rendering.cs
 - save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs
 - retrieve-draw-object-and-bound-information-from-the-drawobjecteventhandler-callback-for-custom-processing.cs
+- verify-that-embedded-attachments-are-accessible-from-the-generated-pdf-using-a-pdf-viewer.cs
