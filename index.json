@@ -10620,6 +10620,11 @@
       "title": "Validate that exported JSON includes expected number of rows by comparing with original worksheet row count."
     },
     {
+      "category": "working-with-pdf",
+      "file": "convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs",
+      "title": "Convert an XLSX workbook to PDF using default settings and verify output file size."
+    },
+    {
       "category": "working-with-shapes",
       "file": "access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs",
       "title": "Access connection points of shape FlowConnector and attach them to cells A1 and B2 for dynamic linking."
