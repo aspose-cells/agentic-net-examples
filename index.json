@@ -10996,6 +10996,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "encrypt-the-generated-pdf-with-a-user-password-and-restrict-printing-permissions.cs",
+      "title": "Encrypt the generated PDF with a user password and restrict printing permissions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "ensure-that-each-worksheet-starts-on-a-new-pdf-page-when-onepagepersheet-is-set.cs",
       "title": "Ensure that each worksheet starts on a new PDF page when OnePagePerSheet is set."
     },
