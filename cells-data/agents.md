@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - convert-textual-number-representations-to-numeric-types-while-assigning-values-during-data-population.cs
 - build-a-dictionary-mapping-cell-addresses-to-their-values-by-enumerating-the-cells-collection.cs
 - count-nonempty-cells-in-each-row-using-a-rows-enumerator-and-output-totals-per-row.cs
+- find-the-cell-with-the-highest-numeric-value-across-the-sheet-by-scanning-with-a-cells-enumerator.cs

@@ -1086,6 +1086,11 @@
     },
     {
       "category": "cells-data",
+      "file": "find-the-cell-with-the-highest-numeric-value-across-the-sheet-by-scanning-with-a-cells-enumerator.cs",
+      "title": "Find the cell with the highest numeric value across the sheet by scanning with a Cells enumerator."
+    },
+    {
+      "category": "cells-data",
       "file": "generate-a-rows-enumerator-traverse-each-row-and-sum-values-in-the-first-column.cs",
       "title": "Generate a Rows enumerator, traverse each row, and sum values in the first column."
     },
