@@ -10746,6 +10746,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs",
+      "title": "Load an XLSX workbook from a file path and save it as a PDF document."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs",
       "title": "Save the workbook to PDF using PdfSaveOptions with configured settings and verify output."
     },
