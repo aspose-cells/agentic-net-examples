@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - find-cells-with-text-longer-than-50-characters-and-truncate-them-to-50-characters.cs
 - locate-cells-with-leading-or-trailing-spaces-and-trim-the-whitespace-programmatically.cs
 - find-cells-with-formulas-using-volatile-functions-and-list-their-addresses-for-review.cs
+- sort-worksheet-rows-by-column-a-in-ascending-order-using-a-datasorter-instance.cs
