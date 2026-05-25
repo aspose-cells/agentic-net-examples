@@ -721,6 +721,11 @@
     },
     {
       "category": "cells-data",
+      "file": "access-cell-b2-using-its-a1-style-name-set-a-numeric-value-and-save-the-workbook.cs",
+      "title": "Access cell B2 using its A1 style name, set a numeric value, and save the workbook."
+    },
+    {
+      "category": "cells-data",
       "file": "load-an-excel-workbook-from-a-file-path-and-verify-it-opens-successfully.cs",
       "title": "Load an Excel workbook from a file path and verify it opens successfully."
     },
