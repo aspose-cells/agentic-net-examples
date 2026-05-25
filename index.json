@@ -1171,6 +1171,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-a-summary-of-empty-versus-filled-cells-by-counting-each-type-during-full-worksheet-enumeration.cs",
+      "title": "Generate a summary of empty versus filled cells by counting each type during full worksheet enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "group-numeric-cell-values-into-bins-to-generate-histogram-data-while-enumerating-a-specific-column.cs",
       "title": "Group numeric cell values into bins to generate histogram data while enumerating a specific column."
     },
