@@ -248,3 +248,4 @@ Output files are written to the working directory.
 - compare-cell-values-between-two-worksheets-and-output-mismatched-addresses-to-a-log-file.cs
 - backup-worksheet-data-to-a-json-file-by-enumerating-cells-and-serializing-addressvalue-pairs.cs
 - log-start-and-end-timestamps-of-each-enumeration-pass-to-analyze-performance-trends-over-multiple-runs.cs
+- identify-and-process-cells-belonging-to-merged-ranges-by-checking-the-ismerged-property-during-enumeration.cs
