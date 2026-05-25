@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - identify-duplicate-entries-in-column-q-and-mark-them-with-red-background.cs
 - search-for-cells-containing-the-word-error-ignoring-case-and-highlight-them-orange.cs
 - find-cells-with-text-longer-than-50-characters-and-truncate-them-to-50-characters.cs
+- locate-cells-with-leading-or-trailing-spaces-and-trim-the-whitespace-programmatically.cs
