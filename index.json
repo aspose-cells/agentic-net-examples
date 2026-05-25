@@ -11156,6 +11156,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "preserve-hyperlinks-so-that-links-in-excel-cells-remain-clickable-in-the-pdf-output.cs",
+      "title": "Preserve hyperlinks so that links in Excel cells remain clickable in the PDF output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "produce-a-landscapeoriented-pdf-for-wide-excel-sheets-to-improve-readability.cs",
       "title": "Produce a landscape\u2011oriented PDF for wide Excel sheets to improve readability."
     },
