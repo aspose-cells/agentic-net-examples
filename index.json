@@ -10661,6 +10661,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs",
+      "title": "Set PDF compliance to PDF/A\u20111a and ensure all fonts are embedded correctly."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-compliance-to-pdfa2b-while-preserving-original-color-profiles-for-accurate-color-reproduction.cs",
       "title": "Set PDF compliance to PDF/A\u20112b while preserving original color profiles for accurate color reproduction."
     },
