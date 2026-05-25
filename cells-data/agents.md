@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - find-cells-with-formulas-using-volatile-functions-and-list-their-addresses-for-review.cs
 - sort-worksheet-rows-by-column-a-in-ascending-order-using-a-datasorter-instance.cs
 - apply-descending-sort-on-column-d-while-preserving-original-row-grouping-via-addkey-method.cs
+- sort-data-based-on-cell-background-colors-in-column-b-using-sortkey-cellcolor-property.cs
