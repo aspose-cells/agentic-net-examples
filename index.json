@@ -826,6 +826,11 @@
     },
     {
       "category": "cells-data",
+      "file": "handle-an-outofrange-column-index-in-cellssubtotal-gracefully-by-catching-the-exception.cs",
+      "title": "Handle an out\u2011of\u2011range column index in Cells.Subtotal gracefully by catching the exception."
+    },
+    {
+      "category": "cells-data",
       "file": "iterate-through-all-cells-in-the-maximum-display-range-to-count-nonempty-cells.cs",
       "title": "Iterate through all cells in the maximum display range to count non\u2011empty cells."
     },
