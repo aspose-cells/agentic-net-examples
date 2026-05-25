@@ -1051,6 +1051,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-data-from-a-csv-source-using-a-custom-icellsdatatable-that-parses-commas-and-quotes-correctly.cs",
+      "title": "Import data from a CSV source using a custom ICellsDataTable that parses commas and quotes correctly."
+    },
+    {
+      "category": "cells-data",
       "file": "import-data-from-an-arraylist-containing-mixed-types-specifying-column-data-types-to-ensure-correct-cell-formatting.cs",
       "title": "Import data from an ArrayList containing mixed types, specifying column data types to ensure correct cell formatting."
     },
