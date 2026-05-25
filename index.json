@@ -4256,6 +4256,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-occurrences-of-concatenate-with-concat-function-across-the-workbook-for-modern-syntax.cs",
+      "title": "Replace all occurrences of CONCATENATE with CONCAT function across the workbook for modern syntax."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs",
       "title": "Retrieve the formula string from cell E10 and log it for audit purposes."
     },
