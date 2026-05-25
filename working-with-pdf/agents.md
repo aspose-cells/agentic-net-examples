@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionscompressionlevel-to-maximum-to-reduce-the-size-of-the-generated-pdf-file.cs
 - create-a-pdf-bookmark-hierarchy-by-adding-child-pdfbookmarkentry-objects-under-a-parent-entry.cs
 - use-workbookcalculateformula-to-ensure-all-formulas-are-evaluated-before-exporting-to-pdf.cs
+- apply-a-custom-font-substitution-rule-via-pdfsaveoptions-to-handle-missing-fonts-during-pdf-generation.cs
