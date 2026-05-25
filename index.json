@@ -906,6 +906,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-only-validated-cells-from-a-worksheet-to-a-json-array-for-downstream-processing.cs",
+      "title": "Export only validated cells from a worksheet to a JSON array for downstream processing."
+    },
+    {
+      "category": "cells-data",
       "file": "export-worksheet-data-to-a-markdown-table-preserving-header-formatting-and-alignment.cs",
       "title": "Export worksheet data to a markdown table preserving header formatting and alignment."
     },
