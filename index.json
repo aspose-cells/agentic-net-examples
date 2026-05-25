@@ -10771,6 +10771,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-highresolution-image-quality-for-charts-when-converting-excel-worksheets-to-pdf.cs",
+      "title": "Configure high\u2011resolution image quality for charts when converting Excel worksheets to PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs",
       "title": "Configure PDF page size to A4 and orientation to landscape before saving the workbook."
     },
