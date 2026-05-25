@@ -10746,6 +10746,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs",
+      "title": "Configure PDF page size to A4 and orientation to landscape before saving the workbook."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-pdfsaveoptions-to-disable-blank-page-generation-when-the-workbook-contains-no-printable-content.cs",
       "title": "Configure PdfSaveOptions to disable blank page generation when the workbook contains no printable content."
     },

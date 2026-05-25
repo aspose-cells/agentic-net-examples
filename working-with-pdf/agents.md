@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs
 - convert-a-batch-of-xlsx-files-in-a-directory-to-pdfa1a-format-using-parallel-processing.cs
 - increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs
+- configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs
