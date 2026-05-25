@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - check-that-the-sumproduct-function-appears-in-the-supported-excel-functions-list-before-using-it.cs
 - implement-a-routine-that-reads-cellvalue-after-calculation-to-confirm-formula-evaluation-result.cs
 - create-a-batch-script-that-opens-multiple-workbooks-sets-a-shared-formula-and-saves-each-file.cs
+- verify-that-the-npv-function-is-supported-and-correctly-calculates-net-present-value-for-sample-cash-flows.cs
