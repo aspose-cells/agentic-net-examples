@@ -1076,6 +1076,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-an-array-of-boolean-values-then-set-cell-background-green-for-true-and-red-for-false.cs",
+      "title": "Import an array of boolean values, then set cell background green for true and red for false."
+    },
+    {
+      "category": "cells-data",
       "file": "import-an-array-of-timestamps-then-format-cells-to-display-time-in-hhmmss-format-for-readability.cs",
       "title": "Import an array of timestamps, then format cells to display time in HH:mm:ss format for readability."
     },

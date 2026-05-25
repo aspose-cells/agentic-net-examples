@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs
 - retrieve-raw-string-values-from-a-column-count-occurrences-of-a-specific-keyword-and-log-the-total.cs
 - use-getstringvalue-with-withformatting-to-generate-a-formatted-address-line-combining-street-city-and-zip.cs
+- import-an-array-of-boolean-values-then-set-cell-background-green-for-true-and-red-for-false.cs
