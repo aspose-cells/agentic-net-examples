@@ -10721,6 +10721,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-pdf-encryption-with-a-user-password-and-restrict-printing-using-pdfsaveoptionsencryptionoptions.cs",
+      "title": "Apply PDF encryption with a user password and restrict printing using PdfSaveOptions.EncryptionOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs",
       "title": "Assign specific worksheet indices to PdfSaveOptions.SheetSet to export selected sheets as a single PDF."
     },
