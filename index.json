@@ -4216,6 +4216,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs",
+      "title": "Create a shared formula for range C3:C12 by invoking Cell.SetSharedFormula on the first cell."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-existing-workbook-then-assign-a-sum-formula-to-cell-b2-using-cellformula.cs",
       "title": "Load an existing workbook, then assign a SUM formula to cell B2 using Cell.Formula."
     },
