@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - verify-that-embedded-attachments-are-accessible-from-the-generated-pdf-using-a-pdf-viewer.cs
 - confirm-that-solid-gridlines-appear-correctly-in-the-pdf-when-rendersolidgridlines-is-enabled.cs
 - ensure-that-each-worksheet-starts-on-a-new-pdf-page-when-onepagepersheet-is-set.cs
+- check-that-the-pdf-complies-with-pdfa1a-standards-when-compliance-is-set-accordingly.cs

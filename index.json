@@ -10701,6 +10701,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "check-that-the-pdf-complies-with-pdfa1a-standards-when-compliance-is-set-accordingly.cs",
+      "title": "Check that the PDF complies with PDF/A\u20111a standards when Compliance is set accordingly."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-pdfsaveoptions-to-disable-blank-page-generation-when-the-workbook-contains-no-printable-content.cs",
       "title": "Configure PdfSaveOptions to disable blank page generation when the workbook contains no printable content."
     },
