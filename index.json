@@ -866,6 +866,11 @@
     },
     {
       "category": "cells-data",
+      "file": "enable-incell-dropdown-for-column-h-by-setting-validationincelldropdown-to-true.cs",
+      "title": "Enable in\u2011cell dropdown for column H by setting Validation.InCellDropDown to true."
+    },
+    {
+      "category": "cells-data",
       "file": "find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs",
       "title": "Find all numeric values greater than 1000 across the worksheet and collect their addresses."
     },
