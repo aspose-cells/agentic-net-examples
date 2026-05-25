@@ -10711,6 +10711,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-a-custom-color-profile-to-pdf-images-extracted-from-excel-charts-for-accurate-printing.cs",
+      "title": "Apply a custom color profile to PDF images extracted from Excel charts for accurate printing."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-a-custom-font-substitution-rule-via-pdfsaveoptions-to-handle-missing-fonts-during-pdf-generation.cs",
       "title": "Apply a custom font substitution rule via PdfSaveOptions to handle missing fonts during PDF generation."
     },
