@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - measure-execution-time-for-columnmajor-versus-rowmajor-data-population-to-determine-optimal-ordering.cs
 - set-displayrange-to-a-specific-area-and-enumerate-only-cells-within-that-visible-region.cs
 - use-maxdatarow-and-maxdatacolumn-limits-to-iterate-only-populated-cells-ignoring-empty-rows.cs
+- convert-textual-number-representations-to-numeric-types-while-assigning-values-during-data-population.cs
