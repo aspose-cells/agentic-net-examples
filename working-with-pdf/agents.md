@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - apply-aes256-encryption-with-user-and-owner-passwords-to-secure-the-pdf.cs
 - apply-aes256-encryption-with-only-a-user-password-to-protect-the-pdf.cs
 - apply-aes256-encryption-with-both-user-and-owner-passwords-then-save-workbook-as-pdf.cs
+- configure-pdfsaveoptionspassword-and-encryptiontype-to-encrypt-pdf-with-a-strong-password.cs

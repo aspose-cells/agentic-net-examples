@@ -10731,6 +10731,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-pdfsaveoptionspassword-and-encryptiontype-to-encrypt-pdf-with-a-strong-password.cs",
+      "title": "Configure PdfSaveOptions.Password and EncryptionType to encrypt PDF with a strong password."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "confirm-that-solid-gridlines-appear-correctly-in-the-pdf-when-rendersolidgridlines-is-enabled.cs",
       "title": "Confirm that solid gridlines appear correctly in the PDF when RenderSolidGridlines is enabled."
     },
