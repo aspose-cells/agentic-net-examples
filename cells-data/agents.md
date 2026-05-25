@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - export-worksheet-data-to-an-html-file-with-embedded-css-to-retain-cell-styling.cs
 - export-worksheet-data-to-a-markdown-table-preserving-header-formatting-and-alignment.cs
 - export-only-validated-cells-from-a-worksheet-to-a-json-array-for-downstream-processing.cs
+- export-worksheet-rows-that-fail-validation-to-a-separate-sheet-for-error-analysis.cs
