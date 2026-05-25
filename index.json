@@ -916,6 +916,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-hyperlink-that-opens-a-specific-sheet-and-cell-range-when-clicked-using-the-sheet1a1-syntax.cs",
+      "title": "Create a hyperlink that opens a specific sheet and cell range when clicked, using the '#Sheet1!A1' syntax."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-hyperlink-that-points-to-a-network-share-location-using-unc-path-syntax-for-accessibility.cs",
       "title": "Create a hyperlink that points to a network share location, using UNC path syntax for accessibility."
     },
