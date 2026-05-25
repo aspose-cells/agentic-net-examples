@@ -1341,6 +1341,11 @@
     },
     {
       "category": "cells-data",
+      "file": "profile-cpu-usage-while-enumerating-a-large-worksheet-to-identify-performance-bottlenecks-in-the-iteration-loop.cs",
+      "title": "Profile CPU usage while enumerating a large worksheet to identify performance bottlenecks in the iteration loop."
+    },
+    {
+      "category": "cells-data",
       "file": "read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs",
       "title": "Read a cell's formatted string, replace placeholder tokens, and write the updated string back to the cell."
     },
