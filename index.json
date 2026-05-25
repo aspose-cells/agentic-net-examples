@@ -1111,6 +1111,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-raw-strings-from-a-cell-range-concatenate-them-and-write-the-result-to-a-summary-cell.cs",
+      "title": "Retrieve raw strings from a cell range, concatenate them, and write the result to a summary cell."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-the-worksheets-maximum-display-range-and-use-it-to-define-a-print-area.cs",
       "title": "Retrieve the worksheet's maximum display range and use it to define a print area."
     },

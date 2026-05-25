@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - use-getstringvalue-with-withformatting-to-generate-a-userfriendly-report-line-that-includes-currency-symbols.cs
 - import-a-twodimensional-array-of-booleans-and-set-cell-style-to-display-checkmarks-for-true-values.cs
 - create-a-hyperlink-that-references-a-cell-in-another-worksheet-using-the-internal-excel-address-format.cs
+- retrieve-raw-strings-from-a-cell-range-concatenate-them-and-write-the-result-to-a-summary-cell.cs
