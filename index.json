@@ -11091,6 +11091,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "use-crossstring-to-place-a-confidential-stamp-over-the-center-of-each-pdf-page.cs",
+      "title": "Use cross\u2011string to place a 'Confidential' stamp over the center of each PDF page."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "use-crossstring-to-position-a-logo-image-at-coordinates-100200-in-the-pdf.cs",
       "title": "Use cross\u2011string to position a logo image at coordinates (100,200) in the PDF."
     },
