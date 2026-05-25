@@ -10641,6 +10641,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-an-xls-workbook-to-pdfa1b-compliant-file-and-verify-compliance-with-external-validator.cs",
+      "title": "Convert an XLS workbook to PDF/A\u20111b compliant file and verify compliance with external validator."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs",
       "title": "Convert an XLSX workbook to PDF using default settings and verify output file size."
     },
