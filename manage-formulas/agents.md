@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-an-existing-workbook-then-assign-a-sum-formula-to-cell-b2-using-cellformula.cs
+- verify-that-the-assigned-formula-uses-english-us-function-names-and-commas-as-argument-separators.cs

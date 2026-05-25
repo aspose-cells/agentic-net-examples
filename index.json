@@ -4220,6 +4220,11 @@
       "title": "Load an existing workbook, then assign a SUM formula to cell B2 using Cell.Formula."
     },
     {
+      "category": "manage-formulas",
+      "file": "verify-that-the-assigned-formula-uses-english-us-function-names-and-commas-as-argument-separators.cs",
+      "title": "Verify that the assigned formula uses English (US) function names and commas as argument separators."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
