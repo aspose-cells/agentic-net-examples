@@ -1021,6 +1021,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-lookup-table-of-cell-addresses-to-values-for-fast-retrieval-by-populating-a-dictionary-during-enumeration.cs",
+      "title": "Create a lookup table of cell addresses to values for fast retrieval by populating a dictionary during enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-new-worksheet-import-an-array-of-dates-and-format-cells-to-display-short-date-pattern.cs",
       "title": "Create a new worksheet, import an array of dates, and format cells to display short date pattern."
     },

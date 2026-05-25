@@ -242,3 +242,4 @@ Output files are written to the working directory.
 - implement-a-custom-iterator-that-skips-hidden-rows-by-checking-the-rowishidden-property-during-enumeration.cs
 - generate-a-report-of-cells-exceeding-a-numeric-threshold-by-scanning-each-cell-and-recording-violating-addresses.cs
 - log-cell-address-value-and-data-type-for-auditing-by-writing-entries-to-a-csv-file-during-enumeration.cs
+- create-a-lookup-table-of-cell-addresses-to-values-for-fast-retrieval-by-populating-a-dictionary-during-enumeration.cs
