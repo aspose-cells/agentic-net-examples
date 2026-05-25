@@ -11256,6 +11256,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdf-document-title-metadata-based-on-the-original-excel-workbook-name.cs",
+      "title": "Set PDF document title metadata based on the original Excel workbook name."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs",
       "title": "Set PDF metadata such as title, author, and subject before saving the workbook."
     },
