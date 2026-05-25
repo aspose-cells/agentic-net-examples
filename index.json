@@ -10881,6 +10881,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "use-workbookcalculateformula-to-ensure-all-formulas-are-evaluated-before-exporting-to-pdf.cs",
+      "title": "Use Workbook.CalculateFormula to ensure all formulas are evaluated before exporting to PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "validate-that-the-exported-pdf-contains-the-expected-number-of-pages-using-a-pdf-inspection-library.cs",
       "title": "Validate that the exported PDF contains the expected number of pages using a PDF inspection library."
     },
