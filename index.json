@@ -10901,6 +10901,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs",
+      "title": "Enable PdfSaveOptions.EmbedAttachments and add file paths to embed multiple external files into the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsrendersolidgridlines-to-draw-solid-gridlines-in-the-exported-pdf.cs",
       "title": "Enable PdfSaveOptions.RenderSolidGridlines to draw solid gridlines in the exported PDF."
     },

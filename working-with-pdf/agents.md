@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs
 - add-a-semitransparent-watermark-text-across-each-pdf-page-using-pdfsaveoptionswatermarktext.cs
 - create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs
+- enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs
