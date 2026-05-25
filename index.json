@@ -1146,6 +1146,11 @@
     },
     {
       "category": "cells-data",
+      "file": "implement-progress-reporting-by-raising-events-after-processing-each-hundred-cells-during-enumeration.cs",
+      "title": "Implement progress reporting by raising events after processing each hundred cells during enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs",
       "title": "Import a collection of custom objects, mapping properties to columns, starting at row two, column one."
     },
