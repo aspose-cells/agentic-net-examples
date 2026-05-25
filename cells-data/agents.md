@@ -276,3 +276,4 @@ Output files are written to the working directory.
 - create-a-report-listing-cells-where-stylequoteprefix-is-true-including-their-row-and-column-indices.cs
 - detect-cells-that-contain-both-a-leading-apostrophe-and-richtext-and-log-their-addresses.cs
 - implement-error-handling-for-setcharacters-when-the-specified-range-exceeds-the-cells-text-length.cs
+- benchmark-the-performance-impact-of-iterating-through-richtext-portions-in-large-worksheets.cs
