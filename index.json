@@ -796,6 +796,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-subtotals-with-summaryposition-set-to-bottom-inserting-summary-rows-after-each-group.cs",
+      "title": "Apply subtotals with summaryPosition set to bottom, inserting summary rows after each group."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-subtotals-with-summaryposition-set-to-top-inserting-summary-rows-before-each-group.cs",
       "title": "Apply subtotals with summaryPosition set to top, inserting summary rows before each group."
     },
