@@ -911,6 +911,11 @@
     },
     {
       "category": "cells-data",
+      "file": "sort-worksheet-rows-by-column-a-in-ascending-order-using-a-datasorter-instance.cs",
+      "title": "Sort worksheet rows by column A in ascending order using a DataSorter instance."
+    },
+    {
+      "category": "cells-data",
       "file": "use-cellssubtotal-with-column-index-derived-from-column-name-sales-to-sum-sales-figures.cs",
       "title": "Use Cells.Subtotal with column index derived from column name \"Sales\" to sum sales figures."
     },
