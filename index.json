@@ -801,6 +801,11 @@
     },
     {
       "category": "cells-data",
+      "file": "adjust-the-firstrow-parameter-to-shift-existing-rows-down-before-inserting-a-new-data-table.cs",
+      "title": "Adjust the firstRow parameter to shift existing rows down before inserting a new data table."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
