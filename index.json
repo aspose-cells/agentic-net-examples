@@ -10966,6 +10966,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs",
+      "title": "Loop through each worksheet, set SheetSet individually, and save each as separate PDF files."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs",
       "title": "Programmatically remove a specific worksheet before saving the workbook as PDF to exclude its content."
     },
