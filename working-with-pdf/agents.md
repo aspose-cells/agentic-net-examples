@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs
 - load-an-xls-workbook-containing-charts-then-export-it-to-pdf-preserving-chart-rendering.cs
 - create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs
+- iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs
