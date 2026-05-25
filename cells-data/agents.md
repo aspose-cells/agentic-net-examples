@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - retrieve-the-worksheets-maximum-display-range-and-use-it-to-define-a-print-area.cs
 - iterate-through-all-cells-in-the-maximum-display-range-to-count-nonempty-cells.cs
 - convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs
+- convert-string-numeric-values-only-in-the-first-worksheet-while-leaving-other-sheets-unchanged.cs
