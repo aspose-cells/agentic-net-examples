@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-an-excel-workbook-from-a-file-path-and-verify-it-opens-successfully.cs
+- select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs
