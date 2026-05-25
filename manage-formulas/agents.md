@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - calculate-all-formulas-in-the-workbook-programmatically-using-workbookcalculate-and-retrieve-updated-cell-values.cs
 - read-the-calculated-result-of-cell-d5-after-invoking-the-worksheetcalculate-method.cs
 - use-calculateformula-method-to-evaluate-a-single-complex-formula-without-recalculating-the-whole-worksheet.cs
+- retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs
