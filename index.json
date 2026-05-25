@@ -941,6 +941,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-worksheet-rows-that-fail-validation-to-a-separate-sheet-for-error-analysis.cs",
+      "title": "Export worksheet rows that fail validation to a separate sheet for error analysis."
+    },
+    {
+      "category": "cells-data",
       "file": "find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs",
       "title": "Find all numeric values greater than 1000 across the worksheet and collect their addresses."
     },
