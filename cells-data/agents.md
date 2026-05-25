@@ -278,3 +278,4 @@ Output files are written to the working directory.
 - implement-error-handling-for-setcharacters-when-the-specified-range-exceeds-the-cells-text-length.cs
 - benchmark-the-performance-impact-of-iterating-through-richtext-portions-in-large-worksheets.cs
 - write-unit-tests-asserting-that-styleflagquoteprefix-false-does-not-alter-existing-quoteprefix-values.cs
+- create-a-utility-that-scans-a-workbook-for-cells-where-quoteprefix-is-unintentionally-set-to-true.cs
