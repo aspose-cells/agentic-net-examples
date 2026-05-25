@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-set-pdfsaveoptionsoptimizationtype-to-standardsize-and-save-as-pdf.cs
 - convert-an-xls-workbook-to-pdf-using-minimumsize-optimization-while-preserving-worksheet-colors.cs
 - load-an-xls-file-set-optimizationtype-to-minimumsize-and-save-as-pdf.cs
+- load-an-xlsm-file-apply-standardsize-optimization-and-export-to-pdf.cs
