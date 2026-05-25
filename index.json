@@ -10686,6 +10686,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs",
+      "title": "Configure PdfSaveOptions to use a specific PDF version for compatibility with older readers."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "control-loading-of-external-resources-by-disabling-them-during-pdf-rendering-to-improve-performance.cs",
       "title": "Control loading of external resources by disabling them during PDF rendering to improve performance."
     },
