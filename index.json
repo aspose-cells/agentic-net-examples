@@ -10996,6 +10996,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "fit-all-worksheet-columns-onto-a-single-pdf-page-during-conversion.cs",
+      "title": "Fit all worksheet columns onto a single PDF page during conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs",
       "title": "Hide rows and columns marked as hidden in Excel when generating the PDF output."
     },

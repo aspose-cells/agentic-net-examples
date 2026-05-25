@@ -204,3 +204,4 @@ Output files are written to the working directory.
 - convert-a-workbook-containing-sparklines-ensuring-they-appear-as-inline-graphics-in-the-pdf.cs
 - export-worksheets-with-slicers-rendering-slicer-controls-as-static-images-in-the-pdf.cs
 - preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs
+- fit-all-worksheet-columns-onto-a-single-pdf-page-during-conversion.cs
