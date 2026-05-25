@@ -10961,6 +10961,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs",
+      "title": "Export pivot tables as static images in the PDF to capture their current state."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "extract-the-list-of-named-destinations-from-an-exported-pdf-using-a-pdf-parsing-library.cs",
       "title": "Extract the list of named destinations from an exported PDF using a PDF parsing library."
     },
