@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - add-a-text-watermark-with-no-rotation-and-20-opacity-on-evennumbered-pages.cs
 - add-a-text-watermark-with-30point-size-and-40-opacity-on-all-pdf-pages.cs
 - add-an-image-watermark-from-png-byte-array-scaling-to-page-size-with-40-opacity.cs
+- add-an-image-watermark-from-jpeg-bytes-maintaining-original-dimensions-and-20-opacity.cs
