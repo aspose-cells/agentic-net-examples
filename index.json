@@ -4301,6 +4301,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "disable-the-calculation-chain-recalculate-a-single-worksheet-and-compare-execution-time-with-chain-enabled.cs",
+      "title": "Disable the calculation chain, recalculate a single worksheet, and compare execution time with chain enabled."
+    },
+    {
+      "category": "manage-formulas",
       "file": "enable-the-calculation-chain-run-workbook-wide-calculation-and-measure-performance-improvement-over-default-mode.cs",
       "title": "Enable the calculation chain, run workbook-wide calculation, and measure performance improvement over default mode."
     },
