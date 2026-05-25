@@ -11086,6 +11086,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs",
+      "title": "Preserve cell background colors in the PDF by enabling appropriate rendering settings."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs",
       "title": "Preserve cell comments in the PDF output by enabling the option to retain comments."
     },
