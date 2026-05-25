@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - create-a-new-worksheet-import-an-array-of-dates-and-format-cells-to-display-short-date-pattern.cs
 - read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs
 - import-data-from-a-csv-file-into-a-worksheet-using-importdata-with-a-custom-icellsdatatable-implementation.cs
+- set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs
