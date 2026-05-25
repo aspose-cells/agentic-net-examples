@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - create-a-hyperlink-that-opens-a-specific-sheet-and-cell-range-when-clicked-using-the-sheet1a1-syntax.cs
 - import-data-from-a-json-source-by-implementing-icellsdatatable-to-map-json-fields-to-worksheet-columns.cs
 - after-importing-html-content-verify-that-image-tags-are-ignored-and-do-not-affect-cell-formatting.cs
+- set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs
