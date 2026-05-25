@@ -906,6 +906,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-hyperlink-that-references-a-cell-in-another-worksheet-using-the-internal-excel-address-format.cs",
+      "title": "Create a hyperlink that references a cell in another worksheet, using the internal Excel address format."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-new-worksheet-import-an-array-of-dates-and-format-cells-to-display-short-date-pattern.cs",
       "title": "Create a new worksheet, import an array of dates, and format cells to display short date pattern."
     },
