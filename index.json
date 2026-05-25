@@ -10671,6 +10671,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-file-attachments-to-pdfsaveoptionsattachments-collection-to-embed-external-documents-in-the-pdf.cs",
+      "title": "Add file attachments to PdfSaveOptions.Attachments collection to embed external documents in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-pdf-bookmarks-with-named-destinations-matching-specific-cell-ranges-for-quick-access.cs",
       "title": "Add PDF bookmarks with named destinations matching specific cell ranges for quick access."
     },
