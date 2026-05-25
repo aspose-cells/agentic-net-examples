@@ -936,6 +936,11 @@
     },
     {
       "category": "cells-data",
+      "file": "count-cells-containing-a-specific-keyword-by-scanning-each-cells-text-during-enumeration.cs",
+      "title": "Count cells containing a specific keyword by scanning each cell's text during enumeration."
+    },
+    {
+      "category": "cells-data",
       "file": "count-nonempty-cells-in-each-row-using-a-rows-enumerator-and-output-totals-per-row.cs",
       "title": "Count non\u2011empty cells in each row using a Rows enumerator and output totals per row."
     },
