@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - retrieve-validation-details-of-cell-j5-and-log-its-type-and-formula-values.cs
 - check-whether-cell-k10-uses-an-incell-dropdown-and-output-the-result-to-console.cs
 - add-validation-to-a-dynamic-range-that-expands-as-new-rows-are-inserted-using-cellarea.cs
+- create-a-validation-allowing-dates-between-01012020-and-12312025-in-column-n.cs
