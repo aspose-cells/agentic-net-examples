@@ -280,3 +280,4 @@ Output files are written to the working directory.
 - write-unit-tests-asserting-that-styleflagquoteprefix-false-does-not-alter-existing-quoteprefix-values.cs
 - create-a-utility-that-scans-a-workbook-for-cells-where-quoteprefix-is-unintentionally-set-to-true.cs
 - apply-conditional-formatting-that-highlights-cells-with-quoteprefix-false-using-a-distinct-background-color.cs
+- programmatically-insert-an-apostrophe-prefix-into-numeric-cells-to-force-text-interpretation.cs

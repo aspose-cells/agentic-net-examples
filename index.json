@@ -1536,6 +1536,11 @@
     },
     {
       "category": "cells-data",
+      "file": "programmatically-insert-an-apostrophe-prefix-into-numeric-cells-to-force-text-interpretation.cs",
+      "title": "Programmatically insert an apostrophe prefix into numeric cells to force text interpretation."
+    },
+    {
+      "category": "cells-data",
       "file": "read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs",
       "title": "Read a cell's formatted string, replace placeholder tokens, and write the updated string back to the cell."
     },
