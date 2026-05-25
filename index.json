@@ -926,6 +926,11 @@
     },
     {
       "category": "cells-data",
+      "file": "change-the-font-size-of-a-specific-richtextportion-to-twelve-points.cs",
+      "title": "Change the font size of a specific RichTextPortion to twelve points."
+    },
+    {
+      "category": "cells-data",
       "file": "check-whether-cell-k10-uses-an-incell-dropdown-and-output-the-result-to-console.cs",
       "title": "Check whether cell K10 uses an in\u2011cell dropdown and output the result to console."
     },
