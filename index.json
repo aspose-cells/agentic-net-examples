@@ -10906,6 +10906,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs",
+      "title": "Convert Excel formulas to their calculated values in the PDF to display static results."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-only-selected-ranges-of-an-excel-worksheet-to-pdf-excluding-hidden-rows-and-columns.cs",
       "title": "Convert only selected ranges of an Excel worksheet to PDF, excluding hidden rows and columns."
     },
