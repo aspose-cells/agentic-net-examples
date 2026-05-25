@@ -201,3 +201,4 @@ Output files are written to the working directory.
 - add-a-digital-signature-to-the-pdf-using-pdfsaveoptions-to-ensure-document-authenticity.cs
 - set-pdf-version-to-17-for-compatibility-with-modern-pdf-readers-ensuring-proper-rendering.cs
 - enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs
+- convert-a-workbook-containing-sparklines-ensuring-they-appear-as-inline-graphics-in-the-pdf.cs
