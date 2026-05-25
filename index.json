@@ -10666,6 +10666,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-pdf-bookmarks-with-named-destinations-matching-specific-cell-ranges-for-quick-access.cs",
+      "title": "Add PDF bookmarks with named destinations matching specific cell ranges for quick access."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs",
       "title": "Convert a CSV file to PDF and ensure column alignment matches source data."
     },
