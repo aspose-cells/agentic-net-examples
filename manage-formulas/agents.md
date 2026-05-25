@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - create-a-batch-script-that-opens-multiple-workbooks-sets-a-shared-formula-and-saves-each-file.cs
 - verify-that-the-npv-function-is-supported-and-correctly-calculates-net-present-value-for-sample-cash-flows.cs
 - convert-all-formulas-to-english-us-syntax-with-commas-and-validate-successful-calculation-across-the-workbook.cs
+- generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs
