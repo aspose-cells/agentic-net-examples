@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs
 - export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs
 - maintain-conditional-formatting-colors-in-the-pdf-by-enabling-appropriate-rendering-options.cs
+- include-data-validation-dropdowns-as-static-text-in-the-pdf-to-reflect-cell-constraints.cs

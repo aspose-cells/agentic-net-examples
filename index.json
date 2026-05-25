@@ -10981,6 +10981,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "include-data-validation-dropdowns-as-static-text-in-the-pdf-to-reflect-cell-constraints.cs",
+      "title": "Include data validation dropdowns as static text in the PDF to reflect cell constraints."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs",
       "title": "Increase image resampling quality to 300 DPI for sharper images in the generated PDF."
     },
