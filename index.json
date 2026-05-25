@@ -4266,6 +4266,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs",
+      "title": "Create a named range, assign a simple SUM formula, and verify the calculated result programmatically."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs",
       "title": "Create a shared formula for range C3:C12 by invoking Cell.SetSharedFormula on the first cell."
     },
