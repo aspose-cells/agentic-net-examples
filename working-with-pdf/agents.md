@@ -227,3 +227,4 @@ Output files are written to the working directory.
 - embed-javascript-in-the-pdf-to-open-a-specific-url-when-the-document-loads.cs
 - apply-a-custom-color-profile-to-pdf-images-extracted-from-excel-charts-for-accurate-printing.cs
 - include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
+- convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs
