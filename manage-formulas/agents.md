@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs
 - load-a-workbook-modify-a-formula-to-reference-a-different-cell-and-recalculate-to-verify-updated-value.cs
 - check-that-the-sumproduct-function-appears-in-the-supported-excel-functions-list-before-using-it.cs
+- implement-a-routine-that-reads-cellvalue-after-calculation-to-confirm-formula-evaluation-result.cs

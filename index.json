@@ -4276,6 +4276,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "implement-a-routine-that-reads-cellvalue-after-calculation-to-confirm-formula-evaluation-result.cs",
+      "title": "Implement a routine that reads Cell.Value after calculation to confirm formula evaluation result."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-a-workbook-modify-a-formula-to-reference-a-different-cell-and-recalculate-to-verify-updated-value.cs",
       "title": "Load a workbook, modify a formula to reference a different cell, and recalculate to verify updated value."
     },
