@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - apply-aes256-encryption-with-both-user-and-owner-passwords-then-save-workbook-as-pdf.cs
 - configure-pdfsaveoptionspassword-and-encryptiontype-to-encrypt-pdf-with-a-strong-password.cs
 - use-crossstring-to-position-a-logo-image-at-coordinates-100200-in-the-pdf.cs
+- use-crossstring-to-overlay-the-word-confidential-at-the-bottom-of-each-pdf-page.cs
