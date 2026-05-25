@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs
 - enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs
 - configure-pdfsaveoptionsimageresample-to-150-dpi-to-reduce-pdf-size-while-maintaining-image-clarity.cs
+- set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs

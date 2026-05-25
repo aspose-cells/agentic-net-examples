@@ -11121,6 +11121,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs",
+      "title": "Set PdfSaveOptions.FitAllColumnsInOnePage to true to fit all columns on a single PDF page."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsfitallcolumnsononepage-to-true-to-fit-all-worksheet-columns-onto-a-single-pdf-page.cs",
       "title": "Set PdfSaveOptions.FitAllColumnsOnOnePage to true to fit all worksheet columns onto a single PDF page."
     },
