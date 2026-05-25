@@ -971,6 +971,11 @@
     },
     {
       "category": "cells-data",
+      "file": "count-the-number-of-cells-per-data-type-by-iterating-all-cells-and-incrementing-typespecific-counters.cs",
+      "title": "Count the number of cells per data type by iterating all cells and incrementing type\u2011specific counters."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-chart-data-series-from-column-values-by-enumerating-the-column-and-collecting-numeric-entries.cs",
       "title": "Create a chart data series from column values by enumerating the column and collecting numeric entries."
     },
