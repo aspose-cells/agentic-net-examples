@@ -916,6 +916,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-hyperlink-that-triggers-a-mailto-email-composition-when-the-user-clicks-the-cell.cs",
+      "title": "Create a hyperlink that triggers a mailto: email composition when the user clicks the cell."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-new-worksheet-import-an-array-of-dates-and-format-cells-to-display-short-date-pattern.cs",
       "title": "Create a new worksheet, import an array of dates, and format cells to display short date pattern."
     },

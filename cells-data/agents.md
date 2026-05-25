@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - retrieve-a-cells-formatted-string-detect-if-it-contains-a-url-and-convert-it-into-a-clickable-hyperlink.cs
 - import-data-from-a-csv-source-using-a-custom-icellsdatatable-that-parses-commas-and-quotes-correctly.cs
 - use-getstringvalue-with-withformatting-to-extract-date-strings-then-parse-them-into-datetime-objects-for-sorting.cs
+- create-a-hyperlink-that-triggers-a-mailto-email-composition-when-the-user-clicks-the-cell.cs
