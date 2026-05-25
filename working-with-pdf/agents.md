@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - apply-a-custom-page-margin-setting-via-pdfsaveoptions-to-control-pdf-page-layout.cs
 - set-pdfsaveoptionsonepagepersheet-to-true-to-force-each-worksheet-onto-a-separate-pdf-page.cs
 - implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs
+- log-the-names-of-all-pdf-bookmarks-created-during-workbook-export-for-audit-purposes.cs
