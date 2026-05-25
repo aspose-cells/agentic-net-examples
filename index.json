@@ -4356,6 +4356,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "update-external-link-paths-in-formulas-after-moving-source-workbooks-to-a-new-directory.cs",
+      "title": "Update external link paths in formulas after moving source workbooks to a new directory."
+    },
+    {
+      "category": "manage-formulas",
       "file": "use-calculateformula-method-to-evaluate-a-single-complex-formula-without-recalculating-the-whole-worksheet.cs",
       "title": "Use CalculateFormula method to evaluate a single complex formula without recalculating the whole worksheet."
     },
