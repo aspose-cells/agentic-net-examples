@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - import-an-array-of-timestamps-then-format-cells-to-display-time-in-hhmmss-format-for-readability.cs
 - use-importcustomobjects-with-a-mapping-dictionary-to-rename-columns-during-data-import-from-objects.cs
 - set-importtableoptionscheckmergedcells-to-false-to-intentionally-skip-writing-into-merged-cell-ranges.cs
+- after-importing-html-content-replace-all-br-tags-with-line-feed-characters-to-improve-cell-display.cs
