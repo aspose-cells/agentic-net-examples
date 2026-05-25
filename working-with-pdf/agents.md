@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - use-crossstring-to-overlay-the-word-confidential-at-the-bottom-of-each-pdf-page.cs
 - specify-crossstring-coordinates-to-place-custom-text-precisely-within-the-generated-pdf.cs
 - activate-pdfsaveoptionscrossstring-to-customize-text-placement-coordinates-for-precise-pdf-layout-control.cs
+- use-crossstring-to-place-a-confidential-stamp-over-the-center-of-each-pdf-page.cs
