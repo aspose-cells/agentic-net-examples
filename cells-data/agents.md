@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - use-importcustomobjects-with-preservehtml-enabled-to-keep-bold-tags-when-importing-product-descriptions.cs
 - set-importtableoptionscheckmergedcells-to-true-then-import-data-that-spans-across-merged-cell-ranges.cs
 - retrieve-raw-string-from-a-date-cell-convert-it-to-iso-8601-format-and-store-in-another-column.cs
+- import-a-twodimensional-array-of-strings-then-apply-a-custom-font-style-to-header-row-for-emphasis.cs
