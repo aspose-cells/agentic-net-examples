@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - use-calculateformula-method-to-evaluate-a-single-complex-formula-without-recalculating-the-whole-worksheet.cs
 - retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs
 - detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs
+- replace-all-instances-of-the-today-function-with-a-static-date-string-to-freeze-calculations.cs
