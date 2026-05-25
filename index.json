@@ -1336,6 +1336,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-displayrange-to-a-specific-area-and-enumerate-only-cells-within-that-visible-region.cs",
+      "title": "Set DisplayRange to a specific area and enumerate only cells within that visible region."
+    },
+    {
+      "category": "cells-data",
       "file": "set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs",
       "title": "Set firstRow offset to five, then import a data table, pushing existing rows down without overwriting."
     },
