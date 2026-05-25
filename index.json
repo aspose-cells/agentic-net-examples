@@ -4251,6 +4251,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-instances-of-the-today-function-with-a-static-date-string-to-freeze-calculations.cs",
+      "title": "Replace all instances of the TODAY function with a static date string to freeze calculations."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs",
       "title": "Retrieve the formula string from cell E10 and log it for audit purposes."
     },
