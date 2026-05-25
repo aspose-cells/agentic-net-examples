@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - combine-importarray-and-importcustomobjects-calls-to-populate-a-worksheet-from-heterogeneous-data-sources-in-one-workflow.cs
 - insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs
 - create-a-new-worksheet-import-an-array-of-dates-and-format-cells-to-display-short-date-pattern.cs
+- read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs
