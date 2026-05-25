@@ -4431,6 +4431,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "use-the-cellcalculate-method-to-evaluate-a-formula-that-references-a-previously-defined-named-range.cs",
+      "title": "Use the Cell.Calculate method to evaluate a formula that references a previously defined named range."
+    },
+    {
+      "category": "manage-formulas",
       "file": "use-the-setformula-method-to-assign-a-formula-that-references-an-external-workbook-in-a-cell.cs",
       "title": "Use the SetFormula method to assign a formula that references an external workbook in a cell."
     },
