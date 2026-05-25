@@ -826,6 +826,11 @@
     },
     {
       "category": "cells-data",
+      "file": "after-importing-html-verify-that-line-break-tags-are-rendered-as-actual-new-lines-within-the-cell.cs",
+      "title": "After importing HTML, verify that line break tags are rendered as actual new lines within the cell."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
