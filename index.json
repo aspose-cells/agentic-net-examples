@@ -10796,6 +10796,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "log-the-names-of-all-pdf-bookmarks-created-during-workbook-export-for-audit-purposes.cs",
+      "title": "Log the names of all PDF bookmarks created during workbook export for audit purposes."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs",
       "title": "Programmatically remove a specific worksheet before saving the workbook as PDF to exclude its content."
     },
