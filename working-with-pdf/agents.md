@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - export-a-workbook-containing-embedded-hyperlinks-and-verify-that-links-remain-functional-in-the-pdf.cs
 - set-pdfsaveoptionscompressionlevel-to-maximum-to-reduce-the-size-of-the-generated-pdf-file.cs
 - create-a-pdf-bookmark-hierarchy-by-adding-child-pdfbookmarkentry-objects-under-a-parent-entry.cs
+- use-workbookcalculateformula-to-ensure-all-formulas-are-evaluated-before-exporting-to-pdf.cs
