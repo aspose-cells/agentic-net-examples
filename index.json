@@ -4326,6 +4326,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "generate-a-csv-file-listing-each-formula-cell-its-precedents-and-dependent-counts-for-audit-purposes.cs",
+      "title": "Generate a CSV file listing each formula cell, its precedents, and dependent counts for audit purposes."
+    },
+    {
+      "category": "manage-formulas",
       "file": "generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs",
       "title": "Generate a report of all formulas using unsupported functions by cross\u2011referencing the Supported Excel Functions list."
     },
