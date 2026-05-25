@@ -4381,6 +4381,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "update-the-refersto-property-of-an-existing-named-range-to-include-a-new-column-in-its-formula.cs",
+      "title": "Update the RefersTo property of an existing named range to include a new column in its formula."
+    },
+    {
+      "category": "manage-formulas",
       "file": "use-calculateformula-method-to-evaluate-a-single-complex-formula-without-recalculating-the-whole-worksheet.cs",
       "title": "Use CalculateFormula method to evaluate a single complex formula without recalculating the whole worksheet."
     },
