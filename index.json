@@ -10986,6 +10986,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-office-addins-while-converting-an-xlsb-workbook-to-pdf-applying-custom-scaling-factor-of-08.cs",
+      "title": "Render Office Add\u2011Ins while converting an XLSB workbook to PDF, applying custom scaling factor of 0.8."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-while-converting-an-xlsb-workbook-to-pdf-preserving-interactive-elements.cs",
       "title": "Render Office Add\u2011Ins while converting an XLSB workbook to PDF, preserving interactive elements."
     },
