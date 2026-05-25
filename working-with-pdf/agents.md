@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - enable-pdfsaveoptionsaddpdfbookmarks-to-include-pdf-bookmarks-for-each-worksheet-in-the-output.cs
 - set-pdfsaveoptionscrossstringinpdf-to-true-to-prevent-string-splitting-across-lines-in-the-pdf.cs
 - subscribe-to-workbookdrawobjecteventhandler-to-capture-draw-object-types-and-bounds-during-pdf-rendering.cs
+- save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs
