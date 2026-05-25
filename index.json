@@ -741,6 +741,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-subtotals-that-calculate-the-average-of-column-f-positioning-the-summary-rows-at-the-top.cs",
+      "title": "Add subtotals that calculate the average of column F, positioning the summary rows at the top."
+    },
+    {
+      "category": "cells-data",
       "file": "add-subtotals-that-count-entries-in-column-b-for-rows-5200-using-outline-grouping.cs",
       "title": "Add subtotals that count entries in column B for rows 5\u2011200, using outline grouping."
     },
