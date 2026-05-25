@@ -856,6 +856,11 @@
     },
     {
       "category": "cells-data",
+      "file": "define-a-cellarea-covering-rows-2100-and-apply-wholenumber-validation-to-that-range.cs",
+      "title": "Define a CellArea covering rows 2\u2011100 and apply whole\u2011number validation to that range."
+    },
+    {
+      "category": "cells-data",
       "file": "find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs",
       "title": "Find all numeric values greater than 1000 across the worksheet and collect their addresses."
     },

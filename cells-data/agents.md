@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - perform-caseinsensitive-sort-on-column-af-while-treating-numeric-strings-as-numbers.cs
 - create-a-datasorter-instance-with-stable-sorting-enabled-to-maintain-relative-order-of-equal-keys.cs
 - sort-data-while-preserving-merged-cells-by-disabling-merge-handling-in-datasorter-options.cs
+- define-a-cellarea-covering-rows-2100-and-apply-wholenumber-validation-to-that-range.cs
