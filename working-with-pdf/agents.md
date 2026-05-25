@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - add-a-centered-text-watermark-with-arial-font-30point-size-and-50-opacity.cs
 - add-a-diagonal-text-watermark-using-times-new-roman-24point-size-and-30-opacity.cs
 - add-a-text-watermark-with-45degree-rotation-and-60-opacity-on-oddnumbered-pages.cs
+- add-a-text-watermark-with-no-rotation-and-20-opacity-on-evennumbered-pages.cs
