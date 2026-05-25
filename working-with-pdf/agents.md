@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionspdfacompliance-to-pdfacompliancepdfa1a-to-generate-pdfa1a-compliant-files-output.cs
 - assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs
 - loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs
+- enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs

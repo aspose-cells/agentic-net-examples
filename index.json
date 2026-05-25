@@ -10891,6 +10891,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs",
+      "title": "Enable PdfSaveOptions.RenderSolidGridlines to preserve original Excel cell borders in the PDF output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-printing-of-cell-comments-while-saving-workbook-to-pdf-preserving-comment-formatting.cs",
       "title": "Enable printing of cell comments while saving workbook to PDF, preserving comment formatting."
     },
