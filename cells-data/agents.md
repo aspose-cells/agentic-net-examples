@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - access-a-cell-using-zerobased-row-and-column-indices-read-its-value-and-log-it.cs
 - access-a-cell-by-its-numeric-index-within-the-cells-collection-modify-its-background-color-and-save.cs
 - retrieve-the-worksheets-maximum-display-range-and-use-it-to-define-a-print-area.cs
+- iterate-through-all-cells-in-the-maximum-display-range-to-count-nonempty-cells.cs
