@@ -816,6 +816,11 @@
     },
     {
       "category": "cells-data",
+      "file": "configure-datasorter-to-ignore-hidden-rows-while-sorting-column-l-in-descending-order.cs",
+      "title": "Configure DataSorter to ignore hidden rows while sorting column L in descending order."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs",
       "title": "Convert all string\u2011based numeric values in the entire workbook to true numbers using ConvertStringToNumericValue."
     },

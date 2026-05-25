@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - sort-data-based-on-cell-background-colors-in-column-b-using-sortkey-cellcolor-property.cs
 - create-a-custom-sort-list-for-months-and-sort-column-c-according-to-that-list.cs
 - perform-multilevel-sorting-first-column-e-ascending-then-column-f-descending.cs
+- configure-datasorter-to-ignore-hidden-rows-while-sorting-column-l-in-descending-order.cs
