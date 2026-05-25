@@ -1101,6 +1101,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-a-json-representation-of-all-cell-addresses-and-values-by-iterating-with-a-cells-enumerator.cs",
+      "title": "Generate a JSON representation of all cell addresses and values by iterating with a Cells enumerator."
+    },
+    {
+      "category": "cells-data",
       "file": "generate-a-rows-enumerator-traverse-each-row-and-sum-values-in-the-first-column.cs",
       "title": "Generate a Rows enumerator, traverse each row, and sum values in the first column."
     },
