@@ -11081,6 +11081,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs",
+      "title": "Include Excel comments as footnotes on corresponding PDF pages for reference."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "include-row-and-column-headings-on-each-pdf-page-for-reference-using-pdfsaveoptions.cs",
       "title": "Include row and column headings on each PDF page for reference using PdfSaveOptions."
     },

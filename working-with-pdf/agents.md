@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs
 - embed-javascript-in-the-pdf-to-open-a-specific-url-when-the-document-loads.cs
 - apply-a-custom-color-profile-to-pdf-images-extracted-from-excel-charts-for-accurate-printing.cs
+- include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
