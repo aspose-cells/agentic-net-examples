@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - add-an-image-watermark-that-retains-original-size-and-appears-in-the-lowerright-corner.cs
 - create-pdf-bookmarks-for-each-worksheet-using-worksheet-names-as-bookmark-titles.cs
 - create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs
+- add-pdf-bookmarks-with-named-destinations-matching-specific-cell-ranges-for-quick-access.cs
