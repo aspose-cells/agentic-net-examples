@@ -1226,6 +1226,11 @@
     },
     {
       "category": "cells-data",
+      "file": "log-each-cells-address-data-type-and-value-to-a-text-file-during-enumeration-for-auditing.cs",
+      "title": "Log each cell's address, data type, and value to a text file during enumeration for auditing."
+    },
+    {
+      "category": "cells-data",
       "file": "measure-execution-time-for-columnmajor-versus-rowmajor-data-population-to-determine-optimal-ordering.cs",
       "title": "Measure execution time for column\u2011major versus row\u2011major data population to determine optimal ordering."
     },
