@@ -845,6 +845,11 @@
       "title": "Select a worksheet by name and obtain its Cells collection for further operations."
     },
     {
+      "category": "cells-data",
+      "file": "use-cellssubtotal-with-column-index-derived-from-column-name-sales-to-sum-sales-figures.cs",
+      "title": "Use Cells.Subtotal with column index derived from column name \"Sales\" to sum sales figures."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
