@@ -1786,6 +1786,11 @@
     },
     {
       "category": "cells-data",
+      "file": "validate-that-cells-containing-mixed-formatting-retain-their-quote-prefix-after-a-styleflag-update.cs",
+      "title": "Validate that cells containing mixed formatting retain their quote prefix after a StyleFlag update."
+    },
+    {
+      "category": "cells-data",
       "file": "validate-that-cellssubtotal-throws-an-informative-error-when-startrow-exceeds-endrow.cs",
       "title": "Validate that Cells.Subtotal throws an informative error when startRow exceeds endRow."
     },
