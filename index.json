@@ -4391,6 +4391,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-dependent-cells-for-a-formula-using-the-getdependents-method-and-export-the-list-to-a-csv-file.cs",
+      "title": "Retrieve dependent cells for a formula using the GetDependents method and export the list to a CSV file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-precedent-cells-for-a-specific-formula-cell-using-the-getprecedents-method-and-log-their-addresses.cs",
       "title": "Retrieve precedent cells for a specific formula cell using the GetPrecedents method and log their addresses."
     },
