@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - compress-pdf-content-using-flate-compression-to-reduce-file-size-while-preserving-quality.cs
 - embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs
 - add-a-header-containing-the-workbook-name-on-each-pdf-page-via-pdfsaveoptions.cs
+- preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs
