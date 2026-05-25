@@ -10831,6 +10831,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-excel-workbook-xls-or-xlsx-using-the-workbook-constructor-or-workbookload-method.cs",
+      "title": "Load an Excel workbook (XLS or XLSX) using the Workbook constructor or Workbook.Load method."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xls-workbook-containing-charts-then-export-it-to-pdf-preserving-chart-rendering.cs",
       "title": "Load an XLS workbook containing charts, then export it to PDF preserving chart rendering."
     },
