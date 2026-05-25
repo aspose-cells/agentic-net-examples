@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - render-office-addins-with-default-settings-during-pdf-conversion-to-verify-basic-functionality.cs
 - render-office-addins-with-a-custom-scaling-factor-to-adjust-their-size-in-the-pdf-output.cs
 - render-office-addins-while-converting-an-xlsb-workbook-to-pdf-applying-custom-scaling-factor-of-08.cs
+- recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs
