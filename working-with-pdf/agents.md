@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - set-pdf-version-to-16-to-enable-advanced-features-such-as-transparency-handling.cs
 - convert-a-csv-file-to-pdf-and-set-pdf-creation-time-to-a-specific-historical-date.cs
 - convert-a-tsv-document-to-pdf-while-applying-pdfa2b-compliance-for-archival-purposes.cs
+- add-a-centered-text-watermark-with-arial-font-30point-size-and-50-opacity.cs
