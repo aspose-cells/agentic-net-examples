@@ -851,6 +851,11 @@
     },
     {
       "category": "cells-data",
+      "file": "save-the-modified-workbook-to-an-xlsx-file-while-preserving-original-formatting.cs",
+      "title": "Save the modified workbook to an XLSX file while preserving original formatting."
+    },
+    {
+      "category": "cells-data",
       "file": "select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs",
       "title": "Select a worksheet by name and obtain its Cells collection for further operations."
     },
