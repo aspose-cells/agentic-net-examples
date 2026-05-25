@@ -10746,6 +10746,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "compress-pdf-content-using-flate-compression-to-reduce-file-size-while-preserving-quality.cs",
+      "title": "Compress PDF content using Flate compression to reduce file size while preserving quality."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs",
       "title": "Configure PDF page size to A4 and orientation to landscape before saving the workbook."
     },
