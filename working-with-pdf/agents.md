@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - apply-custom-pdf-page-margins-to-control-content-positioning-during-excel-conversion.cs
 - enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs
 - set-pdf-document-title-metadata-based-on-the-original-excel-workbook-name.cs
+- embed-all-used-fonts-in-the-generated-pdf-to-prevent-missing-glyphs.cs

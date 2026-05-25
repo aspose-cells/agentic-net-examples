@@ -10946,6 +10946,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-all-used-fonts-in-the-generated-pdf-to-prevent-missing-glyphs.cs",
+      "title": "Embed all used fonts in the generated PDF to prevent missing glyphs."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs",
       "title": "Enable hyperlink preservation so that clickable links remain functional in the generated PDF."
     },
