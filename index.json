@@ -11226,6 +11226,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdf-version-to-17-for-compatibility-with-modern-pdf-readers-ensuring-proper-rendering.cs",
+      "title": "Set PDF version to 1.7 for compatibility with modern PDF readers, ensuring proper rendering."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionscompliance-to-pdfcompliancepdfa1a-for-pdfa1a-compliant-output-that-meets-archival-standards.cs",
       "title": "Set PdfSaveOptions.Compliance to PdfCompliance.PdfA1a for PDF/A\u20111a compliant output that meets archival standards."
     },

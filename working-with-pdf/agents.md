@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - set-pdf-page-breaks-based-on-excel-page-breaks-to-maintain-original-pagination.cs
 - include-row-and-column-headings-on-each-pdf-page-for-reference-using-pdfsaveoptions.cs
 - add-a-digital-signature-to-the-pdf-using-pdfsaveoptions-to-ensure-document-authenticity.cs
+- set-pdf-version-to-17-for-compatibility-with-modern-pdf-readers-ensuring-proper-rendering.cs
