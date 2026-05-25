@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - enable-the-calculation-chain-run-workbook-wide-calculation-and-measure-performance-improvement-over-default-mode.cs
 - disable-the-calculation-chain-recalculate-a-single-worksheet-and-compare-execution-time-with-chain-enabled.cs
 - benchmark-calculation-time-for-a-workbook-using-direct-evaluation-versus-calculation-chain-on-identical-formula-sets.cs
+- measure-memory-usage-while-calculating-formulas-with-and-without-the-calculation-chain-enabled-on-large-datasets.cs
