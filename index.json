@@ -1041,6 +1041,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-a-twodimensional-array-of-strings-then-apply-text-wrap-to-all-cells-to-prevent-truncation.cs",
+      "title": "Import a two\u2011dimensional array of strings, then apply text wrap to all cells to prevent truncation."
+    },
+    {
+      "category": "cells-data",
       "file": "import-a-twodimensional-double-array-into-a-worksheet-starting-at-row-five-and-column-two.cs",
       "title": "Import a two\u2011dimensional double array into a worksheet starting at row five and column two."
     },
