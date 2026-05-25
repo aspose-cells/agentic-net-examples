@@ -10661,6 +10661,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdf-compliance-to-pdfa2b-while-preserving-original-color-profiles-for-accurate-color-reproduction.cs",
+      "title": "Set PDF compliance to PDF/A\u20112b while preserving original color profiles for accurate color reproduction."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-compliance-to-pdfa3u-and-embed-xml-metadata-for-enhanced-accessibility.cs",
       "title": "Set PDF compliance to PDF/A\u20113u and embed XML metadata for enhanced accessibility."
     },
