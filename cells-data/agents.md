@@ -232,3 +232,4 @@ Output files are written to the working directory.
 - calculate-the-total-number-of-merged-regions-by-counting-merge-occurrences-while-enumerating-the-worksheet.cs
 - adjust-column-width-based-on-measured-pixel-width-of-cell-contents-using-the-measurement-api-during-enumeration.cs
 - set-row-height-dynamically-according-to-the-tallest-cell-content-measured-in-pixels-while-enumerating-rows.cs
+- profile-cpu-usage-while-enumerating-a-large-worksheet-to-identify-performance-bottlenecks-in-the-iteration-loop.cs
