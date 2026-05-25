@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - retrieve-precedent-cells-for-a-specific-formula-cell-using-the-getprecedents-method-and-log-their-addresses.cs
 - retrieve-dependent-cells-for-a-formula-using-the-getdependents-method-and-export-the-list-to-a-csv-file.cs
 - export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs
+- generate-a-csv-file-listing-each-formula-cell-its-precedents-and-dependent-counts-for-audit-purposes.cs
