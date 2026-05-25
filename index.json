@@ -10791,6 +10791,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "export-a-workbook-containing-embedded-hyperlinks-and-verify-that-links-remain-functional-in-the-pdf.cs",
+      "title": "Export a workbook containing embedded hyperlinks and verify that links remain functional in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs",
       "title": "Implement batch conversion of multiple XLSX files in a directory to individual PDF files."
     },
