@@ -786,6 +786,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-validation-that-disallows-blank-entries-in-column-v-and-displays-an-error-alert.cs",
+      "title": "Add validation that disallows blank entries in column V and displays an error alert."
+    },
+    {
+      "category": "cells-data",
       "file": "add-validation-to-a-dynamic-range-that-expands-as-new-rows-are-inserted-using-cellarea.cs",
       "title": "Add validation to a dynamic range that expands as new rows are inserted using CellArea."
     },
