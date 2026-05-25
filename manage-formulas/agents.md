@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - load-multiple-workbooks-in-a-batch-update-external-link-formulas-to-new-file-locations-and-save-each.cs
 - create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs
 - define-a-named-range-with-an-index-formula-that-dynamically-adjusts-based-on-another-cells-value.cs
+- update-the-refersto-property-of-an-existing-named-range-to-include-a-new-column-in-its-formula.cs
