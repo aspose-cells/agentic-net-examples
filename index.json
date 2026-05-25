@@ -1121,6 +1121,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-utility-that-scans-a-workbook-for-cells-where-quoteprefix-is-unintentionally-set-to-true.cs",
+      "title": "Create a utility that scans a workbook for cells where QuotePrefix is unintentionally set to true."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-validation-allowing-dates-between-01012020-and-12312025-in-column-n.cs",
       "title": "Create a validation allowing dates between 01/01/2020 and 12/31/2025 in column N."
     },
