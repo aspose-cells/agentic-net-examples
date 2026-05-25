@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - sort-rows-based-on-a-computed-helper-column-that-concatenates-first-and-last-names.cs
 - perform-caseinsensitive-sort-on-column-af-while-treating-numeric-strings-as-numbers.cs
 - create-a-datasorter-instance-with-stable-sorting-enabled-to-maintain-relative-order-of-equal-keys.cs
+- sort-data-while-preserving-merged-cells-by-disabling-merge-handling-in-datasorter-options.cs

@@ -956,6 +956,11 @@
     },
     {
       "category": "cells-data",
+      "file": "sort-data-while-preserving-merged-cells-by-disabling-merge-handling-in-datasorter-options.cs",
+      "title": "Sort data while preserving merged cells by disabling merge handling in DataSorter options."
+    },
+    {
+      "category": "cells-data",
       "file": "sort-rows-based-on-a-computed-helper-column-that-concatenates-first-and-last-names.cs",
       "title": "Sort rows based on a computed helper column that concatenates first and last names."
     },
