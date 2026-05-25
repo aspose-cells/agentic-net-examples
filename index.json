@@ -10971,6 +10971,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "subscribe-to-workbookdrawobjecteventhandler-to-capture-draw-object-types-and-bounds-during-pdf-rendering.cs",
+      "title": "Subscribe to workbook.DrawObjectEventHandler to capture draw object types and bounds during PDF rendering."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "use-workbookcalculateformula-to-ensure-all-formulas-are-evaluated-before-exporting-to-pdf.cs",
       "title": "Use Workbook.CalculateFormula to ensure all formulas are evaluated before exporting to PDF."
     },

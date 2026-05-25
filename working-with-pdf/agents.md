@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - create-a-pdfbookmarkentry-pointing-to-cell-a1-on-a-chart-sheet-and-assign-it-to-the-sheets-bookmark.cs
 - enable-pdfsaveoptionsaddpdfbookmarks-to-include-pdf-bookmarks-for-each-worksheet-in-the-output.cs
 - set-pdfsaveoptionscrossstringinpdf-to-true-to-prevent-string-splitting-across-lines-in-the-pdf.cs
+- subscribe-to-workbookdrawobjecteventhandler-to-capture-draw-object-types-and-bounds-during-pdf-rendering.cs
