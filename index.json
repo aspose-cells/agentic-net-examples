@@ -851,6 +851,11 @@
     },
     {
       "category": "cells-data",
+      "file": "apply-a-styleflag-with-quoteprefix-set-to-true-to-add-a-leading-apostrophe-to-the-cell-value.cs",
+      "title": "Apply a StyleFlag with QuotePrefix set to true to add a leading apostrophe to the cell value."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
