@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - set-displayrange-to-a-specific-area-and-enumerate-only-cells-within-that-visible-region.cs
 - use-maxdatarow-and-maxdatacolumn-limits-to-iterate-only-populated-cells-ignoring-empty-rows.cs
 - convert-textual-number-representations-to-numeric-types-while-assigning-values-during-data-population.cs
+- build-a-dictionary-mapping-cell-addresses-to-their-values-by-enumerating-the-cells-collection.cs
