@@ -245,3 +245,4 @@ Output files are written to the working directory.
 - create-a-lookup-table-of-cell-addresses-to-values-for-fast-retrieval-by-populating-a-dictionary-during-enumeration.cs
 - count-the-number-of-cells-per-data-type-by-iterating-all-cells-and-incrementing-typespecific-counters.cs
 - create-a-checksum-for-each-row-by-concatenating-cell-values-and-applying-a-hash-function-during-row-enumeration.cs
+- compare-cell-values-between-two-worksheets-and-output-mismatched-addresses-to-a-log-file.cs
