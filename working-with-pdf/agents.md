@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - create-pdf-bookmarks-that-correspond-to-named-ranges-in-the-workbook-for-navigation.cs
 - enable-printing-of-cell-comments-while-saving-workbook-to-pdf-preserving-comment-formatting.cs
 - disable-printing-of-cell-comments-during-pdf-conversion-to-produce-cleaner-document-layout.cs
+- save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs
