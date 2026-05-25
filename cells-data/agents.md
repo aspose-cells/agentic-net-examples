@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs
 - compute-a-checksum-of-all-cell-values-by-concatenating-string-representations-during-enumeration-and-applying-a-hash-function.cs
 - compare-two-worksheets-cell-by-cell-using-enumerators-and-generate-a-diff-report-highlighting-mismatches.cs
+- synchronize-changes-from-a-source-worksheet-to-a-target-worksheet-by-iterating-cells-and-copying-modified-values.cs
