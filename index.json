@@ -1191,6 +1191,11 @@
     },
     {
       "category": "cells-data",
+      "file": "ensure-that-disabling-quoteprefix-updates-does-not-affect-cell-comments-or-data-validation-dropdowns.cs",
+      "title": "Ensure that disabling QuotePrefix updates does not affect cell comments or data validation dropdowns."
+    },
+    {
+      "category": "cells-data",
       "file": "export-cells-with-richtext-content-to-csv-while-encoding-apostrophes-as-literal-characters.cs",
       "title": "Export cells with rich\u2011text content to CSV while encoding apostrophes as literal characters."
     },
