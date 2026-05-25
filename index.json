@@ -11041,6 +11041,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "maintain-conditional-formatting-colors-in-the-pdf-by-enabling-appropriate-rendering-options.cs",
+      "title": "Maintain conditional formatting colors in the PDF by enabling appropriate rendering options."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs",
       "title": "Preserve cell comments in the PDF output by enabling the option to retain comments."
     },
