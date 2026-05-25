@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - ensure-that-each-worksheet-starts-on-a-new-pdf-page-when-onepagepersheet-is-set.cs
 - check-that-the-pdf-complies-with-pdfa1a-standards-when-compliance-is-set-accordingly.cs
 - validate-that-all-columns-fit-within-a-single-page-for-each-worksheet-when-fitallcolumnsononepage-is-true.cs
+- confirm-that-the-pdf-contains-the-expected-number-of-pages-respecting-the-maxpages-limit.cs
