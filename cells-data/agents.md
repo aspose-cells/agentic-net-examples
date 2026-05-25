@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - search-for-cells-containing-the-text-pending-and-highlight-them-with-yellow-fill.cs
 - find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs
 - perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs
+- locate-cells-with-formulas-that-return-div0-errors-and-replace-them-with-zero.cs
