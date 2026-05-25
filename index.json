@@ -996,6 +996,11 @@
     },
     {
       "category": "cells-data",
+      "file": "enable-multithreadreading-then-launch-multiple-threads-to-read-random-cells-concurrently.cs",
+      "title": "Enable MultiThreadReading, then launch multiple threads to read random cells concurrently."
+    },
+    {
+      "category": "cells-data",
       "file": "enable-preservehtml-option-in-importtableoptions-to-keep-html-formatting-when-importing-rich-text-data.cs",
       "title": "Enable PreserveHtml option in ImportTableOptions to keep HTML formatting when importing rich text data."
     },
