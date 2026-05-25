@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - log-the-names-of-all-pdf-bookmarks-created-during-workbook-export-for-audit-purposes.cs
 - detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs
 - configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs
+- add-a-pdf-bookmark-that-points-to-the-first-visible-cell-of-a-worksheet-using-a-named-destination.cs

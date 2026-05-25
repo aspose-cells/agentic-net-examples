@@ -10631,6 +10631,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-pdf-bookmark-that-points-to-the-first-visible-cell-of-a-worksheet-using-a-named-destination.cs",
+      "title": "Add a PDF bookmark that points to the first visible cell of a worksheet using a named destination."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-text-watermark-with-30point-size-and-40-opacity-on-all-pdf-pages.cs",
       "title": "Add a text watermark with 30\u2011point size and 40% opacity on all PDF pages."
     },
