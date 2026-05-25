@@ -10936,6 +10936,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs",
+      "title": "Enable hyperlink preservation so that clickable links remain functional in the generated PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsaddpdfbookmarks-to-include-pdf-bookmarks-for-each-worksheet-in-the-output.cs",
       "title": "Enable PdfSaveOptions.AddPdfBookmarks to include PDF bookmarks for each worksheet in the output."
     },
