@@ -1121,6 +1121,11 @@
     },
     {
       "category": "cells-data",
+      "file": "deserialize-previously-saved-json-and-reapply-the-richtext-portions-to-the-same-cell.cs",
+      "title": "Deserialize previously saved JSON and reapply the rich\u2011text portions to the same cell."
+    },
+    {
+      "category": "cells-data",
       "file": "detect-and-log-cells-containing-null-values-during-enumeration-to-assist-in-data-completeness-analysis.cs",
       "title": "Detect and log cells containing null values during enumeration to assist in data completeness analysis."
     },
