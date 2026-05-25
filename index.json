@@ -876,6 +876,11 @@
     },
     {
       "category": "cells-data",
+      "file": "calculate-average-of-numeric-cells-per-column-using-a-columns-enumerator-and-store-results-in-a-summary-row.cs",
+      "title": "Calculate average of numeric cells per column using a Columns enumerator and store results in a summary row."
+    },
+    {
+      "category": "cells-data",
       "file": "check-whether-cell-k10-uses-an-incell-dropdown-and-output-the-result-to-console.cs",
       "title": "Check whether cell K10 uses an in\u2011cell dropdown and output the result to console."
     },
