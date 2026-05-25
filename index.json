@@ -946,6 +946,11 @@
     },
     {
       "category": "cells-data",
+      "file": "sort-rows-based-on-a-computed-helper-column-that-concatenates-first-and-last-names.cs",
+      "title": "Sort rows based on a computed helper column that concatenates first and last names."
+    },
+    {
+      "category": "cells-data",
       "file": "sort-worksheet-rows-by-column-a-in-ascending-order-using-a-datasorter-instance.cs",
       "title": "Sort worksheet rows by column A in ascending order using a DataSorter instance."
     },

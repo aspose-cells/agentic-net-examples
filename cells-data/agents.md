@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - configure-datasorter-to-ignore-hidden-rows-while-sorting-column-l-in-descending-order.cs
 - set-custom-sort-order-for-priority-levels-high-medium-low-and-sort-column-m.cs
 - apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs
+- sort-rows-based-on-a-computed-helper-column-that-concatenates-first-and-last-names.cs
