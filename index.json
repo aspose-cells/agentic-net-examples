@@ -1646,6 +1646,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-cellgetcharactersstartindex-length-to-retrieve-a-richtextportion-from-the-cell.cs",
+      "title": "Use Cell.GetCharacters(startIndex, length) to retrieve a RichTextPortion from the cell."
+    },
+    {
+      "category": "cells-data",
       "file": "use-cellssubtotal-with-column-index-derived-from-column-name-sales-to-sum-sales-figures.cs",
       "title": "Use Cells.Subtotal with column index derived from column name \"Sales\" to sum sales figures."
     },
