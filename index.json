@@ -911,6 +911,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-worksheet-data-to-xml-file-preserving-cell-data-types-and-formatting-attributes.cs",
+      "title": "Export worksheet data to XML file preserving cell data types and formatting attributes."
+    },
+    {
+      "category": "cells-data",
       "file": "export-worksheet-rows-150-and-columns-ad-to-a-csv-string.cs",
       "title": "Export worksheet rows 1\u201150 and columns A\u2011D to a CSV string."
     },

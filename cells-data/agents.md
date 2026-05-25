@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - add-validation-restricting-column-s-values-to-a-predefined-array-of-strings.cs
 - export-worksheet-rows-150-and-columns-ad-to-a-csv-string.cs
 - export-worksheet-data-to-json-format-using-custom-serialization-of-cell-values-and-styles.cs
+- export-worksheet-data-to-xml-file-preserving-cell-data-types-and-formatting-attributes.cs
