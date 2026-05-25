@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - locate-cells-with-leading-or-trailing-spaces-and-trim-the-whitespace-programmatically.cs
 - find-cells-with-formulas-using-volatile-functions-and-list-their-addresses-for-review.cs
 - sort-worksheet-rows-by-column-a-in-ascending-order-using-a-datasorter-instance.cs
+- apply-descending-sort-on-column-d-while-preserving-original-row-grouping-via-addkey-method.cs
