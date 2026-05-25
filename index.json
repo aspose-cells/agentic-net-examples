@@ -851,6 +851,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-cellssubtotal-with-endrow-set-to-the-last-used-row-ensuring-full-range-coverage.cs",
+      "title": "Use Cells.Subtotal with endRow set to the last used row, ensuring full range coverage."
+    },
+    {
+      "category": "cells-data",
       "file": "use-cellssubtotal-with-startrow-set-to-zero-handling-zerobased-indexing-correctly.cs",
       "title": "Use Cells.Subtotal with startRow set to zero, handling zero\u2011based indexing correctly."
     },
