@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - fit-all-worksheet-columns-onto-a-single-pdf-page-during-conversion.cs
 - limit-generated-pdf-pages-by-specifying-a-maximum-page-count-for-conversion.cs
 - retrieve-and-log-font-substitution-warnings-after-rendering-excel-to-pdf.cs
+- replace-specific-unicode-characters-with-a-custom-font-when-saving-excel-as-pdf.cs
