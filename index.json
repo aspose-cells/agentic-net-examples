@@ -986,6 +986,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs",
+      "title": "Import a collection of custom objects, mapping properties to columns, starting at row two, column one."
+    },
+    {
+      "category": "cells-data",
       "file": "import-a-twodimensional-double-array-into-a-worksheet-starting-at-row-five-and-column-two.cs",
       "title": "Import a two\u2011dimensional double array into a worksheet starting at row five and column two."
     },
