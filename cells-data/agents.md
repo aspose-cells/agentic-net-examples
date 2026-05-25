@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - test-thread-safety-by-having-multiple-threads-read-the-same-cell-simultaneously-after-setting-multithreadreading-true.cs
 - implement-progress-reporting-by-raising-events-after-processing-each-hundred-cells-during-enumeration.cs
 - filter-enumerated-cells-to-include-only-stringtype-cells-and-collect-them-into-a-list.cs
+- count-cells-containing-a-specific-keyword-by-scanning-each-cells-text-during-enumeration.cs
