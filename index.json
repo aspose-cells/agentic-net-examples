@@ -1256,6 +1256,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-a-summary-of-all-richtextportion-objects-in-a-worksheet-including-start-index-length-and-font-name.cs",
+      "title": "Generate a summary of all RichTextPortion objects in a worksheet, including start index, length, and font name."
+    },
+    {
+      "category": "cells-data",
       "file": "generate-a-summary-of-empty-versus-filled-cells-by-counting-each-type-during-full-worksheet-enumeration.cs",
       "title": "Generate a summary of empty versus filled cells by counting each type during full worksheet enumeration."
     },
