@@ -202,3 +202,4 @@ Output files are written to the working directory.
 - import-data-into-a-worksheet-then-generate-a-summary-sheet-that-aggregates-totals-from-each-imported-table.cs
 - create-a-readonly-cells-enumerator-and-collect-all-numeric-values-from-the-worksheet.cs
 - generate-a-rows-enumerator-traverse-each-row-and-sum-values-in-the-first-column.cs
+- obtain-a-columns-enumerator-iterate-each-column-and-record-the-maximum-numeric-cell-value.cs
