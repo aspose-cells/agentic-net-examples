@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - set-custom-sort-order-for-priority-levels-high-medium-low-and-sort-column-m.cs
 - apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs
 - sort-rows-based-on-a-computed-helper-column-that-concatenates-first-and-last-names.cs
+- perform-caseinsensitive-sort-on-column-af-while-treating-numeric-strings-as-numbers.cs
