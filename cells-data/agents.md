@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-from-a-file-path-and-verify-it-opens-successfully.cs
 - select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs
 - access-cell-b2-using-its-a1-style-name-set-a-numeric-value-and-save-the-workbook.cs
+- access-a-cell-using-zerobased-row-and-column-indices-read-its-value-and-log-it.cs

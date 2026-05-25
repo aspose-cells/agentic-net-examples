@@ -721,6 +721,11 @@
     },
     {
       "category": "cells-data",
+      "file": "access-a-cell-using-zerobased-row-and-column-indices-read-its-value-and-log-it.cs",
+      "title": "Access a cell using zero\u2011based row and column indices, read its value, and log it."
+    },
+    {
+      "category": "cells-data",
       "file": "access-cell-b2-using-its-a1-style-name-set-a-numeric-value-and-save-the-workbook.cs",
       "title": "Access cell B2 using its A1 style name, set a numeric value, and save the workbook."
     },
