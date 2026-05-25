@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - retrieve-raw-string-from-a-date-cell-convert-it-to-iso-8601-format-and-store-in-another-column.cs
 - import-a-twodimensional-array-of-strings-then-apply-a-custom-font-style-to-header-row-for-emphasis.cs
 - create-a-hyperlink-that-links-to-a-specific-cell-in-another-workbook-using-external-reference-syntax.cs
+- use-getstringvalue-without-formatting-to-extract-raw-percentage-strings-for-statistical-analysis-in-external-module.cs
