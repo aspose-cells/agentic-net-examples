@@ -243,3 +243,4 @@ Output files are written to the working directory.
 - generate-a-report-of-cells-exceeding-a-numeric-threshold-by-scanning-each-cell-and-recording-violating-addresses.cs
 - log-cell-address-value-and-data-type-for-auditing-by-writing-entries-to-a-csv-file-during-enumeration.cs
 - create-a-lookup-table-of-cell-addresses-to-values-for-fast-retrieval-by-populating-a-dictionary-during-enumeration.cs
+- count-the-number-of-cells-per-data-type-by-iterating-all-cells-and-incrementing-typespecific-counters.cs
