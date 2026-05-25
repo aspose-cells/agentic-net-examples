@@ -1141,6 +1141,11 @@
     },
     {
       "category": "cells-data",
+      "file": "validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs",
+      "title": "Validate cell content by retrieving raw string values and comparing them against expected numeric strings."
+    },
+    {
+      "category": "cells-data",
       "file": "validate-that-cellssubtotal-throws-an-informative-error-when-startrow-exceeds-endrow.cs",
       "title": "Validate that Cells.Subtotal throws an informative error when startRow exceeds endRow."
     },
