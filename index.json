@@ -851,6 +851,11 @@
     },
     {
       "category": "cells-data",
+      "file": "perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs",
+      "title": "Perform case\u2011insensitive search for 'total revenue' and replace it with 'Revenue Total'."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-the-worksheets-maximum-display-range-and-use-it-to-define-a-print-area.cs",
       "title": "Retrieve the worksheet's maximum display range and use it to define a print area."
     },
