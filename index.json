@@ -10646,6 +10646,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-an-image-watermark-from-jpeg-bytes-maintaining-original-dimensions-and-20-opacity.cs",
+      "title": "Add an image watermark from JPEG bytes, maintaining original dimensions and 20% opacity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-an-image-watermark-from-png-byte-array-scaling-to-page-size-with-40-opacity.cs",
       "title": "Add an image watermark from PNG byte array, scaling to page size, with 40% opacity."
     },
