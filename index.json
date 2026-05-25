@@ -856,6 +856,11 @@
     },
     {
       "category": "cells-data",
+      "file": "combine-importarray-and-importcustomobjects-calls-to-populate-a-worksheet-from-heterogeneous-data-sources-in-one-workflow.cs",
+      "title": "Combine ImportArray and ImportCustomObjects calls to populate a worksheet from heterogeneous data sources in one workflow."
+    },
+    {
+      "category": "cells-data",
       "file": "configure-datasorter-to-ignore-hidden-rows-while-sorting-column-l-in-descending-order.cs",
       "title": "Configure DataSorter to ignore hidden rows while sorting column L in descending order."
     },
