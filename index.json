@@ -1366,6 +1366,11 @@
     },
     {
       "category": "cells-data",
+      "file": "log-start-and-end-timestamps-of-each-enumeration-pass-to-analyze-performance-trends-over-multiple-runs.cs",
+      "title": "Log start and end timestamps of each enumeration pass to analyze performance trends over multiple runs."
+    },
+    {
+      "category": "cells-data",
       "file": "map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs",
       "title": "Map column headers to their indices by iterating the header row and creating a lookup dictionary."
     },
