@@ -10646,6 +10646,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-an-xlsm-workbook-to-pdfa2a-format-while-preserving-embedded-images-throughout-conversion.cs",
+      "title": "Convert an XLSM workbook to PDF/A\u20112a format while preserving embedded images throughout conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs",
       "title": "Convert an XLSX workbook to PDF using default settings and verify output file size."
     },

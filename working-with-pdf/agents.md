@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs
 - convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs
 - convert-an-xls-workbook-to-pdfa1b-compliant-file-and-verify-compliance-with-external-validator.cs
+- convert-an-xlsm-workbook-to-pdfa2a-format-while-preserving-embedded-images-throughout-conversion.cs
