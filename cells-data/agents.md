@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - after-importing-html-content-replace-all-br-tags-with-line-feed-characters-to-improve-cell-display.cs
 - retrieve-a-cells-formatted-string-detect-if-it-contains-a-url-and-convert-it-into-a-clickable-hyperlink.cs
 - import-data-from-a-csv-source-using-a-custom-icellsdatatable-that-parses-commas-and-quotes-correctly.cs
+- use-getstringvalue-with-withformatting-to-extract-date-strings-then-parse-them-into-datetime-objects-for-sorting.cs
