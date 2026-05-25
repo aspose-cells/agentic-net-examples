@@ -10746,6 +10746,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xls-workbook-containing-charts-then-export-it-to-pdf-preserving-chart-rendering.cs",
+      "title": "Load an XLS workbook containing charts, then export it to PDF preserving chart rendering."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs",
       "title": "Load an XLSX workbook from a file path and save it as a PDF document."
     },
