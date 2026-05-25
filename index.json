@@ -10811,6 +10811,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "implement-error-handling-that-retries-pdf-export-with-outputblankpagewhennothingtoprint-set-to-true-after-failure.cs",
+      "title": "Implement error handling that retries PDF export with OutputBlankPageWhenNothingToPrint set to true after failure."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs",
       "title": "Iterate through all worksheets and add a PDF bookmark for each using worksheet names as destinations."
     },
