@@ -851,6 +851,11 @@
     },
     {
       "category": "cells-data",
+      "file": "locate-cells-with-formulas-that-return-div0-errors-and-replace-them-with-zero.cs",
+      "title": "Locate cells with formulas that return #DIV/0! errors and replace them with zero."
+    },
+    {
+      "category": "cells-data",
       "file": "perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs",
       "title": "Perform case\u2011insensitive search for 'total revenue' and replace it with 'Revenue Total'."
     },
