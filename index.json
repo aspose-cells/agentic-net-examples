@@ -11361,6 +11361,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "split-the-output-pdf-into-separate-files-per-worksheet-using-custom-naming-conventions.cs",
+      "title": "Split the output PDF into separate files per worksheet using custom naming conventions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "subscribe-to-workbookdrawobjecteventhandler-to-capture-draw-object-types-and-bounds-during-pdf-rendering.cs",
       "title": "Subscribe to workbook.DrawObjectEventHandler to capture draw object types and bounds during PDF rendering."
     },

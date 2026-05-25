@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - embed-all-used-fonts-in-the-generated-pdf-to-prevent-missing-glyphs.cs
 - configure-highresolution-image-quality-for-charts-when-converting-excel-worksheets-to-pdf.cs
 - add-a-semitransparent-watermark-text-to-each-page-of-the-resulting-pdf.cs
+- split-the-output-pdf-into-separate-files-per-worksheet-using-custom-naming-conventions.cs
