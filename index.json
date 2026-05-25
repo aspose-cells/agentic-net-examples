@@ -4221,6 +4221,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "assign-the-same-formula-to-each-cell-in-column-b-using-a-loop-and-verify-correct-relative-references.cs",
+      "title": "Assign the same formula to each cell in column B using a loop and verify correct relative references."
+    },
+    {
+      "category": "manage-formulas",
       "file": "calculate-all-formulas-in-the-workbook-programmatically-using-workbookcalculate-and-retrieve-updated-cell-values.cs",
       "title": "Calculate all formulas in the workbook programmatically using Workbook.Calculate and retrieve updated cell values."
     },

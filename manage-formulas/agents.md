@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - create-a-unit-test-confirming-sumproduct-function-returns-expected-results-for-a-given-data-set.cs
 - apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs
 - create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs
+- assign-the-same-formula-to-each-cell-in-column-b-using-a-loop-and-verify-correct-relative-references.cs
