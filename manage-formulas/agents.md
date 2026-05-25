@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs
 - configure-workbooksettingsmaxrowsofsharedformula-to-limit-shared-formula-rows-to-fifty-in-the-workbook.cs
 - set-maxrowsofsharedformula-to-zero-to-disable-shared-formulas-for-the-entire-workbook.cs
+- calculate-all-formulas-in-the-workbook-programmatically-using-workbookcalculate-and-retrieve-updated-cell-values.cs
