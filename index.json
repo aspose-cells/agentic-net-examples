@@ -10901,6 +10901,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsx-workbook-calculate-formulas-and-save-as-a-passwordprotected-pdf.cs",
+      "title": "Load an XLSX workbook, calculate formulas, and save as a password\u2011protected PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs",
       "title": "Load an XLSX workbook from a file path and save it as a PDF document."
     },
