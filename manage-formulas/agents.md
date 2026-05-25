@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - set-workbooksettingsmaxrowsofsharedformula-to-100-to-allow-larger-shared-formula-blocks.cs
 - use-cellformula-property-to-set-a-vlookup-formula-with-comma-separators-in-a-new-worksheet.cs
 - confirm-that-the-if-function-is-listed-in-the-supported-excel-functions-documentation.cs
+- create-a-unit-test-verifying-that-the-date-function-returns-correct-serial-numbers-for-valid-dates.cs

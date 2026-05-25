@@ -4256,6 +4256,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-unit-test-verifying-that-the-date-function-returns-correct-serial-numbers-for-valid-dates.cs",
+      "title": "Create a unit test verifying that the DATE function returns correct serial numbers for valid dates."
+    },
+    {
+      "category": "manage-formulas",
       "file": "detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs",
       "title": "Detect cells containing calculation errors after evaluation and log their addresses for investigation."
     },
