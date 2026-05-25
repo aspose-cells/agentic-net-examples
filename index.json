@@ -831,6 +831,11 @@
     },
     {
       "category": "cells-data",
+      "file": "find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs",
+      "title": "Find all numeric values greater than 1000 across the worksheet and collect their addresses."
+    },
+    {
+      "category": "cells-data",
       "file": "handle-an-outofrange-column-index-in-cellssubtotal-gracefully-by-catching-the-exception.cs",
       "title": "Handle an out\u2011of\u2011range column index in Cells.Subtotal gracefully by catching the exception."
     },

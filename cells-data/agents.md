@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-to-an-xlsx-file-while-preserving-original-formatting.cs
 - save-the-workbook-to-a-csv-file-ensuring-numeric-values-are-not-quoted-unnecessarily.cs
 - search-for-cells-containing-the-text-pending-and-highlight-them-with-yellow-fill.cs
+- find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs
