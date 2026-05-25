@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - use-getstringvalue-with-withformatting-to-extract-date-strings-then-parse-them-into-datetime-objects-for-sorting.cs
 - create-a-hyperlink-that-triggers-a-mailto-email-composition-when-the-user-clicks-the-cell.cs
 - import-a-twodimensional-array-of-strings-then-apply-text-wrap-to-all-cells-to-prevent-truncation.cs
+- retrieve-raw-string-values-from-merged-cells-concatenate-them-and-store-the-result-in-a-separate-summary-cell.cs
