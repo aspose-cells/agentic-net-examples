@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - set-importtableoptionscheckmergedcells-to-true-then-import-data-that-spans-across-merged-cell-ranges.cs
 - retrieve-raw-string-from-a-date-cell-convert-it-to-iso-8601-format-and-store-in-another-column.cs
 - import-a-twodimensional-array-of-strings-then-apply-a-custom-font-style-to-header-row-for-emphasis.cs
+- create-a-hyperlink-that-links-to-a-specific-cell-in-another-workbook-using-external-reference-syntax.cs
