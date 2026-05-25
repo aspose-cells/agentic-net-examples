@@ -10621,6 +10621,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "activate-pdfsaveoptionscrossstring-to-customize-text-placement-coordinates-for-precise-pdf-layout-control.cs",
+      "title": "Activate PdfSaveOptions.CrossString to customize text placement coordinates for precise PDF layout control."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-centered-text-watermark-with-arial-font-30point-size-and-50-opacity.cs",
       "title": "Add a centered text watermark with Arial font, 30\u2011point size, and 50% opacity."
     },

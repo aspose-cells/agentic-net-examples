@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - use-crossstring-to-position-a-logo-image-at-coordinates-100200-in-the-pdf.cs
 - use-crossstring-to-overlay-the-word-confidential-at-the-bottom-of-each-pdf-page.cs
 - specify-crossstring-coordinates-to-place-custom-text-precisely-within-the-generated-pdf.cs
+- activate-pdfsaveoptionscrossstring-to-customize-text-placement-coordinates-for-precise-pdf-layout-control.cs
