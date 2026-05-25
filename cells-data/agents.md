@@ -240,3 +240,4 @@ Output files are written to the working directory.
 - benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs
 - test-impact-of-maxdatarow-and-maxdatacolumn-limits-on-iteration-time-by-measuring-duration-with-and-without-constraints.cs
 - implement-a-custom-iterator-that-skips-hidden-rows-by-checking-the-rowishidden-property-during-enumeration.cs
+- generate-a-report-of-cells-exceeding-a-numeric-threshold-by-scanning-each-cell-and-recording-violating-addresses.cs

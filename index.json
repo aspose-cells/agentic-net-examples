@@ -1176,6 +1176,11 @@
     },
     {
       "category": "cells-data",
+      "file": "generate-a-report-of-cells-exceeding-a-numeric-threshold-by-scanning-each-cell-and-recording-violating-addresses.cs",
+      "title": "Generate a report of cells exceeding a numeric threshold by scanning each cell and recording violating addresses."
+    },
+    {
+      "category": "cells-data",
       "file": "generate-a-rows-enumerator-traverse-each-row-and-sum-values-in-the-first-column.cs",
       "title": "Generate a Rows enumerator, traverse each row, and sum values in the first column."
     },
