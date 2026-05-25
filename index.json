@@ -1571,6 +1571,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-row-heights-to-accommodate-wrapped-text-by-measuring-required-pixel-height-during-row-enumeration-and-applying-it.cs",
+      "title": "Set row heights to accommodate wrapped text by measuring required pixel height during row enumeration and applying it."
+    },
+    {
+      "category": "cells-data",
       "file": "set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs",
       "title": "Set the firstRow offset to zero to overwrite existing data when importing a new dataset."
     },

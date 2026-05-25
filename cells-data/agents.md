@@ -251,3 +251,4 @@ Output files are written to the working directory.
 - identify-and-process-cells-belonging-to-merged-ranges-by-checking-the-ismerged-property-during-enumeration.cs
 - calculate-total-number-of-merged-cells-by-counting-each-merged-regions-cell-count-during-enumeration.cs
 - adjust-column-widths-dynamically-based-on-measured-pixel-width-of-longest-cell-content-during-column-enumeration.cs
+- set-row-heights-to-accommodate-wrapped-text-by-measuring-required-pixel-height-during-row-enumeration-and-applying-it.cs
