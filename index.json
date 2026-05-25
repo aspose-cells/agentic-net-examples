@@ -850,6 +850,11 @@
       "title": "Use Cells.Subtotal with column index derived from column name \"Sales\" to sum sales figures."
     },
     {
+      "category": "cells-data",
+      "file": "use-cellssubtotal-with-startrow-set-to-zero-handling-zerobased-indexing-correctly.cs",
+      "title": "Use Cells.Subtotal with startRow set to zero, handling zero\u2011based indexing correctly."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
