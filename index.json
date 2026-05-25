@@ -10966,6 +10966,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-onepagepersheet-to-true-then-iterate-worksheets-and-save-each-as-individual-pdf-files.cs",
+      "title": "Set OnePagePerSheet to true, then iterate worksheets and save each as individual PDF files."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-onepagepersheet-to-true-then-save-each-worksheet-on-a-single-pdf-page.cs",
       "title": "Set OnePagePerSheet to true, then save each worksheet on a single PDF page."
     },
