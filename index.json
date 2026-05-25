@@ -836,6 +836,11 @@
     },
     {
       "category": "cells-data",
+      "file": "assign-simple-html-markup-to-a-cells-htmlstring-property-to-display-bold-and-italic-text.cs",
+      "title": "Assign simple HTML markup to a cell's HtmlString property to display bold and italic text."
+    },
+    {
+      "category": "cells-data",
       "file": "check-whether-cell-k10-uses-an-incell-dropdown-and-output-the-result-to-console.cs",
       "title": "Check whether cell K10 uses an in\u2011cell dropdown and output the result to console."
     },
