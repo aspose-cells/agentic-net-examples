@@ -886,6 +886,11 @@
     },
     {
       "category": "cells-data",
+      "file": "search-for-cells-containing-the-word-error-ignoring-case-and-highlight-them-orange.cs",
+      "title": "Search for cells containing the word 'error' ignoring case and highlight them orange."
+    },
+    {
+      "category": "cells-data",
       "file": "select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs",
       "title": "Select a worksheet by name and obtain its Cells collection for further operations."
     },
