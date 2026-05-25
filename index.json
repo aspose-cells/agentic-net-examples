@@ -11036,6 +11036,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs",
+      "title": "Preserve cell comments in the PDF output by enabling the option to retain comments."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs",
       "title": "Programmatically remove a specific worksheet before saving the workbook as PDF to exclude its content."
     },
