@@ -1086,6 +1086,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-checkmergedcells-to-true-before-importing-custom-objects-to-correctly-populate-merged-cell-ranges.cs",
+      "title": "Set CheckMergedCells to true before importing custom objects to correctly populate merged cell ranges."
+    },
+    {
+      "category": "cells-data",
       "file": "set-custom-sort-order-for-priority-levels-high-medium-low-and-sort-column-m.cs",
       "title": "Set custom sort order for priority levels High, Medium, Low and sort column M."
     },
