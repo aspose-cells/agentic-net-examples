@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - use-cellssubtotal-with-column-index-derived-from-column-name-sales-to-sum-sales-figures.cs
 - use-cellssubtotal-with-startrow-set-to-zero-handling-zerobased-indexing-correctly.cs
 - use-cellssubtotal-with-endrow-set-to-the-last-used-row-ensuring-full-range-coverage.cs
+- handle-an-outofrange-column-index-in-cellssubtotal-gracefully-by-catching-the-exception.cs
