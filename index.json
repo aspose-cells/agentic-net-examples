@@ -10711,6 +10711,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-crossstring-to-place-a-watermark-text-at-coordinates-50400-on-each-pdf-page.cs",
+      "title": "Apply cross\u2011string to place a watermark text at coordinates (50,400) on each PDF page."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "call-workbookcalculateformula-to-recalculate-all-formulas-before-exporting-to-pdf.cs",
       "title": "Call Workbook.CalculateFormula to recalculate all formulas before exporting to PDF."
     },
