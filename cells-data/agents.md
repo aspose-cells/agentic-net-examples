@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - apply-a-styleflag-with-quoteprefix-set-to-true-to-add-a-leading-apostrophe-to-the-cell-value.cs
 - use-cellgetcharactersstartindex-length-to-retrieve-a-richtextportion-from-the-cell.cs
 - iterate-through-all-richtextportion-objects-in-a-cell-and-modify-each-portions-font-name.cs
+- change-the-font-size-of-a-specific-richtextportion-to-twelve-points.cs
