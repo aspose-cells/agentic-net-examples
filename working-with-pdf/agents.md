@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs
 - preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs
 - export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs
+- maintain-conditional-formatting-colors-in-the-pdf-by-enabling-appropriate-rendering-options.cs
