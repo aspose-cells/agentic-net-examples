@@ -222,3 +222,4 @@ Output files are written to the working directory.
 - demonstrate-data-inconsistencies-by-reading-cell-values-without-enabling-multithreadreading-in-a-multithreaded-scenario.cs
 - test-thread-safety-by-having-multiple-threads-read-the-same-cell-simultaneously-after-setting-multithreadreading-true.cs
 - implement-progress-reporting-by-raising-events-after-processing-each-hundred-cells-during-enumeration.cs
+- filter-enumerated-cells-to-include-only-stringtype-cells-and-collect-them-into-a-list.cs
