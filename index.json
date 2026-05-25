@@ -4281,6 +4281,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs",
+      "title": "Programmatically change a formula's arguments to use commas and ensure calculation succeeds."
+    },
+    {
+      "category": "manage-formulas",
       "file": "read-the-calculated-result-of-cell-d5-after-invoking-the-worksheetcalculate-method.cs",
       "title": "Read the calculated result of cell D5 after invoking the Worksheet.Calculate method."
     },

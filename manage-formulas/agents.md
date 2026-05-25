@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - confirm-that-the-if-function-is-listed-in-the-supported-excel-functions-documentation.cs
 - create-a-unit-test-verifying-that-the-date-function-returns-correct-serial-numbers-for-valid-dates.cs
 - apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs
+- programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs
