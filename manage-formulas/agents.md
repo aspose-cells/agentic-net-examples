@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs
 - detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs
 - replace-all-instances-of-the-today-function-with-a-static-date-string-to-freeze-calculations.cs
+- replace-all-occurrences-of-concatenate-with-concat-function-across-the-workbook-for-modern-syntax.cs
