@@ -11121,6 +11121,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "merge-multiple-excel-worksheets-into-a-single-pdf-while-preserving-original-sheet-order.cs",
+      "title": "Merge multiple Excel worksheets into a single PDF while preserving original sheet order."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs",
       "title": "Preserve cell background colors in the PDF by enabling appropriate rendering settings."
     },
