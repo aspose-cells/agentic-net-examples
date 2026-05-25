@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs
 - add-a-header-containing-the-workbook-name-on-each-pdf-page-via-pdfsaveoptions.cs
 - preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs
+- preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs

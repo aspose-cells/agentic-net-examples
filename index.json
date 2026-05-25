@@ -11041,6 +11041,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs",
+      "title": "Preserve Excel charts as vector graphics in the PDF to maintain scalability and clarity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs",
       "title": "Programmatically remove a specific worksheet before saving the workbook as PDF to exclude its content."
     },
