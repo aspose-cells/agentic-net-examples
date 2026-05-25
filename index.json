@@ -1271,6 +1271,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-getstringvalue-without-formatting-to-extract-scientific-notation-strings-for-further-numeric-conversion.cs",
+      "title": "Use GetStringValue without formatting to extract scientific notation strings for further numeric conversion."
+    },
+    {
+      "category": "cells-data",
       "file": "use-importarraylist-to-add-a-list-of-guid-strings-then-format-cells-to-display-them-as-uppercase.cs",
       "title": "Use ImportArrayList to add a list of GUID strings, then format cells to display them as uppercase."
     },
