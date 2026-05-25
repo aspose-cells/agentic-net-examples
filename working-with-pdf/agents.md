@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - set-pdf-compliance-to-pdfa2b-while-preserving-original-color-profiles-for-accurate-color-reproduction.cs
 - set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs
 - set-pdf-version-to-14-using-pdfsaveoptions-for-compatibility-with-older-pdf-viewers.cs
+- set-pdf-version-to-16-to-enable-advanced-features-such-as-transparency-handling.cs

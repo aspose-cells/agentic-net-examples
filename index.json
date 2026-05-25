@@ -10680,6 +10680,11 @@
       "title": "Set PDF version to 1.4 using PdfSaveOptions for compatibility with older PDF viewers."
     },
     {
+      "category": "working-with-pdf",
+      "file": "set-pdf-version-to-16-to-enable-advanced-features-such-as-transparency-handling.cs",
+      "title": "Set PDF version to 1.6 to enable advanced features such as transparency handling."
+    },
+    {
       "category": "working-with-shapes",
       "file": "access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs",
       "title": "Access connection points of shape FlowConnector and attach them to cells A1 and B2 for dynamic linking."
