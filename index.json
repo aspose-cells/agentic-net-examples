@@ -4321,6 +4321,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-remove-all-external-references-from-formulas-in-a-workbook-to-prepare-for-distribution.cs",
+      "title": "Programmatically remove all external references from formulas in a workbook to prepare for distribution."
+    },
+    {
+      "category": "manage-formulas",
       "file": "read-the-calculated-result-of-cell-d5-after-invoking-the-worksheetcalculate-method.cs",
       "title": "Read the calculated result of cell D5 after invoking the Worksheet.Calculate method."
     },
