@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - use-crossstring-to-align-header-text-at-the-top-center-of-each-pdf-page.cs
 - render-office-addins-while-converting-an-xls-workbook-to-pdf-preserving-interactive-controls.cs
 - render-office-addins-while-converting-an-xlsx-workbook-to-pdf-preserving-interactive-controls.cs
+- render-office-addins-while-converting-an-xlsb-workbook-to-pdf-preserving-interactive-elements.cs
