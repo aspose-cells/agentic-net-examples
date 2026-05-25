@@ -836,6 +836,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-custom-sort-list-for-months-and-sort-column-c-according-to-that-list.cs",
+      "title": "Create a custom sort list for months and sort column C according to that list."
+    },
+    {
+      "category": "cells-data",
       "file": "find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs",
       "title": "Find all numeric values greater than 1000 across the worksheet and collect their addresses."
     },

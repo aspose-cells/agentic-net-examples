@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - sort-worksheet-rows-by-column-a-in-ascending-order-using-a-datasorter-instance.cs
 - apply-descending-sort-on-column-d-while-preserving-original-row-grouping-via-addkey-method.cs
 - sort-data-based-on-cell-background-colors-in-column-b-using-sortkey-cellcolor-property.cs
+- create-a-custom-sort-list-for-months-and-sort-column-c-according-to-that-list.cs
