@@ -11126,6 +11126,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionspdfacompliance-to-pdfacompliancepdfa1a-to-generate-pdfa1a-compliant-files-output.cs",
+      "title": "Set PdfSaveOptions.PdfACompliance to PdfACompliance.PdfA1a to generate PDF/A\u20111a compliant files output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionspdfcompliance-to-pdfa1a-to-produce-pdfa1a-compliant-output-for-archival-purposes.cs",
       "title": "Set PdfSaveOptions.PdfCompliance to PdfA1a to produce PDF/A\u20111a compliant output for archival purposes."
     },
