@@ -10786,6 +10786,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs",
+      "title": "Programmatically remove a specific worksheet before saving the workbook as PDF to exclude its content."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs",
       "title": "Save the workbook to PDF using PdfSaveOptions with configured settings and verify output."
     },
