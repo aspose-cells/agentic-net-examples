@@ -741,6 +741,11 @@
     },
     {
       "category": "cells-data",
+      "file": "convert-numeric-strings-within-range-a1c10-on-a-worksheet-and-verify-conversion.cs",
+      "title": "Convert numeric strings within range A1:C10 on a worksheet and verify conversion."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-string-numeric-values-only-in-the-first-worksheet-while-leaving-other-sheets-unchanged.cs",
       "title": "Convert string numeric values only in the first worksheet while leaving other sheets unchanged."
     },
