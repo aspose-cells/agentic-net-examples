@@ -1476,6 +1476,11 @@
     },
     {
       "category": "cells-data",
+      "file": "replace-characters-in-a-richtextportion-using-cellsetcharacters-with-a-new-string.cs",
+      "title": "Replace characters in a RichTextPortion using Cell.SetCharacters with a new string."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cells-formatted-string-detect-currency-symbols-and-replace-them-with-localized-equivalents.cs",
       "title": "Retrieve a cell's formatted string, detect currency symbols, and replace them with localized equivalents."
     },

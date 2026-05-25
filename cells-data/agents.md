@@ -261,3 +261,4 @@ Output files are written to the working directory.
 - use-cellgetcharactersstartindex-length-to-retrieve-a-richtextportion-from-the-cell.cs
 - iterate-through-all-richtextportion-objects-in-a-cell-and-modify-each-portions-font-name.cs
 - change-the-font-size-of-a-specific-richtextportion-to-twelve-points.cs
+- replace-characters-in-a-richtextportion-using-cellsetcharacters-with-a-new-string.cs
