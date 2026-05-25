@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - create-pdf-bookmarks-for-each-worksheet-using-worksheet-names-as-bookmark-titles.cs
 - create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs
 - add-pdf-bookmarks-with-named-destinations-matching-specific-cell-ranges-for-quick-access.cs
+- create-pdf-bookmarks-that-correspond-to-named-ranges-in-the-workbook-for-navigation.cs
