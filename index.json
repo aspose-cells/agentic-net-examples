@@ -10926,6 +10926,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "review-the-generated-pdf-to-confirm-that-all-configured-options-have-been-applied-correctly.cs",
+      "title": "Review the generated PDF to confirm that all configured options have been applied correctly."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs",
       "title": "Save the workbook to PDF using PdfSaveOptions with configured settings and verify output."
     },
