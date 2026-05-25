@@ -4231,6 +4231,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs",
+      "title": "Create a conditional formula using IFERROR to display a default value when division by zero occurs."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs",
       "title": "Create a shared formula for range C3:C12 by invoking Cell.SetSharedFormula on the first cell."
     },
