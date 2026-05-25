@@ -721,6 +721,11 @@
     },
     {
       "category": "cells-data",
+      "file": "access-a-cell-by-its-numeric-index-within-the-cells-collection-modify-its-background-color-and-save.cs",
+      "title": "Access a cell by its numeric index within the Cells collection, modify its background color, and save."
+    },
+    {
+      "category": "cells-data",
       "file": "access-a-cell-using-zerobased-row-and-column-indices-read-its-value-and-log-it.cs",
       "title": "Access a cell using zero\u2011based row and column indices, read its value, and log it."
     },

@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs
 - access-cell-b2-using-its-a1-style-name-set-a-numeric-value-and-save-the-workbook.cs
 - access-a-cell-using-zerobased-row-and-column-indices-read-its-value-and-log-it.cs
+- access-a-cell-by-its-numeric-index-within-the-cells-collection-modify-its-background-color-and-save.cs
