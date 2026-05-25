@@ -10936,6 +10936,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "decrypt-a-passwordprotected-pdf-generated-from-excel-and-programmatically-extract-its-text.cs",
+      "title": "Decrypt a password\u2011protected PDF generated from Excel and programmatically extract its text."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "define-pdfsaveoptionsmaxpages-to-limit-the-total-number-of-pages-generated-during-conversion.cs",
       "title": "Define PdfSaveOptions.MaxPages to limit the total number of pages generated during conversion."
     },
