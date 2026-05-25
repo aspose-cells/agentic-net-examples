@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs
 - retrieve-draw-object-and-bound-information-from-the-drawobjecteventhandler-callback-for-custom-processing.cs
 - verify-that-embedded-attachments-are-accessible-from-the-generated-pdf-using-a-pdf-viewer.cs
+- confirm-that-solid-gridlines-appear-correctly-in-the-pdf-when-rendersolidgridlines-is-enabled.cs
