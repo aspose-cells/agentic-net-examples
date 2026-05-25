@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - export-worksheet-data-to-xml-file-preserving-cell-data-types-and-formatting-attributes.cs
 - export-worksheet-data-to-pdf-while-preserving-cell-background-colors-and-borders.cs
 - export-worksheet-data-to-an-html-file-with-embedded-css-to-retain-cell-styling.cs
+- export-worksheet-data-to-a-markdown-table-preserving-header-formatting-and-alignment.cs

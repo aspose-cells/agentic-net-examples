@@ -906,6 +906,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-worksheet-data-to-a-markdown-table-preserving-header-formatting-and-alignment.cs",
+      "title": "Export worksheet data to a markdown table preserving header formatting and alignment."
+    },
+    {
+      "category": "cells-data",
       "file": "export-worksheet-data-to-an-html-file-with-embedded-css-to-retain-cell-styling.cs",
       "title": "Export worksheet data to an HTML file with embedded CSS to retain cell styling."
     },
