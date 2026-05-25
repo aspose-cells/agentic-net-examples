@@ -11076,6 +11076,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs",
+      "title": "Render merged cells correctly in the PDF by preserving their spanning across rows and columns."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-while-converting-a-csv-file-to-pdf-ensuring-addins-appear-correctly.cs",
       "title": "Render Office Add\u2011Ins while converting a CSV file to PDF, ensuring add\u2011ins appear correctly."
     },
