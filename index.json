@@ -11091,6 +11091,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "use-crossstring-to-align-header-text-at-the-top-center-of-each-pdf-page.cs",
+      "title": "Use cross\u2011string to align header text at the top center of each PDF page."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "use-crossstring-to-embed-a-qr-code-image-at-coordinates-200300-in-the-pdf.cs",
       "title": "Use cross\u2011string to embed a QR code image at coordinates (200,300) in the PDF."
     },

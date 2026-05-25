@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - use-crossstring-to-place-a-confidential-stamp-over-the-center-of-each-pdf-page.cs
 - apply-crossstring-to-place-a-watermark-text-at-coordinates-50400-on-each-pdf-page.cs
 - use-crossstring-to-embed-a-qr-code-image-at-coordinates-200300-in-the-pdf.cs
+- use-crossstring-to-align-header-text-at-the-top-center-of-each-pdf-page.cs
