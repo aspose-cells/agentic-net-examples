@@ -254,3 +254,4 @@ Output files are written to the working directory.
 - set-row-heights-to-accommodate-wrapped-text-by-measuring-required-pixel-height-during-row-enumeration-and-applying-it.cs
 - profile-memory-consumption-while-enumerating-large-worksheets-to-identify-potential-leaks-in-the-iteration-process.cs
 - load-an-excel-workbook-from-a-specified-file-path-into-memory-for-processing.cs
+- access-the-desired-worksheet-within-the-workbook-and-obtain-a-reference-to-a-target-cell.cs
