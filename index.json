@@ -10951,6 +10951,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs",
+      "title": "Enable PDF/A compliance to ensure long\u2011term archival compatibility of converted documents."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsaddpdfbookmarks-to-include-pdf-bookmarks-for-each-worksheet-in-the-output.cs",
       "title": "Enable PdfSaveOptions.AddPdfBookmarks to include PDF bookmarks for each worksheet in the output."
     },

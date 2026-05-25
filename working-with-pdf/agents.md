@@ -209,3 +209,4 @@ Output files are written to the working directory.
 - retrieve-and-log-font-substitution-warnings-after-rendering-excel-to-pdf.cs
 - replace-specific-unicode-characters-with-a-custom-font-when-saving-excel-as-pdf.cs
 - apply-custom-pdf-page-margins-to-control-content-positioning-during-excel-conversion.cs
+- enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs
