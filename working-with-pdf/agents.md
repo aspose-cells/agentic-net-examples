@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionspdfcompliance-to-pdfa1a-to-produce-pdfa1a-compliant-output-for-archival-purposes.cs
 - control-loading-of-external-resources-by-disabling-them-during-pdf-rendering-to-improve-performance.cs
 - validate-that-the-exported-pdf-contains-the-expected-number-of-pages-using-a-pdf-inspection-library.cs
+- programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs
