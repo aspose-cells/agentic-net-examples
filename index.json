@@ -1076,6 +1076,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-a-cells-formatted-string-parse-currency-symbols-and-store-numeric-value-in-adjacent-cell-for-calculations.cs",
+      "title": "Retrieve a cell's formatted string, parse currency symbols, and store numeric value in adjacent cell for calculations."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cells-formatted-string-value-using-getstringvalue-with-the-withformatting-strategy.cs",
       "title": "Retrieve a cell's formatted string value using GetStringValue with the WithFormatting strategy."
     },
