@@ -11041,6 +11041,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "limit-generated-pdf-pages-by-specifying-a-maximum-page-count-for-conversion.cs",
+      "title": "Limit generated PDF pages by specifying a maximum page count for conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs",
       "title": "Limit PDF output to ten pages by setting PdfSaveOptions.MaxPageCount to 10."
     },

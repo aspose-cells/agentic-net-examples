@@ -205,3 +205,4 @@ Output files are written to the working directory.
 - export-worksheets-with-slicers-rendering-slicer-controls-as-static-images-in-the-pdf.cs
 - preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs
 - fit-all-worksheet-columns-onto-a-single-pdf-page-during-conversion.cs
+- limit-generated-pdf-pages-by-specifying-a-maximum-page-count-for-conversion.cs
