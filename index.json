@@ -1101,6 +1101,11 @@
     },
     {
       "category": "cells-data",
+      "file": "filter-enumerated-cells-to-include-only-stringtype-cells-and-collect-them-into-a-list.cs",
+      "title": "Filter enumerated cells to include only string\u2011type cells and collect them into a list."
+    },
+    {
+      "category": "cells-data",
       "file": "find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs",
       "title": "Find all numeric values greater than 1000 across the worksheet and collect their addresses."
     },
