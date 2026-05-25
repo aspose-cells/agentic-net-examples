@@ -10786,6 +10786,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-batch-of-xlsx-files-in-a-directory-to-pdfa1a-format-using-parallel-processing.cs",
+      "title": "Convert a batch of XLSX files in a directory to PDF/A\u20111a format using parallel processing."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs",
       "title": "Convert a CSV file to PDF and ensure column alignment matches source data."
     },
