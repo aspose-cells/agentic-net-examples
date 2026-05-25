@@ -1216,6 +1216,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-formatted-cell-text-detect-email-addresses-using-regex-and-convert-them-into-clickable-mailto-hyperlinks.cs",
+      "title": "Retrieve formatted cell text, detect email addresses using regex, and convert them into clickable mailto hyperlinks."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-formatted-cell-text-detect-numeric-patterns-and-replace-them-with-localized-number-formats-for-display.cs",
       "title": "Retrieve formatted cell text, detect numeric patterns, and replace them with localized number formats for display."
     },

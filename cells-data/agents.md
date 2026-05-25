@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - after-importing-html-verify-that-line-break-tags-are-rendered-as-actual-new-lines-within-the-cell.cs
 - use-importarray-to-load-sensor-readings-matrix-then-calculate-and-insert-average-values-in-a-summary-row.cs
 - set-firstrow-offset-to-three-then-import-a-data-table-ensuring-existing-rows-shift-down-accordingly.cs
+- retrieve-formatted-cell-text-detect-email-addresses-using-regex-and-convert-them-into-clickable-mailto-hyperlinks.cs
