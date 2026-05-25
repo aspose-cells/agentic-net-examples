@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - use-getstringvalue-with-withformatting-to-extract-currency-strings-then-strip-symbols-for-backend-processing.cs
 - import-an-array-of-strings-containing-file-paths-then-create-hyperlinks-in-adjacent-cells-pointing-to-those-files.cs
 - set-importtableoptionspreservehtml-to-false-import-data-and-verify-that-all-html-tags-are-removed-from-cells.cs
+- use-importarraylist-to-add-enum-values-then-format-cells-to-display-enum-names-instead-of-numbers.cs
