@@ -225,3 +225,4 @@ Output files are written to the working directory.
 - filter-enumerated-cells-to-include-only-stringtype-cells-and-collect-them-into-a-list.cs
 - count-cells-containing-a-specific-keyword-by-scanning-each-cells-text-during-enumeration.cs
 - generate-a-list-of-unique-column-headers-by-enumerating-the-first-row-and-storing-distinct-values.cs
+- map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs

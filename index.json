@@ -1286,6 +1286,11 @@
     },
     {
       "category": "cells-data",
+      "file": "map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs",
+      "title": "Map column headers to their indices by iterating the header row and creating a lookup dictionary."
+    },
+    {
+      "category": "cells-data",
       "file": "measure-execution-time-for-columnmajor-versus-rowmajor-data-population-to-determine-optimal-ordering.cs",
       "title": "Measure execution time for column\u2011major versus row\u2011major data population to determine optimal ordering."
     },
