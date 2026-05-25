@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - create-a-hyperlink-that-points-to-a-network-share-location-using-unc-path-syntax-for-accessibility.cs
 - import-a-twodimensional-array-of-timestamps-then-sort-rows-based-on-the-earliest-timestamp-column.cs
 - use-getstringvalue-without-formatting-to-extract-scientific-notation-strings-for-further-numeric-conversion.cs
+- import-custom-objects-with-nested-collections-flattening-nested-data-into-separate-columns-using-a-custom-mapping-function.cs
