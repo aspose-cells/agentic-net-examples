@@ -10846,6 +10846,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "programmatically-set-the-pdf-document-title-metadata-based-on-the-workbooks-name-property.cs",
+      "title": "Programmatically set the PDF document title metadata based on the workbook's name property."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs",
       "title": "Save the workbook to PDF using PdfSaveOptions with configured settings and verify output."
     },
