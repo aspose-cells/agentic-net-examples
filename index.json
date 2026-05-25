@@ -741,6 +741,11 @@
     },
     {
       "category": "cells-data",
+      "file": "convert-numeric-strings-in-a-range-using-culturespecific-decimal-separators-and-ensure-correct-parsing.cs",
+      "title": "Convert numeric strings in a range using culture\u2011specific decimal separators and ensure correct parsing."
+    },
+    {
+      "category": "cells-data",
       "file": "convert-numeric-strings-within-range-a1c10-on-a-worksheet-and-verify-conversion.cs",
       "title": "Convert numeric strings within range A1:C10 on a worksheet and verify conversion."
     },
