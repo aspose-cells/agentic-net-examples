@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - verify-that-no-exceptions-are-thrown-during-export-when-ignoreerrors-is-enabled-and-source-errors-exist.cs
 - confirm-that-string-crossing-behavior-follows-the-crossstringinpdf-setting-in-the-final-pdf.cs
 - validate-that-draw-object-bounds-captured-during-rendering-match-the-visual-positions-in-the-pdf.cs
+- review-the-generated-pdf-to-confirm-that-all-configured-options-have-been-applied-correctly.cs
