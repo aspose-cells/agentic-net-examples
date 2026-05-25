@@ -10756,6 +10756,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "create-a-pdf-bookmark-hierarchy-by-adding-child-pdfbookmarkentry-objects-under-a-parent-entry.cs",
+      "title": "Create a PDF bookmark hierarchy by adding child PdfBookmarkEntry objects under a parent entry."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs",
       "title": "Create a PdfBookmarkEntry for a specific worksheet and assign a stable destination name."
     },
