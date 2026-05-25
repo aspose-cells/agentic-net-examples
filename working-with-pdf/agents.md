@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - set-onepagepersheet-to-true-then-save-each-worksheet-on-a-single-pdf-page.cs
 - set-onepagepersheet-to-true-and-limit-pdf-to-a-maximum-of-ten-pages.cs
 - set-onepagepersheet-to-true-and-fit-all-columns-on-one-pdf-page.cs
+- set-onepagepersheet-to-true-then-iterate-worksheets-and-save-each-as-individual-pdf-files.cs
