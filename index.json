@@ -10626,6 +10626,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs",
+      "title": "Convert a TSV document to PDF applying custom page margins for better readability."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-ods-spreadsheet-to-pdf-using-default-options-and-ensure-correct-rendering.cs",
       "title": "Convert an ODS spreadsheet to PDF using default options and ensure correct rendering."
     },
