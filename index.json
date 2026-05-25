@@ -741,6 +741,11 @@
     },
     {
       "category": "cells-data",
+      "file": "convert-string-numeric-values-only-in-the-first-worksheet-while-leaving-other-sheets-unchanged.cs",
+      "title": "Convert string numeric values only in the first worksheet while leaving other sheets unchanged."
+    },
+    {
+      "category": "cells-data",
       "file": "iterate-through-all-cells-in-the-maximum-display-range-to-count-nonempty-cells.cs",
       "title": "Iterate through all cells in the maximum display range to count non\u2011empty cells."
     },
