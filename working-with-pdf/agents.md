@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - create-a-named-destination-for-a-chart-object-and-link-a-pdf-bookmark-to-it.cs
 - configure-pdfsaveoptions-to-disable-blank-page-generation-when-the-workbook-contains-no-printable-content.cs
 - set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs
+- catch-cellsexception-during-pdf-save-to-handle-cases-where-nothing-was-printed.cs
