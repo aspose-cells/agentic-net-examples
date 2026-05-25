@@ -786,6 +786,11 @@
     },
     {
       "category": "cells-data",
+      "file": "add-validation-to-a-dynamic-range-that-expands-as-new-rows-are-inserted-using-cellarea.cs",
+      "title": "Add validation to a dynamic range that expands as new rows are inserted using CellArea."
+    },
+    {
+      "category": "cells-data",
       "file": "apply-backgroundcolor-sorting-on-column-u-treating-empty-cells-as-lowest-priority.cs",
       "title": "Apply background\u2011color sorting on column U, treating empty cells as lowest priority."
     },
