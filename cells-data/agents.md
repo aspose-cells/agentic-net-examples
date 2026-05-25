@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - import-custom-objects-with-date-properties-then-apply-a-custom-number-format-to-display-dates-as-dd-mmm-yyyy.cs
 - after-importing-html-verify-that-line-break-tags-are-rendered-as-actual-new-lines-within-the-cell.cs
 - use-importarray-to-load-sensor-readings-matrix-then-calculate-and-insert-average-values-in-a-summary-row.cs
+- set-firstrow-offset-to-three-then-import-a-data-table-ensuring-existing-rows-shift-down-accordingly.cs
