@@ -1126,6 +1126,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-a-cells-formatted-string-detect-currency-symbols-and-replace-them-with-localized-equivalents.cs",
+      "title": "Retrieve a cell's formatted string, detect currency symbols, and replace them with localized equivalents."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-a-cells-formatted-string-detect-if-it-contains-a-url-and-convert-it-into-a-clickable-hyperlink.cs",
       "title": "Retrieve a cell's formatted string, detect if it contains a URL, and convert it into a clickable hyperlink."
     },
