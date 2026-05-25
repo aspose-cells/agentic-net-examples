@@ -10636,6 +10636,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-digital-signature-to-the-pdf-using-pdfsaveoptions-to-ensure-document-authenticity.cs",
+      "title": "Add a digital signature to the PDF using PdfSaveOptions to ensure document authenticity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-header-containing-the-workbook-name-on-each-pdf-page-via-pdfsaveoptions.cs",
       "title": "Add a header containing the workbook name on each PDF page via PdfSaveOptions."
     },
