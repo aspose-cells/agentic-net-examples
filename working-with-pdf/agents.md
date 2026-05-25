@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - add-file-attachments-to-pdfsaveoptionsattachments-collection-to-embed-external-documents-in-the-pdf.cs
 - set-pdfsaveoptionscompliance-to-pdfcompliancepdfa1a-for-pdfa1a-compliant-output-that-meets-archival-standards.cs
 - set-pdfsaveoptionsfitallcolumnsononepage-to-true-to-fit-all-worksheet-columns-onto-a-single-pdf-page.cs
+- define-pdfsaveoptionsmaxpages-to-limit-the-total-number-of-pages-generated-during-conversion.cs

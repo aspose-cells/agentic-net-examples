@@ -10801,6 +10801,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "define-pdfsaveoptionsmaxpages-to-limit-the-total-number-of-pages-generated-during-conversion.cs",
+      "title": "Define PdfSaveOptions.MaxPages to limit the total number of pages generated during conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs",
       "title": "Detect empty worksheets and skip them when generating PDF to avoid unnecessary blank pages."
     },
