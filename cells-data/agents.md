@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - after-importing-html-content-verify-that-image-tags-are-ignored-and-do-not-affect-cell-formatting.cs
 - set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs
 - retrieve-raw-string-values-from-a-column-count-occurrences-of-a-specific-keyword-and-log-the-total.cs
+- use-getstringvalue-with-withformatting-to-generate-a-formatted-address-line-combining-street-city-and-zip.cs

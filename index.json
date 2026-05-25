@@ -1301,6 +1301,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-getstringvalue-with-withformatting-to-generate-a-formatted-address-line-combining-street-city-and-zip.cs",
+      "title": "Use GetStringValue with WithFormatting to generate a formatted address line combining street, city, and zip."
+    },
+    {
+      "category": "cells-data",
       "file": "use-getstringvalue-with-withformatting-to-generate-a-userfriendly-report-line-that-includes-currency-symbols.cs",
       "title": "Use GetStringValue with WithFormatting to generate a user\u2011friendly report line that includes currency symbols."
     },
