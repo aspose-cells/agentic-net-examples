@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - apply-subtotals-after-sorting-the-worksheet-by-column-a-to-ensure-grouped-data-is-correct.cs
 - apply-subtotals-on-filtered-data-confirming-that-only-visible-rows-are-included-in-calculations.cs
 - apply-subtotals-with-isoutline-set-to-false-producing-a-flat-list-of-summary-rows.cs
+- apply-subtotals-with-summaryposition-set-to-top-inserting-summary-rows-before-each-group.cs
