@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - programmatically-remove-all-external-references-from-formulas-in-a-workbook-to-prepare-for-distribution.cs
 - load-multiple-workbooks-in-a-batch-update-external-link-formulas-to-new-file-locations-and-save-each.cs
 - create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs
+- define-a-named-range-with-an-index-formula-that-dynamically-adjusts-based-on-another-cells-value.cs
