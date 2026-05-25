@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - export-worksheet-data-to-json-format-using-custom-serialization-of-cell-values-and-styles.cs
 - export-worksheet-data-to-xml-file-preserving-cell-data-types-and-formatting-attributes.cs
 - export-worksheet-data-to-pdf-while-preserving-cell-background-colors-and-borders.cs
+- export-worksheet-data-to-an-html-file-with-embedded-css-to-retain-cell-styling.cs
