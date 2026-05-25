@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs
 - configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs
 - add-a-pdf-bookmark-that-points-to-the-first-visible-cell-of-a-worksheet-using-a-named-destination.cs
+- export-a-workbook-containing-embedded-hyperlinks-and-verify-that-links-remain-functional-in-the-pdf.cs
