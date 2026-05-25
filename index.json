@@ -4231,6 +4231,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs",
+      "title": "Detect cells containing calculation errors after evaluation and log their addresses for investigation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-existing-workbook-then-assign-a-sum-formula-to-cell-b2-using-cellformula.cs",
       "title": "Load an existing workbook, then assign a SUM formula to cell B2 using Cell.Formula."
     },
