@@ -10821,6 +10821,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdfsaveoptionsaddpdfbookmarks-to-include-pdf-bookmarks-for-each-worksheet-in-the-output.cs",
+      "title": "Enable PdfSaveOptions.AddPdfBookmarks to include PDF bookmarks for each worksheet in the output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsrendersolidgridlines-to-draw-solid-gridlines-in-the-exported-pdf.cs",
       "title": "Enable PdfSaveOptions.RenderSolidGridlines to draw solid gridlines in the exported PDF."
     },
