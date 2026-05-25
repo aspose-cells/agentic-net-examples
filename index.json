@@ -1371,6 +1371,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-importarray-to-load-sensor-readings-matrix-then-calculate-and-insert-average-values-in-a-summary-row.cs",
+      "title": "Use ImportArray to load sensor readings matrix, then calculate and insert average values in a summary row."
+    },
+    {
+      "category": "cells-data",
       "file": "use-importarraylist-to-add-a-list-of-guid-strings-then-format-cells-to-display-them-as-uppercase.cs",
       "title": "Use ImportArrayList to add a list of GUID strings, then format cells to display them as uppercase."
     },
