@@ -10806,6 +10806,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdfsaveoptionsrendersolidgridlines-to-draw-solid-gridlines-in-the-exported-pdf.cs",
+      "title": "Enable PdfSaveOptions.RenderSolidGridlines to draw solid gridlines in the exported PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-printing-of-cell-comments-while-saving-workbook-to-pdf-preserving-comment-formatting.cs",
       "title": "Enable printing of cell comments while saving workbook to PDF, preserving comment formatting."
     },
