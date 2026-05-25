@@ -10805,6 +10805,11 @@
       "title": "Set PDF version to 1.6 to enable advanced features such as transparency handling."
     },
     {
+      "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs",
+      "title": "Set PdfSaveOptions.OutputBlankPageWhenNothingToPrint to false to trigger CellsException on empty workbooks."
+    },
+    {
       "category": "working-with-shapes",
       "file": "access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs",
       "title": "Access connection points of shape FlowConnector and attach them to cells A1 and B2 for dynamic linking."

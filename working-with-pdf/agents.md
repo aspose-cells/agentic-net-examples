@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs
 - create-a-named-destination-for-a-chart-object-and-link-a-pdf-bookmark-to-it.cs
 - configure-pdfsaveoptions-to-disable-blank-page-generation-when-the-workbook-contains-no-printable-content.cs
+- set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs
