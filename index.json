@@ -916,6 +916,11 @@
     },
     {
       "category": "cells-data",
+      "file": "benchmark-the-performance-impact-of-iterating-through-richtext-portions-in-large-worksheets.cs",
+      "title": "Benchmark the performance impact of iterating through rich\u2011text portions in large worksheets."
+    },
+    {
+      "category": "cells-data",
       "file": "build-a-dictionary-mapping-cell-addresses-to-their-values-by-enumerating-the-cells-collection.cs",
       "title": "Build a dictionary mapping cell addresses to their values by enumerating the Cells collection."
     },
