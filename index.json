@@ -10721,6 +10721,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "confirm-that-string-crossing-behavior-follows-the-crossstringinpdf-setting-in-the-final-pdf.cs",
+      "title": "Confirm that string crossing behavior follows the CrossStringInPdf setting in the final PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "confirm-that-the-pdf-contains-the-expected-number-of-pages-respecting-the-maxpages-limit.cs",
       "title": "Confirm that the PDF contains the expected number of pages, respecting the MaxPages limit."
     },
