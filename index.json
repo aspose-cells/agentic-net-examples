@@ -1166,6 +1166,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-cells-with-richtext-content-to-csv-while-encoding-apostrophes-as-literal-characters.cs",
+      "title": "Export cells with rich\u2011text content to CSV while encoding apostrophes as literal characters."
+    },
+    {
+      "category": "cells-data",
       "file": "export-numeric-column-data-to-a-binary-file-after-enumerating-cells-and-converting-values-to-littleendian-format.cs",
       "title": "Export numeric column data to a binary file after enumerating cells and converting values to little\u2011endian format."
     },
