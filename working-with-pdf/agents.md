@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs
 - convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs
 - convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs
+- convert-an-xls-workbook-to-pdfa1b-compliant-file-and-verify-compliance-with-external-validator.cs
