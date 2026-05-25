@@ -911,6 +911,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-worksheet-data-to-a-fixedwidth-text-file-using-custom-column-width-definitions.cs",
+      "title": "Export worksheet data to a fixed\u2011width text file using custom column width definitions."
+    },
+    {
+      "category": "cells-data",
       "file": "export-worksheet-data-to-a-markdown-table-preserving-header-formatting-and-alignment.cs",
       "title": "Export worksheet data to a markdown table preserving header formatting and alignment."
     },

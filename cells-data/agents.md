@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - export-only-validated-cells-from-a-worksheet-to-a-json-array-for-downstream-processing.cs
 - export-worksheet-rows-that-fail-validation-to-a-separate-sheet-for-error-analysis.cs
 - export-worksheet-data-to-a-tabdelimited-text-file-preserving-numeric-formatting.cs
+- export-worksheet-data-to-a-fixedwidth-text-file-using-custom-column-width-definitions.cs
