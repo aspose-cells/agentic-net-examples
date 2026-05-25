@@ -10631,6 +10631,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs",
+      "title": "Convert a TXT workbook to PDF, inserting page breaks after each paragraph for clarity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-ods-spreadsheet-to-pdf-using-default-options-and-ensure-correct-rendering.cs",
       "title": "Convert an ODS spreadsheet to PDF using default options and ensure correct rendering."
     },
