@@ -4361,6 +4361,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "measure-memory-usage-while-calculating-formulas-with-and-without-the-calculation-chain-enabled-on-large-datasets.cs",
+      "title": "Measure memory usage while calculating formulas with and without the calculation chain enabled on large datasets."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs",
       "title": "Programmatically change a formula's arguments to use commas and ensure calculation succeeds."
     },
