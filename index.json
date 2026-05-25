@@ -10716,6 +10716,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "create-pdf-bookmarks-for-each-worksheet-using-worksheet-names-as-bookmark-titles.cs",
+      "title": "Create PDF bookmarks for each worksheet using worksheet names as bookmark titles."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs",
       "title": "Set PDF compliance to PDF/A\u20111a and ensure all fonts are embedded correctly."
     },
