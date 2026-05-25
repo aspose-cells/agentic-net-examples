@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - loop-through-column-a-assign-incremental-row-references-in-a-multiplication-formula-and-store-results.cs
 - create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs
 - configure-workbooksettingsmaxrowsofsharedformula-to-limit-shared-formula-rows-to-fifty-in-the-workbook.cs
+- set-maxrowsofsharedformula-to-zero-to-disable-shared-formulas-for-the-entire-workbook.cs
