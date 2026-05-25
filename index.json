@@ -10971,6 +10971,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-office-addins-while-converting-a-csv-file-to-pdf-preserving-interactive-controls.cs",
+      "title": "Render Office Add\u2011Ins while converting a CSV file to PDF, preserving interactive controls."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-while-converting-an-xls-workbook-to-pdf-preserving-interactive-controls.cs",
       "title": "Render Office Add\u2011Ins while converting an XLS workbook to PDF, preserving interactive controls."
     },
