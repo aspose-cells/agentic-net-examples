@@ -10641,6 +10641,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-semitransparent-watermark-text-across-each-pdf-page-using-pdfsaveoptionswatermarktext.cs",
+      "title": "Add a semi\u2011transparent watermark text across each PDF page using PdfSaveOptions.WatermarkText."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-text-watermark-with-30point-size-and-40-opacity-on-all-pdf-pages.cs",
       "title": "Add a text watermark with 30\u2011point size and 40% opacity on all PDF pages."
     },
