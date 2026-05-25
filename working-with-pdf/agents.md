@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - apply-a-custom-color-profile-to-pdf-images-extracted-from-excel-charts-for-accurate-printing.cs
 - include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
 - convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs
+- enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs

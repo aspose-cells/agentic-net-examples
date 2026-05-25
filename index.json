@@ -11001,6 +11001,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs",
+      "title": "Enable PDF document tagging to improve accessibility for screen readers after conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs",
       "title": "Enable PDF/A compliance to ensure long\u2011term archival compatibility of converted documents."
     },
