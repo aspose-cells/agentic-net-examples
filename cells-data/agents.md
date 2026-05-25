@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - import-data-from-a-json-source-by-implementing-icellsdatatable-to-map-json-fields-to-worksheet-columns.cs
 - after-importing-html-content-verify-that-image-tags-are-ignored-and-do-not-affect-cell-formatting.cs
 - set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs
+- retrieve-raw-string-values-from-a-column-count-occurrences-of-a-specific-keyword-and-log-the-total.cs
