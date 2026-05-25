@@ -10766,6 +10766,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "create-a-pdf-bookmark-that-navigates-to-a-specific-cell-range-using-a-named-destination-reference.cs",
+      "title": "Create a PDF bookmark that navigates to a specific cell range using a named destination reference."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs",
       "title": "Create a PdfBookmarkEntry for a specific worksheet and assign a stable destination name."
     },
