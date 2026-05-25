@@ -1106,6 +1106,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-report-listing-cells-where-stylequoteprefix-is-true-including-their-row-and-column-indices.cs",
+      "title": "Create a report listing cells where Style.QuotePrefix is true, including their row and column indices."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-summary-report-of-data-types-present-in-the-sheet-by-counting-occurrences-during-cell-enumeration.cs",
       "title": "Create a summary report of data types present in the sheet by counting occurrences during cell enumeration."
     },
