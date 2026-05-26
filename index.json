@@ -4656,6 +4656,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-and-list-formulas-that-use-the-indirect-function-noting-their-potential-impact-on-calculation-speed.cs",
+      "title": "Identify and list formulas that use the INDIRECT function, noting their potential impact on calculation speed."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-cells-containing-circular-references-and-generate-a-report-highlighting-their-addresses-and-dependent-formulas.cs",
       "title": "Identify cells containing circular references and generate a report highlighting their addresses and dependent formulas."
     },
