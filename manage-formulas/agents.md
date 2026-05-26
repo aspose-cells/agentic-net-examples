@@ -247,3 +247,4 @@ Output files are written to the working directory.
 - apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs
 - apply-a-custom-number-format-to-cells-containing-formulas-that-produce-negative-results.cs
 - apply-conditional-formatting-that-highlights-cells-where-the-formula-result-exceeds-a-dynamic-threshold.cs
+- apply-a-formula-that-uses-the-xlookup-function-to-replace-legacy-vlookup-implementations-across-the-workbook.cs

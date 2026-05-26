@@ -4266,6 +4266,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-formula-that-uses-the-xlookup-function-to-replace-legacy-vlookup-implementations-across-the-workbook.cs",
+      "title": "Apply a formula that uses the XLOOKUP function to replace legacy VLOOKUP implementations across the workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs",
       "title": "Apply a shared array formula to a matrix range and verify each cell returns correct aggregate value."
     },
