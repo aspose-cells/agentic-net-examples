@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-in-a-workbook-applying-a-dynamic-array-formula-to-column-e-on-each-sheet.cs
 - disable-automatic-calculation-modify-several-cells-then-manually-invoke-workbookcalculateformula-to-update-dependent-formulas.cs
 - set-workbook-calculation-mode-to-automaticexcepttables-then-add-a-new-table-and-observe-recalculation-behavior.cs
+- add-a-new-worksheet-copy-a-table-with-formulas-and-ensure-calculation-mode-remains-consistent-across-sheets.cs

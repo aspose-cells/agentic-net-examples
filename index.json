@@ -4226,6 +4226,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-a-new-worksheet-copy-a-table-with-formulas-and-ensure-calculation-mode-remains-consistent-across-sheets.cs",
+      "title": "Add a new worksheet, copy a table with formulas, and ensure calculation mode remains consistent across sheets."
+    },
+    {
+      "category": "manage-formulas",
       "file": "after-deleting-a-named-range-call-workbookcalculateformula-to-ensure-dependent-formulas-update-correctly.cs",
       "title": "After deleting a named range, call workbook.CalculateFormula to ensure dependent formulas update correctly."
     },
