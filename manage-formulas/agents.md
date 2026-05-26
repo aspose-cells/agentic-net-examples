@@ -209,3 +209,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-aggregates-monthly-sales-data-using-sumifs-for-dynamic-reporting.cs
 - delete-all-named-ranges-that-start-with-the-prefix-temp_-across-every-worksheet-in-the-workbook.cs
 - copy-a-named-range-from-one-worksheet-to-another-while-preserving-its-absolute-cell-references.cs
+- retrieve-external-links-from-a-workbook-and-list-their-source-file-paths-for-audit-purposes.cs

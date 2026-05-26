@@ -4821,6 +4821,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-external-links-from-a-workbook-and-list-their-source-file-paths-for-audit-purposes.cs",
+      "title": "Retrieve external links from a workbook and list their source file paths for audit purposes."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-precedent-cells-for-a-specific-formula-cell-using-the-getprecedents-method-and-log-their-addresses.cs",
       "title": "Retrieve precedent cells for a specific formula cell using the GetPrecedents method and log their addresses."
     },
