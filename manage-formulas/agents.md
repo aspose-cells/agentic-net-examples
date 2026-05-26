@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - protect-a-worksheet-while-allowing-users-to-edit-cells-that-contain-formulas-only.cs
 - programmatically-disable-automatic-formula-recalculation-while-importing-large-data-sets-to-improve-import-speed.cs
 - programmatically-disable-automatic-calculation-while-performing-bulk-data-imports-then-enable-and-recalculate-once-complete.cs
+- programmatically-lock-cells-that-contain-formulas-to-prevent-accidental-overwriting-by-end-users.cs
