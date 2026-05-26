@@ -269,3 +269,4 @@ Output files are written to the working directory.
 - generate-a-summary-sheet-that-lists-each-named-range-its-address-and-the-formula-it-contains.cs
 - generate-a-report-of-all-formulas-that-contain-the-indirect-function-including-their-cell-addresses.cs
 - create-a-macrolike-routine-that-iterates-over-a-range-and-inserts-a-sum-formula-in-each-row.cs
+- create-a-macrostyle-loop-that-inserts-a-running-total-formula-in-each-row-of-a-financial-sheet.cs

@@ -4491,6 +4491,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-macrostyle-loop-that-inserts-a-running-total-formula-in-each-row-of-a-financial-sheet.cs",
+      "title": "Create a macro\u2011style loop that inserts a running total formula in each row of a financial sheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs",
       "title": "Create a named range, assign a simple SUM formula, and verify the calculated result programmatically."
     },
