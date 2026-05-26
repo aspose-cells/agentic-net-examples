@@ -4666,6 +4666,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "validate-that-changing-a-named-ranges-address-updates-all-formulas-referencing-it-without-manual-intervention.cs",
+      "title": "Validate that changing a named range\u2019s address updates all formulas referencing it without manual intervention."
+    },
+    {
+      "category": "manage-formulas",
       "file": "verify-that-formulas-referencing-external-workbooks-are-correctly-updated-after-changing-the-source-file-paths.cs",
       "title": "Verify that formulas referencing external workbooks are correctly updated after changing the source file paths."
     },

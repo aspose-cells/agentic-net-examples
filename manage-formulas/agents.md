@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - iterate-through-all-named-ranges-output-each-name-and-its-address-to-a-debug-log.cs
 - rename-every-named-range-that-starts-with-temp-by-prefixing-archive_-using-a-loop-and-nametext.cs
 - programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs
+- validate-that-changing-a-named-ranges-address-updates-all-formulas-referencing-it-without-manual-intervention.cs
