@@ -4576,6 +4576,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "detect-formulas-that-reference-cells-outside-the-used-range-indicating-potential-data-errors.cs",
+      "title": "Detect formulas that reference cells outside the used range, indicating potential data errors."
+    },
+    {
+      "category": "manage-formulas",
       "file": "disable-automatic-calculation-insert-formulas-then-manually-trigger-calculation-for-specific-worksheets-using-worksheetcalculateformula.cs",
       "title": "Disable automatic calculation, insert formulas, then manually trigger calculation for specific worksheets using Worksheet.CalculateFormula."
     },
