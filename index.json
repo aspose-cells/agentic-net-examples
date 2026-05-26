@@ -4261,6 +4261,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-formula-that-aggregates-data-using-sumifs-for-dynamic-monthly-sales-reporting.cs",
+      "title": "Apply a formula that aggregates data using SUMIFS for dynamic monthly sales reporting."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs",
       "title": "Apply a formula that calculates the moving average over a sliding window of ten rows for each column."
     },
