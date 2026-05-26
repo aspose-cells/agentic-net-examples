@@ -4811,6 +4811,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs",
+      "title": "Replace external links with relative paths to make the workbook portable across environments."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-and-log-the-formula-text-of-all-cells-in-a-worksheet-then-export-to-a-json-file.cs",
       "title": "Retrieve and log the formula text of all cells in a worksheet, then export to a JSON file."
     },

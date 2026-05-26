@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - copy-a-named-range-from-one-worksheet-to-another-while-preserving-its-absolute-cell-references.cs
 - retrieve-external-links-from-a-workbook-and-list-their-source-file-paths-for-audit-purposes.cs
 - update-external-link-urls-in-a-workbook-to-point-to-a-new-network-share-location.cs
+- replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs
