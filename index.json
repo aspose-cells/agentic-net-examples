@@ -4516,6 +4516,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "iterate-over-all-worksheets-and-set-calculation-mode-to-automatic-after-completing-data-imports.cs",
+      "title": "Iterate over all worksheets and set calculation mode to automatic after completing data imports."
+    },
+    {
+      "category": "manage-formulas",
       "file": "iterate-through-all-named-ranges-output-each-name-and-its-address-to-a-debug-log.cs",
       "title": "Iterate through all named ranges, output each name and its address to a debug log."
     },
