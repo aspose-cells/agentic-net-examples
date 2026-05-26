@@ -4256,6 +4256,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs",
+      "title": "Apply a formula that calculates the moving average over a sliding window of ten rows for each column."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs",
       "title": "Apply a shared array formula to a matrix range and verify each cell returns correct aggregate value."
     },
