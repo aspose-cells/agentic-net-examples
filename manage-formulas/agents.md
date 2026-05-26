@@ -275,3 +275,4 @@ Output files are written to the working directory.
 - programmatically-recalculate-formulas-after-bulk-inserting-rows-to-ensure-dependent-calculations-remain-accurate.cs
 - programmatically-enable-workbook-events-that-trigger-formula-recalculation-only-when-specific-cells-are-modified.cs
 - programmatically-set-the-workbooks-calculation-engine-to-use-64bit-precision-for-highaccuracy-financial-formulas.cs
+- set-the-workbooks-precision-as-displayed-property-to-true-ensuring-formulas-round-according-to-cell-formatting.cs
