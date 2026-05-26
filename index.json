@@ -4701,6 +4701,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-calculation-engine-to-use-1904-date-system-for-legacy-date-dependent-formulas.cs",
+      "title": "Set calculation engine to use 1904 date system for legacy date-dependent formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-calculation-mode-to-manual-batch-rename-named-ranges-using-a-regex-pattern-then-enable-automatic-mode-and-recalc.cs",
       "title": "Set calculation mode to Manual, batch rename named ranges using a regex pattern, then enable Automatic mode and recalc."
     },
