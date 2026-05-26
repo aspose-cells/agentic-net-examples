@@ -4471,6 +4471,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-workbook-calculation-mode-to-automaticexcepttables-ensuring-table-formulas-recalculate-while-other-formulas-remain-static.cs",
+      "title": "Set workbook calculation mode to AutomaticExceptTables, ensuring table formulas recalculate while other formulas remain static."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbooksettingsmaxrowsofsharedformula-to-100-to-allow-larger-shared-formula-blocks.cs",
       "title": "Set Workbook.Settings.MaxRowsOfSharedFormula to 100 to allow larger shared formula blocks."
     },
