@@ -4886,6 +4886,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-vlookup-formulas-with-indexmatch-combinations-to-enhance-lookup-performance.cs",
+      "title": "Replace all VLOOKUP formulas with INDEX\u2011MATCH combinations to enhance lookup performance."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs",
       "title": "Replace external links with relative paths to make the workbook portable across environments."
     },
