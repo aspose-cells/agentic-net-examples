@@ -242,3 +242,4 @@ Output files are written to the working directory.
 - replace-all-formulas-that-use-the-rand-function-with-a-static-seed-value-to-achieve-reproducible-results.cs
 - replace-all-formulas-that-reference-entire-columns-with-rangespecific-references-to-reduce-calculation-overhead.cs
 - replace-all-formulas-that-use-the-concatenate-function-with-the-modern-concat-operator-for-readability.cs
+- replace-all-formulas-that-use-the-indirect-function-with-alternatives-to-improve-calculation-stability.cs

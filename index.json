@@ -4881,6 +4881,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-formulas-that-use-the-indirect-function-with-alternatives-to-improve-calculation-stability.cs",
+      "title": "Replace all formulas that use the INDIRECT function with alternatives to improve calculation stability."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-formulas-that-use-the-rand-function-with-a-static-seed-value-to-achieve-reproducible-results.cs",
       "title": "Replace all formulas that use the RAND function with a static seed value to achieve reproducible results."
     },
