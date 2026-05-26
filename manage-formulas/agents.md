@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - batch-process-a-folder-of-excel-files-setting-each-workbooks-calculation-mode-to-manual-before-saving.cs
 - set-calculation-mode-to-manual-batch-rename-named-ranges-using-a-regex-pattern-then-enable-automatic-mode-and-recalc.cs
 - after-modifying-cell-values-invoke-workbookcalculateformula-to-refresh-dynamic-array-formulas-across-all-sheets.cs
+- insert-a-sort-dynamic-array-formula-into-cell-b2-and-verify-the-spilled-range-expands-correctly.cs
