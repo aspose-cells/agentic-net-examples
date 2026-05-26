@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - calculate-formulas-only-for-the-worksheet-named-summary-using-workbookcalculateformula-with-a-specific-sheet-parameter.cs
 - evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs
 - set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs
+- create-a-named-range-that-spans-multiple-worksheets-and-verify-that-formulas-can-reference-it-across-sheets.cs
