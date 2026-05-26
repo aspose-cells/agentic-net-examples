@@ -256,3 +256,4 @@ Output files are written to the working directory.
 - export-the-workbooks-formula-dependency-matrix-to-a-csv-file-for-external-processing.cs
 - export-a-detailed-log-of-formula-evaluation-times-for-each-worksheet-to-assist-in-performance-tuning.cs
 - export-a-detailed-log-of-formula-errors-including-cell-address-error-type-and-timestamp.cs
+- export-a-csv-file-that-lists-each-formula-cell-its-address-and-the-evaluated-result.cs
