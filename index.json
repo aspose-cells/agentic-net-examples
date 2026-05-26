@@ -4281,6 +4281,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "calculate-formulas-only-for-the-worksheet-named-summary-using-workbookcalculateformula-with-a-specific-sheet-parameter.cs",
+      "title": "Calculate formulas only for the worksheet named 'Summary' using workbook.CalculateFormula with a specific sheet parameter."
+    },
+    {
+      "category": "manage-formulas",
       "file": "change-source-data-for-a-filter-dynamic-array-formula-then-recalculate-workbook-to-update-results.cs",
       "title": "Change source data for a FILTER dynamic array formula, then recalculate workbook to update results."
     },
