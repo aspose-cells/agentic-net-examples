@@ -4316,6 +4316,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-calculation-options-to-treat-division-by-zero-as-a-blank-cell-instead-of-an-error.cs",
+      "title": "Configure calculation options to treat division by zero as a blank cell instead of an error."
+    },
+    {
+      "category": "manage-formulas",
       "file": "configure-workbook-to-use-manual-calculation-then-programmatically-trigger-formula-evaluation-for-a-specific-worksheet.cs",
       "title": "Configure workbook to use Manual calculation, then programmatically trigger formula evaluation for a specific worksheet."
     },

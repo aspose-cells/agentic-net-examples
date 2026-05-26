@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - set-calculation-engine-to-use-1904-date-system-for-legacy-date-dependent-formulas.cs
 - set-calculation-engine-to-ignore-circular-references-and-continue-evaluating-remaining-formulas.cs
 - configure-calculation-options-to-ignore-errors-in-formulas-referencing-empty-cells-during-evaluation.cs
+- configure-calculation-options-to-treat-division-by-zero-as-a-blank-cell-instead-of-an-error.cs
