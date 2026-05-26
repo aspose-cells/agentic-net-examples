@@ -4456,6 +4456,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-dynamically-adjusts-based-on-the-number-of-rows-in-a-table-using-offset.cs",
+      "title": "Create a named range that dynamically adjusts based on the number of rows in a table using OFFSET."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-includes-cells-from-a-filtered-table-and-use-it-in-a-subtotal-formula.cs",
       "title": "Create a named range that includes cells from a filtered table and use it in a subtotal formula."
     },
