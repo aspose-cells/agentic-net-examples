@@ -258,3 +258,4 @@ Output files are written to the working directory.
 - export-a-detailed-log-of-formula-errors-including-cell-address-error-type-and-timestamp.cs
 - export-a-csv-file-that-lists-each-formula-cell-its-address-and-the-evaluated-result.cs
 - export-a-csv-file-containing-each-formulas-address-text-and-last-evaluated-value-for-external-analysis.cs
+- export-a-json-representation-of-the-workbooks-formula-tree-capturing-parentchild-relationships-for-each-calculation.cs
