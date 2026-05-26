@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - retrieve-the-name-object-for-reportdata-change-its-text-property-to-summarydata-and-save-workbook.cs
 - identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs
 - clear-contents-of-the-named-range-reportdata-without-deleting-the-range-definition-itself.cs
+- remove-the-named-range-summarydata-from-the-workbook-and-verify-it-no-longer-appears-in-the-collection.cs
