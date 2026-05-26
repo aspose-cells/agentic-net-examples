@@ -4466,6 +4466,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-nonsequential-range-that-includes-cells-from-multiple-rows-and-columns-for-a-complex-chart.cs",
+      "title": "Create a non\u2011sequential range that includes cells from multiple rows and columns for a complex chart."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs",
       "title": "Create a shared formula for range C3:C12 by invoking Cell.SetSharedFormula on the first cell."
     },
