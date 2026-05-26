@@ -4231,6 +4231,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "batch-process-a-folder-of-excel-files-setting-each-workbooks-calculation-mode-to-manual-before-saving.cs",
+      "title": "Batch process a folder of Excel files, setting each workbook\u2019s calculation mode to Manual before saving."
+    },
+    {
+      "category": "manage-formulas",
       "file": "benchmark-calculation-time-for-a-workbook-using-direct-evaluation-versus-calculation-chain-on-identical-formula-sets.cs",
       "title": "Benchmark calculation time for a workbook using direct evaluation versus calculation chain on identical formula sets."
     },
