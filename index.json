@@ -4216,6 +4216,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-a-calculated-column-to-a-listobject-using-the-xlookup-function-and-verify-automatic-propagation.cs",
+      "title": "Add a calculated column to a ListObject using the XLOOKUP function and verify automatic propagation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "after-modifying-cell-values-invoke-workbookcalculateformula-to-refresh-dynamic-array-formulas-across-all-sheets.cs",
       "title": "After modifying cell values, invoke workbook.CalculateFormula to refresh dynamic array formulas across all sheets."
     },
