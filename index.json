@@ -4931,6 +4931,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "update-external-link-urls-in-a-workbook-to-point-to-a-new-network-share-location.cs",
+      "title": "Update external link URLs in a workbook to point to a new network share location."
+    },
+    {
+      "category": "manage-formulas",
       "file": "update-the-formula-of-a-table-column-to-include-if-logic-then-add-rows-to-verify-new-behavior.cs",
       "title": "Update the formula of a table column to include IF logic, then add rows to verify new behavior."
     },
