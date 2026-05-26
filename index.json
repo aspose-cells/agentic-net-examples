@@ -4636,6 +4636,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-disable-automatic-formula-recalculation-while-importing-large-data-sets-to-improve-import-speed.cs",
+      "title": "Programmatically disable automatic formula recalculation while importing large data sets to improve import speed."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-enable-iterative-calculation-with-a-custom-maximum-change-threshold-for-convergence.cs",
       "title": "Programmatically enable iterative calculation with a custom maximum change threshold for convergence."
     },
