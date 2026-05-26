@@ -4481,6 +4481,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "use-the-refersto-property-to-modify-an-existing-named-ranges-formula-to-include-additional-cells.cs",
+      "title": "Use the RefersTo property to modify an existing named range's formula to include additional cells."
+    },
+    {
+      "category": "manage-formulas",
       "file": "use-the-setformula-method-to-assign-a-formula-that-references-an-external-workbook-in-a-cell.cs",
       "title": "Use the SetFormula method to assign a formula that references an external workbook in a cell."
     },
