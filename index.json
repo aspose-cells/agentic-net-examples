@@ -4676,6 +4676,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-the-workbooks-formula-dependency-matrix-to-a-csv-file-for-external-processing.cs",
+      "title": "Export the workbook's formula dependency matrix to a CSV file for external processing."
+    },
+    {
+      "category": "manage-formulas",
       "file": "extract-the-textual-representation-of-a-complex-array-formula-using-the-formulatext-function-for-debugging.cs",
       "title": "Extract the textual representation of a complex array formula using the FormulaText function for debugging."
     },
