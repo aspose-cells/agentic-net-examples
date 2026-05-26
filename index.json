@@ -4321,6 +4321,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-formula-parsing-to-use-us-english-function-names-regardless-of-system-locale-settings.cs",
+      "title": "Configure formula parsing to use US English function names regardless of system locale settings."
+    },
+    {
+      "category": "manage-formulas",
       "file": "configure-workbook-to-treat-empty-strings-as-zero-when-evaluating-numeric-formulas.cs",
       "title": "Configure workbook to treat empty strings as zero when evaluating numeric formulas."
     },
