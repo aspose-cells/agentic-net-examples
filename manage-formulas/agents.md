@@ -213,3 +213,4 @@ Output files are written to the working directory.
 - update-external-link-urls-in-a-workbook-to-point-to-a-new-network-share-location.cs
 - replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs
 - create-a-formula-that-references-an-external-workbook-and-ensure-the-link-updates-when-the-source-file-moves.cs
+- identify-formulas-that-reference-external-workbooks-located-on-network-drives-and-generate-a-migration-checklist.cs

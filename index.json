@@ -4631,6 +4631,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-formulas-that-reference-external-workbooks-located-on-network-drives-and-generate-a-migration-checklist.cs",
+      "title": "Identify formulas that reference external workbooks located on network drives and generate a migration checklist."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs",
       "title": "Identify overlapping cells between Range A5:B15 and Range B10:C20 using Intersect method."
     },
