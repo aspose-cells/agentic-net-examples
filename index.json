@@ -4676,6 +4676,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-json-representation-of-the-workbooks-formula-tree-capturing-parentchild-relationships-for-each-calculation.cs",
+      "title": "Export a JSON representation of the workbook's formula tree, capturing parent\u2011child relationships for each calculation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-list-of-all-formulas-in-the-workbook-to-a-json-file-for-external-analysis.cs",
       "title": "Export a list of all formulas in the workbook to a JSON file for external analysis."
     },
