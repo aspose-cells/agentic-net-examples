@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - load-multiple-workbooks-merge-named-ranges-and-automatically-resolve-naming-conflicts.cs
 - set-workbook-calculation-mode-to-manual-modify-data-then-trigger-full-recalculation-on-demand.cs
 - iterate-over-all-worksheets-and-set-calculation-mode-to-automatic-after-completing-data-imports.cs
+- enable-iterative-calculation-with-a-maximum-of-100-iterations-and-a-convergence-threshold-of-0001.cs

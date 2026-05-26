@@ -4451,6 +4451,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "enable-iterative-calculation-with-a-maximum-of-100-iterations-and-a-convergence-threshold-of-0001.cs",
+      "title": "Enable iterative calculation with a maximum of 100 iterations and a convergence threshold of 0.001."
+    },
+    {
+      "category": "manage-formulas",
       "file": "enable-the-calculation-chain-run-workbook-wide-calculation-and-measure-performance-improvement-over-default-mode.cs",
       "title": "Enable the calculation chain, run workbook-wide calculation, and measure performance improvement over default mode."
     },
