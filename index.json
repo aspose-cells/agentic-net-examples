@@ -4481,6 +4481,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-macrolike-routine-that-iterates-over-a-range-and-inserts-a-sum-formula-in-each-row.cs",
+      "title": "Create a macro\u2011like routine that iterates over a range and inserts a SUM formula in each row."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs",
       "title": "Create a macro\u2011like routine that toggles calculation mode between Automatic and Manual based on file size."
     },
