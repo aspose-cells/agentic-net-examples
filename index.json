@@ -4311,6 +4311,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-listobject-named-salestable-add-a-column-with-a-sum-formula-and-test-propagation.cs",
+      "title": "Create a ListObject named SalesTable, add a column with a SUM formula, and test propagation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs",
       "title": "Create a named range, assign a simple SUM formula, and verify the calculated result programmatically."
     },
