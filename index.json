@@ -4966,6 +4966,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-enable-workbook-events-that-trigger-formula-recalculation-only-when-specific-cells-are-modified.cs",
+      "title": "Programmatically enable workbook events that trigger formula recalculation only when specific cells are modified."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-lock-all-cells-that-contain-formulas-and-unlock-only-input-cells-for-data-entry.cs",
       "title": "Programmatically lock all cells that contain formulas and unlock only input cells for data entry."
     },
