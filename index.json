@@ -4541,6 +4541,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "delete-all-named-ranges-that-start-with-the-prefix-temp_-across-every-worksheet-in-the-workbook.cs",
+      "title": "Delete all named ranges that start with the prefix 'Temp_' across every worksheet in the workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs",
       "title": "Detect cells containing calculation errors after evaluation and log their addresses for investigation."
     },
