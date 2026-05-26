@@ -4891,6 +4891,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-occurrences-of-the-deprecated-datevalue-function-with-direct-date-literals-for-readability.cs",
+      "title": "Replace all occurrences of the deprecated DATEVALUE function with direct date literals for readability."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-occurrences-of-the-deprecated-getpivotdata-function-with-modern-structured-reference-equivalents.cs",
       "title": "Replace all occurrences of the deprecated GETPIVOTDATA function with modern structured reference equivalents."
     },
