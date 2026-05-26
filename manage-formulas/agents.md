@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - programmatically-disable-automatic-calculation-while-performing-bulk-data-imports-then-enable-and-recalculate-once-complete.cs
 - programmatically-lock-cells-that-contain-formulas-to-prevent-accidental-overwriting-by-end-users.cs
 - programmatically-lock-all-cells-that-contain-formulas-and-unlock-only-input-cells-for-data-entry.cs
+- add-a-comment-to-each-cell-that-contains-a-formula-describing-its-purpose-for-documentation.cs
