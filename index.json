@@ -4656,6 +4656,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-detailed-log-of-formula-evaluation-times-for-each-worksheet-to-assist-in-performance-tuning.cs",
+      "title": "Export a detailed log of formula evaluation times for each worksheet to assist in performance tuning."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-list-of-all-formulas-in-the-workbook-to-a-json-file-for-external-analysis.cs",
       "title": "Export a list of all formulas in the workbook to a JSON file for external analysis."
     },
