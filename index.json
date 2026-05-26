@@ -4376,6 +4376,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-references-a-whole-column-then-use-it-in-a-vlookup-formula-across-sheets.cs",
+      "title": "Create a named range that references a whole column, then use it in a VLOOKUP formula across sheets."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-spans-multiple-worksheets-and-verify-that-formulas-can-reference-it-across-sheets.cs",
       "title": "Create a named range that spans multiple worksheets and verify that formulas can reference it across sheets."
     },
