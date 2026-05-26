@@ -4356,6 +4356,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs",
+      "title": "Create a macro\u2011like routine that toggles calculation mode between Automatic and Manual based on file size."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs",
       "title": "Create a named range, assign a simple SUM formula, and verify the calculated result programmatically."
     },
