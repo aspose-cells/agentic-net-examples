@@ -4981,6 +4981,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-recalculate-formulas-after-bulk-inserting-rows-to-ensure-dependent-calculations-remain-accurate.cs",
+      "title": "Programmatically recalculate formulas after bulk inserting rows to ensure dependent calculations remain accurate."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-remove-all-external-references-from-formulas-in-a-workbook-to-prepare-for-distribution.cs",
       "title": "Programmatically remove all external references from formulas in a workbook to prepare for distribution."
     },
