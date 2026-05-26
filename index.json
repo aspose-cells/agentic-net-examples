@@ -4541,6 +4541,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-the-name-object-for-reportdata-change-its-text-property-to-summarydata-and-save-workbook.cs",
+      "title": "Retrieve the Name object for ReportData, change its Text property to SummaryData, and save workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs",
       "title": "Retrieve the spilled range address of a dynamic array formula located in cell C3 programmatically."
     },
