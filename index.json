@@ -4746,6 +4746,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "generate-a-dependency-graph-of-formulas-across-worksheets-and-export-it-as-a-dot-file.cs",
+      "title": "Generate a dependency graph of formulas across worksheets and export it as a DOT file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "generate-a-report-of-all-formulas-that-contain-external-links-and-list-their-target-file-paths.cs",
       "title": "Generate a report of all formulas that contain external links and list their target file paths."
     },
