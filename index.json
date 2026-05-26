@@ -4341,6 +4341,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "generate-a-report-of-all-formulas-that-contain-external-links-and-list-their-target-file-paths.cs",
+      "title": "Generate a report of all formulas that contain external links and list their target file paths."
+    },
+    {
+      "category": "manage-formulas",
       "file": "generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs",
       "title": "Generate a report of all formulas using unsupported functions by cross\u2011referencing the Supported Excel Functions list."
     },
