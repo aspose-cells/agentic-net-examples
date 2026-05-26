@@ -4651,6 +4651,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "enable-formula-error-checking-and-collect-cells-that-produce-div0-errors.cs",
+      "title": "Enable formula error checking and collect cells that produce #DIV/0! errors."
+    },
+    {
+      "category": "manage-formulas",
       "file": "enable-iterative-calculation-define-maximum-iterations-as-100-and-test-circular-reference-handling.cs",
       "title": "Enable iterative calculation, define maximum iterations as 100, and test circular reference handling."
     },
