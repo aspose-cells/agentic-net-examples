@@ -4521,6 +4521,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-a-workbook-disable-automatic-calculation-perform-bulk-data-import-then-enable-calculation-and-recalc.cs",
+      "title": "Load a workbook, disable automatic calculation, perform bulk data import, then enable calculation and recalc."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-a-workbook-from-disk-set-calculation-mode-to-manual-and-save-the-file.cs",
       "title": "Load a workbook from disk, set calculation mode to Manual, and save the file."
     },

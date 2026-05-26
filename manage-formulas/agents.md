@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - merge-cells-across-columns-a-to-d-in-a-range-then-set-the-merged-cells-formula-to-calculate-total.cs
 - programmatically-merge-cells-in-a-named-range-then-set-the-merged-cells-formula-to-calculate-average.cs
 - apply-a-style-that-includes-text-rotation-to-a-merged-range-created-from-a-named-range.cs
+- load-a-workbook-disable-automatic-calculation-perform-bulk-data-import-then-enable-calculation-and-recalc.cs
