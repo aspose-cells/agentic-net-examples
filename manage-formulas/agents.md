@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - extract-the-textual-representation-of-a-complex-array-formula-using-the-formulatext-function-for-debugging.cs
 - retrieve-and-log-the-formula-text-of-all-cells-in-a-worksheet-then-export-to-a-json-file.cs
 - use-the-worksheetcalculateformula-method-to-evaluate-formulas-only-on-sheets-marked-for-quarterly-reporting.cs
+- create-a-utility-that-scans-a-workbook-for-formulas-missing-the-leading-equal-sign-and-prefixes-them-automatically.cs
