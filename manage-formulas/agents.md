@@ -274,3 +274,4 @@ Output files are written to the working directory.
 - create-a-macrostyle-routine-that-inserts-a-running-total-column-using-the-sum-function-across-rows.cs
 - programmatically-recalculate-formulas-after-bulk-inserting-rows-to-ensure-dependent-calculations-remain-accurate.cs
 - programmatically-enable-workbook-events-that-trigger-formula-recalculation-only-when-specific-cells-are-modified.cs
+- programmatically-set-the-workbooks-calculation-engine-to-use-64bit-precision-for-highaccuracy-financial-formulas.cs
