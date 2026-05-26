@@ -266,3 +266,4 @@ Output files are written to the working directory.
 - export-a-pivot-table-that-summarizes-the-results-of-all-formulas-grouped-by-worksheet-name.cs
 - export-the-workbooks-formula-evaluation-order-to-a-text-file-for-debugging-complex-dependency-chains.cs
 - generate-a-dependency-graph-of-formulas-across-worksheets-and-export-it-as-a-dot-file.cs
+- generate-a-summary-sheet-that-lists-each-named-range-its-address-and-the-formula-it-contains.cs
