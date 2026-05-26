@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - set-the-workbook-to-use-iterative-calculation-create-a-circular-reference-and-verify-convergence-within-defined-tolerance.cs
 - load-workbook-from-file-stream-and-enable-iterative-calculation-for-complex-formulas.cs
 - load-workbook-from-memory-stream-modify-a-specific-formula-and-save-back-to-same-stream.cs
+- load-multiple-workbooks-merge-named-ranges-and-automatically-resolve-naming-conflicts.cs
