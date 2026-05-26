@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - generate-a-csv-file-listing-each-formula-cell-its-precedents-and-dependent-counts-for-audit-purposes.cs
 - extract-the-textual-representation-of-a-complex-array-formula-using-the-formulatext-function-for-debugging.cs
 - retrieve-and-log-the-formula-text-of-all-cells-in-a-worksheet-then-export-to-a-json-file.cs
+- use-the-worksheetcalculateformula-method-to-evaluate-formulas-only-on-sheets-marked-for-quarterly-reporting.cs
