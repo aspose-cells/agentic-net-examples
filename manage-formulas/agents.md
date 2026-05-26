@@ -217,3 +217,4 @@ Output files are written to the working directory.
 - detect-formulas-that-reference-cells-on-hidden-worksheets-for-security-auditing.cs
 - detect-formulas-that-reference-cells-on-deleted-worksheets-and-automatically-update-them-to-reference-a-placeholder-sheet.cs
 - detect-formulas-that-reference-cells-on-worksheets-with-very-large-data-sets-and-suggest-optimization-strategies.cs
+- detect-formulas-that-reference-cells-outside-the-used-range-indicating-potential-data-errors.cs
