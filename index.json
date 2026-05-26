@@ -4381,6 +4381,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-custom-function-that-returns-the-median-of-a-range-and-register-it-for-use-in-formulas.cs",
+      "title": "Create a custom function that returns the median of a range and register it for use in formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-custom-style-with-border-fill-and-font-then-apply-it-to-the-union-of-two-ranges.cs",
       "title": "Create a custom style with border, fill, and font, then apply it to the union of two ranges."
     },
