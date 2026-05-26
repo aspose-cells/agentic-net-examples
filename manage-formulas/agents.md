@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - insert-a-new-row-into-salestable-and-confirm-the-column-formula-automatically-calculates-for-the-new-entry.cs
 - update-the-formula-of-a-table-column-to-include-if-logic-then-add-rows-to-verify-new-behavior.cs
 - remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs
+- convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs
