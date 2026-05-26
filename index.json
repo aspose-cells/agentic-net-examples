@@ -4371,6 +4371,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "copy-a-named-range-from-one-worksheet-to-another-while-preserving-its-absolute-cell-references.cs",
+      "title": "Copy a named range from one worksheet to another while preserving its absolute cell references."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-batch-script-that-opens-multiple-workbooks-sets-a-shared-formula-and-saves-each-file.cs",
       "title": "Create a batch script that opens multiple workbooks, sets a shared formula, and saves each file."
     },
