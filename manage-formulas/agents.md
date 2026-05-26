@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - use-the-worksheetcalculateformula-method-to-evaluate-formulas-only-on-sheets-marked-for-quarterly-reporting.cs
 - create-a-utility-that-scans-a-workbook-for-formulas-missing-the-leading-equal-sign-and-prefixes-them-automatically.cs
 - generate-a-report-of-all-formulas-that-contain-external-links-and-list-their-target-file-paths.cs
+- update-external-link-formulas-to-new-file-locations-after-migrating-source-workbooks-to-a-network-share.cs

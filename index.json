@@ -4451,6 +4451,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "update-external-link-formulas-to-new-file-locations-after-migrating-source-workbooks-to-a-network-share.cs",
+      "title": "Update external link formulas to new file locations after migrating source workbooks to a network share."
+    },
+    {
+      "category": "manage-formulas",
       "file": "update-external-link-paths-in-formulas-after-moving-source-workbooks-to-a-new-directory.cs",
       "title": "Update external link paths in formulas after moving source workbooks to a new directory."
     },
