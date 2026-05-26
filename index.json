@@ -4236,6 +4236,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-custom-number-format-to-a-named-range-containing-financial-data-and-verify-display-correctness.cs",
+      "title": "Apply a custom number format to a named range containing financial data and verify display correctness."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs",
       "title": "Apply a shared array formula to a matrix range and verify each cell returns correct aggregate value."
     },
