@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - programmatically-lock-cells-that-contain-formulas-to-prevent-accidental-overwriting-by-end-users.cs
 - programmatically-lock-all-cells-that-contain-formulas-and-unlock-only-input-cells-for-data-entry.cs
 - add-a-comment-to-each-cell-that-contains-a-formula-describing-its-purpose-for-documentation.cs
+- add-a-comment-to-each-named-range-describing-its-purpose-and-any-associated-business-rules.cs
