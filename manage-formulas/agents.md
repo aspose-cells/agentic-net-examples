@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - validate-that-changing-a-named-ranges-address-updates-all-formulas-referencing-it-without-manual-intervention.cs
 - apply-a-custom-number-format-to-a-named-range-containing-financial-data-and-verify-display-correctness.cs
 - create-a-custom-style-with-border-fill-and-font-then-apply-it-to-the-union-of-two-ranges.cs
+- iterate-through-all-worksheets-in-a-workbook-applying-a-dynamic-array-formula-to-column-e-on-each-sheet.cs
