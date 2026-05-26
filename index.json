@@ -4431,6 +4431,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs",
+      "title": "Identify overlapping cells between Range A5:B15 and Range B10:C20 using Intersect method."
+    },
+    {
+      "category": "manage-formulas",
       "file": "implement-a-routine-that-reads-cellvalue-after-calculation-to-confirm-formula-evaluation-result.cs",
       "title": "Implement a routine that reads Cell.Value after calculation to confirm formula evaluation result."
     },
