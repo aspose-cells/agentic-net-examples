@@ -4446,6 +4446,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-side-of-a-table.cs",
+      "title": "Create a named range that automatically expands when new columns are added to the side of a table."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-references-a-whole-column-then-use-it-in-a-vlookup-formula-across-sheets.cs",
       "title": "Create a named range that references a whole column, then use it in a VLOOKUP formula across sheets."
     },
