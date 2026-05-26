@@ -4426,6 +4426,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-dynamic-named-range-that-expands-automatically-when-new-rows-are-added-to-a-table.cs",
+      "title": "Create a dynamic named range that expands automatically when new rows are added to a table."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-listobject-named-salestable-add-a-column-with-a-sum-formula-and-test-propagation.cs",
       "title": "Create a ListObject named SalesTable, add a column with a SUM formula, and test propagation."
     },
