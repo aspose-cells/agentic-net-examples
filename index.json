@@ -4666,6 +4666,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-detailed-audit-of-all-named-ranges-including-their-scope-address-and-any-associated-formulas.cs",
+      "title": "Export a detailed audit of all named ranges, including their scope, address, and any associated formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-detailed-log-of-formula-errors-including-cell-address-error-type-and-timestamp.cs",
       "title": "Export a detailed log of formula errors, including cell address, error type, and timestamp."
     },
