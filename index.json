@@ -4491,6 +4491,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "verify-that-formulas-referencing-external-workbooks-are-correctly-updated-after-changing-the-source-file-paths.cs",
+      "title": "Verify that formulas referencing external workbooks are correctly updated after changing the source file paths."
+    },
+    {
+      "category": "manage-formulas",
       "file": "verify-that-the-assigned-formula-uses-english-us-function-names-and-commas-as-argument-separators.cs",
       "title": "Verify that the assigned formula uses English (US) function names and commas as argument separators."
     },
