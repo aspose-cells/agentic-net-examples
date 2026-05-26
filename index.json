@@ -4766,6 +4766,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "extract-the-formula-text-from-each-cell-in-a-named-range-and-write-them-to-a-text-file.cs",
+      "title": "Extract the formula text from each cell in a named range and write them to a text file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "extract-the-textual-representation-of-a-complex-array-formula-using-the-formulatext-function-for-debugging.cs",
       "title": "Extract the textual representation of a complex array formula using the FormulaText function for debugging."
     },

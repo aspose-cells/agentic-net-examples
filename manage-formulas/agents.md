@@ -280,3 +280,4 @@ Output files are written to the working directory.
 - set-the-calculation-engine-to-use-custom-precision-of-1012-decimal-places-for-scientific-formulas.cs
 - enable-formula-error-checking-and-collect-cells-that-produce-div0-errors.cs
 - add-a-data-validation-rule-that-restricts-formula-entry-to-cells-within-a-predefined-named-range.cs
+- extract-the-formula-text-from-each-cell-in-a-named-range-and-write-them-to-a-text-file.cs
