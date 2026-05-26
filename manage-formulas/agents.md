@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - update-external-link-formulas-to-new-file-locations-after-migrating-source-workbooks-to-a-network-share.cs
 - verify-that-formulas-referencing-external-workbooks-are-correctly-updated-after-changing-the-source-file-paths.cs
 - use-the-refersto-property-to-modify-an-existing-named-ranges-formula-to-include-additional-cells.cs
+- create-a-named-range-using-an-offset-formula-to-define-a-dynamic-range-based-on-a-reference-cell.cs

@@ -4276,6 +4276,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-using-an-offset-formula-to-define-a-dynamic-range-based-on-a-reference-cell.cs",
+      "title": "Create a named range using an OFFSET formula to define a dynamic range based on a reference cell."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs",
       "title": "Create a shared formula for range C3:C12 by invoking Cell.SetSharedFormula on the first cell."
     },
