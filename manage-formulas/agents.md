@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - create-a-listobject-named-salestable-add-a-column-with-a-sum-formula-and-test-propagation.cs
 - insert-a-new-row-into-salestable-and-confirm-the-column-formula-automatically-calculates-for-the-new-entry.cs
 - update-the-formula-of-a-table-column-to-include-if-logic-then-add-rows-to-verify-new-behavior.cs
+- remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs
