@@ -249,3 +249,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-that-highlights-cells-where-the-formula-result-exceeds-a-dynamic-threshold.cs
 - apply-a-formula-that-uses-the-xlookup-function-to-replace-legacy-vlookup-implementations-across-the-workbook.cs
 - apply-a-formula-that-aggregates-data-using-sumifs-for-dynamic-monthly-sales-reporting.cs
+- convert-all-formula-cells-to-their-calculated-values-before-exporting-the-workbook-to-csv-format.cs
