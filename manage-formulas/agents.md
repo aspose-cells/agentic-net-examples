@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs
 - convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs
 - add-a-calculated-column-to-a-listobject-using-the-xlookup-function-and-verify-automatic-propagation.cs
+- add-a-new-column-to-a-table-set-its-formula-to-reference-a-named-range-and-test-propagation.cs
