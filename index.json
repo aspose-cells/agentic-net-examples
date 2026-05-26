@@ -4466,6 +4466,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-references-cells-from-a-different-workbook-for-crossfile-formulas.cs",
+      "title": "Create a named range that references cells from a different workbook for cross\u2011file formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-references-noncontiguous-cells-and-assign-a-custom-formula-to-it.cs",
       "title": "Create a named range that references non\u2011contiguous cells and assign a custom formula to it."
     },
