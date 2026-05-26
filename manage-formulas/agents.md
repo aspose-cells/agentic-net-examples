@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - clear-contents-of-the-named-range-reportdata-without-deleting-the-range-definition-itself.cs
 - remove-the-named-range-summarydata-from-the-workbook-and-verify-it-no-longer-appears-in-the-collection.cs
 - after-deleting-a-named-range-call-workbookcalculateformula-to-ensure-dependent-formulas-update-correctly.cs
+- iterate-through-all-named-ranges-output-each-name-and-its-address-to-a-debug-log.cs
