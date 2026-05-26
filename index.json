@@ -4561,6 +4561,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "update-the-formula-of-a-table-column-to-include-if-logic-then-add-rows-to-verify-new-behavior.cs",
+      "title": "Update the formula of a table column to include IF logic, then add rows to verify new behavior."
+    },
+    {
+      "category": "manage-formulas",
       "file": "update-the-refersto-property-of-an-existing-named-range-to-include-a-new-column-in-its-formula.cs",
       "title": "Update the RefersTo property of an existing named range to include a new column in its formula."
     },
