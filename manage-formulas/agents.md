@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - replace-all-instances-of-the-deprecated-sumif-function-with-sumifs-across-the-workbook.cs
 - replace-all-vlookup-formulas-with-indexmatch-combinations-to-enhance-lookup-performance.cs
 - replace-all-vlookup-formulas-that-perform-exact-matches-with-xlookup-for-improved-performance.cs
+- replace-all-occurrences-of-the-deprecated-getpivotdata-function-with-modern-structured-reference-equivalents.cs
