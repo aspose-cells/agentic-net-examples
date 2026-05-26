@@ -5001,6 +5001,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-set-the-workbooks-calculation-engine-to-use-64bit-precision-for-highaccuracy-financial-formulas.cs",
+      "title": "Programmatically set the workbook's calculation engine to use 64\u2011bit precision for high\u2011accuracy financial formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "protect-a-worksheet-while-allowing-users-to-edit-cells-that-contain-formulas-only.cs",
       "title": "Protect a worksheet while allowing users to edit cells that contain formulas only."
     },
