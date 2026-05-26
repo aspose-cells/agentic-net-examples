@@ -4256,6 +4256,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "change-source-data-for-a-filter-dynamic-array-formula-then-recalculate-workbook-to-update-results.cs",
+      "title": "Change source data for a FILTER dynamic array formula, then recalculate workbook to update results."
+    },
+    {
+      "category": "manage-formulas",
       "file": "change-workbook-calculation-mode-to-automatic-recalculate-all-formulas-and-verify-updated-cell-values.cs",
       "title": "Change workbook calculation mode to Automatic, recalculate all formulas, and verify updated cell values."
     },

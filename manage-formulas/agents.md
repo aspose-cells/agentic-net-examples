@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - after-modifying-cell-values-invoke-workbookcalculateformula-to-refresh-dynamic-array-formulas-across-all-sheets.cs
 - insert-a-sort-dynamic-array-formula-into-cell-b2-and-verify-the-spilled-range-expands-correctly.cs
 - apply-a-unique-function-as-a-dynamic-array-formula-in-column-d-and-observe-automatic-deduplication.cs
+- change-source-data-for-a-filter-dynamic-array-formula-then-recalculate-workbook-to-update-results.cs
