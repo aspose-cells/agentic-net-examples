@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - add-a-comment-to-each-cell-that-contains-a-formula-describing-its-purpose-for-documentation.cs
 - add-a-comment-to-each-named-range-describing-its-purpose-and-any-associated-business-rules.cs
 - create-a-custom-function-that-returns-the-median-of-a-range-and-register-it-for-use-in-formulas.cs
+- create-a-custom-function-that-returns-the-number-of-working-days-between-two-dates-for-use-in-formulas.cs
