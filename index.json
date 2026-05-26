@@ -4326,6 +4326,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-workbook-to-ignore-external-link-errors-during-formula-evaluation-to-prevent-calculation-failures.cs",
+      "title": "Configure workbook to ignore external link errors during formula evaluation to prevent calculation failures."
+    },
+    {
+      "category": "manage-formulas",
       "file": "configure-workbook-to-treat-empty-strings-as-zero-when-evaluating-numeric-formulas.cs",
       "title": "Configure workbook to treat empty strings as zero when evaluating numeric formulas."
     },
