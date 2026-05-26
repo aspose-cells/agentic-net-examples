@@ -4656,6 +4656,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-detailed-log-of-formula-errors-including-cell-address-error-type-and-timestamp.cs",
+      "title": "Export a detailed log of formula errors, including cell address, error type, and timestamp."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-detailed-log-of-formula-evaluation-times-for-each-worksheet-to-assist-in-performance-tuning.cs",
       "title": "Export a detailed log of formula evaluation times for each worksheet to assist in performance tuning."
     },
