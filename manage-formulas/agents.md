@@ -277,3 +277,4 @@ Output files are written to the working directory.
 - programmatically-set-the-workbooks-calculation-engine-to-use-64bit-precision-for-highaccuracy-financial-formulas.cs
 - set-the-workbooks-precision-as-displayed-property-to-true-ensuring-formulas-round-according-to-cell-formatting.cs
 - set-the-workbooks-precision-as-displayed-property-to-false-ensuring-calculations-use-full-double-precision.cs
+- set-the-calculation-engine-to-use-custom-precision-of-1012-decimal-places-for-scientific-formulas.cs
