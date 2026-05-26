@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - load-a-workbook-disable-automatic-calculation-perform-bulk-data-import-then-enable-calculation-and-recalc.cs
 - create-a-named-range-that-references-a-whole-column-then-use-it-in-a-vlookup-formula-across-sheets.cs
 - set-the-workbook-to-use-iterative-calculation-create-a-circular-reference-and-verify-convergence-within-defined-tolerance.cs
+- load-workbook-from-file-stream-and-enable-iterative-calculation-for-complex-formulas.cs
