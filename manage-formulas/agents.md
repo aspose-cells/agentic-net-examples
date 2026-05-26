@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - identify-and-list-formulas-that-use-volatile-functions-and-log-their-locations-for-performance-optimization.cs
 - identify-formulas-that-contain-hardcoded-constants-and-suggest-converting-them-to-named-parameters.cs
 - identify-formulas-that-use-the-now-deprecated-function-and-replace-them-with-the-recommended-alternative.cs
+- validate-that-all-formulas-in-a-workbook-reference-existing-cells-and-report-any-broken-references.cs
