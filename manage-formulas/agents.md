@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - configure-workbook-to-use-manual-calculation-then-programmatically-trigger-formula-evaluation-for-a-specific-worksheet.cs
 - set-workbook-calculation-mode-to-automaticexcepttables-ensuring-table-formulas-recalculate-while-other-formulas-remain-static.cs
 - enable-iterative-calculation-define-maximum-iterations-as-100-and-test-circular-reference-handling.cs
+- set-workbooks-iterative-calculation-maximum-change-to-0001-and-test-convergence-on-a-circular-reference-example.cs
