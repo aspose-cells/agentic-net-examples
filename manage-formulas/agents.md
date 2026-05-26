@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - configure-workbook-to-treat-empty-strings-as-zero-when-evaluating-numeric-formulas.cs
 - configure-formula-parsing-to-use-us-english-function-names-regardless-of-system-locale-settings.cs
 - configure-workbook-to-ignore-external-link-errors-during-formula-evaluation-to-prevent-calculation-failures.cs
+- protect-a-worksheet-while-allowing-users-to-edit-cells-that-contain-formulas-only.cs
