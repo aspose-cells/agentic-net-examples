@@ -4501,6 +4501,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-a-workbook-replace-all-occurrences-of-a-specific-named-range-with-a-new-range-and-recalc.cs",
+      "title": "Load a workbook, replace all occurrences of a specific named range with a new range, and recalc."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-an-existing-workbook-set-a-formula-referencing-an-external-file-and-save-changes.cs",
       "title": "Load an existing workbook, set a formula referencing an external file, and save changes."
     },
