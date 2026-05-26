@@ -4226,6 +4226,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "after-deleting-a-named-range-call-workbookcalculateformula-to-ensure-dependent-formulas-update-correctly.cs",
+      "title": "After deleting a named range, call workbook.CalculateFormula to ensure dependent formulas update correctly."
+    },
+    {
+      "category": "manage-formulas",
       "file": "after-modifying-cell-values-invoke-workbookcalculateformula-to-refresh-dynamic-array-formulas-across-all-sheets.cs",
       "title": "After modifying cell values, invoke workbook.CalculateFormula to refresh dynamic array formulas across all sheets."
     },
