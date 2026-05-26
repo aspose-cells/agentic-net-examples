@@ -4291,6 +4291,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-utility-that-scans-a-workbook-for-formulas-missing-the-leading-equal-sign-and-prefixes-them-automatically.cs",
+      "title": "Create a utility that scans a workbook for formulas missing the leading equal sign and prefixes them automatically."
+    },
+    {
+      "category": "manage-formulas",
       "file": "define-a-named-range-with-an-index-formula-that-dynamically-adjusts-based-on-another-cells-value.cs",
       "title": "Define a named range with an INDEX formula that dynamically adjusts based on another cell's value."
     },
