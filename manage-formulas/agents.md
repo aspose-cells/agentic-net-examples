@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - add-a-new-worksheet-copy-a-table-with-formulas-and-ensure-calculation-mode-remains-consistent-across-sheets.cs
 - load-a-workbook-replace-all-occurrences-of-a-specific-named-range-with-a-new-range-and-recalc.cs
 - create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs
+- set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs
