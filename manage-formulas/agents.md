@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-a-named-range-containing-financial-data-and-verify-display-correctness.cs
 - create-a-custom-style-with-border-fill-and-font-then-apply-it-to-the-union-of-two-ranges.cs
 - iterate-through-all-worksheets-in-a-workbook-applying-a-dynamic-array-formula-to-column-e-on-each-sheet.cs
+- disable-automatic-calculation-modify-several-cells-then-manually-invoke-workbookcalculateformula-to-update-dependent-formulas.cs
