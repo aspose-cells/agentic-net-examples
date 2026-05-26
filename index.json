@@ -4496,6 +4496,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-macrostyle-routine-that-inserts-a-conditional-sumif-formula-into-each-row-based-on-a-flag-column.cs",
+      "title": "Create a macro\u2011style routine that inserts a conditional SUMIF formula into each row based on a flag column."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs",
       "title": "Create a named range, assign a simple SUM formula, and verify the calculated result programmatically."
     },

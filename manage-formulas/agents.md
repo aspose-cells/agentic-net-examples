@@ -270,3 +270,4 @@ Output files are written to the working directory.
 - generate-a-report-of-all-formulas-that-contain-the-indirect-function-including-their-cell-addresses.cs
 - create-a-macrolike-routine-that-iterates-over-a-range-and-inserts-a-sum-formula-in-each-row.cs
 - create-a-macrostyle-loop-that-inserts-a-running-total-formula-in-each-row-of-a-financial-sheet.cs
+- create-a-macrostyle-routine-that-inserts-a-conditional-sumif-formula-into-each-row-based-on-a-flag-column.cs
