@@ -4561,6 +4561,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "detect-formulas-that-reference-cells-on-hidden-worksheets-for-security-auditing.cs",
+      "title": "Detect formulas that reference cells on hidden worksheets for security auditing."
+    },
+    {
+      "category": "manage-formulas",
       "file": "disable-automatic-calculation-insert-formulas-then-manually-trigger-calculation-for-specific-worksheets-using-worksheetcalculateformula.cs",
       "title": "Disable automatic calculation, insert formulas, then manually trigger calculation for specific worksheets using Worksheet.CalculateFormula."
     },
