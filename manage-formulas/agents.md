@@ -279,3 +279,4 @@ Output files are written to the working directory.
 - set-the-workbooks-precision-as-displayed-property-to-false-ensuring-calculations-use-full-double-precision.cs
 - set-the-calculation-engine-to-use-custom-precision-of-1012-decimal-places-for-scientific-formulas.cs
 - enable-formula-error-checking-and-collect-cells-that-produce-div0-errors.cs
+- add-a-data-validation-rule-that-restricts-formula-entry-to-cells-within-a-predefined-named-range.cs
