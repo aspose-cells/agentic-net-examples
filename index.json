@@ -4716,6 +4716,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-workbook-calculation-mode-to-manual-modify-data-then-trigger-full-recalculation-on-demand.cs",
+      "title": "Set workbook calculation mode to manual, modify data, then trigger full recalculation on demand."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs",
       "title": "Set workbook calculation mode to Manual, modify several cells, then selectively recalculate only the affected range."
     },
