@@ -4886,6 +4886,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-occurrences-of-the-deprecated-choose-function-with-nested-if-statements-for-compatibility.cs",
+      "title": "Replace all occurrences of the deprecated CHOOSE function with nested IF statements for compatibility."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-occurrences-of-the-deprecated-getpivotdata-function-with-modern-structured-reference-equivalents.cs",
       "title": "Replace all occurrences of the deprecated GETPIVOTDATA function with modern structured reference equivalents."
     },
