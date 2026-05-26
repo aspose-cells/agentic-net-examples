@@ -4726,6 +4726,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-custom-calculation-engine-timeout-to-prevent-longrunning-formulas-from-hanging-the-application.cs",
+      "title": "Set custom calculation engine timeout to prevent long\u2011running formulas from hanging the application."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-maxrowsofsharedformula-to-zero-to-disable-shared-formulas-for-the-entire-workbook.cs",
       "title": "Set MaxRowsOfSharedFormula to zero to disable shared formulas for the entire workbook."
     },
