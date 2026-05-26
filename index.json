@@ -4701,6 +4701,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-all-formulas-that-use-the-sumproduct-function-to-a-separate-worksheet-for-performance-review.cs",
+      "title": "Export all formulas that use the SUMPRODUCT function to a separate worksheet for performance review."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs",
       "title": "Export the list of dependent cells for a given formula to a CSV file for external analysis."
     },
