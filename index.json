@@ -4311,6 +4311,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-calculation-options-to-ignore-errors-in-formulas-referencing-empty-cells-during-evaluation.cs",
+      "title": "Configure calculation options to ignore errors in formulas referencing empty cells during evaluation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "configure-workbook-to-use-manual-calculation-then-programmatically-trigger-formula-evaluation-for-a-specific-worksheet.cs",
       "title": "Configure workbook to use Manual calculation, then programmatically trigger formula evaluation for a specific worksheet."
     },

@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - programmatically-enable-iterative-calculation-with-a-custom-maximum-change-threshold-for-convergence.cs
 - set-calculation-engine-to-use-1904-date-system-for-legacy-date-dependent-formulas.cs
 - set-calculation-engine-to-ignore-circular-references-and-continue-evaluating-remaining-formulas.cs
+- configure-calculation-options-to-ignore-errors-in-formulas-referencing-empty-cells-during-evaluation.cs
