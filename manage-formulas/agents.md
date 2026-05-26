@@ -248,3 +248,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-cells-containing-formulas-that-produce-negative-results.cs
 - apply-conditional-formatting-that-highlights-cells-where-the-formula-result-exceeds-a-dynamic-threshold.cs
 - apply-a-formula-that-uses-the-xlookup-function-to-replace-legacy-vlookup-implementations-across-the-workbook.cs
+- apply-a-formula-that-aggregates-data-using-sumifs-for-dynamic-monthly-sales-reporting.cs
