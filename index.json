@@ -4661,6 +4661,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-list-of-named-ranges-along-with-their-associated-formulas-to-an-excel-summary-worksheet.cs",
+      "title": "Export a list of named ranges along with their associated formulas to an Excel summary worksheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs",
       "title": "Export the list of dependent cells for a given formula to a CSV file for external analysis."
     },
