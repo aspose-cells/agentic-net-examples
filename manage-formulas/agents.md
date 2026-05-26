@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs
 - calculate-formulas-only-for-the-worksheet-named-summary-using-workbookcalculateformula-with-a-specific-sheet-parameter.cs
 - evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs
+- set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs
