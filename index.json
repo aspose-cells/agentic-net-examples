@@ -4221,6 +4221,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-a-comment-to-each-cell-that-contains-a-formula-describing-its-purpose-for-documentation.cs",
+      "title": "Add a comment to each cell that contains a formula, describing its purpose for documentation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "add-a-new-column-to-a-table-set-its-formula-to-reference-a-named-range-and-test-propagation.cs",
       "title": "Add a new column to a table, set its formula to reference a named range, and test propagation."
     },
