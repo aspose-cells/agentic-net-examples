@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - after-deleting-a-named-range-call-workbookcalculateformula-to-ensure-dependent-formulas-update-correctly.cs
 - iterate-through-all-named-ranges-output-each-name-and-its-address-to-a-debug-log.cs
 - rename-every-named-range-that-starts-with-temp-by-prefixing-archive_-using-a-loop-and-nametext.cs
+- programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs
