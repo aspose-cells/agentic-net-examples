@@ -4451,6 +4451,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-crosssheet-formula.cs",
+      "title": "Create a named range that spans multiple worksheets and use it in a cross\u2011sheet formula."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-spans-multiple-worksheets-and-verify-that-formulas-can-reference-it-across-sheets.cs",
       "title": "Create a named range that spans multiple worksheets and verify that formulas can reference it across sheets."
     },
