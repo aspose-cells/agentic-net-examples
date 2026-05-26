@@ -4501,6 +4501,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-macrostyle-routine-that-inserts-a-running-total-column-using-the-sum-function-across-rows.cs",
+      "title": "Create a macro\u2011style routine that inserts a running total column using the SUM function across rows."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs",
       "title": "Create a named range, assign a simple SUM formula, and verify the calculated result programmatically."
     },
