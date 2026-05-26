@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - create-a-custom-error-handler-that-replaces-na-results-with-a-userdefined-placeholder-text.cs
 - create-a-custom-calculation-option-that-treats-empty-cells-as-zero-when-used-in-arithmetic-formulas.cs
 - create-a-named-range-that-references-noncontiguous-cells-and-assign-a-custom-formula-to-it.cs
+- create-a-nonsequential-range-that-includes-cells-from-multiple-rows-and-columns-for-a-complex-chart.cs
