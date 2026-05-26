@@ -4561,6 +4561,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "detect-formulas-that-reference-cells-on-deleted-worksheets-and-automatically-update-them-to-reference-a-placeholder-sheet.cs",
+      "title": "Detect formulas that reference cells on deleted worksheets and automatically update them to reference a placeholder sheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "detect-formulas-that-reference-cells-on-hidden-worksheets-for-security-auditing.cs",
       "title": "Detect formulas that reference cells on hidden worksheets for security auditing."
     },
