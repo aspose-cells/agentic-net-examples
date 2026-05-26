@@ -4441,6 +4441,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs",
+      "title": "Evaluate formulas within a defined range A1:D20 without recalculating the entire workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs",
       "title": "Export the list of dependent cells for a given formula to a CSV file for external analysis."
     },

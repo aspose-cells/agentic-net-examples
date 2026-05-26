@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs
 - set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs
 - calculate-formulas-only-for-the-worksheet-named-summary-using-workbookcalculateformula-with-a-specific-sheet-parameter.cs
+- evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs
