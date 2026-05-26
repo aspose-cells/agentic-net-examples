@@ -246,3 +246,4 @@ Output files are written to the working directory.
 - apply-an-array-formula-to-a-rectangular-range-that-calculates-the-sum-of-corresponding-rows-across-sheets.cs
 - apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs
 - apply-a-custom-number-format-to-cells-containing-formulas-that-produce-negative-results.cs
+- apply-conditional-formatting-that-highlights-cells-where-the-formula-result-exceeds-a-dynamic-threshold.cs
