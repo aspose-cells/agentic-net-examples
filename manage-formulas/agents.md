@@ -245,3 +245,4 @@ Output files are written to the working directory.
 - replace-all-formulas-that-use-the-indirect-function-with-alternatives-to-improve-calculation-stability.cs
 - apply-an-array-formula-to-a-rectangular-range-that-calculates-the-sum-of-corresponding-rows-across-sheets.cs
 - apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs
+- apply-a-custom-number-format-to-cells-containing-formulas-that-produce-negative-results.cs
