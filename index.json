@@ -4361,6 +4361,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs",
+      "title": "Define a named range called DataSet covering A1:C10, then rename it to ReportData using Name.Text."
+    },
+    {
+      "category": "manage-formulas",
       "file": "define-a-named-range-with-an-index-formula-that-dynamically-adjusts-based-on-another-cells-value.cs",
       "title": "Define a named range with an INDEX formula that dynamically adjusts based on another cell's value."
     },

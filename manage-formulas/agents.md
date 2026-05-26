@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs
 - add-a-calculated-column-to-a-listobject-using-the-xlookup-function-and-verify-automatic-propagation.cs
 - add-a-new-column-to-a-table-set-its-formula-to-reference-a-named-range-and-test-propagation.cs
+- define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs
