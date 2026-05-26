@@ -4481,6 +4481,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-workbooks-iterative-calculation-maximum-change-to-0001-and-test-convergence-on-a-circular-reference-example.cs",
+      "title": "Set workbook\u2019s iterative calculation maximum change to 0.001 and test convergence on a circular reference example."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbooksettingsmaxrowsofsharedformula-to-100-to-allow-larger-shared-formula-blocks.cs",
       "title": "Set Workbook.Settings.MaxRowsOfSharedFormula to 100 to allow larger shared formula blocks."
     },
