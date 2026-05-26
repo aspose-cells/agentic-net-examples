@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - replace-all-occurrences-of-the-deprecated-datevalue-function-with-direct-date-literals-for-readability.cs
 - replace-all-occurrences-of-the-deprecated-rept-function-with-the-newer-repeat-function-for-consistency.cs
 - replace-all-occurrences-of-the-deprecated-textjoin-function-with-concatenate-combined-with-delimiters-for-older-compatibility.cs
+- replace-all-instances-of-the-power-function-with-the-exponentiation-operator-for-simpler-syntax.cs
