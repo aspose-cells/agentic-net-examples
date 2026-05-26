@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - validate-the-syntax-of-a-userprovided-formula-string-before-inserting-it-into-a-worksheet-cell.cs
 - replace-all-instances-of-the-deprecated-sumif-function-with-sumifs-across-the-workbook.cs
 - replace-all-vlookup-formulas-with-indexmatch-combinations-to-enhance-lookup-performance.cs
+- replace-all-vlookup-formulas-that-perform-exact-matches-with-xlookup-for-improved-performance.cs
