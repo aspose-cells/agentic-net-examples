@@ -4256,6 +4256,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-custom-number-format-to-cells-containing-formulas-that-produce-negative-results.cs",
+      "title": "Apply a custom number format to cells containing formulas that produce negative results."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs",
       "title": "Apply a formula that calculates the moving average over a sliding window of ten rows for each column."
     },
