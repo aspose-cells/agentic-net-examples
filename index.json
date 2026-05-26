@@ -5191,6 +5191,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-the-calculation-engine-to-use-custom-precision-of-1012-decimal-places-for-scientific-formulas.cs",
+      "title": "Set the calculation engine to use custom precision of 10\u201112 decimal places for scientific formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-the-workbook-to-use-iterative-calculation-create-a-circular-reference-and-verify-convergence-within-defined-tolerance.cs",
       "title": "Set the workbook to use iterative calculation, create a circular reference, and verify convergence within defined tolerance."
     },
