@@ -4651,6 +4651,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-cells-containing-circular-references-and-generate-a-report-highlighting-their-addresses-and-dependent-formulas.cs",
+      "title": "Identify cells containing circular references and generate a report highlighting their addresses and dependent formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-formulas-that-reference-cells-in-deleted-rows-and-provide-correction-suggestions.cs",
       "title": "Identify formulas that reference cells in deleted rows and provide correction suggestions."
     },

@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - detect-formulas-that-reference-cells-outside-the-used-range-indicating-potential-data-errors.cs
 - identify-formulas-that-reference-named-ranges-defined-in-hidden-worksheets-and-generate-a-remediation-plan.cs
 - identify-formulas-that-reference-cells-in-deleted-rows-and-provide-correction-suggestions.cs
+- identify-cells-containing-circular-references-and-generate-a-report-highlighting-their-addresses-and-dependent-formulas.cs
