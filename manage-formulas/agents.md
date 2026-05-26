@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - create-a-dynamic-named-range-that-expands-automatically-when-new-rows-are-added-to-a-table.cs
 - create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-side-of-a-table.cs
 - create-a-named-range-that-includes-cells-from-a-filtered-table-and-use-it-in-a-subtotal-formula.cs
+- create-a-named-range-that-aggregates-data-from-multiple-sheets-using-the-sum-function-for-dashboard-use.cs

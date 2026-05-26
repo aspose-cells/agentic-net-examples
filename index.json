@@ -4446,6 +4446,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-aggregates-data-from-multiple-sheets-using-the-sum-function-for-dashboard-use.cs",
+      "title": "Create a named range that aggregates data from multiple sheets using the SUM function for dashboard use."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-side-of-a-table.cs",
       "title": "Create a named range that automatically expands when new columns are added to the side of a table."
     },
