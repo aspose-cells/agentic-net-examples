@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs
 - set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs
 - create-a-named-range-that-spans-multiple-worksheets-and-verify-that-formulas-can-reference-it-across-sheets.cs
+- create-a-named-range-that-spans-noncontiguous-cells-using-the-union-method-and-apply-a-custom-style.cs
