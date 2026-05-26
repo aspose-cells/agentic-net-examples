@@ -4646,6 +4646,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs",
+      "title": "Set workbook calculation mode to Automatic, then use the EvaluateFormula method to obtain a single cell\u2019s result."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbook-calculation-mode-to-automaticexcepttables-ensuring-table-formulas-recalculate-while-other-formulas-remain-static.cs",
       "title": "Set workbook calculation mode to AutomaticExceptTables, ensuring table formulas recalculate while other formulas remain static."
     },
