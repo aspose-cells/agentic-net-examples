@@ -4481,6 +4481,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-calculation-mode-to-manual-batch-rename-named-ranges-using-a-regex-pattern-then-enable-automatic-mode-and-recalc.cs",
+      "title": "Set calculation mode to Manual, batch rename named ranges using a regex pattern, then enable Automatic mode and recalc."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-maxrowsofsharedformula-to-zero-to-disable-shared-formulas-for-the-entire-workbook.cs",
       "title": "Set MaxRowsOfSharedFormula to zero to disable shared formulas for the entire workbook."
     },
