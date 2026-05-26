@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - add-a-new-column-to-a-table-set-its-formula-to-reference-a-named-range-and-test-propagation.cs
 - define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs
 - retrieve-the-name-object-for-reportdata-change-its-text-property-to-summarydata-and-save-workbook.cs
+- identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs
