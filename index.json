@@ -4441,6 +4441,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-the-current-workbook-calculation-mode-and-output-its-enum-value-to-the-console.cs",
+      "title": "Retrieve the current workbook calculation mode and output its enum value to the console."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs",
       "title": "Retrieve the formula string from cell E10 and log it for audit purposes."
     },

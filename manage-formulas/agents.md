@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - use-the-refersto-property-to-modify-an-existing-named-ranges-formula-to-include-additional-cells.cs
 - create-a-named-range-using-an-offset-formula-to-define-a-dynamic-range-based-on-a-reference-cell.cs
 - load-a-workbook-from-disk-set-calculation-mode-to-manual-and-save-the-file.cs
+- retrieve-the-current-workbook-calculation-mode-and-output-its-enum-value-to-the-console.cs
