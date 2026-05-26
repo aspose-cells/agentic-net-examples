@@ -4701,6 +4701,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-pivot-table-that-summarizes-the-results-of-all-formulas-grouped-by-worksheet-name.cs",
+      "title": "Export a pivot table that summarizes the results of all formulas grouped by worksheet name."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-summary-worksheet-that-aggregates-the-count-of-formulas-per-worksheet-categorized-by-function-type.cs",
       "title": "Export a summary worksheet that aggregates the count of formulas per worksheet, categorized by function type."
     },
