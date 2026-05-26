@@ -4876,6 +4876,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-instances-of-the-power-function-with-the-exponentiation-operator-for-simpler-syntax.cs",
+      "title": "Replace all instances of the POWER function with the exponentiation operator (^) for simpler syntax."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-instances-of-the-today-function-with-a-static-date-string-to-freeze-calculations.cs",
       "title": "Replace all instances of the TODAY function with a static date string to freeze calculations."
     },
