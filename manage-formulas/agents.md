@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-spans-multiple-worksheets-and-verify-that-formulas-can-reference-it-across-sheets.cs
 - create-a-named-range-that-spans-noncontiguous-cells-using-the-union-method-and-apply-a-custom-style.cs
 - merge-cells-across-columns-a-to-d-in-a-range-then-set-the-merged-cells-formula-to-calculate-total.cs
+- programmatically-merge-cells-in-a-named-range-then-set-the-merged-cells-formula-to-calculate-average.cs

@@ -4571,6 +4571,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-merge-cells-in-a-named-range-then-set-the-merged-cells-formula-to-calculate-average.cs",
+      "title": "Programmatically merge cells in a named range, then set the merged cell\u2019s formula to calculate average."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-remove-all-external-references-from-formulas-in-a-workbook-to-prepare-for-distribution.cs",
       "title": "Programmatically remove all external references from formulas in a workbook to prepare for distribution."
     },
