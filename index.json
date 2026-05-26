@@ -4691,6 +4691,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-formulas-that-use-the-now-deprecated-function-and-replace-them-with-the-recommended-alternative.cs",
+      "title": "Identify formulas that use the now deprecated function and replace them with the recommended alternative."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs",
       "title": "Identify overlapping cells between Range A5:B15 and Range B10:C20 using Intersect method."
     },
