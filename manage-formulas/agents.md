@@ -195,3 +195,4 @@ Output files are written to the working directory.
 - create-a-custom-function-that-returns-the-number-of-working-days-between-two-dates-for-use-in-formulas.cs
 - create-a-custom-function-that-calculates-compound-interest-and-register-it-for-financial-formulas.cs
 - create-a-custom-function-that-returns-the-fiscal-quarter-based-on-a-date-for-reporting-formulas.cs
+- create-a-custom-error-handler-that-replaces-na-results-with-a-userdefined-placeholder-text.cs
