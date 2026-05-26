@@ -4661,6 +4661,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-and-list-formulas-that-use-volatile-functions-and-log-their-locations-for-performance-optimization.cs",
+      "title": "Identify and list formulas that use volatile functions and log their locations for performance optimization."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-cells-containing-circular-references-and-generate-a-report-highlighting-their-addresses-and-dependent-formulas.cs",
       "title": "Identify cells containing circular references and generate a report highlighting their addresses and dependent formulas."
     },
