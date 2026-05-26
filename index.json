@@ -4451,6 +4451,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-aggregates-monthly-sales-data-using-sumifs-for-dynamic-reporting.cs",
+      "title": "Create a named range that aggregates monthly sales data using SUMIFS for dynamic reporting."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-side-of-a-table.cs",
       "title": "Create a named range that automatically expands when new columns are added to the side of a table."
     },
