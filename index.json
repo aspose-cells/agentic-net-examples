@@ -4286,6 +4286,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-conditional-formatting-that-highlights-cells-where-the-formula-result-exceeds-a-dynamic-threshold.cs",
+      "title": "Apply conditional formatting that highlights cells where the formula result exceeds a dynamic threshold."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs",
       "title": "Apply SetSharedFormula to a range spanning multiple rows and columns, then validate calculated results."
     },
