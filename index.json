@@ -4656,6 +4656,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-list-of-all-formulas-in-the-workbook-to-a-json-file-for-external-analysis.cs",
+      "title": "Export a list of all formulas in the workbook to a JSON file for external analysis."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs",
       "title": "Export the list of dependent cells for a given formula to a CSV file for external analysis."
     },
