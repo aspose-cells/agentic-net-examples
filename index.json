@@ -4241,6 +4241,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "change-workbook-calculation-mode-to-automatic-recalculate-all-formulas-and-verify-updated-cell-values.cs",
+      "title": "Change workbook calculation mode to Automatic, recalculate all formulas, and verify updated cell values."
+    },
+    {
+      "category": "manage-formulas",
       "file": "check-that-the-sumproduct-function-appears-in-the-supported-excel-functions-list-before-using-it.cs",
       "title": "Check that the SUMPRODUCT function appears in the Supported Excel Functions list before using it."
     },

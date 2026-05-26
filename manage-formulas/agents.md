@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - create-a-named-range-using-an-offset-formula-to-define-a-dynamic-range-based-on-a-reference-cell.cs
 - load-a-workbook-from-disk-set-calculation-mode-to-manual-and-save-the-file.cs
 - retrieve-the-current-workbook-calculation-mode-and-output-its-enum-value-to-the-console.cs
+- change-workbook-calculation-mode-to-automatic-recalculate-all-formulas-and-verify-updated-cell-values.cs
