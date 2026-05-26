@@ -5196,6 +5196,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-the-workbooks-precision-as-displayed-property-to-true-ensuring-formulas-round-according-to-cell-formatting.cs",
+      "title": "Set the workbook's precision as displayed property to true, ensuring formulas round according to cell formatting."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs",
       "title": "Set workbook calculation mode to Automatic, then use the EvaluateFormula method to obtain a single cell\u2019s result."
     },
