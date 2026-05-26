@@ -4496,6 +4496,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs",
+      "title": "Retrieve the spilled range address of a dynamic array formula located in cell C3 programmatically."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-a-formula-string-that-includes-a-vlookup-referencing-another-workbook-with-correct-path-syntax.cs",
       "title": "Set a formula string that includes a VLOOKUP referencing another workbook with correct path syntax."
     },
