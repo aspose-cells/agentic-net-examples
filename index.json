@@ -4471,6 +4471,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "use-the-worksheetcalculateformula-method-to-evaluate-formulas-only-on-sheets-marked-for-quarterly-reporting.cs",
+      "title": "Use the Worksheet.CalculateFormula method to evaluate formulas only on sheets marked for quarterly reporting."
+    },
+    {
+      "category": "manage-formulas",
       "file": "verify-that-the-assigned-formula-uses-english-us-function-names-and-commas-as-argument-separators.cs",
       "title": "Verify that the assigned formula uses English (US) function names and commas as argument separators."
     },
