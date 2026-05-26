@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - identify-cells-containing-circular-references-and-generate-a-report-highlighting-their-addresses-and-dependent-formulas.cs
 - identify-and-list-all-formulas-that-use-the-offset-function-noting-their-potential-volatility.cs
 - identify-and-list-formulas-that-use-the-indirect-function-noting-their-potential-impact-on-calculation-speed.cs
+- identify-and-list-formulas-that-use-volatile-functions-and-log-their-locations-for-performance-optimization.cs
