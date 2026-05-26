@@ -4271,6 +4271,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-an-array-formula-to-a-rectangular-range-that-calculates-the-sum-of-corresponding-rows-across-sheets.cs",
+      "title": "Apply an array formula to a rectangular range that calculates the sum of corresponding rows across sheets."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs",
       "title": "Apply SetSharedFormula to a range spanning multiple rows and columns, then validate calculated results."
     },
