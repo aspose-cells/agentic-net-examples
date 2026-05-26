@@ -4561,6 +4561,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "merge-cells-across-columns-a-to-d-in-a-range-then-set-the-merged-cells-formula-to-calculate-total.cs",
+      "title": "Merge cells across columns A to D in a range, then set the merged cell\u2019s formula to calculate total."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs",
       "title": "Programmatically change a formula's arguments to use commas and ensure calculation succeeds."
     },
