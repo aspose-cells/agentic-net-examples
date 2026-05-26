@@ -4381,6 +4381,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-custom-function-that-calculates-compound-interest-and-register-it-for-financial-formulas.cs",
+      "title": "Create a custom function that calculates compound interest and register it for financial formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-custom-function-that-returns-the-median-of-a-range-and-register-it-for-use-in-formulas.cs",
       "title": "Create a custom function that returns the median of a range and register it for use in formulas."
     },
