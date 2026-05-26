@@ -5051,6 +5051,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "validate-that-all-formulas-in-a-workbook-reference-existing-cells-and-report-any-broken-references.cs",
+      "title": "Validate that all formulas in a workbook reference existing cells and report any broken references."
+    },
+    {
+      "category": "manage-formulas",
       "file": "validate-that-changing-a-named-ranges-address-updates-all-formulas-referencing-it-without-manual-intervention.cs",
       "title": "Validate that changing a named range\u2019s address updates all formulas referencing it without manual intervention."
     },
