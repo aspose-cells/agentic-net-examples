@@ -4406,6 +4406,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-multiple-workbooks-in-a-loop-set-each-to-manual-calculation-and-store-them-in-a-list.cs",
+      "title": "Load multiple workbooks in a loop, set each to Manual calculation, and store them in a list."
+    },
+    {
+      "category": "manage-formulas",
       "file": "loop-through-column-a-assign-incremental-row-references-in-a-multiplication-formula-and-store-results.cs",
       "title": "Loop through column A, assign incremental row references in a multiplication formula, and store results."
     },
