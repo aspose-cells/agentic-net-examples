@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - create-a-utility-that-scans-a-workbook-for-formulas-missing-the-leading-equal-sign-and-prefixes-them-automatically.cs
 - generate-a-report-of-all-formulas-that-contain-external-links-and-list-their-target-file-paths.cs
 - update-external-link-formulas-to-new-file-locations-after-migrating-source-workbooks-to-a-network-share.cs
+- verify-that-formulas-referencing-external-workbooks-are-correctly-updated-after-changing-the-source-file-paths.cs
