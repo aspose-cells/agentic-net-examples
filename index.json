@@ -4331,6 +4331,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-custom-style-with-border-fill-and-font-then-apply-it-to-the-union-of-two-ranges.cs",
+      "title": "Create a custom style with border, fill, and font, then apply it to the union of two ranges."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-dynamic-array-formula-that-references-a-spill-then-use-it-in-a-sum-formula-on-another-sheet.cs",
       "title": "Create a dynamic array formula that references a spill, then use it in a SUM formula on another sheet."
     },
