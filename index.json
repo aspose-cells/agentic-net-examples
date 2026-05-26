@@ -5061,6 +5061,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "validate-the-syntax-of-a-userprovided-formula-string-before-inserting-it-into-a-worksheet-cell.cs",
+      "title": "Validate the syntax of a user\u2011provided formula string before inserting it into a worksheet cell."
+    },
+    {
+      "category": "manage-formulas",
       "file": "verify-that-formulas-referencing-external-workbooks-are-correctly-updated-after-changing-the-source-file-paths.cs",
       "title": "Verify that formulas referencing external workbooks are correctly updated after changing the source file paths."
     },
