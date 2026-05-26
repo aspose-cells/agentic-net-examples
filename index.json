@@ -4701,6 +4701,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-summary-worksheet-that-aggregates-the-count-of-formulas-per-worksheet-categorized-by-function-type.cs",
+      "title": "Export a summary worksheet that aggregates the count of formulas per worksheet, categorized by function type."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-workbooks-formula-audit-trail-including-timestamps-of-each-calculation-to-an-xml-report.cs",
       "title": "Export a workbook's formula audit trail, including timestamps of each calculation, to an XML report."
     },

@@ -262,3 +262,4 @@ Output files are written to the working directory.
 - export-a-list-of-formulas-that-contain-the-iferror-function-to-a-separate-worksheet-for-review.cs
 - export-all-formulas-that-use-the-sumproduct-function-to-a-separate-worksheet-for-performance-review.cs
 - export-a-detailed-audit-of-all-named-ranges-including-their-scope-address-and-any-associated-formulas.cs
+- export-a-summary-worksheet-that-aggregates-the-count-of-formulas-per-worksheet-categorized-by-function-type.cs
