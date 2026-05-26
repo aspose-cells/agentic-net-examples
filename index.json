@@ -4656,6 +4656,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-csv-file-containing-each-formulas-address-text-and-last-evaluated-value-for-external-analysis.cs",
+      "title": "Export a CSV file containing each formula's address, text, and last evaluated value for external analysis."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-csv-file-that-lists-each-formula-cell-its-address-and-the-evaluated-result.cs",
       "title": "Export a CSV file that lists each formula cell, its address, and the evaluated result."
     },
