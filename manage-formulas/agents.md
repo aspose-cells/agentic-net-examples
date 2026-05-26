@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs
 - create-a-formula-that-references-an-external-workbook-and-ensure-the-link-updates-when-the-source-file-moves.cs
 - identify-formulas-that-reference-external-workbooks-located-on-network-drives-and-generate-a-migration-checklist.cs
+- detect-formulas-that-reference-cells-on-hidden-worksheets-for-security-auditing.cs
