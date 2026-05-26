@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - rename-every-named-range-that-starts-with-temp-by-prefixing-archive_-using-a-loop-and-nametext.cs
 - programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs
 - validate-that-changing-a-named-ranges-address-updates-all-formulas-referencing-it-without-manual-intervention.cs
+- apply-a-custom-number-format-to-a-named-range-containing-financial-data-and-verify-display-correctness.cs
