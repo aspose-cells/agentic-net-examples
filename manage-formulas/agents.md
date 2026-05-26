@@ -252,3 +252,4 @@ Output files are written to the working directory.
 - convert-all-formula-cells-to-their-calculated-values-before-exporting-the-workbook-to-csv-format.cs
 - export-a-list-of-all-formulas-in-the-workbook-to-a-json-file-for-external-analysis.cs
 - export-a-list-of-named-ranges-along-with-their-associated-formulas-to-an-excel-summary-worksheet.cs
+- export-a-workbooks-formula-audit-trail-including-timestamps-of-each-calculation-to-an-xml-report.cs

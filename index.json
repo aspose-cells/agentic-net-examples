@@ -4666,6 +4666,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-workbooks-formula-audit-trail-including-timestamps-of-each-calculation-to-an-xml-report.cs",
+      "title": "Export a workbook's formula audit trail, including timestamps of each calculation, to an XML report."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs",
       "title": "Export the list of dependent cells for a given formula to a CSV file for external analysis."
     },
