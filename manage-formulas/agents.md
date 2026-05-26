@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - apply-a-style-that-includes-text-rotation-to-a-merged-range-created-from-a-named-range.cs
 - load-a-workbook-disable-automatic-calculation-perform-bulk-data-import-then-enable-calculation-and-recalc.cs
 - create-a-named-range-that-references-a-whole-column-then-use-it-in-a-vlookup-formula-across-sheets.cs
+- set-the-workbook-to-use-iterative-calculation-create-a-circular-reference-and-verify-convergence-within-defined-tolerance.cs

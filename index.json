@@ -4681,6 +4681,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-the-workbook-to-use-iterative-calculation-create-a-circular-reference-and-verify-convergence-within-defined-tolerance.cs",
+      "title": "Set the workbook to use iterative calculation, create a circular reference, and verify convergence within defined tolerance."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs",
       "title": "Set workbook calculation mode to Automatic, then use the EvaluateFormula method to obtain a single cell\u2019s result."
     },
