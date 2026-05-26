@@ -263,3 +263,4 @@ Output files are written to the working directory.
 - export-all-formulas-that-use-the-sumproduct-function-to-a-separate-worksheet-for-performance-review.cs
 - export-a-detailed-audit-of-all-named-ranges-including-their-scope-address-and-any-associated-formulas.cs
 - export-a-summary-worksheet-that-aggregates-the-count-of-formulas-per-worksheet-categorized-by-function-type.cs
+- export-a-pivot-table-that-summarizes-the-results-of-all-formulas-grouped-by-worksheet-name.cs
