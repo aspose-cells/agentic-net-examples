@@ -4376,6 +4376,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-spans-noncontiguous-cells-using-the-union-method-and-apply-a-custom-style.cs",
+      "title": "Create a named range that spans non\u2011contiguous cells using the Union method and apply a custom style."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-using-an-offset-formula-to-define-a-dynamic-range-based-on-a-reference-cell.cs",
       "title": "Create a named range using an OFFSET formula to define a dynamic range based on a reference cell."
     },
