@@ -4871,6 +4871,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-formulas-that-use-the-today-function-with-static-dates-based-on-a-provided-snapshot-date.cs",
+      "title": "Replace all formulas that use the TODAY() function with static dates based on a provided snapshot date."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-instances-of-the-deprecated-sumif-function-with-sumifs-across-the-workbook.cs",
       "title": "Replace all instances of the deprecated SUMIF function with SUMIFS across the workbook."
     },
