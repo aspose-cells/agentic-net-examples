@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - set-workbook-calculation-mode-to-automaticexcepttables-then-add-a-new-table-and-observe-recalculation-behavior.cs
 - add-a-new-worksheet-copy-a-table-with-formulas-and-ensure-calculation-mode-remains-consistent-across-sheets.cs
 - load-a-workbook-replace-all-occurrences-of-a-specific-named-range-with-a-new-range-and-recalc.cs
+- create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs
