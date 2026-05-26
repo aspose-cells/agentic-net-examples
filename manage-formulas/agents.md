@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - configure-workbook-to-ignore-external-link-errors-during-formula-evaluation-to-prevent-calculation-failures.cs
 - protect-a-worksheet-while-allowing-users-to-edit-cells-that-contain-formulas-only.cs
 - programmatically-disable-automatic-formula-recalculation-while-importing-large-data-sets-to-improve-import-speed.cs
+- programmatically-disable-automatic-calculation-while-performing-bulk-data-imports-then-enable-and-recalculate-once-complete.cs

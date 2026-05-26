@@ -4636,6 +4636,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-disable-automatic-calculation-while-performing-bulk-data-imports-then-enable-and-recalculate-once-complete.cs",
+      "title": "Programmatically disable automatic calculation while performing bulk data imports, then enable and recalculate once complete."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-disable-automatic-formula-recalculation-while-importing-large-data-sets-to-improve-import-speed.cs",
       "title": "Programmatically disable automatic formula recalculation while importing large data sets to improve import speed."
     },
