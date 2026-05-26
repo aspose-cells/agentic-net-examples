@@ -4451,6 +4451,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-includes-cells-from-a-filtered-table-and-use-it-in-a-subtotal-formula.cs",
+      "title": "Create a named range that includes cells from a filtered table and use it in a subtotal formula."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-references-a-whole-column-then-use-it-in-a-vlookup-formula-across-sheets.cs",
       "title": "Create a named range that references a whole column, then use it in a VLOOKUP formula across sheets."
     },
