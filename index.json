@@ -4476,6 +4476,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "iterate-through-all-worksheets-in-a-workbook-applying-a-dynamic-array-formula-to-column-e-on-each-sheet.cs",
+      "title": "Iterate through all worksheets in a workbook, applying a dynamic array formula to column E on each sheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-a-workbook-from-disk-set-calculation-mode-to-manual-and-save-the-file.cs",
       "title": "Load a workbook from disk, set calculation mode to Manual, and save the file."
     },
