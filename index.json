@@ -4756,6 +4756,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "generate-a-report-of-all-formulas-that-contain-the-indirect-function-including-their-cell-addresses.cs",
+      "title": "Generate a report of all formulas that contain the INDIRECT function, including their cell addresses."
+    },
+    {
+      "category": "manage-formulas",
       "file": "generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs",
       "title": "Generate a report of all formulas using unsupported functions by cross\u2011referencing the Supported Excel Functions list."
     },
