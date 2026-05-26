@@ -4656,6 +4656,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-csv-file-that-lists-each-formula-cell-its-address-and-the-evaluated-result.cs",
+      "title": "Export a CSV file that lists each formula cell, its address, and the evaluated result."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-detailed-log-of-formula-errors-including-cell-address-error-type-and-timestamp.cs",
       "title": "Export a detailed log of formula errors, including cell address, error type, and timestamp."
     },
