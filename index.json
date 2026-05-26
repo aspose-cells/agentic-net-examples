@@ -4406,6 +4406,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-and-log-the-formula-text-of-all-cells-in-a-worksheet-then-export-to-a-json-file.cs",
+      "title": "Retrieve and log the formula text of all cells in a worksheet, then export to a JSON file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-dependent-cells-for-a-formula-using-the-getdependents-method-and-export-the-list-to-a-csv-file.cs",
       "title": "Retrieve dependent cells for a formula using the GetDependents method and export the list to a CSV file."
     },
