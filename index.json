@@ -4566,6 +4566,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-multiple-workbooks-merge-named-ranges-and-automatically-resolve-naming-conflicts.cs",
+      "title": "Load multiple workbooks, merge named ranges, and automatically resolve naming conflicts."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-workbook-from-file-stream-and-enable-iterative-calculation-for-complex-formulas.cs",
       "title": "Load workbook from file stream and enable iterative calculation for complex formulas."
     },
