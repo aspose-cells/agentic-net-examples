@@ -4701,6 +4701,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-calculation-engine-to-ignore-circular-references-and-continue-evaluating-remaining-formulas.cs",
+      "title": "Set calculation engine to ignore circular references and continue evaluating remaining formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-calculation-engine-to-use-1904-date-system-for-legacy-date-dependent-formulas.cs",
       "title": "Set calculation engine to use 1904 date system for legacy date-dependent formulas."
     },
