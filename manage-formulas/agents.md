@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - create-a-custom-function-that-calculates-compound-interest-and-register-it-for-financial-formulas.cs
 - create-a-custom-function-that-returns-the-fiscal-quarter-based-on-a-date-for-reporting-formulas.cs
 - create-a-custom-error-handler-that-replaces-na-results-with-a-userdefined-placeholder-text.cs
+- create-a-custom-calculation-option-that-treats-empty-cells-as-zero-when-used-in-arithmetic-formulas.cs
