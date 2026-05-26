@@ -255,3 +255,4 @@ Output files are written to the working directory.
 - export-a-workbooks-formula-audit-trail-including-timestamps-of-each-calculation-to-an-xml-report.cs
 - export-the-workbooks-formula-dependency-matrix-to-a-csv-file-for-external-processing.cs
 - export-a-detailed-log-of-formula-evaluation-times-for-each-worksheet-to-assist-in-performance-tuning.cs
+- export-a-detailed-log-of-formula-errors-including-cell-address-error-type-and-timestamp.cs
