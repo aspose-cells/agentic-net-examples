@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - identify-and-list-all-formulas-that-use-the-offset-function-noting-their-potential-volatility.cs
 - identify-and-list-formulas-that-use-the-indirect-function-noting-their-potential-impact-on-calculation-speed.cs
 - identify-and-list-formulas-that-use-volatile-functions-and-log-their-locations-for-performance-optimization.cs
+- identify-formulas-that-contain-hardcoded-constants-and-suggest-converting-them-to-named-parameters.cs
