@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - enable-iterative-calculation-with-a-maximum-of-100-iterations-and-a-convergence-threshold-of-0001.cs
 - programmatically-enable-iterative-calculation-with-a-custom-maximum-change-threshold-for-convergence.cs
 - set-calculation-engine-to-use-1904-date-system-for-legacy-date-dependent-formulas.cs
+- set-calculation-engine-to-ignore-circular-references-and-continue-evaluating-remaining-formulas.cs
