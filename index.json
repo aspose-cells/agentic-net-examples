@@ -4301,6 +4301,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-dynamic-array-formula-that-references-a-spill-then-use-it-in-a-sum-formula-on-another-sheet.cs",
+      "title": "Create a dynamic array formula that references a spill, then use it in a SUM formula on another sheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-dynamic-array-formula-that-spills-into-empty-rows-then-insert-data-to-shift-the-spill-range.cs",
       "title": "Create a dynamic array formula that spills into empty rows, then insert data to shift the spill range."
     },
