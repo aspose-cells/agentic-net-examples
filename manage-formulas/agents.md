@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - export-a-csv-file-containing-each-formulas-address-text-and-last-evaluated-value-for-external-analysis.cs
 - export-a-json-representation-of-the-workbooks-formula-tree-capturing-parentchild-relationships-for-each-calculation.cs
 - export-a-list-of-formulas-that-contain-the-iferror-function-to-a-separate-worksheet-for-review.cs
+- export-all-formulas-that-use-the-sumproduct-function-to-a-separate-worksheet-for-performance-review.cs
