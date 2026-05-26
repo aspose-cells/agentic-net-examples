@@ -240,3 +240,4 @@ Output files are written to the working directory.
 - replace-all-instances-of-the-power-function-with-the-exponentiation-operator-for-simpler-syntax.cs
 - replace-all-formulas-that-use-the-today-function-with-static-dates-based-on-a-provided-snapshot-date.cs
 - replace-all-formulas-that-use-the-rand-function-with-a-static-seed-value-to-achieve-reproducible-results.cs
+- replace-all-formulas-that-reference-entire-columns-with-rangespecific-references-to-reduce-calculation-overhead.cs

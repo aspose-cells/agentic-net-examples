@@ -4871,6 +4871,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-formulas-that-reference-entire-columns-with-rangespecific-references-to-reduce-calculation-overhead.cs",
+      "title": "Replace all formulas that reference entire columns with range\u2011specific references to reduce calculation overhead."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-formulas-that-use-the-rand-function-with-a-static-seed-value-to-achieve-reproducible-results.cs",
       "title": "Replace all formulas that use the RAND function with a static seed value to achieve reproducible results."
     },
