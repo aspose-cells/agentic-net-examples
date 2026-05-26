@@ -4626,6 +4626,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-workbook-calculation-mode-to-automaticexcepttables-then-add-a-new-table-and-observe-recalculation-behavior.cs",
+      "title": "Set workbook calculation mode to AutomaticExceptTables, then add a new table and observe recalculation behavior."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbooks-iterative-calculation-maximum-change-to-0001-and-test-convergence-on-a-circular-reference-example.cs",
       "title": "Set workbook\u2019s iterative calculation maximum change to 0.001 and test convergence on a circular reference example."
     },
