@@ -4226,6 +4226,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-unique-function-as-a-dynamic-array-formula-in-column-d-and-observe-automatic-deduplication.cs",
+      "title": "Apply a UNIQUE function as a dynamic array formula in column D and observe automatic deduplication."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs",
       "title": "Apply SetSharedFormula to a range spanning multiple rows and columns, then validate calculated results."
     },
