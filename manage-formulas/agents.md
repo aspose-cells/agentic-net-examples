@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - create-a-custom-style-with-border-fill-and-font-then-apply-it-to-the-union-of-two-ranges.cs
 - iterate-through-all-worksheets-in-a-workbook-applying-a-dynamic-array-formula-to-column-e-on-each-sheet.cs
 - disable-automatic-calculation-modify-several-cells-then-manually-invoke-workbookcalculateformula-to-update-dependent-formulas.cs
+- set-workbook-calculation-mode-to-automaticexcepttables-then-add-a-new-table-and-observe-recalculation-behavior.cs
