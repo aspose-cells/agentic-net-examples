@@ -4381,6 +4381,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-custom-error-handler-that-replaces-na-results-with-a-userdefined-placeholder-text.cs",
+      "title": "Create a custom error handler that replaces #N/A results with a user\u2011defined placeholder text."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-custom-function-that-calculates-compound-interest-and-register-it-for-financial-formulas.cs",
       "title": "Create a custom function that calculates compound interest and register it for financial formulas."
     },
