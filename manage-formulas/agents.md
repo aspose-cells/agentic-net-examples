@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - retrieve-external-links-from-a-workbook-and-list-their-source-file-paths-for-audit-purposes.cs
 - update-external-link-urls-in-a-workbook-to-point-to-a-new-network-share-location.cs
 - replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs
+- create-a-formula-that-references-an-external-workbook-and-ensure-the-link-updates-when-the-source-file-moves.cs

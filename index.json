@@ -4436,6 +4436,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-formula-that-references-an-external-workbook-and-ensure-the-link-updates-when-the-source-file-moves.cs",
+      "title": "Create a formula that references an external workbook and ensure the link updates when the source file moves."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-listobject-named-salestable-add-a-column-with-a-sum-formula-and-test-propagation.cs",
       "title": "Create a ListObject named SalesTable, add a column with a SUM formula, and test propagation."
     },
