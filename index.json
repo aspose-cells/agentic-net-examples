@@ -4281,6 +4281,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "clear-contents-of-the-named-range-reportdata-without-deleting-the-range-definition-itself.cs",
+      "title": "Clear contents of the named range ReportData without deleting the range definition itself."
+    },
+    {
+      "category": "manage-formulas",
       "file": "configure-workbook-to-use-manual-calculation-then-programmatically-trigger-formula-evaluation-for-a-specific-worksheet.cs",
       "title": "Configure workbook to use Manual calculation, then programmatically trigger formula evaluation for a specific worksheet."
     },
