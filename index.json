@@ -4416,6 +4416,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "insert-a-new-row-into-salestable-and-confirm-the-column-formula-automatically-calculates-for-the-new-entry.cs",
+      "title": "Insert a new row into SalesTable and confirm the column formula automatically calculates for the new entry."
+    },
+    {
+      "category": "manage-formulas",
       "file": "insert-a-sort-dynamic-array-formula-into-cell-b2-and-verify-the-spilled-range-expands-correctly.cs",
       "title": "Insert a SORT dynamic array formula into cell B2 and verify the spilled range expands correctly."
     },
