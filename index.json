@@ -4231,6 +4231,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-a-data-validation-rule-that-restricts-formula-entry-to-cells-within-a-predefined-named-range.cs",
+      "title": "Add a data validation rule that restricts formula entry to cells within a predefined named range."
+    },
+    {
+      "category": "manage-formulas",
       "file": "add-a-new-column-to-a-table-set-its-formula-to-reference-a-named-range-and-test-propagation.cs",
       "title": "Add a new column to a table, set its formula to reference a named range, and test propagation."
     },
