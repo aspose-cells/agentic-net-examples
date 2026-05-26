@@ -4906,6 +4906,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-occurrences-of-the-deprecated-rept-function-with-the-newer-repeat-function-for-consistency.cs",
+      "title": "Replace all occurrences of the deprecated REPT function with the newer REPEAT function for consistency."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-vlookup-formulas-that-perform-exact-matches-with-xlookup-for-improved-performance.cs",
       "title": "Replace all VLOOKUP formulas that perform exact matches with XLOOKUP for improved performance."
     },
