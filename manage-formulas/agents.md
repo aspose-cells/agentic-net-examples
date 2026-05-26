@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - set-calculation-mode-to-manual-batch-rename-named-ranges-using-a-regex-pattern-then-enable-automatic-mode-and-recalc.cs
 - after-modifying-cell-values-invoke-workbookcalculateformula-to-refresh-dynamic-array-formulas-across-all-sheets.cs
 - insert-a-sort-dynamic-array-formula-into-cell-b2-and-verify-the-spilled-range-expands-correctly.cs
+- apply-a-unique-function-as-a-dynamic-array-formula-in-column-d-and-observe-automatic-deduplication.cs
