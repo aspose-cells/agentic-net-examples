@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-references-a-whole-column-then-use-it-in-a-vlookup-formula-across-sheets.cs
 - set-the-workbook-to-use-iterative-calculation-create-a-circular-reference-and-verify-convergence-within-defined-tolerance.cs
 - load-workbook-from-file-stream-and-enable-iterative-calculation-for-complex-formulas.cs
+- load-workbook-from-memory-stream-modify-a-specific-formula-and-save-back-to-same-stream.cs

@@ -4571,6 +4571,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-workbook-from-memory-stream-modify-a-specific-formula-and-save-back-to-same-stream.cs",
+      "title": "Load workbook from memory stream, modify a specific formula, and save back to same stream."
+    },
+    {
+      "category": "manage-formulas",
       "file": "loop-through-column-a-assign-incremental-row-references-in-a-multiplication-formula-and-store-results.cs",
       "title": "Loop through column A, assign incremental row references in a multiplication formula, and store results."
     },
