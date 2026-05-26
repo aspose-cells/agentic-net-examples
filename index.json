@@ -5196,6 +5196,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-the-workbooks-precision-as-displayed-property-to-false-ensuring-calculations-use-full-double-precision.cs",
+      "title": "Set the workbook's precision as displayed property to false, ensuring calculations use full double precision."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-the-workbooks-precision-as-displayed-property-to-true-ensuring-formulas-round-according-to-cell-formatting.cs",
       "title": "Set the workbook's precision as displayed property to true, ensuring formulas round according to cell formatting."
     },
