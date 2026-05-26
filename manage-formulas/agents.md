@@ -232,3 +232,4 @@ Output files are written to the working directory.
 - replace-all-vlookup-formulas-with-indexmatch-combinations-to-enhance-lookup-performance.cs
 - replace-all-vlookup-formulas-that-perform-exact-matches-with-xlookup-for-improved-performance.cs
 - replace-all-occurrences-of-the-deprecated-getpivotdata-function-with-modern-structured-reference-equivalents.cs
+- replace-all-occurrences-of-the-deprecated-hlookup-function-with-xlookup-for-vertical-lookups.cs

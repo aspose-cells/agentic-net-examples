@@ -4891,6 +4891,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-occurrences-of-the-deprecated-hlookup-function-with-xlookup-for-vertical-lookups.cs",
+      "title": "Replace all occurrences of the deprecated HLOOKUP function with XLOOKUP for vertical lookups."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-vlookup-formulas-that-perform-exact-matches-with-xlookup-for-improved-performance.cs",
       "title": "Replace all VLOOKUP formulas that perform exact matches with XLOOKUP for improved performance."
     },
