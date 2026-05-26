@@ -4686,6 +4686,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-list-of-formulas-that-contain-the-iferror-function-to-a-separate-worksheet-for-review.cs",
+      "title": "Export a list of formulas that contain the IFERROR function to a separate worksheet for review."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-a-list-of-named-ranges-along-with-their-associated-formulas-to-an-excel-summary-worksheet.cs",
       "title": "Export a list of named ranges along with their associated formulas to an Excel summary worksheet."
     },
