@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - identify-weak-encryption-on-a-loaded-workbook-and-reencrypt-it-with-a-stronger-algorithm.cs
 - detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs
 - detect-the-ods-encryption-algorithm-and-output-a-humanreadable-description-of-its-security-level.cs
+- load-an-encrypted-ods-file-in-readonly-mode-verify-its-password-and-extract-cell-values.cs
