@@ -17461,6 +17461,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-an-existing-excel-file-set-showzerovalues-to-false-and-export-result-as-html-page.cs",
+      "title": "Load an existing Excel file, set ShowZeroValues to false, and export result as HTML page."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs",
       "title": "Load an existing workbook, hide the second worksheet, and save the file."
     },
