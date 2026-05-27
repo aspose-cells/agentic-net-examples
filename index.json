@@ -3081,6 +3081,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs",
+      "title": "If a loaded workbook is not encrypted, apply default encryption using a preset password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },
