@@ -3076,6 +3076,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-the-encryption-type-of-an-ods-file-and-display-the-algorithm-name.cs",
+      "title": "Detect the encryption type of an ODS file and display the algorithm name."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-the-workbook-file-format-from-an-input-stream-and-log-the-identified-type.cs",
       "title": "Detect the workbook file format from an input stream and log the identified type."
     },
