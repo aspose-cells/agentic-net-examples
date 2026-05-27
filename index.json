@@ -17336,6 +17336,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "copy-page-setup-settings-from-a-source-worksheet-to-multiple-target-worksheets-in-a-loop.cs",
+      "title": "Copy page setup settings from a source worksheet to multiple target worksheets in a loop."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-batch-processor-that-hides-zero-values-applies-80-percent-zoom-and-saves-each-workbook-as-pdf.cs",
       "title": "Create a batch processor that hides zero values, applies 80 percent zoom, and saves each workbook as PDF."
     },

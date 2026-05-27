@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - repeat-the-header-row-on-each-printed-page-while-also-repeating-the-first-column-as-a-title.cs
 - disable-printing-of-row-headings-to-create-a-cleaner-layout-for-a-marketing-brochure.cs
 - add-a-qr-code-image-to-the-left-side-of-the-footer-for-scanning-after-printing.cs
+- copy-page-setup-settings-from-a-source-worksheet-to-multiple-target-worksheets-in-a-loop.cs
