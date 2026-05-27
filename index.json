@@ -17646,6 +17646,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "suppress-error-values-during-printing-by-setting-printerrors-to-the-blank-enumeration-on-the-sheet.cs",
+      "title": "Suppress error values during printing by setting PrintErrors to the blank enumeration on the sheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs",
       "title": "Switch a worksheet back to normal view mode to display cells without page break outlines."
     },

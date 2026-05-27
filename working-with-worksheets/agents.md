@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - enable-printing-of-gridlines-while-disabling-row-and-column-headings-for-the-current-worksheet.cs
 - turn-on-blackandwhite-printing-mode-to-reduce-ink-usage-for-the-entire-workbook.cs
 - print-all-cell-comments-in-place-by-assigning-the-appropriate-enumeration-to-the-printcomments-property.cs
+- suppress-error-values-during-printing-by-setting-printerrors-to-the-blank-enumeration-on-the-sheet.cs
