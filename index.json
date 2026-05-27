@@ -17301,6 +17301,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "disable-numbersastext-warning-only-for-cells-in-column-b-leaving-other-columns-unchanged.cs",
+      "title": "Disable NumbersAsText warning only for cells in column B, leaving other columns unchanged."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "duplicate-a-worksheet-and-ensure-pivot-tables-are-retained-in-the-copied-version-for-analysis.cs",
       "title": "Duplicate a worksheet and ensure pivot tables are retained in the copied version for analysis."
     },
