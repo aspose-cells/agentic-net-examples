@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs
 - apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs
 - set-worksheet-orientation-to-landscape-enable-fittopageswide-1-and-generate-printable-pdf.cs
+- disable-numbersastext-warning-only-for-cells-in-column-b-leaving-other-columns-unchanged.cs
