@@ -3116,6 +3116,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "build-a-tool-that-reads-a-csv-list-of-file-paths-and-passwords-then-decrypts-each-corresponding-workbook.cs",
+      "title": "Build a tool that reads a CSV list of file paths and passwords, then decrypts each corresponding workbook."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs",
       "title": "Change an encrypted workbook's password using a secure key vault and save the updated file."
     },

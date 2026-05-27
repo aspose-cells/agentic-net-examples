@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - batch-decrypt-excel-files-apply-data-masking-to-sensitive-columns-and-reencrypt-with-new-passwords.cs
 - create-a-utility-that-scans-a-directory-identifies-encrypted-excel-files-and-generates-a-password-status-report.cs
 - develop-a-console-application-that-accepts-a-file-path-detects-encryption-and-outputs-the-required-password-status.cs
+- build-a-tool-that-reads-a-csv-list-of-file-paths-and-passwords-then-decrypts-each-corresponding-workbook.cs
