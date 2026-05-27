@@ -17276,6 +17276,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "toggle-worksheet-view-between-normal-and-page-break-preview-based-on-a-userdefined-flag.cs",
+      "title": "Toggle worksheet view between normal and page break preview based on a user\u2011defined flag."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },
