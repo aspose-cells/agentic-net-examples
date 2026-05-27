@@ -17411,6 +17411,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-multiple-workbooks-from-a-folder-hide-zero-values-on-each-sheet-and-save-changes.cs",
+      "title": "Load multiple workbooks from a folder, hide zero values on each sheet, and save changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs",
       "title": "Move a worksheet to a new position by providing the target index within the same workbook."
     },
