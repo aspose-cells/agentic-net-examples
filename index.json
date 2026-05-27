@@ -3151,6 +3151,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "set-both-opening-and-modifying-passwords-on-an-xls-file-ensuring-distinct-credentials-for-each-operation.cs",
+      "title": "Set both opening and modifying passwords on an XLS file, ensuring distinct credentials for each operation."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },
