@@ -17306,6 +17306,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-unhide-row-10-in-the-active-sheet-and-save-the-modified-document.cs",
+      "title": "Load a workbook, unhide row 10 in the active sheet, and save the modified document."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs",
       "title": "Load an existing workbook, hide the second worksheet, and save the file."
     },
