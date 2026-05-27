@@ -17441,6 +17441,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "generate-a-report-that-lists-each-worksheets-current-print-area-and-title-rows-configuration.cs",
+      "title": "Generate a report that lists each worksheet\u2019s current print area and title rows configuration."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs",
       "title": "Hide a range of rows from 20 to 30, then save the workbook with those rows concealed."
     },
