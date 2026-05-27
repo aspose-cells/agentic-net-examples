@@ -17840,6 +17840,11 @@
       "title": "Validate that each worksheet retains a unique SheetId after performing copy operations."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "verify-that-the-printersettings-object-is-null-after-removal-by-checking-the-property-value.cs",
+      "title": "Verify that the PrinterSettings object is null after removal by checking the property value."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
