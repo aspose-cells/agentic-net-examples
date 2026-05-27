@@ -17316,6 +17316,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "split-panes-at-row-ten-and-column-five-to-create-separate-scrolling-regions-within-the-sheet.cs",
+      "title": "Split panes at row ten and column five to create separate scrolling regions within the sheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs",
       "title": "Switch a worksheet back to normal view mode to display cells without page break outlines."
     },
