@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - encrypt-a-workbook-then-attempt-to-modify-a-protected-cell-to-confirm-edit-restrictions-are-enforced.cs
 - batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs
 - batch-process-ods-files-encrypt-each-with-a-unique-password-derived-from-its-filename-hash.cs
+- batch-decrypt-a-collection-of-encrypted-excel-files-using-a-shared-password-and-save-them-unprotected.cs

@@ -3086,6 +3086,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-decrypt-a-collection-of-encrypted-excel-files-using-a-shared-password-and-save-them-unprotected.cs",
+      "title": "Batch decrypt a collection of encrypted Excel files using a shared password and save them unprotected."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs",
       "title": "Batch encrypt multiple Excel files in a directory using a shared password and AES\u2011128 encryption."
     },
