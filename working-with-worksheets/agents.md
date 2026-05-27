@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs
 - load-a-workbook-display-formulas-on-all-sheets-hide-the-second-column-and-save.cs
 - hide-rows-0-through-9-then-toggle-the-visibility-of-the-vertical-scroll-bar-before-saving.cs
+- show-the-horizontal-scroll-bar-hide-the-vertical-one-and-write-the-workbook-to-disk.cs

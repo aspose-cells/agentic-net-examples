@@ -17451,6 +17451,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "show-the-horizontal-scroll-bar-hide-the-vertical-one-and-write-the-workbook-to-disk.cs",
+      "title": "Show the horizontal scroll bar, hide the vertical one, and write the workbook to disk."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "show-the-vertical-scroll-bar-while-hiding-the-horizontal-one-then-save-the-workbook-to-disk.cs",
       "title": "Show the vertical scroll bar while hiding the horizontal one, then save the workbook to disk."
     },
