@@ -3121,6 +3121,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "generate-a-secure-random-password-for-the-password-to-modify-and-log-its-hash-value.cs",
+      "title": "Generate a secure random password for the 'password to modify' and log its hash value."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "identify-weak-encryption-on-a-loaded-workbook-and-reencrypt-it-with-a-stronger-algorithm.cs",
       "title": "Identify weak encryption on a loaded workbook and re\u2011encrypt it with a stronger algorithm."
     },

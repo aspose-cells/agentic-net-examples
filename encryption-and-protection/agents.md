@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - set-a-password-to-open-a-newly-created-xlsx-workbook-and-enforce-strong-encryption-before-saving.cs
 - apply-a-passwordtomodify-option-on-an-existing-ods-workbook-while-preserving-its-original-data.cs
 - set-both-opening-and-modifying-passwords-on-an-xls-file-ensuring-distinct-credentials-for-each-operation.cs
+- generate-a-secure-random-password-for-the-password-to-modify-and-log-its-hash-value.cs
