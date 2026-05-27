@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - load-an-xlsx-file-set-a3-paper-size-on-the-second-sheet-then-save-as-pdf.cs
 - open-a-workbook-remove-printer-settings-from-every-sheet-and-save-the-result-as-a-clean-xlsx.cs
 - apply-a-600point-custom-paper-size-to-a-worksheet-render-to-pdf-then-revert-to-a4.cs
+- prompt-the-user-for-a-paper-size-enum-value-and-assign-it-to-the-worksheets-pagesetuppapersize.cs

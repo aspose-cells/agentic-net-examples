@@ -17711,6 +17711,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "prompt-the-user-for-a-paper-size-enum-value-and-assign-it-to-the-worksheets-pagesetuppapersize.cs",
+      "title": "Prompt the user for a paper size enum value and assign it to the worksheet's PageSetup.PaperSize."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs",
       "title": "Relocate a worksheet to the first position in the workbook to prioritize its visibility."
     },
