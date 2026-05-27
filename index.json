@@ -3226,6 +3226,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "validate-that-a-saved-xlsx-file-is-encrypted-by-reopening-it-and-checking-its-encryption-status.cs",
+      "title": "Validate that a saved XLSX file is encrypted by reopening it and checking its encryption status."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-that-a-workbook-encrypted-with-aes256-cannot-be-opened-using-an-older-aes128-password.cs",
       "title": "Verify that a workbook encrypted with AES\u2011256 cannot be opened using an older AES\u2011128 password."
     },

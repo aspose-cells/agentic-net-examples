@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs
 - decrypt-an-ods-file-encrypted-with-a-legacy-algorithm-and-upgrade-it-to-aes256-encryption.cs
 - verify-that-a-workbook-encrypted-with-aes256-cannot-be-opened-using-an-older-aes128-password.cs
+- validate-that-a-saved-xlsx-file-is-encrypted-by-reopening-it-and-checking-its-encryption-status.cs
