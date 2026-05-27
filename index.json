@@ -17361,6 +17361,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "iterate-through-all-worksheets-set-showzerovalues-to-false-and-save-the-workbook-as-pdf.cs",
+      "title": "Iterate through all worksheets, set ShowZeroValues to false, and save the workbook as PDF."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-display-formulas-on-all-sheets-hide-the-second-column-and-save.cs",
       "title": "Load a workbook, display formulas on all sheets, hide the second column, and save."
     },
