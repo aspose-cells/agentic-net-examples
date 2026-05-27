@@ -17336,6 +17336,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-hide-columns-c-and-d-then-export-the-file-preserving-hidden-columns.cs",
+      "title": "Load a workbook, hide columns C and D, then export the file preserving hidden columns."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-toggle-worksheet-visibility-based-on-a-condition-and-save-the-updated-file.cs",
       "title": "Load a workbook, toggle worksheet visibility based on a condition, and save the updated file."
     },
