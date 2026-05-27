@@ -3101,6 +3101,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-function-that-returns-a-boolean-indicating-whether-a-workbook-is-encrypted.cs",
+      "title": "Create a function that returns a boolean indicating whether a workbook is encrypted."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "decrypt-an-ods-file-encrypted-with-a-legacy-algorithm-and-upgrade-it-to-aes256-encryption.cs",
       "title": "Decrypt an ODS file encrypted with a legacy algorithm and upgrade it to AES\u2011256 encryption."
     },
