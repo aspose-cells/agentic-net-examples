@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - insert-a-dynamic-page-number-placeholder-into-the-center-of-the-footer-for-each-printed-page.cs
 - set-a-custom-print-area-that-excludes-hidden-rows-and-columns-to-improve-print-performance.cs
 - enable-printing-of-gridlines-only-for-the-first-three-worksheets-while-keeping-others-unchanged.cs
+- apply-blackandwhite-mode-selectively-to-worksheets-containing-confidential-data-before-exporting-to-pdf.cs
