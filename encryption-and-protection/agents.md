@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - encrypt-an-xlsx-workbook-with-a-userdefined-password-using-aes256-encryption-and-save-it.cs
 - encrypt-a-workbook-with-a-specified-encryption-strength-parameter-and-validate-that-the-strength-matches.cs
 - encrypt-an-excel-workbook-using-rc4-encryption-then-decrypt-it-to-verify-data-consistency.cs
+- encrypt-an-ods-workbook-and-verify-that-opening-it-prompts-the-user-for-a-password.cs

@@ -3106,6 +3106,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-an-ods-workbook-and-verify-that-opening-it-prompts-the-user-for-a-password.cs",
+      "title": "Encrypt an ODS workbook and verify that opening it prompts the user for a password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-xlsx-workbook-with-a-userdefined-password-using-aes256-encryption-and-save-it.cs",
       "title": "Encrypt an XLSX workbook with a user\u2011defined password using AES\u2011256 encryption and save it."
     },
