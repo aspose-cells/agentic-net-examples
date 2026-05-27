@@ -17486,6 +17486,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "unhide-a-specific-hidden-worksheet-adjust-its-tab-order-and-save-the-updated-workbook.cs",
+      "title": "Unhide a specific hidden worksheet, adjust its tab order, and save the updated workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "unhide-all-columns-in-a-sheet-enable-scroll-bars-and-export-the-workbook-to-a-new-location.cs",
       "title": "Unhide all columns in a sheet, enable scroll bars, and export the workbook to a new location."
     },
