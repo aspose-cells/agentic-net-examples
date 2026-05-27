@@ -17230,6 +17230,11 @@
       "title": "Copy multiple worksheets whose names start with a specific prefix into a new workbook for backup."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "use-worksheetcollectionaddcopy-overload-with-source-index-to-duplicate-a-sheet-at-a-specific-position.cs",
+      "title": "Use WorksheetCollection.AddCopy overload with source index to duplicate a sheet at a specific position."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
