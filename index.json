@@ -17361,6 +17361,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-printing-of-gridlines-while-disabling-row-and-column-headings-for-the-current-worksheet.cs",
+      "title": "Enable printing of gridlines while disabling row and column headings for the current worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-the-emptycellreferences-error-check-for-a-specific-worksheet-by-creating-an-errorcheckoption-instance.cs",
       "title": "Enable the EmptyCellReferences error check for a specific worksheet by creating an ErrorCheckOption instance."
     },
