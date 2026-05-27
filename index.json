@@ -3091,6 +3091,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "change-the-password-to-modify-on-an-existing-workbook-without-altering-its-content.cs",
+      "title": "Change the 'password to modify' on an existing workbook without altering its content."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs",
       "title": "Detect legacy encryption in a workbook and automatically upgrade it to the latest standard."
     },
