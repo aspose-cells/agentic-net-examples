@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - apply-110-percent-zoom-to-a-worksheet-and-generate-pdf-with-embedded-fonts.cs
 - programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs
 - load-a-workbook-set-page-orientation-to-landscape-fit-to-one-page-wide-and-save-as-xps.cs
+- iterate-through-each-worksheet-apply-95-percent-zoom-to-those-with-over-500-rows-and-export-pdf.cs

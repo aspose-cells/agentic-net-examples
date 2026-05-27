@@ -17416,6 +17416,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "iterate-through-each-worksheet-apply-95-percent-zoom-to-those-with-over-500-rows-and-export-pdf.cs",
+      "title": "Iterate through each worksheet, apply 95 percent zoom to those with over 500 rows, and export PDF."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-display-formulas-on-all-sheets-hide-the-second-column-and-save.cs",
       "title": "Load a workbook, display formulas on all sheets, hide the second column, and save."
     },
