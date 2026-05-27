@@ -17251,6 +17251,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs",
+      "title": "Place a worksheet immediately after a specified sheet name to control sheet sequencing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs",
       "title": "Relocate a worksheet to the first position in the workbook to prioritize its visibility."
     },
