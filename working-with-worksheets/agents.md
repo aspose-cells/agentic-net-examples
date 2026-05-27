@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs
 - hide-rows-based-on-a-predicate-that-checks-cell-values-then-save-the-modified-workbook.cs
 - unhide-all-columns-in-a-sheet-enable-scroll-bars-and-export-the-workbook-to-a-new-location.cs
+- set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs
