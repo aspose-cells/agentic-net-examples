@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - adjust-the-zoom-factor-of-a-worksheet-to-150-percent-for-detailed-visual-inspection.cs
 - set-worksheet-zoom-to-75-percent-to-fit-more-content-on-screen-during-data-entry.cs
 - calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs
+- freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs
