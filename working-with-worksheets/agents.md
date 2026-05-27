@@ -204,3 +204,4 @@ Output files are written to the working directory.
 - create-a-console-application-that-loads-a-workbook-prints-each-worksheets-paper-dimensions-and-exits.cs
 - develop-a-method-that-accepts-width-and-height-in-millimeters-converts-to-points-and-sets-custom-paper-size.cs
 - integrate-pagesetup-copying-into-a-workbook-merging-routine-to-preserve-original-layout-across-combined-files.cs
+- validate-that-after-removing-printer-settings-the-workbook-opens-in-excel-without-prompting-for-a-default-printer.cs
