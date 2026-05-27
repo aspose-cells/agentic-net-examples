@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-obtain-the-paper-width-of-the-first-worksheet.cs
 - retrieve-the-paper-height-property-from-the-active-worksheet-and-display-it-in-the-console.cs
 - iterate-through-all-worksheets-collecting-each-sheets-paper-width-and-height-into-a-dictionary.cs
+- compare-paper-dimensions-between-two-specified-worksheets-and-log-any-differences-for-review.cs

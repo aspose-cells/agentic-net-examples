@@ -17301,6 +17301,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "compare-paper-dimensions-between-two-specified-worksheets-and-log-any-differences-for-review.cs",
+      "title": "Compare paper dimensions between two specified worksheets and log any differences for review."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-rows-1-to-3-to-repeat-on-every-printed-page-of-the-selected-sheet.cs",
       "title": "Configure rows 1 to 3 to repeat on every printed page of the selected sheet."
     },
