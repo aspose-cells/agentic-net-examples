@@ -17231,6 +17231,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "batch-process-multiple-workbooks-to-hide-the-last-worksheet-in-each-and-save-them.cs",
+      "title": "Batch process multiple workbooks to hide the last worksheet in each and save them."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs",
       "title": "Calculate appropriate zoom level based on column width and assign it to the worksheet."
     },
