@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - set-both-opening-and-modifying-passwords-on-an-xls-file-ensuring-distinct-credentials-for-each-operation.cs
 - generate-a-secure-random-password-for-the-password-to-modify-and-log-its-hash-value.cs
 - protect-the-workbook-structure-and-lock-all-worksheets-then-save-the-workbook-as-an-encrypted-xlsx-file.cs
+- apply-workbook-protection-with-a-password-and-attempt-to-add-a-new-worksheet-to-verify-restriction.cs
