@@ -202,3 +202,4 @@ Output files are written to the working directory.
 - assign-a4-size-to-data-sheets-and-letter-size-to-summary-sheets-based-on-worksheet-role.cs
 - write-a-unit-test-that-asserts-paperwidth-equals-expected-value-when-worksheet-paper-size-is-set-to-a4.cs
 - create-a-console-application-that-loads-a-workbook-prints-each-worksheets-paper-dimensions-and-exits.cs
+- develop-a-method-that-accepts-width-and-height-in-millimeters-converts-to-points-and-sets-custom-paper-size.cs
