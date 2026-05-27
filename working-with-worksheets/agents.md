@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - set-workbook-settings-to-hide-the-horizontal-scroll-bar-keep-vertical-bar-visible-and-save.cs
 - load-a-workbook-hide-columns-c-and-d-then-export-the-file-preserving-hidden-columns.cs
 - show-formulas-on-a-hidden-worksheet-after-making-it-visible-then-save-the-workbook.cs
+- batch-process-multiple-workbooks-to-hide-the-last-worksheet-in-each-and-save-them.cs
