@@ -3141,6 +3141,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "set-a-password-to-open-a-newly-created-xlsx-workbook-and-enforce-strong-encryption-before-saving.cs",
+      "title": "Set a password to open a newly created XLSX workbook and enforce strong encryption before saving."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },
