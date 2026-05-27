@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - hide-columns-based-on-header-names-enable-formula-display-and-export-the-workbook.cs
 - load-a-workbook-from-file-and-hide-zero-values-on-the-first-worksheet.cs
 - iterate-through-all-worksheets-set-showzerovalues-to-false-and-save-the-workbook-as-pdf.cs
+- apply-fittopageswide-1-and-fittopagestall-1-to-a-worksheet-for-single-page-printing.cs
