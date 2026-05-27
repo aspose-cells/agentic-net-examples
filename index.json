@@ -17421,6 +17421,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-company-logo-image-into-the-right-side-of-the-header-for-the-first-worksheet.cs",
+      "title": "Insert a company logo image into the right side of the header for the first worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
