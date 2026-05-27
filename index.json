@@ -17256,6 +17256,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs",
+      "title": "Shift a worksheet to the last index of the workbook to place it at the end."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },
