@@ -17761,6 +17761,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "read-the-configuration-mapping-and-apply-corresponding-paper-sizes-to-each-worksheet-during-workbook-load.cs",
+      "title": "Read the configuration mapping and apply corresponding paper sizes to each worksheet during workbook load."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs",
       "title": "Relocate a worksheet to the first position in the workbook to prioritize its visibility."
     },
