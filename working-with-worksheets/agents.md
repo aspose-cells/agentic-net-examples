@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - set-worksheet-orientation-to-landscape-enable-fittopageswide-1-and-generate-printable-pdf.cs
 - disable-numbersastext-warning-only-for-cells-in-column-b-leaving-other-columns-unchanged.cs
 - enable-error-checking-for-formulas-containing-circular-references-then-export-workbook-to-ods-file.cs
+- hide-zero-values-only-in-rows-beyond-the-100th-row-preserving-earlier-data-visibility.cs
