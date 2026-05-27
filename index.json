@@ -17466,6 +17466,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs",
+      "title": "Programmatically disable NumbersAsText warning, then verify that the cell comment indicating the issue is removed."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-read-worksheet-errorchecking-settings-log-each-enabled-check-and-write-report-to-text-file.cs",
       "title": "Programmatically read worksheet error\u2011checking settings, log each enabled check, and write report to text file."
     },

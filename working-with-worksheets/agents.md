@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - enable-error-checking-for-formulas-containing-circular-references-then-export-workbook-to-ods-file.cs
 - hide-zero-values-only-in-rows-beyond-the-100th-row-preserving-earlier-data-visibility.cs
 - apply-110-percent-zoom-to-a-worksheet-and-generate-pdf-with-embedded-fonts.cs
+- programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs
