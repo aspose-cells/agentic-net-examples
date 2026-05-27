@@ -17341,6 +17341,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "store-worksheet-sheetid-values-in-a-dictionary-keyed-by-worksheet-name-for-quick-lookup.cs",
+      "title": "Store worksheet SheetId values in a dictionary keyed by worksheet name for quick lookup."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs",
       "title": "Switch a worksheet back to normal view mode to display cells without page break outlines."
     },
