@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - measure-execution-time-when-updating-page-setup-for-one-hundred-worksheets-to-evaluate-performance-impact.cs
 - generate-a-summary-report-listing-original-and-modified-paper-dimensions-for-each-worksheet-after-changes.cs
 - use-linq-to-select-worksheets-whose-names-start-with-report-before-applying-custom-paper-sizes.cs
+- assign-a4-size-to-data-sheets-and-letter-size-to-summary-sheets-based-on-worksheet-role.cs
