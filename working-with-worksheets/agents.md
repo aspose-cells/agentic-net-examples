@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - add-a-qr-code-image-to-the-left-side-of-the-footer-for-scanning-after-printing.cs
 - copy-page-setup-settings-from-a-source-worksheet-to-multiple-target-worksheets-in-a-loop.cs
 - enable-printing-of-gridlines-and-headings-together-to-replicate-the-onscreen-view-on-paper.cs
+- apply-a-custom-paper-size-by-reading-paperwidth-and-paperheight-and-assigning-them-to-the-page-setup.cs

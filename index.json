@@ -17241,6 +17241,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-custom-paper-size-by-reading-paperwidth-and-paperheight-and-assigning-them-to-the-page-setup.cs",
+      "title": "Apply a custom paper size by reading PaperWidth and PaperHeight and assigning them to the page setup."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-blackandwhite-mode-selectively-to-worksheets-containing-confidential-data-before-exporting-to-pdf.cs",
       "title": "Apply black\u2011and\u2011white mode selectively to worksheets containing confidential data before exporting to PDF."
     },
