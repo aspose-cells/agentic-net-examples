@@ -17216,6 +17216,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs",
+      "title": "Apply page break preview to every worksheet in the workbook to prepare for printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs",
       "title": "Copy a worksheet and keep all conditional formatting rules intact for consistent styling."
     },
