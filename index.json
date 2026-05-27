@@ -17311,6 +17311,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "retrieve-the-unique-sheetid-of-a-worksheet-and-log-it-for-audit-tracking.cs",
+      "title": "Retrieve the unique SheetId of a worksheet and log it for audit tracking."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-all-worksheets-to-normal-view-mode-to-ensure-consistent-onscreen-display-across-the-workbook.cs",
       "title": "Set all worksheets to normal view mode to ensure consistent on\u2011screen display across the workbook."
     },
