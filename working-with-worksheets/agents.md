@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - implement-exception-handling-to-catch-invalid-custom-paper-dimensions-and-log-descriptive-error-messages.cs
 - measure-execution-time-when-updating-page-setup-for-one-hundred-worksheets-to-evaluate-performance-impact.cs
 - generate-a-summary-report-listing-original-and-modified-paper-dimensions-for-each-worksheet-after-changes.cs
+- use-linq-to-select-worksheets-whose-names-start-with-report-before-applying-custom-paper-sizes.cs

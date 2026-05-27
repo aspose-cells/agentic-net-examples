@@ -17906,6 +17906,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-linq-to-select-worksheets-whose-names-start-with-report-before-applying-custom-paper-sizes.cs",
+      "title": "Use LINQ to select worksheets whose names start with \"Report\" before applying custom paper sizes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs",
       "title": "Use WorksheetCollection to hide zero values on every sheet whose name starts with \u201cQ\u201d."
     },
