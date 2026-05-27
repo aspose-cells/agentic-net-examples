@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - implement-writeprotect-on-a-workbook-specifying-author-name-and-comments-for-audit-tracking.cs
 - protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs
 - protect-the-workbook-structure-and-then-attempt-to-delete-a-worksheet-to-confirm-deletion-is-blocked.cs
+- unprotect-a-locked-worksheet-in-an-xlsx-workbook-by-supplying-the-correct-worksheet-password.cs
