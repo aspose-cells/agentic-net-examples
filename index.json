@@ -17301,6 +17301,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-workbook-to-print-comments-as-separate-notes-rather-than-inplace-for-audit-purposes.cs",
+      "title": "Configure the workbook to print comments as separate notes rather than in\u2011place for audit purposes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs",
       "title": "Copy a worksheet and keep all conditional formatting rules intact for consistent styling."
     },

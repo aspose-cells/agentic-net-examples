@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - set-a-custom-print-area-that-excludes-hidden-rows-and-columns-to-improve-print-performance.cs
 - enable-printing-of-gridlines-only-for-the-first-three-worksheets-while-keeping-others-unchanged.cs
 - apply-blackandwhite-mode-selectively-to-worksheets-containing-confidential-data-before-exporting-to-pdf.cs
+- configure-the-workbook-to-print-comments-as-separate-notes-rather-than-inplace-for-audit-purposes.cs
