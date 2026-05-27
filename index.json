@@ -17396,6 +17396,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-printing-of-gridlines-and-headings-together-to-replicate-the-onscreen-view-on-paper.cs",
+      "title": "Enable printing of gridlines and headings together to replicate the on\u2011screen view on paper."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-printing-of-gridlines-only-for-the-first-three-worksheets-while-keeping-others-unchanged.cs",
       "title": "Enable printing of gridlines only for the first three worksheets while keeping others unchanged."
     },

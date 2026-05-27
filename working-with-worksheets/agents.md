@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - disable-printing-of-row-headings-to-create-a-cleaner-layout-for-a-marketing-brochure.cs
 - add-a-qr-code-image-to-the-left-side-of-the-footer-for-scanning-after-printing.cs
 - copy-page-setup-settings-from-a-source-worksheet-to-multiple-target-worksheets-in-a-loop.cs
+- enable-printing-of-gridlines-and-headings-together-to-replicate-the-onscreen-view-on-paper.cs
