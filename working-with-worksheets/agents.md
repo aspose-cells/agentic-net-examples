@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - load-a-workbook-toggle-worksheet-visibility-based-on-a-condition-and-save-the-updated-file.cs
 - show-all-worksheet-tabs-ensure-scroll-bars-are-visible-and-save-the-workbook-for-user-interaction.cs
 - hide-the-first-worksheet-tab-display-formulas-on-the-second-sheet-and-save-the-changes.cs
+- unhide-a-previously-hidden-worksheet-adjust-its-tab-color-and-write-the-workbook-back.cs
