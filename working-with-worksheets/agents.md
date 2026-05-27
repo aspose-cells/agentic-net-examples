@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs
 - apply-split-panes-and-then-freeze-panes-on-the-same-sheet-to-create-a-fixed-header-area.cs
 - retrieve-the-unique-sheetid-of-a-worksheet-and-log-it-for-audit-tracking.cs
+- iterate-over-the-worksheet-collection-and-obtain-each-sheetid-for-diagnostic-reporting.cs
