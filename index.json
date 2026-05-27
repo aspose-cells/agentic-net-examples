@@ -17556,6 +17556,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs",
+      "title": "Use WorksheetCollection to hide zero values on every sheet whose name starts with \u201cQ\u201d."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },

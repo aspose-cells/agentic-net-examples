@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - batch-process-excel-files-to-set-fittopageswide-1-fittopagestall-1-then-export-to-pdf.cs
 - create-a-macrofree-workbook-apply-90-percent-zoom-and-save-as-html-preserving-formatting.cs
 - programmatically-read-worksheet-errorchecking-settings-log-each-enabled-check-and-write-report-to-text-file.cs
+- use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs
