@@ -17316,6 +17316,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-workbook-set-a-centered-header-text-and-save-the-file-as-xlsx.cs",
+      "title": "Create a workbook, set a centered header text, and save the file as XLSX."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
