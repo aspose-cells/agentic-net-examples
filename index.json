@@ -17446,6 +17446,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "design-a-configuration-file-that-maps-worksheet-names-to-desired-paper-sizes-for-automated-processing.cs",
+      "title": "Design a configuration file that maps worksheet names to desired paper sizes for automated processing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "develop-a-method-that-accepts-width-and-height-in-millimeters-converts-to-points-and-sets-custom-paper-size.cs",
       "title": "Develop a method that accepts width and height in millimeters, converts to points, and sets custom paper size."
     },

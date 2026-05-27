@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - integrate-pagesetup-copying-into-a-workbook-merging-routine-to-preserve-original-layout-across-combined-files.cs
 - validate-that-after-removing-printer-settings-the-workbook-opens-in-excel-without-prompting-for-a-default-printer.cs
 - implement-a-feature-that-logs-the-number-of-worksheets-lacking-printer-settings-after-batch-removal-operation.cs
+- design-a-configuration-file-that-maps-worksheet-names-to-desired-paper-sizes-for-automated-processing.cs
