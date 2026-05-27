@@ -17426,6 +17426,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-script-that-removes-printer-settings-sets-a2-size-and-saves-as-pdf.cs",
+      "title": "Create a script that removes printer settings, sets A2 size, and saves as PDF."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-workbook-set-a-centered-header-text-and-save-the-file-as-xlsx.cs",
       "title": "Create a workbook, set a centered header text, and save the file as XLSX."
     },
