@@ -17296,6 +17296,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs",
+      "title": "Hide a range of rows from 20 to 30, then save the workbook with those rows concealed."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-columns-b-through-e-in-a-specific-worksheet-then-save-the-workbook-preserving-column-visibility.cs",
       "title": "Hide columns B through E in a specific worksheet, then save the workbook preserving column visibility."
     },
