@@ -17316,6 +17316,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "benchmark-memory-usage-when-cloning-page-setup-objects-for-fifty-worksheets-versus-direct-property-assignment.cs",
+      "title": "Benchmark memory usage when cloning page setup objects for fifty worksheets versus direct property assignment."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs",
       "title": "Calculate appropriate zoom level based on column width and assign it to the worksheet."
     },

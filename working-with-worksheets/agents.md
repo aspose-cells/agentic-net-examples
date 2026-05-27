@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - read-the-configuration-mapping-and-apply-corresponding-paper-sizes-to-each-worksheet-during-workbook-load.cs
 - after-applying-custom-sizes-generate-pdf-thumbnails-for-each-worksheet-to-preview-layout-changes.cs
 - create-a-script-that-removes-printer-settings-sets-a2-size-and-saves-as-pdf.cs
+- benchmark-memory-usage-when-cloning-page-setup-objects-for-fifty-worksheets-versus-direct-property-assignment.cs
