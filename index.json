@@ -17291,6 +17291,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-columns-b-through-e-in-a-specific-worksheet-then-save-the-workbook-preserving-column-visibility.cs",
+      "title": "Hide columns B through E in a specific worksheet, then save the workbook preserving column visibility."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs",
       "title": "Implement freeze panes using user\u2011provided row and column indices for customizable header locking."
     },
