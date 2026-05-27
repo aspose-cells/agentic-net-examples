@@ -17696,6 +17696,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-pagesetup-paper-size-of-a-worksheet-to-a2-and-verify-the-updated-dimensions.cs",
+      "title": "Set the page\u2011setup paper size of a worksheet to A2 and verify the updated dimensions."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-print-area-using-a-named-range-instead-of-a-literal-cell-address-for-flexibility.cs",
       "title": "Set the print area using a named range instead of a literal cell address for flexibility."
     },
