@@ -17216,6 +17216,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-qr-code-image-to-the-left-side-of-the-footer-for-scanning-after-printing.cs",
+      "title": "Add a QR code image to the left side of the footer for scanning after printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "addcopy-a-worksheet-and-specify-insertion-index-to-place-the-copy-directly-after-the-original-sheet.cs",
       "title": "AddCopy a worksheet and specify insertion index to place the copy directly after the original sheet."
     },
