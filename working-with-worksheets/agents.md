@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - freeze-the-top-three-rows-of-a-worksheet-to-maintain-summary-information-during-navigation.cs
 - freeze-the-first-two-columns-to-keep-identifier-fields-static-while-scrolling-horizontally.cs
 - implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs
+- split-panes-at-row-ten-and-column-five-to-create-separate-scrolling-regions-within-the-sheet.cs
