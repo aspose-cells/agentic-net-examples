@@ -17391,6 +17391,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "show-all-worksheet-tabs-ensure-scroll-bars-are-visible-and-save-the-workbook-for-user-interaction.cs",
+      "title": "Show all worksheet tabs, ensure scroll bars are visible, and save the workbook for user interaction."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "show-the-vertical-scroll-bar-while-hiding-the-horizontal-one-then-save-the-workbook-to-disk.cs",
       "title": "Show the vertical scroll bar while hiding the horizontal one, then save the workbook to disk."
     },
