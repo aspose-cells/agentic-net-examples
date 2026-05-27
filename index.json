@@ -17225,6 +17225,11 @@
       "title": "Copy a worksheet within the same workbook using its numeric index and verify duplication."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "copy-multiple-worksheets-whose-names-start-with-a-specific-prefix-into-a-new-workbook-for-backup.cs",
+      "title": "Copy multiple worksheets whose names start with a specific prefix into a new workbook for backup."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
