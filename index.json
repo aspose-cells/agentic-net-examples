@@ -3171,6 +3171,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "develop-a-console-application-that-accepts-a-file-path-detects-encryption-and-outputs-the-required-password-status.cs",
+      "title": "Develop a console application that accepts a file path, detects encryption, and outputs the required password status."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-attempt-to-modify-a-protected-cell-to-confirm-edit-restrictions-are-enforced.cs",
       "title": "Encrypt a workbook then attempt to modify a protected cell to confirm edit restrictions are enforced."
     },
