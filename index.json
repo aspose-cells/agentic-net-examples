@@ -17311,6 +17311,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-error-checking-for-formulas-containing-circular-references-then-export-workbook-to-ods-file.cs",
+      "title": "Enable error checking for formulas containing circular references, then export workbook to ODS file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs",
       "title": "Enable page break preview mode for a worksheet to visualize printed page divisions."
     },
