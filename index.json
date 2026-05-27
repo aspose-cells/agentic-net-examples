@@ -17231,6 +17231,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "after-applying-custom-sizes-generate-pdf-thumbnails-for-each-worksheet-to-preview-layout-changes.cs",
+      "title": "After applying custom sizes, generate PDF thumbnails for each worksheet to preview layout changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "after-copying-compare-destination-worksheets-paper-size-margins-and-orientation-to-ensure-exact-match.cs",
       "title": "After copying, compare destination worksheet's paper size, margins, and orientation to ensure exact match."
     },
