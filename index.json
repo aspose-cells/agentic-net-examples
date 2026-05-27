@@ -17231,6 +17231,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "after-copying-compare-destination-worksheets-paper-size-margins-and-orientation-to-ensure-exact-match.cs",
+      "title": "After copying, compare destination worksheet's paper size, margins, and orientation to ensure exact match."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-110-percent-zoom-to-a-worksheet-and-generate-pdf-with-embedded-fonts.cs",
       "title": "Apply 110 percent zoom to a worksheet and generate PDF with embedded fonts."
     },

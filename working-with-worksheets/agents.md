@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - create-separate-pdfs-for-three-worksheets-each-using-a-distinct-custom-paper-size-defined-programmatically.cs
 - combine-custom-paper-size-rendering-with-a-300-dpi-setting-to-improve-pdf-image-quality.cs
 - copy-the-entire-pagesetup-configuration-from-a-source-worksheet-to-a-destination-worksheet.cs
+- after-copying-compare-destination-worksheets-paper-size-margins-and-orientation-to-ensure-exact-match.cs
