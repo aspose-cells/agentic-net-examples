@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs
 - iterate-through-all-worksheets-hide-those-whose-names-start-with-temp-and-write-the-workbook-back.cs
 - load-a-workbook-unhide-row-10-in-the-active-sheet-and-save-the-modified-document.cs
+- hide-columns-b-through-e-in-a-specific-worksheet-then-save-the-workbook-preserving-column-visibility.cs
