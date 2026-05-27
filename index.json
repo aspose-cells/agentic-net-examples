@@ -3086,6 +3086,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-the-ods-encryption-algorithm-and-output-a-humanreadable-description-of-its-security-level.cs",
+      "title": "Detect the ODS encryption algorithm and output a human\u2011readable description of its security level."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-the-workbook-file-format-from-an-input-stream-and-log-the-identified-type.cs",
       "title": "Detect the workbook file format from an input stream and log the identified type."
     },
