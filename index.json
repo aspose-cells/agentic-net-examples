@@ -17431,6 +17431,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "export-the-gathered-worksheet-paper-dimensions-to-a-csv-file-for-external-analysis.cs",
+      "title": "Export the gathered worksheet paper dimensions to a CSV file for external analysis."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs",
       "title": "Freeze panes at row one and column one to keep headers visible while scrolling."
     },

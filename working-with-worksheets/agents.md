@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - retrieve-the-paper-height-property-from-the-active-worksheet-and-display-it-in-the-console.cs
 - iterate-through-all-worksheets-collecting-each-sheets-paper-width-and-height-into-a-dictionary.cs
 - compare-paper-dimensions-between-two-specified-worksheets-and-log-any-differences-for-review.cs
+- export-the-gathered-worksheet-paper-dimensions-to-a-csv-file-for-external-analysis.cs
