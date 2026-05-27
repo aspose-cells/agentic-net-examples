@@ -17431,6 +17431,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-set-page-orientation-to-landscape-fit-to-one-page-wide-and-save-as-xps.cs",
+      "title": "Load a workbook, set page orientation to landscape, fit to one page wide, and save as XPS."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-toggle-worksheet-visibility-based-on-a-condition-and-save-the-updated-file.cs",
       "title": "Load a workbook, toggle worksheet visibility based on a condition, and save the updated file."
     },
