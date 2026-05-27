@@ -17301,6 +17301,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "iterate-through-all-worksheets-hide-those-whose-names-start-with-temp-and-write-the-workbook-back.cs",
+      "title": "Iterate through all worksheets, hide those whose names start with 'Temp', and write the workbook back."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs",
       "title": "Load an existing workbook, hide the second worksheet, and save the file."
     },
