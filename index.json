@@ -17940,6 +17940,11 @@
       "title": "Verify that the PrinterSettings object is null after removal by checking the property value."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "write-a-unit-test-that-asserts-paperwidth-equals-expected-value-when-worksheet-paper-size-is-set-to-a4.cs",
+      "title": "Write a unit test that asserts PaperWidth equals expected value when worksheet paper size is set to A4."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
