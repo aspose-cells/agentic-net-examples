@@ -3091,6 +3091,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-process-ods-files-encrypt-each-with-a-unique-password-derived-from-its-filename-hash.cs",
+      "title": "Batch process ODS files, encrypt each with a unique password derived from its filename hash."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs",
       "title": "Change an encrypted workbook's password using a secure key vault and save the updated file."
     },
