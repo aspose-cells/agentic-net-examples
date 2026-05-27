@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - remove-all-password-protection-from-a-workbook-making-it-freely-editable-and-viewable-without-authentication.cs
 - change-the-password-of-an-encrypted-excel-workbook-from-an-old-value-to-a-new-stronger-password.cs
 - change-the-password-to-modify-on-an-existing-workbook-without-altering-its-content.cs
+- remove-the-password-to-modify-from-a-workbook-while-retaining-the-opening-password.cs
