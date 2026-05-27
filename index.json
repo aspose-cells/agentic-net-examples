@@ -17451,6 +17451,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-dynamic-page-number-placeholder-into-the-center-of-the-footer-for-each-printed-page.cs",
+      "title": "Insert a dynamic page number placeholder into the center of the footer for each printed page."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
