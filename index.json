@@ -17236,6 +17236,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-fittopagestall-1-while-keeping-fittopageswide-unchanged-then-generate-multi-sheet-pdf-with-consistent-scaling.cs",
+      "title": "Apply FitToPagesTall = 1 while keeping FitToPagesWide unchanged, then generate multi-sheet PDF with consistent scaling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-fittopageswide-1-and-fittopagestall-1-to-a-worksheet-for-single-page-printing.cs",
       "title": "Apply FitToPagesWide = 1 and FitToPagesTall = 1 to a worksheet for single-page printing."
     },
