@@ -17296,6 +17296,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-the-emptycellreferences-error-check-for-a-specific-worksheet-by-creating-an-errorcheckoption-instance.cs",
+      "title": "Enable the EmptyCellReferences error check for a specific worksheet by creating an ErrorCheckOption instance."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs",
       "title": "Freeze panes at row one and column one to keep headers visible while scrolling."
     },
