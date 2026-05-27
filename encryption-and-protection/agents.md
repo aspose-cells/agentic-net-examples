@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - load-an-excel-file-check-for-password-protection-and-prompt-the-user-for-credentials-if-needed.cs
 - encrypt-an-xlsx-workbook-with-a-userdefined-password-using-aes256-encryption-and-save-it.cs
 - encrypt-a-workbook-with-a-specified-encryption-strength-parameter-and-validate-that-the-strength-matches.cs
+- encrypt-an-excel-workbook-using-rc4-encryption-then-decrypt-it-to-verify-data-consistency.cs
