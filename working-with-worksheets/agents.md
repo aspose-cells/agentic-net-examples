@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-collecting-each-sheets-paper-width-and-height-into-a-dictionary.cs
 - compare-paper-dimensions-between-two-specified-worksheets-and-log-any-differences-for-review.cs
 - export-the-gathered-worksheet-paper-dimensions-to-a-csv-file-for-external-analysis.cs
+- set-the-pagesetup-paper-size-of-a-worksheet-to-a2-and-verify-the-updated-dimensions.cs
