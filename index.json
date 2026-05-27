@@ -3091,6 +3091,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-decrypt-excel-files-apply-data-masking-to-sensitive-columns-and-reencrypt-with-new-passwords.cs",
+      "title": "Batch decrypt Excel files, apply data masking to sensitive columns, and re\u2011encrypt with new passwords."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "batch-decrypt-excel-files-apply-data-sanitization-and-reencrypt-them-with-updated-passwords-for-compliance.cs",
       "title": "Batch decrypt Excel files, apply data sanitization, and re\u2011encrypt them with updated passwords for compliance."
     },
