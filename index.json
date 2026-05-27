@@ -3091,6 +3091,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-decrypt-excel-files-apply-data-sanitization-and-reencrypt-them-with-updated-passwords-for-compliance.cs",
+      "title": "Batch decrypt Excel files, apply data sanitization, and re\u2011encrypt them with updated passwords for compliance."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs",
       "title": "Batch encrypt multiple Excel files in a directory using a shared password and AES\u2011128 encryption."
     },
