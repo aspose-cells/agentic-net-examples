@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - programmatically-add-different-header-texts-for-odd-and-even-pages-using-the-appropriate-api-calls.cs
 - insert-a-dynamic-page-number-placeholder-into-the-center-of-the-footer-for-each-printed-page.cs
 - set-a-custom-print-area-that-excludes-hidden-rows-and-columns-to-improve-print-performance.cs
+- enable-printing-of-gridlines-only-for-the-first-three-worksheets-while-keeping-others-unchanged.cs

@@ -17371,6 +17371,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-printing-of-gridlines-only-for-the-first-three-worksheets-while-keeping-others-unchanged.cs",
+      "title": "Enable printing of gridlines only for the first three worksheets while keeping others unchanged."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-printing-of-gridlines-while-disabling-row-and-column-headings-for-the-current-worksheet.cs",
       "title": "Enable printing of gridlines while disabling row and column headings for the current worksheet."
     },
