@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - add-a-left-aligned-footer-containing-the-current-date-to-each-worksheet-in-an-existing-workbook.cs
 - insert-a-company-logo-image-into-the-right-side-of-the-header-for-the-first-worksheet.cs
 - place-a-watermark-picture-in-the-footer-of-all-worksheets-using-the-same-image-file-path.cs
+- define-the-print-area-as-cells-b2-through-g20-for-the-active-worksheet.cs
