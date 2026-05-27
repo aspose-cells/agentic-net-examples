@@ -3141,6 +3141,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "implement-writeprotect-on-a-workbook-specifying-author-name-and-comments-for-audit-tracking.cs",
+      "title": "Implement write\u2011protect on a workbook, specifying author name and comments for audit tracking."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "load-a-passwordprotected-excel-file-catch-authentication-exceptions-and-log-detailed-error-information.cs",
       "title": "Load a password\u2011protected Excel file, catch authentication exceptions, and log detailed error information."
     },
