@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - copy-a-worksheet-from-a-source-workbook-to-a-target-workbook-while-preserving-formulas.cs
 - copy-multiple-worksheets-whose-names-start-with-a-specific-prefix-into-a-new-workbook-for-backup.cs
 - use-worksheetcollectionaddcopy-overload-with-source-index-to-duplicate-a-sheet-at-a-specific-position.cs
+- use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs

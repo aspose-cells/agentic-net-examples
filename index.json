@@ -17231,6 +17231,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
+      "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-with-source-index-to-duplicate-a-sheet-at-a-specific-position.cs",
       "title": "Use WorksheetCollection.AddCopy overload with source index to duplicate a sheet at a specific position."
     },
