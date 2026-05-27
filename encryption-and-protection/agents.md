@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - detect-the-ods-encryption-algorithm-and-output-a-humanreadable-description-of-its-security-level.cs
 - load-an-encrypted-ods-file-in-readonly-mode-verify-its-password-and-extract-cell-values.cs
 - load-a-passwordprotected-excel-file-catch-authentication-exceptions-and-log-detailed-error-information.cs
+- load-an-excel-file-check-for-password-protection-and-prompt-the-user-for-credentials-if-needed.cs
