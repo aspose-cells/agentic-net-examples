@@ -17631,6 +17631,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-print-area-using-a-named-range-instead-of-a-literal-cell-address-for-flexibility.cs",
+      "title": "Set the print area using a named range instead of a literal cell address for flexibility."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs",
       "title": "Set the tab bar width, hide the fourth worksheet, and save the workbook with these settings."
     },
