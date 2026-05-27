@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - create-a-script-that-removes-printer-settings-sets-a2-size-and-saves-as-pdf.cs
 - benchmark-memory-usage-when-cloning-page-setup-objects-for-fifty-worksheets-versus-direct-property-assignment.cs
 - implement-a-retry-mechanism-that-attempts-to-set-custom-paper-size-up-to-three-times-on-failure.cs
+- log-detailed-information-about-each-pagesetup-change-including-previous-and-new-paper-dimensions-to-a-log-file.cs

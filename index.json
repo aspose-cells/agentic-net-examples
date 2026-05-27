@@ -17716,6 +17716,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "log-detailed-information-about-each-pagesetup-change-including-previous-and-new-paper-dimensions-to-a-log-file.cs",
+      "title": "Log detailed information about each page\u2011setup change, including previous and new paper dimensions, to a log file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "loop-through-all-workbook-worksheets-and-set-each-printersettings-to-null-clearing-printer-data.cs",
       "title": "Loop through all workbook worksheets and set each PrinterSettings to null, clearing printer data."
     },
