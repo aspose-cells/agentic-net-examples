@@ -17321,6 +17321,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-rows-based-on-a-predicate-that-checks-cell-values-then-save-the-modified-workbook.cs",
+      "title": "Hide rows based on a predicate that checks cell values, then save the modified workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-the-first-worksheet-tab-display-formulas-on-the-second-sheet-and-save-the-changes.cs",
       "title": "Hide the first worksheet tab, display formulas on the second sheet, and save the changes."
     },
