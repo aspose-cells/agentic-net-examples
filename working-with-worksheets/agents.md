@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs
 - hide-multiple-columns-from-index-5-to-9-then-export-the-workbook-preserving-hidden-columns.cs
 - load-a-workbook-toggle-worksheet-visibility-based-on-a-condition-and-save-the-updated-file.cs
+- show-all-worksheet-tabs-ensure-scroll-bars-are-visible-and-save-the-workbook-for-user-interaction.cs
