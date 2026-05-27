@@ -3191,6 +3191,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "remove-the-password-to-modify-from-a-workbook-while-retaining-the-opening-password.cs",
+      "title": "Remove the 'password to modify' from a workbook while retaining the opening password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "set-a-password-to-open-a-newly-created-xlsx-workbook-and-enforce-strong-encryption-before-saving.cs",
       "title": "Set a password to open a newly created XLSX workbook and enforce strong encryption before saving."
     },
