@@ -17391,6 +17391,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-separate-pdfs-for-three-worksheets-each-using-a-distinct-custom-paper-size-defined-programmatically.cs",
+      "title": "Create separate PDFs for three worksheets, each using a distinct custom paper size defined programmatically."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
