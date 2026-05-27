@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - verify-that-the-printersettings-object-is-null-after-removal-by-checking-the-property-value.cs
 - loop-through-all-workbook-worksheets-and-set-each-printersettings-to-null-clearing-printer-data.cs
 - save-the-cleaned-workbook-as-xlsx-and-confirm-no-printersettings-bin-files-exist-inside-the-package.cs
+- define-a-custom-paper-size-of-500-points-width-and-700-points-height-for-a-worksheet.cs

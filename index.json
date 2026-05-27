@@ -17396,6 +17396,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-custom-paper-size-of-500-points-width-and-700-points-height-for-a-worksheet.cs",
+      "title": "Define a custom paper size of 500 points width and 700 points height for a worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "define-the-print-area-as-cells-b2-through-g20-for-the-active-worksheet.cs",
       "title": "Define the print area as cells B2 through G20 for the active worksheet."
     },
