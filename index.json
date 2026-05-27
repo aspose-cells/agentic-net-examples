@@ -3191,6 +3191,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "unprotect-a-workbook-structure-using-a-recovered-password-and-log-the-unprotection-event-for-audit.cs",
+      "title": "Unprotect a workbook structure using a recovered password and log the unprotection event for audit."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },

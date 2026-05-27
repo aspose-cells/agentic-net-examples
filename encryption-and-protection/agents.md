@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs
 - protect-the-workbook-structure-and-then-attempt-to-delete-a-worksheet-to-confirm-deletion-is-blocked.cs
 - unprotect-a-locked-worksheet-in-an-xlsx-workbook-by-supplying-the-correct-worksheet-password.cs
+- unprotect-a-workbook-structure-using-a-recovered-password-and-log-the-unprotection-event-for-audit.cs
