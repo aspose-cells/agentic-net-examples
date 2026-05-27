@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - show-the-horizontal-scroll-bar-hide-the-vertical-one-and-write-the-workbook-to-disk.cs
 - unhide-a-specific-hidden-worksheet-adjust-its-tab-order-and-save-the-updated-workbook.cs
 - hide-columns-based-on-header-names-enable-formula-display-and-export-the-workbook.cs
+- load-a-workbook-from-file-and-hide-zero-values-on-the-first-worksheet.cs

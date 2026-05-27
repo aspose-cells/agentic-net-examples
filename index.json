@@ -17366,6 +17366,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-from-file-and-hide-zero-values-on-the-first-worksheet.cs",
+      "title": "Load a workbook from file and hide zero values on the first worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-hide-columns-c-and-d-then-export-the-file-preserving-hidden-columns.cs",
       "title": "Load a workbook, hide columns C and D, then export the file preserving hidden columns."
     },
