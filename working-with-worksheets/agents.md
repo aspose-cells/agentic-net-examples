@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - set-the-tab-bar-width-to-200-pixels-hide-the-third-worksheet-and-save-the-file.cs
 - unhide-all-rows-in-a-worksheet-enable-formula-display-and-write-the-workbook-to-a-new-file.cs
 - hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs
+- hide-multiple-columns-from-index-5-to-9-then-export-the-workbook-preserving-hidden-columns.cs
