@@ -17236,6 +17236,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "duplicate-a-worksheet-and-ensure-pivot-tables-are-retained-in-the-copied-version-for-analysis.cs",
+      "title": "Duplicate a worksheet and ensure pivot tables are retained in the copied version for analysis."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },
