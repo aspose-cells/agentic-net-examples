@@ -17276,6 +17276,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-rows-1-to-3-to-repeat-on-every-printed-page-of-the-selected-sheet.cs",
+      "title": "Configure rows 1 to 3 to repeat on every printed page of the selected sheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-workbook-to-hide-both-horizontal-and-vertical-scroll-bars-and-export-the-result.cs",
       "title": "Configure the workbook to hide both horizontal and vertical scroll bars, and export the result."
     },
