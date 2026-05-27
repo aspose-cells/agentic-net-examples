@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - iterate-over-all-worksheets-enable-numbersastext-error-check-only-on-sheets-with-numeric-data-and-log-changes.cs
 - create-a-workbook-set-a-centered-header-text-and-save-the-file-as-xlsx.cs
 - add-a-left-aligned-footer-containing-the-current-date-to-each-worksheet-in-an-existing-workbook.cs
+- insert-a-company-logo-image-into-the-right-side-of-the-header-for-the-first-worksheet.cs
