@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs
 - split-panes-at-row-ten-and-column-five-to-create-separate-scrolling-regions-within-the-sheet.cs
 - create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs
+- apply-split-panes-and-then-freeze-panes-on-the-same-sheet-to-create-a-fixed-header-area.cs
