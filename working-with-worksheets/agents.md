@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - compare-paper-dimensions-between-two-specified-worksheets-and-log-any-differences-for-review.cs
 - export-the-gathered-worksheet-paper-dimensions-to-a-csv-file-for-external-analysis.cs
 - set-the-pagesetup-paper-size-of-a-worksheet-to-a2-and-verify-the-updated-dimensions.cs
+- change-the-same-worksheets-paper-size-sequentially-to-a3-a4-and-letter-recording-each-size.cs

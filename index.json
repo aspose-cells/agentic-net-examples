@@ -17291,6 +17291,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "change-the-same-worksheets-paper-size-sequentially-to-a3-a4-and-letter-recording-each-size.cs",
+      "title": "Change the same worksheet's paper size sequentially to A3, A4, and Letter, recording each size."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "clear-any-existing-printer-settings-from-a-worksheet-before-applying-new-print-configuration.cs",
       "title": "Clear any existing printer settings from a worksheet before applying new print configuration."
     },
