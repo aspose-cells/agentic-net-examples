@@ -17311,6 +17311,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-columns-based-on-header-names-enable-formula-display-and-export-the-workbook.cs",
+      "title": "Hide columns based on header names, enable formula display, and export the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-multiple-columns-from-index-5-to-9-then-export-the-workbook-preserving-hidden-columns.cs",
       "title": "Hide multiple columns from index 5 to 9, then export the workbook preserving hidden columns."
     },
