@@ -200,3 +200,4 @@ Output files are written to the working directory.
 - generate-a-summary-report-listing-original-and-modified-paper-dimensions-for-each-worksheet-after-changes.cs
 - use-linq-to-select-worksheets-whose-names-start-with-report-before-applying-custom-paper-sizes.cs
 - assign-a4-size-to-data-sheets-and-letter-size-to-summary-sheets-based-on-worksheet-role.cs
+- write-a-unit-test-that-asserts-paperwidth-equals-expected-value-when-worksheet-paper-size-is-set-to-a4.cs
