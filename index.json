@@ -17311,6 +17311,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-rows-5-through-15-then-enable-formula-view-on-the-same-sheet-before-saving.cs",
+      "title": "Hide rows 5 through 15, then enable formula view on the same sheet before saving."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-the-first-worksheet-tab-display-formulas-on-the-second-sheet-and-save-the-changes.cs",
       "title": "Hide the first worksheet tab, display formulas on the second sheet, and save the changes."
     },
