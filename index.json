@@ -17216,6 +17216,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "adjust-the-zoom-factor-of-a-worksheet-to-150-percent-for-detailed-visual-inspection.cs",
+      "title": "Adjust the zoom factor of a worksheet to 150 percent for detailed visual inspection."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs",
       "title": "Apply page break preview to every worksheet in the workbook to prepare for printing."
     },
