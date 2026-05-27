@@ -17236,6 +17236,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-blackandwhite-mode-selectively-to-worksheets-containing-confidential-data-before-exporting-to-pdf.cs",
+      "title": "Apply black\u2011and\u2011white mode selectively to worksheets containing confidential data before exporting to PDF."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs",
       "title": "Apply custom margin of 0.5 inches on all sides before scaling worksheet to fit one page."
     },
