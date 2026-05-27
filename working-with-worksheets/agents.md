@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - after-applying-custom-sizes-generate-pdf-thumbnails-for-each-worksheet-to-preview-layout-changes.cs
 - create-a-script-that-removes-printer-settings-sets-a2-size-and-saves-as-pdf.cs
 - benchmark-memory-usage-when-cloning-page-setup-objects-for-fifty-worksheets-versus-direct-property-assignment.cs
+- implement-a-retry-mechanism-that-attempts-to-set-custom-paper-size-up-to-three-times-on-failure.cs
