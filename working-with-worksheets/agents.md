@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - set-the-print-area-using-a-named-range-instead-of-a-literal-cell-address-for-flexibility.cs
 - repeat-the-header-row-on-each-printed-page-while-also-repeating-the-first-column-as-a-title.cs
 - disable-printing-of-row-headings-to-create-a-cleaner-layout-for-a-marketing-brochure.cs
+- add-a-qr-code-image-to-the-left-side-of-the-footer-for-scanning-after-printing.cs
