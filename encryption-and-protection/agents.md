@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - batch-process-ods-files-encrypt-each-with-a-unique-password-derived-from-its-filename-hash.cs
 - batch-decrypt-a-collection-of-encrypted-excel-files-using-a-shared-password-and-save-them-unprotected.cs
 - batch-decrypt-excel-files-apply-data-sanitization-and-reencrypt-them-with-updated-passwords-for-compliance.cs
+- batch-encrypt-a-set-of-workbooks-then-generate-a-csv-report-listing-file-names-and-applied-encryption-algorithms.cs
