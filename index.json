@@ -17316,6 +17316,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-rows-0-through-9-then-toggle-the-visibility-of-the-vertical-scroll-bar-before-saving.cs",
+      "title": "Hide rows 0 through 9, then toggle the visibility of the vertical scroll bar before saving."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-rows-5-through-15-then-enable-formula-view-on-the-same-sheet-before-saving.cs",
       "title": "Hide rows 5 through 15, then enable formula view on the same sheet before saving."
     },
