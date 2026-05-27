@@ -17365,6 +17365,11 @@
       "title": "Use WorksheetCollection.AddCopy overload with source index to duplicate a sheet at a specific position."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs",
+      "title": "Validate that each worksheet retains a unique SheetId after performing copy operations."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."

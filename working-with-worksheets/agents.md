@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - retrieve-the-unique-sheetid-of-a-worksheet-and-log-it-for-audit-tracking.cs
 - iterate-over-the-worksheet-collection-and-obtain-each-sheetid-for-diagnostic-reporting.cs
 - store-worksheet-sheetid-values-in-a-dictionary-keyed-by-worksheet-name-for-quick-lookup.cs
+- validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs
