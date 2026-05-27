@@ -17666,6 +17666,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "open-a-workbook-remove-printer-settings-from-every-sheet-and-save-the-result-as-a-clean-xlsx.cs",
+      "title": "Open a workbook, remove printer settings from every sheet, and save the result as a clean XLSX."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "place-a-watermark-picture-in-the-footer-of-all-worksheets-using-the-same-image-file-path.cs",
       "title": "Place a watermark picture in the footer of all worksheets using the same image file path."
     },
