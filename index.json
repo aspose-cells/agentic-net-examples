@@ -17371,6 +17371,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "copy-the-entire-pagesetup-configuration-from-a-source-worksheet-to-a-destination-worksheet.cs",
+      "title": "Copy the entire page\u2011setup configuration from a source worksheet to a destination worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-batch-process-that-sets-identical-headers-for-all-worksheets-in-a-large-workbook.cs",
       "title": "Create a batch process that sets identical headers for all worksheets in a large workbook."
     },
