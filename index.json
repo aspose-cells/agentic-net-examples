@@ -17281,6 +17281,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-worksheet-zoom-to-75-percent-to-fit-more-content-on-screen-during-data-entry.cs",
+      "title": "Set worksheet zoom to 75 percent to fit more content on screen during data entry."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs",
       "title": "Shift a worksheet to the last index of the workbook to place it at the end."
     },
