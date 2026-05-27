@@ -17281,6 +17281,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs",
+      "title": "Implement freeze panes using user\u2011provided row and column indices for customizable header locking."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs",
       "title": "Move a worksheet to a new position by providing the target index within the same workbook."
     },
