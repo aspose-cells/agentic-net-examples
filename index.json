@@ -3086,6 +3086,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs",
+      "title": "Batch encrypt multiple Excel files in a directory using a shared password and AES\u2011128 encryption."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs",
       "title": "Change an encrypted workbook's password using a secure key vault and save the updated file."
     },
