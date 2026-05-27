@@ -17696,6 +17696,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "save-the-cleaned-workbook-as-xlsx-and-confirm-no-printersettings-bin-files-exist-inside-the-package.cs",
+      "title": "Save the cleaned workbook as XLSX and confirm no printer\u2011settings .bin files exist inside the package."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-a-custom-print-area-that-excludes-hidden-rows-and-columns-to-improve-print-performance.cs",
       "title": "Set a custom print area that excludes hidden rows and columns to improve print performance."
     },
