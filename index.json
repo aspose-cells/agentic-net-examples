@@ -17316,6 +17316,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "combine-custom-paper-size-rendering-with-a-300-dpi-setting-to-improve-pdf-image-quality.cs",
+      "title": "Combine custom paper size rendering with a 300 DPI setting to improve PDF image quality."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "compare-paper-dimensions-between-two-specified-worksheets-and-log-any-differences-for-review.cs",
       "title": "Compare paper dimensions between two specified worksheets and log any differences for review."
     },
