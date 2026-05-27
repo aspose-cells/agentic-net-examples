@@ -3086,6 +3086,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs",
+      "title": "Change an encrypted workbook's password using a secure key vault and save the updated file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "change-the-password-of-an-encrypted-excel-workbook-from-an-old-value-to-a-new-stronger-password.cs",
       "title": "Change the password of an encrypted Excel workbook from an old value to a new stronger password."
     },
