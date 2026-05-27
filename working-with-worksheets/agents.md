@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - hide-the-first-worksheet-tab-display-formulas-on-the-second-sheet-and-save-the-changes.cs
 - unhide-a-previously-hidden-worksheet-adjust-its-tab-color-and-write-the-workbook-back.cs
 - hide-rows-5-through-15-then-enable-formula-view-on-the-same-sheet-before-saving.cs
+- set-workbook-settings-to-hide-the-horizontal-scroll-bar-keep-vertical-bar-visible-and-save.cs

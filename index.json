@@ -17391,6 +17391,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-workbook-settings-to-hide-the-horizontal-scroll-bar-keep-vertical-bar-visible-and-save.cs",
+      "title": "Set workbook settings to hide the horizontal scroll bar, keep vertical bar visible, and save."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-worksheet-zoom-to-75-percent-to-fit-more-content-on-screen-during-data-entry.cs",
       "title": "Set worksheet zoom to 75 percent to fit more content on screen during data entry."
     },
