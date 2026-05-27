@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - hide-columns-b-through-e-in-a-specific-worksheet-then-save-the-workbook-preserving-column-visibility.cs
 - configure-the-workbook-to-hide-both-horizontal-and-vertical-scroll-bars-and-export-the-result.cs
 - show-the-vertical-scroll-bar-while-hiding-the-horizontal-one-then-save-the-workbook-to-disk.cs
+- set-the-tab-bar-width-to-200-pixels-hide-the-third-worksheet-and-save-the-file.cs
