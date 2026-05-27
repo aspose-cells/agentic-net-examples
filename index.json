@@ -17271,6 +17271,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs",
+      "title": "Switch a worksheet back to normal view mode to display cells without page break outlines."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },
