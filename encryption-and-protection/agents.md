@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - change-the-password-of-an-encrypted-excel-workbook-from-an-old-value-to-a-new-stronger-password.cs
 - change-the-password-to-modify-on-an-existing-workbook-without-altering-its-content.cs
 - remove-the-password-to-modify-from-a-workbook-while-retaining-the-opening-password.cs
+- change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs
