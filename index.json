@@ -17976,6 +17976,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-conditional-logic-to-assign-letter-size-to-worksheets-whose-names-contain-summary-and-a4-otherwise.cs",
+      "title": "Use conditional logic to assign Letter size to worksheets whose names contain \"Summary\" and A4 otherwise."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-linq-to-select-worksheets-whose-names-start-with-report-before-applying-custom-paper-sizes.cs",
       "title": "Use LINQ to select worksheets whose names start with \"Report\" before applying custom paper sizes."
     },
