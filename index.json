@@ -18021,6 +18021,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "write-a-powershell-wrapper-that-calls-the-net-library-to-remove-printer-settings-from-a-given-excel-file.cs",
+      "title": "Write a PowerShell wrapper that calls the .NET library to remove printer settings from a given Excel file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "write-a-unit-test-that-asserts-paperwidth-equals-expected-value-when-worksheet-paper-size-is-set-to-a4.cs",
       "title": "Write a unit test that asserts PaperWidth equals expected value when worksheet paper size is set to A4."
     },
