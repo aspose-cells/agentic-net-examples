@@ -17366,6 +17366,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "disable-printing-of-row-headings-to-create-a-cleaner-layout-for-a-marketing-brochure.cs",
+      "title": "Disable printing of row headings to create a cleaner layout for a marketing brochure."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "duplicate-a-worksheet-and-ensure-pivot-tables-are-retained-in-the-copied-version-for-analysis.cs",
       "title": "Duplicate a worksheet and ensure pivot tables are retained in the copied version for analysis."
     },
