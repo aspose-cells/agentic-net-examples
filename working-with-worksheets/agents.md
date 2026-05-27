@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - apply-a-600point-custom-paper-size-to-a-worksheet-render-to-pdf-then-revert-to-a4.cs
 - prompt-the-user-for-a-paper-size-enum-value-and-assign-it-to-the-worksheets-pagesetuppapersize.cs
 - implement-exception-handling-to-catch-invalid-custom-paper-dimensions-and-log-descriptive-error-messages.cs
+- measure-execution-time-when-updating-page-setup-for-one-hundred-worksheets-to-evaluate-performance-impact.cs

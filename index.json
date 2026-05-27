@@ -17666,6 +17666,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "measure-execution-time-when-updating-page-setup-for-one-hundred-worksheets-to-evaluate-performance-impact.cs",
+      "title": "Measure execution time when updating page setup for one hundred worksheets to evaluate performance impact."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs",
       "title": "Move a worksheet to a new position by providing the target index within the same workbook."
     },
