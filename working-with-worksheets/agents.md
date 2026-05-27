@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - implement-a-feature-that-logs-the-number-of-worksheets-lacking-printer-settings-after-batch-removal-operation.cs
 - design-a-configuration-file-that-maps-worksheet-names-to-desired-paper-sizes-for-automated-processing.cs
 - read-the-configuration-mapping-and-apply-corresponding-paper-sizes-to-each-worksheet-during-workbook-load.cs
+- after-applying-custom-sizes-generate-pdf-thumbnails-for-each-worksheet-to-preview-layout-changes.cs
