@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - enable-the-emptycellreferences-error-check-for-a-specific-worksheet-by-creating-an-errorcheckoption-instance.cs
 - load-multiple-workbooks-from-a-folder-hide-zero-values-on-each-sheet-and-save-changes.cs
 - batch-process-excel-files-to-set-fittopageswide-1-fittopagestall-1-then-export-to-pdf.cs
+- create-a-macrofree-workbook-apply-90-percent-zoom-and-save-as-html-preserving-formatting.cs
