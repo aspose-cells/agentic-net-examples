@@ -17256,6 +17256,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
+      "title": "Create split panes with left column three and top row four for focused data analysis."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "duplicate-a-worksheet-and-ensure-pivot-tables-are-retained-in-the-copied-version-for-analysis.cs",
       "title": "Duplicate a worksheet and ensure pivot tables are retained in the copied version for analysis."
     },
