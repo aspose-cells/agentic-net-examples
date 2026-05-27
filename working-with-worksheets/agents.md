@@ -215,3 +215,4 @@ Output files are written to the working directory.
 - log-detailed-information-about-each-pagesetup-change-including-previous-and-new-paper-dimensions-to-a-log-file.cs
 - create-a-utility-that-extracts-paper-width-and-height-from-all-worksheets-and-returns-a-json-summary.cs
 - develop-a-function-that-checks-whether-a-worksheets-custom-paper-size-exceeds-standard-a3-dimensions.cs
+- use-conditional-logic-to-assign-letter-size-to-worksheets-whose-names-contain-summary-and-a4-otherwise.cs
