@@ -17271,6 +17271,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "freeze-the-first-two-columns-to-keep-identifier-fields-static-while-scrolling-horizontally.cs",
+      "title": "Freeze the first two columns to keep identifier fields static while scrolling horizontally."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-the-top-three-rows-of-a-worksheet-to-maintain-summary-information-during-navigation.cs",
       "title": "Freeze the top three rows of a worksheet to maintain summary information during navigation."
     },

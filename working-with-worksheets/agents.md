@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs
 - freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs
 - freeze-the-top-three-rows-of-a-worksheet-to-maintain-summary-information-during-navigation.cs
+- freeze-the-first-two-columns-to-keep-identifier-fields-static-while-scrolling-horizontally.cs
