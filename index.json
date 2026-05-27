@@ -3166,6 +3166,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs",
+      "title": "Protect the workbook structure, then attempt to copy a worksheet to another workbook to test enforcement."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "set-a-password-to-open-a-newly-created-xlsx-workbook-and-enforce-strong-encryption-before-saving.cs",
       "title": "Set a password to open a newly created XLSX workbook and enforce strong encryption before saving."
     },
