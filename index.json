@@ -3236,6 +3236,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "verify-the-password-of-an-encrypted-workbook-without-fully-opening-it-using-a-lightweight-validation-method.cs",
+      "title": "Verify the password of an encrypted workbook without fully opening it, using a lightweight validation method."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },
