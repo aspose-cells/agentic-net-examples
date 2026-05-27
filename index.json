@@ -17216,6 +17216,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs",
+      "title": "Copy a worksheet and keep all conditional formatting rules intact for consistent styling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "copy-a-worksheet-from-a-source-workbook-to-a-target-workbook-while-preserving-formulas.cs",
       "title": "Copy a worksheet from a source workbook to a target workbook while preserving formulas."
     },
