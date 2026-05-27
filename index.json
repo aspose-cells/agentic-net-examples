@@ -17221,6 +17221,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-110-percent-zoom-to-a-worksheet-and-generate-pdf-with-embedded-fonts.cs",
+      "title": "Apply 110 percent zoom to a worksheet and generate PDF with embedded fonts."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-120-percent-zoom-level-to-every-worksheet-and-save-each-as-separate-xls-file.cs",
       "title": "Apply a 120 percent zoom level to every worksheet and save each as separate XLS file."
     },
