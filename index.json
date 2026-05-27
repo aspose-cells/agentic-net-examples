@@ -17596,6 +17596,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-a-retry-mechanism-that-attempts-to-set-custom-paper-size-up-to-three-times-on-failure.cs",
+      "title": "Implement a retry mechanism that attempts to set custom paper size up to three times on failure."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-exception-handling-to-catch-invalid-custom-paper-dimensions-and-log-descriptive-error-messages.cs",
       "title": "Implement exception handling to catch invalid custom paper dimensions and log descriptive error messages."
     },
