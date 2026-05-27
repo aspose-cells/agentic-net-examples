@@ -17536,6 +17536,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "print-all-cell-comments-in-place-by-assigning-the-appropriate-enumeration-to-the-printcomments-property.cs",
+      "title": "Print all cell comments in place by assigning the appropriate enumeration to the PrintComments property."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs",
       "title": "Programmatically disable NumbersAsText warning, then verify that the cell comment indicating the issue is removed."
     },
