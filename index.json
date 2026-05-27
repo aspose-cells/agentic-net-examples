@@ -17436,6 +17436,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-utility-that-extracts-paper-width-and-height-from-all-worksheets-and-returns-a-json-summary.cs",
+      "title": "Create a utility that extracts paper width and height from all worksheets and returns a JSON summary."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-workbook-set-a-centered-header-text-and-save-the-file-as-xlsx.cs",
       "title": "Create a workbook, set a centered header text, and save the file as XLSX."
     },
