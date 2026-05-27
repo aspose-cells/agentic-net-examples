@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - apply-a4-paper-size-to-every-worksheet-in-a-workbook-using-a-foreach-loop.cs
 - assign-null-to-a-worksheets-printersettings-property-to-remove-its-embedded-printer-configuration.cs
 - verify-that-the-printersettings-object-is-null-after-removal-by-checking-the-property-value.cs
+- loop-through-all-workbook-worksheets-and-set-each-printersettings-to-null-clearing-printer-data.cs

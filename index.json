@@ -17616,6 +17616,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "loop-through-all-workbook-worksheets-and-set-each-printersettings-to-null-clearing-printer-data.cs",
+      "title": "Loop through all workbook worksheets and set each PrinterSettings to null, clearing printer data."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs",
       "title": "Move a worksheet to a new position by providing the target index within the same workbook."
     },
