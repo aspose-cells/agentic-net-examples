@@ -17246,6 +17246,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-600point-custom-paper-size-to-a-worksheet-render-to-pdf-then-revert-to-a4.cs",
+      "title": "Apply a 600\u2011point custom paper size to a worksheet, render to PDF, then revert to A4."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-custom-paper-size-by-reading-paperwidth-and-paperheight-and-assigning-them-to-the-page-setup.cs",
       "title": "Apply a custom paper size by reading PaperWidth and PaperHeight and assigning them to the page setup."
     },
