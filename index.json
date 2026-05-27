@@ -17361,6 +17361,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-tab-bar-width-to-200-pixels-hide-the-third-worksheet-and-save-the-file.cs",
+      "title": "Set the tab bar width to 200 pixels, hide the third worksheet, and save the file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-worksheet-zoom-to-75-percent-to-fit-more-content-on-screen-during-data-entry.cs",
       "title": "Set worksheet zoom to 75 percent to fit more content on screen during data entry."
     },
