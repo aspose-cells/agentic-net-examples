@@ -17311,6 +17311,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-the-first-worksheet-tab-display-formulas-on-the-second-sheet-and-save-the-changes.cs",
+      "title": "Hide the first worksheet tab, display formulas on the second sheet, and save the changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs",
       "title": "Implement freeze panes using user\u2011provided row and column indices for customizable header locking."
     },
