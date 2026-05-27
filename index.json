@@ -3116,6 +3116,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "load-an-excel-file-check-for-password-protection-and-prompt-the-user-for-credentials-if-needed.cs",
+      "title": "Load an Excel file, check for password protection, and prompt the user for credentials if needed."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },
