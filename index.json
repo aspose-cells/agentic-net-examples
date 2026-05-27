@@ -17331,6 +17331,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
+      "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-the-worksheet-collection-and-obtain-each-sheetid-for-diagnostic-reporting.cs",
       "title": "Iterate over the worksheet collection and obtain each SheetId for diagnostic reporting."
     },
