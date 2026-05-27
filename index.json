@@ -17566,6 +17566,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-columns-a-and-b-to-repeat-as-titles-on-each-printed-page-of-the-workbook.cs",
+      "title": "Set columns A and B to repeat as titles on each printed page of the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-pagesetupzoom-to-80-percent-for-a-worksheet-and-export-the-result-as-pdf.cs",
       "title": "Set PageSetup.Zoom to 80 percent for a worksheet and export the result as PDF."
     },
