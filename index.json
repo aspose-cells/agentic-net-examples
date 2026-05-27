@@ -17311,6 +17311,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs",
+      "title": "Open a spreadsheet, set the first worksheet tab to invisible, then export to a new file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs",
       "title": "Place a worksheet immediately after a specified sheet name to control sheet sequencing."
     },
