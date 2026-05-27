@@ -3106,6 +3106,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "decrypt-an-encrypted-workbook-modify-cell-values-reencrypt-with-a-different-password-and-save-as-ods.cs",
+      "title": "Decrypt an encrypted workbook, modify cell values, re\u2011encrypt with a different password, and save as ODS."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "decrypt-an-ods-file-encrypted-with-a-legacy-algorithm-and-upgrade-it-to-aes256-encryption.cs",
       "title": "Decrypt an ODS file encrypted with a legacy algorithm and upgrade it to AES\u2011256 encryption."
     },
