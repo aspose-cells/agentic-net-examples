@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - assign-null-to-a-worksheets-printersettings-property-to-remove-its-embedded-printer-configuration.cs
 - verify-that-the-printersettings-object-is-null-after-removal-by-checking-the-property-value.cs
 - loop-through-all-workbook-worksheets-and-set-each-printersettings-to-null-clearing-printer-data.cs
+- save-the-cleaned-workbook-as-xlsx-and-confirm-no-printersettings-bin-files-exist-inside-the-package.cs
