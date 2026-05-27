@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - copy-a-worksheet-within-the-same-workbook-using-its-numeric-index-and-verify-duplication.cs
+- copy-a-worksheet-within-the-same-workbook-using-its-name-and-ensure-content-integrity.cs
