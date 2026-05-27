@@ -17226,6 +17226,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-split-panes-and-then-freeze-panes-on-the-same-sheet-to-create-a-fixed-header-area.cs",
+      "title": "Apply split panes and then freeze panes on the same sheet to create a fixed header area."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs",
       "title": "Calculate appropriate zoom level based on column width and assign it to the worksheet."
     },
