@@ -17351,6 +17351,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-display-formulas-on-all-sheets-hide-the-second-column-and-save.cs",
+      "title": "Load a workbook, display formulas on all sheets, hide the second column, and save."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-hide-columns-c-and-d-then-export-the-file-preserving-hidden-columns.cs",
       "title": "Load a workbook, hide columns C and D, then export the file preserving hidden columns."
     },
