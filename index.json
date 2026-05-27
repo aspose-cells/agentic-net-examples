@@ -17210,6 +17210,11 @@
       "title": "Write a DataTable object into a new worksheet table, mapping column names to table headers automatically."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "copy-a-worksheet-within-the-same-workbook-using-its-numeric-index-and-verify-duplication.cs",
+      "title": "Copy a worksheet within the same workbook using its numeric index and verify duplication."
+    },
+    {
       "category": "xml-maps",
       "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
       "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
