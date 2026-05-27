@@ -17301,6 +17301,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs",
+      "title": "Load an existing workbook, hide the second worksheet, and save the file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs",
       "title": "Move a worksheet to a new position by providing the target index within the same workbook."
     },
