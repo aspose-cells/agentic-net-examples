@@ -17946,6 +17946,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "validate-that-after-removing-printer-settings-the-workbook-opens-in-excel-without-prompting-for-a-default-printer.cs",
+      "title": "Validate that after removing printer settings, the workbook opens in Excel without prompting for a default printer."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs",
       "title": "Validate that each worksheet retains a unique SheetId after performing copy operations."
     },
