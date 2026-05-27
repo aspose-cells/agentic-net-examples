@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs
 - if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs
 - detect-the-encryption-type-of-an-ods-file-and-display-the-algorithm-name.cs
+- identify-weak-encryption-on-a-loaded-workbook-and-reencrypt-it-with-a-stronger-algorithm.cs

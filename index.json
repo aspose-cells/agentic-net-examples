@@ -3086,6 +3086,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "identify-weak-encryption-on-a-loaded-workbook-and-reencrypt-it-with-a-stronger-algorithm.cs",
+      "title": "Identify weak encryption on a loaded workbook and re\u2011encrypt it with a stronger algorithm."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs",
       "title": "If a loaded workbook is not encrypted, apply default encryption using a preset password."
     },
