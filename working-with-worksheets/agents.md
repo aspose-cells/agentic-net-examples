@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - unhide-a-specific-hidden-worksheet-adjust-its-tab-order-and-save-the-updated-workbook.cs
 - hide-columns-based-on-header-names-enable-formula-display-and-export-the-workbook.cs
 - load-a-workbook-from-file-and-hide-zero-values-on-the-first-worksheet.cs
+- iterate-through-all-worksheets-set-showzerovalues-to-false-and-save-the-workbook-as-pdf.cs
