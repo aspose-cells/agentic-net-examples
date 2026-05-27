@@ -3096,6 +3096,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-with-a-specified-encryption-strength-parameter-and-validate-that-the-strength-matches.cs",
+      "title": "Encrypt a workbook with a specified encryption strength parameter and validate that the strength matches."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-an-xlsx-workbook-with-a-userdefined-password-using-aes256-encryption-and-save-it.cs",
       "title": "Encrypt an XLSX workbook with a user\u2011defined password using AES\u2011256 encryption and save it."
     },
