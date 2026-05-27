@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - apply-a-custom-paper-size-by-reading-paperwidth-and-paperheight-and-assigning-them-to-the-page-setup.cs
 - create-a-batch-process-that-sets-identical-headers-for-all-worksheets-in-a-large-workbook.cs
 - generate-a-report-that-lists-each-worksheets-current-print-area-and-title-rows-configuration.cs
+- load-an-xlsx-workbook-and-obtain-the-paper-width-of-the-first-worksheet.cs
