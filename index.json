@@ -17246,6 +17246,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a4-paper-size-to-every-worksheet-in-a-workbook-using-a-foreach-loop.cs",
+      "title": "Apply A4 paper size to every worksheet in a workbook using a foreach loop."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-blackandwhite-mode-selectively-to-worksheets-containing-confidential-data-before-exporting-to-pdf.cs",
       "title": "Apply black\u2011and\u2011white mode selectively to worksheets containing confidential data before exporting to PDF."
     },
