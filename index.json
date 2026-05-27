@@ -3176,6 +3176,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "remove-all-password-protection-from-a-workbook-making-it-freely-editable-and-viewable-without-authentication.cs",
+      "title": "Remove all password protection from a workbook, making it freely editable and viewable without authentication."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "set-a-password-to-open-a-newly-created-xlsx-workbook-and-enforce-strong-encryption-before-saving.cs",
       "title": "Set a password to open a newly created XLSX workbook and enforce strong encryption before saving."
     },
