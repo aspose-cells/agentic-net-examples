@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - apply-fittopagestall-1-while-keeping-fittopageswide-unchanged-then-generate-multi-sheet-pdf-with-consistent-scaling.cs
 - load-an-existing-excel-file-set-showzerovalues-to-false-and-export-result-as-html-page.cs
 - create-a-batch-processor-that-hides-zero-values-applies-80-percent-zoom-and-saves-each-workbook-as-pdf.cs
+- programmatically-set-worksheet-left-margin-to-05-inches-then-export-sheet-to-excel-972003-format.cs
