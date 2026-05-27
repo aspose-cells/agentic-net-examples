@@ -17651,6 +17651,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "turn-on-blackandwhite-printing-mode-to-reduce-ink-usage-for-the-entire-workbook.cs",
+      "title": "Turn on black\u2011and\u2011white printing mode to reduce ink usage for the entire workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "unhide-a-previously-hidden-worksheet-adjust-its-tab-color-and-write-the-workbook-back.cs",
       "title": "Unhide a previously hidden worksheet, adjust its tab color, and write the workbook back."
     },
