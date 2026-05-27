@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - unprotect-a-locked-worksheet-in-an-xlsx-workbook-by-supplying-the-correct-worksheet-password.cs
 - unprotect-a-workbook-structure-using-a-recovered-password-and-log-the-unprotection-event-for-audit.cs
 - remove-all-password-protection-from-a-workbook-making-it-freely-editable-and-viewable-without-authentication.cs
+- change-the-password-of-an-encrypted-excel-workbook-from-an-old-value-to-a-new-stronger-password.cs

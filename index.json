@@ -3086,6 +3086,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "change-the-password-of-an-encrypted-excel-workbook-from-an-old-value-to-a-new-stronger-password.cs",
+      "title": "Change the password of an encrypted Excel workbook from an old value to a new stronger password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs",
       "title": "Detect legacy encryption in a workbook and automatically upgrade it to the latest standard."
     },
