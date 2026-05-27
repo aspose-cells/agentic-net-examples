@@ -17506,6 +17506,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "generate-a-summary-report-listing-original-and-modified-paper-dimensions-for-each-worksheet-after-changes.cs",
+      "title": "Generate a summary report listing original and modified paper dimensions for each worksheet after changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs",
       "title": "Hide a range of rows from 20 to 30, then save the workbook with those rows concealed."
     },
