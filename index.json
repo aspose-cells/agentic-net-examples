@@ -17271,6 +17271,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-all-worksheets-to-normal-view-mode-to-ensure-consistent-onscreen-display-across-the-workbook.cs",
+      "title": "Set all worksheets to normal view mode to ensure consistent on\u2011screen display across the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs",
       "title": "Shift a worksheet to the last index of the workbook to place it at the end."
     },
