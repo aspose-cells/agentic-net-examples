@@ -17316,6 +17316,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "clone-a-worksheets-page-setup-modify-only-the-paper-height-and-apply-it-back-to-the-sheet.cs",
+      "title": "Clone a worksheet's page setup, modify only the paper height, and apply it back to the sheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "clone-the-page-setup-of-a-template-worksheet-and-apply-it-to-a-newly-created-sheet.cs",
       "title": "Clone the page setup of a template worksheet and apply it to a newly created sheet."
     },
