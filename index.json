@@ -17676,6 +17676,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "render-the-worksheet-with-the-custom-paper-dimensions-to-a-pdf-file-using-the-save-method.cs",
+      "title": "Render the worksheet with the custom paper dimensions to a PDF file using the Save method."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "repeat-the-header-row-on-each-printed-page-while-also-repeating-the-first-column-as-a-title.cs",
       "title": "Repeat the header row on each printed page while also repeating the first column as a title."
     },

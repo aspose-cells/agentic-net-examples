@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - loop-through-all-workbook-worksheets-and-set-each-printersettings-to-null-clearing-printer-data.cs
 - save-the-cleaned-workbook-as-xlsx-and-confirm-no-printersettings-bin-files-exist-inside-the-package.cs
 - define-a-custom-paper-size-of-500-points-width-and-700-points-height-for-a-worksheet.cs
+- render-the-worksheet-with-the-custom-paper-dimensions-to-a-pdf-file-using-the-save-method.cs
