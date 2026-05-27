@@ -17521,6 +17521,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "iterate-through-all-worksheets-collecting-each-sheets-paper-width-and-height-into-a-dictionary.cs",
+      "title": "Iterate through all worksheets, collecting each sheet's paper width and height into a dictionary."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-through-all-worksheets-hide-those-whose-names-start-with-temp-and-write-the-workbook-back.cs",
       "title": "Iterate through all worksheets, hide those whose names start with 'Temp', and write the workbook back."
     },
