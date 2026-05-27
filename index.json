@@ -3081,6 +3081,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-workbook-protection-with-a-password-and-attempt-to-add-a-new-worksheet-to-verify-restriction.cs",
+      "title": "Apply workbook protection with a password and attempt to add a new worksheet to verify restriction."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs",
       "title": "Detect legacy encryption in a workbook and automatically upgrade it to the latest standard."
     },
