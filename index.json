@@ -17551,6 +17551,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-add-different-header-texts-for-odd-and-even-pages-using-the-appropriate-api-calls.cs",
+      "title": "Programmatically add different header texts for odd and even pages using the appropriate API calls."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs",
       "title": "Programmatically disable NumbersAsText warning, then verify that the cell comment indicating the issue is removed."
     },
