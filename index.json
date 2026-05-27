@@ -17371,6 +17371,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "show-the-vertical-scroll-bar-while-hiding-the-horizontal-one-then-save-the-workbook-to-disk.cs",
+      "title": "Show the vertical scroll bar while hiding the horizontal one, then save the workbook to disk."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "split-panes-at-row-ten-and-column-five-to-create-separate-scrolling-regions-within-the-sheet.cs",
       "title": "Split panes at row ten and column five to create separate scrolling regions within the sheet."
     },
