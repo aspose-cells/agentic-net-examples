@@ -17646,6 +17646,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "retrieve-the-paper-height-property-from-the-active-worksheet-and-display-it-in-the-console.cs",
+      "title": "Retrieve the paper height property from the active worksheet and display it in the console."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-the-paper-width-and-height-from-pagesetup-to-calculate-custom-scaling-factors.cs",
       "title": "Retrieve the paper width and height from PageSetup to calculate custom scaling factors."
     },
