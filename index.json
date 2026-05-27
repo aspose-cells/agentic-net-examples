@@ -3101,6 +3101,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "decrypt-an-ods-file-encrypted-with-a-legacy-algorithm-and-upgrade-it-to-aes256-encryption.cs",
+      "title": "Decrypt an ODS file encrypted with a legacy algorithm and upgrade it to AES\u2011256 encryption."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs",
       "title": "Detect legacy encryption in a workbook and automatically upgrade it to the latest standard."
     },
