@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - verify-that-a-workbook-encrypted-with-aes256-cannot-be-opened-using-an-older-aes128-password.cs
 - validate-that-a-saved-xlsx-file-is-encrypted-by-reopening-it-and-checking-its-encryption-status.cs
 - verify-the-password-of-an-encrypted-workbook-without-fully-opening-it-using-a-lightweight-validation-method.cs
+- create-a-function-that-returns-a-boolean-indicating-whether-a-workbook-is-encrypted.cs
