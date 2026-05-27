@@ -17416,6 +17416,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "iterate-over-all-worksheets-enable-numbersastext-error-check-only-on-sheets-with-numeric-data-and-log-changes.cs",
+      "title": "Iterate over all worksheets, enable NumbersAsText error check only on sheets with numeric data, and log changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-the-worksheet-collection-and-obtain-each-sheetid-for-diagnostic-reporting.cs",
       "title": "Iterate over the worksheet collection and obtain each SheetId for diagnostic reporting."
     },

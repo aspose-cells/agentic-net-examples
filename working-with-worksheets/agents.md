@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - load-an-existing-excel-file-set-showzerovalues-to-false-and-export-result-as-html-page.cs
 - create-a-batch-processor-that-hides-zero-values-applies-80-percent-zoom-and-saves-each-workbook-as-pdf.cs
 - programmatically-set-worksheet-left-margin-to-05-inches-then-export-sheet-to-excel-972003-format.cs
+- iterate-over-all-worksheets-enable-numbersastext-error-check-only-on-sheets-with-numeric-data-and-log-changes.cs
