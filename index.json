@@ -3136,6 +3136,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-utility-that-scans-a-directory-identifies-encrypted-excel-files-and-generates-a-password-status-report.cs",
+      "title": "Create a utility that scans a directory, identifies encrypted Excel files, and generates a password status report."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "decrypt-an-encrypted-workbook-modify-cell-values-reencrypt-with-a-different-password-and-save-as-ods.cs",
       "title": "Decrypt an encrypted workbook, modify cell values, re\u2011encrypt with a different password, and save as ODS."
     },
