@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - clone-the-page-setup-of-a-template-worksheet-and-apply-it-to-a-newly-created-sheet.cs
 - programmatically-add-different-header-texts-for-odd-and-even-pages-using-the-appropriate-api-calls.cs
 - insert-a-dynamic-page-number-placeholder-into-the-center-of-the-footer-for-each-printed-page.cs
+- set-a-custom-print-area-that-excludes-hidden-rows-and-columns-to-improve-print-performance.cs

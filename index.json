@@ -17596,6 +17596,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-a-custom-print-area-that-excludes-hidden-rows-and-columns-to-improve-print-performance.cs",
+      "title": "Set a custom print area that excludes hidden rows and columns to improve print performance."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-all-worksheets-to-normal-view-mode-to-ensure-consistent-onscreen-display-across-the-workbook.cs",
       "title": "Set all worksheets to normal view mode to ensure consistent on\u2011screen display across the workbook."
     },
