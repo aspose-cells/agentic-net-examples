@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - hide-rows-5-through-15-then-enable-formula-view-on-the-same-sheet-before-saving.cs
 - set-workbook-settings-to-hide-the-horizontal-scroll-bar-keep-vertical-bar-visible-and-save.cs
 - load-a-workbook-hide-columns-c-and-d-then-export-the-file-preserving-hidden-columns.cs
+- show-formulas-on-a-hidden-worksheet-after-making-it-visible-then-save-the-workbook.cs

@@ -17416,6 +17416,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "show-formulas-on-a-hidden-worksheet-after-making-it-visible-then-save-the-workbook.cs",
+      "title": "Show formulas on a hidden worksheet after making it visible, then save the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "show-the-vertical-scroll-bar-while-hiding-the-horizontal-one-then-save-the-workbook-to-disk.cs",
       "title": "Show the vertical scroll bar while hiding the horizontal one, then save the workbook to disk."
     },
