@@ -3096,6 +3096,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-encrypt-a-set-of-workbooks-then-generate-a-csv-report-listing-file-names-and-applied-encryption-algorithms.cs",
+      "title": "Batch encrypt a set of workbooks, then generate a CSV report listing file names and applied encryption algorithms."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs",
       "title": "Batch encrypt multiple Excel files in a directory using a shared password and AES\u2011128 encryption."
     },
