@@ -17401,6 +17401,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "unhide-all-rows-in-a-worksheet-enable-formula-display-and-write-the-workbook-to-a-new-file.cs",
+      "title": "Unhide all rows in a worksheet, enable formula display, and write the workbook to a new file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },
