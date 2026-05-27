@@ -17251,6 +17251,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs",
+      "title": "Relocate a worksheet to the first position in the workbook to prioritize its visibility."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },

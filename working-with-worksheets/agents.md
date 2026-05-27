@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - duplicate-a-worksheet-and-ensure-pivot-tables-are-retained-in-the-copied-version-for-analysis.cs
 - copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs
 - move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs
+- relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs
