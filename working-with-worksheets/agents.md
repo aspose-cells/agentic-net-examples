@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs
 - shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs
 - place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs
+- enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs
