@@ -17241,6 +17241,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "after-copying-page-setup-modify-the-destination-worksheets-left-margin-to-05-inches-for-better-printing.cs",
+      "title": "After copying page setup, modify the destination worksheet's left margin to 0.5 inches for better printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-110-percent-zoom-to-a-worksheet-and-generate-pdf-with-embedded-fonts.cs",
       "title": "Apply 110 percent zoom to a worksheet and generate PDF with embedded fonts."
     },
