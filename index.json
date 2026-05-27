@@ -17346,6 +17346,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-batch-process-that-sets-identical-headers-for-all-worksheets-in-a-large-workbook.cs",
+      "title": "Create a batch process that sets identical headers for all worksheets in a large workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-batch-processor-that-hides-zero-values-applies-80-percent-zoom-and-saves-each-workbook-as-pdf.cs",
       "title": "Create a batch processor that hides zero values, applies 80 percent zoom, and saves each workbook as PDF."
     },

@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - copy-page-setup-settings-from-a-source-worksheet-to-multiple-target-worksheets-in-a-loop.cs
 - enable-printing-of-gridlines-and-headings-together-to-replicate-the-onscreen-view-on-paper.cs
 - apply-a-custom-paper-size-by-reading-paperwidth-and-paperheight-and-assigning-them-to-the-page-setup.cs
+- create-a-batch-process-that-sets-identical-headers-for-all-worksheets-in-a-large-workbook.cs
