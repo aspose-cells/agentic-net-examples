@@ -17636,6 +17636,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-an-xlsx-file-set-a3-paper-size-on-the-second-sheet-then-save-as-pdf.cs",
+      "title": "Load an XLSX file, set A3 paper size on the second sheet, then save as PDF."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-an-xlsx-workbook-and-obtain-the-paper-width-of-the-first-worksheet.cs",
       "title": "Load an XLSX workbook and obtain the paper width of the first worksheet."
     },

@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - after-copying-compare-destination-worksheets-paper-size-margins-and-orientation-to-ensure-exact-match.cs
 - use-a-loop-to-duplicate-pagesetup-settings-from-the-first-worksheet-to-all-remaining-sheets.cs
 - clone-a-worksheets-page-setup-modify-only-the-paper-height-and-apply-it-back-to-the-sheet.cs
+- load-an-xlsx-file-set-a3-paper-size-on-the-second-sheet-then-save-as-pdf.cs
