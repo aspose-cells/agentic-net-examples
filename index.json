@@ -17491,6 +17491,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-worksheet-orientation-to-landscape-enable-fittopageswide-1-and-generate-printable-pdf.cs",
+      "title": "Set worksheet orientation to landscape, enable FitToPagesWide = 1, and generate printable PDF."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-worksheet-zoom-to-75-percent-to-fit-more-content-on-screen-during-data-entry.cs",
       "title": "Set worksheet zoom to 75 percent to fit more content on screen during data entry."
     },
