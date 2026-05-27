@@ -17571,6 +17571,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-a-feature-that-logs-the-number-of-worksheets-lacking-printer-settings-after-batch-removal-operation.cs",
+      "title": "Implement a feature that logs the number of worksheets lacking printer settings after batch removal operation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-exception-handling-to-catch-invalid-custom-paper-dimensions-and-log-descriptive-error-messages.cs",
       "title": "Implement exception handling to catch invalid custom paper dimensions and log descriptive error messages."
     },
