@@ -17326,6 +17326,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-toggle-worksheet-visibility-based-on-a-condition-and-save-the-updated-file.cs",
+      "title": "Load a workbook, toggle worksheet visibility based on a condition, and save the updated file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-unhide-row-10-in-the-active-sheet-and-save-the-modified-document.cs",
       "title": "Load a workbook, unhide row 10 in the active sheet, and save the modified document."
     },
