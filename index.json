@@ -3076,6 +3076,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs",
+      "title": "Detect legacy encryption in a workbook and automatically upgrade it to the latest standard."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-the-encryption-type-of-an-ods-file-and-display-the-algorithm-name.cs",
       "title": "Detect the encryption type of an ODS file and display the algorithm name."
     },
