@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - write-a-unit-test-that-asserts-paperwidth-equals-expected-value-when-worksheet-paper-size-is-set-to-a4.cs
 - create-a-console-application-that-loads-a-workbook-prints-each-worksheets-paper-dimensions-and-exits.cs
 - develop-a-method-that-accepts-width-and-height-in-millimeters-converts-to-points-and-sets-custom-paper-size.cs
+- integrate-pagesetup-copying-into-a-workbook-merging-routine-to-preserve-original-layout-across-combined-files.cs

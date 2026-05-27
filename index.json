@@ -17591,6 +17591,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "integrate-pagesetup-copying-into-a-workbook-merging-routine-to-preserve-original-layout-across-combined-files.cs",
+      "title": "Integrate page\u2011setup copying into a workbook merging routine to preserve original layout across combined files."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
