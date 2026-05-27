@@ -17441,6 +17441,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "programmatically-read-worksheet-errorchecking-settings-log-each-enabled-check-and-write-report-to-text-file.cs",
+      "title": "Programmatically read worksheet error\u2011checking settings, log each enabled check, and write report to text file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs",
       "title": "Relocate a worksheet to the first position in the workbook to prioritize its visibility."
     },
