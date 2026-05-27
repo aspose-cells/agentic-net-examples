@@ -17281,6 +17281,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "assign-null-to-a-worksheets-printersettings-property-to-remove-its-embedded-printer-configuration.cs",
+      "title": "Assign null to a worksheet's PrinterSettings property to remove its embedded printer configuration."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "batch-process-excel-files-to-set-fittopageswide-1-fittopagestall-1-then-export-to-pdf.cs",
       "title": "Batch process Excel files to set FitToPagesWide = 1, FitToPagesTall = 1, then export to PDF."
     },

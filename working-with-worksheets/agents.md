@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - set-the-pagesetup-paper-size-of-a-worksheet-to-a2-and-verify-the-updated-dimensions.cs
 - change-the-same-worksheets-paper-size-sequentially-to-a3-a4-and-letter-recording-each-size.cs
 - apply-a4-paper-size-to-every-worksheet-in-a-workbook-using-a-foreach-loop.cs
+- assign-null-to-a-worksheets-printersettings-property-to-remove-its-embedded-printer-configuration.cs
