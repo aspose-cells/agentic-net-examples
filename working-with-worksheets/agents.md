@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - configure-the-workbook-to-print-comments-as-separate-notes-rather-than-inplace-for-audit-purposes.cs
 - set-the-print-area-using-a-named-range-instead-of-a-literal-cell-address-for-flexibility.cs
 - repeat-the-header-row-on-each-printed-page-while-also-repeating-the-first-column-as-a-title.cs
+- disable-printing-of-row-headings-to-create-a-cleaner-layout-for-a-marketing-brochure.cs
