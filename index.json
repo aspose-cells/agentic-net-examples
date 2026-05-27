@@ -17406,6 +17406,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-console-application-that-loads-a-workbook-prints-each-worksheets-paper-dimensions-and-exits.cs",
+      "title": "Create a console application that loads a workbook, prints each worksheet's paper dimensions, and exits."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-macrofree-workbook-apply-90-percent-zoom-and-save-as-html-preserving-formatting.cs",
       "title": "Create a macro\u2011free workbook, apply 90 percent zoom, and save as HTML preserving formatting."
     },
