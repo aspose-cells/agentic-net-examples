@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - programmatically-set-worksheet-left-margin-to-05-inches-then-export-sheet-to-excel-972003-format.cs
 - iterate-over-all-worksheets-enable-numbersastext-error-check-only-on-sheets-with-numeric-data-and-log-changes.cs
 - create-a-workbook-set-a-centered-header-text-and-save-the-file-as-xlsx.cs
+- add-a-left-aligned-footer-containing-the-current-date-to-each-worksheet-in-an-existing-workbook.cs

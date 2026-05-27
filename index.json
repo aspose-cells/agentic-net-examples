@@ -17211,6 +17211,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-left-aligned-footer-containing-the-current-date-to-each-worksheet-in-an-existing-workbook.cs",
+      "title": "Add a left-aligned footer containing the current date to each worksheet in an existing workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "addcopy-a-worksheet-and-specify-insertion-index-to-place-the-copy-directly-after-the-original-sheet.cs",
       "title": "AddCopy a worksheet and specify insertion index to place the copy directly after the original sheet."
     },
