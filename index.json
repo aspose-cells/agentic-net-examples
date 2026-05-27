@@ -3166,6 +3166,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-the-workbook-structure-and-then-attempt-to-delete-a-worksheet-to-confirm-deletion-is-blocked.cs",
+      "title": "Protect the workbook structure and then attempt to delete a worksheet to confirm deletion is blocked."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs",
       "title": "Protect the workbook structure, then attempt to copy a worksheet to another workbook to test enforcement."
     },
