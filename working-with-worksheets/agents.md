@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - suppress-error-values-during-printing-by-setting-printerrors-to-the-blank-enumeration-on-the-sheet.cs
 - retrieve-the-paper-width-and-height-from-pagesetup-to-calculate-custom-scaling-factors.cs
 - clear-any-existing-printer-settings-from-a-worksheet-before-applying-new-print-configuration.cs
+- clone-the-page-setup-of-a-template-worksheet-and-apply-it-to-a-newly-created-sheet.cs
