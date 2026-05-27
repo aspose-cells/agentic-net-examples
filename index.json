@@ -17246,6 +17246,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs",
+      "title": "Move a worksheet to a new position by providing the target index within the same workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs",
       "title": "Use WorksheetCollection.AddCopy overload by name to copy a worksheet and insert it after a target sheet."
     },
