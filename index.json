@@ -17466,6 +17466,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "unhide-all-columns-in-a-sheet-enable-scroll-bars-and-export-the-workbook-to-a-new-location.cs",
+      "title": "Unhide all columns in a sheet, enable scroll bars, and export the workbook to a new location."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "unhide-all-rows-in-a-worksheet-enable-formula-display-and-write-the-workbook-to-a-new-file.cs",
       "title": "Unhide all rows in a worksheet, enable formula display, and write the workbook to a new file."
     },
