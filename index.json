@@ -17576,6 +17576,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-an-xlsx-workbook-and-obtain-the-paper-width-of-the-first-worksheet.cs",
+      "title": "Load an XLSX workbook and obtain the paper width of the first worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-multiple-workbooks-from-a-folder-hide-zero-values-on-each-sheet-and-save-changes.cs",
       "title": "Load multiple workbooks from a folder, hide zero values on each sheet, and save changes."
     },
