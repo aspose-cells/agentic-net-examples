@@ -17471,6 +17471,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "develop-a-function-that-checks-whether-a-worksheets-custom-paper-size-exceeds-standard-a3-dimensions.cs",
+      "title": "Develop a function that checks whether a worksheet's custom paper size exceeds standard A3 dimensions."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "develop-a-method-that-accepts-width-and-height-in-millimeters-converts-to-points-and-sets-custom-paper-size.cs",
       "title": "Develop a method that accepts width and height in millimeters, converts to points, and sets custom paper size."
     },

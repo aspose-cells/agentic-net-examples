@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - implement-a-retry-mechanism-that-attempts-to-set-custom-paper-size-up-to-three-times-on-failure.cs
 - log-detailed-information-about-each-pagesetup-change-including-previous-and-new-paper-dimensions-to-a-log-file.cs
 - create-a-utility-that-extracts-paper-width-and-height-from-all-worksheets-and-returns-a-json-summary.cs
+- develop-a-function-that-checks-whether-a-worksheets-custom-paper-size-exceeds-standard-a3-dimensions.cs
