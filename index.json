@@ -17596,6 +17596,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "repeat-the-header-row-on-each-printed-page-while-also-repeating-the-first-column-as-a-title.cs",
+      "title": "Repeat the header row on each printed page while also repeating the first column as a title."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs",
       "title": "Retrieve a worksheet by name, display its formulas instead of values, and save the changes."
     },
