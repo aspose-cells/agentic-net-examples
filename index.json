@@ -17301,6 +17301,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-macrofree-workbook-hide-zero-values-set-custom-top-margin-and-save-as-csv.cs",
+      "title": "Create a macro\u2011free workbook, hide zero values, set custom top margin, and save as CSV."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
