@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-file-and-hide-zero-values-on-the-first-worksheet.cs
 - iterate-through-all-worksheets-set-showzerovalues-to-false-and-save-the-workbook-as-pdf.cs
 - apply-fittopageswide-1-and-fittopagestall-1-to-a-worksheet-for-single-page-printing.cs
+- set-pagesetupzoom-to-80-percent-for-a-worksheet-and-export-the-result-as-pdf.cs
