@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - place-a-watermark-picture-in-the-footer-of-all-worksheets-using-the-same-image-file-path.cs
 - define-the-print-area-as-cells-b2-through-g20-for-the-active-worksheet.cs
 - configure-rows-1-to-3-to-repeat-on-every-printed-page-of-the-selected-sheet.cs
+- set-columns-a-and-b-to-repeat-as-titles-on-each-printed-page-of-the-workbook.cs
