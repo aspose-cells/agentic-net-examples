@@ -17221,6 +17221,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-120-percent-zoom-level-to-every-worksheet-and-save-each-as-separate-xls-file.cs",
+      "title": "Apply a 120 percent zoom level to every worksheet and save each as separate XLS file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-fittopageswide-1-and-fittopagestall-1-to-a-worksheet-for-single-page-printing.cs",
       "title": "Apply FitToPagesWide = 1 and FitToPagesTall = 1 to a worksheet for single-page printing."
     },
