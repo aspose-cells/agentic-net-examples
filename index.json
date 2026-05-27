@@ -17221,6 +17221,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-fittopageswide-1-and-fittopagestall-1-to-a-worksheet-for-single-page-printing.cs",
+      "title": "Apply FitToPagesWide = 1 and FitToPagesTall = 1 to a worksheet for single-page printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs",
       "title": "Apply page break preview to every worksheet in the workbook to prepare for printing."
     },
