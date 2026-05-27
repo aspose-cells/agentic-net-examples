@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - create-a-macrofree-workbook-apply-90-percent-zoom-and-save-as-html-preserving-formatting.cs
 - programmatically-read-worksheet-errorchecking-settings-log-each-enabled-check-and-write-report-to-text-file.cs
 - use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs
+- apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs
