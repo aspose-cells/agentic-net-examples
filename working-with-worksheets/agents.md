@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - configure-rows-1-to-3-to-repeat-on-every-printed-page-of-the-selected-sheet.cs
 - set-columns-a-and-b-to-repeat-as-titles-on-each-printed-page-of-the-workbook.cs
 - enable-printing-of-gridlines-while-disabling-row-and-column-headings-for-the-current-worksheet.cs
+- turn-on-blackandwhite-printing-mode-to-reduce-ink-usage-for-the-entire-workbook.cs
