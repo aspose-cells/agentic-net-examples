@@ -3151,6 +3151,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-the-workbook-structure-and-lock-all-worksheets-then-save-the-workbook-as-an-encrypted-xlsx-file.cs",
+      "title": "Protect the workbook structure and lock all worksheets, then save the workbook as an encrypted XLSX file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "set-a-password-to-open-a-newly-created-xlsx-workbook-and-enforce-strong-encryption-before-saving.cs",
       "title": "Set a password to open a newly created XLSX workbook and enforce strong encryption before saving."
     },
