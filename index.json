@@ -17291,6 +17291,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "assign-a4-size-to-data-sheets-and-letter-size-to-summary-sheets-based-on-worksheet-role.cs",
+      "title": "Assign A4 size to data sheets and Letter size to summary sheets based on worksheet role."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "assign-null-to-a-worksheets-printersettings-property-to-remove-its-embedded-printer-configuration.cs",
       "title": "Assign null to a worksheet's PrinterSettings property to remove its embedded printer configuration."
     },
