@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs
 - set-numeric-format-000-for-a-data-field-to-display-currency-values-correctly.cs
 - load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs
+- add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs

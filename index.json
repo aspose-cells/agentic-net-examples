@@ -7336,6 +7336,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs",
+      "title": "Add a calculated field named Profit with expression [Revenue]-[Cost] to the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-predefined-style-to-all-pivottable-elements-by-calling-pivottableformatall-with-the-style.cs",
       "title": "Apply a predefined style to all PivotTable elements by calling PivotTable.FormatAll with the style."
     },
