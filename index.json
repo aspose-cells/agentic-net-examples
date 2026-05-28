@@ -7856,6 +7856,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-and-then-calculate-its-data-to-ensure-formulas-are-uptodate.cs",
+      "title": "Refresh the pivot table and then calculate its data to ensure formulas are up\u2011to\u2011date."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-the-pivot-table-programmatically-after-modifying-the-source-data.cs",
       "title": "Refresh the pivot table programmatically after modifying the source data."
     },
