@@ -7351,6 +7351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-calculated-item-to-group-multiple-product-categories-into-a-custom-group.cs",
+      "title": "Add a calculated item to group multiple product categories into a custom group."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs",
       "title": "Add a custom data field that calculates the percentage of total using a formula within the PivotTable."
     },
