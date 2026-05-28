@@ -8056,6 +8056,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-zerovalue-rows-in-the-pivot-table-to-reduce-visual-clutter.cs",
+      "title": "Hide zero\u2011value rows in the pivot table to reduce visual clutter."
+    },
+    {
+      "category": "pivot-table",
       "file": "implement-batch-processing-to-generate-pivot-tables-for-multiple-workbooks-in-a-directory.cs",
       "title": "Implement batch processing to generate pivot tables for multiple workbooks in a directory."
     },
