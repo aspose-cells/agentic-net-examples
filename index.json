@@ -7726,6 +7726,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-new-workbook-instance-and-add-a-worksheet-for-pivot-table-insertion.cs",
+      "title": "Create a new Workbook instance and add a worksheet for pivot table insertion."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-pivot-chart-linked-to-the-pivot-table-and-export-as-a-png-image-file.cs",
       "title": "Create a pivot chart linked to the pivot table and export as a PNG image file."
     },
