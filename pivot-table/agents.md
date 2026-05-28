@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs
 - retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs
 - save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs
+- update-the-source-data-of-an-existing-pivottable-by-redefining-its-sourcedata-property-accordingly.cs
