@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs
 - apply-distinct-custom-globalization-settings-to-each-workbook-before-refreshing-to-generate-multilingual-pivot-labels.cs
 - create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs
+- programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs
