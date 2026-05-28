@@ -7336,6 +7336,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-the-compact-layout-to-an-existing-pivottable-by-invoking-the-showincompactform-method.cs",
+      "title": "Apply the Compact layout to an existing PivotTable by invoking the ShowInCompactForm method."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs",
       "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
     },
