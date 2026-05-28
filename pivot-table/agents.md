@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - add-a-calculated-item-to-an-existing-field-by-calling-addcalculateditem-with-the-appropriate-expression.cs
 - remove-a-calculated-field-from-a-pivottable-using-the-calculatedfieldsremove-method-for-the-specified-field.cs
 - set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs
+- create-a-pivottable-that-consolidates-data-from-multiple-worksheets-using-the-consolidationfunction-property.cs
