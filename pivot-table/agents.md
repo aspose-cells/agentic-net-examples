@@ -268,3 +268,4 @@ Output files are written to the working directory.
 - add-a-calculated-field-that-categorizes-sales-using-if-function-for-high-medium-low.cs
 - update-an-existing-calculated-fields-formula-to-incorporate-a-new-discount-rate-parameter.cs
 - remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs
+- rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs

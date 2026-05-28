@@ -8151,6 +8151,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs",
+      "title": "Rename a PivotField after hiding it to reflect updated business terminology."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-a-cell-from-the-pivot-table-by-specifying-the-display-name-of-a-data-field.cs",
       "title": "Retrieve a cell from the pivot table by specifying the display name of a data field."
     },
