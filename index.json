@@ -7606,6 +7606,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-displayerrorstring-to-a-custom-message-for-handling-div0-calculation-errors.cs",
+      "title": "Programmatically set the PivotTable's DisplayErrorString to a custom message for handling #DIV/0! calculation errors."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs",
       "title": "Programmatically set the PivotTable's RowHeaderCaption to a localized string for international user interfaces."
     },
