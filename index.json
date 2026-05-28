@@ -7436,6 +7436,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs",
+      "title": "Enable the ShowValuesRow property to display a separate row that aggregates values for better readability."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs",
       "title": "Export a PivotTable to CSV by extracting its data rows and writing them with commas."
     },
