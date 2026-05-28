@@ -323,3 +323,4 @@ Output files are written to the working directory.
 - hide-selected-pivot-items-to-exclude-confidential-information-from-the-report-view.cs
 - set-the-pivot-table-option-to-display-zero-values-for-empty-cells.cs
 - specify-the-absolute-position-of-a-pivot-item-within-the-row-hierarchy.cs
+- refresh-the-pivot-table-after-modifying-source-worksheet-data-to-update-calculations.cs
