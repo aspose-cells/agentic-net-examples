@@ -7886,6 +7886,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs",
+      "title": "Load a workbook, locate a PivotTable, and read its RefreshDate property."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs",
       "title": "Load a workbook, set PivotItem.Position for multiple items, then save changes back to XLSX."
     },
