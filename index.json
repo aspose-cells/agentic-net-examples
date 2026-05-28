@@ -7516,6 +7516,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs",
+      "title": "Calculate pivot formulas after repositioning items to ensure dependent totals update correctly."
+    },
+    {
+      "category": "pivot-table",
       "file": "change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs",
       "title": "Change the ConsolidationFunction to Average to compute mean values in the PivotTable for better analysis."
     },

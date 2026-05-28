@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs
 - programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs
 - refresh-a-pivot-table-after-modifying-its-source-data-range-to-reflect-recent-changes.cs
+- calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs
