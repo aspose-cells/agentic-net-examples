@@ -7576,6 +7576,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs",
+      "title": "Delete an existing pivot table and replace it with a newly configured version."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-automatic-grouping-of-date-fields-in-a-pivottable-by-setting-the-groupdates-property-to-false.cs",
       "title": "Disable automatic grouping of date fields in a PivotTable by setting the GroupDates property to false."
     },

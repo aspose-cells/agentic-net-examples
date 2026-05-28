@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - enable-drilldown-functionality-on-data-fields-for-exploring-underlying-records.cs
 - add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs
 - use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs
+- delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs
