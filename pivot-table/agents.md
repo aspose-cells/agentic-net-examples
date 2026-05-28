@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs
 - refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs
 - enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs
+- retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs
