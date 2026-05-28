@@ -8431,6 +8431,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-and-log-the-external-odbc-connection-string-used-by-a-pivot-table.cs",
+      "title": "Retrieve and log the external ODBC connection string used by a pivot table."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs",
       "title": "Retrieve external data connection details from a PivotTable via its ExternalConnection property."
     },

@@ -338,3 +338,4 @@ Output files are written to the working directory.
 - apply-a-custom-sort-to-pivot-items-based-on-aggregated-sales-totals-descending.cs
 - hide-zerovalue-rows-in-the-pivot-table-to-reduce-visual-clutter.cs
 - set-the-pivot-tables-page-field-to-enable-pagination-when-printing-the-ods-document.cs
+- retrieve-and-log-the-external-odbc-connection-string-used-by-a-pivot-table.cs
