@@ -7551,6 +7551,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-a-pivottable-asynchronously-to-avoid-blocking-the-ui-thread-in-a-desktop-application-environment.cs",
+      "title": "Refresh a PivotTable asynchronously to avoid blocking the UI thread in a desktop application environment."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
       "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
     },
