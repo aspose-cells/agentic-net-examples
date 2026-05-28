@@ -8001,6 +8001,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "insert-a-pivot-table-into-the-worksheet-using-a-defined-data-source-range.cs",
+      "title": "Insert a pivot table into the worksheet using a defined data source range."
+    },
+    {
+      "category": "pivot-table",
       "file": "insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs",
       "title": "Insert column fields to display quarterly revenue across different fiscal years."
     },
