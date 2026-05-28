@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - add-a-new-calculated-field-that-computes-average-price-by-dividing-total-sales-by-quantity-within-the-pivottable.cs
 - hide-the-pivottables-field-list-pane-by-setting-the-showfieldlist-property-to-false-before-saving.cs
 - enable-the-showvaluesrow-property-only-when-a-single-data-field-exists-to-avoid-redundant-rows-in-the-pivottable.cs
+- refresh-a-pivottable-after-changing-its-consolidationfunction-to-ensure-aggregated-results-are-updated-correctly.cs
