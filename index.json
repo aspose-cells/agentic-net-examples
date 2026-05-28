@@ -8316,6 +8316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-the-type-of-external-connection-used-by-the-pivot-table-oledb-or-odbc.cs",
+      "title": "Retrieve the type of external connection used by the pivot table (OLEDB or ODBC)."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs",
       "title": "Save a workbook containing a configured PivotTable to XLSX format using default save options."
     },
