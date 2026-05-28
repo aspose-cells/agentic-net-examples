@@ -8086,6 +8086,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "save-the-workbook-to-a-memory-stream-and-then-write-the-stream-to-disk.cs",
+      "title": "Save the workbook to a memory stream and then write the stream to disk."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
       "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
     },
