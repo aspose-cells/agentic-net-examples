@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-0red-0-to-negative-values-for-visual-emphasis-and-easier-analysis.cs
 - set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs
 - load-an-excel-workbook-create-a-pivot-table-on-a-new-worksheet-and-set-its-data-source-range.cs
+- add-row-fields-to-group-sales-data-by-region-and-product-category.cs
