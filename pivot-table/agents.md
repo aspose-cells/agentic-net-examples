@@ -292,3 +292,4 @@ Output files are written to the working directory.
 - assign-a-specific-cell-range-as-the-data-source-for-the-newly-created-pivot-table.cs
 - apply-custom-ascending-sorting-to-a-row-field-based-on-its-underlying-numeric-values.cs
 - apply-custom-descending-sorting-to-a-column-field-using-its-textual-values-for-ordering.cs
+- define-a-custom-list-order-for-a-pivot-field-and-apply-it-to-control-item-sequence.cs

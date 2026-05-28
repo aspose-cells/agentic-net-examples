@@ -7736,6 +7736,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "define-a-custom-list-order-for-a-pivot-field-and-apply-it-to-control-item-sequence.cs",
+      "title": "Define a custom list order for a pivot field and apply it to control item sequence."
+    },
+    {
+      "category": "pivot-table",
       "file": "define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs",
       "title": "Define a custom number format '0.00%' for a percentage field within the PivotTable."
     },
