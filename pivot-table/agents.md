@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - assign-the-custom-globalization-instance-to-workbooksettingsglobalizationsettingspivotsettings-for-the-loaded-workbook.cs
 - refresh-the-pivot-table-and-then-calculate-its-data-to-ensure-formulas-are-uptodate.cs
 - retrieve-a-pivotitem-from-a-row-field-and-read-its-absolute-position-property.cs
+- set-the-pivotitemposition-to-a-specific-index-after-calling-refreshdata-and-calculatedata.cs
