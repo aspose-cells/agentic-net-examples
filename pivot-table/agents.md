@@ -312,3 +312,4 @@ Output files are written to the working directory.
 - add-both-a-top-10-filter-and-a-label-filter-to-the-same-pivot-field-for-combined-criteria.cs
 - clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs
 - set-showvaluessettingcalculationtype-to-ranklargesttosmallest-for-multiple-fields-uniformly.cs
+- enable-auto-format-for-a-pivot-table-during-creation-to-apply-default-visual-styling.cs
