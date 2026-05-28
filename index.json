@@ -7506,6 +7506,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-sort-to-pivot-items-based-on-aggregated-sales-totals-descending.cs",
+      "title": "Apply a custom sort to pivot items based on aggregated sales totals descending."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-style-to-the-pivottables-data-cells-only-by-using-formatall-with-a-specific-cell-style.cs",
       "title": "Apply a custom style to the PivotTable's data cells only by using FormatAll with a specific cell style."
     },
