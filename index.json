@@ -7351,6 +7351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-custom-tooltip-to-a-pivottable-field-by-setting-its-description-property-with-the-desired-text.cs",
+      "title": "Add a custom tooltip to a PivotTable field by setting its Description property with the desired text."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-new-worksheet-copy-source-data-and-create-a-linked-pivottable-referencing-that-data.cs",
       "title": "Add a new worksheet, copy source data, and create a linked PivotTable referencing that data."
     },

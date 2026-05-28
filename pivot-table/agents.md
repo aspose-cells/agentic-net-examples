@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs
 - enable-the-showdrilldownbuttons-property-to-allow-users-to-expand-aggregated-cells-directly-from-the-pivottable.cs
 - set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs
+- add-a-custom-tooltip-to-a-pivottable-field-by-setting-its-description-property-with-the-desired-text.cs
