@@ -7621,6 +7621,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-expand-only-the-first-level-of-items-in-a-hierarchical-pivottable-to-provide-a-concise-initial-view.cs",
+      "title": "Programmatically expand only the first level of items in a hierarchical PivotTable to provide a concise initial view."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-hide-the-pivottables-field-headers-by-setting-the-showfieldheaders-property-to-false.cs",
       "title": "Programmatically hide the PivotTable's field headers by setting the ShowFieldHeaders property to false."
     },
