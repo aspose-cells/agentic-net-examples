@@ -7831,6 +7831,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-with-default-loadoptions-and-refresh-its-first-pivot-table.cs",
+      "title": "Load a workbook with default LoadOptions and refresh its first pivot table."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-an-excel-workbook-create-a-pivot-table-on-a-new-worksheet-and-set-its-data-source-range.cs",
       "title": "Load an Excel workbook, create a pivot table on a new worksheet, and set its data source range."
     },
