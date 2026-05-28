@@ -7646,6 +7646,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs",
+      "title": "Set the PivotTable's EnableRefreshOnOpen property to false to prevent automatic data refresh on workbook opening."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs",
       "title": "Set the PivotTable's MissingItemsLimit to a high number to include all possible items during refresh."
     },
