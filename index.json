@@ -8336,6 +8336,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "save-the-modified-workbook-as-xlsx-after-applying-pivot-table-changes-and-custom-styles.cs",
+      "title": "Save the modified workbook as XLSX after applying pivot table changes and custom styles."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs",
       "title": "Save the modified workbook to a specified file path after pivot operations."
     },
