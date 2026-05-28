@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-create-a-pivot-table-on-a-new-worksheet-and-set-its-data-source-range.cs
 - add-row-fields-to-group-sales-data-by-region-and-product-category.cs
 - insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs
+- create-data-fields-with-sum-aggregation-to-calculate-total-units-sold.cs
