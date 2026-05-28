@@ -7601,6 +7601,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "display-null-values-as-the-word-na-for-clearer-data-interpretation.cs",
+      "title": "Display null values as the word 'N/A' for clearer data interpretation."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs",
       "title": "Enable automatic refresh on workbook open so the pivot table updates."
     },
