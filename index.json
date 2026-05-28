@@ -7681,6 +7681,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs",
+      "title": "Refresh a PivotTable in a background thread and update the UI after completion using a callback method."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
       "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
     },
