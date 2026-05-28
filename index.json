@@ -7416,6 +7416,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
+      "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
       "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
     },
