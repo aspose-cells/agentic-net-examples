@@ -7606,6 +7606,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs",
+      "title": "Insert column fields to display quarterly revenue across different fiscal years."
+    },
+    {
+      "category": "pivot-table",
       "file": "iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs",
       "title": "Iterate through all PivotTables in a workbook and apply the Outline layout to each one."
     },
