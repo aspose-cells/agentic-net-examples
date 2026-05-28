@@ -7491,6 +7491,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-an-ascending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
+      "title": "Apply an ascending custom sort order to a PivotField using the AutoSort property."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs",
       "title": "Apply conditional formatting to PivotTable values that exceed a threshold using the FormatCondition feature."
     },
