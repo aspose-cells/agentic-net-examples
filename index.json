@@ -7801,6 +7801,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs",
+      "title": "Load a workbook, set PivotItem.Position for multiple items, then save changes back to XLSX."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-an-excel-workbook-create-a-pivot-table-on-a-new-worksheet-and-set-its-data-source-range.cs",
       "title": "Load an Excel workbook, create a pivot table on a new worksheet, and set its data source range."
     },

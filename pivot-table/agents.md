@@ -218,3 +218,4 @@ Output files are written to the working directory.
 - iterate-over-each-pivotfield-list-all-pivotitems-and-log-their-absolute-positions-for-debugging.cs
 - move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs
 - create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs
+- load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs
