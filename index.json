@@ -8006,6 +8006,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "group-numeric-pivot-field-values-into-custom-ranges-for-better-data-segmentation.cs",
+      "title": "Group numeric pivot field values into custom ranges for better data segmentation."
+    },
+    {
+      "category": "pivot-table",
       "file": "group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs",
       "title": "Group related date fields in a PivotTable by month and year using GroupFields method."
     },

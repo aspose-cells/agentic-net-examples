@@ -334,3 +334,4 @@ Output files are written to the working directory.
 - create-a-pivot-chart-linked-to-the-pivot-table-and-export-both-to-an-ods-file.cs
 - refresh-all-pivot-tables-in-a-workbook-after-bulk-data-import-to-ensure-consistency.cs
 - delete-a-pivot-table-from-its-worksheet-and-confirm-no-remaining-pivot-objects.cs
+- group-numeric-pivot-field-values-into-custom-ranges-for-better-data-segmentation.cs
