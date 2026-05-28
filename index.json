@@ -7416,6 +7416,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs",
+      "title": "After applying custom globalization, refresh the pivot table and verify that all label texts are translated."
+    },
+    {
+      "category": "pivot-table",
       "file": "after-deleting-a-pivot-table-verify-that-the-worksheet-no-longer-contains-any-pivot-objects.cs",
       "title": "After deleting a pivot table, verify that the worksheet no longer contains any pivot objects."
     },
