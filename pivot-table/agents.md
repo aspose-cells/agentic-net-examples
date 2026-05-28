@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs
 - iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs
 - batch-create-pivottables-on-multiple-worksheets-by-looping-over-data-ranges-and-calling-the-add-method.cs
+- export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs
