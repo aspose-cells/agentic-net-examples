@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - export-the-pivot-table-and-its-chart-to-a-pdf-document-preserving-layout.cs
 - display-null-values-as-the-word-na-for-clearer-data-interpretation.cs
 - enable-background-refresh-to-improve-ui-responsiveness-while-updates-occur-asynchronously.cs
+- apply-a-custom-number-format-to-display-quantities-with-thousand-separators-and-no-decimals.cs
