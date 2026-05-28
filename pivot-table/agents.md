@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - set-the-pivottables-showvaluesaspercent-property-to-true-for-all-data-fields-to-normalize-values-across-columns.cs
 - programmatically-expand-only-the-first-level-of-items-in-a-hierarchical-pivottable-to-provide-a-concise-initial-view.cs
 - collapse-all-items-in-the-column-area-after-refresh-to-present-a-summarized-report-with-minimal-detail.cs
+- set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs

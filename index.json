@@ -7756,6 +7756,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs",
+      "title": "Set the PivotTable's EnableMultipleSelection property to false to enforce single selection behavior in filter dialogs."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs",
       "title": "Set the PivotTable's EnableRefreshOnOpen property to false to prevent automatic data refresh on workbook opening."
     },
