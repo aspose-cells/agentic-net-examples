@@ -7576,6 +7576,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "compare-memory-usage-between-loading-with-cache-parsing-enabled-and-disabled-for-the-same-file.cs",
+      "title": "Compare memory usage between loading with cache parsing enabled and disabled for the same file."
+    },
+    {
+      "category": "pivot-table",
       "file": "configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs",
       "title": "Configure the PivotTable to display grand totals for rows only by setting ShowRowGrandTotals true."
     },
