@@ -7836,6 +7836,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "read-the-positioninsameparentnode-of-a-pivot-item-to-determine-its-current-ordering-within-the-field.cs",
+      "title": "Read the PositionInSameParentNode of a pivot item to determine its current ordering within the field."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-a-pivottable-after-changing-its-consolidationfunction-to-ensure-aggregated-results-are-updated-correctly.cs",
       "title": "Refresh a PivotTable after changing its ConsolidationFunction to ensure aggregated results are updated correctly."
     },
