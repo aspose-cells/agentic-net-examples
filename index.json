@@ -8481,6 +8481,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivot-table-option-to-display-zero-values-for-empty-cells.cs",
+      "title": "Set the pivot table option to display zero values for empty cells."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs",
       "title": "Set the pivot table to show row grand totals but hide column grand totals."
     },
