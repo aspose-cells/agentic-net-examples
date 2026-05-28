@@ -7861,6 +7861,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-all-nested-child-pivot-tables-of-a-parent-pivot-table-to-synchronize-data-hierarchy.cs",
+      "title": "Refresh all nested child pivot tables of a parent pivot table to synchronize data hierarchy."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
       "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
     },
