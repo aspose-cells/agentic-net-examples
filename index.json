@@ -8156,6 +8156,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs",
+      "title": "Use PivotItem.Move with count -1 and isSameParent true to shift an item upward within its group."
+    },
+    {
+      "category": "pivot-table",
       "file": "validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs",
       "title": "Validate that a PivotTable contains at least one data field before performing any calculations."
     },
