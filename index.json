@@ -7426,6 +7426,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-pivottable-to-use-the-default-report-layout-by-resetting-the-showincompactform-setting.cs",
+      "title": "Configure the PivotTable to use the default report layout by resetting the ShowInCompactForm setting."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs",
       "title": "Create a custom Style object, configure its font color, and apply it using PivotTable.Format."
     },
