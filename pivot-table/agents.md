@@ -279,3 +279,4 @@ Output files are written to the working directory.
 - hide-the-pivottable-ribbon-interface-to-provide-a-cleaner-view-during-runtime.cs
 - show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs
 - retrieve-the-external-data-connection-string-associated-with-a-pivottable-for-auditing.cs
+- modify-the-external-connection-of-a-pivottable-to-point-to-a-new-database-server.cs

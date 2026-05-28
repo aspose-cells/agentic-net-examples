@@ -8001,6 +8001,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "modify-the-external-connection-of-a-pivottable-to-point-to-a-new-database-server.cs",
+      "title": "Modify the external connection of a PivotTable to point to a new database server."
+    },
+    {
+      "category": "pivot-table",
       "file": "move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs",
       "title": "Move a pivot item from the column area to the row area by changing its parent field."
     },
