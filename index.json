@@ -7831,6 +7831,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-auto-format-for-a-pivot-table-during-creation-to-apply-default-visual-styling.cs",
+      "title": "Enable auto format for a pivot table during creation to apply default visual styling."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs",
       "title": "Enable automatic refresh on workbook open so the pivot table updates."
     },
