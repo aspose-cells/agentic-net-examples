@@ -7401,6 +7401,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-drillthrough-functionality-for-a-pivottable-by-setting-the-enabledrillthrough-option-to-true.cs",
+      "title": "Enable drill\u2011through functionality for a PivotTable by setting the EnableDrillThrough option to true."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs",
       "title": "Export a PivotTable to CSV by extracting its data rows and writing them with commas."
     },
