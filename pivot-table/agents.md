@@ -321,3 +321,4 @@ Output files are written to the working directory.
 - group-the-pivot-tables-date-field-by-months-and-years-for-hierarchical-analysis.cs
 - apply-a-custom-descending-alphabetical-sort-to-product-category-pivot-items.cs
 - hide-selected-pivot-items-to-exclude-confidential-information-from-the-report-view.cs
+- set-the-pivot-table-option-to-display-zero-values-for-empty-cells.cs
