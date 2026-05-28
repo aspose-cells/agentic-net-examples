@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - create-data-fields-with-sum-aggregation-to-calculate-total-units-sold.cs
 - apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs
 - set-the-pivot-table-option-to-display-empty-cells-as-a-dash-character.cs
+- refresh-the-pivot-table-programmatically-after-modifying-the-source-data.cs

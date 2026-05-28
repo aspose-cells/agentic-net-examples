@@ -7726,6 +7726,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-programmatically-after-modifying-the-source-data.cs",
+      "title": "Refresh the pivot table programmatically after modifying the source data."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-a-calculated-field-from-a-pivottable-using-the-calculatedfieldsremove-method-for-the-specified-field.cs",
       "title": "Remove a calculated field from a PivotTable using the CalculatedFields.Remove method for the specified field."
     },
