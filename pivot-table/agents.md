@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - set-the-pivottables-showvaluesrow-property-to-false-to-hide-the-additional-aggregated-values-row.cs
 - enable-the-showexpandcollapsebuttons-property-to-provide-visual-cues-for-hierarchical-data-navigation-within-the-pivottable.cs
 - programmatically-set-the-pivottables-datafieldseparator-to-a-custom-character-for-multifield-values-representation.cs
+- add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs
