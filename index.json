@@ -7461,6 +7461,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-the-display-of-item-labels-in-the-values-area-by-setting-the-showvaluescolumn-property-true.cs",
+      "title": "Enable the display of item labels in the values area by setting the ShowValuesColumn property true."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs",
       "title": "Enable the ShowValuesRow property to display a separate row that aggregates values for better readability."
     },
