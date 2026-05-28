@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs
 - use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs
 - delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs
+- show-error-values-as-zero-to-avoid-displaying-div0-messages.cs
