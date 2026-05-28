@@ -337,3 +337,4 @@ Output files are written to the working directory.
 - group-numeric-pivot-field-values-into-custom-ranges-for-better-data-segmentation.cs
 - apply-a-custom-sort-to-pivot-items-based-on-aggregated-sales-totals-descending.cs
 - hide-zerovalue-rows-in-the-pivot-table-to-reduce-visual-clutter.cs
+- set-the-pivot-tables-page-field-to-enable-pagination-when-printing-the-ods-document.cs
