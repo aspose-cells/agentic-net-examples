@@ -7776,6 +7776,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivot-table-option-to-display-empty-cells-as-a-dash-character.cs",
+      "title": "Set the pivot table option to display empty cells as a dash character."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs",
       "title": "Set the PivotTable's AllowMultipleFilters property to false to restrict filter selections for end users."
     },
