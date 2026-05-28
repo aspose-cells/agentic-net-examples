@@ -7631,6 +7631,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "export-pivot-table-data-to-a-csv-file-while-preserving-column-headers-and-data-types.cs",
+      "title": "Export pivot table data to a CSV file while preserving column headers and data types."
+    },
+    {
+      "category": "pivot-table",
       "file": "group-date-fields-by-month-and-year-to-summarize-sales-trends.cs",
       "title": "Group date fields by month and year to summarize sales trends."
     },
