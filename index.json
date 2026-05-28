@@ -7396,6 +7396,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs",
+      "title": "Export a PivotTable to CSV by extracting its data rows and writing them with commas."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs",
       "title": "Export a workbook with PivotTables to PDF format while preserving all pivot formatting details."
     },
