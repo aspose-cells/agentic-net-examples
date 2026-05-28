@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - programmatically-set-the-pivottables-datacaption-to-sales-amount-for-clearer-column-naming-in-reports.cs
 - refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs
 - apply-a-custom-number-format-0red-0-to-negative-values-for-visual-emphasis-and-easier-analysis.cs
+- set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs

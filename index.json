@@ -7816,6 +7816,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs",
+      "title": "Set the PivotTable's ShowGrandTotalsForRows property to true to display row totals at the bottom of the report."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-showvaluesaspercent-property-to-true-for-all-data-fields-to-normalize-values-across-columns.cs",
       "title": "Set the PivotTable's ShowValuesAsPercent property to true for all data fields to normalize values across columns."
     },
