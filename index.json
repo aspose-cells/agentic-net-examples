@@ -8316,6 +8316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-a-label-filter-on-a-data-field-to-include-only-entries-matching-specific-text.cs",
+      "title": "Set a label filter on a data field to include only entries matching specific text."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
       "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
     },
