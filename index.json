@@ -8321,6 +8321,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "validate-that-attempting-to-retrieve-a-cell-with-an-invalid-display-name-throws-the-expected-exception.cs",
+      "title": "Validate that attempting to retrieve a cell with an invalid display name throws the expected exception."
+    },
+    {
+      "category": "pivot-table",
       "file": "verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs",
       "title": "Verify that cell content length does not exceed 255 characters when compatibility is enabled."
     },

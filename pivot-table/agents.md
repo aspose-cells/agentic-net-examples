@@ -253,3 +253,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-network-share-modify-compatibility-and-save-locally-for-distribution.cs
 - load-a-workbook-from-a-stream-enable-cache-parsing-modify-the-pivot-and-write-back-to-the-stream.cs
 - implement-trycatch-handling-when-retrieving-a-cell-by-a-nonexistent-display-name-to-prevent-crashes.cs
+- validate-that-attempting-to-retrieve-a-cell-with-an-invalid-display-name-throws-the-expected-exception.cs
