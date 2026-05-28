@@ -7391,6 +7391,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs",
+      "title": "Configure the PivotTable to hide empty rows by setting the HideEmptyRows property to true."
+    },
+    {
+      "category": "pivot-table",
       "file": "configure-the-pivottable-to-use-the-default-data-source-connection-string-for-external-data-retrieval-operations.cs",
       "title": "Configure the PivotTable to use the default data source connection string for external data retrieval operations."
     },
