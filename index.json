@@ -8101,6 +8101,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-all-pivottables-in-a-workbook-sequentially-to-synchronize-data-across-reports.cs",
+      "title": "Refresh all PivotTables in a workbook sequentially to synchronize data across reports."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs",
       "title": "Refresh nested pivot tables recursively to ensure all child tables reflect updated source data."
     },
