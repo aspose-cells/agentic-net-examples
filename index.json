@@ -7441,6 +7441,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs",
+      "title": "Programmatically reorder PivotFields within the row area to change the data hierarchy display order."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
       "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
     },
