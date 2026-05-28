@@ -7611,6 +7611,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-background-refresh-to-improve-ui-responsiveness-while-updates-occur-asynchronously.cs",
+      "title": "Enable background refresh to improve UI responsiveness while updates occur asynchronously."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-drilldown-functionality-on-data-fields-for-exploring-underlying-records.cs",
       "title": "Enable drill\u2011down functionality on data fields for exploring underlying records."
     },

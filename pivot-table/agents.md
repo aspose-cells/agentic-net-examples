@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - create-a-timeline-filter-for-the-date-field-to-select-custom-time-periods.cs
 - export-the-pivot-table-and-its-chart-to-a-pdf-document-preserving-layout.cs
 - display-null-values-as-the-word-na-for-clearer-data-interpretation.cs
+- enable-background-refresh-to-improve-ui-responsiveness-while-updates-occur-asynchronously.cs
