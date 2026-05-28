@@ -341,3 +341,4 @@ Output files are written to the working directory.
 - retrieve-and-log-the-external-odbc-connection-string-used-by-a-pivot-table.cs
 - disable-the-pivot-table-ribbon-and-toolbar-in-the-ods-output-for-minimal-ui.cs
 - use-pivottablecalculatedata-after-adding-calculated-fields-to-update-results-accurately.cs
+- save-the-workbook-after-disabling-ribbons-to-ensure-settings-are-persisted-in-ods.cs

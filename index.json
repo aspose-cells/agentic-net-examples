@@ -8486,6 +8486,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "save-the-workbook-after-disabling-ribbons-to-ensure-settings-are-persisted-in-ods.cs",
+      "title": "Save the workbook after disabling ribbons to ensure settings are persisted in ODS."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs",
       "title": "Save the workbook as PDF after removing unwanted pivot tables to produce a clean report."
     },
