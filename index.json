@@ -7346,6 +7346,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
+      "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
+    },
+    {
+      "category": "pivot-table",
       "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
       "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
     },
