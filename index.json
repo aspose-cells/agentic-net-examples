@@ -7371,6 +7371,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs",
+      "title": "Delete a PivotTable from the worksheet using worksheet.PivotTables.RemoveAt with the appropriate index."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs",
       "title": "Hide a specific PivotField from the report area by setting its Visible property to false."
     },
