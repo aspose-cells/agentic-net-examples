@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - add-row-fields-to-group-sales-data-by-region-and-product-category.cs
 - insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs
 - create-data-fields-with-sum-aggregation-to-calculate-total-units-sold.cs
+- apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs
