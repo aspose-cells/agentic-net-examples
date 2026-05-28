@@ -7996,6 +7996,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-selected-pivot-items-to-exclude-confidential-information-from-the-report-view.cs",
+      "title": "Hide selected pivot items to exclude confidential information from the report view."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-subtotals-for-specific-row-fields-to-simplify-the-pivot-view.cs",
       "title": "Hide subtotals for specific row fields to simplify the pivot view."
     },
