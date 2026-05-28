@@ -7436,6 +7436,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-both-a-top-10-filter-and-a-label-filter-to-the-same-pivot-field-for-combined-criteria.cs",
+      "title": "Add both a Top 10 filter and a label filter to the same pivot field for combined criteria."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs",
       "title": "Add conditional formatting to highlight rows where profit margin exceeds twenty percent."
     },
