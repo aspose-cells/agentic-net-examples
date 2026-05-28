@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - set-the-pivottables-datacaption-property-to-a-custom-label-for-the-values-column-header.cs
 - enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs
 - disable-automatic-grouping-of-date-fields-in-a-pivottable-by-setting-the-groupdates-property-to-false.cs
+- programmatically-expand-all-collapsed-items-in-a-pivottable-using-the-expandall-method-for-full-visibility.cs

@@ -7456,6 +7456,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-expand-all-collapsed-items-in-a-pivottable-using-the-expandall-method-for-full-visibility.cs",
+      "title": "Programmatically expand all collapsed items in a PivotTable using the ExpandAll method for full visibility."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs",
       "title": "Programmatically reorder PivotFields within the row area to change the data hierarchy display order."
     },
