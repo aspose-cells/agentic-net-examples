@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - remove-a-calculated-field-from-a-pivottable-using-the-calculatedfieldsremove-method-for-the-specified-field.cs
 - set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs
 - create-a-pivottable-that-consolidates-data-from-multiple-worksheets-using-the-consolidationfunction-property.cs
+- set-the-consolidationfunction-to-sum-for-aggregating-values-across-source-ranges-accurately-within-the-pivottable.cs
