@@ -7841,6 +7841,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "implement-trycatch-handling-when-retrieving-a-cell-by-a-nonexistent-display-name-to-prevent-crashes.cs",
+      "title": "Implement try\u2011catch handling when retrieving a cell by a non\u2011existent display name to prevent crashes."
+    },
+    {
+      "category": "pivot-table",
       "file": "insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs",
       "title": "Insert column fields to display quarterly revenue across different fiscal years."
     },
