@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs
 - apply-a-theme-color-to-all-pivottable-headers-using-the-formatall-method-with-a-predefined-style.cs
 - programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs
+- add-a-calculated-item-to-an-existing-field-by-calling-addcalculateditem-with-the-appropriate-expression.cs
