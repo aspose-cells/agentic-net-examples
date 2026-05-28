@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - update-the-odbc-connection-string-of-a-pivottables-external-source-to-point-to-a-new-server-location.cs
 - programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs
 - enable-the-showdrilldownbuttons-property-to-allow-users-to-expand-aggregated-cells-directly-from-the-pivottable.cs
+- set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs
