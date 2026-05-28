@@ -7396,6 +7396,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "show-a-previously-hidden-column-field-in-the-pivottable-by-toggling-its-visible-flag-back.cs",
+      "title": "Show a previously hidden column field in the PivotTable by toggling its Visible flag back."
+    },
+    {
+      "category": "pivot-table",
       "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
       "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
     },
