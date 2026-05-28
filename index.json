@@ -7351,6 +7351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-custom-grouping-to-a-date-field-by-defining-a-groupinterval-of-months-for-better-summarization.cs",
+      "title": "Add a custom grouping to a date field by defining a GroupInterval of months for better summarization."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-custom-tooltip-to-a-pivottable-field-by-setting-its-description-property-with-the-desired-text.cs",
       "title": "Add a custom tooltip to a PivotTable field by setting its Description property with the desired text."
     },
