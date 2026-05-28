@@ -7416,6 +7416,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs",
+      "title": "Enable repeat item labels in rows by setting the RepeatItemLabels property to true on the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs",
       "title": "Export a PivotTable to CSV by extracting its data rows and writing them with commas."
     },
