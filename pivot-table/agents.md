@@ -303,3 +303,4 @@ Output files are written to the working directory.
 - retrieve-the-external-connection-object-of-a-pivot-table-and-log-its-connection-string.cs
 - retrieve-the-type-of-external-connection-used-by-the-pivot-table-oledb-or-odbc.cs
 - update-the-external-connection-string-of-a-pivot-table-then-refresh-to-load-new-data.cs
+- refresh-pivot-table-data-programmatically-after-modifying-the-underlying-source-worksheet-range.cs
