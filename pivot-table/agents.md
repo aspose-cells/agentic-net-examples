@@ -287,3 +287,4 @@ Output files are written to the working directory.
 - clone-an-existing-pivottable-modify-its-data-source-range-and-insert-it-into-a-new-worksheet.cs
 - load-a-workbook-from-a-file-path-to-prepare-for-pivot-table-operations.cs
 - open-a-workbook-from-a-memory-stream-for-programmatic-manipulation-of-its-pivot-tables.cs
+- read-an-encrypted-excel-file-using-a-password-and-access-its-existing-pivot-tables.cs
