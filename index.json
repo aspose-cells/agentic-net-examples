@@ -7851,6 +7851,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-through-all-pivot-fields-and-log-each-fields-display-name-to-a-text-file.cs",
+      "title": "Iterate through all pivot fields and log each field\u2019s display name to a text file."
+    },
+    {
+      "category": "pivot-table",
       "file": "iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs",
       "title": "Iterate through all PivotTables in a workbook and apply the Outline layout to each one."
     },

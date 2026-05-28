@@ -247,3 +247,4 @@ Output files are written to the working directory.
 - measure-memory-consumption-while-loading-a-workbook-with-parsingpivotcachedrecords-set-to-true.cs
 - compare-memory-usage-between-loading-with-cache-parsing-enabled-and-disabled-for-the-same-file.cs
 - log-the-duration-required-to-refresh-a-pivot-table-after-loading-cache-records.cs
+- iterate-through-all-pivot-fields-and-log-each-fields-display-name-to-a-text-file.cs
