@@ -7381,6 +7381,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs",
+      "title": "Change the ConsolidationFunction to Average to compute mean values in the PivotTable for better analysis."
+    },
+    {
+      "category": "pivot-table",
       "file": "clear-all-page-fields-from-a-pivottable-by-invoking-the-pivottablepagefieldsclear-method-first.cs",
       "title": "Clear all page fields from a PivotTable by invoking the PivotTable.PageFields.Clear method first."
     },
