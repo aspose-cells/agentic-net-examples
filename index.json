@@ -7366,6 +7366,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
+      "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
       "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
     },
