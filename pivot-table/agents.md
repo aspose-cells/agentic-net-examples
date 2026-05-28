@@ -317,3 +317,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-instance-and-add-a-worksheet-for-pivot-table-insertion.cs
 - insert-a-pivot-table-into-the-worksheet-using-a-defined-data-source-range.cs
 - configure-pivot-table-rows-columns-and-data-fields-to-summarize-sales-by-region.cs
+- add-a-calculated-field-that-computes-profit-margin-as-profit-divided-by-revenue.cs
