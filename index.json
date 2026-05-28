@@ -7741,6 +7741,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-pivot-table-ribbons-programmatically-after-loading-the-workbook-to-restore-default-ui-elements.cs",
+      "title": "Enable pivot table ribbons programmatically after loading the workbook to restore default UI elements."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs",
       "title": "Enable repeat item labels in rows by setting the RepeatItemLabels property to true on the PivotTable."
     },
