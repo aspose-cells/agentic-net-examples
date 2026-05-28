@@ -7546,6 +7546,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "assign-a-specific-cell-range-as-the-data-source-for-the-newly-created-pivot-table.cs",
+      "title": "Assign a specific cell range as the data source for the newly created pivot table."
+    },
+    {
+      "category": "pivot-table",
       "file": "assign-different-custom-globalization-objects-to-separate-worksheets-within-the-same-workbook-for-localized-sections.cs",
       "title": "Assign different custom globalization objects to separate worksheets within the same workbook for localized sections."
     },
