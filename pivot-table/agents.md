@@ -340,3 +340,4 @@ Output files are written to the working directory.
 - set-the-pivot-tables-page-field-to-enable-pagination-when-printing-the-ods-document.cs
 - retrieve-and-log-the-external-odbc-connection-string-used-by-a-pivot-table.cs
 - disable-the-pivot-table-ribbon-and-toolbar-in-the-ods-output-for-minimal-ui.cs
+- use-pivottablecalculatedata-after-adding-calculated-fields-to-update-results-accurately.cs
