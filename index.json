@@ -7716,6 +7716,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs",
+      "title": "Export the refreshed pivot table to a PDF file preserving layout and calculated values."
+    },
+    {
+      "category": "pivot-table",
       "file": "group-date-fields-by-month-and-year-to-summarize-sales-trends.cs",
       "title": "Group date fields by month and year to summarize sales trends."
     },

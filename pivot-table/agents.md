@@ -204,3 +204,4 @@ Output files are written to the working directory.
 - read-the-positioninsameparentnode-of-a-pivot-item-to-determine-its-current-ordering-within-the-field.cs
 - after-moving-items-verify-that-their-position-values-reflect-the-new-order-by-iterating-over-the-fields.cs
 - refresh-all-nested-child-pivot-tables-of-a-parent-pivot-table-to-synchronize-data-hierarchy.cs
+- export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs
