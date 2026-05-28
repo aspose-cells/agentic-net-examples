@@ -7541,6 +7541,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-consolidationfunction-to-sum-for-aggregating-values-across-source-ranges-accurately-within-the-pivottable.cs",
+      "title": "Set the ConsolidationFunction to Sum for aggregating values across source ranges accurately within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-datacaption-property-to-a-custom-label-for-the-values-column-header.cs",
       "title": "Set the PivotTable's DataCaption property to a custom label for the values column header."
     },
