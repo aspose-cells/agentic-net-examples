@@ -7436,6 +7436,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-value-filter-to-display-only-items-with-sales-greater-than-a-threshold.cs",
+      "title": "Apply a value filter to display only items with sales greater than a threshold."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs",
       "title": "Apply conditional formatting to PivotTable values that exceed a threshold using the FormatCondition feature."
     },
