@@ -8296,6 +8296,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-all-pivot-tables-in-a-workbook-after-bulk-data-import-to-ensure-consistency.cs",
+      "title": "Refresh all pivot tables in a workbook after bulk data import to ensure consistency."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
       "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
     },
