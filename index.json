@@ -7561,6 +7561,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs",
+      "title": "Retrieve external data connection details from a PivotTable via its ExternalConnection property."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
       "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
     },
