@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs
 - load-an-excel-workbook-create-a-pivot-table-on-a-new-worksheet-and-set-its-data-source-range.cs
 - add-row-fields-to-group-sales-data-by-region-and-product-category.cs
+- insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs
