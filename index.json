@@ -7596,6 +7596,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "clone-an-existing-pivottable-modify-its-data-source-range-and-insert-it-into-a-new-worksheet.cs",
+      "title": "Clone an existing PivotTable, modify its data source range, and insert it into a new worksheet."
+    },
+    {
+      "category": "pivot-table",
       "file": "clone-an-existing-pivottable-to-a-new-worksheet-while-preserving-its-layout-and-formatting-settings.cs",
       "title": "Clone an existing PivotTable to a new worksheet while preserving its layout and formatting settings."
     },
