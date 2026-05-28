@@ -7391,6 +7391,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-column-grand-totals-in-a-pivottable-by-setting-showcolumngrandtotals-property-to-false.cs",
+      "title": "Disable column grand totals in a PivotTable by setting ShowColumnGrandTotals property to false."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs",
       "title": "Export a workbook with PivotTables to PDF format while preserving all pivot formatting details."
     },

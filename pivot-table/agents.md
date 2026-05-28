@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs
 - apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs
 - configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs
+- disable-column-grand-totals-in-a-pivottable-by-setting-showcolumngrandtotals-property-to-false.cs
