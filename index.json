@@ -7456,6 +7456,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-pivottable-that-uses-a-named-table-as-its-source-for-dynamic-range-handling-and-updates.cs",
+      "title": "Create a PivotTable that uses a named table as its source for dynamic range handling and updates."
+    },
+    {
+      "category": "pivot-table",
       "file": "customize-the-pivottables-report-filter-caption-by-assigning-a-new-descriptive-string-to-its-caption-property.cs",
       "title": "Customize the PivotTable's report filter caption by assigning a new descriptive string to its Caption property."
     },
