@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs
 - update-the-source-data-of-an-existing-pivottable-by-redefining-its-sourcedata-property-accordingly.cs
 - apply-a-custom-number-format-to-the-pivottables-grand-total-row-for-clearer-presentation-of-totals.cs
+- add-a-new-worksheet-copy-source-data-and-create-a-linked-pivottable-referencing-that-data.cs
