@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs
 - create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs
 - delete-pivot-tables-from-a-worksheet-based-on-a-naming-convention-that-starts-with-temp_-prefix.cs
+- load-a-workbook-with-default-loadoptions-and-refresh-its-first-pivot-table.cs
