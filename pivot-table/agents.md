@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - enable-background-refresh-to-improve-ui-responsiveness-while-updates-occur-asynchronously.cs
 - apply-a-custom-number-format-to-display-quantities-with-thousand-separators-and-no-decimals.cs
 - cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs
+- add-a-calculated-item-to-group-multiple-product-categories-into-a-custom-group.cs
