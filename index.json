@@ -7826,6 +7826,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-row-grand-totals-in-a-pivot-table-to-simplify-the-summary-view.cs",
+      "title": "Disable row grand totals in a pivot table to simplify the summary view."
+    },
+    {
+      "category": "pivot-table",
       "file": "display-null-values-as-the-word-na-for-clearer-data-interpretation.cs",
       "title": "Display null values as the word 'N/A' for clearer data interpretation."
     },

@@ -313,3 +313,4 @@ Output files are written to the working directory.
 - clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs
 - set-showvaluessettingcalculationtype-to-ranklargesttosmallest-for-multiple-fields-uniformly.cs
 - enable-auto-format-for-a-pivot-table-during-creation-to-apply-default-visual-styling.cs
+- disable-row-grand-totals-in-a-pivot-table-to-simplify-the-summary-view.cs
