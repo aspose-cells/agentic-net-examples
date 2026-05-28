@@ -7481,6 +7481,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs",
+      "title": "Cache source data to reduce load time when the workbook is opened repeatedly."
+    },
+    {
+      "category": "pivot-table",
       "file": "change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs",
       "title": "Change the ConsolidationFunction to Average to compute mean values in the PivotTable for better analysis."
     },
