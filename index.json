@@ -7621,6 +7621,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "clear-the-filter-applied-to-a-specific-row-field-restoring-its-full-item-list.cs",
+      "title": "Clear the filter applied to a specific row field, restoring its full item list."
+    },
+    {
+      "category": "pivot-table",
       "file": "clone-an-existing-pivottable-modify-its-data-source-range-and-insert-it-into-a-new-worksheet.cs",
       "title": "Clone an existing PivotTable, modify its data source range, and insert it into a new worksheet."
     },
