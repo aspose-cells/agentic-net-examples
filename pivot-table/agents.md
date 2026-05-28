@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs
 - add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs
 - remove-all-slicers-associated-with-a-pivottable-by-clearing-its-slicercollection-completely.cs
+- set-the-pivottables-datacaption-property-to-a-custom-label-for-the-values-column-header.cs
