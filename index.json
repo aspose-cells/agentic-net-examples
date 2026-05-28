@@ -7471,6 +7471,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-pivottable-that-consolidates-data-from-three-separate-worksheets-using-a-union-range-for-combined-analysis.cs",
+      "title": "Create a PivotTable that consolidates data from three separate worksheets using a union range for combined analysis."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-pivottable-that-uses-a-named-table-as-its-source-for-dynamic-range-handling-and-updates.cs",
       "title": "Create a PivotTable that uses a named table as its source for dynamic range handling and updates."
     },
