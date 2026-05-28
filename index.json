@@ -7371,6 +7371,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "clone-an-existing-pivottable-to-a-new-worksheet-while-preserving-its-layout-and-formatting-settings.cs",
+      "title": "Clone an existing PivotTable to a new worksheet while preserving its layout and formatting settings."
+    },
+    {
+      "category": "pivot-table",
       "file": "configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs",
       "title": "Configure the PivotTable to display grand totals for rows only by setting ShowRowGrandTotals true."
     },
