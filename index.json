@@ -8011,6 +8011,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-enabling-excel-2003-compatibility-to-apply-truncation.cs",
+      "title": "Refresh the pivot table after enabling Excel 2003 compatibility to apply truncation."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-the-pivot-table-and-then-calculate-its-data-to-ensure-formulas-are-uptodate.cs",
       "title": "Refresh the pivot table and then calculate its data to ensure formulas are up\u2011to\u2011date."
     },

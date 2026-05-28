@@ -236,3 +236,4 @@ Output files are written to the working directory.
 - apply-light-blue-fill-and-black-font-color-to-the-pivot-field-header-cell-together.cs
 - set-pivottableisexcel2003compatible-to-true-before-refreshing-to-enforce-255character-truncation.cs
 - set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs
+- refresh-the-pivot-table-after-enabling-excel-2003-compatibility-to-apply-truncation.cs
