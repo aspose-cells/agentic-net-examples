@@ -7481,6 +7481,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-distinct-custom-globalization-settings-to-each-workbook-before-refreshing-to-generate-multilingual-pivot-labels.cs",
+      "title": "Apply distinct custom globalization settings to each workbook before refreshing to generate multilingual pivot labels."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs",
       "title": "Apply number formatting to show values as currency with two decimal places."
     },
