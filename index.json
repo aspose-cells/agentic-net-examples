@@ -7351,6 +7351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "clear-all-page-fields-from-a-pivottable-by-invoking-the-pivottablepagefieldsclear-method-first.cs",
+      "title": "Clear all page fields from a PivotTable by invoking the PivotTable.PageFields.Clear method first."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs",
       "title": "Create a custom Style object, configure its font color, and apply it using PivotTable.Format."
     },
