@@ -7336,6 +7336,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "access-the-first-worksheet-and-obtain-the-first-pivot-table-for-further-operations.cs",
+      "title": "Access the first worksheet and obtain the first pivot table for further operations."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs",
       "title": "Add a calculated field named Profit with expression [Revenue]-[Cost] to the PivotTable."
     },
