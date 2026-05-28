@@ -7406,6 +7406,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-automatic-grouping-of-date-fields-in-a-pivottable-by-setting-the-groupdates-property-to-false.cs",
+      "title": "Disable automatic grouping of date fields in a PivotTable by setting the GroupDates property to false."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-column-grand-totals-in-a-pivottable-by-setting-showcolumngrandtotals-property-to-false.cs",
       "title": "Disable column grand totals in a PivotTable by setting ShowColumnGrandTotals property to false."
     },
