@@ -274,3 +274,4 @@ Output files are written to the working directory.
 - disable-automatic-refresh-on-workbook-open-for-all-pivottables-to-improve-loading-performance.cs
 - refresh-a-specific-pivottable-programmatically-to-reflect-changes-in-its-data-source.cs
 - refresh-all-pivottables-in-a-workbook-sequentially-to-synchronize-data-across-reports.cs
+- group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs

@@ -7861,6 +7861,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs",
+      "title": "Group related date fields in a PivotTable by month and year using GroupFields method."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-a-specific-pivotfield-by-setting-its-hidden-property-to-true.cs",
       "title": "Hide a specific PivotField by setting its Hidden property to true."
     },
