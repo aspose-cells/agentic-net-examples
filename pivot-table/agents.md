@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - enable-the-showvaluesrow-property-only-when-a-single-data-field-exists-to-avoid-redundant-rows-in-the-pivottable.cs
 - refresh-a-pivottable-after-changing-its-consolidationfunction-to-ensure-aggregated-results-are-updated-correctly.cs
 - apply-a-custom-style-to-the-pivottables-data-cells-only-by-using-formatall-with-a-specific-cell-style.cs
+- programmatically-disable-the-showexpandcollapsebuttons-property-to-simplify-the-ui-for-flat-data-structures-without-hierarchy.cs

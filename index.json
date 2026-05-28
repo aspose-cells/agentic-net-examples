@@ -7601,6 +7601,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-disable-the-showexpandcollapsebuttons-property-to-simplify-the-ui-for-flat-data-structures-without-hierarchy.cs",
+      "title": "Programmatically disable the ShowExpandCollapseButtons property to simplify the UI for flat data structures without hierarchy."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-expand-all-collapsed-items-in-a-pivottable-using-the-expandall-method-for-full-visibility.cs",
       "title": "Programmatically expand all collapsed items in a PivotTable using the ExpandAll method for full visibility."
     },
