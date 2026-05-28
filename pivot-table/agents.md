@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - create-a-pivottable-that-consolidates-data-from-multiple-worksheets-using-the-consolidationfunction-property.cs
 - set-the-consolidationfunction-to-sum-for-aggregating-values-across-source-ranges-accurately-within-the-pivottable.cs
 - change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs
+- programmatically-hide-the-pivottables-field-headers-by-setting-the-showfieldheaders-property-to-false.cs
