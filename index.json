@@ -7621,6 +7621,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-subtotals-for-specific-row-fields-to-simplify-the-pivot-view.cs",
+      "title": "Hide subtotals for specific row fields to simplify the pivot view."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-the-pivottables-field-list-pane-by-setting-the-showfieldlist-property-to-false-before-saving.cs",
       "title": "Hide the PivotTable's field list pane by setting the ShowFieldList property to false before saving."
     },
