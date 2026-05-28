@@ -275,3 +275,4 @@ Output files are written to the working directory.
 - refresh-a-specific-pivottable-programmatically-to-reflect-changes-in-its-data-source.cs
 - refresh-all-pivottables-in-a-workbook-sequentially-to-synchronize-data-across-reports.cs
 - group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs
+- create-a-custom-numeric-grouping-for-a-sales-amount-field-with-defined-ranges.cs
