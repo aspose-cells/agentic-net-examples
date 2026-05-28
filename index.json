@@ -7731,6 +7731,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-automatic-refresh-on-workbook-open-for-all-pivottables-to-improve-loading-performance.cs",
+      "title": "Disable automatic refresh on workbook open for all PivotTables to improve loading performance."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-column-grand-totals-in-a-pivottable-by-setting-showcolumngrandtotals-property-to-false.cs",
       "title": "Disable column grand totals in a PivotTable by setting ShowColumnGrandTotals property to false."
     },
