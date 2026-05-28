@@ -8766,6 +8766,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "validate-that-the-ods-file-contains-the-rendered-pivot-table-by-opening-and-checking-objects.cs",
+      "title": "Validate that the ODS file contains the rendered pivot table by opening and checking objects."
+    },
+    {
+      "category": "pivot-table",
       "file": "verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs",
       "title": "Verify that cell content length does not exceed 255 characters when compatibility is enabled."
     },
