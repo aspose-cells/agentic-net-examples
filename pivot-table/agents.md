@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-the-pivottables-grand-total-row-for-clearer-presentation-of-totals.cs
 - add-a-new-worksheet-copy-source-data-and-create-a-linked-pivottable-referencing-that-data.cs
 - set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs
+- configure-the-pivottable-to-use-the-default-report-layout-by-resetting-the-showincompactform-setting.cs
