@@ -7386,6 +7386,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-row-fields-to-group-sales-data-by-region-and-product-category.cs",
+      "title": "Add row fields to group sales data by region and product category."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-background-color-to-the-pivottables-header-row-using-the-formatall-method-for-visual-emphasis.cs",
       "title": "Apply a custom background color to the PivotTable's header row using the FormatAll method for visual emphasis."
     },
