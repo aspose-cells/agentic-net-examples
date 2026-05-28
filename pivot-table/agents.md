@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - remove-all-slicers-associated-with-a-pivottable-by-clearing-its-slicercollection-completely.cs
 - set-the-pivottables-datacaption-property-to-a-custom-label-for-the-values-column-header.cs
 - enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs
+- disable-automatic-grouping-of-date-fields-in-a-pivottable-by-setting-the-groupdates-property-to-false.cs
