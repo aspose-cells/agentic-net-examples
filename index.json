@@ -7466,6 +7466,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-light-blue-fill-color-to-the-retrieved-pivot-field-header-cell.cs",
+      "title": "Apply a light blue fill color to the retrieved pivot field header cell."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-predefined-pivot-table-style-for-consistent-visual-formatting.cs",
       "title": "Apply a predefined pivot table style for consistent visual formatting."
     },

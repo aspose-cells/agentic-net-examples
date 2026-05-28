@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-loadoptionsparsingpivotcachedrecords-set-to-false-then-refresh-the-pivot-table.cs
 - access-the-first-worksheet-and-obtain-the-first-pivot-table-for-further-operations.cs
 - retrieve-a-cell-from-the-pivot-table-by-specifying-the-display-name-of-a-data-field.cs
+- apply-a-light-blue-fill-color-to-the-retrieved-pivot-field-header-cell.cs
