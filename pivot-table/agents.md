@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - refresh-all-nested-child-pivot-tables-of-a-parent-pivot-table-to-synchronize-data-hierarchy.cs
 - export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs
 - delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs
+- delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs
