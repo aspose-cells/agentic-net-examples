@@ -7341,6 +7341,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs",
+      "title": "Add a calculated field that computes profit margin by dividing profit by revenue."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-calculated-item-to-an-existing-field-by-calling-addcalculateditem-with-the-appropriate-expression.cs",
       "title": "Add a calculated item to an existing field by calling AddCalculatedItem with the appropriate expression."
     },
