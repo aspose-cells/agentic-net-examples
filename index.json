@@ -7496,6 +7496,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "assign-different-custom-globalization-objects-to-separate-worksheets-within-the-same-workbook-for-localized-sections.cs",
+      "title": "Assign different custom globalization objects to separate worksheets within the same workbook for localized sections."
+    },
+    {
+      "category": "pivot-table",
       "file": "assign-the-builtin-pivottablestylemedium9-autoformat-to-a-pivottable-for-quick-styling-automatically.cs",
       "title": "Assign the built\u2011in PivotTableStyleMedium9 auto\u2011format to a PivotTable for quick styling automatically."
     },

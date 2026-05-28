@@ -222,3 +222,4 @@ Output files are written to the working directory.
 - use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs
 - refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs
 - export-a-workbook-containing-multiple-pivot-tables-to-a-single-pdf-preserving-each-tables-layout.cs
+- assign-different-custom-globalization-objects-to-separate-worksheets-within-the-same-workbook-for-localized-sections.cs
