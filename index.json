@@ -7426,6 +7426,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-top-10-filter-to-a-row-field-to-display-only-the-highest-values.cs",
+      "title": "Add a Top 10 filter to a row field to display only the highest values."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs",
       "title": "Add conditional formatting to highlight rows where profit margin exceeds twenty percent."
     },

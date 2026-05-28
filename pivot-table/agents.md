@@ -293,3 +293,4 @@ Output files are written to the working directory.
 - apply-custom-ascending-sorting-to-a-row-field-based-on-its-underlying-numeric-values.cs
 - apply-custom-descending-sorting-to-a-column-field-using-its-textual-values-for-ordering.cs
 - define-a-custom-list-order-for-a-pivot-field-and-apply-it-to-control-item-sequence.cs
+- add-a-top-10-filter-to-a-row-field-to-display-only-the-highest-values.cs
