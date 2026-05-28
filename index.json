@@ -7886,6 +7886,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-the-pivottable-ribbon-interface-to-provide-a-cleaner-view-during-runtime.cs",
+      "title": "Hide the PivotTable ribbon interface to provide a cleaner view during runtime."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-the-pivottables-field-list-pane-by-setting-the-showfieldlist-property-to-false-before-saving.cs",
       "title": "Hide the PivotTable's field list pane by setting the ShowFieldList property to false before saving."
     },
