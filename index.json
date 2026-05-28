@@ -7941,6 +7941,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs",
+      "title": "Refresh nested pivot tables recursively to ensure all child tables reflect updated source data."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
