@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - collapse-all-items-in-the-column-area-after-refresh-to-present-a-summarized-report-with-minimal-detail.cs
 - set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs
 - enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs
+- programmatically-set-the-pivottables-datacaption-to-sales-amount-for-clearer-column-naming-in-reports.cs
