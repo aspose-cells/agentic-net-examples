@@ -257,3 +257,4 @@ Output files are written to the working directory.
 - use-a-logging-framework-to-capture-memory-usage-and-refresh-duration-metrics-during-pivot-processing.cs
 - generate-a-summary-report-listing-each-processed-workbook-its-compatibility-setting-and-ribbon-status.cs
 - load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs
+- retrieve-the-refreshbywho-property-to-identify-the-user-who-last-refreshed-the-pivottable.cs
