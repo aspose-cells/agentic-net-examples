@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - set-pivottableisexcel2003compatible-to-true-before-refreshing-to-enforce-255character-truncation.cs
 - set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs
 - refresh-the-pivot-table-after-enabling-excel-2003-compatibility-to-apply-truncation.cs
+- refresh-the-pivot-table-after-disabling-excel-2003-compatibility-to-keep-original-content.cs
