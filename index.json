@@ -7506,6 +7506,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-a-calculated-field-from-a-pivottable-using-the-calculatedfieldsremove-method-for-the-specified-field.cs",
+      "title": "Remove a calculated field from a PivotTable using the CalculatedFields.Remove method for the specified field."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs",
       "title": "Remove all data fields from a PivotTable to convert it into a pure row and column summary."
     },
