@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - add-a-report-filter-field-to-allow-selection-of-a-specific-salesperson.cs
 - implement-batch-processing-to-generate-pivot-tables-for-multiple-workbooks-in-a-directory.cs
 - export-pivot-table-data-to-a-csv-file-while-preserving-column-headers-and-data-types.cs
+- apply-a-value-filter-to-display-only-items-with-sales-greater-than-a-threshold.cs
