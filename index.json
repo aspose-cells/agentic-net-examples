@@ -7361,6 +7361,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-new-calculated-field-that-computes-average-price-by-dividing-total-sales-by-quantity-within-the-pivottable.cs",
+      "title": "Add a new calculated field that computes average price by dividing total sales by quantity within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs",
       "title": "Add a new data field to the PivotTable and set its aggregation function to Count for item tallying."
     },
