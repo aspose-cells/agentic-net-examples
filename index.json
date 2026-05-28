@@ -7706,6 +7706,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-pivot-table-ribbons-programmatically-before-saving-the-workbook-to-reduce-ui-clutter.cs",
+      "title": "Disable pivot table ribbons programmatically before saving the workbook to reduce UI clutter."
+    },
+    {
+      "category": "pivot-table",
       "file": "display-null-values-as-the-word-na-for-clearer-data-interpretation.cs",
       "title": "Display null values as the word 'N/A' for clearer data interpretation."
     },
