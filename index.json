@@ -7476,6 +7476,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-descending-alphabetical-sort-to-product-category-pivot-items.cs",
+      "title": "Apply a custom descending alphabetical sort to product category pivot items."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-number-format-0red-0-to-negative-values-for-visual-emphasis-and-easier-analysis.cs",
       "title": "Apply a custom number format '#,##0;[Red]-#,##0' to negative values for visual emphasis and easier analysis."
     },
