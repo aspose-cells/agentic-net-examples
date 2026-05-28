@@ -8076,6 +8076,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs",
+      "title": "Save the modified workbook to a specified file path after pivot operations."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs",
       "title": "Save the workbook as PDF after removing unwanted pivot tables to produce a clean report."
     },
