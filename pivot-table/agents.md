@@ -227,3 +227,4 @@ Output files are written to the working directory.
 - create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs
 - delete-pivot-tables-from-a-worksheet-based-on-a-naming-convention-that-starts-with-temp_-prefix.cs
 - load-a-workbook-with-default-loadoptions-and-refresh-its-first-pivot-table.cs
+- load-a-workbook-with-loadoptionsparsingpivotcachedrecords-set-to-true-then-refresh-the-pivot-table.cs
