@@ -7781,6 +7781,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-showvaluesaspercent-property-to-true-for-all-data-fields-to-normalize-values-across-columns.cs",
+      "title": "Set the PivotTable's ShowValuesAsPercent property to true for all data fields to normalize values across columns."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-showvaluesrow-property-to-false-to-hide-the-additional-aggregated-values-row.cs",
       "title": "Set the PivotTable's ShowValuesRow property to false to hide the additional aggregated values row."
     },

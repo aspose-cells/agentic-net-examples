@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - add-a-slicer-for-the-region-field-and-link-it-to-the-pivottable-for-interactive-filtering-by-users.cs
 - remove-all-slicers-from-a-workbook-by-iterating-each-worksheet-and-clearing-each-pivottables-slicercollection.cs
 - configure-the-pivottable-to-display-values-as-percentages-of-column-total-using-the-showvaluesaspercent-property.cs
+- set-the-pivottables-showvaluesaspercent-property-to-true-for-all-data-fields-to-normalize-values-across-columns.cs
