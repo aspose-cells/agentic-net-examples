@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - programmatically-reorder-the-page-fields-to-change-filter-priority-within-the-pivottable-for-better-user-experience.cs
 - set-the-pivottables-displayitemlabels-property-to-true-to-show-labels-for-each-individual-data-item.cs
 - create-a-pivottable-that-uses-a-named-table-as-its-source-for-dynamic-range-handling-and-updates.cs
+- apply-a-custom-background-color-to-the-pivottables-header-row-using-the-formatall-method-for-visual-emphasis.cs
