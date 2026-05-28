@@ -7666,6 +7666,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "update-the-odbc-connection-string-of-a-pivottables-external-source-to-point-to-a-new-server-location.cs",
+      "title": "Update the ODBC connection string of a PivotTable's external source to point to a new server location."
+    },
+    {
+      "category": "pivot-table",
       "file": "update-the-source-data-of-an-existing-pivottable-by-redefining-its-sourcedata-property-accordingly.cs",
       "title": "Update the source data of an existing PivotTable by redefining its SourceData property accordingly."
     },

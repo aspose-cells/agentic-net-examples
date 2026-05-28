@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs
 - refresh-a-pivottable-asynchronously-to-avoid-blocking-the-ui-thread-in-a-desktop-application-environment.cs
 - log-the-number-of-rows-generated-by-a-pivottable-after-refresh-for-performance-monitoring-and-diagnostics.cs
+- update-the-odbc-connection-string-of-a-pivottables-external-source-to-point-to-a-new-server-location.cs
