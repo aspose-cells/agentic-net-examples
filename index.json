@@ -7686,6 +7686,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-slicers-from-a-workbook-by-iterating-each-worksheet-and-clearing-each-pivottables-slicercollection.cs",
+      "title": "Remove all slicers from a workbook by iterating each worksheet and clearing each PivotTable's SlicerCollection."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs",
       "title": "Retrieve external data connection details from a PivotTable via its ExternalConnection property."
     },
