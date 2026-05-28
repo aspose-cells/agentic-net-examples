@@ -281,3 +281,4 @@ Output files are written to the working directory.
 - retrieve-the-external-data-connection-string-associated-with-a-pivottable-for-auditing.cs
 - modify-the-external-connection-of-a-pivottable-to-point-to-a-new-database-server.cs
 - iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs
+- batch-update-the-showreportfilterpages-option-for-every-pivottable-across-multiple-workbooks.cs

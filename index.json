@@ -7561,6 +7561,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "batch-update-the-showreportfilterpages-option-for-every-pivottable-across-multiple-workbooks.cs",
+      "title": "Batch update the ShowReportFilterPages option for every PivotTable across multiple workbooks."
+    },
+    {
+      "category": "pivot-table",
       "file": "cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs",
       "title": "Cache source data to reduce load time when the workbook is opened repeatedly."
     },
