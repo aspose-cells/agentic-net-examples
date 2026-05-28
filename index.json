@@ -7836,6 +7836,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-with-loadoptionsparsingpivotcachedrecords-set-to-false-then-refresh-the-pivot-table.cs",
+      "title": "Load a workbook with LoadOptions.ParsingPivotCachedRecords set to false, then refresh the pivot table."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-with-loadoptionsparsingpivotcachedrecords-set-to-true-then-refresh-the-pivot-table.cs",
       "title": "Load a workbook with LoadOptions.ParsingPivotCachedRecords set to true, then refresh the pivot table."
     },
