@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs
 - configure-the-pivottable-to-use-the-default-data-source-connection-string-for-external-data-retrieval-operations.cs
 - update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs
+- remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs
