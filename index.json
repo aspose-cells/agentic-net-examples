@@ -7425,6 +7425,11 @@
       "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
     },
     {
+      "category": "pivot-table",
+      "file": "validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs",
+      "title": "Validate that a PivotTable contains at least one data field before performing any calculations."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
