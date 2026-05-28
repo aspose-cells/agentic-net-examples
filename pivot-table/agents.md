@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - set-numeric-format-000-for-a-data-field-to-display-currency-values-correctly.cs
 - load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs
 - add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs
+- hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs
