@@ -7771,6 +7771,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "move-a-pivot-item-two-positions-forward-within-the-same-parent-node-using-the-move-method.cs",
+      "title": "Move a pivot item two positions forward within the same parent node using the Move method."
+    },
+    {
+      "category": "pivot-table",
       "file": "preserve-custom-formatting-after-data-refresh-keeping-number-formats-and-colors.cs",
       "title": "Preserve custom formatting after data refresh, keeping number formats and colors."
     },
