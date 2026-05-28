@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs
 - use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs
 - refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs
+- export-a-workbook-containing-multiple-pivot-tables-to-a-single-pdf-preserving-each-tables-layout.cs
