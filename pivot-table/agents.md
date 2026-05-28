@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - show-error-values-as-zero-to-avoid-displaying-div0-messages.cs
 - add-a-slicer-control-linked-to-the-pivot-table-for-interactive-region-filtering.cs
 - create-a-timeline-filter-for-the-date-field-to-select-custom-time-periods.cs
+- export-the-pivot-table-and-its-chart-to-a-pdf-document-preserving-layout.cs

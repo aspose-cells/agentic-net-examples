@@ -7671,6 +7671,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "export-the-pivot-table-and-its-chart-to-a-pdf-document-preserving-layout.cs",
+      "title": "Export the pivot table and its chart to a PDF document, preserving layout."
+    },
+    {
+      "category": "pivot-table",
       "file": "group-date-fields-by-month-and-year-to-summarize-sales-trends.cs",
       "title": "Group date fields by month and year to summarize sales trends."
     },
