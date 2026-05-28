@@ -7466,6 +7466,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
+      "title": "Apply a descending custom sort order to a PivotField using the AutoSort property."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-light-blue-fill-color-to-the-retrieved-pivot-field-header-cell.cs",
       "title": "Apply a light blue fill color to the retrieved pivot field header cell."
     },
