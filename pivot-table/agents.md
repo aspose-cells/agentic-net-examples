@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - batch-create-pivottables-on-multiple-worksheets-by-looping-over-data-ranges-and-calling-the-add-method.cs
 - export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs
 - validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs
+- apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs

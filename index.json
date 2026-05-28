@@ -7346,6 +7346,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs",
+      "title": "Apply conditional formatting to PivotTable values that exceed a threshold using the FormatCondition feature."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-the-compact-layout-to-an-existing-pivottable-by-invoking-the-showincompactform-method.cs",
       "title": "Apply the Compact layout to an existing PivotTable by invoking the ShowInCompactForm method."
     },
