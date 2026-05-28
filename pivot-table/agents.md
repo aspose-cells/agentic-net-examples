@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs
 - export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs
 - clone-an-existing-pivottable-to-a-new-worksheet-while-preserving-its-layout-and-formatting-settings.cs
+- set-the-pivottables-refreshonfileopen-property-to-true-to-enable-autorefresh-when-workbook-loads.cs
