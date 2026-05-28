@@ -7816,6 +7816,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs",
+      "title": "Set the pivot table to show row grand totals but hide column grand totals."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs",
       "title": "Set the PivotTable's AllowMultipleFilters property to false to restrict filter selections for end users."
     },
