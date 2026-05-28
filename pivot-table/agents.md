@@ -306,3 +306,4 @@ Output files are written to the working directory.
 - refresh-pivot-table-data-programmatically-after-modifying-the-underlying-source-worksheet-range.cs
 - save-the-workbook-containing-the-pivot-table-as-an-ods-file-for-opendocument-compatibility.cs
 - export-the-workbook-with-the-pivot-table-to-pdf-format-preserving-layout-and-formatting.cs
+- save-the-modified-workbook-as-xlsx-after-applying-pivot-table-changes-and-custom-styles.cs
