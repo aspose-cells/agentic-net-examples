@@ -7351,6 +7351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-theme-color-to-all-pivottable-headers-using-the-formatall-method-with-a-predefined-style.cs",
+      "title": "Apply a theme color to all PivotTable headers using the FormatAll method with a predefined style."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs",
       "title": "Apply conditional formatting to PivotTable values that exceed a threshold using the FormatCondition feature."
     },
