@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - hide-subtotals-for-specific-row-fields-to-simplify-the-pivot-view.cs
 - apply-a-predefined-pivot-table-style-for-consistent-visual-formatting.cs
 - group-date-fields-by-month-and-year-to-summarize-sales-trends.cs
+- create-a-pivot-chart-linked-to-the-pivot-table-and-export-as-a-png-image-file.cs
