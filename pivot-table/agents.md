@@ -305,3 +305,4 @@ Output files are written to the working directory.
 - update-the-external-connection-string-of-a-pivot-table-then-refresh-to-load-new-data.cs
 - refresh-pivot-table-data-programmatically-after-modifying-the-underlying-source-worksheet-range.cs
 - save-the-workbook-containing-the-pivot-table-as-an-ods-file-for-opendocument-compatibility.cs
+- export-the-workbook-with-the-pivot-table-to-pdf-format-preserving-layout-and-formatting.cs

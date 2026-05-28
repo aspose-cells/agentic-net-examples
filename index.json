@@ -7916,6 +7916,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "export-the-workbook-with-the-pivot-table-to-pdf-format-preserving-layout-and-formatting.cs",
+      "title": "Export the workbook with the pivot table to PDF format, preserving layout and formatting."
+    },
+    {
+      "category": "pivot-table",
       "file": "generate-a-summary-report-listing-each-processed-workbook-its-compatibility-setting-and-ribbon-status.cs",
       "title": "Generate a summary report listing each processed workbook, its compatibility setting, and ribbon status."
     },
