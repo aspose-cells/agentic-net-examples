@@ -7561,6 +7561,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-the-pivottables-field-list-pane-by-setting-the-showfieldlist-property-to-false-before-saving.cs",
+      "title": "Hide the PivotTable's field list pane by setting the ShowFieldList property to false before saving."
+    },
+    {
+      "category": "pivot-table",
       "file": "iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs",
       "title": "Iterate through all PivotTables in a workbook and apply the Outline layout to each one."
     },
