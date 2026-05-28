@@ -7891,6 +7891,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-a-pivotitem-from-a-row-field-and-read-its-absolute-position-property.cs",
+      "title": "Retrieve a PivotItem from a row field and read its absolute Position property."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs",
       "title": "Retrieve external data connection details from a PivotTable via its ExternalConnection property."
     },
