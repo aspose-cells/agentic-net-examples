@@ -7556,6 +7556,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs",
+      "title": "Enable automatic refresh on workbook open so the pivot table updates."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-drillthrough-functionality-for-a-pivottable-by-setting-the-enabledrillthrough-option-to-true.cs",
       "title": "Enable drill\u2011through functionality for a PivotTable by setting the EnableDrillThrough option to true."
     },
