@@ -7651,6 +7651,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs",
+      "title": "Configure the data field display format to RankSmallestToLargest for ascending ranking."
+    },
+    {
+      "category": "pivot-table",
       "file": "configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs",
       "title": "Configure the PivotTable to display grand totals for rows only by setting ShowRowGrandTotals true."
     },
