@@ -7381,6 +7381,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "collapse-specific-pivotitems-by-iterating-them-and-setting-each-items-isexpanded-property-to-false.cs",
+      "title": "Collapse specific PivotItems by iterating them and setting each item's IsExpanded property to false."
+    },
+    {
+      "category": "pivot-table",
       "file": "configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs",
       "title": "Configure the PivotTable to display grand totals for rows only by setting ShowRowGrandTotals true."
     },
