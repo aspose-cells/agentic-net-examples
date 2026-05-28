@@ -7611,6 +7611,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "batch-process-a-folder-of-workbooks-adding-a-standardized-pivot-table-and-saving-as-ods.cs",
+      "title": "Batch process a folder of workbooks, adding a standardized pivot table and saving as ODS."
+    },
+    {
+      "category": "pivot-table",
       "file": "batch-update-the-showreportfilterpages-option-for-every-pivottable-across-multiple-workbooks.cs",
       "title": "Batch update the ShowReportFilterPages option for every PivotTable across multiple workbooks."
     },
