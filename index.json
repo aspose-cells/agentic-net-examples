@@ -7421,6 +7421,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "limit-the-number-of-items-displayed-in-a-pivotfield-by-adjusting-its-showitemscount-property-value.cs",
+      "title": "Limit the number of items displayed in a PivotField by adjusting its ShowItemsCount property value."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs",
       "title": "Load an existing Excel file, locate a PivotTable, and change its layout to Tabular."
     },
