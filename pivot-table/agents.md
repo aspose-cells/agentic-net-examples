@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - implement-batch-processing-to-generate-pivot-tables-for-multiple-workbooks-in-a-directory.cs
 - export-pivot-table-data-to-a-csv-file-while-preserving-column-headers-and-data-types.cs
 - apply-a-value-filter-to-display-only-items-with-sales-greater-than-a-threshold.cs
+- create-a-top10-filter-on-the-product-field-to-show-highest-selling-items.cs

@@ -7546,6 +7546,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-top10-filter-on-the-product-field-to-show-highest-selling-items.cs",
+      "title": "Create a top\u201110 filter on the product field to show highest selling items."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-data-fields-with-sum-aggregation-to-calculate-total-units-sold.cs",
       "title": "Create data fields with sum aggregation to calculate total units sold."
     },
