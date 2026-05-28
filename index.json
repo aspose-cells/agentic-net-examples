@@ -7461,6 +7461,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-slicers-associated-with-a-pivottable-by-clearing-its-slicercollection-completely.cs",
+      "title": "Remove all slicers associated with a PivotTable by clearing its SlicerCollection completely."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
       "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
     },
