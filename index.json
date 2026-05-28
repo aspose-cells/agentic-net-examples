@@ -7606,6 +7606,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs",
+      "title": "Set the PivotTable's AllowMultipleFilters property to false to restrict filter selections for end users."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-datacaption-property-to-a-custom-label-for-the-values-column-header.cs",
       "title": "Set the PivotTable's DataCaption property to a custom label for the values column header."
     },

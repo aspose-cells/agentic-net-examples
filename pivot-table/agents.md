@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs
 - configure-the-pivottable-to-use-the-default-report-layout-by-resetting-the-showincompactform-setting.cs
 - add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs
+- set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs
