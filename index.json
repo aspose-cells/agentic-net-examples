@@ -7456,6 +7456,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-pivottable-to-display-values-as-percentages-of-column-total-using-the-showvaluesaspercent-property.cs",
+      "title": "Configure the PivotTable to display values as percentages of column total using the ShowValuesAsPercent property."
+    },
+    {
+      "category": "pivot-table",
       "file": "configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs",
       "title": "Configure the PivotTable to hide empty rows by setting the HideEmptyRows property to true."
     },
