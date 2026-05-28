@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - export-a-workbook-containing-multiple-pivot-tables-to-a-single-pdf-preserving-each-tables-layout.cs
 - assign-different-custom-globalization-objects-to-separate-worksheets-within-the-same-workbook-for-localized-sections.cs
 - after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs
+- create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs

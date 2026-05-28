@@ -7591,6 +7591,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs",
+      "title": "Create a function that accepts a pivot table index, removes it, and returns the updated count of tables."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs",
       "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
     },
