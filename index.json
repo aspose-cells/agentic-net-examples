@@ -8041,6 +8041,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "open-a-workbook-from-a-memory-stream-for-programmatic-manipulation-of-its-pivot-tables.cs",
+      "title": "Open a workbook from a memory stream for programmatic manipulation of its pivot tables."
+    },
+    {
+      "category": "pivot-table",
       "file": "preserve-custom-formatting-after-data-refresh-keeping-number-formats-and-colors.cs",
       "title": "Preserve custom formatting after data refresh, keeping number formats and colors."
     },
