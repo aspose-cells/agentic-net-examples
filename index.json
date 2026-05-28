@@ -7651,6 +7651,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "implement-batch-processing-to-generate-pivot-tables-for-multiple-workbooks-in-a-directory.cs",
+      "title": "Implement batch processing to generate pivot tables for multiple workbooks in a directory."
+    },
+    {
+      "category": "pivot-table",
       "file": "insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs",
       "title": "Insert column fields to display quarterly revenue across different fiscal years."
     },
