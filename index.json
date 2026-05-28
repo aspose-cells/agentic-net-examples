@@ -8311,6 +8311,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "use-a-logging-framework-to-capture-memory-usage-and-refresh-duration-metrics-during-pivot-processing.cs",
+      "title": "Use a logging framework to capture memory usage and refresh duration metrics during pivot processing."
+    },
+    {
+      "category": "pivot-table",
       "file": "use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs",
       "title": "Use PivotItem.Move with count -1 and isSameParent true to shift an item upward within its group."
     },
