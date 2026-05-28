@@ -7826,6 +7826,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-a-specific-pivotfield-by-setting-its-hidden-property-to-true.cs",
+      "title": "Hide a specific PivotField by setting its Hidden property to true."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs",
       "title": "Hide a specific PivotField from the report area by setting its Visible property to false."
     },
