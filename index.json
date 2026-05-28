@@ -7501,6 +7501,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-light-blue-fill-and-black-font-color-to-the-pivot-field-header-cell-together.cs",
+      "title": "Apply light blue fill and black font color to the pivot field header cell together."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs",
       "title": "Apply number formatting to show values as currency with two decimal places."
     },
