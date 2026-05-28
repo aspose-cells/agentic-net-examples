@@ -7371,6 +7371,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs",
+      "title": "Configure the PivotTable to display grand totals for rows only by setting ShowRowGrandTotals true."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs",
       "title": "Create a custom Style object, configure its font color, and apply it using PivotTable.Format."
     },
