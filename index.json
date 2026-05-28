@@ -7976,6 +7976,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "group-the-pivot-tables-date-field-by-months-and-years-for-hierarchical-analysis.cs",
+      "title": "Group the pivot table's date field by months and years for hierarchical analysis."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-a-specific-pivotfield-by-setting-its-hidden-property-to-true.cs",
       "title": "Hide a specific PivotField by setting its Hidden property to true."
     },
