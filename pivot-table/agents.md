@@ -318,3 +318,4 @@ Output files are written to the working directory.
 - insert-a-pivot-table-into-the-worksheet-using-a-defined-data-source-range.cs
 - configure-pivot-table-rows-columns-and-data-fields-to-summarize-sales-by-region.cs
 - add-a-calculated-field-that-computes-profit-margin-as-profit-divided-by-revenue.cs
+- group-the-pivot-tables-date-field-by-months-and-years-for-hierarchical-analysis.cs
