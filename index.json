@@ -7421,6 +7421,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-number-format-to-display-quantities-with-thousand-separators-and-no-decimals.cs",
+      "title": "Apply a custom number format to display quantities with thousand separators and no decimals."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-number-format-to-the-pivottables-grand-total-row-for-clearer-presentation-of-totals.cs",
       "title": "Apply a custom number format to the PivotTable's grand total row for clearer presentation of totals."
     },
