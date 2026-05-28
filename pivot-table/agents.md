@@ -242,3 +242,4 @@ Output files are written to the working directory.
 - save-the-workbook-to-a-memory-stream-and-then-write-the-stream-to-disk.cs
 - disable-pivot-table-ribbons-programmatically-before-saving-the-workbook-to-reduce-ui-clutter.cs
 - enable-pivot-table-ribbons-programmatically-after-loading-the-workbook-to-restore-default-ui-elements.cs
+- verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs
