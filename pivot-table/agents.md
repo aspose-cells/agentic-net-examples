@@ -272,3 +272,4 @@ Output files are written to the working directory.
 - set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs
 - enable-preserveformatting-option-when-refreshing-a-pivottable-to-keep-user-applied-styles.cs
 - disable-automatic-refresh-on-workbook-open-for-all-pivottables-to-improve-loading-performance.cs
+- refresh-a-specific-pivottable-programmatically-to-reflect-changes-in-its-data-source.cs
