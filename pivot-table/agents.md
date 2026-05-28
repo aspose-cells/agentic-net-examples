@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs
 - enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs
 - programmatically-set-the-pivottables-datacaption-to-sales-amount-for-clearer-column-naming-in-reports.cs
+- refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs
