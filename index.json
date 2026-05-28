@@ -7616,6 +7616,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs",
+      "title": "Delete a specific pivot table from the worksheet by passing its PivotTable object to the Remove method."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs",
       "title": "Delete an existing pivot table and replace it with a newly configured version."
     },
