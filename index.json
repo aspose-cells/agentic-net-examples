@@ -7671,6 +7671,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-pivot-tables-from-a-worksheet-based-on-a-naming-convention-that-starts-with-temp_-prefix.cs",
+      "title": "Delete pivot tables from a worksheet based on a naming convention that starts with 'Temp_' prefix."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-automatic-grouping-of-date-fields-in-a-pivottable-by-setting-the-groupdates-property-to-false.cs",
       "title": "Disable automatic grouping of date fields in a PivotTable by setting the GroupDates property to false."
     },
