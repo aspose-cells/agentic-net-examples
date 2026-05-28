@@ -7791,6 +7791,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-multiple-pivot-tables-in-a-single-worksheet-each-summarizing-different-metrics.cs",
+      "title": "Create multiple pivot tables in a single worksheet, each summarizing different metrics."
+    },
+    {
+      "category": "pivot-table",
       "file": "customize-the-pivottables-report-filter-caption-by-assigning-a-new-descriptive-string-to-its-caption-property.cs",
       "title": "Customize the PivotTable's report filter caption by assigning a new descriptive string to its Caption property."
     },

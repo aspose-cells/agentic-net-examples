@@ -329,3 +329,4 @@ Output files are written to the working directory.
 - load-an-existing-workbook-locate-its-pivot-table-and-change-the-data-source-range.cs
 - retrieve-external-data-connection-details-of-a-pivot-table-for-source-auditing.cs
 - disable-pivot-table-ribbons-in-the-generated-ods-file-for-a-cleaner-interface.cs
+- create-multiple-pivot-tables-in-a-single-worksheet-each-summarizing-different-metrics.cs
