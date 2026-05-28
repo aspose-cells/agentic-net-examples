@@ -310,3 +310,4 @@ Output files are written to the working directory.
 - iterate-over-all-pivot-fields-and-output-each-fields-display-name-to-the-console.cs
 - apply-a-custom-sort-order-using-a-predefined-list-of-strings-to-control-field-item-sequence.cs
 - add-both-a-top-10-filter-and-a-label-filter-to-the-same-pivot-field-for-combined-criteria.cs
+- clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs
