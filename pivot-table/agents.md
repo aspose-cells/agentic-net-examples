@@ -322,3 +322,4 @@ Output files are written to the working directory.
 - apply-a-custom-descending-alphabetical-sort-to-product-category-pivot-items.cs
 - hide-selected-pivot-items-to-exclude-confidential-information-from-the-report-view.cs
 - set-the-pivot-table-option-to-display-zero-values-for-empty-cells.cs
+- specify-the-absolute-position-of-a-pivot-item-within-the-row-hierarchy.cs

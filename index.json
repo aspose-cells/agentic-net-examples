@@ -8591,6 +8591,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "specify-the-absolute-position-of-a-pivot-item-within-the-row-hierarchy.cs",
+      "title": "Specify the absolute position of a pivot item within the row hierarchy."
+    },
+    {
+      "category": "pivot-table",
       "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
       "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
     },
