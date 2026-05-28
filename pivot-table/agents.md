@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs
 - clone-an-existing-pivottable-to-a-new-worksheet-while-preserving-its-layout-and-formatting-settings.cs
 - set-the-pivottables-refreshonfileopen-property-to-true-to-enable-autorefresh-when-workbook-loads.cs
+- limit-the-number-of-items-displayed-in-a-pivotfield-by-adjusting-its-showitemscount-property-value.cs
