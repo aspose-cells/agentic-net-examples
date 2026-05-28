@@ -7586,6 +7586,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-datafieldseparator-to-a-custom-character-for-multifield-values-representation.cs",
+      "title": "Programmatically set the PivotTable's DataFieldSeparator to a custom character for multi\u2011field values representation."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs",
       "title": "Programmatically set the PivotTable's RowHeaderCaption to a localized string for international user interfaces."
     },
