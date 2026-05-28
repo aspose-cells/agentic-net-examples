@@ -261,3 +261,4 @@ Output files are written to the working directory.
 - set-showreportfilterpages-to-true-to-generate-separate-worksheets-for-each-filter-selection.cs
 - hide-a-specific-pivotfield-by-setting-its-hidden-property-to-true.cs
 - unhide-a-previously-hidden-pivotfield-by-setting-its-hidden-property-to-false.cs
+- apply-an-ascending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs
