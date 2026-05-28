@@ -7501,6 +7501,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs",
+      "title": "Set the PivotTable's PreserveFormatting flag to true to retain applied styles after each refresh."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-refreshonfileopen-property-to-true-to-enable-autorefresh-when-workbook-loads.cs",
       "title": "Set the PivotTable's RefreshOnFileOpen property to true to enable auto\u2011refresh when workbook loads."
     },

@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - disable-automatic-grouping-of-date-fields-in-a-pivottable-by-setting-the-groupdates-property-to-false.cs
 - programmatically-expand-all-collapsed-items-in-a-pivottable-using-the-expandall-method-for-full-visibility.cs
 - collapse-specific-pivotitems-by-iterating-them-and-setting-each-items-isexpanded-property-to-false.cs
+- set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs
