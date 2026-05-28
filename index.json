@@ -7666,6 +7666,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-pivot-table-rows-columns-and-data-fields-to-summarize-sales-by-region.cs",
+      "title": "Configure pivot table rows, columns, and data fields to summarize sales by region."
+    },
+    {
+      "category": "pivot-table",
       "file": "configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs",
       "title": "Configure the data field display format to RankSmallestToLargest for ascending ranking."
     },

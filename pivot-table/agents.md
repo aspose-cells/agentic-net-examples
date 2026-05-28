@@ -316,3 +316,4 @@ Output files are written to the working directory.
 - disable-row-grand-totals-in-a-pivot-table-to-simplify-the-summary-view.cs
 - create-a-new-workbook-instance-and-add-a-worksheet-for-pivot-table-insertion.cs
 - insert-a-pivot-table-into-the-worksheet-using-a-defined-data-source-range.cs
+- configure-pivot-table-rows-columns-and-data-fields-to-summarize-sales-by-region.cs
