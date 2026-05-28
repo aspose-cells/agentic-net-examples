@@ -7346,6 +7346,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-new-worksheet-copy-source-data-and-create-a-linked-pivottable-referencing-that-data.cs",
+      "title": "Add a new worksheet, copy source data, and create a linked PivotTable referencing that data."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs",
       "title": "Add a slicer linked to a PivotTable for interactive filtering using the SlicerCollection API."
     },
