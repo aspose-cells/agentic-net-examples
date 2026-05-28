@@ -232,3 +232,4 @@ Output files are written to the working directory.
 - access-the-first-worksheet-and-obtain-the-first-pivot-table-for-further-operations.cs
 - retrieve-a-cell-from-the-pivot-table-by-specifying-the-display-name-of-a-data-field.cs
 - apply-a-light-blue-fill-color-to-the-retrieved-pivot-field-header-cell.cs
+- change-the-font-color-of-the-retrieved-pivot-field-header-cell-to-black.cs
