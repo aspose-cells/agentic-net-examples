@@ -7351,6 +7351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-number-format-to-the-pivottables-grand-total-row-for-clearer-presentation-of-totals.cs",
+      "title": "Apply a custom number format to the PivotTable's grand total row for clearer presentation of totals."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-predefined-style-to-all-pivottable-elements-by-calling-pivottableformatall-with-the-style.cs",
       "title": "Apply a predefined style to all PivotTable elements by calling PivotTable.FormatAll with the style."
     },
