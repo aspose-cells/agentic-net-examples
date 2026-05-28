@@ -8081,6 +8081,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-pivottableisexcel2003compatible-to-true-before-refreshing-to-enforce-255character-truncation.cs",
+      "title": "Set PivotTable.IsExcel2003Compatible to true before refreshing to enforce 255\u2011character truncation."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-consolidationfunction-to-sum-for-aggregating-values-across-source-ranges-accurately-within-the-pivottable.cs",
       "title": "Set the ConsolidationFunction to Sum for aggregating values across source ranges accurately within the PivotTable."
     },
