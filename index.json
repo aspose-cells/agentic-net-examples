@@ -7566,6 +7566,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs",
+      "title": "Save a workbook containing a configured PivotTable to XLSX format using default save options."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
       "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
     },
