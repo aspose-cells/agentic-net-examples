@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - collapse-specific-pivotitems-by-iterating-them-and-setting-each-items-isexpanded-property-to-false.cs
 - set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs
 - configure-the-pivottable-to-use-the-default-data-source-connection-string-for-external-data-retrieval-operations.cs
+- update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs
