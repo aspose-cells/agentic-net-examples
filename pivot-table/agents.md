@@ -219,3 +219,4 @@ Output files are written to the working directory.
 - move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs
 - create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs
 - load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs
+- use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs
