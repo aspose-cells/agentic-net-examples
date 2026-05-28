@@ -8086,6 +8086,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-a-specific-pivottable-programmatically-to-reflect-changes-in-its-data-source.cs",
+      "title": "Refresh a specific PivotTable programmatically to reflect changes in its data source."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-nested-child-pivot-tables-of-a-parent-pivot-table-to-synchronize-data-hierarchy.cs",
       "title": "Refresh all nested child pivot tables of a parent pivot table to synchronize data hierarchy."
     },
