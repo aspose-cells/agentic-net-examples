@@ -8211,6 +8211,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-pivot-table-data-programmatically-after-modifying-the-underlying-source-worksheet-range.cs",
+      "title": "Refresh pivot table data programmatically after modifying the underlying source worksheet range."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
