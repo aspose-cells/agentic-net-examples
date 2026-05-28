@@ -7651,6 +7651,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-displayitemlabels-property-to-true-to-show-labels-for-each-individual-data-item.cs",
+      "title": "Set the PivotTable's DisplayItemLabels property to true to show labels for each individual data item."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs",
       "title": "Set the PivotTable's EnableMultipleFilters property to true to allow selecting multiple items per filter."
     },
