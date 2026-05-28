@@ -8561,6 +8561,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivot-tables-page-field-to-enable-pagination-when-printing-the-ods-document.cs",
+      "title": "Set the pivot table's page field to enable pagination when printing the ODS document."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivotitemposition-to-a-specific-index-after-calling-refreshdata-and-calculatedata.cs",
       "title": "Set the PivotItem.Position to a specific index after calling RefreshData and CalculateData."
     },
