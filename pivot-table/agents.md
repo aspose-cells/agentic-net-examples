@@ -215,3 +215,4 @@ Output files are written to the working directory.
 - programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs
 - refresh-a-pivot-table-after-modifying-its-source-data-range-to-reflect-recent-changes.cs
 - calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs
+- iterate-over-each-pivotfield-list-all-pivotitems-and-log-their-absolute-positions-for-debugging.cs
