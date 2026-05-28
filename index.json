@@ -7516,6 +7516,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-the-showexpandcollapsebuttons-property-to-provide-visual-cues-for-hierarchical-data-navigation-within-the-pivottable.cs",
+      "title": "Enable the ShowExpandCollapseButtons property to provide visual cues for hierarchical data navigation within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs",
       "title": "Enable the ShowValuesRow property to display a separate row that aggregates values for better readability."
     },

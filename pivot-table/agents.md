@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - create-a-pivottable-that-uses-a-named-table-as-its-source-for-dynamic-range-handling-and-updates.cs
 - apply-a-custom-background-color-to-the-pivottables-header-row-using-the-formatall-method-for-visual-emphasis.cs
 - set-the-pivottables-showvaluesrow-property-to-false-to-hide-the-additional-aggregated-values-row.cs
+- enable-the-showexpandcollapsebuttons-property-to-provide-visual-cues-for-hierarchical-data-navigation-within-the-pivottable.cs
