@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - add-a-custom-tooltip-to-a-pivottable-field-by-setting-its-description-property-with-the-desired-text.cs
 - programmatically-reorder-the-page-fields-to-change-filter-priority-within-the-pivottable-for-better-user-experience.cs
 - set-the-pivottables-displayitemlabels-property-to-true-to-show-labels-for-each-individual-data-item.cs
+- create-a-pivottable-that-uses-a-named-table-as-its-source-for-dynamic-range-handling-and-updates.cs
