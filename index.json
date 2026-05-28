@@ -7626,6 +7626,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "call-pivottablecalculatedata-before-saving-to-ensure-rendered-pivot-data-accurately.cs",
+      "title": "Call PivotTable.CalculateData() before saving to ensure rendered pivot data accurately."
+    },
+    {
+      "category": "pivot-table",
       "file": "change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs",
       "title": "Change the ConsolidationFunction to Average to compute mean values in the PivotTable for better analysis."
     },
