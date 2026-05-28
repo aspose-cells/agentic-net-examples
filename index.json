@@ -7776,6 +7776,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-preserveformatting-option-when-refreshing-a-pivottable-to-keep-user-applied-styles.cs",
+      "title": "Enable PreserveFormatting option when refreshing a PivotTable to keep user-applied styles."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs",
       "title": "Enable repeat item labels in rows by setting the RepeatItemLabels property to true on the PivotTable."
     },

@@ -270,3 +270,4 @@ Output files are written to the working directory.
 - remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs
 - rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs
 - set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs
+- enable-preserveformatting-option-when-refreshing-a-pivottable-to-keep-user-applied-styles.cs
