@@ -7566,6 +7566,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-reorder-the-page-fields-to-change-filter-priority-within-the-pivottable-for-better-user-experience.cs",
+      "title": "Programmatically reorder the page fields to change filter priority within the PivotTable for better user experience."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs",
       "title": "Programmatically set the PivotTable's RowHeaderCaption to a localized string for international user interfaces."
     },
