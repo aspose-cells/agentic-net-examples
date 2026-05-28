@@ -7436,6 +7436,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs",
+      "title": "Define a custom number format '0.00%' for a percentage field within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs",
       "title": "Delete a PivotTable from the worksheet using worksheet.PivotTables.RemoveAt with the appropriate index."
     },
