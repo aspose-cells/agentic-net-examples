@@ -331,3 +331,4 @@ Output files are written to the working directory.
 - disable-pivot-table-ribbons-in-the-generated-ods-file-for-a-cleaner-interface.cs
 - create-multiple-pivot-tables-in-a-single-worksheet-each-summarizing-different-metrics.cs
 - batch-process-a-folder-of-workbooks-adding-a-standardized-pivot-table-and-saving-as-ods.cs
+- create-a-pivot-chart-linked-to-the-pivot-table-and-export-both-to-an-ods-file.cs
