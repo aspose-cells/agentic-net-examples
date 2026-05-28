@@ -7541,6 +7541,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-the-showvaluesrow-property-only-when-a-single-data-field-exists-to-avoid-redundant-rows-in-the-pivottable.cs",
+      "title": "Enable the ShowValuesRow property only when a single data field exists to avoid redundant rows in the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs",
       "title": "Enable the ShowValuesRow property to display a separate row that aggregates values for better readability."
     },
