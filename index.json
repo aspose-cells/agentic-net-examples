@@ -7826,6 +7826,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-a-pivot-table-from-its-worksheet-and-confirm-no-remaining-pivot-objects.cs",
+      "title": "Delete a pivot table from its worksheet and confirm no remaining pivot objects."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs",
       "title": "Delete a PivotTable from the worksheet using worksheet.PivotTables.RemoveAt with the appropriate index."
     },
