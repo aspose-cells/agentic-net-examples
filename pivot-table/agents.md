@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - set-the-pivot-table-option-to-display-empty-cells-as-a-dash-character.cs
 - refresh-the-pivot-table-programmatically-after-modifying-the-source-data.cs
 - add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs
+- enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs
