@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs
 - configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs
 - apply-a-theme-color-to-all-pivottable-headers-using-the-formatall-method-with-a-predefined-style.cs
+- programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs

@@ -7491,6 +7491,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs",
+      "title": "Programmatically set the PivotTable's RowHeaderCaption to a localized string for international user interfaces."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
       "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
     },
