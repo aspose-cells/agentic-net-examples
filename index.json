@@ -8081,6 +8081,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs",
+      "title": "Set PivotTable.IsExcel2003Compatible to false before refreshing to preserve full text length."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-pivottableisexcel2003compatible-to-true-before-refreshing-to-enforce-255character-truncation.cs",
       "title": "Set PivotTable.IsExcel2003Compatible to true before refreshing to enforce 255\u2011character truncation."
     },
