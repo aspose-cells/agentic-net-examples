@@ -278,3 +278,4 @@ Output files are written to the working directory.
 - create-a-custom-numeric-grouping-for-a-sales-amount-field-with-defined-ranges.cs
 - hide-the-pivottable-ribbon-interface-to-provide-a-cleaner-view-during-runtime.cs
 - show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs
+- retrieve-the-external-data-connection-string-associated-with-a-pivottable-for-auditing.cs

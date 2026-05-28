@@ -8211,6 +8211,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-the-external-data-connection-string-associated-with-a-pivottable-for-auditing.cs",
+      "title": "Retrieve the external data connection string associated with a PivotTable for auditing."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-the-refreshbywho-property-to-identify-the-user-who-last-refreshed-the-pivottable.cs",
       "title": "Retrieve the RefreshByWho property to identify the user who last refreshed the PivotTable."
     },
