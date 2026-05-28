@@ -8121,6 +8121,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-an-existing-workbook-locate-its-pivot-table-and-change-the-data-source-range.cs",
+      "title": "Load an existing workbook, locate its pivot table, and change the data source range."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-an-xlsx-workbook-containing-a-pivot-table-and-refresh-its-data-programmatically.cs",
       "title": "Load an XLSX workbook containing a pivot table and refresh its data programmatically."
     },
