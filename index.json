@@ -7586,6 +7586,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-drilldown-functionality-on-data-fields-for-exploring-underlying-records.cs",
+      "title": "Enable drill\u2011down functionality on data fields for exploring underlying records."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-drillthrough-functionality-for-a-pivottable-by-setting-the-enabledrillthrough-option-to-true.cs",
       "title": "Enable drill\u2011through functionality for a PivotTable by setting the EnableDrillThrough option to true."
     },
