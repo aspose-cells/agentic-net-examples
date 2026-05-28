@@ -8741,6 +8741,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "use-pivottablecalculatedata-after-adding-calculated-fields-to-update-results-accurately.cs",
+      "title": "Use PivotTable.CalculateData() after adding calculated fields to update results accurately."
+    },
+    {
+      "category": "pivot-table",
       "file": "validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs",
       "title": "Validate that a PivotTable contains at least one data field before performing any calculations."
     },
