@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-containing-a-pivot-table-and-refresh-its-data-programmatically.cs
 - apply-a-custom-pivotglobalizationsettings-subclass-to-modify-total-label-text-before-refreshing-the-pivot-table.cs
 - assign-the-custom-globalization-instance-to-workbooksettingsglobalizationsettingspivotsettings-for-the-loaded-workbook.cs
+- refresh-the-pivot-table-and-then-calculate-its-data-to-ensure-formulas-are-uptodate.cs
