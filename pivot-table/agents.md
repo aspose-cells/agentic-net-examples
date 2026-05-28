@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs
 - delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs
 - after-deleting-a-pivot-table-verify-that-the-worksheet-no-longer-contains-any-pivot-objects.cs
+- save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs
