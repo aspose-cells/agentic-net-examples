@@ -7416,6 +7416,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "after-deleting-a-pivot-table-verify-that-the-worksheet-no-longer-contains-any-pivot-objects.cs",
+      "title": "After deleting a pivot table, verify that the worksheet no longer contains any pivot objects."
+    },
+    {
+      "category": "pivot-table",
       "file": "after-moving-items-verify-that-their-position-values-reflect-the-new-order-by-iterating-over-the-fields.cs",
       "title": "After moving items, verify that their Position values reflect the new order by iterating over the fields."
     },

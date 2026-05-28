@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs
 - delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs
 - delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs
+- after-deleting-a-pivot-table-verify-that-the-worksheet-no-longer-contains-any-pivot-objects.cs
