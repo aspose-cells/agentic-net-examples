@@ -8376,6 +8376,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs",
+      "title": "Show the PivotTable ribbon to allow users to interact with built-in Excel pivot tools."
+    },
+    {
+      "category": "pivot-table",
       "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
       "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
     },

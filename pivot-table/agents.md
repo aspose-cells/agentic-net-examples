@@ -277,3 +277,4 @@ Output files are written to the working directory.
 - group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs
 - create-a-custom-numeric-grouping-for-a-sales-amount-field-with-defined-ranges.cs
 - hide-the-pivottable-ribbon-interface-to-provide-a-cleaner-view-during-runtime.cs
+- show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs
