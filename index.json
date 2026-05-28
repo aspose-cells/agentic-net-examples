@@ -7556,6 +7556,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs",
+      "title": "Enable the ShowErrorValues flag to display #N/A for missing data points within the PivotTable for clarity."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-the-showexpandcollapsebuttons-property-to-provide-visual-cues-for-hierarchical-data-navigation-within-the-pivottable.cs",
       "title": "Enable the ShowExpandCollapseButtons property to provide visual cues for hierarchical data navigation within the PivotTable."
     },
