@@ -7751,6 +7751,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "update-the-union-range-to-include-an-additional-worksheet-and-refresh-the-pivottable-to-incorporate-new-data.cs",
+      "title": "Update the union range to include an additional worksheet and refresh the PivotTable to incorporate new data."
+    },
+    {
+      "category": "pivot-table",
       "file": "validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs",
       "title": "Validate that a PivotTable contains at least one data field before performing any calculations."
     },

@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - add-a-custom-grouping-to-a-date-field-by-defining-a-groupinterval-of-months-for-better-summarization.cs
 - set-the-pivottables-enablerefreshonopen-property-to-true-so-it-automatically-updates-when-the-workbook-opens.cs
 - create-a-pivottable-that-consolidates-data-from-three-separate-worksheets-using-a-union-range-for-combined-analysis.cs
+- update-the-union-range-to-include-an-additional-worksheet-and-refresh-the-pivottable-to-incorporate-new-data.cs
