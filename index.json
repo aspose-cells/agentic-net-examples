@@ -7345,6 +7345,11 @@
       "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
     },
     {
+      "category": "pivot-table",
+      "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
+      "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
