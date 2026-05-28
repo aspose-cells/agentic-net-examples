@@ -7426,6 +7426,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs",
+      "title": "Apply number formatting to show values as currency with two decimal places."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-the-compact-layout-to-an-existing-pivottable-by-invoking-the-showincompactform-method.cs",
       "title": "Apply the Compact layout to an existing PivotTable by invoking the ShowInCompactForm method."
     },
