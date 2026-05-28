@@ -7926,6 +7926,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs",
+      "title": "Iterate through all worksheets, locate each PivotTable, and log its RefreshDate to a file."
+    },
+    {
+      "category": "pivot-table",
       "file": "limit-the-number-of-items-displayed-in-a-pivotfield-by-adjusting-its-showitemscount-property-value.cs",
       "title": "Limit the number of items displayed in a PivotField by adjusting its ShowItemsCount property value."
     },
