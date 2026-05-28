@@ -291,3 +291,4 @@ Output files are written to the working directory.
 - create-a-new-pivot-table-on-a-worksheet-by-specifying-target-range-and-data-source.cs
 - assign-a-specific-cell-range-as-the-data-source-for-the-newly-created-pivot-table.cs
 - apply-custom-ascending-sorting-to-a-row-field-based-on-its-underlying-numeric-values.cs
+- apply-custom-descending-sorting-to-a-column-field-using-its-textual-values-for-ordering.cs
