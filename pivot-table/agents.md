@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - programmatically-disable-the-showexpandcollapsebuttons-property-to-simplify-the-ui-for-flat-data-structures-without-hierarchy.cs
 - set-the-pivottables-enablerefreshonopen-to-false-and-manually-trigger-refreshdata-after-user-edits-for-controlled-updates.cs
 - add-a-slicer-for-the-region-field-and-link-it-to-the-pivottable-for-interactive-filtering-by-users.cs
+- remove-all-slicers-from-a-workbook-by-iterating-each-worksheet-and-clearing-each-pivottables-slicercollection.cs
