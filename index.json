@@ -7516,6 +7516,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-pivot-chart-linked-to-the-pivot-table-and-export-as-a-png-image-file.cs",
+      "title": "Create a pivot chart linked to the pivot table and export as a PNG image file."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-pivottable-that-consolidates-data-from-multiple-worksheets-using-the-consolidationfunction-property.cs",
       "title": "Create a PivotTable that consolidates data from multiple worksheets using the ConsolidationFunction property."
     },
