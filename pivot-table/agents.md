@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs
 - delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs
 - show-error-values-as-zero-to-avoid-displaying-div0-messages.cs
+- add-a-slicer-control-linked-to-the-pivot-table-for-interactive-region-filtering.cs
