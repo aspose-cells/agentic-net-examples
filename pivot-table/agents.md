@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-display-quantities-with-thousand-separators-and-no-decimals.cs
 - cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs
 - add-a-calculated-item-to-group-multiple-product-categories-into-a-custom-group.cs
+- load-an-xlsx-workbook-containing-a-pivot-table-and-refresh-its-data-programmatically.cs
