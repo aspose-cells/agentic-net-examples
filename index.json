@@ -7431,6 +7431,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-top-5-filter-on-a-column-field-limiting-displayed-items-to-the-best-five.cs",
+      "title": "Add a Top 5 filter on a column field, limiting displayed items to the best five."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs",
       "title": "Add conditional formatting to highlight rows where profit margin exceeds twenty percent."
     },
