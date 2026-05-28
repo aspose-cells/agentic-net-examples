@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - apply-a-light-blue-fill-color-to-the-retrieved-pivot-field-header-cell.cs
 - change-the-font-color-of-the-retrieved-pivot-field-header-cell-to-black.cs
 - apply-light-blue-fill-and-black-font-color-to-the-pivot-field-header-cell-together.cs
+- set-pivottableisexcel2003compatible-to-true-before-refreshing-to-enforce-255character-truncation.cs
