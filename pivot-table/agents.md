@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - apply-a-value-filter-to-display-only-items-with-sales-greater-than-a-threshold.cs
 - create-a-top10-filter-on-the-product-field-to-show-highest-selling-items.cs
 - enable-drilldown-functionality-on-data-fields-for-exploring-underlying-records.cs
+- add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs
