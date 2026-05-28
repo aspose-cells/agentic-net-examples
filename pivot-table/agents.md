@@ -239,3 +239,4 @@ Output files are written to the working directory.
 - refresh-the-pivot-table-after-enabling-excel-2003-compatibility-to-apply-truncation.cs
 - refresh-the-pivot-table-after-disabling-excel-2003-compatibility-to-keep-original-content.cs
 - save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs
+- save-the-workbook-to-a-memory-stream-and-then-write-the-stream-to-disk.cs
