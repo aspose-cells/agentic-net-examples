@@ -7335,6 +7335,11 @@
       "title": "Write pivot table definitions while saving with LightCellsDataProvider to recreate analytical views in the output workbook."
     },
     {
+      "category": "pivot-table",
+      "file": "create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs",
+      "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
