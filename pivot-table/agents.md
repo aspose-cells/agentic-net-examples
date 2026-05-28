@@ -280,3 +280,4 @@ Output files are written to the working directory.
 - show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs
 - retrieve-the-external-data-connection-string-associated-with-a-pivottable-for-auditing.cs
 - modify-the-external-connection-of-a-pivottable-to-point-to-a-new-database-server.cs
+- iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs
