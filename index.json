@@ -7866,6 +7866,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-from-a-network-share-modify-compatibility-and-save-locally-for-distribution.cs",
+      "title": "Load a workbook from a network share, modify compatibility, and save locally for distribution."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs",
       "title": "Load a workbook, set PivotItem.Position for multiple items, then save changes back to XLSX."
     },

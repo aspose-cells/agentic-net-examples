@@ -250,3 +250,4 @@ Output files are written to the working directory.
 - iterate-through-all-pivot-fields-and-log-each-fields-display-name-to-a-text-file.cs
 - retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs
 - refresh-the-pivot-table-after-formatting-header-cells-to-ensure-style-changes-persist.cs
+- load-a-workbook-from-a-network-share-modify-compatibility-and-save-locally-for-distribution.cs
