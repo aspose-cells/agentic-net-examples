@@ -7396,6 +7396,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs",
+      "title": "Add conditional formatting to highlight rows where profit margin exceeds twenty percent."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-row-fields-to-group-sales-data-by-region-and-product-category.cs",
       "title": "Add row fields to group sales data by region and product category."
     },
