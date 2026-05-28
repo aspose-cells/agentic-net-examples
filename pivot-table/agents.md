@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - set-the-pivottables-enablerefreshonopen-property-to-true-so-it-automatically-updates-when-the-workbook-opens.cs
 - create-a-pivottable-that-consolidates-data-from-three-separate-worksheets-using-a-union-range-for-combined-analysis.cs
 - update-the-union-range-to-include-an-additional-worksheet-and-refresh-the-pivottable-to-incorporate-new-data.cs
+- set-the-pivottables-showgrandtotalsforcolumns-property-to-false-to-hide-column-totals-entirely-from-the-report.cs
