@@ -7821,6 +7821,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs",
+      "title": "Move a pivot item from the column area to the row area by changing its parent field."
+    },
+    {
+      "category": "pivot-table",
       "file": "move-a-pivot-item-two-positions-forward-within-the-same-parent-node-using-the-move-method.cs",
       "title": "Move a pivot item two positions forward within the same parent node using the Move method."
     },
