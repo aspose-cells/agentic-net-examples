@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - create-a-pivot-chart-linked-to-the-pivot-table-and-export-as-a-png-image-file.cs
 - set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs
 - preserve-custom-formatting-after-data-refresh-keeping-number-formats-and-colors.cs
+- add-a-report-filter-field-to-allow-selection-of-a-specific-salesperson.cs

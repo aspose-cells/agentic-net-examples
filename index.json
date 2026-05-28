@@ -7381,6 +7381,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-report-filter-field-to-allow-selection-of-a-specific-salesperson.cs",
+      "title": "Add a report filter field to allow selection of a specific salesperson."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-slicer-for-the-region-field-and-link-it-to-the-pivottable-for-interactive-filtering-by-users.cs",
       "title": "Add a slicer for the Region field and link it to the PivotTable for interactive filtering by users."
     },
