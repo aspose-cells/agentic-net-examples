@@ -283,3 +283,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs
 - batch-update-the-showreportfilterpages-option-for-every-pivottable-across-multiple-workbooks.cs
 - validate-that-each-pivottable-has-a-non-empty-refreshbywho-property-before-publishing.cs
+- apply-conditional-formatting-to-a-pivottable-column-based-on-calculated-field-values-exceeding-a-threshold.cs

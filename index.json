@@ -7516,6 +7516,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-conditional-formatting-to-a-pivottable-column-based-on-calculated-field-values-exceeding-a-threshold.cs",
+      "title": "Apply conditional formatting to a PivotTable column based on calculated field values exceeding a threshold."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs",
       "title": "Apply conditional formatting to PivotTable values that exceed a threshold using the FormatCondition feature."
     },
