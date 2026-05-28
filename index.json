@@ -7391,6 +7391,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "customize-the-pivottables-report-filter-caption-by-assigning-a-new-descriptive-string-to-its-caption-property.cs",
+      "title": "Customize the PivotTable's report filter caption by assigning a new descriptive string to its Caption property."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs",
       "title": "Delete a PivotTable from the worksheet using worksheet.PivotTables.RemoveAt with the appropriate index."
     },

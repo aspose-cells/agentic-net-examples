@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - set-the-pivottables-refreshonfileopen-property-to-true-to-enable-autorefresh-when-workbook-loads.cs
 - limit-the-number-of-items-displayed-in-a-pivotfield-by-adjusting-its-showitemscount-property-value.cs
 - enable-drillthrough-functionality-for-a-pivottable-by-setting-the-enabledrillthrough-option-to-true.cs
+- customize-the-pivottables-report-filter-caption-by-assigning-a-new-descriptive-string-to-its-caption-property.cs
