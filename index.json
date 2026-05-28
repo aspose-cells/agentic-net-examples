@@ -8251,6 +8251,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-filters-from-a-pivot-table-to-show-unfiltered-data-across-all-fields.cs",
+      "title": "Remove all filters from a pivot table to show unfiltered data across all fields."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
       "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
     },
