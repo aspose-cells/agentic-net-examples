@@ -7511,6 +7511,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-displayerrorstring-property-to-a-custom-message-for-handling-calculation-errors.cs",
+      "title": "Set the PivotTable's DisplayErrorString property to a custom message for handling calculation errors."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs",
       "title": "Set the PivotTable's PreserveFormatting flag to true to retain applied styles after each refresh."
     },

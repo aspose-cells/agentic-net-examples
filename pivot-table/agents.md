@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - configure-the-pivottable-to-use-the-default-data-source-connection-string-for-external-data-retrieval-operations.cs
 - update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs
 - remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs
+- set-the-pivottables-displayerrorstring-property-to-a-custom-message-for-handling-calculation-errors.cs
