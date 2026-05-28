@@ -7971,6 +7971,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs",
+      "title": "Use a dynamic named range as the source to automatically expand with new data."
+    },
+    {
+      "category": "pivot-table",
       "file": "validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs",
       "title": "Validate that a PivotTable contains at least one data field before performing any calculations."
     },

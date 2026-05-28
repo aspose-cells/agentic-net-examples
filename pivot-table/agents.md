@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - create-a-top10-filter-on-the-product-field-to-show-highest-selling-items.cs
 - enable-drilldown-functionality-on-data-fields-for-exploring-underlying-records.cs
 - add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs
+- use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs
