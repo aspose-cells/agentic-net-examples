@@ -259,3 +259,4 @@ Output files are written to the working directory.
 - load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs
 - retrieve-the-refreshbywho-property-to-identify-the-user-who-last-refreshed-the-pivottable.cs
 - set-showreportfilterpages-to-true-to-generate-separate-worksheets-for-each-filter-selection.cs
+- hide-a-specific-pivotfield-by-setting-its-hidden-property-to-true.cs
