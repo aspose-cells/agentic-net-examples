@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - remove-all-slicers-from-a-workbook-by-iterating-each-worksheet-and-clearing-each-pivottables-slicercollection.cs
 - configure-the-pivottable-to-display-values-as-percentages-of-column-total-using-the-showvaluesaspercent-property.cs
 - set-the-pivottables-showvaluesaspercent-property-to-true-for-all-data-fields-to-normalize-values-across-columns.cs
+- programmatically-expand-only-the-first-level-of-items-in-a-hierarchical-pivottable-to-provide-a-concise-initial-view.cs
