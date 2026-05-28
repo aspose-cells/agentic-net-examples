@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - programmatically-expand-all-collapsed-items-in-a-pivottable-using-the-expandall-method-for-full-visibility.cs
 - collapse-specific-pivotitems-by-iterating-them-and-setting-each-items-isexpanded-property-to-false.cs
 - set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs
+- configure-the-pivottable-to-use-the-default-data-source-connection-string-for-external-data-retrieval-operations.cs

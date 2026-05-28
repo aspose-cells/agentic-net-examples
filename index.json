@@ -7391,6 +7391,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-pivottable-to-use-the-default-data-source-connection-string-for-external-data-retrieval-operations.cs",
+      "title": "Configure the PivotTable to use the default data source connection string for external data retrieval operations."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs",
       "title": "Create a custom Style object, configure its font color, and apply it using PivotTable.Format."
     },
