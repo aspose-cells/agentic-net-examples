@@ -7341,6 +7341,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-calculated-item-to-an-existing-field-by-calling-addcalculateditem-with-the-appropriate-expression.cs",
+      "title": "Add a calculated item to an existing field by calling AddCalculatedItem with the appropriate expression."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs",
       "title": "Add a slicer linked to a PivotTable for interactive filtering using the SlicerCollection API."
     },
