@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs
 - remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs
 - set-the-pivottables-displayerrorstring-property-to-a-custom-message-for-handling-calculation-errors.cs
+- enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs
