@@ -8126,6 +8126,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs",
+      "title": "Remove a calculated field from a PivotTable without affecting other fields."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs",
       "title": "Remove all data fields from a PivotTable to convert it into a pure row and column summary."
     },
