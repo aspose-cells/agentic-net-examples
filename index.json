@@ -7621,6 +7621,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "group-date-fields-by-month-and-year-to-summarize-sales-trends.cs",
+      "title": "Group date fields by month and year to summarize sales trends."
+    },
+    {
+      "category": "pivot-table",
       "file": "hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs",
       "title": "Hide a specific PivotField from the report area by setting its Visible property to false."
     },
