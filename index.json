@@ -7666,6 +7666,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-new-pivot-table-on-a-worksheet-by-specifying-target-range-and-data-source.cs",
+      "title": "Create a new pivot table on a worksheet by specifying target range and data source."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs",
       "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
     },
