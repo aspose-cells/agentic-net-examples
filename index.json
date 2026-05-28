@@ -7846,6 +7846,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-pivot-table-ribbons-in-the-generated-ods-file-for-a-cleaner-interface.cs",
+      "title": "Disable pivot table ribbons in the generated ODS file for a cleaner interface."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-pivot-table-ribbons-programmatically-before-saving-the-workbook-to-reduce-ui-clutter.cs",
       "title": "Disable pivot table ribbons programmatically before saving the workbook to reduce UI clutter."
     },
