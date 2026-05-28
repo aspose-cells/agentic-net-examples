@@ -7886,6 +7886,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-a-pivot-table-after-modifying-its-source-data-range-to-reflect-recent-changes.cs",
+      "title": "Refresh a pivot table after modifying its source data range to reflect recent changes."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-a-pivottable-after-changing-its-consolidationfunction-to-ensure-aggregated-results-are-updated-correctly.cs",
       "title": "Refresh a PivotTable after changing its ConsolidationFunction to ensure aggregated results are updated correctly."
     },
