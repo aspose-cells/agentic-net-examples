@@ -8466,6 +8466,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "validate-that-each-pivottable-has-a-non-empty-refreshbywho-property-before-publishing.cs",
+      "title": "Validate that each PivotTable has a non-empty RefreshByWho property before publishing."
+    },
+    {
+      "category": "pivot-table",
       "file": "verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs",
       "title": "Verify that cell content length does not exceed 255 characters when compatibility is enabled."
     },
