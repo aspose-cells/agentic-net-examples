@@ -7446,6 +7446,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "collapse-all-items-in-the-column-area-after-refresh-to-present-a-summarized-report-with-minimal-detail.cs",
+      "title": "Collapse all items in the column area after refresh to present a summarized report with minimal detail."
+    },
+    {
+      "category": "pivot-table",
       "file": "collapse-specific-pivotitems-by-iterating-them-and-setting-each-items-isexpanded-property-to-false.cs",
       "title": "Collapse specific PivotItems by iterating them and setting each item's IsExpanded property to false."
     },
