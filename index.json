@@ -7376,6 +7376,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-slicer-for-the-region-field-and-link-it-to-the-pivottable-for-interactive-filtering-by-users.cs",
+      "title": "Add a slicer for the Region field and link it to the PivotTable for interactive filtering by users."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs",
       "title": "Add a slicer linked to a PivotTable for interactive filtering using the SlicerCollection API."
     },
