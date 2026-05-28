@@ -7501,6 +7501,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-hide-the-pivottables-field-headers-by-setting-the-showfieldheaders-property-to-false.cs",
+      "title": "Programmatically hide the PivotTable's field headers by setting the ShowFieldHeaders property to false."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs",
       "title": "Programmatically reorder PivotFields within the row area to change the data hierarchy display order."
     },
