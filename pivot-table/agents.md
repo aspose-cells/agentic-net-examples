@@ -311,3 +311,4 @@ Output files are written to the working directory.
 - apply-a-custom-sort-order-using-a-predefined-list-of-strings-to-control-field-item-sequence.cs
 - add-both-a-top-10-filter-and-a-label-filter-to-the-same-pivot-field-for-combined-criteria.cs
 - clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs
+- set-showvaluessettingcalculationtype-to-ranklargesttosmallest-for-multiple-fields-uniformly.cs

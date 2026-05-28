@@ -8411,6 +8411,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-showvaluessettingcalculationtype-to-ranklargesttosmallest-for-multiple-fields-uniformly.cs",
+      "title": "Set ShowValuesSetting.CalculationType to RankLargestToSmallest for multiple fields uniformly."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs",
       "title": "Set the AutoSort property of a PivotField to sort items based on a related value field."
     },
