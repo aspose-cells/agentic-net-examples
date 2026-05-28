@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - add-a-new-worksheet-copy-source-data-and-create-a-linked-pivottable-referencing-that-data.cs
 - set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs
 - configure-the-pivottable-to-use-the-default-report-layout-by-resetting-the-showincompactform-setting.cs
+- add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs

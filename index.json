@@ -7346,6 +7346,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs",
+      "title": "Add a custom data field that calculates the percentage of total using a formula within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-new-worksheet-copy-source-data-and-create-a-linked-pivottable-referencing-that-data.cs",
       "title": "Add a new worksheet, copy source data, and create a linked PivotTable referencing that data."
     },
