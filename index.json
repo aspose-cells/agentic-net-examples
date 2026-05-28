@@ -8366,6 +8366,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-data-field-display-format-to-ranklargesttosmallest-for-descending-ranking.cs",
+      "title": "Set the data field display format to RankLargestToSmallest for descending ranking."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivot-table-option-to-display-empty-cells-as-a-dash-character.cs",
       "title": "Set the pivot table option to display empty cells as a dash character."
     },
