@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs
 - show-error-values-as-zero-to-avoid-displaying-div0-messages.cs
 - add-a-slicer-control-linked-to-the-pivot-table-for-interactive-region-filtering.cs
+- create-a-timeline-filter-for-the-date-field-to-select-custom-time-periods.cs
