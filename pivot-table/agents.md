@@ -320,3 +320,4 @@ Output files are written to the working directory.
 - add-a-calculated-field-that-computes-profit-margin-as-profit-divided-by-revenue.cs
 - group-the-pivot-tables-date-field-by-months-and-years-for-hierarchical-analysis.cs
 - apply-a-custom-descending-alphabetical-sort-to-product-category-pivot-items.cs
+- hide-selected-pivot-items-to-exclude-confidential-information-from-the-report-view.cs
