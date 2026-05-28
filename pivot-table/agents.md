@@ -295,3 +295,4 @@ Output files are written to the working directory.
 - define-a-custom-list-order-for-a-pivot-field-and-apply-it-to-control-item-sequence.cs
 - add-a-top-10-filter-to-a-row-field-to-display-only-the-highest-values.cs
 - add-a-top-5-filter-on-a-column-field-limiting-displayed-items-to-the-best-five.cs
+- set-a-label-filter-on-a-data-field-to-include-only-entries-matching-specific-text.cs
