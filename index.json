@@ -7611,6 +7611,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-an-excel-workbook-create-a-pivot-table-on-a-new-worksheet-and-set-its-data-source-range.cs",
+      "title": "Load an Excel workbook, create a pivot table on a new worksheet, and set its data source range."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs",
       "title": "Load an existing Excel file, locate a PivotTable, and change its layout to Tabular."
     },
