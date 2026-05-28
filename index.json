@@ -7951,6 +7951,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-from-a-file-path-to-prepare-for-pivot-table-operations.cs",
+      "title": "Load a workbook from a file path to prepare for pivot table operations."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-from-a-network-share-modify-compatibility-and-save-locally-for-distribution.cs",
       "title": "Load a workbook from a network share, modify compatibility, and save locally for distribution."
     },
