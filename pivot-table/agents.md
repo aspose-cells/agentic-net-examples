@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - programmatically-set-the-pivottables-datafieldseparator-to-a-custom-character-for-multifield-values-representation.cs
 - add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs
 - add-a-custom-grouping-to-a-date-field-by-defining-a-groupinterval-of-months-for-better-summarization.cs
+- set-the-pivottables-enablerefreshonopen-property-to-true-so-it-automatically-updates-when-the-workbook-opens.cs
