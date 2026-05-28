@@ -7636,6 +7636,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs",
+      "title": "Clear the filter on one pivot field while preserving filters applied to other fields."
+    },
+    {
+      "category": "pivot-table",
       "file": "clone-an-existing-pivottable-modify-its-data-source-range-and-insert-it-into-a-new-worksheet.cs",
       "title": "Clone an existing PivotTable, modify its data source range, and insert it into a new worksheet."
     },
