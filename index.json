@@ -8280,6 +8280,11 @@
       "title": "Verify that cell content length does not exceed 255 characters when compatibility is enabled."
     },
     {
+      "category": "pivot-table",
+      "file": "verify-that-cell-content-length-remains-unchanged-when-compatibility-is-disabled-after-refresh.cs",
+      "title": "Verify that cell content length remains unchanged when compatibility is disabled after refresh."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."

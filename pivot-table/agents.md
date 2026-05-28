@@ -243,3 +243,4 @@ Output files are written to the working directory.
 - disable-pivot-table-ribbons-programmatically-before-saving-the-workbook-to-reduce-ui-clutter.cs
 - enable-pivot-table-ribbons-programmatically-after-loading-the-workbook-to-restore-default-ui-elements.cs
 - verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs
+- verify-that-cell-content-length-remains-unchanged-when-compatibility-is-disabled-after-refresh.cs
