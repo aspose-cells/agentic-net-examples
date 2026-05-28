@@ -7611,6 +7611,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs",
+      "title": "Set the PivotTable's MissingItemsLimit to a high number to include all possible items during refresh."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs",
       "title": "Set the PivotTable's PreserveFormatting flag to true to retain applied styles after each refresh."
     },
