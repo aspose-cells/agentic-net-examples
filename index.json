@@ -8226,6 +8226,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs",
+      "title": "Set the AutoSort property of a PivotField to sort items based on a related value field."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-consolidationfunction-to-sum-for-aggregating-values-across-source-ranges-accurately-within-the-pivottable.cs",
       "title": "Set the ConsolidationFunction to Sum for aggregating values across source ranges accurately within the PivotTable."
     },
