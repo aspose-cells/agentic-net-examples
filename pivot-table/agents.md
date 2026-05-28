@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs
 - hide-subtotals-for-specific-row-fields-to-simplify-the-pivot-view.cs
 - apply-a-predefined-pivot-table-style-for-consistent-visual-formatting.cs
+- group-date-fields-by-month-and-year-to-summarize-sales-trends.cs
