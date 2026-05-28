@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - set-the-consolidationfunction-to-sum-for-aggregating-values-across-source-ranges-accurately-within-the-pivottable.cs
 - change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs
 - programmatically-hide-the-pivottables-field-headers-by-setting-the-showfieldheaders-property-to-false.cs
+- enable-the-display-of-item-labels-in-the-values-area-by-setting-the-showvaluescolumn-property-true.cs
