@@ -7546,6 +7546,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "change-the-font-color-of-the-retrieved-pivot-field-header-cell-to-black.cs",
+      "title": "Change the font color of the retrieved pivot field header cell to black."
+    },
+    {
+      "category": "pivot-table",
       "file": "clear-all-page-fields-from-a-pivottable-by-invoking-the-pivottablepagefieldsclear-method-first.cs",
       "title": "Clear all page fields from a PivotTable by invoking the PivotTable.PageFields.Clear method first."
     },
