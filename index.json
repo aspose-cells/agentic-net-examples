@@ -8301,6 +8301,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-the-external-connection-object-of-a-pivot-table-and-log-its-connection-string.cs",
+      "title": "Retrieve the external connection object of a pivot table and log its connection string."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-the-external-data-connection-string-associated-with-a-pivottable-for-auditing.cs",
       "title": "Retrieve the external data connection string associated with a PivotTable for auditing."
     },

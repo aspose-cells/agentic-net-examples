@@ -300,3 +300,4 @@ Output files are written to the working directory.
 - remove-all-filters-from-a-pivot-table-to-show-unfiltered-data-across-all-fields.cs
 - set-the-data-field-display-format-to-ranklargesttosmallest-for-descending-ranking.cs
 - configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs
+- retrieve-the-external-connection-object-of-a-pivot-table-and-log-its-connection-string.cs
