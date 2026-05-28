@@ -342,3 +342,4 @@ Output files are written to the working directory.
 - disable-the-pivot-table-ribbon-and-toolbar-in-the-ods-output-for-minimal-ui.cs
 - use-pivottablecalculatedata-after-adding-calculated-fields-to-update-results-accurately.cs
 - save-the-workbook-after-disabling-ribbons-to-ensure-settings-are-persisted-in-ods.cs
+- validate-that-the-ods-file-contains-the-rendered-pivot-table-by-opening-and-checking-objects.cs
