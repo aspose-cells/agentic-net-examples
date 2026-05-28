@@ -7816,6 +7816,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "generate-a-summary-report-listing-each-processed-workbook-its-compatibility-setting-and-ribbon-status.cs",
+      "title": "Generate a summary report listing each processed workbook, its compatibility setting, and ribbon status."
+    },
+    {
+      "category": "pivot-table",
       "file": "group-date-fields-by-month-and-year-to-summarize-sales-trends.cs",
       "title": "Group date fields by month and year to summarize sales trends."
     },
