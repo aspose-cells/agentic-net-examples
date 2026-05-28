@@ -285,3 +285,4 @@ Output files are written to the working directory.
 - validate-that-each-pivottable-has-a-non-empty-refreshbywho-property-before-publishing.cs
 - apply-conditional-formatting-to-a-pivottable-column-based-on-calculated-field-values-exceeding-a-threshold.cs
 - clone-an-existing-pivottable-modify-its-data-source-range-and-insert-it-into-a-new-worksheet.cs
+- load-a-workbook-from-a-file-path-to-prepare-for-pivot-table-operations.cs
