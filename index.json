@@ -8516,6 +8516,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "update-the-external-connection-string-of-a-pivot-table-then-refresh-to-load-new-data.cs",
+      "title": "Update the external connection string of a pivot table, then refresh to load new data."
+    },
+    {
+      "category": "pivot-table",
       "file": "update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs",
       "title": "Update the external connection's command text for a PivotTable to query a different database table."
     },
