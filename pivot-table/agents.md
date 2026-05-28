@@ -262,3 +262,4 @@ Output files are written to the working directory.
 - hide-a-specific-pivotfield-by-setting-its-hidden-property-to-true.cs
 - unhide-a-previously-hidden-pivotfield-by-setting-its-hidden-property-to-false.cs
 - apply-an-ascending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs
+- apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs
