@@ -8096,6 +8096,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs",
+      "title": "Retrieve and format multiple pivot field header cells by their display names in a loop."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs",
       "title": "Retrieve external data connection details from a PivotTable via its ExternalConnection property."
     },

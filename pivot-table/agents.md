@@ -248,3 +248,4 @@ Output files are written to the working directory.
 - compare-memory-usage-between-loading-with-cache-parsing-enabled-and-disabled-for-the-same-file.cs
 - log-the-duration-required-to-refresh-a-pivot-table-after-loading-cache-records.cs
 - iterate-through-all-pivot-fields-and-log-each-fields-display-name-to-a-text-file.cs
+- retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs
