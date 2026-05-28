@@ -8011,6 +8011,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-disabling-excel-2003-compatibility-to-keep-original-content.cs",
+      "title": "Refresh the pivot table after disabling Excel 2003 compatibility to keep original content."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-the-pivot-table-after-enabling-excel-2003-compatibility-to-apply-truncation.cs",
       "title": "Refresh the pivot table after enabling Excel 2003 compatibility to apply truncation."
     },
