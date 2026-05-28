@@ -7346,6 +7346,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-calculated-field-that-categorizes-sales-using-if-function-for-high-medium-low.cs",
+      "title": "Add a calculated field that categorizes sales using IF function for high, medium, low."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs",
       "title": "Add a calculated field that computes profit margin by dividing profit by revenue."
     },
