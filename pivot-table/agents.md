@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - apply-the-compact-layout-to-an-existing-pivottable-by-invoking-the-showincompactform-method.cs
 - switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs
 - set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs
+- assign-the-builtin-pivottablestylemedium9-autoformat-to-a-pivottable-for-quick-styling-automatically.cs

@@ -7341,6 +7341,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "assign-the-builtin-pivottablestylemedium9-autoformat-to-a-pivottable-for-quick-styling-automatically.cs",
+      "title": "Assign the built\u2011in PivotTableStyleMedium9 auto\u2011format to a PivotTable for quick styling automatically."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs",
       "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
     },
