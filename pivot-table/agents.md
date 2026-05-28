@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs
 - add-a-custom-grouping-to-a-date-field-by-defining-a-groupinterval-of-months-for-better-summarization.cs
 - set-the-pivottables-enablerefreshonopen-property-to-true-so-it-automatically-updates-when-the-workbook-opens.cs
+- create-a-pivottable-that-consolidates-data-from-three-separate-worksheets-using-a-union-range-for-combined-analysis.cs
