@@ -7871,6 +7871,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-from-a-stream-enable-cache-parsing-modify-the-pivot-and-write-back-to-the-stream.cs",
+      "title": "Load a workbook from a stream, enable cache parsing, modify the pivot, and write back to the stream."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs",
       "title": "Load a workbook, set PivotItem.Position for multiple items, then save changes back to XLSX."
     },

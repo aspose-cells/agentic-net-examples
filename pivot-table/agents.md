@@ -251,3 +251,4 @@ Output files are written to the working directory.
 - retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs
 - refresh-the-pivot-table-after-formatting-header-cells-to-ensure-style-changes-persist.cs
 - load-a-workbook-from-a-network-share-modify-compatibility-and-save-locally-for-distribution.cs
+- load-a-workbook-from-a-stream-enable-cache-parsing-modify-the-pivot-and-write-back-to-the-stream.cs
