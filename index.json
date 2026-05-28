@@ -7946,6 +7946,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs",
+      "title": "Save the workbook as PDF after removing unwanted pivot tables to produce a clean report."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
       "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
     },
