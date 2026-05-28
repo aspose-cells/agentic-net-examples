@@ -299,3 +299,4 @@ Output files are written to the working directory.
 - clear-the-filter-applied-to-a-specific-row-field-restoring-its-full-item-list.cs
 - remove-all-filters-from-a-pivot-table-to-show-unfiltered-data-across-all-fields.cs
 - set-the-data-field-display-format-to-ranklargesttosmallest-for-descending-ranking.cs
+- configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs
