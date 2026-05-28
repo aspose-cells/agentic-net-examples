@@ -7626,6 +7626,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "update-the-source-data-of-an-existing-pivottable-by-redefining-its-sourcedata-property-accordingly.cs",
+      "title": "Update the source data of an existing PivotTable by redefining its SourceData property accordingly."
+    },
+    {
+      "category": "pivot-table",
       "file": "validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs",
       "title": "Validate that a PivotTable contains at least one data field before performing any calculations."
     },
