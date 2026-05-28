@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs
 - remove-all-slicers-associated-with-a-pivottable-by-clearing-its-slicercollection-completely.cs
 - set-the-pivottables-datacaption-property-to-a-custom-label-for-the-values-column-header.cs
+- enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs
