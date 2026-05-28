@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs
 - disable-column-grand-totals-in-a-pivottable-by-setting-showcolumngrandtotals-property-to-false.cs
 - refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs
+- export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs
