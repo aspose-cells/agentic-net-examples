@@ -7481,6 +7481,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs",
+      "title": "Remove all data fields from a PivotTable to convert it into a pure row and column summary."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
       "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
     },
