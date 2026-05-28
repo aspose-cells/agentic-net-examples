@@ -7976,6 +7976,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-over-all-pivot-fields-and-output-each-fields-display-name-to-the-console.cs",
+      "title": "Iterate over all pivot fields and output each field\u2019s display name to the console."
+    },
+    {
+      "category": "pivot-table",
       "file": "iterate-over-each-pivotfield-list-all-pivotitems-and-log-their-absolute-positions-for-debugging.cs",
       "title": "Iterate over each PivotField, list all PivotItems, and log their absolute positions for debugging."
     },
