@@ -7496,6 +7496,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-the-showdrilldownbuttons-property-to-allow-users-to-expand-aggregated-cells-directly-from-the-pivottable.cs",
+      "title": "Enable the ShowDrillDownButtons property to allow users to expand aggregated cells directly from the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs",
       "title": "Enable the ShowValuesRow property to display a separate row that aggregates values for better readability."
     },
