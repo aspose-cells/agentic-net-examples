@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - refresh-a-pivot-table-after-modifying-its-source-data-range-to-reflect-recent-changes.cs
 - calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs
 - iterate-over-each-pivotfield-list-all-pivotitems-and-log-their-absolute-positions-for-debugging.cs
+- move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs
