@@ -7676,6 +7676,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "preserve-custom-formatting-after-data-refresh-keeping-number-formats-and-colors.cs",
+      "title": "Preserve custom formatting after data refresh, keeping number formats and colors."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs",
       "title": "Programmatically disable the auto\u2011fit of column widths for a PivotTable to maintain custom column sizing."
     },
