@@ -7536,6 +7536,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs",
+      "title": "Programmatically disable the auto\u2011fit of column widths for a PivotTable to maintain custom column sizing."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-expand-all-collapsed-items-in-a-pivottable-using-the-expandall-method-for-full-visibility.cs",
       "title": "Programmatically expand all collapsed items in a PivotTable using the ExpandAll method for full visibility."
     },
