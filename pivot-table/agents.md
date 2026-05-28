@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs
 - hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs
 - show-a-previously-hidden-column-field-in-the-pivottable-by-toggling-its-visible-flag-back.cs
+- delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs
