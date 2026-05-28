@@ -7366,6 +7366,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs",
+      "title": "Load an existing Excel file, locate a PivotTable, and change its layout to Tabular."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
       "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
     },
