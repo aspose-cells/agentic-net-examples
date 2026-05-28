@@ -8111,6 +8111,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "read-an-encrypted-excel-file-using-a-password-and-access-its-existing-pivot-tables.cs",
+      "title": "Read an encrypted Excel file using a password and access its existing pivot tables."
+    },
+    {
+      "category": "pivot-table",
       "file": "read-the-positioninsameparentnode-of-a-pivot-item-to-determine-its-current-ordering-within-the-field.cs",
       "title": "Read the PositionInSameParentNode of a pivot item to determine its current ordering within the field."
     },
