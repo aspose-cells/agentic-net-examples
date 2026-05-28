@@ -335,3 +335,4 @@ Output files are written to the working directory.
 - refresh-all-pivot-tables-in-a-workbook-after-bulk-data-import-to-ensure-consistency.cs
 - delete-a-pivot-table-from-its-worksheet-and-confirm-no-remaining-pivot-objects.cs
 - group-numeric-pivot-field-values-into-custom-ranges-for-better-data-segmentation.cs
+- apply-a-custom-sort-to-pivot-items-based-on-aggregated-sales-totals-descending.cs
