@@ -302,3 +302,4 @@ Output files are written to the working directory.
 - configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs
 - retrieve-the-external-connection-object-of-a-pivot-table-and-log-its-connection-string.cs
 - retrieve-the-type-of-external-connection-used-by-the-pivot-table-oledb-or-odbc.cs
+- update-the-external-connection-string-of-a-pivot-table-then-refresh-to-load-new-data.cs
