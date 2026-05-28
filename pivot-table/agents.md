@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs
 - set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs
 - refresh-a-pivottable-asynchronously-to-avoid-blocking-the-ui-thread-in-a-desktop-application-environment.cs
+- log-the-number-of-rows-generated-by-a-pivottable-after-refresh-for-performance-monitoring-and-diagnostics.cs
