@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - programmatically-hide-the-pivottables-field-headers-by-setting-the-showfieldheaders-property-to-false.cs
 - enable-the-display-of-item-labels-in-the-values-area-by-setting-the-showvaluescolumn-property-true.cs
 - define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs
+- refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs
