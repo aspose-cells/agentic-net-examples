@@ -289,3 +289,4 @@ Output files are written to the working directory.
 - open-a-workbook-from-a-memory-stream-for-programmatic-manipulation-of-its-pivot-tables.cs
 - read-an-encrypted-excel-file-using-a-password-and-access-its-existing-pivot-tables.cs
 - create-a-new-pivot-table-on-a-worksheet-by-specifying-target-range-and-data-source.cs
+- assign-a-specific-cell-range-as-the-data-source-for-the-newly-created-pivot-table.cs
