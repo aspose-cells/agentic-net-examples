@@ -7356,6 +7356,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "batch-create-pivottables-on-multiple-worksheets-by-looping-over-data-ranges-and-calling-the-add-method.cs",
+      "title": "Batch create PivotTables on multiple worksheets by looping over data ranges and calling the Add method."
+    },
+    {
+      "category": "pivot-table",
       "file": "clear-all-page-fields-from-a-pivottable-by-invoking-the-pivottablepagefieldsclear-method-first.cs",
       "title": "Clear all page fields from a PivotTable by invoking the PivotTable.PageFields.Clear method first."
     },
