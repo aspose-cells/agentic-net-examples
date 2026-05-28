@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - after-deleting-a-pivot-table-verify-that-the-worksheet-no-longer-contains-any-pivot-objects.cs
 - save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs
 - load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs
+- apply-distinct-custom-globalization-settings-to-each-workbook-before-refreshing-to-generate-multilingual-pivot-labels.cs
