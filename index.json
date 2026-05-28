@@ -7461,6 +7461,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs",
+      "title": "Enable Excel 2003 compatibility before refreshing the PivotTable by setting IsCompatibleWithExcel2003 true."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs",
       "title": "Enable repeat item labels in rows by setting the RepeatItemLabels property to true on the PivotTable."
     },
