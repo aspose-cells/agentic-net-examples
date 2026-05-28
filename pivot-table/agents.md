@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs
 - enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs
 - hide-subtotals-for-specific-row-fields-to-simplify-the-pivot-view.cs
+- apply-a-predefined-pivot-table-style-for-consistent-visual-formatting.cs
