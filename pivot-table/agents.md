@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs
 - add-a-calculated-item-to-group-multiple-product-categories-into-a-custom-group.cs
 - load-an-xlsx-workbook-containing-a-pivot-table-and-refresh-its-data-programmatically.cs
+- apply-a-custom-pivotglobalizationsettings-subclass-to-modify-total-label-text-before-refreshing-the-pivot-table.cs

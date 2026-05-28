@@ -7436,6 +7436,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-pivotglobalizationsettings-subclass-to-modify-total-label-text-before-refreshing-the-pivot-table.cs",
+      "title": "Apply a custom PivotGlobalizationSettings subclass to modify total label text before refreshing the pivot table."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-style-to-the-pivottables-data-cells-only-by-using-formatall-with-a-specific-cell-style.cs",
       "title": "Apply a custom style to the PivotTable's data cells only by using FormatAll with a specific cell style."
     },
