@@ -271,3 +271,4 @@ Output files are written to the working directory.
 - rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs
 - set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs
 - enable-preserveformatting-option-when-refreshing-a-pivottable-to-keep-user-applied-styles.cs
+- disable-automatic-refresh-on-workbook-open-for-all-pivottables-to-improve-loading-performance.cs
