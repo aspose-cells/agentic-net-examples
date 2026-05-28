@@ -217,3 +217,4 @@ Output files are written to the working directory.
 - calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs
 - iterate-over-each-pivotfield-list-all-pivotitems-and-log-their-absolute-positions-for-debugging.cs
 - move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs
+- create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs

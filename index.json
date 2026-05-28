@@ -7571,6 +7571,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs",
+      "title": "Create a batch script that removes all pivot tables from every worksheet in a workbook."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs",
       "title": "Create a custom Style object, configure its font color, and apply it using PivotTable.Format."
     },
