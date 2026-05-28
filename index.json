@@ -7901,6 +7901,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "measure-memory-consumption-while-loading-a-workbook-with-parsingpivotcachedrecords-set-to-true.cs",
+      "title": "Measure memory consumption while loading a workbook with ParsingPivotCachedRecords set to true."
+    },
+    {
+      "category": "pivot-table",
       "file": "move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs",
       "title": "Move a pivot item from the column area to the row area by changing its parent field."
     },
