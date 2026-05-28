@@ -266,3 +266,4 @@ Output files are written to the working directory.
 - add-a-calculated-field-that-computes-profit-margin-using-revenue-and-cost-values.cs
 - add-a-calculated-field-that-concatenates-two-text-fields-with-a-hyphen-separator.cs
 - add-a-calculated-field-that-categorizes-sales-using-if-function-for-high-medium-low.cs
+- update-an-existing-calculated-fields-formula-to-incorporate-a-new-discount-rate-parameter.cs
