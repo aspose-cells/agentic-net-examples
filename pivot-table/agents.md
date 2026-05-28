@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs
 - create-data-fields-with-sum-aggregation-to-calculate-total-units-sold.cs
 - apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs
+- set-the-pivot-table-option-to-display-empty-cells-as-a-dash-character.cs
