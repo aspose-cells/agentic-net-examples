@@ -14336,6 +14336,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-a-workbook-enable-exportgridlines-and-produce-html-that-displays-worksheet-gridlines.cs",
+      "title": "Load a workbook, enable ExportGridLines, and produce HTML that displays worksheet gridlines."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
       "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
     },
