@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - configure-workbooks-numberformat-to-display-full-integer-values-when-exporting-to-html.cs
 - apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs
 - verify-that-html-output-shows-large-numbers-as-plain-text-rather-than-exponential-representation.cs
+- use-the-saveoptions-property-to-enforce-nonexponential-display-for-all-numeric-cells.cs
