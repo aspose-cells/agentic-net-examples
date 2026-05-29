@@ -14220,6 +14220,11 @@
       "title": "Write the chart PDF output to a MemoryStream for further in\u2011memory processing."
     },
     {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
+      "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
