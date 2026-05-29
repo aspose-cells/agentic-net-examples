@@ -14376,6 +14376,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "process-multiple-xlsx-files-in-a-directory-applying-excludeunusedstyles-to-each-and-batch-save-reduced-size-html-files.cs",
+      "title": "Process multiple XLSX files in a directory, applying ExcludeUnusedStyles to each, and batch save reduced-size HTML files."
+    },
+    {
+      "category": "working-with-html",
       "file": "remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs",
       "title": "Remove redundant spaces after line breaks in cell text while converting to HTML."
     },
