@@ -14241,6 +14241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
+      "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
       "title": "Enable the option to generate HTML heading elements based on worksheet names."
     },
