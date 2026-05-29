@@ -14341,6 +14341,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-a-workbook-with-conditional-formatting-activate-databar-export-and-save-html-preserving-databar-visuals.cs",
+      "title": "Load a workbook with conditional formatting, activate DataBar export, and save HTML preserving DataBar visuals."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
       "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
     },
