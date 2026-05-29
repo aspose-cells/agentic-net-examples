@@ -14336,6 +14336,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
+      "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-enable-excludeunusedstyles-and-save-as-html-to-reduce-file-size.cs",
       "title": "Load an XLSX workbook, enable ExcludeUnusedStyles, and save as HTML to reduce file size."
     },

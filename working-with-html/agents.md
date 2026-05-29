@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - ensure-that-comment-visibility-settings-respect-user-privacy-requirements-strictly.cs
 - validate-that-disabling-downlevel-revealed-comments-does-not-affect-other-html-features.cs
 - load-an-xlsx-workbook-enable-excludeunusedstyles-and-save-as-html-to-reduce-file-size.cs
+- load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs
