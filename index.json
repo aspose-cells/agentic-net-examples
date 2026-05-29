@@ -14271,6 +14271,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-downlevel-revealed-comments-when-saving-to-html-to-improve-compatibility-with-older-browsers.cs",
+      "title": "Disable downlevel revealed comments when saving to HTML to improve compatibility with older browsers."
+    },
+    {
+      "category": "working-with-html",
       "file": "document-the-impact-of-space-removal-on-html-rendering-performance.cs",
       "title": "Document the impact of space removal on HTML rendering performance."
     },
