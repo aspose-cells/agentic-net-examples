@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs
 - enable-whitespace-trimming-option-to-eliminate-extra-spaces-following-line-break-characters.cs
 - configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs
+- ensure-that-html-output-does-not-contain-unnecessary-blank-spaces-after-br-tags.cs
