@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs
 - ensure-that-html-output-does-not-contain-unnecessary-blank-spaces-after-br-tags.cs
 - validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs
+- apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs
