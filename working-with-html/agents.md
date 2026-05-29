@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs
 - apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs
 - test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs
+- document-the-impact-of-space-removal-on-html-rendering-performance.cs
