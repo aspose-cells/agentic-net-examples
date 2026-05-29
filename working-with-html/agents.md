@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs
 - verify-that-html-output-shows-large-numbers-as-plain-text-rather-than-exponential-representation.cs
 - use-the-saveoptions-property-to-enforce-nonexponential-display-for-all-numeric-cells.cs
+- enable-the-option-to-keep-original-numeric-formatting-when-converting-excel-to-html.cs
