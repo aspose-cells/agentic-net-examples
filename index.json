@@ -14241,6 +14241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-html-export-with-values-larger-than-10\u2076-to-confirm-exponential-notation-is-suppressed.cs",
+      "title": "Test HTML export with values larger than 10\u2076 to confirm exponential notation is suppressed."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-the-saveoptions-property-to-enforce-nonexponential-display-for-all-numeric-cells.cs",
       "title": "Use the SaveOptions property to enforce non\u2011exponential display for all numeric cells."
     },
