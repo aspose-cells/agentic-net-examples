@@ -14296,6 +14296,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-that-comments-are-not-exposed-to-browsers-that-do-not-support-modern-comment-standards.cs",
+      "title": "Ensure that comments are not exposed to browsers that do not support modern comment standards."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-each-worksheets-title-appears-as-a-toplevel-heading-in-the-html-file.cs",
       "title": "Ensure that each worksheet\u2019s title appears as a top\u2011level heading in the HTML file."
     },
