@@ -14246,6 +14246,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs",
+      "title": "Combine ExcludeUnusedStyles and IsExportComments options, then save workbook as HTML for compact output with comments."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs",
       "title": "Compare exported HTML with and without exponential notation suppression for accuracy."
     },
