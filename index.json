@@ -14235,6 +14235,11 @@
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
     {
+      "category": "working-with-html",
+      "file": "verify-that-html-output-shows-large-numbers-as-plain-text-rather-than-exponential-representation.cs",
+      "title": "Verify that HTML output shows large numbers as plain text rather than exponential representation."
+    },
+    {
       "category": "working-with-images",
       "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
       "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
