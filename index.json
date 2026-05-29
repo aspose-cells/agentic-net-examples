@@ -14341,6 +14341,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-a-workbook-with-colorscale-rules-enable-colorscale-export-and-generate-html-reflecting-gradient-colors.cs",
+      "title": "Load a workbook with ColorScale rules, enable ColorScale export, and generate HTML reflecting gradient colors."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-workbook-with-conditional-formatting-activate-databar-export-and-save-html-preserving-databar-visuals.cs",
       "title": "Load a workbook with conditional formatting, activate DataBar export, and save HTML preserving DataBar visuals."
     },
