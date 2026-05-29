@@ -14311,6 +14311,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs",
+      "title": "Test cells containing multi\u2011line text to confirm proper space handling."
+    },
+    {
+      "category": "working-with-html",
       "file": "test-html-export-with-values-larger-than-10\u2076-to-confirm-exponential-notation-is-suppressed.cs",
       "title": "Test HTML export with values larger than 10\u2076 to confirm exponential notation is suppressed."
     },

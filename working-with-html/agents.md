@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - ensure-that-html-output-does-not-contain-unnecessary-blank-spaces-after-br-tags.cs
 - validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs
 - apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs
+- test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs
