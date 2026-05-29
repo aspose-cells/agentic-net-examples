@@ -14236,6 +14236,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
+      "title": "Enable the option to generate HTML heading elements based on worksheet names."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-option-to-keep-original-numeric-formatting-when-converting-excel-to-html.cs",
       "title": "Enable the option to keep original numeric formatting when converting Excel to HTML."
     },
