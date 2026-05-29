@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs
 - test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs
 - document-the-impact-of-space-removal-on-html-rendering-performance.cs
+- compare-html-files-before-and-after-enabling-redundant-space-deletion.cs
