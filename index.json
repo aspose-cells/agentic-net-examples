@@ -14341,6 +14341,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-a-workbook-featuring-iconset-rules-set-iconset-export-to-true-and-produce-html-showing-icons.cs",
+      "title": "Load a workbook featuring IconSet rules, set IconSet export to true, and produce HTML showing icons."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-workbook-with-colorscale-rules-enable-colorscale-export-and-generate-html-reflecting-gradient-colors.cs",
       "title": "Load a workbook with ColorScale rules, enable ColorScale export, and generate HTML reflecting gradient colors."
     },

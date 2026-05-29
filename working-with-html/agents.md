@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - load-a-workbook-enable-exportgridlines-and-produce-html-that-displays-worksheet-gridlines.cs
 - load-a-workbook-with-conditional-formatting-activate-databar-export-and-save-html-preserving-databar-visuals.cs
 - load-a-workbook-with-colorscale-rules-enable-colorscale-export-and-generate-html-reflecting-gradient-colors.cs
+- load-a-workbook-featuring-iconset-rules-set-iconset-export-to-true-and-produce-html-showing-icons.cs
