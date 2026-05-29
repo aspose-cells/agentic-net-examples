@@ -14221,6 +14221,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "add-a-table-of-contents-linking-to-each-heading-generated-from-worksheet-names.cs",
+      "title": "Add a table of contents linking to each heading generated from worksheet names."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs",
       "title": "Apply CSS classes to heading elements for consistent styling across exported pages."
     },
