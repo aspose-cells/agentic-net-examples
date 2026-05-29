@@ -14246,6 +14246,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-html-files-before-and-after-enabling-redundant-space-deletion.cs",
+      "title": "Compare HTML files before and after enabling redundant space deletion."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs",
       "title": "Configure HtmlSaveOptions to collapse multiple spaces after newline characters in HTML."
     },
