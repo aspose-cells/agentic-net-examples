@@ -14376,6 +14376,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "prevent-exponential-notation-for-large-numeric-values-during-html-export-by-adjusting-number-format-options.cs",
+      "title": "Prevent exponential notation for large numeric values during HTML export by adjusting number format options."
+    },
+    {
+      "category": "working-with-html",
       "file": "process-multiple-xlsx-files-in-a-directory-applying-excludeunusedstyles-to-each-and-batch-save-reduced-size-html-files.cs",
       "title": "Process multiple XLSX files in a directory, applying ExcludeUnusedStyles to each, and batch save reduced-size HTML files."
     },
