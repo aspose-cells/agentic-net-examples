@@ -14221,6 +14221,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs",
+      "title": "Apply custom number format strings to ensure large identifiers appear without scientific notation."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-workbooks-numberformat-to-display-full-integer-values-when-exporting-to-html.cs",
       "title": "Configure workbook's NumberFormat to display full integer values when exporting to HTML."
     },
