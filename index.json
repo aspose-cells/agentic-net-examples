@@ -14311,6 +14311,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-that-comment-visibility-settings-respect-user-privacy-requirements-strictly.cs",
+      "title": "Ensure that comment visibility settings respect user privacy requirements strictly."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-comments-are-not-exposed-to-browsers-that-do-not-support-modern-comment-standards.cs",
       "title": "Ensure that comments are not exposed to browsers that do not support modern comment standards."
     },
