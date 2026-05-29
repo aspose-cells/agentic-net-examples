@@ -14281,6 +14281,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs",
+      "title": "Remove redundant spaces after line breaks in cell text while converting to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
