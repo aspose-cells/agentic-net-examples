@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - compare-page-source-before-and-after-disabling-downlevel-revealed-comments.cs
 - apply-this-setting-when-exporting-workbooks-containing-extensive-cell-comments.cs
 - ensure-that-comment-visibility-settings-respect-user-privacy-requirements-strictly.cs
+- validate-that-disabling-downlevel-revealed-comments-does-not-affect-other-html-features.cs

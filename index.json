@@ -14386,6 +14386,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-that-disabling-downlevel-revealed-comments-does-not-affect-other-html-features.cs",
+      "title": "Validate that disabling downlevel revealed comments does not affect other HTML features."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
       "title": "Verify that generated HTML contains heading tags matching worksheet titles."
     },
