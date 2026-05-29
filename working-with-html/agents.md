@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs
 - enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs
 - configure-htmlsaveoptions-to-insert-h1-tags-before-each-worksheet-table.cs
+- ensure-that-each-worksheets-title-appears-as-a-toplevel-heading-in-the-html-file.cs
