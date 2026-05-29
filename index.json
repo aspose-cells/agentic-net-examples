@@ -14226,6 +14226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs",
+      "title": "Compare exported HTML with and without exponential notation suppression for accuracy."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-workbooks-numberformat-to-display-full-integer-values-when-exporting-to-html.cs",
       "title": "Configure workbook's NumberFormat to display full integer values when exporting to HTML."
     },
