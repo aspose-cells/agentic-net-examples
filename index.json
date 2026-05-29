@@ -14221,6 +14221,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs",
+      "title": "Apply CSS classes to heading elements for consistent styling across exported pages."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs",
       "title": "Apply custom number format strings to ensure large identifiers appear without scientific notation."
     },
