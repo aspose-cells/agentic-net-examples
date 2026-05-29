@@ -14231,6 +14231,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-the-option-to-keep-original-numeric-formatting-when-converting-excel-to-html.cs",
+      "title": "Enable the option to keep original numeric formatting when converting Excel to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
