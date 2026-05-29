@@ -14241,6 +14241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
+      "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
