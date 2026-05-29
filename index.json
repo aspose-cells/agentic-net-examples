@@ -14266,6 +14266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "document-the-impact-of-space-removal-on-html-rendering-performance.cs",
+      "title": "Document the impact of space removal on HTML rendering performance."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
       "title": "Enable the option to generate HTML heading elements based on worksheet names."
     },
