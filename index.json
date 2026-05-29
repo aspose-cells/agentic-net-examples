@@ -14316,6 +14316,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs",
+      "title": "Validate that cell content with line breaks displays correctly without extra spacing."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
       "title": "Verify that generated HTML contains heading tags matching worksheet titles."
     },

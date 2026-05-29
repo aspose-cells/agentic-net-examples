@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - enable-whitespace-trimming-option-to-eliminate-extra-spaces-following-line-break-characters.cs
 - configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs
 - ensure-that-html-output-does-not-contain-unnecessary-blank-spaces-after-br-tags.cs
+- validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs
