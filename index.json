@@ -14281,6 +14281,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
+      "title": "Verify that generated HTML contains heading tags matching worksheet titles."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-html-output-shows-large-numbers-as-plain-text-rather-than-exponential-representation.cs",
       "title": "Verify that HTML output shows large numbers as plain text rather than exponential representation."
     },
