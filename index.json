@@ -14226,6 +14226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
+      "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs",
       "title": "Apply CSS classes to heading elements for consistent styling across exported pages."
     },
