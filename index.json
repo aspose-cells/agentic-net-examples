@@ -14326,6 +14326,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-htmlsaveoptions-to-omit-downlevel-revealed-comment-syntax-in-the-exported-html.cs",
+      "title": "Set HtmlSaveOptions to omit downlevel revealed comment syntax in the exported HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs",
       "title": "Test cells containing multi\u2011line text to confirm proper space handling."
     },
