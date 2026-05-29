@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - enable-the-option-to-keep-original-numeric-formatting-when-converting-excel-to-html.cs
 - test-html-export-with-values-larger-than-10⁶-to-confirm-exponential-notation-is-suppressed.cs
 - compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs
+- include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs
