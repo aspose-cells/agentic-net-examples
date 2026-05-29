@@ -14346,6 +14346,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-html-files-in-legacy-browsers-to-confirm-comments-are-hidden-appropriately.cs",
+      "title": "Test HTML files in legacy browsers to confirm comments are hidden appropriately."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs",
       "title": "Use a sample workbook to demonstrate whitespace cleanup during export."
     },
