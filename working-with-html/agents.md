@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - compare-html-files-before-and-after-enabling-redundant-space-deletion.cs
 - use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs
 - disable-downlevel-revealed-comments-when-saving-to-html-to-improve-compatibility-with-older-browsers.cs
+- set-htmlsaveoptions-to-omit-downlevel-revealed-comment-syntax-in-the-exported-html.cs
