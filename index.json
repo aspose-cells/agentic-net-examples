@@ -14241,6 +14241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs",
+      "title": "Configure HtmlSaveOptions to collapse multiple spaces after newline characters in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-insert-h1-tags-before-each-worksheet-table.cs",
       "title": "Configure HtmlSaveOptions to insert <h1> tags before each worksheet table."
     },
