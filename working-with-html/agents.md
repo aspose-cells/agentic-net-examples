@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs
 - verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs
 - apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs
+- preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs

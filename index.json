@@ -14271,6 +14271,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs",
+      "title": "Preserve original worksheet name capitalization when creating HTML heading tags."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
