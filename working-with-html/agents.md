@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-colorscale-rules-enable-colorscale-export-and-generate-html-reflecting-gradient-colors.cs
 - load-a-workbook-featuring-iconset-rules-set-iconset-export-to-true-and-produce-html-showing-icons.cs
 - combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs
+- process-multiple-xlsx-files-in-a-directory-applying-excludeunusedstyles-to-each-and-batch-save-reduced-size-html-files.cs
