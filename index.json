@@ -14251,6 +14251,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-page-source-before-and-after-disabling-downlevel-revealed-comments.cs",
+      "title": "Compare page source before and after disabling downlevel revealed comments."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs",
       "title": "Configure HtmlSaveOptions to collapse multiple spaces after newline characters in HTML."
     },
