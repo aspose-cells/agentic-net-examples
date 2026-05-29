@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - test-html-files-in-legacy-browsers-to-confirm-comments-are-hidden-appropriately.cs
 - document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs
 - compare-page-source-before-and-after-disabling-downlevel-revealed-comments.cs
+- apply-this-setting-when-exporting-workbooks-containing-extensive-cell-comments.cs
