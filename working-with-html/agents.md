@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs
 - include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs
 - enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs
+- configure-htmlsaveoptions-to-insert-h1-tags-before-each-worksheet-table.cs
