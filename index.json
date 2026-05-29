@@ -14276,6 +14276,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs",
+      "title": "Document the configuration required to turn off downlevel revealed comments."
+    },
+    {
+      "category": "working-with-html",
       "file": "document-the-impact-of-space-removal-on-html-rendering-performance.cs",
       "title": "Document the impact of space removal on HTML rendering performance."
     },
