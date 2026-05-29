@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - verify-that-html-output-shows-large-numbers-as-plain-text-rather-than-exponential-representation.cs
 - use-the-saveoptions-property-to-enforce-nonexponential-display-for-all-numeric-cells.cs
 - enable-the-option-to-keep-original-numeric-formatting-when-converting-excel-to-html.cs
+- test-html-export-with-values-larger-than-10⁶-to-confirm-exponential-notation-is-suppressed.cs
