@@ -14336,6 +14336,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-enable-excludeunusedstyles-and-save-as-html-to-reduce-file-size.cs",
+      "title": "Load an XLSX workbook, enable ExcludeUnusedStyles, and save as HTML to reduce file size."
+    },
+    {
+      "category": "working-with-html",
       "file": "preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs",
       "title": "Preserve original worksheet name capitalization when creating HTML heading tags."
     },
