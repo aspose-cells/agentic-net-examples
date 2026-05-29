@@ -14366,6 +14366,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "verify-that-html-output-contains-only-standard-comment-tags-without-downlevel-revealed-format.cs",
+      "title": "Verify that HTML output contains only standard comment tags without downlevel revealed format."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-html-output-shows-large-numbers-as-plain-text-rather-than-exponential-representation.cs",
       "title": "Verify that HTML output shows large numbers as plain text rather than exponential representation."
     },
