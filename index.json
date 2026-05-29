@@ -14241,6 +14241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-this-setting-when-exporting-workbooks-containing-extensive-cell-comments.cs",
+      "title": "Apply this setting when exporting workbooks containing extensive cell comments."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs",
       "title": "Compare exported HTML with and without exponential notation suppression for accuracy."
     },
