@@ -14546,6 +14546,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs",
+      "title": "Implement IFilePathProvider that converts worksheet names to lowercase URLs for consistent linking."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-ifilepathprovider-to-customize-html-file-paths-for-each-exported-worksheet-and-maintain-link-integrity.cs",
       "title": "Implement IFilePathProvider to customize HTML file paths for each exported worksheet and maintain link integrity."
     },
