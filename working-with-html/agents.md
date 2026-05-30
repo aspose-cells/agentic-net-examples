@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - load-html-preserving-div-layout-then-re-export-to-html-and-verify-div-structure-remains-unchanged.cs
 - load-html-modify-a-cell-value-programmatically-and-export-to-html-with-default-options.cs
 - load-html-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs
+- load-html-preserving-div-layout-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs
