@@ -14396,6 +14396,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-iconset-and-verify-icons-are-rendered-using-img-tags.cs",
+      "title": "Export a workbook with conditional formatting that includes IconSet, and verify icons are rendered using <img> tags."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-overlapping-rules-and-ensure-both-rules-are-represented-in-html.cs",
       "title": "Export a workbook with conditional formatting that includes overlapping rules, and ensure both rules are represented in HTML."
     },
