@@ -14761,6 +14761,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-a-custom-stylesheet-that-overrides-default-cell-colors.cs",
+      "title": "Export Excel to HTML and apply a custom stylesheet that overrides default cell colors."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
       "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
     },
