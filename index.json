@@ -14421,6 +14421,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-both-css-disabled-and-custom-properties-enabled.cs",
+      "title": "Export a workbook to HTML with both CSS disabled and custom properties enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs",
       "title": "Export a workbook with conditional formatting that includes ColorScale, and extract the CSS gradient definitions for reuse."
     },
