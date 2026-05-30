@@ -14556,6 +14556,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-html-preserving-div-layout-then-re-export-to-html-and-verify-div-structure-remains-unchanged.cs",
+      "title": "Load HTML preserving DIV layout, then re-export to HTML and verify DIV structure remains unchanged."
+    },
+    {
+      "category": "working-with-html",
       "file": "preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs",
       "title": "Preserve original worksheet name capitalization when creating HTML heading tags."
     },
