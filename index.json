@@ -14666,6 +14666,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-htmlsaveoptionssimilarborderstyle-to-generate-fallback-border-styles-and-test-rendering-in-legacy-browsers.cs",
+      "title": "Use HtmlSaveOptions.SimilarBorderStyle to generate fallback border styles and test rendering in legacy browsers."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-the-saveoptions-property-to-enforce-nonexponential-display-for-all-numeric-cells.cs",
       "title": "Use the SaveOptions property to enforce non\u2011exponential display for all numeric cells."
     },
