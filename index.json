@@ -14226,6 +14226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-a-custom-style-to-a-range-enable-excludeunusedstyles-and-verify-only-used-styles-appear-in-html.cs",
+      "title": "Apply a custom style to a range, enable ExcludeUnusedStyles, and verify only used styles appear in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
     },
