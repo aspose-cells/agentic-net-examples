@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - prevent-exponential-notation-for-large-numeric-values-during-html-export-by-adjusting-number-format-options.cs
 - document-the-steps-required-to-disable-scientific-notation-in-html-export.cs
 - validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs
+- compare-html-file-sizes-with-and-without-excludeunusedstyles-to-quantify-reduction-achieved-by-style-omission.cs
