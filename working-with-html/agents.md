@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - document-the-steps-required-to-disable-scientific-notation-in-html-export.cs
 - validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs
 - compare-html-file-sizes-with-and-without-excludeunusedstyles-to-quantify-reduction-achieved-by-style-omission.cs
+- load-a-workbook-with-hidden-rows-enable-exportgridlines-and-ensure-hidden-rows-do-not-affect-gridline-rendering.cs

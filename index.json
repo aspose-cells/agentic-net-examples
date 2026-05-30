@@ -14371,6 +14371,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-a-workbook-with-hidden-rows-enable-exportgridlines-and-ensure-hidden-rows-do-not-affect-gridline-rendering.cs",
+      "title": "Load a workbook with hidden rows, enable ExportGridLines, and ensure hidden rows do not affect gridline rendering."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
       "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
     },
