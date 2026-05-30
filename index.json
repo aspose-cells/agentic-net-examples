@@ -14766,6 +14766,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-true-and-verify-that-each-worksheet-has-its-own-css-file.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately true and verify that each worksheet has its own .css file."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-htmlsaveoptionssimilarborderstyle-to-generate-fallback-border-styles-and-test-rendering-in-legacy-browsers.cs",
       "title": "Use HtmlSaveOptions.SimilarBorderStyle to generate fallback border styles and test rendering in legacy browsers."
     },
