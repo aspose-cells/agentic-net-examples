@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - use-ifilepathprovider-to-generate-relative-paths-for-html-files-to-support-offline-browsing.cs
 - set-htmlsaveoptionsexportworksheetcssseparately-to-true-to-generate-distinct-stylesheet-files-per-worksheet-individually.cs
 - export-a-singlesheet-workbook-to-html-with-exportworksheetcssseparately-enabled-creating-a-css-folder.cs
+- create-external-css-files-per-worksheet-and-ensure-html-references-point-to-the-correct-stylesheet-locations.cs

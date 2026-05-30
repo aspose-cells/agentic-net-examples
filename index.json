@@ -14346,6 +14346,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-external-css-files-per-worksheet-and-ensure-html-references-point-to-the-correct-stylesheet-locations.cs",
+      "title": "Create external CSS files per worksheet and ensure HTML references point to the correct stylesheet locations."
+    },
+    {
+      "category": "working-with-html",
       "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
       "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
     },
