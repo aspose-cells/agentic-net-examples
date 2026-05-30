@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-with-custom-properties-enabled-while-preserving-default-css-generation.cs
 - disable-css-generation-during-html-export-by-setting-disablecss-to-true.cs
 - load-an-html-file-into-a-workbook-while-preserving-div-tag-layout-using-enabledivtaglayout.cs
+- load-an-html-file-into-a-workbook-without-preserving-div-layout-by-leaving-enabledivtaglayout-false.cs
