@@ -14296,6 +14296,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-workbook-with-conditional-formatting-using-iconset-disable-iconset-export-and-confirm-icons-are-omitted-in-html.cs",
+      "title": "Create a workbook with conditional formatting using IconSet, disable IconSet export, and confirm icons are omitted in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
       "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
     },
