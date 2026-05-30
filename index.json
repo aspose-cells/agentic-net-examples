@@ -14676,6 +14676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "store-exported-html-files-in-a-temporary-folder-via-ifilepathprovider-and-clean-up-after-processing.cs",
+      "title": "Store exported HTML files in a temporary folder via IFilePathProvider and clean up after processing."
+    },
+    {
+      "category": "working-with-html",
       "file": "test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs",
       "title": "Test cells containing multi\u2011line text to confirm proper space handling."
     },
