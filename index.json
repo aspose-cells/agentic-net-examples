@@ -14686,6 +14686,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-mhtml-output-in-microsoft-edge-after-enabling-isiecompatible-and-assess-compatibility-with-modern-browsers.cs",
+      "title": "Test MHTML output in Microsoft Edge after enabling IsIECompatible and assess compatibility with modern browsers."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs",
       "title": "Use a sample workbook to demonstrate whitespace cleanup during export."
     },
