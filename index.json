@@ -14396,6 +14396,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-generate-a-separate-css-file-containing-bar-styles.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and generate a separate CSS file containing bar styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-verify-bar-lengths-match-cell-values-in-html.cs",
       "title": "Export a workbook with conditional formatting that includes DataBar, and verify bar lengths match cell values in HTML."
     },
