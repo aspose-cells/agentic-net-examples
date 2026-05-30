@@ -14456,6 +14456,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
+      "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-right-to-left-aligned-text-correctly-using-default-htmlsaveoptions-during-conversion.cs",
       "title": "Export right-to-left aligned text correctly using default HtmlSaveOptions during conversion."
     },
