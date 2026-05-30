@@ -14696,6 +14696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-css-custom-properties-in-htmlsaveoptions-while-using-tablecssid-to-enhance-table-styling-flexibility.cs",
+      "title": "Enable CSS custom properties in HtmlSaveOptions while using TableCssId to enhance table styling flexibility."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs",
       "title": "Enable HtmlSaveOptions.IsIECompatible before saving to MHTML to allow worksheet tab switching in Internet Explorer."
     },
