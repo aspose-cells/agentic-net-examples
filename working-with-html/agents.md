@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - generate-html-from-a-workbook-while-disabling-excludeunusedstyles-to-compare-full-style-set-against-reduced-version.cs
 - batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs
 - export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs
+- export-a-workbook-with-conditional-formatting-that-includes-iconset-and-verify-icons-are-rendered-using-img-tags.cs
