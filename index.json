@@ -14456,6 +14456,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-defined-print-area-while-omitting-document-properties-by-combining-exportprintareaonly-and-exportdocumentproperties-false.cs",
+      "title": "Export defined print area while omitting document properties by combining ExportPrintAreaOnly and ExportDocumentProperties false."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
       "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
     },
