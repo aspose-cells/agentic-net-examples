@@ -14351,6 +14351,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-overlapping-rules-and-ensure-both-rules-are-represented-in-html.cs",
+      "title": "Export a workbook with conditional formatting that includes overlapping rules, and ensure both rules are represented in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
       "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
     },
