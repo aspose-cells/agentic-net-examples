@@ -14506,6 +14506,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-and-disabling-css-generation.cs",
+      "title": "Export workbook to HTML after defining a print area and disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-workbook-to-html-after-defining-a-print-area-and-omitting-worksheet-properties.cs",
       "title": "Export workbook to HTML after defining a print area and omitting worksheet properties."
     },
