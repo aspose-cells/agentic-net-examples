@@ -14746,6 +14746,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-ifilepathprovider-to-generate-relative-paths-for-html-files-to-support-offline-browsing.cs",
+      "title": "Use IFilePathProvider to generate relative paths for HTML files to support offline browsing."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-ifilepathprovider-to-store-html-files-in-a-network-share-path-and-validate-accessibility-via-unc.cs",
       "title": "Use IFilePathProvider to store HTML files in a network share path and validate accessibility via UNC."
     },
