@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs
 - export-excel-to-html-and-apply-a-custom-stylesheet-that-overrides-default-cell-colors.cs
 - export-excel-to-html-and-preserve-cell-comments-as-html-tooltip-attributes.cs
+- export-excel-to-html-and-ensure-formulas-are-displayed-as-values-not-as-formula-strings.cs
