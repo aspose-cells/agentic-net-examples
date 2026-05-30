@@ -14416,6 +14416,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "save-a-workbook-to-html-with-exportgridlines-disabled-then-confirm-that-gridlines-are-absent-in-the-output.cs",
+      "title": "Save a workbook to HTML with ExportGridLines disabled, then confirm that gridlines are absent in the output."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
