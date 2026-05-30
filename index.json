@@ -14681,6 +14681,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-mhtml-output-in-internet-explorer-11-after-enabling-isiecompatible-and-verify-worksheet-tab-navigation.cs",
+      "title": "Test MHTML output in Internet Explorer 11 after enabling IsIECompatible and verify worksheet tab navigation."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs",
       "title": "Use a sample workbook to demonstrate whitespace cleanup during export."
     },

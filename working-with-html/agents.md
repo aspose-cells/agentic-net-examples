@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - test-fallback-border-rendering-in-safari-by-exporting-with-similarborderstyle-enabled-and-reviewing-html-output.cs
 - enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs
 - generate-iecompatible-mhtml-from-a-multisheet-workbook-and-verify-tab-switching-functionality-in-internet-explorer.cs
+- test-mhtml-output-in-internet-explorer-11-after-enabling-isiecompatible-and-verify-worksheet-tab-navigation.cs
