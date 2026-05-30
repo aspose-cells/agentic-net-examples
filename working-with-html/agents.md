@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - apply-a-custom-style-to-a-range-enable-excludeunusedstyles-and-verify-only-used-styles-appear-in-html.cs
 - create-a-workbook-with-conditional-formatting-using-iconset-disable-iconset-export-and-confirm-icons-are-omitted-in-html.cs
 - batch-convert-a-set-of-xls-files-to-html-applying-exportgridlines-only-to-worksheets-that-contain-tables.cs
+- generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs
