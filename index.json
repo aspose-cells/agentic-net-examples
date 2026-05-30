@@ -14506,6 +14506,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-and-omitting-worksheet-properties.cs",
+      "title": "Export workbook to HTML after defining a print area and omitting worksheet properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-workbook-to-html-after-defining-a-print-area-ensuring-only-that-area-appears.cs",
       "title": "Export workbook to HTML after defining a print area, ensuring only that area appears."
     },

@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - batch-convert-xlsx-files-to-html-while-omitting-document-properties-for-privacy-compliance.cs
 - batch-convert-xlsx-files-to-html-while-disabling-css-generation-to-reduce-file-size.cs
 - export-workbook-to-html-after-defining-a-print-area-ensuring-only-that-area-appears.cs
+- export-workbook-to-html-after-defining-a-print-area-and-omitting-worksheet-properties.cs
