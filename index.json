@@ -14416,6 +14416,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-singlesheet-workbook-to-html-with-exportworksheetcssseparately-enabled-creating-a-css-folder.cs",
+      "title": "Export a single\u2011sheet workbook to HTML with ExportWorksheetCSSSeparately enabled, creating a CSS folder."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-to-html-while-omitting-document-and-workbook-properties-together.cs",
       "title": "Export a workbook to HTML while omitting document and workbook properties together."
     },
