@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - convert-a-workbook-with-wordart-to-pdf-and-set-output-to-pdfa2b-compliance-while-preserving-gradients.cs
 - convert-a-workbook-with-wordart-to-html-and-ensure-output-passes-w3c-validation-for-css-gradients.cs
 - render-wordart-gradient-fills-while-converting-to-html-and-provide-a-javascript-fallback-that-draws-gradients-on-canvas.cs
+- convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs
