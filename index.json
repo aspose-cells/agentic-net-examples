@@ -14346,6 +14346,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs",
+      "title": "Convert a spreadsheet containing multiple WordArt objects to PDF and verify each gradient renders independently."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-a-spreadsheet-with-wordart-to-html-and-include-inline-svg-definitions-for-complex-gradients.cs",
       "title": "Convert a spreadsheet with WordArt to HTML and include inline SVG definitions for complex gradients."
     },
