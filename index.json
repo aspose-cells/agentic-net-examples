@@ -14556,6 +14556,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-html-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs",
+      "title": "Load HTML, modify a cell, and export to HTML while disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-html-modify-a-cell-value-programmatically-and-export-to-html-with-default-options.cs",
       "title": "Load HTML, modify a cell value programmatically, and export to HTML with default options."
     },
