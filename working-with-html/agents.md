@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-asynchronously-and-report-conversion-progress-to-callers-via-events.cs
 - convert-html-to-pdf-in-a-multithreaded-batch-processing-fifty-files-simultaneously.cs
 - convert-html-to-pdf-and-compress-the-final-document-using-object-stream-compression.cs
+- convert-html-to-pdf-while-preserving-gradient-fills-in-css-background-images.cs
