@@ -14256,6 +14256,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-all-xlsx-files-in-a-directory-to-html-using-default-conversion-settings.cs",
+      "title": "Batch convert all XLSX files in a directory to HTML using default conversion settings."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
       "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
     },
