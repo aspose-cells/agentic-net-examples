@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - process-multiple-xlsx-files-in-a-directory-applying-excludeunusedstyles-to-each-and-batch-save-reduced-size-html-files.cs
 - prevent-exponential-notation-for-large-numeric-values-during-html-export-by-adjusting-number-format-options.cs
 - document-the-steps-required-to-disable-scientific-notation-in-html-export.cs
+- validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs
