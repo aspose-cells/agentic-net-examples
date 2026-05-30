@@ -14531,6 +14531,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-while-preserving-div-tag-layout-using-enabledivtaglayout.cs",
+      "title": "Load an HTML file into a workbook while preserving DIV tag layout using EnableDivTagLayout."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
       "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
     },
