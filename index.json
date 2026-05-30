@@ -14761,6 +14761,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
+      "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
       "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
     },
