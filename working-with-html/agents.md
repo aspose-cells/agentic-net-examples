@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs
 - export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs
 - export-excel-to-html-and-apply-a-custom-stylesheet-that-overrides-default-cell-colors.cs
+- export-excel-to-html-and-preserve-cell-comments-as-html-tooltip-attributes.cs
