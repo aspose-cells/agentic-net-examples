@@ -14531,6 +14531,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-workbook-to-html-with-custom-file-naming-pattern-using-ifilepathprovider-that-appends-timestamps.cs",
+      "title": "Export workbook to HTML with custom file naming pattern using IFilePathProvider that appends timestamps."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
       "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
     },
