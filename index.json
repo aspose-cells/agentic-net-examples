@@ -14681,6 +14681,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-mhtml-output-in-google-chrome-with-isiecompatible-false-and-confirm-standard-rendering-without-iespecific-features.cs",
+      "title": "Test MHTML output in Google Chrome with IsIECompatible false and confirm standard rendering without IE\u2011specific features."
+    },
+    {
+      "category": "working-with-html",
       "file": "test-mhtml-output-in-internet-explorer-11-after-enabling-isiecompatible-and-verify-worksheet-tab-navigation.cs",
       "title": "Test MHTML output in Internet Explorer 11 after enabling IsIECompatible and verify worksheet tab navigation."
     },

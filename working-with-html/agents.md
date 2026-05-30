@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - generate-iecompatible-mhtml-from-a-multisheet-workbook-and-verify-tab-switching-functionality-in-internet-explorer.cs
 - test-mhtml-output-in-internet-explorer-11-after-enabling-isiecompatible-and-verify-worksheet-tab-navigation.cs
 - test-mhtml-output-in-microsoft-edge-after-enabling-isiecompatible-and-assess-compatibility-with-modern-browsers.cs
+- test-mhtml-output-in-google-chrome-with-isiecompatible-false-and-confirm-standard-rendering-without-iespecific-features.cs
