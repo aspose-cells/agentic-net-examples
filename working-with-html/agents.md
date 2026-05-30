@@ -240,3 +240,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-apply-localespecific-number-formatting-based-on-workbook-culture.cs
 - export-excel-to-html-and-generate-a-printable-version-using-css-media-print-rules.cs
 - convert-a-spreadsheet-with-wordart-to-svg-and-ensure-gradient-definitions-are-preserved-as-vector-data.cs
+- render-wordart-gradient-fills-during-pdf-conversion-and-enable-antialiasing-for-smoother-edges.cs
