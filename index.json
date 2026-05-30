@@ -14441,6 +14441,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs",
+      "title": "Validate that generated HTML contains comment tags by searching for \u201c<!--\u201d after enabling IsExportComments."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
       "title": "Verify that generated HTML contains heading tags matching worksheet titles."
     },
