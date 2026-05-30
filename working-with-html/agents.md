@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - export-a-workbook-with-conditional-formatting-that-includes-iconset-and-verify-icons-are-rendered-using-img-tags.cs
 - batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs
 - export-a-workbook-with-conditional-formatting-that-includes-databar-and-generate-a-separate-css-file-containing-bar-styles.cs
+- load-an-xlsx-workbook-and-export-to-html-using-default-settings-preserving-all-content.cs
