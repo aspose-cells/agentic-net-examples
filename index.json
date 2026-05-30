@@ -14266,6 +14266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-xlsx-files-to-html-while-omitting-document-properties-for-privacy-compliance.cs",
+      "title": "Batch convert XLSX files to HTML while omitting document properties for privacy compliance."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs",
       "title": "Batch process a collection of workbooks, applying ExportGridLines and IsExportComments simultaneously to each HTML output."
     },
