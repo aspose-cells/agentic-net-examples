@@ -14256,6 +14256,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-process-workbooks-applying-both-excludeunusedstyles-and-exportgridlines-and-compare-processing-time-against-default-settings.cs",
+      "title": "Batch process workbooks, applying both ExcludeUnusedStyles and ExportGridLines, and compare processing time against default settings."
+    },
+    {
+      "category": "working-with-html",
       "file": "combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs",
       "title": "Combine ExcludeUnusedStyles and IsExportComments options, then save workbook as HTML for compact output with comments."
     },
