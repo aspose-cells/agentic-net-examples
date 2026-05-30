@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-while-omitting-document-and-workbook-properties-together.cs
 - export-right-to-left-aligned-text-correctly-using-default-htmlsaveoptions-during-conversion.cs
 - export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs
+- export-defined-print-area-while-omitting-document-properties-by-combining-exportprintareaonly-and-exportdocumentproperties-false.cs
