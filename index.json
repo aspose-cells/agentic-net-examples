@@ -14556,6 +14556,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-html-modify-a-cell-value-programmatically-and-export-to-html-with-default-options.cs",
+      "title": "Load HTML, modify a cell value programmatically, and export to HTML with default options."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-html-preserving-div-layout-then-re-export-to-html-and-verify-div-structure-remains-unchanged.cs",
       "title": "Load HTML preserving DIV layout, then re-export to HTML and verify DIV structure remains unchanged."
     },
