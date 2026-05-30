@@ -14466,6 +14466,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-to-html-using-default-settings-preserving-all-content.cs",
+      "title": "Load an XLSX workbook and export to HTML using default settings, preserving all content."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xlsx-workbook-enable-excludeunusedstyles-and-save-as-html-to-reduce-file-size.cs",
       "title": "Load an XLSX workbook, enable ExcludeUnusedStyles, and save as HTML to reduce file size."
     },
