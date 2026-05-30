@@ -14761,6 +14761,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-together-with-similarborderstyle-to-test-combined-effects-on-rendering-across-multiple-browsers.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately together with SimilarBorderStyle to test combined effects on rendering across multiple browsers."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-htmlsaveoptionssimilarborderstyle-to-generate-fallback-border-styles-and-test-rendering-in-legacy-browsers.cs",
       "title": "Use HtmlSaveOptions.SimilarBorderStyle to generate fallback border styles and test rendering in legacy browsers."
     },
