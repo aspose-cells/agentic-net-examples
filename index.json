@@ -14766,6 +14766,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-localespecific-number-formatting-based-on-workbook-culture.cs",
+      "title": "Export Excel to HTML and apply locale\u2011specific number formatting based on workbook culture."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-ensure-formulas-are-displayed-as-values-not-as-formula-strings.cs",
       "title": "Export Excel to HTML and ensure formulas are displayed as values, not as formula strings."
     },
