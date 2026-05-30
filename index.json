@@ -14551,6 +14551,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "implement-ifilepathprovider-that-generates-unique-file-names-for-worksheets-with-duplicate-titles.cs",
+      "title": "Implement IFilePathProvider that generates unique file names for worksheets with duplicate titles."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-ifilepathprovider-to-customize-html-file-paths-for-each-exported-worksheet-and-maintain-link-integrity.cs",
       "title": "Implement IFilePathProvider to customize HTML file paths for each exported worksheet and maintain link integrity."
     },

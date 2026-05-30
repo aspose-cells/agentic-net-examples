@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - implement-ifilepathprovider-to-customize-html-file-paths-for-each-exported-worksheet-and-maintain-link-integrity.cs
 - assign-a-custom-ifilepathprovider-instance-to-htmlsaveoptionsfilepathprovider-to-fix-broken-worksheet-hyperlinks.cs
 - implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs
+- implement-ifilepathprovider-that-generates-unique-file-names-for-worksheets-with-duplicate-titles.cs
