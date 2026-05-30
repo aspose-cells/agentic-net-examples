@@ -14506,6 +14506,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-ensuring-only-that-area-appears.cs",
+      "title": "Export workbook to HTML after defining a print area, ensuring only that area appears."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
       "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
     },
