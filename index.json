@@ -14366,6 +14366,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-embedded-css-and-manually-link-an-external-stylesheet-after-html-export-for-custom-styling.cs",
+      "title": "Disable embedded CSS and manually link an external stylesheet after HTML export for custom styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs",
       "title": "Document the configuration required to turn off downlevel revealed comments."
     },
