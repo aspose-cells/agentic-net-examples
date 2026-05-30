@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs
 - export-a-workbook-with-conditional-formatting-that-includes-databar-and-extract-the-generated-css-classes-for-analysis.cs
 - export-a-workbook-with-conditional-formatting-that-uses-threecolor-scales-and-verify-gradient-colors-appear-in-html.cs
+- batch-process-workbooks-applying-both-excludeunusedstyles-and-exportgridlines-and-compare-processing-time-against-default-settings.cs
