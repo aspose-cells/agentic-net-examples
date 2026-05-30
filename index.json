@@ -14256,6 +14256,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
+      "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs",
       "title": "Batch process a collection of workbooks, applying ExportGridLines and IsExportComments simultaneously to each HTML output."
     },
