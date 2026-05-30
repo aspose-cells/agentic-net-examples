@@ -14971,6 +14971,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-worksheet-headings-in-the-html-output-and-prefix-table-styles-with-the-chosen-tablecssid.cs",
+      "title": "Include worksheet headings in the HTML output and prefix table styles with the chosen TableCssId."
+    },
+    {
+      "category": "working-with-html",
       "file": "integrate-ifilepathprovider-with-aspnet-routing-to-serve-exported-html-dynamically-from-a-web-api.cs",
       "title": "Integrate IFilePathProvider with ASP.NET routing to serve exported HTML dynamically from a web API."
     },
