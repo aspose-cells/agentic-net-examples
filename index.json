@@ -14566,6 +14566,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-html-preserving-div-layout-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs",
+      "title": "Load HTML preserving DIV layout, modify a cell, and export to HTML while disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-html-preserving-div-layout-then-re-export-to-html-and-verify-div-structure-remains-unchanged.cs",
       "title": "Load HTML preserving DIV layout, then re-export to HTML and verify DIV structure remains unchanged."
     },
