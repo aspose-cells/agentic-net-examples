@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-while-omitting-document-workbook-and-worksheet-properties-simultaneously.cs
 - export-a-workbook-to-html-while-omitting-workbook-and-worksheet-properties-together.cs
 - export-a-workbook-to-html-while-omitting-document-and-worksheet-properties-together.cs
+- export-a-workbook-to-html-while-omitting-document-and-workbook-properties-together.cs

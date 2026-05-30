@@ -14386,6 +14386,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-and-workbook-properties-together.cs",
+      "title": "Export a workbook to HTML while omitting document and workbook properties together."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-to-html-while-omitting-document-and-worksheet-properties-together.cs",
       "title": "Export a workbook to HTML while omitting document and worksheet properties together."
     },
