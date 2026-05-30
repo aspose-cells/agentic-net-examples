@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-export-to-html-using-default-settings-preserving-all-content.cs
 - export-a-workbook-to-html-while-omitting-document-properties-by-setting-exportdocumentproperties-to-false.cs
 - export-a-workbook-to-html-while-omitting-workbook-properties-by-disabling-exportworkbookproperties-flag.cs
+- export-a-workbook-to-html-while-omitting-worksheet-properties-by-setting-exportworksheetproperties-to-false.cs
