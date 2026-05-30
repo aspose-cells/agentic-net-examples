@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - export-defined-print-area-while-omitting-document-properties-by-combining-exportprintareaonly-and-exportdocumentproperties-false.cs
 - export-defined-print-area-while-disabling-css-generation-by-setting-exportprintareaonly-true-and-disablecss-true.cs
 - export-a-workbook-to-html-with-both-css-disabled-and-custom-properties-enabled.cs
+- export-a-workbook-to-html-with-custom-properties-enabled-while-preserving-default-css-generation.cs
