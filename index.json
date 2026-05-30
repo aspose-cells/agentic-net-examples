@@ -14366,6 +14366,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-extract-the-generated-css-classes-for-analysis.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and extract the generated CSS classes for analysis."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-overlapping-rules-and-ensure-both-rules-are-represented-in-html.cs",
       "title": "Export a workbook with conditional formatting that includes overlapping rules, and ensure both rules are represented in HTML."
     },
