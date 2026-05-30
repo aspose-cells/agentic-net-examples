@@ -14386,6 +14386,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-asynchronously-and-report-conversion-progress-to-callers-via-events.cs",
+      "title": "Convert HTML to PDF asynchronously and report conversion progress to callers via events."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-while-preserving-hyperlinks-and-making-them-clickable.cs",
       "title": "Convert HTML to PDF while preserving hyperlinks and making them clickable."
     },
