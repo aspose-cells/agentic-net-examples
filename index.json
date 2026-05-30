@@ -14776,6 +14776,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-generate-a-printable-version-using-css-media-print-rules.cs",
+      "title": "Export Excel to HTML and generate a printable version using CSS @media print rules."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-handle-hidden-rows-by-omitting-them-from-the-generated-markup.cs",
       "title": "Export Excel to HTML and handle hidden rows by omitting them from the generated markup."
     },
