@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - test-mhtml-output-in-google-chrome-with-isiecompatible-false-and-confirm-standard-rendering-without-iespecific-features.cs
 - implement-ifilepathprovider-to-customize-html-file-paths-for-each-exported-worksheet-and-maintain-link-integrity.cs
 - assign-a-custom-ifilepathprovider-instance-to-htmlsaveoptionsfilepathprovider-to-fix-broken-worksheet-hyperlinks.cs
+- implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs
