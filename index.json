@@ -14266,6 +14266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-xlsx-files-to-html-while-disabling-css-generation-to-reduce-file-size.cs",
+      "title": "Batch convert XLSX files to HTML while disabling CSS generation to reduce file size."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-xlsx-files-to-html-while-omitting-document-properties-for-privacy-compliance.cs",
       "title": "Batch convert XLSX files to HTML while omitting document properties for privacy compliance."
     },
