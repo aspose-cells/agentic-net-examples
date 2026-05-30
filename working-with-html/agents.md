@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - disable-embedded-css-and-manually-link-an-external-stylesheet-after-html-export-for-custom-styling.cs
 - use-htmlsaveoptionsexportworksheetcssseparately-true-and-verify-that-each-worksheet-has-its-own-css-file.cs
 - use-htmlsaveoptionsexportworksheetcssseparately-false-and-confirm-that-css-is-embedded-within-the-html.cs
+- export-workbook-to-html-with-custom-css-folder-path-and-ensure-the-folder-is-created-relative-to-output.cs
