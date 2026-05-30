@@ -14371,6 +14371,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs",
+      "title": "Enable HtmlSaveOptions.IsIECompatible before saving to MHTML to allow worksheet tab switching in Internet Explorer."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
       "title": "Enable the option to generate HTML heading elements based on worksheet names."
     },

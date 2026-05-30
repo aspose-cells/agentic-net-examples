@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - use-htmlsaveoptionssimilarborderstyle-to-generate-fallback-border-styles-and-test-rendering-in-legacy-browsers.cs
 - test-fallback-border-rendering-in-firefox-by-exporting-with-similarborderstyle-enabled-and-inspecting-css.cs
 - test-fallback-border-rendering-in-safari-by-exporting-with-similarborderstyle-enabled-and-reviewing-html-output.cs
+- enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs
