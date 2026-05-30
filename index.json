@@ -14331,6 +14331,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-css-generation-during-html-export-by-setting-disablecss-to-true.cs",
+      "title": "Disable CSS generation during HTML export by setting DisableCss to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-downlevel-revealed-comments-when-saving-to-html-to-improve-compatibility-with-older-browsers.cs",
       "title": "Disable downlevel revealed comments when saving to HTML to improve compatibility with older browsers."
     },
