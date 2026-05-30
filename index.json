@@ -14531,6 +14531,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-workbook-to-html-while-preserving-original-worksheet-order-by-not-altering-ifilepathprovider-mapping.cs",
+      "title": "Export workbook to HTML while preserving original worksheet order by not altering IFilePathProvider mapping."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-workbook-to-html-with-custom-file-naming-pattern-using-ifilepathprovider-that-appends-timestamps.cs",
       "title": "Export workbook to HTML with custom file naming pattern using IFilePathProvider that appends timestamps."
     },
