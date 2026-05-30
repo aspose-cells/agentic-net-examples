@@ -14376,6 +14376,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-uses-threecolor-scales-and-verify-gradient-colors-appear-in-html.cs",
+      "title": "Export a workbook with conditional formatting that uses three\u2011color scales, and verify gradient colors appear in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
       "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
     },
