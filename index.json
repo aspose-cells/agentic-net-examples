@@ -14651,6 +14651,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-fallback-border-rendering-in-firefox-by-exporting-with-similarborderstyle-enabled-and-inspecting-css.cs",
+      "title": "Test fallback border rendering in Firefox by exporting with SimilarBorderStyle enabled and inspecting CSS."
+    },
+    {
+      "category": "working-with-html",
       "file": "test-html-export-with-values-larger-than-10\u2076-to-confirm-exponential-notation-is-suppressed.cs",
       "title": "Test HTML export with values larger than 10\u2076 to confirm exponential notation is suppressed."
     },

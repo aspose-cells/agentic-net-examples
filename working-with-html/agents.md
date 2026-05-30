@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - export-workbook-to-html-after-defining-a-print-area-and-disabling-css-generation.cs
 - set-htmlsaveoptionssimilarborderstyle-to-true-to-provide-fallback-borders-for-unsupported-browsers-in-html.cs
 - use-htmlsaveoptionssimilarborderstyle-to-generate-fallback-border-styles-and-test-rendering-in-legacy-browsers.cs
+- test-fallback-border-rendering-in-firefox-by-exporting-with-similarborderstyle-enabled-and-inspecting-css.cs
