@@ -14256,6 +14256,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs",
+      "title": "Batch process a collection of workbooks, applying ExportGridLines and IsExportComments simultaneously to each HTML output."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-process-a-folder-of-xlsx-files-applying-excludeunusedstyles-only-to-files-larger-than-5-mb.cs",
       "title": "Batch process a folder of XLSX files, applying ExcludeUnusedStyles only to files larger than 5\u202fMB."
     },
