@@ -14256,6 +14256,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-html-file-sizes-with-and-without-excludeunusedstyles-to-quantify-reduction-achieved-by-style-omission.cs",
+      "title": "Compare HTML file sizes with and without ExcludeUnusedStyles to quantify reduction achieved by style omission."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-html-files-before-and-after-enabling-redundant-space-deletion.cs",
       "title": "Compare HTML files before and after enabling redundant space deletion."
     },
