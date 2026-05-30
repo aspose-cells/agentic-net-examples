@@ -14381,6 +14381,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs",
+      "title": "Export a workbook with conditional formatting that includes ColorScale, and extract the CSS gradient definitions for reuse."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-extract-the-generated-css-classes-for-analysis.cs",
       "title": "Export a workbook with conditional formatting that includes DataBar, and extract the generated CSS classes for analysis."
     },
