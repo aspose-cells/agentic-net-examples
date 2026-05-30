@@ -14301,6 +14301,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "document-the-steps-required-to-disable-scientific-notation-in-html-export.cs",
+      "title": "Document the steps required to disable scientific notation in HTML export."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
       "title": "Enable the option to generate HTML heading elements based on worksheet names."
     },
