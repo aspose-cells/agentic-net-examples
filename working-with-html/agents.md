@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs
 - convert-html-to-pdf-with-high-image-compression-level-to-reduce-file-size.cs
 - convert-html-to-pdf-and-enable-vector-graphics-rendering-for-scalable-charts.cs
+- convert-html-to-pdf-while-preserving-righttoleft-text-direction-for-arabic-content.cs
