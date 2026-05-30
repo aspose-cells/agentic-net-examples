@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-while-omitting-workbook-properties-by-disabling-exportworkbookproperties-flag.cs
 - export-a-workbook-to-html-while-omitting-worksheet-properties-by-setting-exportworksheetproperties-to-false.cs
 - export-a-workbook-to-html-while-omitting-document-workbook-and-worksheet-properties-simultaneously.cs
+- export-a-workbook-to-html-while-omitting-workbook-and-worksheet-properties-together.cs
