@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - export-workbook-to-html-after-defining-a-print-area-ensuring-only-that-area-appears.cs
 - export-workbook-to-html-after-defining-a-print-area-and-omitting-worksheet-properties.cs
 - export-workbook-to-html-after-defining-a-print-area-and-disabling-css-generation.cs
+- set-htmlsaveoptionssimilarborderstyle-to-true-to-provide-fallback-borders-for-unsupported-browsers-in-html.cs
