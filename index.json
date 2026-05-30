@@ -14386,6 +14386,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-properties-by-setting-exportdocumentproperties-to-false.cs",
+      "title": "Export a workbook to HTML while omitting document properties by setting ExportDocumentProperties to false."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs",
       "title": "Export a workbook with conditional formatting that includes ColorScale, and extract the CSS gradient definitions for reuse."
     },
