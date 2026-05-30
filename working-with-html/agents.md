@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - integrate-ifilepathprovider-with-aspnet-routing-to-serve-exported-html-dynamically-from-a-web-api.cs
 - export-workbook-to-html-with-custom-file-naming-pattern-using-ifilepathprovider-that-appends-timestamps.cs
 - export-workbook-to-html-while-preserving-original-worksheet-order-by-not-altering-ifilepathprovider-mapping.cs
+- use-ifilepathprovider-to-store-html-files-in-a-network-share-path-and-validate-accessibility-via-unc.cs
