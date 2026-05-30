@@ -14456,6 +14456,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-defined-print-area-while-disabling-css-generation-by-setting-exportprintareaonly-true-and-disablecss-true.cs",
+      "title": "Export defined print area while disabling CSS generation by setting ExportPrintAreaOnly true and DisableCss true."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-defined-print-area-while-omitting-document-properties-by-combining-exportprintareaonly-and-exportdocumentproperties-false.cs",
       "title": "Export defined print area while omitting document properties by combining ExportPrintAreaOnly and ExportDocumentProperties false."
     },
