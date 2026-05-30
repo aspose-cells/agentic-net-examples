@@ -14401,6 +14401,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-from-a-workbook-while-disabling-excludeunusedstyles-to-compare-full-style-set-against-reduced-version.cs",
+      "title": "Generate HTML from a workbook while disabling ExcludeUnusedStyles to compare full style set against reduced version."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
       "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
     },
