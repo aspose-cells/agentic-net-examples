@@ -1,220 +1,117 @@
-# Working With Worksheets Examples
+---
+category: working-with-worksheets
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Working With Worksheets
+You are a C# developer specializing in worksheet operations using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE worksheet scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Working With Worksheets**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Worksheet
+- WorksheetCollection
+- Workbook.Worksheets
+- Cells
+- PageSetup
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Create or access worksheet
+3. Perform worksheet operation
+4. Verify worksheet state
+5. Save workbook
+6. Print success message
 
+---
 
-## Output
+# Worksheet Rules
 
-Examples may generate:
+- Use workbook.Worksheets to access worksheets
+- Demonstrate one worksheet feature per example
+- Use meaningful worksheet names
+- Keep worksheet operations isolated and easy to understand
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- copy-a-worksheet-within-the-same-workbook-using-its-numeric-index-and-verify-duplication.cs
-- copy-a-worksheet-within-the-same-workbook-using-its-name-and-ensure-content-integrity.cs
-- copy-a-worksheet-from-a-source-workbook-to-a-target-workbook-while-preserving-formulas.cs
-- copy-multiple-worksheets-whose-names-start-with-a-specific-prefix-into-a-new-workbook-for-backup.cs
-- use-worksheetcollectionaddcopy-overload-with-source-index-to-duplicate-a-sheet-at-a-specific-position.cs
-- use-worksheetcollectionaddcopy-overload-by-name-to-copy-a-worksheet-and-insert-it-after-a-target-sheet.cs
-- addcopy-a-worksheet-and-specify-insertion-index-to-place-the-copy-directly-after-the-original-sheet.cs
-- duplicate-a-worksheet-and-ensure-pivot-tables-are-retained-in-the-copied-version-for-analysis.cs
-- copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs
-- move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs
-- relocate-a-worksheet-to-the-first-position-in-the-workbook-to-prioritize-its-visibility.cs
-- shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs
-- place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs
-- enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs
-- switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs
-- toggle-worksheet-view-between-normal-and-page-break-preview-based-on-a-userdefined-flag.cs
-- apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs
-- set-all-worksheets-to-normal-view-mode-to-ensure-consistent-onscreen-display-across-the-workbook.cs
-- adjust-the-zoom-factor-of-a-worksheet-to-150-percent-for-detailed-visual-inspection.cs
-- set-worksheet-zoom-to-75-percent-to-fit-more-content-on-screen-during-data-entry.cs
-- calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs
-- freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs
-- freeze-the-top-three-rows-of-a-worksheet-to-maintain-summary-information-during-navigation.cs
-- freeze-the-first-two-columns-to-keep-identifier-fields-static-while-scrolling-horizontally.cs
-- implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs
-- split-panes-at-row-ten-and-column-five-to-create-separate-scrolling-regions-within-the-sheet.cs
-- create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs
-- apply-split-panes-and-then-freeze-panes-on-the-same-sheet-to-create-a-fixed-header-area.cs
-- retrieve-the-unique-sheetid-of-a-worksheet-and-log-it-for-audit-tracking.cs
-- iterate-over-the-worksheet-collection-and-obtain-each-sheetid-for-diagnostic-reporting.cs
-- store-worksheet-sheetid-values-in-a-dictionary-keyed-by-worksheet-name-for-quick-lookup.cs
-- validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs
-- load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs
-- open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs
-- retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs
-- iterate-through-all-worksheets-hide-those-whose-names-start-with-temp-and-write-the-workbook-back.cs
-- load-a-workbook-unhide-row-10-in-the-active-sheet-and-save-the-modified-document.cs
-- hide-columns-b-through-e-in-a-specific-worksheet-then-save-the-workbook-preserving-column-visibility.cs
-- configure-the-workbook-to-hide-both-horizontal-and-vertical-scroll-bars-and-export-the-result.cs
-- show-the-vertical-scroll-bar-while-hiding-the-horizontal-one-then-save-the-workbook-to-disk.cs
-- set-the-tab-bar-width-to-200-pixels-hide-the-third-worksheet-and-save-the-file.cs
-- unhide-all-rows-in-a-worksheet-enable-formula-display-and-write-the-workbook-to-a-new-file.cs
-- hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs
-- hide-multiple-columns-from-index-5-to-9-then-export-the-workbook-preserving-hidden-columns.cs
-- load-a-workbook-toggle-worksheet-visibility-based-on-a-condition-and-save-the-updated-file.cs
-- show-all-worksheet-tabs-ensure-scroll-bars-are-visible-and-save-the-workbook-for-user-interaction.cs
-- hide-the-first-worksheet-tab-display-formulas-on-the-second-sheet-and-save-the-changes.cs
-- unhide-a-previously-hidden-worksheet-adjust-its-tab-color-and-write-the-workbook-back.cs
-- hide-rows-5-through-15-then-enable-formula-view-on-the-same-sheet-before-saving.cs
-- set-workbook-settings-to-hide-the-horizontal-scroll-bar-keep-vertical-bar-visible-and-save.cs
-- load-a-workbook-hide-columns-c-and-d-then-export-the-file-preserving-hidden-columns.cs
-- show-formulas-on-a-hidden-worksheet-after-making-it-visible-then-save-the-workbook.cs
-- batch-process-multiple-workbooks-to-hide-the-last-worksheet-in-each-and-save-them.cs
-- iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs
-- hide-rows-based-on-a-predicate-that-checks-cell-values-then-save-the-modified-workbook.cs
-- unhide-all-columns-in-a-sheet-enable-scroll-bars-and-export-the-workbook-to-a-new-location.cs
-- set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs
-- load-a-workbook-display-formulas-on-all-sheets-hide-the-second-column-and-save.cs
-- hide-rows-0-through-9-then-toggle-the-visibility-of-the-vertical-scroll-bar-before-saving.cs
-- show-the-horizontal-scroll-bar-hide-the-vertical-one-and-write-the-workbook-to-disk.cs
-- unhide-a-specific-hidden-worksheet-adjust-its-tab-order-and-save-the-updated-workbook.cs
-- hide-columns-based-on-header-names-enable-formula-display-and-export-the-workbook.cs
-- load-a-workbook-from-file-and-hide-zero-values-on-the-first-worksheet.cs
-- iterate-through-all-worksheets-set-showzerovalues-to-false-and-save-the-workbook-as-pdf.cs
-- apply-fittopageswide-1-and-fittopagestall-1-to-a-worksheet-for-single-page-printing.cs
-- set-pagesetupzoom-to-80-percent-for-a-worksheet-and-export-the-result-as-pdf.cs
-- apply-a-120-percent-zoom-level-to-every-worksheet-and-save-each-as-separate-xls-file.cs
-- enable-the-emptycellreferences-error-check-for-a-specific-worksheet-by-creating-an-errorcheckoption-instance.cs
-- load-multiple-workbooks-from-a-folder-hide-zero-values-on-each-sheet-and-save-changes.cs
-- batch-process-excel-files-to-set-fittopageswide-1-fittopagestall-1-then-export-to-pdf.cs
-- create-a-macrofree-workbook-apply-90-percent-zoom-and-save-as-html-preserving-formatting.cs
-- programmatically-read-worksheet-errorchecking-settings-log-each-enabled-check-and-write-report-to-text-file.cs
-- use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs
-- apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs
-- set-worksheet-orientation-to-landscape-enable-fittopageswide-1-and-generate-printable-pdf.cs
-- disable-numbersastext-warning-only-for-cells-in-column-b-leaving-other-columns-unchanged.cs
-- enable-error-checking-for-formulas-containing-circular-references-then-export-workbook-to-ods-file.cs
-- hide-zero-values-only-in-rows-beyond-the-100th-row-preserving-earlier-data-visibility.cs
-- apply-110-percent-zoom-to-a-worksheet-and-generate-pdf-with-embedded-fonts.cs
-- programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs
-- load-a-workbook-set-page-orientation-to-landscape-fit-to-one-page-wide-and-save-as-xps.cs
-- iterate-through-each-worksheet-apply-95-percent-zoom-to-those-with-over-500-rows-and-export-pdf.cs
-- create-a-macrofree-workbook-hide-zero-values-set-custom-top-margin-and-save-as-csv.cs
-- apply-fittopagestall-1-while-keeping-fittopageswide-unchanged-then-generate-multi-sheet-pdf-with-consistent-scaling.cs
-- load-an-existing-excel-file-set-showzerovalues-to-false-and-export-result-as-html-page.cs
-- create-a-batch-processor-that-hides-zero-values-applies-80-percent-zoom-and-saves-each-workbook-as-pdf.cs
-- programmatically-set-worksheet-left-margin-to-05-inches-then-export-sheet-to-excel-972003-format.cs
-- iterate-over-all-worksheets-enable-numbersastext-error-check-only-on-sheets-with-numeric-data-and-log-changes.cs
-- create-a-workbook-set-a-centered-header-text-and-save-the-file-as-xlsx.cs
-- add-a-left-aligned-footer-containing-the-current-date-to-each-worksheet-in-an-existing-workbook.cs
-- insert-a-company-logo-image-into-the-right-side-of-the-header-for-the-first-worksheet.cs
-- place-a-watermark-picture-in-the-footer-of-all-worksheets-using-the-same-image-file-path.cs
-- define-the-print-area-as-cells-b2-through-g20-for-the-active-worksheet.cs
-- configure-rows-1-to-3-to-repeat-on-every-printed-page-of-the-selected-sheet.cs
-- set-columns-a-and-b-to-repeat-as-titles-on-each-printed-page-of-the-workbook.cs
-- enable-printing-of-gridlines-while-disabling-row-and-column-headings-for-the-current-worksheet.cs
-- turn-on-blackandwhite-printing-mode-to-reduce-ink-usage-for-the-entire-workbook.cs
-- print-all-cell-comments-in-place-by-assigning-the-appropriate-enumeration-to-the-printcomments-property.cs
-- suppress-error-values-during-printing-by-setting-printerrors-to-the-blank-enumeration-on-the-sheet.cs
-- retrieve-the-paper-width-and-height-from-pagesetup-to-calculate-custom-scaling-factors.cs
-- clear-any-existing-printer-settings-from-a-worksheet-before-applying-new-print-configuration.cs
-- clone-the-page-setup-of-a-template-worksheet-and-apply-it-to-a-newly-created-sheet.cs
-- programmatically-add-different-header-texts-for-odd-and-even-pages-using-the-appropriate-api-calls.cs
-- insert-a-dynamic-page-number-placeholder-into-the-center-of-the-footer-for-each-printed-page.cs
-- set-a-custom-print-area-that-excludes-hidden-rows-and-columns-to-improve-print-performance.cs
-- enable-printing-of-gridlines-only-for-the-first-three-worksheets-while-keeping-others-unchanged.cs
-- apply-blackandwhite-mode-selectively-to-worksheets-containing-confidential-data-before-exporting-to-pdf.cs
-- configure-the-workbook-to-print-comments-as-separate-notes-rather-than-inplace-for-audit-purposes.cs
-- set-the-print-area-using-a-named-range-instead-of-a-literal-cell-address-for-flexibility.cs
-- repeat-the-header-row-on-each-printed-page-while-also-repeating-the-first-column-as-a-title.cs
-- disable-printing-of-row-headings-to-create-a-cleaner-layout-for-a-marketing-brochure.cs
-- add-a-qr-code-image-to-the-left-side-of-the-footer-for-scanning-after-printing.cs
-- copy-page-setup-settings-from-a-source-worksheet-to-multiple-target-worksheets-in-a-loop.cs
-- enable-printing-of-gridlines-and-headings-together-to-replicate-the-onscreen-view-on-paper.cs
-- apply-a-custom-paper-size-by-reading-paperwidth-and-paperheight-and-assigning-them-to-the-page-setup.cs
-- create-a-batch-process-that-sets-identical-headers-for-all-worksheets-in-a-large-workbook.cs
-- generate-a-report-that-lists-each-worksheets-current-print-area-and-title-rows-configuration.cs
-- load-an-xlsx-workbook-and-obtain-the-paper-width-of-the-first-worksheet.cs
-- retrieve-the-paper-height-property-from-the-active-worksheet-and-display-it-in-the-console.cs
-- iterate-through-all-worksheets-collecting-each-sheets-paper-width-and-height-into-a-dictionary.cs
-- compare-paper-dimensions-between-two-specified-worksheets-and-log-any-differences-for-review.cs
-- export-the-gathered-worksheet-paper-dimensions-to-a-csv-file-for-external-analysis.cs
-- set-the-pagesetup-paper-size-of-a-worksheet-to-a2-and-verify-the-updated-dimensions.cs
-- change-the-same-worksheets-paper-size-sequentially-to-a3-a4-and-letter-recording-each-size.cs
-- apply-a4-paper-size-to-every-worksheet-in-a-workbook-using-a-foreach-loop.cs
-- assign-null-to-a-worksheets-printersettings-property-to-remove-its-embedded-printer-configuration.cs
-- verify-that-the-printersettings-object-is-null-after-removal-by-checking-the-property-value.cs
-- loop-through-all-workbook-worksheets-and-set-each-printersettings-to-null-clearing-printer-data.cs
-- save-the-cleaned-workbook-as-xlsx-and-confirm-no-printersettings-bin-files-exist-inside-the-package.cs
-- define-a-custom-paper-size-of-500-points-width-and-700-points-height-for-a-worksheet.cs
-- render-the-worksheet-with-the-custom-paper-dimensions-to-a-pdf-file-using-the-save-method.cs
-- create-separate-pdfs-for-three-worksheets-each-using-a-distinct-custom-paper-size-defined-programmatically.cs
-- combine-custom-paper-size-rendering-with-a-300-dpi-setting-to-improve-pdf-image-quality.cs
-- copy-the-entire-pagesetup-configuration-from-a-source-worksheet-to-a-destination-worksheet.cs
-- after-copying-compare-destination-worksheets-paper-size-margins-and-orientation-to-ensure-exact-match.cs
-- use-a-loop-to-duplicate-pagesetup-settings-from-the-first-worksheet-to-all-remaining-sheets.cs
-- clone-a-worksheets-page-setup-modify-only-the-paper-height-and-apply-it-back-to-the-sheet.cs
-- load-an-xlsx-file-set-a3-paper-size-on-the-second-sheet-then-save-as-pdf.cs
-- open-a-workbook-remove-printer-settings-from-every-sheet-and-save-the-result-as-a-clean-xlsx.cs
-- apply-a-600point-custom-paper-size-to-a-worksheet-render-to-pdf-then-revert-to-a4.cs
-- prompt-the-user-for-a-paper-size-enum-value-and-assign-it-to-the-worksheets-pagesetuppapersize.cs
-- implement-exception-handling-to-catch-invalid-custom-paper-dimensions-and-log-descriptive-error-messages.cs
-- measure-execution-time-when-updating-page-setup-for-one-hundred-worksheets-to-evaluate-performance-impact.cs
-- generate-a-summary-report-listing-original-and-modified-paper-dimensions-for-each-worksheet-after-changes.cs
-- use-linq-to-select-worksheets-whose-names-start-with-report-before-applying-custom-paper-sizes.cs
-- assign-a4-size-to-data-sheets-and-letter-size-to-summary-sheets-based-on-worksheet-role.cs
-- write-a-unit-test-that-asserts-paperwidth-equals-expected-value-when-worksheet-paper-size-is-set-to-a4.cs
-- create-a-console-application-that-loads-a-workbook-prints-each-worksheets-paper-dimensions-and-exits.cs
-- develop-a-method-that-accepts-width-and-height-in-millimeters-converts-to-points-and-sets-custom-paper-size.cs
-- integrate-pagesetup-copying-into-a-workbook-merging-routine-to-preserve-original-layout-across-combined-files.cs
-- validate-that-after-removing-printer-settings-the-workbook-opens-in-excel-without-prompting-for-a-default-printer.cs
-- implement-a-feature-that-logs-the-number-of-worksheets-lacking-printer-settings-after-batch-removal-operation.cs
-- design-a-configuration-file-that-maps-worksheet-names-to-desired-paper-sizes-for-automated-processing.cs
-- read-the-configuration-mapping-and-apply-corresponding-paper-sizes-to-each-worksheet-during-workbook-load.cs
-- after-applying-custom-sizes-generate-pdf-thumbnails-for-each-worksheet-to-preview-layout-changes.cs
-- create-a-script-that-removes-printer-settings-sets-a2-size-and-saves-as-pdf.cs
-- benchmark-memory-usage-when-cloning-page-setup-objects-for-fifty-worksheets-versus-direct-property-assignment.cs
-- implement-a-retry-mechanism-that-attempts-to-set-custom-paper-size-up-to-three-times-on-failure.cs
-- log-detailed-information-about-each-pagesetup-change-including-previous-and-new-paper-dimensions-to-a-log-file.cs
-- create-a-utility-that-extracts-paper-width-and-height-from-all-worksheets-and-returns-a-json-summary.cs
-- develop-a-function-that-checks-whether-a-worksheets-custom-paper-size-exceeds-standard-a3-dimensions.cs
-- use-conditional-logic-to-assign-letter-size-to-worksheets-whose-names-contain-summary-and-a4-otherwise.cs
-- after-copying-page-setup-modify-the-destination-worksheets-left-margin-to-05-inches-for-better-printing.cs
-- write-a-powershell-wrapper-that-calls-the-net-library-to-remove-printer-settings-from-a-given-excel-file.cs
+# Input Strategy
+
+- Do NOT rely on external XLSX files
+- Create workbook and worksheets programmatically
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Add worksheet
+- Rename worksheet
+- Remove worksheet
+- Copy worksheet
+- Move worksheet
+- Set active worksheet
+- Access worksheet properties
+- Configure page setup
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Hard-code invalid worksheet indexes
+✅ Verify worksheet exists before access
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one worksheet capability per example
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
