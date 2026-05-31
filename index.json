@@ -15981,6 +15981,106 @@
     },
     {
       "category": "working-with-json",
+      "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
+      "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."
+    },
+    {
+      "category": "working-with-json",
+      "file": "batch-process-a-folder-of-xls-files-converting-each-workbook-to-separate-json-files.cs",
+      "title": "Batch process a folder of XLS files, converting each workbook to separate JSON files."
+    },
+    {
+      "category": "working-with-json",
+      "file": "configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs",
+      "title": "Configure JsonSaveOptions to exclude hidden rows and columns from the exported JSON data."
+    },
+    {
+      "category": "working-with-json",
+      "file": "convert-a-json-file-containing-nested-objects-into-a-flattened-json-structure-before-saving.cs",
+      "title": "Convert a JSON file containing nested objects into a flattened JSON structure before saving."
+    },
+    {
+      "category": "working-with-json",
+      "file": "convert-a-json-file-containing-tabular-data-to-csv-using-jsonutility-with-a-custom-delimiter.cs",
+      "title": "Convert a JSON file containing tabular data to CSV using JsonUtility with a custom delimiter."
+    },
+    {
+      "category": "working-with-json",
+      "file": "create-a-batch-job-that-converts-all-json-files-in-a-directory-to-matching-csv-files.cs",
+      "title": "Create a batch job that converts all JSON files in a directory to matching CSV files."
+    },
+    {
+      "category": "working-with-json",
+      "file": "create-a-console-application-that-prints-json-representation-of-the-first-worksheet-to-standard-output.cs",
+      "title": "Create a console application that prints JSON representation of the first worksheet to standard output."
+    },
+    {
+      "category": "working-with-json",
+      "file": "define-a-semicolon-as-csv-delimiter-in-jsonlayoutoptions-before-converting-json-to-csv.cs",
+      "title": "Define a semicolon as CSV delimiter in JsonLayoutOptions before converting JSON to CSV."
+    },
+    {
+      "category": "working-with-json",
+      "file": "encrypt-the-generated-json-file-using-a-passwordprotected-stream-before-writing-to-disk.cs",
+      "title": "Encrypt the generated JSON file using a password\u2011protected stream before writing to disk."
+    },
+    {
+      "category": "working-with-json",
+      "file": "exclude-empty-rows-from-json-output-by-setting-jsonsaveoptionsincludeemptyrows-to-false.cs",
+      "title": "Exclude empty rows from JSON output by setting JsonSaveOptions.IncludeEmptyRows to false."
+    },
+    {
+      "category": "working-with-json",
+      "file": "export-a-specific-cell-range-from-a-worksheet-to-json-using-exportrangetojsonoptions.cs",
+      "title": "Export a specific cell range from a worksheet to JSON using ExportRangeToJsonOptions."
+    },
+    {
+      "category": "working-with-json",
+      "file": "export-the-active-worksheet-of-the-loaded-workbook-to-json-using-default-saveformat-settings.cs",
+      "title": "Export the active worksheet of the loaded workbook to JSON using default SaveFormat settings."
+    },
+    {
+      "category": "working-with-json",
+      "file": "export-the-entire-workbook-to-json-with-column-headers-included-via-jsonsaveoptions.cs",
+      "title": "Export the entire workbook to JSON with column headers included via JsonSaveOptions."
+    },
+    {
+      "category": "working-with-json",
+      "file": "generate-json-for-a-pivot-table-by-exporting-its-underlying-data-source-range.cs",
+      "title": "Generate JSON for a pivot table by exporting its underlying data source range."
+    },
+    {
+      "category": "working-with-json",
+      "file": "generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs",
+      "title": "Generate pretty\u2011printed JSON with indentation by setting JsonSaveOptions.PrettyPrint to true."
+    },
+    {
+      "category": "working-with-json",
+      "file": "implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs",
+      "title": "Implement error handling to catch JsonUtility.Load exceptions when source JSON file is malformed."
+    },
+    {
+      "category": "working-with-json",
+      "file": "include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs",
+      "title": "Include column names as keys in JSON output by enabling IncludeColumnNames option."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-a-csv-file-into-memory-using-jsonutility-and-transform-it-into-json-format.cs",
+      "title": "Load a CSV file into memory using JsonUtility and transform it into JSON format."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-a-json-array-representing-multiple-tables-and-map-each-element-to-a-separate-worksheet.cs",
+      "title": "Load a JSON array representing multiple tables and map each element to a separate worksheet."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-an-xls-workbook-remove-empty-columns-then-export-the-cleaned-data-to-json.cs",
+      "title": "Load an XLS workbook, remove empty columns, then export the cleaned data to JSON."
+    },
+    {
+      "category": "working-with-json",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
       "title": "Load an XLSX workbook from a file path and verify successful initialization."
     },
