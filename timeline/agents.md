@@ -1,77 +1,112 @@
-# Timeline Examples
+---
+category: timeline
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Timeline
+You are a C# developer specializing in timeline features using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE timeline scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Timeline**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Timeline
+- TimelineCollection
+- PivotTable
+- Worksheet.Timelines
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Create sample date-based data
+3. Create PivotTable
+4. Create Timeline
+5. Save workbook
+6. Print success message
 
+---
 
-## Output
+# Timeline Rules
 
-Examples may generate:
+- Timelines require a PivotTable data source
+- Include valid date fields
+- Use realistic sample data
+- One example = one timeline operation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs
-- draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs
-- apply-a-gradient-background-to-a-timeline-adjust-label-rotation-and-render-it-to-a-bmp-image.cs
-- batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs
-- validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs
-- update-an-existing-timeline-by-adding-a-new-data-series-and-rerender-it-to-a-pdf-with-annotations.cs
-- apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs
-- embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs
-- create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs
-- render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs
-- combine-two-separate-timelines-into-a-single-composite-view-and-save-the-merged-chart-as-an-svg-file.cs
-- apply-a-dark-theme-to-a-timeline-change-axis-colors-and-render-the-result-to-a-pdf.cs
-- load-a-csv-file-containing-event-dates-convert-it-to-an-excel-worksheet-and-draw-a-timeline.cs
-- create-a-timeline-with-custom-date-format-ddmmmyyyy-and-export-the-chart-to-a-pdf-document.cs
-- render-a-timeline-with-data-labels-showing-percentages-adjust-label-font-size-and-save-as-png.cs
-- batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs
-- apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs
-- create-a-timeline-with-a-logarithmic-scale-for-dates-customize-tick-intervals-and-render-to-png.cs
-- export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs
-- add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs
-- render-a-timeline-with-a-3d-perspective-effect-adjust-depth-and-output-as-a-png-image.cs
+# Input Strategy
+
+- Do NOT rely on external XLSX files
+- Create all data programmatically
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Create timeline
+- Access timelines
+- Modify timeline properties
+- Connect timeline to PivotTable
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Use timeline without date fields
+✅ Create valid date-based source data
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
