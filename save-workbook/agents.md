@@ -1,88 +1,115 @@
-# Save Workbook Examples
+---
+category: save-workbook
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Save Workbook
+You are a C# developer specializing in workbook saving and export operations using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE workbook-saving scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Save Workbook**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+Add SaveOptions namespaces only when required.
 
-## Common Pattern
+---
 
-Typical Aspose.Cells workflow:
+# Key APIs
 
-Workbook workbook = new Workbook();
+- Workbook.Save()
+- SaveFormat
+- PdfSaveOptions
+- HtmlSaveOptions
+- OdsSaveOptions
 
-Worksheet sheet = workbook.Worksheets[0];
+---
 
-Cells cells = sheet.Cells;
+# Common Pattern
 
+1. Create workbook
+2. Populate sample data
+3. Configure save options (if required)
+4. Save workbook
+5. Validate output
+6. Print success message
 
-## Output
+---
 
-Examples may generate:
+# Save Workbook Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Always save generated output to the working directory
+- Use the appropriate SaveFormat
+- Use SaveOptions only when demonstrating save customization
+- One example = one save operation
 
-Output files are written to the working directory.
-- read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs
-- open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs
-- instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs
-- load-an-xlsm-file-remove-macros-and-save-the-workbook-as-a-strict-open-xml-xlsx.cs
-- create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs
-- open-a-fods-workbook-change-the-default-font-and-save-it-as-an-ods-document.cs
-- load-an-xlsb-file-calculate-all-formulas-and-generate-a-json-representation-of-the-data.cs
-- read-an-xls-file-apply-conditional-formatting-and-save-the-result-as-an-mht-web-archive.cs
-- load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs
-- open-a-workbook-enable-strict-open-xml-compliance-and-save-it-using-the-default-file-name.cs
-- load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs
-- read-a-txt-workbook-split-cells-by-custom-delimiter-and-export-the-data-to-an-xml-file.cs
-- open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs
-- load-a-workbook-apply-a-watermark-to-each-page-and-save-the-output-as-a-pdf-document.cs
-- instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs
-- open-an-ots-template-replace-placeholder-text-and-save-the-result-as-an-ods-file.cs
-- load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs
-- read-a-workbook-compress-it-at-level1-for-fast-saving-and-compare-performance-with-level9.cs
-- open-a-workbook-enable-page-margins-and-export-the-document-to-an-html-file-with-embedded-images.cs
-- load-a-workbook-set-pdf-export-to-embed-fonts-and-save-the-pdf-for-crossplatform-compatibility.cs
-- instantiate-a-workbook-apply-data-validation-rules-and-export-the-sheet-to-a-json-file.cs
-- open-a-workbook-configure-saveoptions-to-generate-a-single-worksheet-mht-file-and-save-it.cs
-- load-a-workbook-set-ooxmlcompressiontype-to-level3-and-write-the-compressed-file-to-a-stream.cs
-- read-a-workbook-filter-out-hidden-rows-and-export-the-visible-data-to-a-txt-file.cs
-- open-a-workbook-set-contentdisposition-to-attachment-and-deliver-the-xlsx-file-via-http-response.cs
-- load-a-workbook-adjust-pdf-export-quality-to-300-dpi-and-save-the-highresolution-pdf.cs
-- instantiate-a-workbook-set-exportallsheets-false-and-export-only-the-active-sheet-to-an-xml-file.cs
-- open-a-workbook-apply-a-custom-number-format-and-save-the-file-as-a-csv-with-tab-delimiter.cs
-- load-a-workbook-enable-strict-compliance-and-attempt-to-save-to-a-location-with-insufficient-permissions.cs
-- read-a-workbook-merge-cells-across-rows-and-export-the-result-to-an-html-file-with-tables.cs
-- open-a-workbook-set-ooxmlcompressiontype-to-level5-and-compare-resulting-file-size-to-default-compression.cs
-- load-a-workbook-add-a-chart-object-and-save-the-workbook-as-a-pdf-with-embedded-chart.cs
+---
+
+# Input Strategy
+
+- Do NOT depend on input.xlsx
+- Create workbook programmatically
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate an output file
+- Use meaningful names such as output.xlsx, output.pdf, output.html
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Save XLSX workbook
+- Save as PDF
+- Save as HTML
+- Save as ODS
+- Save with custom options
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Save without specifying required options
+✅ Configure SaveOptions when demonstrating custom behavior
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
