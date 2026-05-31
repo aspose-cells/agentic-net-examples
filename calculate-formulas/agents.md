@@ -1,199 +1,116 @@
-# Calculate Formulas Examples
+---
+category: calculate-formulas
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Calculate Formulas
+You are a C# developer specializing in formula calculation and recalculation using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE formula-calculation scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Calculate Formulas**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Workbook.CalculateFormula()
+- CalculationOptions
+- Cell.Formula
+- Cell.Value
+- FormulaSettings
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Add sample worksheet data
+3. Assign formulas
+4. Calculate formulas
+5. Verify calculated values
+6. Save workbook
+7. Print success message
 
+---
 
-## Output
+# Formula Calculation Rules
 
-Examples may generate:
+- Call Workbook.CalculateFormula() after formula updates
+- Use valid Excel formula syntax
+- Demonstrate one calculation feature per example
+- Use deterministic sample data
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs
-- load-a-workbook-from-a-memory-stream-change-a-formula-and-invoke-workbookcalculateformula-with-options.cs
-- create-a-class-implementing-icustomfunction-and-override-calculatecustomfunction-to-define-custom-logic.cs
-- use-referredareagetvaluerowoffset-coloffset-to-obtain-a-single-cell-value-from-a-reference-argument.cs
-- use-referredareagetvalues-to-retrieve-a-twodimensional-array-of-values-from-a-range-argument.cs
-- return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs
-- return-a-twodimensional-object-array-from-a-custom-function-to-populate-a-worksheet-range.cs
-- replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs
-- create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs
-- in-beforecalculate-call-interrupt-when-a-specific-cell-address-meets-a-predefined-condition.cs
-- assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs
-- set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs
-- invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs
-- evaluate-the-builtin-ifna-function-by-writing-ifnaa1-fallback-and-calling-workbookcalculateformula.cs
-- use-workbookcalculateformula-without-options-to-compute-all-formulas-using-default-calculation-settings.cs
-- set-calculationoptionsenableiterativecalculation-to-true-to-allow-circular-reference-evaluation-during-calculations.cs
-- set-calculationoptionsmaxiterationcount-to-100-to-limit-the-number-of-iterative-calculation-cycles.cs
-- set-calculationoptionsconvergencethreshold-to-0001-to-define-precision-for-iterative-calculations.cs
-- set-calculationoptionsignoreerrorvalue-to-true-to-skip-errors-during-formula-evaluation.cs
-- set-calculationoptionstreattextaszero-to-true-to-convert-textual-values-to-zero-during-evaluation.cs
-- limit-calculation-threads-by-setting-calculationoptionsthreadcount-to-4-for-controlled-parallelism.cs
-- enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs
-- use-calculationoptionsuse1904datesystem-true-to-calculate-dates-based-on-the-1904-epoch.cs
-- after-inserting-a-new-row-call-workbookcalculateformula-to-update-dependent-formulas-automatically.cs
-- after-deleting-a-column-call-workbookcalculateformula-to-ensure-remaining-formulas-recalculate-correctly.cs
-- after-renaming-a-worksheet-call-workbookcalculateformula-to-refresh-formulas-that-reference-the-sheet.cs
-- after-updating-a-named-range-call-workbookcalculateformula-to-propagate-changes-to-dependent-formulas.cs
-- after-applying-data-validation-call-workbookcalculateformula-to-evaluate-any-dependent-formulas.cs
-- after-applying-conditional-formatting-call-workbookcalculateformula-to-ensure-conditional-formulas-recalculate.cs
-- after-protecting-a-worksheet-call-workbookcalculateformula-to-verify-that-protected-cells-still-calculate.cs
-- after-unprotecting-a-worksheet-call-workbookcalculateformula-to-reenable-full-calculation-of-all-cells.cs
-- set-calculationoptionscalculationmode-to-automatic-and-call-workbookcalculateformula-to-trigger-full-recalculation.cs
-- use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs
-- use-calculationoptions-to-treat-empty-cells-as-zero-and-evaluate-a-formula-that-sums-a-mixed-range.cs
-- register-the-custom-calculation-engine-with-the-workbooks-calculationengine-before-invoking-any-formulas.cs
-- assign-a-formula-that-calls-the-custom-function-to-a-target-cell-with-required-parameters.cs
-- call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs
-- retrieve-the-range-of-values-returned-by-the-custom-function-from-the-evaluated-cell.cs
-- add-a-specific-cell-to-the-formula-watch-window-using-worksheetcellwatchesadd-after-setting-its-formula.cs
-- add-multiple-cells-to-the-watch-window-in-a-loop-to-monitor-a-batch-of-formulas.cs
-- remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs
-- retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs
-- save-the-workbook-to-an-excel-file-after-configuring-the-watch-window-for-later-inspection.cs
-- open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
-- use-formulatext-to-obtain-the-exact-textual-representation-of-a-cells-formula.cs
-- write-a-formula-to-a-cell-and-store-its-text-in-another-cell-using-formulatext.cs
-- apply-formulatext-on-a-range-of-cells-to-extract-each-formulas-text-for-bulk-analysis.cs
-- compare-formula-text-before-and-after-modification-to-ensure-intended-changes-were-applied.cs
-- enable-circularreference-detection-in-workbook-calculation-settings-to-prevent-infinite-evaluation-loops.cs
-- detect-circular-references-during-formula-evaluation-and-log-the-offending-cell-addresses.cs
-- set-the-workbooks-formula-calculation-mode-to-manual-for-selective-recalculation-control.cs
-- configure-the-workbook-to-use-automatic-calculation-mode-and-verify-dependent-cells-update-instantly.cs
-- interrupt-an-ongoing-workbookcalculate-operation-using-calculationenginecancel-to-stop-longrunning-calculations.cs
-- use-a-cancellation-token-with-workbookcalculate-to-abort-calculation-after-a-predefined-timeout.cs
-- optimize-custom-function-logic-to-reduce-execution-time-of-cellcalculate-calls-significantly.cs
-- cache-results-of-a-custom-function-to-improve-performance-on-repeated-calls-with-identical-inputs.cs
-- invalidate-cached-custom-function-results-automatically-when-dependent-cells-are-modified-in-the-workbook.cs
-- implement-icustomfunction-interface-to-create-a-custom-function-that-returns-a-multicell-range.cs
-- return-a-twodimensional-array-from-a-custom-function-to-populate-a-range-of-cells-dynamically.cs
-- apply-a-custom-function-within-an-array-formula-to-compute-results-for-an-entire-data-table.cs
-- calculate-an-array-formula-for-a-data-table-that-aggregates-values-across-multiple-rows.cs
-- validate-array-formula-syntax-programmatically-before-triggering-workbookcalculate-to-avoid-runtime-errors.cs
-- set-iterative-calculation-settings-including-maximum-iterations-and-precision-tolerance-for-circular-reference-handling.cs
-- enable-iterative-calculation-for-circular-references-and-define-convergence-criteria-in-workbook-settings.cs
-- log-each-step-of-formula-evaluation-using-custom-callbacks-attached-to-the-calculation-engine.cs
-- subscribe-to-calculation-engine-events-to-monitor-progress-of-longrunning-formula-evaluations.cs
-- implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs
-- pause-calculation-after-a-predefined-time-threshold-and-resume-it-later-without-data-loss.cs
-- resume-a-paused-calculation-session-and-verify-that-results-match-uninterrupted-execution.cs
-- disable-automatic-recalculation-in-workbook-settings-to-control-when-formulas-are-evaluated.cs
-- trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs
-- use-cellcalculate-method-to-evaluate-a-single-cells-formula-independently-of-the-workbook.cs
-- compare-results-of-cellcalculate-with-those-obtained-from-workbookcalculate-for-consistency.cs
-- generate-a-csv-file-containing-all-formulas-in-the-workbook-along-with-their-cell-addresses.cs
-- filter-formulas-that-contain-specific-functions-such-as-vlookup-or-sumifs-for-targeted-review.cs
-- count-the-number-of-array-formulas-present-in-a-worksheet-and-report-the-total.cs
-- identify-cells-that-participate-in-circular-references-and-highlight-them-for-user-correction.cs
-- highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs
-- apply-conditional-formatting-based-on-formula-results-to-visually-emphasize-threshold-breaches.cs
-- programmatically-clear-the-watch-window-before-adding-a-new-set-of-cells-for-monitoring.cs
-- serialize-the-watch-window-configuration-to-json-for-external-storage-and-later-restoration.cs
-- load-a-previously-saved-watch-window-configuration-and-apply-it-to-the-active-workbook.cs
-- use-a-custom-function-to-perform-a-lookup-across-multiple-worksheets-and-return-matching-range.cs
-- implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs
-- assign-the-custom-monitor-to-workbooksettingscalculationmonitor-before-loading-the-workbook.cs
-- trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs
-- use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs
-- configure-calculationoptionsignoreerror-to-true-when-evaluating-formulas-that-may-cause-divisionbyzero.cs
-- capture-calculation-errors-by-setting-calculationoptionsignoreerror-false-and-handling-exceptions-thrown-from-calculateformula-calls.cs
-- enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs
-- test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs
-- use-worksheetcalculateformula-with-a-custom-calculationoptions-instance-to-evaluate-a-formula-string-without-adding-it-to-the-sheet.cs
-- register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs
-- add-a-custom-function-that-returns-the-user-name-register-it-and-invoke-via-calculateformula-for-audit-logs.cs
-- create-a-subclass-of-abstractcalculationengine-that-overrides-calculate-to-replace-today-with-a-fixed-date.cs
-- register-the-custom-engine-via-workbooksettingscustomengine-and-verify-all-formulas-use-the-overridden-today-implementation.cs
-- in-the-overridden-calculate-method-fallback-to-basecalculate-for-any-unsupported-functions.cs
-- implement-a-custom-engine-that-caches-intermediate-results-to-avoid-redundant-calculations-for-identical-subexpressions.cs
-- provide-a-public-method-to-clear-the-custom-engines-cache-ensuring-fresh-computation-after-data-changes.cs
-- verify-workbooksettingscustomengine-is-null-after-resetting-settings-to-default-confirming-no-residual-custom-logic.cs
-- set-calculationoptionsprecision-to-a-higher-value-when-evaluating-financial-formulas-requiring-exact-decimal-handling.cs
-- switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs
-- set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs
-- disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs
-- programmatically-disable-automatic-calculation-import-a-csv-file-then-enable-calculation-mode-to-recompute-dependent-cells.cs
-- improve-performance-by-setting-workbooksettingsenablefastformulacalculation-true-before-invoking-cellcalculate-on-large-datasets.cs
-- reduce-overhead-in-simple-workbooks-by-setting-workbooksettingsusethreadedcalculation-false-to-improve-stability.cs
-- iterate-through-each-worksheet-enable-fast-formula-calculation-and-compare-total-calculation-time-before-and-after.cs
-- create-a-benchmark-measuring-cellcalculate-latency-with-and-without-enablefastformulacalculation-across-multiple-workbook-sizes.cs
-- compare-memory-consumption-of-default-versus-custom-calculation-engines-by-profiling-heap-usage-during-large-workbook-evaluation.cs
-- create-a-test-suite-verifying-custom-engine-correctly-overrides-builtin-sum-function-while-leaving-other-functions-unchanged.cs
-- write-a-utility-that-enumerates-all-worksheets-sets-calculationmode-to-manual-and-logs-the-previous-mode-for-each.cs
-- demonstrate-worksheetcalculateformula-with-a-formula-referencing-external-workbook-cells-by-providing-appropriate-options.cs
-- load-an-xlsx-workbook-from-a-file-path-and-set-calculation-mode-to-manual.cs
-- set-the-workbooks-calculation-mode-to-automatic-for-immediate-formula-updates.cs
-- set-calculation-mode-to-automaticexcepttables-to-exclude-table-formulas-from-automatic-updates.cs
-- programmatically-disable-automatic-calculation-for-tables-only-while-keeping-other-formulas-in-automatic-mode.cs
-- load-multiple-xlsx-files-from-a-directory-set-each-to-automatic-and-recalculate-formulas.cs
-- recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs
-- implement-a-custom-worksheet-function-by-creating-a-class-that-implements-icustomfunction.cs
-- derive-a-custom-calculation-engine-from-abstractcalculationengine-and-assign-it-to-the-workbook.cs
-- configure-the-custom-engine-to-log-each-cell-evaluation-for-performance-analysis.cs
-- apply-a-custom-calculation-engine-that-substitutes-missing-functions-with-userdefined-equivalents-during-evaluation.cs
-- interrupt-an-ongoing-workbookcalculateformula-operation-using-a-cancellation-token-after-a-timeout.cs
-- implement-a-cancellation-token-that-stops-formula-calculation-when-the-user-requests-an-abort-operation.cs
-- handle-calculationexception-during-formula-recalculation-to-detect-circular-reference-errors.cs
-- extract-and-log-the-formula-dependency-graph-after-calling-workbookcalculateformula-for-debugging.cs
-- implement-a-logger-that-records-the-order-of-formula-evaluations-during-workbookcalculateformula-for-debugging.cs
-- generate-a-report-listing-all-cells-containing-volatile-functions-after-workbook-recalculation.cs
-- validate-minifs-functions-return-correct-results-after-setting-workbook-to-excel-2016-compatibility-mode.cs
-- verify-minifs-calculations-respect-filtered-rows-by-applying-a-filter-before-invoking-workbookcalculateformula.cs
-- compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs
-- measure-performance-difference-between-automatic-and-manual-modes-by-timing-workbookcalculateformula-execution.cs
-- measure-memory-consumption-differences-between-automatic-and-automaticexcepttables-modes-on-large-workbooks.cs
-- log-time-taken-for-each-cell-calculation-when-using-cellcalculate-within-a-processing-loop.cs
-- create-a-utility-that-toggles-calculation-mode-based-on-workbook-size-to-optimize-memory-usage.cs
-- test-that-automaticexcepttables-mode-does-not-recalculate-formulas-inside-structured-tables.cs
-- test-that-manual-calculation-mode-prevents-any-formula-evaluation-until-workbookcalculateformula-is-called.cs
-- create-a-batch-process-that-loads-workbooks-applies-a-custom-function-recalculates-and-saves-results.cs
-- create-a-commandline-tool-that-accepts-a-folder-path-recalculates-all-workbooks-and-outputs-summary-statistics.cs
-- write-a-utility-that-iterates-through-all-worksheets-sets-each-to-manual-mode-and-saves-changes.cs
-- develop-a-plugin-that-replaces-the-default-calculation-engine-with-a-parallelized-version-to-accelerate-large-workbooks.cs
-- implement-a-routine-that-clears-all-cached-calculation-results-before-invoking-a-fresh-workbookcalculateformula-run.cs
+# Input Strategy
+
+- Do NOT rely on external XLSX files
+- Generate worksheet data programmatically
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Calculate workbook formulas
+- Recalculate changed formulas
+- Configure CalculationOptions
+- Evaluate formula results
+- Work with dependent formulas
+- Control calculation behavior
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Add formulas without recalculation
+✅ Call Workbook.CalculateFormula()
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one calculation capability per example
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
