@@ -1,87 +1,113 @@
-# Working With JSON Examples
+---
+category: working-with-json
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Working With JSON
+You are a C# developer specializing in JSON import, export, and transformation using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE JSON scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Working With JSON**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- JsonUtility
+- JsonLayoutOptions
+- Workbook
+- Worksheet
+- Cells
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Create JSON data
+3. Import or process JSON
+4. Validate worksheet content
+5. Save workbook
+6. Print success message
 
+---
 
-## Output
+# JSON Rules
 
-Examples may generate:
+- Use JsonUtility for JSON operations
+- Keep JSON samples small and readable
+- Use JsonLayoutOptions when structure matters
+- One example = one JSON operation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs
-- export-the-active-worksheet-of-the-loaded-workbook-to-json-using-default-saveformat-settings.cs
-- export-the-entire-workbook-to-json-with-column-headers-included-via-jsonsaveoptions.cs
-- specify-a-custom-date-format-in-jsonsaveoptions-before-exporting-workbook-to-json.cs
-- exclude-empty-rows-from-json-output-by-setting-jsonsaveoptionsincludeemptyrows-to-false.cs
-- convert-a-json-file-containing-tabular-data-to-csv-using-jsonutility-with-a-custom-delimiter.cs
-- define-a-semicolon-as-csv-delimiter-in-jsonlayoutoptions-before-converting-json-to-csv.cs
-- load-a-csv-file-into-memory-using-jsonutility-and-transform-it-into-json-format.cs
-- export-a-specific-cell-range-from-a-worksheet-to-json-using-exportrangetojsonoptions.cs
-- include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs
-- set-json-output-encoding-to-utf-8-within-jsonsaveoptions-before-saving-workbook-as-json.cs
-- batch-process-a-folder-of-xls-files-converting-each-workbook-to-separate-json-files.cs
-- validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs
-- merge-multiple-json-files-into-a-single-workbook-creating-separate-worksheets-for-each-file.cs
-- preserve-cell-formulas-during-json-conversion-by-configuring-jsonsaveoptionspreserveformulas-flag.cs
-- generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs
-- load-a-json-array-representing-multiple-tables-and-map-each-element-to-a-separate-worksheet.cs
-- encrypt-the-generated-json-file-using-a-passwordprotected-stream-before-writing-to-disk.cs
-- implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs
-- create-a-console-application-that-prints-json-representation-of-the-first-worksheet-to-standard-output.cs
-- configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs
-- transform-numeric-values-to-strings-in-json-output-by-applying-a-custom-value-formatter.cs
-- read-a-json-file-encoded-in-utf16-and-convert-it-to-csv-with-utf8-encoding.cs
-- generate-json-for-a-pivot-table-by-exporting-its-underlying-data-source-range.cs
-- apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs
-- create-a-batch-job-that-converts-all-json-files-in-a-directory-to-matching-csv-files.cs
-- load-an-xls-workbook-remove-empty-columns-then-export-the-cleaned-data-to-json.cs
-- set-jsonlayoutoptionsquoteallfields-to-true-to-ensure-every-csv-field-is-enclosed-in-quotes.cs
-- convert-a-json-file-containing-nested-objects-into-a-flattened-json-structure-before-saving.cs
-- validate-that-exported-json-includes-expected-number-of-rows-by-comparing-with-original-worksheet-row-count.cs
-- use-jsonutilityload-with-a-stream-to-read-json-data-from-a-network-source.cs
+# Input Strategy
+
+- Do NOT rely on external JSON files
+- Use inline JSON strings
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Import JSON into worksheet
+- Convert JSON to Excel
+- Configure JSON layout
+- Process nested JSON
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Depend on external JSON files
+✅ Use inline JSON samples
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
