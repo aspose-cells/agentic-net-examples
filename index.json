@@ -7335,6 +7335,1451 @@
       "title": "Write pivot table definitions while saving with LightCellsDataProvider to recreate analytical views in the output workbook."
     },
     {
+      "category": "pivot-table",
+      "file": "access-the-first-worksheet-and-obtain-the-first-pivot-table-for-further-operations.cs",
+      "title": "Access the first worksheet and obtain the first pivot table for further operations."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs",
+      "title": "Add a calculated field named Profit with expression [Revenue]-[Cost] to the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-field-that-categorizes-sales-using-if-function-for-high-medium-low.cs",
+      "title": "Add a calculated field that categorizes sales using IF function for high, medium, low."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-field-that-computes-profit-margin-as-profit-divided-by-revenue.cs",
+      "title": "Add a calculated field that computes profit margin as profit divided by revenue."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs",
+      "title": "Add a calculated field that computes profit margin by dividing profit by revenue."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-field-that-computes-profit-margin-using-revenue-and-cost-values.cs",
+      "title": "Add a calculated field that computes profit margin using Revenue and Cost values."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-field-that-concatenates-two-text-fields-with-a-hyphen-separator.cs",
+      "title": "Add a calculated field that concatenates two text fields with a hyphen separator."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-item-to-an-existing-field-by-calling-addcalculateditem-with-the-appropriate-expression.cs",
+      "title": "Add a calculated item to an existing field by calling AddCalculatedItem with the appropriate expression."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-calculated-item-to-group-multiple-product-categories-into-a-custom-group.cs",
+      "title": "Add a calculated item to group multiple product categories into a custom group."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs",
+      "title": "Add a custom data field that calculates the percentage of total using a formula within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-custom-grouping-to-a-date-field-by-defining-a-groupinterval-of-months-for-better-summarization.cs",
+      "title": "Add a custom grouping to a date field by defining a GroupInterval of months for better summarization."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-custom-tooltip-to-a-pivottable-field-by-setting-its-description-property-with-the-desired-text.cs",
+      "title": "Add a custom tooltip to a PivotTable field by setting its Description property with the desired text."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-new-calculated-field-that-computes-average-price-by-dividing-total-sales-by-quantity-within-the-pivottable.cs",
+      "title": "Add a new calculated field that computes average price by dividing total sales by quantity within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs",
+      "title": "Add a new data field to the PivotTable and set its aggregation function to Count for item tallying."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-new-worksheet-copy-source-data-and-create-a-linked-pivottable-referencing-that-data.cs",
+      "title": "Add a new worksheet, copy source data, and create a linked PivotTable referencing that data."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-report-filter-field-to-allow-selection-of-a-specific-salesperson.cs",
+      "title": "Add a report filter field to allow selection of a specific salesperson."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-slicer-control-linked-to-the-pivot-table-for-interactive-region-filtering.cs",
+      "title": "Add a slicer control linked to the pivot table for interactive region filtering."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-slicer-for-the-region-field-and-link-it-to-the-pivottable-for-interactive-filtering-by-users.cs",
+      "title": "Add a slicer for the Region field and link it to the PivotTable for interactive filtering by users."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs",
+      "title": "Add a slicer linked to a PivotTable for interactive filtering using the SlicerCollection API."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-top-10-filter-to-a-row-field-to-display-only-the-highest-values.cs",
+      "title": "Add a Top 10 filter to a row field to display only the highest values."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-a-top-5-filter-on-a-column-field-limiting-displayed-items-to-the-best-five.cs",
+      "title": "Add a Top 5 filter on a column field, limiting displayed items to the best five."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-both-a-top-10-filter-and-a-label-filter-to-the-same-pivot-field-for-combined-criteria.cs",
+      "title": "Add both a Top 10 filter and a label filter to the same pivot field for combined criteria."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs",
+      "title": "Add conditional formatting to highlight rows where profit margin exceeds twenty percent."
+    },
+    {
+      "category": "pivot-table",
+      "file": "add-row-fields-to-group-sales-data-by-region-and-product-category.cs",
+      "title": "Add row fields to group sales data by region and product category."
+    },
+    {
+      "category": "pivot-table",
+      "file": "after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs",
+      "title": "After applying custom globalization, refresh the pivot table and verify that all label texts are translated."
+    },
+    {
+      "category": "pivot-table",
+      "file": "after-deleting-a-pivot-table-verify-that-the-worksheet-no-longer-contains-any-pivot-objects.cs",
+      "title": "After deleting a pivot table, verify that the worksheet no longer contains any pivot objects."
+    },
+    {
+      "category": "pivot-table",
+      "file": "after-moving-items-verify-that-their-position-values-reflect-the-new-order-by-iterating-over-the-fields.cs",
+      "title": "After moving items, verify that their Position values reflect the new order by iterating over the fields."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-background-color-to-the-pivottables-header-row-using-the-formatall-method-for-visual-emphasis.cs",
+      "title": "Apply a custom background color to the PivotTable's header row using the FormatAll method for visual emphasis."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-descending-alphabetical-sort-to-product-category-pivot-items.cs",
+      "title": "Apply a custom descending alphabetical sort to product category pivot items."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-number-format-0red-0-to-negative-values-for-visual-emphasis-and-easier-analysis.cs",
+      "title": "Apply a custom number format '#,##0;[Red]-#,##0' to negative values for visual emphasis and easier analysis."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-number-format-to-display-quantities-with-thousand-separators-and-no-decimals.cs",
+      "title": "Apply a custom number format to display quantities with thousand separators and no decimals."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-number-format-to-the-pivottables-grand-total-row-for-clearer-presentation-of-totals.cs",
+      "title": "Apply a custom number format to the PivotTable's grand total row for clearer presentation of totals."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-pivotglobalizationsettings-subclass-to-modify-total-label-text-before-refreshing-the-pivot-table.cs",
+      "title": "Apply a custom PivotGlobalizationSettings subclass to modify total label text before refreshing the pivot table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-sort-order-using-a-predefined-list-of-strings-to-control-field-item-sequence.cs",
+      "title": "Apply a custom sort order using a predefined list of strings to control field item sequence."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-sort-to-pivot-items-based-on-aggregated-sales-totals-descending.cs",
+      "title": "Apply a custom sort to pivot items based on aggregated sales totals descending."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-custom-style-to-the-pivottables-data-cells-only-by-using-formatall-with-a-specific-cell-style.cs",
+      "title": "Apply a custom style to the PivotTable's data cells only by using FormatAll with a specific cell style."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
+      "title": "Apply a descending custom sort order to a PivotField using the AutoSort property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-light-blue-fill-color-to-the-retrieved-pivot-field-header-cell.cs",
+      "title": "Apply a light blue fill color to the retrieved pivot field header cell."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-predefined-pivot-table-style-for-consistent-visual-formatting.cs",
+      "title": "Apply a predefined pivot table style for consistent visual formatting."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-predefined-style-to-all-pivottable-elements-by-calling-pivottableformatall-with-the-style.cs",
+      "title": "Apply a predefined style to all PivotTable elements by calling PivotTable.FormatAll with the style."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-theme-color-to-all-pivottable-headers-using-the-formatall-method-with-a-predefined-style.cs",
+      "title": "Apply a theme color to all PivotTable headers using the FormatAll method with a predefined style."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-a-value-filter-to-display-only-items-with-sales-greater-than-a-threshold.cs",
+      "title": "Apply a value filter to display only items with sales greater than a threshold."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-an-ascending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
+      "title": "Apply an ascending custom sort order to a PivotField using the AutoSort property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-conditional-formatting-to-a-pivottable-column-based-on-calculated-field-values-exceeding-a-threshold.cs",
+      "title": "Apply conditional formatting to a PivotTable column based on calculated field values exceeding a threshold."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs",
+      "title": "Apply conditional formatting to PivotTable values that exceed a threshold using the FormatCondition feature."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-custom-ascending-sorting-to-a-row-field-based-on-its-underlying-numeric-values.cs",
+      "title": "Apply custom ascending sorting to a row field based on its underlying numeric values."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-custom-descending-sorting-to-a-column-field-using-its-textual-values-for-ordering.cs",
+      "title": "Apply custom descending sorting to a column field using its textual values for ordering."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-distinct-custom-globalization-settings-to-each-workbook-before-refreshing-to-generate-multilingual-pivot-labels.cs",
+      "title": "Apply distinct custom globalization settings to each workbook before refreshing to generate multilingual pivot labels."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-light-blue-fill-and-black-font-color-to-the-pivot-field-header-cell-together.cs",
+      "title": "Apply light blue fill and black font color to the pivot field header cell together."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs",
+      "title": "Apply number formatting to show values as currency with two decimal places."
+    },
+    {
+      "category": "pivot-table",
+      "file": "apply-the-compact-layout-to-an-existing-pivottable-by-invoking-the-showincompactform-method.cs",
+      "title": "Apply the Compact layout to an existing PivotTable by invoking the ShowInCompactForm method."
+    },
+    {
+      "category": "pivot-table",
+      "file": "assign-a-specific-cell-range-as-the-data-source-for-the-newly-created-pivot-table.cs",
+      "title": "Assign a specific cell range as the data source for the newly created pivot table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "assign-different-custom-globalization-objects-to-separate-worksheets-within-the-same-workbook-for-localized-sections.cs",
+      "title": "Assign different custom globalization objects to separate worksheets within the same workbook for localized sections."
+    },
+    {
+      "category": "pivot-table",
+      "file": "assign-the-builtin-pivottablestylemedium9-autoformat-to-a-pivottable-for-quick-styling-automatically.cs",
+      "title": "Assign the built\u2011in PivotTableStyleMedium9 auto\u2011format to a PivotTable for quick styling automatically."
+    },
+    {
+      "category": "pivot-table",
+      "file": "assign-the-custom-globalization-instance-to-workbooksettingsglobalizationsettingspivotsettings-for-the-loaded-workbook.cs",
+      "title": "Assign the custom globalization instance to WorkbookSettings.GlobalizationSettings.PivotSettings for the loaded workbook."
+    },
+    {
+      "category": "pivot-table",
+      "file": "batch-create-pivottables-on-multiple-worksheets-by-looping-over-data-ranges-and-calling-the-add-method.cs",
+      "title": "Batch create PivotTables on multiple worksheets by looping over data ranges and calling the Add method."
+    },
+    {
+      "category": "pivot-table",
+      "file": "batch-process-a-folder-of-workbooks-adding-a-standardized-pivot-table-and-saving-as-ods.cs",
+      "title": "Batch process a folder of workbooks, adding a standardized pivot table and saving as ODS."
+    },
+    {
+      "category": "pivot-table",
+      "file": "batch-update-the-showreportfilterpages-option-for-every-pivottable-across-multiple-workbooks.cs",
+      "title": "Batch update the ShowReportFilterPages option for every PivotTable across multiple workbooks."
+    },
+    {
+      "category": "pivot-table",
+      "file": "cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs",
+      "title": "Cache source data to reduce load time when the workbook is opened repeatedly."
+    },
+    {
+      "category": "pivot-table",
+      "file": "calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs",
+      "title": "Calculate pivot formulas after repositioning items to ensure dependent totals update correctly."
+    },
+    {
+      "category": "pivot-table",
+      "file": "call-pivottablecalculatedata-before-saving-to-ensure-rendered-pivot-data-accurately.cs",
+      "title": "Call PivotTable.CalculateData() before saving to ensure rendered pivot data accurately."
+    },
+    {
+      "category": "pivot-table",
+      "file": "change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs",
+      "title": "Change the ConsolidationFunction to Average to compute mean values in the PivotTable for better analysis."
+    },
+    {
+      "category": "pivot-table",
+      "file": "change-the-font-color-of-the-retrieved-pivot-field-header-cell-to-black.cs",
+      "title": "Change the font color of the retrieved pivot field header cell to black."
+    },
+    {
+      "category": "pivot-table",
+      "file": "clear-all-page-fields-from-a-pivottable-by-invoking-the-pivottablepagefieldsclear-method-first.cs",
+      "title": "Clear all page fields from a PivotTable by invoking the PivotTable.PageFields.Clear method first."
+    },
+    {
+      "category": "pivot-table",
+      "file": "clear-the-filter-applied-to-a-specific-row-field-restoring-its-full-item-list.cs",
+      "title": "Clear the filter applied to a specific row field, restoring its full item list."
+    },
+    {
+      "category": "pivot-table",
+      "file": "clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs",
+      "title": "Clear the filter on one pivot field while preserving filters applied to other fields."
+    },
+    {
+      "category": "pivot-table",
+      "file": "clone-an-existing-pivottable-modify-its-data-source-range-and-insert-it-into-a-new-worksheet.cs",
+      "title": "Clone an existing PivotTable, modify its data source range, and insert it into a new worksheet."
+    },
+    {
+      "category": "pivot-table",
+      "file": "clone-an-existing-pivottable-to-a-new-worksheet-while-preserving-its-layout-and-formatting-settings.cs",
+      "title": "Clone an existing PivotTable to a new worksheet while preserving its layout and formatting settings."
+    },
+    {
+      "category": "pivot-table",
+      "file": "collapse-all-items-in-the-column-area-after-refresh-to-present-a-summarized-report-with-minimal-detail.cs",
+      "title": "Collapse all items in the column area after refresh to present a summarized report with minimal detail."
+    },
+    {
+      "category": "pivot-table",
+      "file": "collapse-specific-pivotitems-by-iterating-them-and-setting-each-items-isexpanded-property-to-false.cs",
+      "title": "Collapse specific PivotItems by iterating them and setting each item's IsExpanded property to false."
+    },
+    {
+      "category": "pivot-table",
+      "file": "compare-memory-usage-between-loading-with-cache-parsing-enabled-and-disabled-for-the-same-file.cs",
+      "title": "Compare memory usage between loading with cache parsing enabled and disabled for the same file."
+    },
+    {
+      "category": "pivot-table",
+      "file": "configure-pivot-table-rows-columns-and-data-fields-to-summarize-sales-by-region.cs",
+      "title": "Configure pivot table rows, columns, and data fields to summarize sales by region."
+    },
+    {
+      "category": "pivot-table",
+      "file": "configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs",
+      "title": "Configure the data field display format to RankSmallestToLargest for ascending ranking."
+    },
+    {
+      "category": "pivot-table",
+      "file": "configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs",
+      "title": "Configure the PivotTable to display grand totals for rows only by setting ShowRowGrandTotals true."
+    },
+    {
+      "category": "pivot-table",
+      "file": "configure-the-pivottable-to-display-values-as-percentages-of-column-total-using-the-showvaluesaspercent-property.cs",
+      "title": "Configure the PivotTable to display values as percentages of column total using the ShowValuesAsPercent property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs",
+      "title": "Configure the PivotTable to hide empty rows by setting the HideEmptyRows property to true."
+    },
+    {
+      "category": "pivot-table",
+      "file": "configure-the-pivottable-to-use-the-default-data-source-connection-string-for-external-data-retrieval-operations.cs",
+      "title": "Configure the PivotTable to use the default data source connection string for external data retrieval operations."
+    },
+    {
+      "category": "pivot-table",
+      "file": "configure-the-pivottable-to-use-the-default-report-layout-by-resetting-the-showincompactform-setting.cs",
+      "title": "Configure the PivotTable to use the default report layout by resetting the ShowInCompactForm setting."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs",
+      "title": "Create a batch script that removes all pivot tables from every worksheet in a workbook."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-custom-numeric-grouping-for-a-sales-amount-field-with-defined-ranges.cs",
+      "title": "Create a custom numeric grouping for a sales amount field with defined ranges."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs",
+      "title": "Create a custom Style object, configure its font color, and apply it using PivotTable.Format."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs",
+      "title": "Create a function that accepts a pivot table index, removes it, and returns the updated count of tables."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-new-pivot-table-on-a-worksheet-by-specifying-target-range-and-data-source.cs",
+      "title": "Create a new pivot table on a worksheet by specifying target range and data source."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs",
+      "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-new-workbook-instance-and-add-a-worksheet-for-pivot-table-insertion.cs",
+      "title": "Create a new Workbook instance and add a worksheet for pivot table insertion."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-pivot-chart-linked-to-the-pivot-table-and-export-as-a-png-image-file.cs",
+      "title": "Create a pivot chart linked to the pivot table and export as a PNG image file."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-pivot-chart-linked-to-the-pivot-table-and-export-both-to-an-ods-file.cs",
+      "title": "Create a pivot chart linked to the pivot table and export both to an ODS file."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-pivottable-that-consolidates-data-from-multiple-worksheets-using-the-consolidationfunction-property.cs",
+      "title": "Create a PivotTable that consolidates data from multiple worksheets using the ConsolidationFunction property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-pivottable-that-consolidates-data-from-three-separate-worksheets-using-a-union-range-for-combined-analysis.cs",
+      "title": "Create a PivotTable that consolidates data from three separate worksheets using a union range for combined analysis."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-pivottable-that-uses-a-named-table-as-its-source-for-dynamic-range-handling-and-updates.cs",
+      "title": "Create a PivotTable that uses a named table as its source for dynamic range handling and updates."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-timeline-filter-for-the-date-field-to-select-custom-time-periods.cs",
+      "title": "Create a timeline filter for the date field to select custom time periods."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-top10-filter-on-the-product-field-to-show-highest-selling-items.cs",
+      "title": "Create a top\u201110 filter on the product field to show highest selling items."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs",
+      "title": "Create a utility method that accepts a pivot table name and deletes it using RemoveAt after index lookup."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-data-fields-with-sum-aggregation-to-calculate-total-units-sold.cs",
+      "title": "Create data fields with sum aggregation to calculate total units sold."
+    },
+    {
+      "category": "pivot-table",
+      "file": "create-multiple-pivot-tables-in-a-single-worksheet-each-summarizing-different-metrics.cs",
+      "title": "Create multiple pivot tables in a single worksheet, each summarizing different metrics."
+    },
+    {
+      "category": "pivot-table",
+      "file": "customize-the-pivottables-report-filter-caption-by-assigning-a-new-descriptive-string-to-its-caption-property.cs",
+      "title": "Customize the PivotTable's report filter caption by assigning a new descriptive string to its Caption property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "define-a-custom-list-order-for-a-pivot-field-and-apply-it-to-control-item-sequence.cs",
+      "title": "Define a custom list order for a pivot field and apply it to control item sequence."
+    },
+    {
+      "category": "pivot-table",
+      "file": "define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs",
+      "title": "Define a custom number format '0.00%' for a percentage field within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs",
+      "title": "Delete a pivot table by its zero\u2011based index using Worksheet.PivotTables.RemoveAt."
+    },
+    {
+      "category": "pivot-table",
+      "file": "delete-a-pivot-table-from-its-worksheet-and-confirm-no-remaining-pivot-objects.cs",
+      "title": "Delete a pivot table from its worksheet and confirm no remaining pivot objects."
+    },
+    {
+      "category": "pivot-table",
+      "file": "delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs",
+      "title": "Delete a PivotTable from the worksheet using worksheet.PivotTables.RemoveAt with the appropriate index."
+    },
+    {
+      "category": "pivot-table",
+      "file": "delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs",
+      "title": "Delete a specific pivot table from the worksheet by passing its PivotTable object to the Remove method."
+    },
+    {
+      "category": "pivot-table",
+      "file": "delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs",
+      "title": "Delete an existing pivot table and replace it with a newly configured version."
+    },
+    {
+      "category": "pivot-table",
+      "file": "delete-pivot-tables-from-a-worksheet-based-on-a-naming-convention-that-starts-with-temp_-prefix.cs",
+      "title": "Delete pivot tables from a worksheet based on a naming convention that starts with 'Temp_' prefix."
+    },
+    {
+      "category": "pivot-table",
+      "file": "disable-automatic-grouping-of-date-fields-in-a-pivottable-by-setting-the-groupdates-property-to-false.cs",
+      "title": "Disable automatic grouping of date fields in a PivotTable by setting the GroupDates property to false."
+    },
+    {
+      "category": "pivot-table",
+      "file": "disable-automatic-refresh-on-workbook-open-for-all-pivottables-to-improve-loading-performance.cs",
+      "title": "Disable automatic refresh on workbook open for all PivotTables to improve loading performance."
+    },
+    {
+      "category": "pivot-table",
+      "file": "disable-column-grand-totals-in-a-pivottable-by-setting-showcolumngrandtotals-property-to-false.cs",
+      "title": "Disable column grand totals in a PivotTable by setting ShowColumnGrandTotals property to false."
+    },
+    {
+      "category": "pivot-table",
+      "file": "disable-pivot-table-ribbons-in-the-generated-ods-file-for-a-cleaner-interface.cs",
+      "title": "Disable pivot table ribbons in the generated ODS file for a cleaner interface."
+    },
+    {
+      "category": "pivot-table",
+      "file": "disable-pivot-table-ribbons-programmatically-before-saving-the-workbook-to-reduce-ui-clutter.cs",
+      "title": "Disable pivot table ribbons programmatically before saving the workbook to reduce UI clutter."
+    },
+    {
+      "category": "pivot-table",
+      "file": "disable-row-grand-totals-in-a-pivot-table-to-simplify-the-summary-view.cs",
+      "title": "Disable row grand totals in a pivot table to simplify the summary view."
+    },
+    {
+      "category": "pivot-table",
+      "file": "disable-the-pivot-table-ribbon-and-toolbar-in-the-ods-output-for-minimal-ui.cs",
+      "title": "Disable the pivot table ribbon and toolbar in the ODS output for minimal UI."
+    },
+    {
+      "category": "pivot-table",
+      "file": "display-null-values-as-the-word-na-for-clearer-data-interpretation.cs",
+      "title": "Display null values as the word 'N/A' for clearer data interpretation."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-auto-format-for-a-pivot-table-during-creation-to-apply-default-visual-styling.cs",
+      "title": "Enable auto format for a pivot table during creation to apply default visual styling."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs",
+      "title": "Enable automatic refresh on workbook open so the pivot table updates."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-background-refresh-to-improve-ui-responsiveness-while-updates-occur-asynchronously.cs",
+      "title": "Enable background refresh to improve UI responsiveness while updates occur asynchronously."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-drilldown-functionality-on-data-fields-for-exploring-underlying-records.cs",
+      "title": "Enable drill\u2011down functionality on data fields for exploring underlying records."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-drillthrough-functionality-for-a-pivottable-by-setting-the-enabledrillthrough-option-to-true.cs",
+      "title": "Enable drill\u2011through functionality for a PivotTable by setting the EnableDrillThrough option to true."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs",
+      "title": "Enable Excel 2003 compatibility before refreshing the PivotTable by setting IsCompatibleWithExcel2003 true."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-pivot-table-ribbons-programmatically-after-loading-the-workbook-to-restore-default-ui-elements.cs",
+      "title": "Enable pivot table ribbons programmatically after loading the workbook to restore default UI elements."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-preserveformatting-option-when-refreshing-a-pivottable-to-keep-user-applied-styles.cs",
+      "title": "Enable PreserveFormatting option when refreshing a PivotTable to keep user-applied styles."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs",
+      "title": "Enable repeat item labels in rows by setting the RepeatItemLabels property to true on the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-the-display-of-item-labels-in-the-values-area-by-setting-the-showvaluescolumn-property-true.cs",
+      "title": "Enable the display of item labels in the values area by setting the ShowValuesColumn property true."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-the-showdrilldownbuttons-property-to-allow-users-to-expand-aggregated-cells-directly-from-the-pivottable.cs",
+      "title": "Enable the ShowDrillDownButtons property to allow users to expand aggregated cells directly from the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs",
+      "title": "Enable the ShowErrorValues flag to display #N/A for missing data points within the PivotTable for clarity."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-the-showexpandcollapsebuttons-property-to-provide-visual-cues-for-hierarchical-data-navigation-within-the-pivottable.cs",
+      "title": "Enable the ShowExpandCollapseButtons property to provide visual cues for hierarchical data navigation within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-the-showvaluesrow-property-only-when-a-single-data-field-exists-to-avoid-redundant-rows-in-the-pivottable.cs",
+      "title": "Enable the ShowValuesRow property only when a single data field exists to avoid redundant rows in the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "enable-the-showvaluesrow-property-to-display-a-separate-row-that-aggregates-values-for-better-readability.cs",
+      "title": "Enable the ShowValuesRow property to display a separate row that aggregates values for better readability."
+    },
+    {
+      "category": "pivot-table",
+      "file": "export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs",
+      "title": "Export a PivotTable to CSV by extracting its data rows and writing them with commas."
+    },
+    {
+      "category": "pivot-table",
+      "file": "export-a-workbook-containing-multiple-pivot-tables-to-a-single-pdf-preserving-each-tables-layout.cs",
+      "title": "Export a workbook containing multiple pivot tables to a single PDF, preserving each table's layout."
+    },
+    {
+      "category": "pivot-table",
+      "file": "export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs",
+      "title": "Export a workbook with PivotTables to PDF format while preserving all pivot formatting details."
+    },
+    {
+      "category": "pivot-table",
+      "file": "export-pivot-table-data-to-a-csv-file-while-preserving-column-headers-and-data-types.cs",
+      "title": "Export pivot table data to a CSV file while preserving column headers and data types."
+    },
+    {
+      "category": "pivot-table",
+      "file": "export-the-pivot-table-and-its-chart-to-a-pdf-document-preserving-layout.cs",
+      "title": "Export the pivot table and its chart to a PDF document, preserving layout."
+    },
+    {
+      "category": "pivot-table",
+      "file": "export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs",
+      "title": "Export the refreshed pivot table to a PDF file preserving layout and calculated values."
+    },
+    {
+      "category": "pivot-table",
+      "file": "export-the-workbook-with-the-pivot-table-to-pdf-format-preserving-layout-and-formatting.cs",
+      "title": "Export the workbook with the pivot table to PDF format, preserving layout and formatting."
+    },
+    {
+      "category": "pivot-table",
+      "file": "generate-a-summary-report-listing-each-processed-workbook-its-compatibility-setting-and-ribbon-status.cs",
+      "title": "Generate a summary report listing each processed workbook, its compatibility setting, and ribbon status."
+    },
+    {
+      "category": "pivot-table",
+      "file": "group-date-fields-by-month-and-year-to-summarize-sales-trends.cs",
+      "title": "Group date fields by month and year to summarize sales trends."
+    },
+    {
+      "category": "pivot-table",
+      "file": "group-numeric-pivot-field-values-into-custom-ranges-for-better-data-segmentation.cs",
+      "title": "Group numeric pivot field values into custom ranges for better data segmentation."
+    },
+    {
+      "category": "pivot-table",
+      "file": "group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs",
+      "title": "Group related date fields in a PivotTable by month and year using GroupFields method."
+    },
+    {
+      "category": "pivot-table",
+      "file": "group-the-pivot-tables-date-field-by-months-and-years-for-hierarchical-analysis.cs",
+      "title": "Group the pivot table's date field by months and years for hierarchical analysis."
+    },
+    {
+      "category": "pivot-table",
+      "file": "hide-a-specific-pivotfield-by-setting-its-hidden-property-to-true.cs",
+      "title": "Hide a specific PivotField by setting its Hidden property to true."
+    },
+    {
+      "category": "pivot-table",
+      "file": "hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs",
+      "title": "Hide a specific PivotField from the report area by setting its Visible property to false."
+    },
+    {
+      "category": "pivot-table",
+      "file": "hide-selected-pivot-items-to-exclude-confidential-information-from-the-report-view.cs",
+      "title": "Hide selected pivot items to exclude confidential information from the report view."
+    },
+    {
+      "category": "pivot-table",
+      "file": "hide-subtotals-for-specific-row-fields-to-simplify-the-pivot-view.cs",
+      "title": "Hide subtotals for specific row fields to simplify the pivot view."
+    },
+    {
+      "category": "pivot-table",
+      "file": "hide-the-pivottable-ribbon-interface-to-provide-a-cleaner-view-during-runtime.cs",
+      "title": "Hide the PivotTable ribbon interface to provide a cleaner view during runtime."
+    },
+    {
+      "category": "pivot-table",
+      "file": "hide-the-pivottables-field-list-pane-by-setting-the-showfieldlist-property-to-false-before-saving.cs",
+      "title": "Hide the PivotTable's field list pane by setting the ShowFieldList property to false before saving."
+    },
+    {
+      "category": "pivot-table",
+      "file": "hide-zerovalue-rows-in-the-pivot-table-to-reduce-visual-clutter.cs",
+      "title": "Hide zero\u2011value rows in the pivot table to reduce visual clutter."
+    },
+    {
+      "category": "pivot-table",
+      "file": "implement-batch-processing-to-generate-pivot-tables-for-multiple-workbooks-in-a-directory.cs",
+      "title": "Implement batch processing to generate pivot tables for multiple workbooks in a directory."
+    },
+    {
+      "category": "pivot-table",
+      "file": "implement-trycatch-handling-when-retrieving-a-cell-by-a-nonexistent-display-name-to-prevent-crashes.cs",
+      "title": "Implement try\u2011catch handling when retrieving a cell by a non\u2011existent display name to prevent crashes."
+    },
+    {
+      "category": "pivot-table",
+      "file": "insert-a-pivot-table-into-the-worksheet-using-a-defined-data-source-range.cs",
+      "title": "Insert a pivot table into the worksheet using a defined data source range."
+    },
+    {
+      "category": "pivot-table",
+      "file": "insert-column-fields-to-display-quarterly-revenue-across-different-fiscal-years.cs",
+      "title": "Insert column fields to display quarterly revenue across different fiscal years."
+    },
+    {
+      "category": "pivot-table",
+      "file": "iterate-over-all-pivot-fields-and-output-each-fields-display-name-to-the-console.cs",
+      "title": "Iterate over all pivot fields and output each field\u2019s display name to the console."
+    },
+    {
+      "category": "pivot-table",
+      "file": "iterate-over-each-pivotfield-list-all-pivotitems-and-log-their-absolute-positions-for-debugging.cs",
+      "title": "Iterate over each PivotField, list all PivotItems, and log their absolute positions for debugging."
+    },
+    {
+      "category": "pivot-table",
+      "file": "iterate-through-all-pivot-fields-and-log-each-fields-display-name-to-a-text-file.cs",
+      "title": "Iterate through all pivot fields and log each field\u2019s display name to a text file."
+    },
+    {
+      "category": "pivot-table",
+      "file": "iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs",
+      "title": "Iterate through all PivotTables in a workbook and apply the Outline layout to each one."
+    },
+    {
+      "category": "pivot-table",
+      "file": "iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs",
+      "title": "Iterate through all worksheets, locate each PivotTable, and log its RefreshDate to a file."
+    },
+    {
+      "category": "pivot-table",
+      "file": "limit-the-number-of-items-displayed-in-a-pivotfield-by-adjusting-its-showitemscount-property-value.cs",
+      "title": "Limit the number of items displayed in a PivotField by adjusting its ShowItemsCount property value."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-from-a-file-path-to-prepare-for-pivot-table-operations.cs",
+      "title": "Load a workbook from a file path to prepare for pivot table operations."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-from-a-network-share-modify-compatibility-and-save-locally-for-distribution.cs",
+      "title": "Load a workbook from a network share, modify compatibility, and save locally for distribution."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-from-a-stream-enable-cache-parsing-modify-the-pivot-and-write-back-to-the-stream.cs",
+      "title": "Load a workbook from a stream, enable cache parsing, modify the pivot, and write back to the stream."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs",
+      "title": "Load a workbook, locate a PivotTable, and read its RefreshDate property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs",
+      "title": "Load a workbook, set PivotItem.Position for multiple items, then save changes back to XLSX."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-with-default-loadoptions-and-refresh-its-first-pivot-table.cs",
+      "title": "Load a workbook with default LoadOptions and refresh its first pivot table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-with-loadoptionsparsingpivotcachedrecords-set-to-false-then-refresh-the-pivot-table.cs",
+      "title": "Load a workbook with LoadOptions.ParsingPivotCachedRecords set to false, then refresh the pivot table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-a-workbook-with-loadoptionsparsingpivotcachedrecords-set-to-true-then-refresh-the-pivot-table.cs",
+      "title": "Load a workbook with LoadOptions.ParsingPivotCachedRecords set to true, then refresh the pivot table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-an-excel-workbook-create-a-pivot-table-on-a-new-worksheet-and-set-its-data-source-range.cs",
+      "title": "Load an Excel workbook, create a pivot table on a new worksheet, and set its data source range."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs",
+      "title": "Load an existing Excel file, locate a PivotTable, and change its layout to Tabular."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-an-existing-workbook-locate-its-pivot-table-and-change-the-data-source-range.cs",
+      "title": "Load an existing workbook, locate its pivot table, and change the data source range."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-an-xlsx-workbook-containing-a-pivot-table-and-refresh-its-data-programmatically.cs",
+      "title": "Load an XLSX workbook containing a pivot table and refresh its data programmatically."
+    },
+    {
+      "category": "pivot-table",
+      "file": "load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs",
+      "title": "Load multiple XLSX files, refresh their pivot tables, and batch export each to separate PDF documents."
+    },
+    {
+      "category": "pivot-table",
+      "file": "log-the-duration-required-to-refresh-a-pivot-table-after-loading-cache-records.cs",
+      "title": "Log the duration required to refresh a pivot table after loading cache records."
+    },
+    {
+      "category": "pivot-table",
+      "file": "log-the-number-of-rows-generated-by-a-pivottable-after-refresh-for-performance-monitoring-and-diagnostics.cs",
+      "title": "Log the number of rows generated by a PivotTable after refresh for performance monitoring and diagnostics."
+    },
+    {
+      "category": "pivot-table",
+      "file": "measure-memory-consumption-while-loading-a-workbook-with-parsingpivotcachedrecords-set-to-true.cs",
+      "title": "Measure memory consumption while loading a workbook with ParsingPivotCachedRecords set to true."
+    },
+    {
+      "category": "pivot-table",
+      "file": "modify-the-external-connection-of-a-pivottable-to-point-to-a-new-database-server.cs",
+      "title": "Modify the external connection of a PivotTable to point to a new database server."
+    },
+    {
+      "category": "pivot-table",
+      "file": "move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs",
+      "title": "Move a pivot item from the column area to the row area by changing its parent field."
+    },
+    {
+      "category": "pivot-table",
+      "file": "move-a-pivot-item-two-positions-forward-within-the-same-parent-node-using-the-move-method.cs",
+      "title": "Move a pivot item two positions forward within the same parent node using the Move method."
+    },
+    {
+      "category": "pivot-table",
+      "file": "open-a-workbook-from-a-memory-stream-for-programmatic-manipulation-of-its-pivot-tables.cs",
+      "title": "Open a workbook from a memory stream for programmatic manipulation of its pivot tables."
+    },
+    {
+      "category": "pivot-table",
+      "file": "preserve-custom-formatting-after-data-refresh-keeping-number-formats-and-colors.cs",
+      "title": "Preserve custom formatting after data refresh, keeping number formats and colors."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs",
+      "title": "Programmatically change the label for grand total in all pivot tables by setting custom globalization property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs",
+      "title": "Programmatically disable the auto\u2011fit of column widths for a PivotTable to maintain custom column sizing."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-disable-the-showexpandcollapsebuttons-property-to-simplify-the-ui-for-flat-data-structures-without-hierarchy.cs",
+      "title": "Programmatically disable the ShowExpandCollapseButtons property to simplify the UI for flat data structures without hierarchy."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-expand-all-collapsed-items-in-a-pivottable-using-the-expandall-method-for-full-visibility.cs",
+      "title": "Programmatically expand all collapsed items in a PivotTable using the ExpandAll method for full visibility."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-expand-only-the-first-level-of-items-in-a-hierarchical-pivottable-to-provide-a-concise-initial-view.cs",
+      "title": "Programmatically expand only the first level of items in a hierarchical PivotTable to provide a concise initial view."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-hide-the-pivottables-field-headers-by-setting-the-showfieldheaders-property-to-false.cs",
+      "title": "Programmatically hide the PivotTable's field headers by setting the ShowFieldHeaders property to false."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs",
+      "title": "Programmatically reorder PivotFields within the row area to change the data hierarchy display order."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-reorder-the-page-fields-to-change-filter-priority-within-the-pivottable-for-better-user-experience.cs",
+      "title": "Programmatically reorder the page fields to change filter priority within the PivotTable for better user experience."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-datacaption-to-sales-amount-for-clearer-column-naming-in-reports.cs",
+      "title": "Programmatically set the PivotTable's DataCaption to 'Sales Amount' for clearer column naming in reports."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-datafieldseparator-to-a-custom-character-for-multifield-values-representation.cs",
+      "title": "Programmatically set the PivotTable's DataFieldSeparator to a custom character for multi\u2011field values representation."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-displayerrorstring-to-a-custom-message-for-handling-div0-calculation-errors.cs",
+      "title": "Programmatically set the PivotTable's DisplayErrorString to a custom message for handling #DIV/0! calculation errors."
+    },
+    {
+      "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs",
+      "title": "Programmatically set the PivotTable's RowHeaderCaption to a localized string for international user interfaces."
+    },
+    {
+      "category": "pivot-table",
+      "file": "read-an-encrypted-excel-file-using-a-password-and-access-its-existing-pivot-tables.cs",
+      "title": "Read an encrypted Excel file using a password and access its existing pivot tables."
+    },
+    {
+      "category": "pivot-table",
+      "file": "read-the-positioninsameparentnode-of-a-pivot-item-to-determine-its-current-ordering-within-the-field.cs",
+      "title": "Read the PositionInSameParentNode of a pivot item to determine its current ordering within the field."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-a-pivot-table-after-modifying-its-source-data-range-to-reflect-recent-changes.cs",
+      "title": "Refresh a pivot table after modifying its source data range to reflect recent changes."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-a-pivottable-after-changing-its-consolidationfunction-to-ensure-aggregated-results-are-updated-correctly.cs",
+      "title": "Refresh a PivotTable after changing its ConsolidationFunction to ensure aggregated results are updated correctly."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-a-pivottable-asynchronously-to-avoid-blocking-the-ui-thread-in-a-desktop-application-environment.cs",
+      "title": "Refresh a PivotTable asynchronously to avoid blocking the UI thread in a desktop application environment."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs",
+      "title": "Refresh a PivotTable in a background thread and update the UI after completion using a callback method."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-a-specific-pivottable-programmatically-to-reflect-changes-in-its-data-source.cs",
+      "title": "Refresh a specific PivotTable programmatically to reflect changes in its data source."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-all-nested-child-pivot-tables-of-a-parent-pivot-table-to-synchronize-data-hierarchy.cs",
+      "title": "Refresh all nested child pivot tables of a parent pivot table to synchronize data hierarchy."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-all-pivot-tables-in-a-workbook-after-bulk-data-import-to-ensure-consistency.cs",
+      "title": "Refresh all pivot tables in a workbook after bulk data import to ensure consistency."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
+      "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-all-pivottables-in-a-workbook-sequentially-to-synchronize-data-across-reports.cs",
+      "title": "Refresh all PivotTables in a workbook sequentially to synchronize data across reports."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs",
+      "title": "Refresh nested pivot tables recursively to ensure all child tables reflect updated source data."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-pivot-table-data-programmatically-after-modifying-the-underlying-source-worksheet-range.cs",
+      "title": "Refresh pivot table data programmatically after modifying the underlying source worksheet range."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
+      "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-disabling-excel-2003-compatibility-to-keep-original-content.cs",
+      "title": "Refresh the pivot table after disabling Excel 2003 compatibility to keep original content."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-enabling-excel-2003-compatibility-to-apply-truncation.cs",
+      "title": "Refresh the pivot table after enabling Excel 2003 compatibility to apply truncation."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-formatting-header-cells-to-ensure-style-changes-persist.cs",
+      "title": "Refresh the pivot table after formatting header cells to ensure style changes persist."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-modifying-source-worksheet-data-to-update-calculations.cs",
+      "title": "Refresh the pivot table after modifying source worksheet data to update calculations."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-the-pivot-table-and-then-calculate-its-data-to-ensure-formulas-are-uptodate.cs",
+      "title": "Refresh the pivot table and then calculate its data to ensure formulas are up\u2011to\u2011date."
+    },
+    {
+      "category": "pivot-table",
+      "file": "refresh-the-pivot-table-programmatically-after-modifying-the-source-data.cs",
+      "title": "Refresh the pivot table programmatically after modifying the source data."
+    },
+    {
+      "category": "pivot-table",
+      "file": "remove-a-calculated-field-from-a-pivottable-using-the-calculatedfieldsremove-method-for-the-specified-field.cs",
+      "title": "Remove a calculated field from a PivotTable using the CalculatedFields.Remove method for the specified field."
+    },
+    {
+      "category": "pivot-table",
+      "file": "remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs",
+      "title": "Remove a calculated field from a PivotTable without affecting other fields."
+    },
+    {
+      "category": "pivot-table",
+      "file": "remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs",
+      "title": "Remove all data fields from a PivotTable to convert it into a pure row and column summary."
+    },
+    {
+      "category": "pivot-table",
+      "file": "remove-all-filters-from-a-pivot-table-to-show-unfiltered-data-across-all-fields.cs",
+      "title": "Remove all filters from a pivot table to show unfiltered data across all fields."
+    },
+    {
+      "category": "pivot-table",
+      "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
+      "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
+    },
+    {
+      "category": "pivot-table",
+      "file": "remove-all-slicers-associated-with-a-pivottable-by-clearing-its-slicercollection-completely.cs",
+      "title": "Remove all slicers associated with a PivotTable by clearing its SlicerCollection completely."
+    },
+    {
+      "category": "pivot-table",
+      "file": "remove-all-slicers-from-a-workbook-by-iterating-each-worksheet-and-clearing-each-pivottables-slicercollection.cs",
+      "title": "Remove all slicers from a workbook by iterating each worksheet and clearing each PivotTable's SlicerCollection."
+    },
+    {
+      "category": "pivot-table",
+      "file": "rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs",
+      "title": "Rename a PivotField after hiding it to reflect updated business terminology."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-a-cell-from-the-pivot-table-by-specifying-the-display-name-of-a-data-field.cs",
+      "title": "Retrieve a cell from the pivot table by specifying the display name of a data field."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-a-pivotitem-from-a-row-field-and-read-its-absolute-position-property.cs",
+      "title": "Retrieve a PivotItem from a row field and read its absolute Position property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs",
+      "title": "Retrieve and format multiple pivot field header cells by their display names in a loop."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-and-log-the-external-odbc-connection-string-used-by-a-pivot-table.cs",
+      "title": "Retrieve and log the external ODBC connection string used by a pivot table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs",
+      "title": "Retrieve external data connection details from a PivotTable via its ExternalConnection property."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-external-data-connection-details-of-a-pivot-table-for-source-auditing.cs",
+      "title": "Retrieve external data connection details of a pivot table for source auditing."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-the-external-connection-object-of-a-pivot-table-and-log-its-connection-string.cs",
+      "title": "Retrieve the external connection object of a pivot table and log its connection string."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-the-external-data-connection-string-associated-with-a-pivottable-for-auditing.cs",
+      "title": "Retrieve the external data connection string associated with a PivotTable for auditing."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-the-refreshbywho-property-to-identify-the-user-who-last-refreshed-the-pivottable.cs",
+      "title": "Retrieve the RefreshByWho property to identify the user who last refreshed the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "retrieve-the-type-of-external-connection-used-by-the-pivot-table-oledb-or-odbc.cs",
+      "title": "Retrieve the type of external connection used by the pivot table (OLEDB or ODBC)."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs",
+      "title": "Save a workbook containing a configured PivotTable to XLSX format using default save options."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-the-modified-workbook-as-xlsx-after-applying-pivot-table-changes-and-custom-styles.cs",
+      "title": "Save the modified workbook as XLSX after applying pivot table changes and custom styles."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs",
+      "title": "Save the modified workbook to a specified file path after pivot operations."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-the-workbook-after-disabling-ribbons-to-ensure-settings-are-persisted-in-ods.cs",
+      "title": "Save the workbook after disabling ribbons to ensure settings are persisted in ODS."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs",
+      "title": "Save the workbook as PDF after removing unwanted pivot tables to produce a clean report."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-the-workbook-containing-the-pivot-table-as-an-ods-file-for-opendocument-compatibility.cs",
+      "title": "Save the workbook containing the pivot table as an ODS file for OpenDocument compatibility."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-the-workbook-containing-the-pivot-table-as-an-ods-file-using-saveformatods.cs",
+      "title": "Save the workbook containing the pivot table as an ODS file using SaveFormat.ODS."
+    },
+    {
+      "category": "pivot-table",
+      "file": "save-the-workbook-to-a-memory-stream-and-then-write-the-stream-to-disk.cs",
+      "title": "Save the workbook to a memory stream and then write the stream to disk."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-a-label-filter-on-a-data-field-to-include-only-entries-matching-specific-text.cs",
+      "title": "Set a label filter on a data field to include only entries matching specific text."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs",
+      "title": "Set a PivotTable to Tabular layout using ShowInTabularForm and verify column alignment afterwards."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-numeric-format-000-for-a-data-field-to-display-currency-values-correctly.cs",
+      "title": "Set numeric format '#,##0.00' for a data field to display currency values correctly."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs",
+      "title": "Set PivotTable.IsExcel2003Compatible to false before refreshing to preserve full text length."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-pivottableisexcel2003compatible-to-true-before-refreshing-to-enforce-255character-truncation.cs",
+      "title": "Set PivotTable.IsExcel2003Compatible to true before refreshing to enforce 255\u2011character truncation."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-showreportfilterpages-to-true-to-generate-separate-worksheets-for-each-filter-selection.cs",
+      "title": "Set ShowReportFilterPages to true to generate separate worksheets for each filter selection."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-showvaluessettingcalculationtype-to-ranklargesttosmallest-for-multiple-fields-uniformly.cs",
+      "title": "Set ShowValuesSetting.CalculationType to RankLargestToSmallest for multiple fields uniformly."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs",
+      "title": "Set the AutoSort property of a PivotField to sort items based on a related value field."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-consolidationfunction-to-sum-for-aggregating-values-across-source-ranges-accurately-within-the-pivottable.cs",
+      "title": "Set the ConsolidationFunction to Sum for aggregating values across source ranges accurately within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-data-field-display-format-to-ranklargesttosmallest-for-descending-ranking.cs",
+      "title": "Set the data field display format to RankLargestToSmallest for descending ranking."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivot-table-option-to-display-empty-cells-as-a-dash-character.cs",
+      "title": "Set the pivot table option to display empty cells as a dash character."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivot-table-option-to-display-zero-values-for-empty-cells.cs",
+      "title": "Set the pivot table option to display zero values for empty cells."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs",
+      "title": "Set the pivot table to show row grand totals but hide column grand totals."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivot-tables-page-field-to-enable-pagination-when-printing-the-ods-document.cs",
+      "title": "Set the pivot table's page field to enable pagination when printing the ODS document."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivotitemposition-to-a-specific-index-after-calling-refreshdata-and-calculatedata.cs",
+      "title": "Set the PivotItem.Position to a specific index after calling RefreshData and CalculateData."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs",
+      "title": "Set the PivotTable's AllowMultipleFilters property to false to restrict filter selections for end users."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-datacaption-property-to-a-custom-label-for-the-values-column-header.cs",
+      "title": "Set the PivotTable's DataCaption property to a custom label for the values column header."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-displayerrorstring-property-to-a-custom-message-for-handling-calculation-errors.cs",
+      "title": "Set the PivotTable's DisplayErrorString property to a custom message for handling calculation errors."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-displayitemlabels-property-to-true-to-show-labels-for-each-individual-data-item.cs",
+      "title": "Set the PivotTable's DisplayItemLabels property to true to show labels for each individual data item."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs",
+      "title": "Set the PivotTable's EnableMultipleFilters property to true to allow selecting multiple items per filter."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs",
+      "title": "Set the PivotTable's EnableMultipleSelection property to false to enforce single selection behavior in filter dialogs."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs",
+      "title": "Set the PivotTable's EnableRefreshOnOpen property to false to prevent automatic data refresh on workbook opening."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-enablerefreshonopen-property-to-true-so-it-automatically-updates-when-the-workbook-opens.cs",
+      "title": "Set the PivotTable's EnableRefreshOnOpen property to true so it automatically updates when the workbook opens."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-enablerefreshonopen-to-false-and-manually-trigger-refreshdata-after-user-edits-for-controlled-updates.cs",
+      "title": "Set the PivotTable's EnableRefreshOnOpen to false and manually trigger RefreshData after user edits for controlled updates."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs",
+      "title": "Set the PivotTable's MissingItemsLimit to a high number to include all possible items during refresh."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-preserveformatting-flag-to-true-to-retain-applied-styles-after-each-refresh.cs",
+      "title": "Set the PivotTable's PreserveFormatting flag to true to retain applied styles after each refresh."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-refreshonfileopen-property-to-true-to-enable-autorefresh-when-workbook-loads.cs",
+      "title": "Set the PivotTable's RefreshOnFileOpen property to true to enable auto\u2011refresh when workbook loads."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-showgrandtotalsforcolumns-property-to-false-to-hide-column-totals-entirely-from-the-report.cs",
+      "title": "Set the PivotTable's ShowGrandTotalsForColumns property to false to hide column totals entirely from the report."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs",
+      "title": "Set the PivotTable's ShowGrandTotalsForRows property to true to display row totals at the bottom of the report."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-showvaluesaspercent-property-to-true-for-all-data-fields-to-normalize-values-across-columns.cs",
+      "title": "Set the PivotTable's ShowValuesAsPercent property to true for all data fields to normalize values across columns."
+    },
+    {
+      "category": "pivot-table",
+      "file": "set-the-pivottables-showvaluesrow-property-to-false-to-hide-the-additional-aggregated-values-row.cs",
+      "title": "Set the PivotTable's ShowValuesRow property to false to hide the additional aggregated values row."
+    },
+    {
+      "category": "pivot-table",
+      "file": "show-a-previously-hidden-column-field-in-the-pivottable-by-toggling-its-visible-flag-back.cs",
+      "title": "Show a previously hidden column field in the PivotTable by toggling its Visible flag back."
+    },
+    {
+      "category": "pivot-table",
+      "file": "show-error-values-as-zero-to-avoid-displaying-div0-messages.cs",
+      "title": "Show error values as zero to avoid displaying #DIV/0! messages."
+    },
+    {
+      "category": "pivot-table",
+      "file": "show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs",
+      "title": "Show the PivotTable ribbon to allow users to interact with built-in Excel pivot tools."
+    },
+    {
+      "category": "pivot-table",
+      "file": "specify-the-absolute-position-of-a-pivot-item-within-the-row-hierarchy.cs",
+      "title": "Specify the absolute position of a pivot item within the row hierarchy."
+    },
+    {
+      "category": "pivot-table",
+      "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
+      "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "transfer-a-pivot-item-to-a-different-parent-field-by-calling-move-with-issameparent-set-to-false.cs",
+      "title": "Transfer a pivot item to a different parent field by calling Move with isSameParent set to false."
+    },
+    {
+      "category": "pivot-table",
+      "file": "unhide-a-previously-hidden-pivotfield-by-setting-its-hidden-property-to-false.cs",
+      "title": "Unhide a previously hidden PivotField by setting its Hidden property to false."
+    },
+    {
+      "category": "pivot-table",
+      "file": "update-an-existing-calculated-fields-formula-to-incorporate-a-new-discount-rate-parameter.cs",
+      "title": "Update an existing calculated field's formula to incorporate a new discount rate parameter."
+    },
+    {
+      "category": "pivot-table",
+      "file": "update-the-external-connection-string-of-a-pivot-table-then-refresh-to-load-new-data.cs",
+      "title": "Update the external connection string of a pivot table, then refresh to load new data."
+    },
+    {
+      "category": "pivot-table",
+      "file": "update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs",
+      "title": "Update the external connection's command text for a PivotTable to query a different database table."
+    },
+    {
+      "category": "pivot-table",
+      "file": "update-the-odbc-connection-string-of-a-pivottables-external-source-to-point-to-a-new-server-location.cs",
+      "title": "Update the ODBC connection string of a PivotTable's external source to point to a new server location."
+    },
+    {
+      "category": "pivot-table",
+      "file": "update-the-source-data-of-an-existing-pivottable-by-redefining-its-sourcedata-property-accordingly.cs",
+      "title": "Update the source data of an existing PivotTable by redefining its SourceData property accordingly."
+    },
+    {
+      "category": "pivot-table",
+      "file": "update-the-union-range-to-include-an-additional-worksheet-and-refresh-the-pivottable-to-incorporate-new-data.cs",
+      "title": "Update the union range to include an additional worksheet and refresh the PivotTable to incorporate new data."
+    },
+    {
+      "category": "pivot-table",
+      "file": "use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs",
+      "title": "Use a dynamic named range as the source to automatically expand with new data."
+    },
+    {
+      "category": "pivot-table",
+      "file": "use-a-logging-framework-to-capture-memory-usage-and-refresh-duration-metrics-during-pivot-processing.cs",
+      "title": "Use a logging framework to capture memory usage and refresh duration metrics during pivot processing."
+    },
+    {
+      "category": "pivot-table",
+      "file": "use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs",
+      "title": "Use PivotItem.Move with count -1 and isSameParent true to shift an item upward within its group."
+    },
+    {
+      "category": "pivot-table",
+      "file": "use-pivottablecalculatedata-after-adding-calculated-fields-to-update-results-accurately.cs",
+      "title": "Use PivotTable.CalculateData() after adding calculated fields to update results accurately."
+    },
+    {
+      "category": "pivot-table",
+      "file": "validate-that-a-pivottable-contains-at-least-one-data-field-before-performing-any-calculations.cs",
+      "title": "Validate that a PivotTable contains at least one data field before performing any calculations."
+    },
+    {
+      "category": "pivot-table",
+      "file": "validate-that-attempting-to-retrieve-a-cell-with-an-invalid-display-name-throws-the-expected-exception.cs",
+      "title": "Validate that attempting to retrieve a cell with an invalid display name throws the expected exception."
+    },
+    {
+      "category": "pivot-table",
+      "file": "validate-that-each-pivottable-has-a-non-empty-refreshbywho-property-before-publishing.cs",
+      "title": "Validate that each PivotTable has a non-empty RefreshByWho property before publishing."
+    },
+    {
+      "category": "pivot-table",
+      "file": "validate-that-the-ods-file-contains-the-rendered-pivot-table-by-opening-and-checking-objects.cs",
+      "title": "Validate that the ODS file contains the rendered pivot table by opening and checking objects."
+    },
+    {
+      "category": "pivot-table",
+      "file": "verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs",
+      "title": "Verify that cell content length does not exceed 255 characters when compatibility is enabled."
+    },
+    {
+      "category": "pivot-table",
+      "file": "verify-that-cell-content-length-remains-unchanged-when-compatibility-is-disabled-after-refresh.cs",
+      "title": "Verify that cell content length remains unchanged when compatibility is disabled after refresh."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
       "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
@@ -12773,6 +14218,1076 @@
       "category": "working-with-charts",
       "file": "write-the-chart-pdf-output-to-a-memorystream-for-further-inmemory-processing.cs",
       "title": "Write the chart PDF output to a MemoryStream for further in\u2011memory processing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "add-a-table-of-contents-linking-to-each-heading-generated-from-worksheet-names.cs",
+      "title": "Add a table of contents linking to each heading generated from worksheet names."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-a-custom-style-to-a-range-enable-excludeunusedstyles-and-verify-only-used-styles-appear-in-html.cs",
+      "title": "Apply a custom style to a range, enable ExcludeUnusedStyles, and verify only used styles appear in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
+      "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-a-reflection-effect-to-wordart-during-html-export-and-ensure-gradient-fill-remains-visible.cs",
+      "title": "Apply a reflection effect to WordArt during HTML export and ensure gradient fill remains visible."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-a-shadow-effect-to-wordart-during-pdf-conversion-while-preserving-the-underlying-gradient-fill.cs",
+      "title": "Apply a shadow effect to WordArt during PDF conversion while preserving the underlying gradient fill."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs",
+      "title": "Apply CSS classes to heading elements for consistent styling across exported pages."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs",
+      "title": "Apply custom number format strings to ensure large identifiers appear without scientific notation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-this-setting-when-exporting-workbooks-containing-extensive-cell-comments.cs",
+      "title": "Apply this setting when exporting workbooks containing extensive cell comments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "assign-a-custom-ifilepathprovider-instance-to-htmlsaveoptionsfilepathprovider-to-fix-broken-worksheet-hyperlinks.cs",
+      "title": "Assign a custom IFilePathProvider instance to HtmlSaveOptions.FilePathProvider to fix broken worksheet hyperlinks."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-a-set-of-xls-files-to-html-applying-exportgridlines-only-to-worksheets-that-contain-tables.cs",
+      "title": "Batch convert a set of XLS files to HTML, applying ExportGridLines only to worksheets that contain tables."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-all-xlsx-files-in-a-directory-to-html-using-default-conversion-settings.cs",
+      "title": "Batch convert all XLSX files in a directory to HTML using default conversion settings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
+      "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-xlsx-files-to-html-while-disabling-css-generation-to-reduce-file-size.cs",
+      "title": "Batch convert XLSX files to HTML while disabling CSS generation to reduce file size."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-xlsx-files-to-html-while-omitting-document-properties-for-privacy-compliance.cs",
+      "title": "Batch convert XLSX files to HTML while omitting document properties for privacy compliance."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs",
+      "title": "Batch process a collection of workbooks, applying ExportGridLines and IsExportComments simultaneously to each HTML output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-process-a-folder-of-xlsx-files-applying-excludeunusedstyles-only-to-files-larger-than-5-mb.cs",
+      "title": "Batch process a folder of XLSX files, applying ExcludeUnusedStyles only to files larger than 5\u202fMB."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-process-workbooks-applying-both-excludeunusedstyles-and-exportgridlines-and-compare-processing-time-against-default-settings.cs",
+      "title": "Batch process workbooks, applying both ExcludeUnusedStyles and ExportGridLines, and compare processing time against default settings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs",
+      "title": "Combine ExcludeUnusedStyles and IsExportComments options, then save workbook as HTML for compact output with comments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs",
+      "title": "Compare exported HTML with and without exponential notation suppression for accuracy."
+    },
+    {
+      "category": "working-with-html",
+      "file": "compare-html-file-sizes-with-and-without-excludeunusedstyles-to-quantify-reduction-achieved-by-style-omission.cs",
+      "title": "Compare HTML file sizes with and without ExcludeUnusedStyles to quantify reduction achieved by style omission."
+    },
+    {
+      "category": "working-with-html",
+      "file": "compare-html-files-before-and-after-enabling-redundant-space-deletion.cs",
+      "title": "Compare HTML files before and after enabling redundant space deletion."
+    },
+    {
+      "category": "working-with-html",
+      "file": "compare-page-source-before-and-after-disabling-downlevel-revealed-comments.cs",
+      "title": "Compare page source before and after disabling downlevel revealed comments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs",
+      "title": "Configure HtmlSaveOptions to collapse multiple spaces after newline characters in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "configure-htmlsaveoptions-to-insert-h1-tags-before-each-worksheet-table.cs",
+      "title": "Configure HtmlSaveOptions to insert <h1> tags before each worksheet table."
+    },
+    {
+      "category": "working-with-html",
+      "file": "configure-workbooks-numberformat-to-display-full-integer-values-when-exporting-to-html.cs",
+      "title": "Configure workbook's NumberFormat to display full integer values when exporting to HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs",
+      "title": "Convert a spreadsheet containing multiple WordArt objects to PDF and verify each gradient renders independently."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-with-wordart-to-html-and-include-inline-svg-definitions-for-complex-gradients.cs",
+      "title": "Convert a spreadsheet with WordArt to HTML and include inline SVG definitions for complex gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-with-wordart-to-pdf-and-embed-the-gradient-fill-as-an-iccprofileaware-color-space.cs",
+      "title": "Convert a spreadsheet with WordArt to PDF and embed the gradient fill as an ICC\u2011profile\u2011aware color space."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-with-wordart-to-svg-and-ensure-gradient-definitions-are-preserved-as-vector-data.cs",
+      "title": "Convert a spreadsheet with WordArt to SVG and ensure gradient definitions are preserved as vector data."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-html-and-ensure-output-passes-w3c-validation-for-css-gradients.cs",
+      "title": "Convert a workbook with WordArt to HTML and ensure output passes W3C validation for CSS gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-pdf-and-add-a-security-restriction-preventing-editing-of-gradient-layers.cs",
+      "title": "Convert a workbook with WordArt to PDF and add a security restriction preventing editing of gradient layers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-pdf-and-set-output-to-pdfa2b-compliance-while-preserving-gradients.cs",
+      "title": "Convert a workbook with WordArt to PDF and set output to PDF/A\u20112b compliance while preserving gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-containing-base64-images-to-pdf-ensuring-images-retain-original-resolution.cs",
+      "title": "Convert HTML containing base64 images to PDF, ensuring images retain original resolution."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-file-to-excel-while-preserving-cell-background-colors-defined-by-css-styles.cs",
+      "title": "Convert HTML file to Excel while preserving cell background colors defined by CSS styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-tables-with-colspan-and-rowspan-attributes-to-merged-cells-in-the-worksheet.cs",
+      "title": "Convert HTML tables with colspan and rowspan attributes to merged cells in the worksheet."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-custom-number-formats-for-scientific-notation-values.cs",
+      "title": "Convert HTML to Excel and apply custom number formats for scientific notation values."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs",
+      "title": "Convert HTML to Excel and apply date format detection based on locale settings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-embed-custom-document-properties-extracted-from-html-meta-tags.cs",
+      "title": "Convert HTML to Excel and embed custom document properties extracted from HTML meta tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-encrypt-the-resulting-workbook-with-a-password-for-protection.cs",
+      "title": "Convert HTML to Excel and encrypt the resulting workbook with a password for protection."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-handle-nested-tables-by-creating-separate-worksheets-for-each-level.cs",
+      "title": "Convert HTML to Excel and handle nested tables by creating separate worksheets for each level."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-maintain-original-html-page-breaks-as-worksheet-page-breaks.cs",
+      "title": "Convert HTML to Excel and maintain original HTML page breaks as worksheet page breaks."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-map-css-border-styles-to-excel-cell-border-line-styles.cs",
+      "title": "Convert HTML to Excel and map CSS border styles to Excel cell border line styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
+      "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
+      "title": "Convert HTML to Excel and preserve cell comments as HTML tooltip attributes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-conditional-formatting-rules-defined-in-css-classes.cs",
+      "title": "Convert HTML to Excel and preserve conditional formatting rules defined in CSS classes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-hidden-rows-and-columns-indicated-by-css-displaynone.cs",
+      "title": "Convert HTML to Excel and preserve hidden rows and columns indicated by CSS display:none."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs",
+      "title": "Convert HTML to Excel and retain background images by inserting them as worksheet background."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-embedded-svg-graphics-as-scalable-vector-shapes.cs",
+      "title": "Convert HTML to Excel and retain embedded SVG graphics as scalable vector shapes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
+      "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs",
+      "title": "Convert HTML to Excel and set workbook culture to French for proper decimal separators."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-asynchronously-and-provide-a-callback-when-conversion-completes.cs",
+      "title": "Convert HTML to Excel asynchronously and provide a callback when conversion completes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-in-a-batch-job-processing-a-directory-of-files-into-separate-workbooks.cs",
+      "title": "Convert HTML to Excel in a batch job processing a directory of files into separate workbooks."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs",
+      "title": "Convert HTML to Excel using a memory stream to process large files without temporary files."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-using-a-stream-provider-that-writes-output-directly-to-cloud-storage.cs",
+      "title": "Convert HTML to Excel using a stream provider that writes output directly to cloud storage."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-while-preserving-numeric-formats-such-as-currency-and-percentages.cs",
+      "title": "Convert HTML to Excel while preserving numeric formats such as currency and percentages."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-add-a-footer-displaying-page-numbers-in-roman-numerals.cs",
+      "title": "Convert HTML to PDF and add a footer displaying page numbers in Roman numerals."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-add-a-header-with-the-source-file-name-on-each-page.cs",
+      "title": "Convert HTML to PDF and add a header with the source file name on each page."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-add-a-visible-watermark-text-across-each-page.cs",
+      "title": "Convert HTML to PDF and add a visible watermark text across each page."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-compress-the-final-document-using-object-stream-compression.cs",
+      "title": "Convert HTML to PDF and compress the final document using object stream compression."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-embed-a-custom-icc-color-profile-for-accurate-reproduction.cs",
+      "title": "Convert HTML to PDF and embed a custom ICC color profile for accurate reproduction."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs",
+      "title": "Convert HTML to PDF and embed document metadata such as title and author."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-enable-vector-graphics-rendering-for-scalable-charts.cs",
+      "title": "Convert HTML to PDF and enable vector graphics rendering for scalable charts."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-encrypt-the-output-file-with-a-user-password.cs",
+      "title": "Convert HTML to PDF and encrypt the output file with a user password."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-ensure-table-borders-render-with-exact-pixel-widths.cs",
+      "title": "Convert HTML to PDF and ensure table borders render with exact pixel widths."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-include-accessibility-tags-for-screen-reader-compatibility.cs",
+      "title": "Convert HTML to PDF and include accessibility tags for screen reader compatibility."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-preserve-css-pseudoelements-like-before-and-after.cs",
+      "title": "Convert HTML to PDF and preserve CSS pseudo\u2011elements like ::before and ::after."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-retain-embedded-video-placeholders-as-static-images.cs",
+      "title": "Convert HTML to PDF and retain embedded video placeholders as static images."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-set-pdf-version-to-17-for-advanced-features.cs",
+      "title": "Convert HTML to PDF and set PDF version to 1.7 for advanced features."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-applying-custom-margins-of-one-centimeter-on-all-sides.cs",
+      "title": "Convert HTML to PDF applying custom margins of one centimeter on all sides."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-asynchronously-and-report-conversion-progress-to-callers-via-events.cs",
+      "title": "Convert HTML to PDF asynchronously and report conversion progress to callers via events."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-in-a-multithreaded-batch-processing-fifty-files-simultaneously.cs",
+      "title": "Convert HTML to PDF in a multi\u2011threaded batch processing fifty files simultaneously."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-gradient-fills-in-css-background-images.cs",
+      "title": "Convert HTML to PDF while preserving gradient fills in CSS background images."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-hyperlinks-and-making-them-clickable.cs",
+      "title": "Convert HTML to PDF while preserving hyperlinks and making them clickable."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-righttoleft-text-direction-for-arabic-content.cs",
+      "title": "Convert HTML to PDF while preserving right\u2011to\u2011left text direction for Arabic content."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-with-custom-font-mapping-to-replace-missing-fonts.cs",
+      "title": "Convert HTML to PDF with custom font mapping to replace missing fonts."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-with-high-image-compression-level-to-reduce-file-size.cs",
+      "title": "Convert HTML to PDF with high image compression level to reduce file size."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-with-pdfa1b-compliance-for-longterm-archival-storage.cs",
+      "title": "Convert HTML to PDF with PDF/A\u20111b compliance for long\u2011term archival storage."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-with-embedded-images-to-excel-inserting-each-image-into-the-corresponding-cell.cs",
+      "title": "Convert HTML with embedded images to Excel, inserting each image into the corresponding cell."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-with-external-css-files-to-pdf-while-preserving-original-stylesheet-rules.cs",
+      "title": "Convert HTML with external CSS files to PDF while preserving original stylesheet rules."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-with-inline-styles-to-excel-and-map-css-font-sizes-to-row-heights.cs",
+      "title": "Convert HTML with inline styles to Excel and map CSS font sizes to row heights."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-multiple-spreadsheets-containing-wordart-to-pdf-in-a-batch-ensuring-each-gradient-renders-correctly.cs",
+      "title": "Convert multiple spreadsheets containing WordArt to PDF in a batch, ensuring each gradient renders correctly."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-multiple-spreadsheets-with-wordart-to-html-in-a-batch-generating-separate-css-files-for-gradients.cs",
+      "title": "Convert multiple spreadsheets with WordArt to HTML in a batch, generating separate CSS files for gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
+      "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-workbook-with-conditional-formatting-using-iconset-disable-iconset-export-and-confirm-icons-are-omitted-in-html.cs",
+      "title": "Create a workbook with conditional formatting using IconSet, disable IconSet export, and confirm icons are omitted in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-external-css-files-per-worksheet-and-ensure-html-references-point-to-the-correct-stylesheet-locations.cs",
+      "title": "Create external CSS files per worksheet and ensure HTML references point to the correct stylesheet locations."
+    },
+    {
+      "category": "working-with-html",
+      "file": "customize-gradient-angle-for-wordart-during-html-conversion-and-reflect-the-angle-in-css-gradient-syntax.cs",
+      "title": "Customize gradient angle for WordArt during HTML conversion and reflect the angle in CSS gradient syntax."
+    },
+    {
+      "category": "working-with-html",
+      "file": "customize-gradient-angle-for-wordart-during-pdf-conversion-using-a-specific-rotation-parameter.cs",
+      "title": "Customize gradient angle for WordArt during PDF conversion using a specific rotation parameter."
+    },
+    {
+      "category": "working-with-html",
+      "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
+      "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
+    },
+    {
+      "category": "working-with-html",
+      "file": "disable-css-generation-during-html-export-by-setting-disablecss-to-true.cs",
+      "title": "Disable CSS generation during HTML export by setting DisableCss to true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "disable-default-css-generation-and-rely-solely-on-tablecssid-to-style-exported-html-tables.cs",
+      "title": "Disable default CSS generation and rely solely on TableCssId to style exported HTML tables."
+    },
+    {
+      "category": "working-with-html",
+      "file": "disable-downlevel-revealed-comments-when-saving-to-html-to-improve-compatibility-with-older-browsers.cs",
+      "title": "Disable downlevel revealed comments when saving to HTML to improve compatibility with older browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "disable-embedded-css-and-manually-link-an-external-stylesheet-after-html-export-for-custom-styling.cs",
+      "title": "Disable embedded CSS and manually link an external stylesheet after HTML export for custom styling."
+    },
+    {
+      "category": "working-with-html",
+      "file": "document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs",
+      "title": "Document the configuration required to turn off downlevel revealed comments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "document-the-impact-of-space-removal-on-html-rendering-performance.cs",
+      "title": "Document the impact of space removal on HTML rendering performance."
+    },
+    {
+      "category": "working-with-html",
+      "file": "document-the-steps-required-to-disable-scientific-notation-in-html-export.cs",
+      "title": "Document the steps required to disable scientific notation in HTML export."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-css-custom-properties-in-htmlsaveoptions-while-using-tablecssid-to-enhance-table-styling-flexibility.cs",
+      "title": "Enable CSS custom properties in HtmlSaveOptions while using TableCssId to enhance table styling flexibility."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs",
+      "title": "Enable HtmlSaveOptions.IsIECompatible before saving to MHTML to allow worksheet tab switching in Internet Explorer."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
+      "title": "Enable the option to generate HTML heading elements based on worksheet names."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-the-option-to-keep-original-numeric-formatting-when-converting-excel-to-html.cs",
+      "title": "Enable the option to keep original numeric formatting when converting Excel to HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-whitespace-trimming-option-to-eliminate-extra-spaces-following-line-break-characters.cs",
+      "title": "Enable whitespace trimming option to eliminate extra spaces following line break characters."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-that-comment-visibility-settings-respect-user-privacy-requirements-strictly.cs",
+      "title": "Ensure that comment visibility settings respect user privacy requirements strictly."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-that-comments-are-not-exposed-to-browsers-that-do-not-support-modern-comment-standards.cs",
+      "title": "Ensure that comments are not exposed to browsers that do not support modern comment standards."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-that-each-worksheets-title-appears-as-a-toplevel-heading-in-the-html-file.cs",
+      "title": "Ensure that each worksheet\u2019s title appears as a top\u2011level heading in the HTML file."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-that-html-output-does-not-contain-unnecessary-blank-spaces-after-br-tags.cs",
+      "title": "Ensure that HTML output does not contain unnecessary blank spaces after <br> tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-singlesheet-workbook-to-html-with-exportworksheetcssseparately-enabled-creating-a-css-folder.cs",
+      "title": "Export a single\u2011sheet workbook to HTML with ExportWorksheetCSSSeparately enabled, creating a CSS folder."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-and-workbook-properties-together.cs",
+      "title": "Export a workbook to HTML while omitting document and workbook properties together."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-and-worksheet-properties-together.cs",
+      "title": "Export a workbook to HTML while omitting document and worksheet properties together."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-properties-by-setting-exportdocumentproperties-to-false.cs",
+      "title": "Export a workbook to HTML while omitting document properties by setting ExportDocumentProperties to false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-workbook-and-worksheet-properties-simultaneously.cs",
+      "title": "Export a workbook to HTML while omitting document, workbook, and worksheet properties simultaneously."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-workbook-and-worksheet-properties-together.cs",
+      "title": "Export a workbook to HTML while omitting workbook and worksheet properties together."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-workbook-properties-by-disabling-exportworkbookproperties-flag.cs",
+      "title": "Export a workbook to HTML while omitting workbook properties by disabling ExportWorkbookProperties flag."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-worksheet-properties-by-setting-exportworksheetproperties-to-false.cs",
+      "title": "Export a workbook to HTML while omitting worksheet properties by setting ExportWorksheetProperties to false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-both-css-disabled-and-custom-properties-enabled.cs",
+      "title": "Export a workbook to HTML with both CSS disabled and custom properties enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-custom-properties-enabled-while-preserving-default-css-generation.cs",
+      "title": "Export a workbook to HTML with custom properties enabled while preserving default CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs",
+      "title": "Export a workbook with conditional formatting that includes ColorScale, and extract the CSS gradient definitions for reuse."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-extract-the-generated-css-classes-for-analysis.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and extract the generated CSS classes for analysis."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-generate-a-separate-css-file-containing-bar-styles.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and generate a separate CSS file containing bar styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-verify-bar-lengths-match-cell-values-in-html.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and verify bar lengths match cell values in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-iconset-and-verify-icons-are-rendered-using-img-tags.cs",
+      "title": "Export a workbook with conditional formatting that includes IconSet, and verify icons are rendered using <img> tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-overlapping-rules-and-ensure-both-rules-are-represented-in-html.cs",
+      "title": "Export a workbook with conditional formatting that includes overlapping rules, and ensure both rules are represented in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-uses-threecolor-scales-and-verify-gradient-colors-appear-in-html.cs",
+      "title": "Export a workbook with conditional formatting that uses three\u2011color scales, and verify gradient colors appear in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-defined-print-area-while-disabling-css-generation-by-setting-exportprintareaonly-true-and-disablecss-true.cs",
+      "title": "Export defined print area while disabling CSS generation by setting ExportPrintAreaOnly true and DisableCss true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-defined-print-area-while-omitting-document-properties-by-combining-exportprintareaonly-and-exportdocumentproperties-false.cs",
+      "title": "Export defined print area while omitting document properties by combining ExportPrintAreaOnly and ExportDocumentProperties false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-a-custom-stylesheet-that-overrides-default-cell-colors.cs",
+      "title": "Export Excel to HTML and apply a custom stylesheet that overrides default cell colors."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-localespecific-number-formatting-based-on-workbook-culture.cs",
+      "title": "Export Excel to HTML and apply locale\u2011specific number formatting based on workbook culture."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-ensure-formulas-are-displayed-as-values-not-as-formula-strings.cs",
+      "title": "Export Excel to HTML and ensure formulas are displayed as values, not as formula strings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-generate-a-printable-version-using-css-media-print-rules.cs",
+      "title": "Export Excel to HTML and generate a printable version using CSS @media print rules."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-handle-hidden-rows-by-omitting-them-from-the-generated-markup.cs",
+      "title": "Export Excel to HTML and handle hidden rows by omitting them from the generated markup."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-include-a-navigation-pane-linking-to-each-worksheet-section.cs",
+      "title": "Export Excel to HTML and include a navigation pane linking to each worksheet section."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-maintain-original-column-widths-using-css-width-properties.cs",
+      "title": "Export Excel to HTML and maintain original column widths using CSS width properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-preserve-background-images-by-linking-to-external-image-files.cs",
+      "title": "Export Excel to HTML and preserve background images by linking to external image files."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
+      "title": "Export Excel to HTML and preserve cell comments as HTML tooltip attributes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
+      "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-set-page-break-markers-as-html-comments-for-later-processing.cs",
+      "title": "Export Excel to HTML and set page break markers as HTML comments for later processing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
+      "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-right-to-left-aligned-text-correctly-using-default-htmlsaveoptions-during-conversion.cs",
+      "title": "Export right-to-left aligned text correctly using default HtmlSaveOptions during conversion."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-the-workbook-with-gridlines-enabled-while-applying-a-specified-tablecssid-for-table-styling.cs",
+      "title": "Export the workbook with gridlines enabled while applying a specified TableCssId for table styling."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-and-disabling-css-generation.cs",
+      "title": "Export workbook to HTML after defining a print area and disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-and-omitting-worksheet-properties.cs",
+      "title": "Export workbook to HTML after defining a print area and omitting worksheet properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-ensuring-only-that-area-appears.cs",
+      "title": "Export workbook to HTML after defining a print area, ensuring only that area appears."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-while-preserving-original-worksheet-order-by-not-altering-ifilepathprovider-mapping.cs",
+      "title": "Export workbook to HTML while preserving original worksheet order by not altering IFilePathProvider mapping."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-with-custom-css-folder-path-and-ensure-the-folder-is-created-relative-to-output.cs",
+      "title": "Export workbook to HTML with custom CSS folder path and ensure the folder is created relative to output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-with-custom-file-naming-pattern-using-ifilepathprovider-that-appends-timestamps.cs",
+      "title": "Export workbook to HTML with custom file naming pattern using IFilePathProvider that appends timestamps."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-with-embedded-css-and-compare-file-size-against-external-css-approach.cs",
+      "title": "Export workbook to HTML with embedded CSS and compare file size against external CSS approach."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
+      "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-from-a-workbook-while-disabling-excludeunusedstyles-to-compare-full-style-set-against-reduced-version.cs",
+      "title": "Generate HTML from a workbook while disabling ExcludeUnusedStyles to compare full style set against reduced version."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-iecompatible-mhtml-from-a-multisheet-workbook-and-verify-tab-switching-functionality-in-internet-explorer.cs",
+      "title": "Generate IE\u2011compatible MHTML from a multi\u2011sheet workbook and verify tab switching functionality in Internet Explorer."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-pdf-from-html-and-set-page-size-to-a4-landscape-orientation.cs",
+      "title": "Generate PDF from HTML and set page size to A4 landscape orientation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs",
+      "title": "Implement IFilePathProvider that converts worksheet names to lowercase URLs for consistent linking."
+    },
+    {
+      "category": "working-with-html",
+      "file": "implement-ifilepathprovider-that-generates-unique-file-names-for-worksheets-with-duplicate-titles.cs",
+      "title": "Implement IFilePathProvider that generates unique file names for worksheets with duplicate titles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "implement-ifilepathprovider-to-customize-html-file-paths-for-each-exported-worksheet-and-maintain-link-integrity.cs",
+      "title": "Implement IFilePathProvider to customize HTML file paths for each exported worksheet and maintain link integrity."
+    },
+    {
+      "category": "working-with-html",
+      "file": "include-cell-comments-in-the-html-export-and-ensure-they-inherit-the-tablecssid-prefixed-styles.cs",
+      "title": "Include cell comments in the HTML export and ensure they inherit the TableCssId prefixed styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
+      "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "include-worksheet-headings-in-the-html-output-and-prefix-table-styles-with-the-chosen-tablecssid.cs",
+      "title": "Include worksheet headings in the HTML output and prefix table styles with the chosen TableCssId."
+    },
+    {
+      "category": "working-with-html",
+      "file": "integrate-ifilepathprovider-with-aspnet-routing-to-serve-exported-html-dynamically-from-a-web-api.cs",
+      "title": "Integrate IFilePathProvider with ASP.NET routing to serve exported HTML dynamically from a web API."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-a-workbook-enable-exportgridlines-and-produce-html-that-displays-worksheet-gridlines.cs",
+      "title": "Load a workbook, enable ExportGridLines, and produce HTML that displays worksheet gridlines."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-a-workbook-featuring-iconset-rules-set-iconset-export-to-true-and-produce-html-showing-icons.cs",
+      "title": "Load a workbook featuring IconSet rules, set IconSet export to true, and produce HTML showing icons."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-a-workbook-with-colorscale-rules-enable-colorscale-export-and-generate-html-reflecting-gradient-colors.cs",
+      "title": "Load a workbook with ColorScale rules, enable ColorScale export, and generate HTML reflecting gradient colors."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-a-workbook-with-conditional-formatting-activate-databar-export-and-save-html-preserving-databar-visuals.cs",
+      "title": "Load a workbook with conditional formatting, activate DataBar export, and save HTML preserving DataBar visuals."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-a-workbook-with-hidden-rows-enable-exportgridlines-and-ensure-hidden-rows-do-not-affect-gridline-rendering.cs",
+      "title": "Load a workbook with hidden rows, enable ExportGridLines, and ensure hidden rows do not affect gridline rendering."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-html-file-from-disk-and-convert-it-to-pdf-using-default-options.cs",
+      "title": "Load an HTML file from disk and convert it to PDF using default options."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-while-preserving-div-tag-layout-using-enabledivtaglayout.cs",
+      "title": "Load an HTML file into a workbook while preserving DIV tag layout using EnableDivTagLayout."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-without-preserving-div-layout-by-leaving-enabledivtaglayout-false.cs",
+      "title": "Load an HTML file into a workbook without preserving DIV layout by leaving EnableDivTagLayout false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-html-string-in-memory-and-generate-a-pdf-with-embedded-fonts.cs",
+      "title": "Load an HTML string in memory and generate a PDF with embedded fonts."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
+      "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-to-html-using-default-settings-preserving-all-content.cs",
+      "title": "Load an XLSX workbook and export to HTML using default settings, preserving all content."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-enable-excludeunusedstyles-and-save-as-html-to-reduce-file-size.cs",
+      "title": "Load an XLSX workbook, enable ExcludeUnusedStyles, and save as HTML to reduce file size."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-from-a-url-and-convert-it-to-an-excel-workbook-using-a-custom-stream-provider.cs",
+      "title": "Load HTML from a URL and convert it to an Excel workbook using a custom stream provider."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs",
+      "title": "Load HTML, modify a cell, and export to HTML while disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-modify-a-cell-value-programmatically-and-export-to-html-with-default-options.cs",
+      "title": "Load HTML, modify a cell value programmatically, and export to HTML with default options."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-preserving-div-layout-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs",
+      "title": "Load HTML preserving DIV layout, modify a cell, and export to HTML while disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-preserving-div-layout-then-re-export-to-html-and-verify-div-structure-remains-unchanged.cs",
+      "title": "Load HTML preserving DIV layout, then re-export to HTML and verify DIV structure remains unchanged."
+    },
+    {
+      "category": "working-with-html",
+      "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-pdf-reporting-progress-of-gradient-rendering.cs",
+      "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to PDF, reporting progress of gradient rendering."
+    },
+    {
+      "category": "working-with-html",
+      "file": "preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs",
+      "title": "Preserve original worksheet name capitalization when creating HTML heading tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "prevent-exponential-notation-for-large-numeric-values-during-html-export-by-adjusting-number-format-options.cs",
+      "title": "Prevent exponential notation for large numeric values during HTML export by adjusting number format options."
+    },
+    {
+      "category": "working-with-html",
+      "file": "process-multiple-xlsx-files-in-a-directory-applying-excludeunusedstyles-to-each-and-batch-save-reduced-size-html-files.cs",
+      "title": "Process multiple XLSX files in a directory, applying ExcludeUnusedStyles to each, and batch save reduced-size HTML files."
+    },
+    {
+      "category": "working-with-html",
+      "file": "remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs",
+      "title": "Remove redundant spaces after line breaks in cell text while converting to HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-conversion-and-allow-configuration-of-gradient-direction-via-api.cs",
+      "title": "Render WordArt gradient fills during conversion and allow configuration of gradient direction via API."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-html-export-and-apply-custom-css-classes-for-gradient-control.cs",
+      "title": "Render WordArt gradient fills during HTML export and apply custom CSS classes for gradient control."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-pdf-conversion-and-enable-antialiasing-for-smoother-edges.cs",
+      "title": "Render WordArt gradient fills during PDF conversion and enable anti\u2011aliasing for smoother edges."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-and-support-custom-start-and-end-colors-defined-in-the-workbook.cs",
+      "title": "Render WordArt gradient fills while converting and support custom start and end colors defined in the workbook."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-html-and-include-fallback-solid-colors-for-older-browsers.cs",
+      "title": "Render WordArt gradient fills while converting to HTML and include fallback solid colors for older browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-html-and-provide-a-javascript-fallback-that-draws-gradients-on-canvas.cs",
+      "title": "Render WordArt gradient fills while converting to HTML and provide a JavaScript fallback that draws gradients on canvas."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-pdf-and-embed-the-gradient-as-a-pdf-shading-pattern.cs",
+      "title": "Render WordArt gradient fills while converting to PDF and embed the gradient as a PDF shading pattern."
+    },
+    {
+      "category": "working-with-html",
+      "file": "save-a-workbook-to-html-with-exportgridlines-disabled-then-confirm-that-gridlines-are-absent-in-the-output.cs",
+      "title": "Save a workbook to HTML with ExportGridLines disabled, then confirm that gridlines are absent in the output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
+      "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptions-to-omit-downlevel-revealed-comment-syntax-in-the-exported-html.cs",
+      "title": "Set HtmlSaveOptions to omit downlevel revealed comment syntax in the exported HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptionsexportworksheetcssseparately-to-true-to-generate-distinct-stylesheet-files-per-worksheet-individually.cs",
+      "title": "Set HtmlSaveOptions.ExportWorksheetCSSSeparately to true to generate distinct stylesheet files per worksheet individually."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptionssimilarborderstyle-to-true-to-provide-fallback-borders-for-unsupported-browsers-in-html.cs",
+      "title": "Set HtmlSaveOptions.SimilarBorderStyle to true to provide fallback borders for unsupported browsers in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-the-html-encoding-to-utf-8-and-apply-a-custom-tablecssid-for-consistent-table-class-naming.cs",
+      "title": "Set the HTML encoding to UTF-8 and apply a custom TableCssId for consistent table class naming."
+    },
+    {
+      "category": "working-with-html",
+      "file": "store-exported-html-files-in-a-temporary-folder-via-ifilepathprovider-and-clean-up-after-processing.cs",
+      "title": "Store exported HTML files in a temporary folder via IFilePathProvider and clean up after processing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs",
+      "title": "Test cells containing multi\u2011line text to confirm proper space handling."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-fallback-border-rendering-in-firefox-by-exporting-with-similarborderstyle-enabled-and-inspecting-css.cs",
+      "title": "Test fallback border rendering in Firefox by exporting with SimilarBorderStyle enabled and inspecting CSS."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-fallback-border-rendering-in-safari-by-exporting-with-similarborderstyle-enabled-and-reviewing-html-output.cs",
+      "title": "Test fallback border rendering in Safari by exporting with SimilarBorderStyle enabled and reviewing HTML output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-html-export-with-values-larger-than-10\u2076-to-confirm-exponential-notation-is-suppressed.cs",
+      "title": "Test HTML export with values larger than 10\u2076 to confirm exponential notation is suppressed."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-html-files-in-legacy-browsers-to-confirm-comments-are-hidden-appropriately.cs",
+      "title": "Test HTML files in legacy browsers to confirm comments are hidden appropriately."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-mhtml-output-in-google-chrome-with-isiecompatible-false-and-confirm-standard-rendering-without-iespecific-features.cs",
+      "title": "Test MHTML output in Google Chrome with IsIECompatible false and confirm standard rendering without IE\u2011specific features."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-mhtml-output-in-internet-explorer-11-after-enabling-isiecompatible-and-verify-worksheet-tab-navigation.cs",
+      "title": "Test MHTML output in Internet Explorer 11 after enabling IsIECompatible and verify worksheet tab navigation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-mhtml-output-in-microsoft-edge-after-enabling-isiecompatible-and-assess-compatibility-with-modern-browsers.cs",
+      "title": "Test MHTML output in Microsoft Edge after enabling IsIECompatible and assess compatibility with modern browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs",
+      "title": "Use a sample workbook to demonstrate whitespace cleanup during export."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-false-and-confirm-that-css-is-embedded-within-the-html.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately false and confirm that CSS is embedded within the HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-together-with-similarborderstyle-to-test-combined-effects-on-rendering-across-multiple-browsers.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately together with SimilarBorderStyle to test combined effects on rendering across multiple browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-true-and-verify-that-each-worksheet-has-its-own-css-file.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately true and verify that each worksheet has its own .css file."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionssimilarborderstyle-to-generate-fallback-border-styles-and-test-rendering-in-legacy-browsers.cs",
+      "title": "Use HtmlSaveOptions.SimilarBorderStyle to generate fallback border styles and test rendering in legacy browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-ifilepathprovider-to-generate-relative-paths-for-html-files-to-support-offline-browsing.cs",
+      "title": "Use IFilePathProvider to generate relative paths for HTML files to support offline browsing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-ifilepathprovider-to-store-html-files-in-a-network-share-path-and-validate-accessibility-via-unc.cs",
+      "title": "Use IFilePathProvider to store HTML files in a network share path and validate accessibility via UNC."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-the-saveoptions-property-to-enforce-nonexponential-display-for-all-numeric-cells.cs",
+      "title": "Use the SaveOptions property to enforce non\u2011exponential display for all numeric cells."
+    },
+    {
+      "category": "working-with-html",
+      "file": "validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs",
+      "title": "Validate that cell content with line breaks displays correctly without extra spacing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "validate-that-disabling-downlevel-revealed-comments-does-not-affect-other-html-features.cs",
+      "title": "Validate that disabling downlevel revealed comments does not affect other HTML features."
+    },
+    {
+      "category": "working-with-html",
+      "file": "validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs",
+      "title": "Validate that generated HTML contains comment tags by searching for \u201c<!--\u201d after enabling IsExportComments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "validate-that-gradient-fills-in-wordart-appear-identical-in-pdf-output-compared-to-the-original-spreadsheet.cs",
+      "title": "Validate that gradient fills in WordArt appear identical in PDF output compared to the original spreadsheet."
+    },
+    {
+      "category": "working-with-html",
+      "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
+      "title": "Verify that generated HTML contains heading tags matching worksheet titles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "verify-that-html-output-contains-only-standard-comment-tags-without-downlevel-revealed-format.cs",
+      "title": "Verify that HTML output contains only standard comment tags without downlevel revealed format."
+    },
+    {
+      "category": "working-with-html",
+      "file": "verify-that-html-output-shows-large-numbers-as-plain-text-rather-than-exponential-representation.cs",
+      "title": "Verify that HTML output shows large numbers as plain text rather than exponential representation."
     },
     {
       "category": "working-with-images",
