@@ -2986,6 +2986,106 @@
     },
     {
       "category": "document-properties",
+      "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
+      "title": "Add a custom property containing an array of string tags to categorize workbook content."
+    },
+    {
+      "category": "document-properties",
+      "file": "batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs",
+      "title": "Batch process all workbooks in a folder, setting each file's Language property to \"en-GB\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "compare-custom-property-sets-between-two-workbooks-and-generate-a-list-of-differences-for-auditing.cs",
+      "title": "Compare custom property sets between two workbooks and generate a list of differences for auditing."
+    },
+    {
+      "category": "document-properties",
+      "file": "create-a-unit-test-that-adds-a-custom-property-saves-the-workbook-reloads-it-and-verifies-persistence.cs",
+      "title": "Create a unit test that adds a custom property, saves the workbook, reloads it, and verifies persistence."
+    },
+    {
+      "category": "document-properties",
+      "file": "create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs",
+      "title": "Create a utility that reads custom properties from a workbook and writes them into a \"Metadata\" worksheet."
+    },
+    {
+      "category": "document-properties",
+      "file": "create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs",
+      "title": "Create a workbook and set the Title built\u2011in property to a descriptive project name."
+    },
+    {
+      "category": "document-properties",
+      "file": "generate-a-summary-report-that-aggregates-builtin-property-values-from-multiple-workbooks-into-a-consolidated-excel-file.cs",
+      "title": "Generate a summary report that aggregates built\u2011in property values from multiple workbooks into a consolidated Excel file."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs",
+      "title": "Instantiate a workbook, adjust built\u2011in properties, and save the document as PDF to embed metadata."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs",
+      "title": "Instantiate a workbook and deliberately access a non\u2011existent built\u2011in property to demonstrate exception handling."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs",
+      "title": "Instantiate a workbook and enable the ScaleCrop built\u2011in property to preserve image proportions."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs",
+      "title": "Instantiate a workbook and obtain the DocumentVersion built\u2011in property to check version information."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-two-workbooks-and-copy-all-document-properties-from-source-to-destination-programmatically.cs",
+      "title": "Instantiate two workbooks and copy all document properties from source to destination programmatically."
+    },
+    {
+      "category": "document-properties",
+      "file": "iterate-through-a-directory-of-excel-files-and-update-every-documentversion-property-to-30.cs",
+      "title": "Iterate through a directory of Excel files and update every DocumentVersion property to \"3.0\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs",
+      "title": "Load a spreadsheet and read the Language built\u2011in property to determine locale settings."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs",
+      "title": "Load a spreadsheet and use try\u2011catch to safely read a custom property \"Reviewer\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs",
+      "title": "Load a template workbook and clone its built\u2011in properties into a newly created workbook."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs",
+      "title": "Load a workbook and assign the DocumentVersion built\u2011in property the value \"2.0\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-check-whether-a-custom-property-clientname-exists-before-adding.cs",
+      "title": "Load a workbook and check whether a custom property \"ClientName\" exists before adding."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-disable-the-linksuptodate-builtin-property-to-prevent-link-checks.cs",
+      "title": "Load a workbook and disable the LinksUpToDate built\u2011in property to prevent link checks."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs",
+      "title": "Load a workbook and enumerate custom properties, exporting their names, types, and values to JSON."
+    },
+    {
+      "category": "document-properties",
       "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
       "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
     },
