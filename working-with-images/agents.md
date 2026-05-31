@@ -1,97 +1,116 @@
-# Working With Images Examples
+---
+category: working-with-images
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Working With Images
+You are a C# developer specializing in image handling and image manipulation using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE image-related scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Working With Images**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Picture
+- PictureCollection
+- Worksheet.Pictures
+- Pictures.Add()
+- Picture.ToImage()
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Prepare worksheet content
+3. Insert, modify, or extract image
+4. Configure image properties
+5. Save workbook
+6. Print success message
 
+---
 
-## Output
+# Working With Images Rules
 
-Examples may generate:
+- Use Worksheet.Pictures for image operations
+- Demonstrate one image feature per example
+- Use meaningful image positioning and sizing
+- Keep examples focused and easy to understand
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- convert-an-entire-workbook-to-a-multipage-tiff-using-default-rendering-options.cs
-- render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs
-- render-a-workbook-to-tiff-with-horizontal-and-vertical-resolutions-set-to-150-dpi.cs
-- convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs
-- convert-a-workbook-to-tiff-using-twentyfourbit-color-depth-for-highquality-images.cs
-- generate-a-multipage-tiff-from-the-first-three-worksheets-of-a-loaded-workbook.cs
-- track-workbooktotiff-conversion-progress-by-handling-the-conversion-progress-event-and-logging-percentages.cs
-- render-a-workbook-to-tiff-and-write-the-result-into-a-memory-stream-for-further-processing.cs
-- save-a-generated-tiff-file-directly-to-a-network-share-path-after-converting-the-workbook.cs
-- embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs
-- measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs
-- set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs
-- specify-a-white-background-color-in-imageorprintoptions-when-rendering-workbook-to-tiff-to-ensure-consistency.cs
-- convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs
-- export-the-worksheet-named-chart-to-bmp-at-96-dpi-resolution-for-legacy-image-compatibility.cs
-- render-a-worksheet-to-jpeg-with-gridlines-hidden-by-setting-isgridlinesvisible-to-false.cs
-- generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs
-- convert-a-worksheet-to-png-and-embed-the-resulting-image-as-a-base64-string-in-json.cs
-- render-a-worksheet-to-jpeg-and-upload-the-image-file-to-a-cloud-storage-bucket.cs
-- store-the-png-worksheet-image-in-azure-blob-storage-with-custom-metadata-for-categorization.cs
-- send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs
-- perform-pixelbypixel-comparison-between-the-generated-png-worksheet-image-and-a-baseline-reference.cs
-- convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs
-- export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs
-- embed-the-generated-svg-worksheet-file-into-an-html-document-using-the-object-tag-for-display.cs
-- save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs
-- compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs
-- validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs
-- render-the-svg-worksheet-image-in-a-wpf-image-control-for-display-within-a-desktop-application.cs
-- use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs
-- render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs
-- export-a-chart-to-svg-with-viewbox-attribute-for-responsive-scaling-in-modern-browsers.cs
-- attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
-- include-the-svg-chart-file-in-a-web-page-to-allow-interactive-zoom-and-pan-features.cs
-- preserve-data-labels-visibility-when-converting-a-chart-to-png-to-retain-informational-context.cs
-- set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
-- batch-convert-all-excel-files-in-a-directory-to-individual-tiff-images-using-default-rendering-settings.cs
-- iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs
-- extract-every-chart-from-a-workbook-and-export-them-as-svg-files-into-a-designated-subfolder.cs
-- split-a-multipage-tiff-workbook-output-into-individual-singlepage-tiff-files-for-separate-handling.cs
-- convert-the-workbook-tiff-to-pdf-by-invoking-a-thirdparty-converter-after-image-generation.cs
+# Input Strategy
+
+- Avoid dependency on external image assets when possible
+- Create self-contained examples
+- Generate workbook content programmatically
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx or image output when applicable
+- Ensure output is created successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Insert image
+- Resize image
+- Move image
+- Extract image
+- Access image properties
+- Convert image content
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Insert image without validating position
+✅ Use explicit row and column placement
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one image capability per example
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
