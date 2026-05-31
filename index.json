@@ -18951,6 +18951,1326 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "access-connection-points-of-shape-flowconnector-and-attach-them-to-cells-a1-and-b2-for-dynamic-linking.cs",
+      "title": "Access connection points of shape FlowConnector and attach them to cells A1 and B2 for dynamic linking."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "access-nonprimitive-shape-data-and-extract-all-path-segment-points.cs",
+      "title": "Access non\u2011primitive shape data and extract all path segment points."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "access-the-newly-added-activex-control-via-shapeactivexcontrol-and-cast-it-to-its-specific-type.cs",
+      "title": "Access the newly added ActiveX control via Shape.ActiveXControl and cast it to its specific type."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "access-the-shapes-textbody-and-obtain-the-shapetextalignment-object-for-formatting.cs",
+      "title": "Access the shape's TextBody and obtain the ShapeTextAlignment object for formatting."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-checkbox-control-to-a-worksheet-and-link-its-state-to-cell-b2.cs",
+      "title": "Add a CheckBox control to a worksheet and link its state to cell B2."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-glowing-outer-border-to-a-picture-shape-using-specified-glow-radius-and-color-value.cs",
+      "title": "Add a glowing outer border to a picture shape using specified glow radius and color value."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-hyperlink-to-an-ole-object-that-opens-the-original-source-file-when-clicked.cs",
+      "title": "Add a hyperlink to an OLE object that opens the original source file when clicked."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-hyperlink-to-the-textbox-that-opens-a-web-page-when-the-shape-is-clicked.cs",
+      "title": "Add a hyperlink to the textbox that opens a web page when the shape is clicked."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-listbox-control-enable-multiselection-mode-and-populate-it-with-ten-entries.cs",
+      "title": "Add a ListBox control, enable multi\u2011selection mode, and populate it with ten entries."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-new-textbox-to-the-worksheet-at-the-specified-cell-coordinates.cs",
+      "title": "Add a new textbox to the worksheet at the specified cell coordinates."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-picture-and-apply-cropping-parameters-to-display-only-the-central-portion-of-the-image.cs",
+      "title": "Add a picture and apply cropping parameters to display only the central portion of the image."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-picture-and-enable-aspect-ratio-lock-to-maintain-proportional-dimensions-during-resizing.cs",
+      "title": "Add a picture and enable aspect ratio lock to maintain proportional dimensions during resizing."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-picture-and-overlay-a-semitransparent-watermark-to-protect-intellectual-property-rights.cs",
+      "title": "Add a picture and overlay a semi\u2011transparent watermark to protect intellectual property rights."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-picture-and-provide-alternative-text-describing-its-content-for-screen-reader-accessibility.cs",
+      "title": "Add a picture and provide alternative text describing its content for screen reader accessibility."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-picture-and-rotate-it-ninety-degrees-clockwise-to-align-with-column-orientation.cs",
+      "title": "Add a picture and rotate it ninety degrees clockwise to align with column orientation."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-picture-linked-to-cell-c9-then-retrieve-its-absolute-x-and-y-coordinates-for-logging.cs",
+      "title": "Add a picture linked to cell C9, then retrieve its absolute X and Y coordinates for logging."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-picture-loaded-from-a-web-url-and-embed-it-directly-into-the-worksheet.cs",
+      "title": "Add a picture loaded from a web URL and embed it directly into the worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-second-wordart-shape-with-builtin-style-simple-fill-and-custom-font-size.cs",
+      "title": "Add a second WordArt shape with built\u2011in style Simple Fill and custom font size."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-and-enable-its-locked-property-to-prevent-accidental-modifications.cs",
+      "title": "Add a shape and enable its locked property to prevent accidental modifications."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-and-set-alternative-text-describing-its-purpose-for-accessibility-compliance.cs",
+      "title": "Add a shape and set alternative text describing its purpose for accessibility compliance."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-containing-a-nested-formula-and-verify-shape-reflects-final-result.cs",
+      "title": "Add a shape, link it to a cell containing a nested formula, and verify shape reflects final result."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-containing-a-sum-formula-and-verify-shape-shows-total-sum.cs",
+      "title": "Add a shape, link it to a cell containing a SUM formula, and verify shape shows total sum."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-containing-an-if-statement-and-ensure-shape-reflects-conditional-output.cs",
+      "title": "Add a shape, link it to a cell containing an IF statement, and ensure shape reflects conditional output."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-replace-function-and-verify-shape-shows-replaced-text.cs",
+      "title": "Add a shape, link it to a cell using REPLACE function, and verify shape shows replaced text."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-custom-date-format-and-verify-date.cs",
+      "title": "Add a shape, link it to a cell using TEXT for custom date format, and verify date."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-custom-number-format-with-currency-and-verify.cs",
+      "title": "Add a shape, link it to a cell using TEXT for custom number format with currency, and verify."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-custom-number-format-with-percentage-and-verify.cs",
+      "title": "Add a shape, link it to a cell using TEXT for custom number format with percentage, and verify."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-custom-date-and-verify.cs",
+      "title": "Add a shape, link it to a cell using TEXT for number format with custom date, and verify."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-custom-text-and-verify.cs",
+      "title": "Add a shape, link it to a cell using TEXT for number format with custom text, and verify."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-scientific-notation-and-verify.cs",
+      "title": "Add a shape, link it to a cell using TEXT for number format with scientific notation, and verify."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-using-value-to-convert-text-to-number-and-verify.cs",
+      "title": "Add a shape, link it to a cell using VALUE to convert text to number, and verify."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-with-a-circular-reference-and-handle-the-resulting-error-gracefully.cs",
+      "title": "Add a shape, link it to a cell with a circular reference, and handle the resulting error gracefully."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-with-a-custom-date-format-and-display-formatted-date.cs",
+      "title": "Add a shape, link it to a cell with a custom date format, and display formatted date."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-with-a-custom-number-format-including-thousand-separator-and-display.cs",
+      "title": "Add a shape, link it to a cell with a custom number format including thousand separator, and display."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-with-a-number-format-including-thousand-separator-and-display.cs",
+      "title": "Add a shape, link it to a cell with a number format including thousand separator, and display."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-with-a-volatile-function-and-test-automatic-updates.cs",
+      "title": "Add a shape, link it to a cell with a volatile function and test automatic updates."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-retrieve-its-connection-points-and-compare-them-against-a-baseline-defined-in-a-json-schema.cs",
+      "title": "Add a shape, retrieve its connection points, and compare them against a baseline defined in a JSON schema."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-retrieve-its-connection-points-and-compare-them-against-expected-coordinates-defined-in-a-config-file.cs",
+      "title": "Add a shape, retrieve its connection points, and compare them against expected coordinates defined in a config file."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-retrieve-its-connection-points-and-export-the-points-list-to-a-json-file-for-use.cs",
+      "title": "Add a shape, retrieve its connection points, and export the points list to a JSON file for use."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-retrieve-its-connection-points-and-generate-a-csv-file-listing-point-indices-and-coordinates.cs",
+      "title": "Add a shape, retrieve its connection points, and generate a CSV file listing point indices and coordinates."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-set-its-absolute-position-based-on-column-index-multiplied-by-column-width-and-test-placement.cs",
+      "title": "Add a shape, set its absolute position based on column index multiplied by column width, and test placement."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-set-its-linked-cell-to-a-cell-using-the-mid-function-and-display-extracted-substring.cs",
+      "title": "Add a shape, set its linked cell to a cell using the MID function, and display extracted substring."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-set-its-linked-cell-to-a-cell-with-a-custom-array-constant-and-display-values.cs",
+      "title": "Add a shape, set its linked cell to a cell with a custom array constant, and display values."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-set-its-linked-cell-to-a-cell-with-a-text-format-and-verify-formatted-text-appears.cs",
+      "title": "Add a shape, set its linked cell to a cell with a text format, and verify formatted text appears."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-set-its-linked-cell-to-a-cell-with-custom-text-format-and-verify-formatted-text-appears.cs",
+      "title": "Add a shape, set its linked cell to a cell with custom text format, and verify formatted text appears."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-set-its-top-left-corner-to-specific-pixel-coordinates-and-validate-placement.cs",
+      "title": "Add a shape, set its top-left corner to specific pixel coordinates, and validate placement."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-that-incorporates-data-validation-rules-to-restrict-user-input-within-defined-limits.cs",
+      "title": "Add a shape that incorporates data validation rules to restrict user input within defined limits."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-shape-with-custom-width-and-height-dimensions-anchored-to-a-designated-cell-range.cs",
+      "title": "Add a shape with custom width and height dimensions anchored to a designated cell range."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-textbox-control-to-the-first-worksheet-and-set-its-initial-text.cs",
+      "title": "Add a TextBox control to the first worksheet and set its initial text."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-a-wordart-shape-to-a-specific-cell-range-and-anchor-it-so-it-moves-with-cells.cs",
+      "title": "Add a WordArt shape to a specific cell range and anchor it so it moves with cells."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "add-an-ole-object-for-a-powerpoint-slide-set-its-size-to-match-cell-g3-and-lock-it.cs",
+      "title": "Add an OLE object for a PowerPoint slide, set its size to match cell G3, and lock it."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-a-shapes-adjustment-values-to-modify-its-geometry-such-as-changing-a-stars-point-count.cs",
+      "title": "Adjust a shape's adjustment values to modify its geometry, such as changing a star's point count."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-a-shapes-z-order-to-just-above-a-specific-existing-shape.cs",
+      "title": "Adjust a shape's Z-order to just above a specific existing shape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-character-spacing-together-with-line-spacing-to-achieve-balanced-text-appearance.cs",
+      "title": "Adjust character spacing together with line spacing to achieve balanced text appearance."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-geometry-of-a-rounded-rectangle-callout-by-setting-specific-adjustment-values.cs",
+      "title": "Adjust geometry of a rounded rectangle callout by setting specific adjustment values."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-line-spacing-to-15-lines-within-the-shapes-text-using-textoptionslinespacing.cs",
+      "title": "Adjust line spacing to 1.5 lines within the shape's text using TextOptions.LineSpacing."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-the-internal-margins-of-the-textbox-to-control-padding-around-the-text.cs",
+      "title": "Adjust the internal margins of the textbox to control padding around the text."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-the-wordart-shapes-top-left-width-and-height-to-cover-the-entire-worksheet.cs",
+      "title": "Adjust the WordArt shape's top, left, width, and height to cover the entire worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-topmarginpt-to-five-points-for-consistent-top-margin-layout.cs",
+      "title": "Adjust TopMarginPt to five points for consistent top margin layout."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs",
+      "title": "Adjust WordArt shape's transparency to thirty percent to create a subtle background effect."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "append-additional-text-to-the-existing-content-of-the-textbox-programmatically.cs",
+      "title": "Append additional text to the existing content of the textbox programmatically."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-50-transparent-reflection-to-the-selected-shape-using-shapereflection.cs",
+      "title": "Apply a 50% transparent reflection to the selected shape using Shape.Reflection."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-conditional-formatting-rule-using-an-icon-set-to-display-custom-emoji-icons-based-on-text-values.cs",
+      "title": "Apply a conditional formatting rule using an icon set to display custom emoji icons based on text values."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-conditional-icon-set-for-range-b2b15-enable-showcellvalue-and-define-custom-icons-for-each-condition.cs",
+      "title": "Apply a conditional icon set for range B2:B15, enable ShowCellValue, and define custom icons for each condition."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-conditional-icon-set-with-custom-green-yellow-and-red-icons-to-a-range-of-sales-figures.cs",
+      "title": "Apply a conditional icon set with custom green, yellow, and red icons to a range of sales figures."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-custom-character-spacing-of-2-points-to-compress-text-within-a-narrow-shape.cs",
+      "title": "Apply a custom character spacing of -2 points to compress text within a narrow shape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-custom-paragraph-style-by-setting-line-spacing-space-before-and-space-after-simultaneously.cs",
+      "title": "Apply a custom paragraph style by setting line spacing, space before, and space after simultaneously."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-custom-reflection-preset-with-size-forty-blur-three-and-distance-six-points.cs",
+      "title": "Apply a custom reflection preset with size forty, blur three, and distance six points."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-gradient-fill-to-the-textbox-using-two-custom-colors-and-a-defined-angle.cs",
+      "title": "Apply a gradient fill to the textbox using two custom colors and a defined angle."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-preset-shadow-of-type-outerbottom-to-shape-text-and-capture-a-screenshot.cs",
+      "title": "Apply a preset shadow of type OuterBottom to shape text and capture a screenshot."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-preset-shadow-of-type-outershadow-to-the-shapes-text-via-textoptionsshadowpresettype.cs",
+      "title": "Apply a preset shadow of type OuterShadow to the shape's text via TextOptions.Shadow.PresetType."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-a-soft-shadow-effect-with-custom-offset-and-color-to-a-chart-shape-for-visual-depth.cs",
+      "title": "Apply a soft shadow effect with custom offset and color to a chart shape for visual depth."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-an-icon-set-condition-to-cells-c3c12-replace-default-icons-with-text-labels-and-save-workbook.cs",
+      "title": "Apply an icon set condition to cells C3:C12, replace default icons with text labels, and save workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-an-outer-shadow-preset-and-set-its-transparency-to-40-percent-for-the-shape.cs",
+      "title": "Apply an outer shadow preset and set its transparency to 40 percent for the shape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-bold-and-italic-styles-to-selected-text-fragments-within-the-textbox.cs",
+      "title": "Apply bold and italic styles to selected text fragments within the textbox."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-builtin-wordart-style-curved-text-to-a-shape-and-adjust-curvature-via-adjustment-values.cs",
+      "title": "Apply built\u2011in WordArt style Curved Text to a shape and adjust curvature via adjustment values."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-builtin-wordart-style-shadowed-to-a-shape-and-modify-its-shadow-offset-manually.cs",
+      "title": "Apply built\u2011in WordArt style Shadowed to a shape and modify its shadow offset manually."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-center-alignment-to-selected-characters-inside-the-textbox-using-rich-text-formatting.cs",
+      "title": "Apply center alignment to selected characters inside the textbox using rich text formatting."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-character-spacing-of-12-points-to-all-text-within-shapes-to-improve-readability.cs",
+      "title": "Apply character spacing of 1.2 points to all text within shapes to improve readability."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-conditional-formatting-to-a-shapes-fill-color-based-on-a-linked-cells-value-exceeding-a-threshold.cs",
+      "title": "Apply conditional formatting to a shape's fill color based on a linked cell's value exceeding a threshold."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-conditional-formatting-to-a-textbox-based-on-the-numeric-value-of-its-linked-cell.cs",
+      "title": "Apply conditional formatting to a TextBox based on the numeric value of its linked cell."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-custom-adjustment-values-to-a-collection-of-shapes-in-a-loop-for-uniformity.cs",
+      "title": "Apply custom adjustment values to a collection of shapes in a loop for uniformity."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-left-alignment-to-the-entire-text-within-the-textbox.cs",
+      "title": "Apply left alignment to the entire text within the textbox."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-left-alignment-to-the-first-line-and-center-alignment-to-the-second-line-of-a-textbox.cs",
+      "title": "Apply left alignment to the first line and center alignment to the second line of a TextBox."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-multiple-adjustment-values-to-customize-the-smartart-layout-configuration.cs",
+      "title": "Apply multiple adjustment values to customize the SmartArt layout configuration."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-preset-wordart-style-bold-wave-to-shapes-only-on-worksheets-whose-names-start-with-report.cs",
+      "title": "Apply preset WordArt style Bold Wave to shapes only on worksheets whose names start with Report."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-right-alignment-to-specific-characters-within-the-textbox-for-emphasis.cs",
+      "title": "Apply right alignment to specific characters within the textbox for emphasis."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-the-preset-wordart-style-wave-to-the-first-shapes-text-using-fontsetting.cs",
+      "title": "Apply the preset WordArt style Wave to the first shape's text using FontSetting."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "apply-threedimensional-lighting-direction-top-and-set-specular-power-to-eighty-for-the-shape.cs",
+      "title": "Apply three\u2011dimensional lighting direction \"Top\" and set specular power to eighty for the shape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "assign-a-cell-range-anchor-to-a-shape-so-it-moves-dynamically-when-rows-or-columns-are-inserted.cs",
+      "title": "Assign a cell range anchor to a shape so it moves dynamically when rows or columns are inserted."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "assign-a-custom-display-label-to-the-ole-object-using-the-label-property.cs",
+      "title": "Assign a custom display label to the OLE object using the Label property."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "assign-a-new-guid-to-the-oleobjectclassid-to-change-its-associated-application.cs",
+      "title": "Assign a new GUID to the OleObject.ClassId to change its associated application."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "assign-a-png-image-stream-to-the-shapes-filltexturefillimage-property.cs",
+      "title": "Assign a PNG image stream to the shape's Fill.TextureFill.Image property."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "assign-a-unique-name-to-the-textbox-for-later-identification-and-manipulation.cs",
+      "title": "Assign a unique name to the textbox for later identification and manipulation."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "assign-spacebeforept-three-points-to-add-spacing-before-each-paragraph.cs",
+      "title": "Assign SpaceBeforePt three points to add spacing before each paragraph."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-add-textbox-controls-to-each-worksheet-assigning-unique-identifiers.cs",
+      "title": "Batch add TextBox controls to each worksheet, assigning unique identifiers."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-copy-all-pictures-from-multiple-worksheets-into-a-summary-sheet-preserving-each-pictures-original-size.cs",
+      "title": "Batch copy all pictures from multiple worksheets into a summary sheet, preserving each picture's original size."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-insert-a-company-logo-svg-at-the-topright-corner-of-each-worksheet-in-the-workbook.cs",
+      "title": "Batch insert a company logo SVG at the top\u2011right corner of each worksheet in the workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-insert-pictures-from-a-csv-list-of-image-urls-linking-each-picture-to-its-corresponding-cell-reference.cs",
+      "title": "Batch insert pictures from a CSV list of image URLs, linking each picture to its corresponding cell reference."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-process-a-directory-of-excel-files-converting-all-smartart-shapes-to-groupshapes-automatically.cs",
+      "title": "Batch process a directory of Excel files, converting all SmartArt shapes to GroupShapes automatically."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-process-multiple-workbooks-in-a-folder-adding-tiled-textures-to-a-designated-shape.cs",
+      "title": "Batch process multiple workbooks in a folder, adding tiled textures to a designated shape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-process-multiple-workbooks-updating-all-shape-text-margins-to-standard-values-in-each-file.cs",
+      "title": "Batch process multiple workbooks, updating all shape text margins to standard values in each file."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-process-multiple-worksheets-by-inserting-a-picture-linked-to-cell-a1-in-each-sheet-and-saving-file.cs",
+      "title": "Batch process multiple worksheets by inserting a picture linked to cell A1 in each sheet and saving file."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-replace-smartart-text-across-multiple-worksheets-within-the-same-workbook.cs",
+      "title": "Batch replace SmartArt text across multiple worksheets within the same workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "batch-update-linked-shapes-across-several-worksheets-to-reflect-new-data-sources.cs",
+      "title": "Batch update linked shapes across several worksheets to reflect new data sources."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "calculate-the-pixel-offset-between-two-shapes-using-their-absolute-positions-and-store-the-result-in-a-cell.cs",
+      "title": "Calculate the pixel offset between two shapes using their absolute positions and store the result in a cell."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs",
+      "title": "Cast the conversion result to GroupShape and verify the object type is GroupShape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "change-latinfontname-to-calibri-while-keeping-fareastfontname-unchanged-for-western-font-style.cs",
+      "title": "Change LatinFontName to \"Calibri\" while keeping FarEastFontName unchanged for western font style."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "change-the-font-color-of-partial-text-inside-the-textbox-to-a-custom-rgb-value.cs",
+      "title": "Change the font color of partial text inside the textbox to a custom RGB value."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "change-the-font-size-of-partial-text-inside-the-textbox-to-highlight-important-words.cs",
+      "title": "Change the font size of partial text inside the textbox to highlight important words."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "change-the-line-style-of-shape-divider-to-dashed-and-set-its-thickness-to-two-points.cs",
+      "title": "Change the line style of shape Divider to dashed and set its thickness to two points."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "change-the-position-of-a-retrieved-oleobject-using-top-and-left-offset-values.cs",
+      "title": "Change the position of a retrieved OleObject using top and left offset values."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "change-the-shadow-preset-to-perspectivediagonalbottomleft-and-observe-visual-difference.cs",
+      "title": "Change the shadow preset to PerspectiveDiagonalBottomLeft and observe visual difference."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "change-the-text-of-a-specific-textbox-and-save-the-workbook-as-xlsx.cs",
+      "title": "Change the text of a specific TextBox and save the workbook as XLSX."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "clone-a-shape-modify-its-reflection-and-place-the-clone-beside-the-original-shape.cs",
+      "title": "Clone a shape, modify its reflection, and place the clone beside the original shape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "clone-an-existing-ole-object-and-place-the-copy-on-a-different-worksheet.cs",
+      "title": "Clone an existing OLE object and place the copy on a different worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs",
+      "title": "Compare geometry before and after XML import to ensure consistency."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "compare-shape-path-data-before-and-after-modification-to-detect-geometry-changes.cs",
+      "title": "Compare shape path data before and after modification to detect geometry changes."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "compare-the-number-of-adjustment-values-before-and-after-conversion-to-ensure-data-integrity.cs",
+      "title": "Compare the number of adjustment values before and after conversion to ensure data integrity."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "compare-visual-quality-between-tiled-texture-and-stretched-texture-by-toggling-istiling.cs",
+      "title": "Compare visual quality between tiled texture and stretched texture by toggling IsTiling."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "concatenate-extracted-child-shape-texts-into-a-single-string-for-further-processing.cs",
+      "title": "Concatenate extracted child shape texts into a single string for further processing."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-3d-rotation-and-bevel-properties-on-a-shape-to-create-realistic-threedimensional-appearance.cs",
+      "title": "Configure 3D rotation and bevel properties on a shape to create realistic three\u2011dimensional appearance."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-a-camera-shape-to-capture-the-target-range-with-defined-resolution-and-image-format-settings.cs",
+      "title": "Configure a camera shape to capture the target range with defined resolution and image format settings."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-a-picture-to-move-and-size-with-its-linked-cell-then-verify-resizing-cell-adjusts-picture.cs",
+      "title": "Configure a picture to move and size with its linked cell, then verify resizing cell adjusts picture."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-a-shape-to-follow-cell-resizing-by-linking-it-to-cell-h5-and-enabling-movewithcells-option.cs",
+      "title": "Configure a shape to follow cell resizing by linking it to cell H5 and enabling move\u2011with\u2011cells option."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-autofit-for-the-textbox-to-resize-automatically-based-on-its-content-length.cs",
+      "title": "Configure auto\u2011fit for the textbox to resize automatically based on its content length."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-rightmarginpt-to-ten-points-to-provide-space-for-long-sentences.cs",
+      "title": "Configure RightMarginPt to ten points to provide space for long sentences."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-shadow-effect-with-45-degree-angle-10-point-distance-and-dark-gray-color.cs",
+      "title": "Configure shadow effect with 45 degree angle, 10 point distance, and dark gray color."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-the-button-to-trigger-a-vba-script-that-highlights-the-active-row.cs",
+      "title": "Configure the Button to trigger a VBA script that highlights the active row."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-the-oleobjectwidth-and-height-to-fit-within-the-target-cell-range.cs",
+      "title": "Configure the OleObject.Width and Height to fit within the target cell range."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-the-wordart-shapes-fill-to-a-gradient-transitioning-from-blue-to-transparent.cs",
+      "title": "Configure the WordArt shape's fill to a gradient transitioning from blue to transparent."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "configure-the-workbook-to-run-in-licensed-mode-to-suppress-evaluation-watermarks.cs",
+      "title": "Configure the workbook to run in licensed mode to suppress evaluation watermarks."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "convert-each-detected-smartart-shape-to-a-groupshape-using-shapegetresultofsmartart.cs",
+      "title": "Convert each detected SmartArt shape to a GroupShape using Shape.GetResultOfSmartArt."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "convert-the-formula-in-cell-d10-to-mathml-via-tomathml-and-store-the-markup-in-a-string-variable.cs",
+      "title": "Convert the formula in cell D10 to MathML via ToMathML() and store the markup in a string variable."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "copy-reflection-settings-from-one-shape-to-another-within-the-same-worksheet.cs",
+      "title": "Copy reflection settings from one shape to another within the same worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "copy-the-textbox-to-another-worksheet-while-preserving-its-size-and-text-attributes.cs",
+      "title": "Copy the textbox to another worksheet while preserving its size and text attributes."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs",
+      "title": "Create a batch process that adds the same WAV OLE object to every worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-batch-process-that-reads-multiple-excel-files-from-a-directory-and-adds-consistent-watermark.cs",
+      "title": "Create a batch process that reads multiple Excel files from a directory and adds consistent watermark."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
+      "title": "Create a camera shape for a specified range to capture its visual representation as an image."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-combobox-control-populate-it-with-five-items-and-define-its-dropdown-width.cs",
+      "title": "Create a ComboBox control, populate it with five items, and define its drop\u2011down width."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-conditional-formatting-rule-using-an-icon-set-to-display-arrows-based-on-numeric-thresholds.cs",
+      "title": "Create a conditional formatting rule using an icon set to display arrows based on numeric thresholds."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-custom-enumeration-mapping-between-presetshadowtype-values-and-descriptive-labels-for-ui-display.cs",
+      "title": "Create a custom enumeration mapping between PresetShadowType values and descriptive labels for UI display."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-custom-function-that-returns-true-if-a-given-shape-is-a-locked-wordart-watermark.cs",
+      "title": "Create a custom function that returns true if a given shape is a locked WordArt watermark."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs",
+      "title": "Create a gradient glow transitioning from red to yellow with size five points."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-macrolike-routine-that-groups-shapes-by-type-then-locks-each-group-to-prevent-accidental-edits.cs",
+      "title": "Create a macro\u2011like routine that groups shapes by type, then locks each group to prevent accidental edits."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-macrolike-routine-that-toggles-texture-tiling-on-a-shape-each-execution.cs",
+      "title": "Create a macro\u2011like routine that toggles texture tiling on a shape each execution."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-multiline-textbox-and-set-individual-line-alignments-to-left-center-and-right-respectively.cs",
+      "title": "Create a multiline TextBox and set individual line alignments to left, center, and right respectively."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-new-text-box-shape-and-set-its-text-using-textbodytext-property.cs",
+      "title": "Create a new text box shape and set its text using TextBody.Text property."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-new-textbox-on-sheet1-set-its-width-to-200-points-and-position-it-at-cell-b2.cs",
+      "title": "Create a new TextBox on Sheet1, set its width to 200 points, and position it at cell B2."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-new-workbook-and-insert-a-wordart-watermark-on-the-first-worksheet.cs",
+      "title": "Create a new workbook and insert a WordArt watermark on the first worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-picture-object-set-upperleftcell-to-d5-enable-move-with-cell-and-add-to-worksheet.cs",
+      "title": "Create a picture object, set UpperLeftCell to D5, enable move with cell, and add to worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-rectangle-shape-fill-it-with-light-blue-and-place-it-behind-chart-objects.cs",
+      "title": "Create a Rectangle shape, fill it with light blue, and place it behind chart objects."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-reusable-method-that-adds-a-wordart-watermark-with-specified-text-style-and-lock-settings.cs",
+      "title": "Create a reusable method that adds a WordArt watermark with specified text, style, and lock settings."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-routine-that-reads-each-shapes-shadow-color-and-adjusts-it-to-match-the-workbooks-theme-palette.cs",
+      "title": "Create a routine that reads each shape's shadow color and adjusts it to match the workbook's theme palette."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-routine-that-removes-all-existing-wordart-shapes-before-adding-new-watermarks.cs",
+      "title": "Create a routine that removes all existing WordArt shapes before adding new watermarks."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-script-that-applies-a-uniform-glow-effect-to-every-shape-whose-name-contains-important.cs",
+      "title": "Create a script that applies a uniform glow effect to every shape whose name contains 'Important'."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-script-that-applies-a-uniform-shadow-offset-to-every-shape-ensuring-consistent-visual-alignment.cs",
+      "title": "Create a script that applies a uniform shadow offset to every shape, ensuring consistent visual alignment."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-and-apply-conditional-formatting-that-changes-its-fill-based-on-cell-values.cs",
+      "title": "Create a shape and apply conditional formatting that changes its fill based on cell values."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-and-embed-a-comment-that-appears-as-a-tooltip-on-mouse-hover.cs",
+      "title": "Create a shape and embed a comment that appears as a tooltip on mouse hover."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-containing-a-hyperlink-to-another-worksheet-within-the-same-workbook-for-quick-navigation.cs",
+      "title": "Create a shape containing a hyperlink to another worksheet within the same workbook for quick navigation."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-group-lock-it-then-attempt-to-move-an-inner-shape-to-test-lock-enforcement.cs",
+      "title": "Create a shape group, lock it, then attempt to move an inner shape to test lock enforcement."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-link-it-to-a-cell-using-text-for-percentage-format-and-verify-percent-display.cs",
+      "title": "Create a shape, link it to a cell using TEXT for percentage format, and verify percent display."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-link-it-to-a-cell-using-text-for-scientific-notation-and-verify-display.cs",
+      "title": "Create a shape, link it to a cell using TEXT for scientific notation, and verify display."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-absolute-position-to-align-with-a-specific-column-header-and-validate-alignment.cs",
+      "title": "Create a shape, set its absolute position to align with a specific column header, and validate alignment."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-absolute-position-using-pixel-values-from-a-configuration-file-and-validate-placement.cs",
+      "title": "Create a shape, set its absolute position using pixel values from a configuration file, and validate placement."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-z-order-to-a-specific-negative-value-and-confirm-it-resides-beneath-gridlines.cs",
+      "title": "Create a shape, set its Z-order to a specific negative value, and confirm it resides beneath gridlines."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs",
+      "title": "Create a shape, set its Z-order to zero, then incrementally increase Z-order and observe layering effect."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-z-order-using-a-large-positive-integer-and-confirm-it-appears-above-all-layers.cs",
+      "title": "Create a shape, set its Z-order using a large positive integer, and confirm it appears above all layers."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-that-displays-a-live-formula-result-by-linking-its-text-to-the-calculation-cell.cs",
+      "title": "Create a shape that displays a live formula result by linking its text to the calculation cell."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-shape-with-multi-line-text-link-it-to-a-cell-containing-line-break-characters-and-display-correctly.cs",
+      "title": "Create a shape with multi-line text, link it to a cell containing line break characters, and display correctly."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-unit-test-that-verifies-texture-tiling-is-applied-when-istiling-is-true.cs",
+      "title": "Create a unit test that verifies texture tiling is applied when IsTiling is true."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-utility-method-that-accepts-a-shape-and-applies-predefined-paragraph-formatting-parameters.cs",
+      "title": "Create a utility method that accepts a shape and applies predefined paragraph formatting parameters."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-utility-that-lists-each-shapes-zorder-index-and-sorts-them-alphabetically-by-name-for-reporting.cs",
+      "title": "Create a utility that lists each shape's Z\u2011order index and sorts them alphabetically by name for reporting."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-validation-rule-that-ensures-every-shape-linked-to-a-cell-references-a-valid-nonempty-cell-address.cs",
+      "title": "Create a validation rule that ensures every shape linked to a cell references a valid, non\u2011empty cell address."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-wordart-shape-assign-a-custom-font-family-and-set-the-font-size-to-fortyeight-points.cs",
+      "title": "Create a WordArt shape, assign a custom font family, and set the font size to forty\u2011eight points."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-wordart-shape-set-adjustment-values-to-create-custom-curvature-and-save-the-workbook.cs",
+      "title": "Create a WordArt shape, set adjustment values to create custom curvature, and save the workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-wordart-shape-set-flip-horizontally-property-and-verify-visual-reversal.cs",
+      "title": "Create a WordArt shape, set flip horizontally property, and verify visual reversal."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-wordart-shape-set-rotation-to-45-degrees-and-position-it-diagonally-across-the-sheet.cs",
+      "title": "Create a WordArt shape, set rotation to 45 degrees, and position it diagonally across the sheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-a-workbook-add-a-rectangle-shape-and-link-it-to-cell-a1-for-dynamic-text.cs",
+      "title": "Create a workbook, add a rectangle shape, and link it to cell A1 for dynamic text."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-an-ole-object-for-a-pdf-set-its-icon-caption-to-report-and-embed-it-in-sheet.cs",
+      "title": "Create an OLE object for a PDF, set its icon caption to 'Report', and embed it in sheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-an-ole-object-for-a-word-document-embed-it-then-change-its-display-icon-to-an-image.cs",
+      "title": "Create an OLE object for a Word document, embed it, then change its display icon to an image."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-an-ole-object-from-a-pdf-file-embed-it-into-worksheet-at-cell-h4-and-set-size.cs",
+      "title": "Create an OLE object from a PDF file, embed it into worksheet at cell H4, and set size."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs",
+      "title": "Create multiple shapes, assign each a different Z-order value, and confirm rendering order matches expectations."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "define-a-blue-glow-effect-with-size-eight-points-on-all-shapes-in-the-worksheet.cs",
+      "title": "Define a blue glow effect with size eight points on all shapes in the worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "delete-the-textbox-from-the-worksheet-when-it-is-no-longer-required.cs",
+      "title": "Delete the textbox from the worksheet when it is no longer required."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "deserialize-saved-groupshape-json-and-reconstruct-the-smartart-hierarchy-within-a-workbook.cs",
+      "title": "Deserialize saved GroupShape JSON and reconstruct the SmartArt hierarchy within a workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "design-a-routine-that-extracts-all-shape-hyperlinks-and-generates-a-report-listing-source-cells-and-target-urls.cs",
+      "title": "Design a routine that extracts all shape hyperlinks and generates a report listing source cells and target URLs."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "detect-shapes-that-exceed-worksheet-boundaries-and-automatically-reposition-them-within-visible-limits-to-avoid-clipping.cs",
+      "title": "Detect shapes that exceed worksheet boundaries and automatically reposition them within visible limits to avoid clipping."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs",
+      "title": "Determine Z\u2011order of all shapes programmatically and bring the most important WordArt to front."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "develop-a-feature-that-automatically-groups-shapes-added-within-a-specific-time-window-into-a-single-collection.cs",
+      "title": "Develop a feature that automatically groups shapes added within a specific time window into a single collection."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "develop-a-helper-method-that-returns-a-fontsetting-configured-with-a-specific-shadow-preset-and-spacing.cs",
+      "title": "Develop a helper method that returns a FontSetting configured with a specific shadow preset and spacing."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs",
+      "title": "Develop a method to retrieve and display absolute positions of all shapes on a worksheet for analysis."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "develop-a-process-to-ungroup-nested-shape-groups-recursively-until-only-individual-shapes-remain-on-the-sheet.cs",
+      "title": "Develop a process to ungroup nested shape groups recursively until only individual shapes remain on the sheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "develop-a-script-that-iterates-through-all-shapes-unlocking-those-with-a-specific-tag-attribute-for-editing.cs",
+      "title": "Develop a script that iterates through all shapes, unlocking those with a specific tag attribute for editing."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs",
+      "title": "Develop a validation script that ensures no shape exceeds a specified width and height threshold across the workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "disable-all-shape-reflections-while-preserving-other-effects-and-save-the-workbook.cs",
+      "title": "Disable all shape reflections while preserving other effects and save the workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "duplicate-an-existing-shape-rename-the-copy-and-offset-its-position-by-ten-points-to-the-right.cs",
+      "title": "Duplicate an existing shape, rename the copy, and offset its position by ten points to the right."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "duplicate-form-controls-from-one-worksheet-to-another-ensuring-linked-cell-addresses-remain-unchanged.cs",
+      "title": "Duplicate form controls from one worksheet to another ensuring linked cell addresses remain unchanged."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs",
+      "title": "Duplicate the WordArt shape, move the copy to a different cell range, and change its text."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "edit-an-ole-object-by-changing-its-source-file-path-to-a-new-word-document-and-update-properties.cs",
+      "title": "Edit an OLE object by changing its source file path to a new Word document and update properties."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "enable-rotatetextwithshape-property-to-true-to-rotate-text-together-with-the-shape.cs",
+      "title": "Enable RotateTextWithShape property to true to rotate text together with the shape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "enable-text-wrapping-inside-the-textbox-so-long-sentences-break-onto-multiple-lines.cs",
+      "title": "Enable text wrapping inside the textbox so long sentences break onto multiple lines."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "enable-tiling-on-the-shape-by-setting-filltexturefillistiling-to-true.cs",
+      "title": "Enable tiling on the shape by setting Fill.TextureFill.IsTiling to true."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "enumerate-child-shapes-within-the-groupshape-to-access-individual-components.cs",
+      "title": "Enumerate child shapes within the GroupShape to access individual components."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-a-worksheet-containing-ole-objects-to-pdf-while-preserving-object-placeholders.cs",
+      "title": "Export a worksheet containing OLE objects to PDF while preserving object placeholders."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-all-shapes-xml-definitions-to-a-separate-file-for-external-analysis-and-version-control-tracking.cs",
+      "title": "Export all shapes' XML definitions to a separate file for external analysis and version control tracking."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-multiple-worksheet-formulas-to-latex-and-concatenate-the-results-into-a-single-document.cs",
+      "title": "Export multiple worksheet formulas to LaTeX and concatenate the results into a single document."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs",
+      "title": "Export non\u2011primitive shape geometry to an XML file for external analysis."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-the-formula-in-cell-c5-to-latex-using-tolatex-and-embed-the-result-in-an-html-paragraph.cs",
+      "title": "Export the formula in cell C5 to LaTeX using ToLaTeX() and embed the result in an HTML paragraph."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-the-properties-of-all-shape-controls-to-a-json-file-for-external-analysis.cs",
+      "title": "Export the properties of all shape controls to a JSON file for external analysis."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-the-textbox-as-a-png-image-with-a-transparent-background-for-external-use.cs",
+      "title": "Export the textbox as a PNG image with a transparent background for external use."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-the-workbook-with-modified-smartart-shapes-to-a-pdf-document.cs",
+      "title": "Export the workbook with modified SmartArt shapes to a PDF document."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-the-workbook-with-wordart-watermarks-to-pdf-format-ensuring-watermark-visibility-in-output.cs",
+      "title": "Export the workbook with WordArt watermarks to PDF format ensuring watermark visibility in output."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "export-worksheet-shapes-as-separate-svg-files-preserving-visual-properties-for-reuse-in-web-pages.cs",
+      "title": "Export worksheet shapes as separate SVG files, preserving visual properties for reuse in web pages."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "extract-an-embedded-ole-object-to-a-designated-output-folder-on-disk.cs",
+      "title": "Extract an embedded OLE object to a designated output folder on disk."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "extract-an-ole-object-rename-the-extracted-file-based-on-worksheet-name-and-save-to-output-directory.cs",
+      "title": "Extract an OLE object, rename the extracted file based on worksheet name, and save to output directory."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "extract-ole-object-data-decompress-if-necessary-and-save-the-original-file-format-to-a-specified-folder.cs",
+      "title": "Extract OLE object data, decompress if necessary, and save the original file format to a specified folder."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "extract-the-embedded-ole-object-stream-from-cell-j7-write-it-to-a-temporary-file-and-close-workbook.cs",
+      "title": "Extract the embedded OLE object stream from cell J7, write it to a temporary file, and close workbook."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "extract-the-glow-color-from-a-shape-and-compare-it-against-a-predefined-palette-for-consistency-checks.cs",
+      "title": "Extract the glow color from a shape and compare it against a predefined palette for consistency checks."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "filter-shapes-by-autoshapetype-and-process-only-those-matching-given-criteria.cs",
+      "title": "Filter shapes by AutoShapeType and process only those matching given criteria."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "filter-shapes-by-type-and-set-specific-margins-only-for-rectangle-shapes.cs",
+      "title": "Filter shapes by type and set specific margins only for rectangle shapes."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "filter-shapes-linked-to-cells-containing-errors-and-log-problematic-shapes.cs",
+      "title": "Filter shapes linked to cells containing errors and log problematic shapes."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "filter-shapes-to-process-only-those-where-issmartart-returns-true.cs",
+      "title": "Filter shapes to process only those where IsSmartArt returns true."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "generate-a-report-listing-all-shape-types-present-in-a-workbook-along-with-their-cell-coordinates.cs",
+      "title": "Generate a report listing all shape types present in a workbook along with their cell coordinates."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "generate-a-report-listing-each-ole-objects-name-label-class-identifier-and-file-size.cs",
+      "title": "Generate a report listing each OLE object's name, label, class identifier, and file size."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "generate-a-report-listing-each-shapes-type-position-and-adjustment-values-in-a-summary-worksheet.cs",
+      "title": "Generate a report listing each shape\u2019s type, position, and adjustment values in a summary worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "generate-a-report-listing-workbook-names-worksheet-titles-and-counts-of-detected-smartart-shapes.cs",
+      "title": "Generate a report listing workbook names, worksheet titles, and counts of detected SmartArt shapes."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs",
+      "title": "Generate MathML for each formula in column H and store the markup in adjacent cells."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "group-a-picture-and-a-chart-lock-the-group-then-attempt-to-ungroup-to-test-lock-enforcement.cs",
+      "title": "Group a picture and a chart, lock the group, then attempt to ungroup to test lock enforcement."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "group-multiple-rectangle-shapes-into-a-single-container-for-collective-movement.cs",
+      "title": "Group multiple Rectangle shapes into a single container for collective movement."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "group-shapes-icon1-icon2-and-icon3-into-a-single-group-named-iconset-for-collective-manipulation.cs",
+      "title": "Group shapes Icon1, Icon2, and Icon3 into a single group named IconSet for collective manipulation."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "group-the-two-wordart-shapes-together-and-lock-the-group-to-maintain-layout-integrity.cs",
+      "title": "Group the two WordArt shapes together and lock the group to maintain layout integrity."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "group-three-selected-shapes-into-a-composite-object-and-assign-a-descriptive-name-for-reference.cs",
+      "title": "Group three selected shapes into a composite object and assign a descriptive name for reference."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs",
+      "title": "Group three WordArt shapes, lock the group, and export the worksheet as an XLSX file."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "identify-smartart-shapes-in-a-worksheet-and-list-their-names.cs",
+      "title": "Identify SmartArt shapes in a worksheet and list their names."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-a-batch-copy-operation-that-transfers-all-drawing-objects-from-a-template-worksheet-to-newly-created-worksheets.cs",
+      "title": "Implement a batch copy operation that transfers all drawing objects from a template worksheet to newly created worksheets."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-a-batch-operation-that-locks-all-shapes-on-every-worksheet-before-exporting-the-workbook-to-pdf.cs",
+      "title": "Implement a batch operation that locks all shapes on every worksheet before exporting the workbook to PDF."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-a-batch-operation-that-replaces-date-tags-in-all-textboxes-with-the-current-system-date-formatted-yyyymmdd.cs",
+      "title": "Implement a batch operation that replaces <DATE> tags in all TextBoxes with the current system date formatted yyyy\u2011MM\u2011dd."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-a-feature-that-automatically-unlocks-all-shapes-when-the-workbook-is-opened-in-edit-mode.cs",
+      "title": "Implement a feature that automatically unlocks all shapes when the workbook is opened in edit mode."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-a-feature-that-disables-texture-tiling-when-the-shapes-area-is-smaller-than-the-image-dimensions.cs",
+      "title": "Implement a feature that disables texture tiling when the shape's area is smaller than the image dimensions."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-a-process-to-copy-a-shapes-3d-format-settings-from-one-shape-to-another-across-worksheets.cs",
+      "title": "Implement a process to copy a shape's 3D format settings from one shape to another across worksheets."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-a-reflection-effect-on-a-shape-with-defined-transparency-and-size-parameters-to-simulate-glass.cs",
+      "title": "Implement a reflection effect on a shape with defined transparency and size parameters to simulate glass."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-error-handling-for-missing-image-files-when-setting-shape-texture.cs",
+      "title": "Implement error handling for missing image files when setting shape texture."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-error-handling-for-unsupported-smartart-types-that-cannot-be-converted-to-groupshape.cs",
+      "title": "Implement error handling for unsupported SmartArt types that cannot be converted to GroupShape."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs",
+      "title": "Implement error handling that logs a warning when attempting to lock a shape already marked as locked."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-error-handling-to-catch-exceptions-when-a-specified-textbox-name-does-not-exist-in-the-worksheet.cs",
+      "title": "Implement error handling to catch exceptions when a specified TextBox name does not exist in the worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs",
+      "title": "Implement error handling to catch exceptions when adding WordArt to a protected worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-error-handling-to-catch-exceptions-when-extracting-corrupted-or-unsupported-ole-objects.cs",
+      "title": "Implement error handling to catch exceptions when extracting corrupted or unsupported OLE objects."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "implement-logging-to-record-timestamp-and-worksheet-name-each-time-a-wordart-shape-is-added.cs",
+      "title": "Implement logging to record timestamp and worksheet name each time a WordArt shape is added."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "import-shape-configuration-from-a-json-file-and-recreate-the-controls-on-a-target-worksheet.cs",
+      "title": "Import shape configuration from a JSON file and recreate the controls on a target worksheet."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-button-control-assign-a-macro-name-and-position-it-at-cell-d5.cs",
+      "title": "Insert a Button control, assign a macro name, and position it at cell D5."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-generic-activex-togglebutton-using-shapecollectionaddactivexcontrol-and-set-its-default-state.cs",
+      "title": "Insert a generic ActiveX ToggleButton using ShapeCollection.AddActiveXControl and set its default state."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs",
+      "title": "Insert a linked picture from a secure intranet URL, configure authentication headers, and handle access denied errors."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-linked-picture-from-an-image-url-set-islinked-true-and-ensure-image-data-is-not-embedded.cs",
+      "title": "Insert a linked picture from an image URL, set IsLinked true, and ensure image data is not embedded."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-linked-picture-then-programmatically-change-its-source-url-to-a-new-image-and-refresh-it.cs",
+      "title": "Insert a linked picture, then programmatically change its source URL to a new image and refresh it."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-and-apply-background-removal-to-isolate-the-foreground-subject-from-its-backdrop.cs",
+      "title": "Insert a picture and apply background removal to isolate the foreground subject from its backdrop."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-and-assign-a-descriptive-name-property-to-facilitate-later-retrieval-via-api.cs",
+      "title": "Insert a picture and assign a descriptive name property to facilitate later retrieval via API."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-and-attach-a-hyperlink-that-opens-a-document-when-the-image-is-clicked.cs",
+      "title": "Insert a picture and attach a hyperlink that opens a document when the image is clicked."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-and-scale-its-dimensions-proportionally-to-fit-within-a-target-cell-range.cs",
+      "title": "Insert a picture and scale its dimensions proportionally to fit within a target cell range."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-and-set-its-transparency-level-to-achieve-a-semitransparent-visual-effect.cs",
+      "title": "Insert a picture and set its transparency level to achieve a semi\u2011transparent visual effect."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-from-a-local-file-path-and-position-it-at-a-specified-cell-coordinate.cs",
+      "title": "Insert a picture from a local file path and position it at a specified cell coordinate."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-linked-to-cell-h12-then-programmatically-change-its-upperleftcell-to-i13-and-verify-position.cs",
+      "title": "Insert a picture linked to cell H12, then programmatically change its UpperLeftCell to I13 and verify position."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-set-its-height-to-200-points-and-maintain-aspect-ratio-automatically.cs",
+      "title": "Insert a picture, set its height to 200 points, and maintain aspect ratio automatically."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "insert-a-picture-set-its-z-order-to-bring-it-forward-behind-only-the-chart-shape-and-save.cs",
+      "title": "Insert a picture, set its Z-order to bring it forward behind only the chart shape, and save."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
       "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     },
