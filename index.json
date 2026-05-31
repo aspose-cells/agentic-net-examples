@@ -11606,6 +11606,81 @@
     },
     {
       "category": "timeline",
+      "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
+      "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
+    },
+    {
+      "category": "timeline",
+      "file": "apply-a-dark-theme-to-a-timeline-change-axis-colors-and-render-the-result-to-a-pdf.cs",
+      "title": "Apply a dark theme to a timeline, change axis colors, and render the result to a PDF."
+    },
+    {
+      "category": "timeline",
+      "file": "apply-a-gradient-background-to-a-timeline-adjust-label-rotation-and-render-it-to-a-bmp-image.cs",
+      "title": "Apply a gradient background to a timeline, adjust label rotation, and render it to a BMP image."
+    },
+    {
+      "category": "timeline",
+      "file": "apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs",
+      "title": "Apply a watermark text over a rendered timeline image and export the final picture as a PDF."
+    },
+    {
+      "category": "timeline",
+      "file": "apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs",
+      "title": "Apply conditional formatting to timeline bars based on performance thresholds and export the result as a PDF."
+    },
+    {
+      "category": "timeline",
+      "file": "batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs",
+      "title": "Batch convert Excel files, add a timeline to each, and save PDFs to an output directory."
+    },
+    {
+      "category": "timeline",
+      "file": "batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs",
+      "title": "Batch process multiple worksheets, creating individual timelines for each and saving them as separate PNG files."
+    },
+    {
+      "category": "timeline",
+      "file": "combine-two-separate-timelines-into-a-single-composite-view-and-save-the-merged-chart-as-an-svg-file.cs",
+      "title": "Combine two separate timelines into a single composite view and save the merged chart as an SVG file."
+    },
+    {
+      "category": "timeline",
+      "file": "create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs",
+      "title": "Create a timeline using a custom template file, then replace placeholder text with dynamic project names."
+    },
+    {
+      "category": "timeline",
+      "file": "create-a-timeline-with-a-logarithmic-scale-for-dates-customize-tick-intervals-and-render-to-png.cs",
+      "title": "Create a timeline with a logarithmic scale for dates, customize tick intervals, and render to PNG."
+    },
+    {
+      "category": "timeline",
+      "file": "create-a-timeline-with-custom-date-format-ddmmmyyyy-and-export-the-chart-to-a-pdf-document.cs",
+      "title": "Create a timeline with custom date format (dd\u2011MMM\u2011yyyy) and export the chart to a PDF document."
+    },
+    {
+      "category": "timeline",
+      "file": "draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs",
+      "title": "Draw a timeline while converting the entire workbook to PDF, ensuring the timeline appears on each page."
+    },
+    {
+      "category": "timeline",
+      "file": "embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs",
+      "title": "Embed a rendered timeline image into a PDF report header, aligning it with the document title."
+    },
+    {
+      "category": "timeline",
+      "file": "export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs",
+      "title": "Export a timeline directly to a memory stream in PDF format for further processing without disk I/O."
+    },
+    {
+      "category": "timeline",
+      "file": "load-a-csv-file-containing-event-dates-convert-it-to-an-excel-worksheet-and-draw-a-timeline.cs",
+      "title": "Load a CSV file containing event dates, convert it to an Excel worksheet, and draw a timeline."
+    },
+    {
+      "category": "timeline",
       "file": "load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs",
       "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
     },
