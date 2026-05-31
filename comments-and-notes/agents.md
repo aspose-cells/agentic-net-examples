@@ -1,81 +1,113 @@
-# Comments and Notes Examples
+---
+category: comments-and-notes
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Comments and Notes
+You are a C# developer specializing in comments and notes using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE comments-or-notes scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Comments and Notes**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Comment
+- CommentCollection
+- Worksheet.Comments
+- Comment.Note
+- Comment.HtmlNote
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Create worksheet data
+3. Add comment or note
+4. Modify or read comment
+5. Save workbook
+6. Print success message
 
+---
 
-## Output
+# Comments and Notes Rules
 
-Examples may generate:
+- Use Worksheet.Comments to manage comments
+- Associate comments with valid cells
+- Use meaningful comment text
+- One example = one comments/notes operation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- create-a-new-workbook-and-add-a-threaded-comment-to-cell-a1-with-author-john.cs
-- load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs
-- iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs
-- edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs
-- remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs
-- set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs
-- set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs
-- change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs
-- update-the-font-color-of-all-comments-authored-by-alice-to-green-using-shapetextbodyfontcolor.cs
-- apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs
-- create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs
-- load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs
-- batch-process-a-folder-of-workbooks-adding-a-standard-disclaimer-comment-to-each-worksheets-top-left-cell.cs
-- copy-a-threaded-comment-from-cell-e5-to-cell-f6-while-preserving-its-author-and-text.cs
-- read-all-threaded-comments-from-a-worksheet-and-count-the-number-of-comments-per-author.cs
-- remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs
-- scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs
-- compare-two-workbooks-by-extracting-their-threaded-comments-and-identifying-differences-in-author-attribution.cs
-- read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs
-- change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs
-- add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
-- retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs
-- update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs
-- replace-the-background-picture-of-a-comment-with-a-semi-transparent-overlay-image.cs
-- copy-formatting-of-a-comments-shape-including-background-color-and-font-color-to-another-comment.cs
+# Input Strategy
+
+- Do NOT rely on external XLSX files
+- Create workbook programmatically
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Add comment
+- Read comment
+- Update comment
+- Remove comment
+- Work with notes
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Add comment to invalid cell
+✅ Use a valid worksheet cell reference
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
