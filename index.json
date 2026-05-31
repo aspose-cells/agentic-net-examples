@@ -6086,6 +6086,191 @@
     },
     {
       "category": "manage-workbook",
+      "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
+      "title": "Add a chart to a worksheet based on a data range and customize its legend position."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-comment-to-a-cell-with-author-information-and-display-it-when-the-cell-is-selected.cs",
+      "title": "Add a comment to a cell with author information and display it when the cell is selected."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-custom-document-property-named-projectversion-and-assign-it-a-semantic-version-string.cs",
+      "title": "Add a custom document property named ProjectVersion and assign it a semantic version string."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-custom-xml-part-containing-metadata-and-retrieve-it-later-using-its-unique-identifier.cs",
+      "title": "Add a custom XML part containing metadata and retrieve it later using its unique identifier."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-new-contenttypeproperty-named-projectid-with-a-string-value-to-the-workbook.cs",
+      "title": "Add a new ContentTypeProperty named ProjectId with a string value to the workbook."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-multiple-custom-xml-parts-representing-different-data-sections-then-verify-each-appears-in-the-customxml-folder.cs",
+      "title": "Add multiple custom XML parts representing different data sections, then verify each appears in the customXml folder."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "after-adding-custom-properties-verify-that-the-workbooks-core-properties-remain-unchanged.cs",
+      "title": "After adding custom properties, verify that the workbook's core properties remain unchanged."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "after-processing-call-workbookdispose-explicitly-for-each-workbook-to-release-file-handles-and-memory.cs",
+      "title": "After processing, call Workbook.Dispose explicitly for each workbook to release file handles and memory."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs",
+      "title": "Apply a filter to process only workbooks that already contain a specific custom XML part before modification."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
+      "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "apply-data-validation-to-restrict-input-to-a-list-of-predefined-values-in-a-column.cs",
+      "title": "Apply data validation to restrict input to a list of predefined values in a column."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "benchmark-the-time-required-to-remove-unused-styles-from-workbooks-of-varying-size-to-determine-scaling-behavior.cs",
+      "title": "Benchmark the time required to remove unused styles from workbooks of varying size to determine scaling behavior."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "combine-adding-custom-xml-parts-with-style-cleanup-in-a-single-processing-pipeline-for-efficiency.cs",
+      "title": "Combine adding custom XML parts with style cleanup in a single processing pipeline for efficiency."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "compare-two-workbooks-one-with-unused-styles-removed-and-one-without-to-evaluate-visual-consistency.cs",
+      "title": "Compare two workbooks, one with unused styles removed and one without, to evaluate visual consistency."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "configure-the-workbook-to-use-a-specific-culture-when-formatting-optional-property-values-during-export.cs",
+      "title": "Configure the workbook to use a specific culture when formatting optional property values during export."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "configure-workbooksettings-to-disable-automatic-style-creation-before-removing-unused-styles-for-faster-cleanup.cs",
+      "title": "Configure WorkbookSettings to disable automatic style creation before removing unused styles for faster cleanup."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs",
+      "title": "Copy a worksheet from the source workbook to a destination workbook while preserving cell styles."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-batch-job-that-processes-100-workbooks-adding-optional-metadata-and-removing-unused-styles.cs",
+      "title": "Create a batch job that processes 100 workbooks, adding optional metadata and removing unused styles."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-custom-xml-part-containing-a-book-catalog-schema-and-add-it-using-workbookcontenttypepropertiesadd.cs",
+      "title": "Create a custom XML part containing a book catalog schema and add it using Workbook.ContentTypeProperties.Add."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-summary-formula.cs",
+      "title": "Create a named range that spans multiple worksheets and use it in a summary formula."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-pivot-table-from-a-data-source-range-and-place-it-on-a-new-worksheet.cs",
+      "title": "Create a pivot table from a data source range and place it on a new worksheet."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-reusable-method-that-adds-a-contenttypeproperty-and-sets-isnillable-based-on-a-boolean-parameter.cs",
+      "title": "Create a reusable method that adds a ContentTypeProperty and sets IsNillable based on a boolean parameter."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
+      "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-unit-test-that-asserts-the-isnillable-flag-is-true-for-a-given-contenttypeproperty-after-saving.cs",
+      "title": "Create a unit test that asserts the IsNillable flag is true for a given ContentTypeProperty after saving."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "enable-iterative-calculation-mode-and-set-maximum-iterations-to-improve-convergence-of-circular-formulas.cs",
+      "title": "Enable iterative calculation mode and set maximum iterations to improve convergence of circular formulas."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "export-a-list-of-all-contenttypeproperty-names-from-a-workbook-to-a-csv-file-for-reporting.cs",
+      "title": "Export a list of all ContentTypeProperty names from a workbook to a CSV file for reporting."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "export-a-specific-worksheet-to-an-image-file-with-300-dpi-resolution-and-transparent-background.cs",
+      "title": "Export a specific worksheet to an image file with 300 DPI resolution and transparent background."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "export-the-workbook-to-pdf-format-with-high-resolution-images-and-embedded-fonts.cs",
+      "title": "Export the workbook to PDF format with high resolution images and embedded fonts."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "generate-a-report-listing-workbooks-that-contain-optional-contenttypeproperties-lacking-the-isnillable-flag.cs",
+      "title": "Generate a report listing workbooks that contain optional ContentTypeProperties lacking the IsNillable flag."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "implement-a-commandline-tool-that-accepts-a-file-path-adds-an-optional-property-and-disposes-the-workbook.cs",
+      "title": "Implement a command\u2011line tool that accepts a file path, adds an optional property, and disposes the workbook."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "implement-error-handling-to-continue-batch-processing-when-a-workbook-fails-to-load-due-to-corruption.cs",
+      "title": "Implement error handling to continue batch processing when a workbook fails to load due to corruption."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs",
+      "title": "Insert a hyperlink into a cell that points to an external website and opens in a new tab."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "integrate-workbook-disposal-into-a-finally-block-to-guarantee-resource-release-even-when-exceptions-occur.cs",
+      "title": "Integrate workbook disposal into a finally block to guarantee resource release even when exceptions occur."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "iterate-through-multiple-workbooks-in-a-directory-adding-a-shared-contenttypeproperty-to-each-file.cs",
+      "title": "Iterate through multiple workbooks in a directory, adding a shared ContentTypeProperty to each file."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs",
+      "title": "Load a CSV file into a workbook, specify the delimiter, and treat the first row as headers."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-a-workbook-from-a-memory-stream-modify-a-cell-value-and-write-back-to-the-stream.cs",
+      "title": "Load a workbook from a memory stream, modify a cell value, and write back to the stream."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-a-workbook-that-contains-numerous-unused-styles-and-invoke-removeunusedstyles-to-clean-it.cs",
+      "title": "Load a workbook that contains numerous unused styles and invoke RemoveUnusedStyles to clean it."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-an-xlsx-workbook-from-a-file-stream-and-enable-automatic-formula-calculation.cs",
       "title": "Load an XLSX workbook from a file stream and enable automatic formula calculation."
     },
