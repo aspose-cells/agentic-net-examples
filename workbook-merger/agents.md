@@ -1,86 +1,116 @@
-# Workbook Merger Examples
+---
+category: workbook-merger
+framework: .NET
+parent: ../agents.md
+version: v3
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Workbook Merger
+You are a C# developer specializing in workbook merging and workbook consolidation using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE workbook-merging scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Workbook Merger**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+Add additional namespaces only when required.
 
-## Common Pattern
+---
 
-Typical Aspose.Cells workflow:
+# Key APIs
 
-Workbook workbook = new Workbook();
+- Workbook
+- Workbook.Combine()
+- Worksheet.Copy()
+- Worksheets.Add()
+- SaveFormat
 
-Worksheet sheet = workbook.Worksheets[0];
+---
 
-Cells cells = sheet.Cells;
+# Common Pattern
 
+1. Create source workbooks
+2. Populate sample data
+3. Merge or copy worksheets
+4. Save merged workbook
+5. Print success message
 
-## Output
+---
 
-Examples may generate:
+# Workbook Merger Rules
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+- Prefer Workbook.Combine() when merging entire workbooks
+- Prefer Worksheet.Copy() when merging selected worksheets
+- Generate source workbooks programmatically
+- Ensure merged workbook contains visible data
+- One example = one merge scenario
 
-Output files are written to the working directory.
-- add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs
-- create-a-console-application-project-in-visual-studio-to-host-the-workbook-merging-code.cs
-- load-source-xls-workbooks-using-new-workbookfilepath-for-each-file-to-be-merged.cs
-- load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs
-- use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs
-- copy-specific-worksheets-from-source-workbooks-into-the-target-workbook-using-worksheetcopy-method.cs
-- preserve-charts-and-images-during-merge-by-employing-default-workbookcombine-behavior-without-additional-options.cs
-- ensure-formulas-remain-intact-by-keeping-calculation-mode-set-to-automatic-before-and-after-merging.cs
-- maintain-original-cell-formatting-by-not-altering-style-settings-during-the-combine-operation.cs
-- verify-that-the-merged-workbook-contains-the-expected-number-of-worksheets-after-combination.cs
-- check-that-all-charts-from-source-workbooks-appear-correctly-in-the-combined-workbook.cs
-- confirm-that-embedded-images-are-retained-in-the-merged-workbook-after-using-workbookcombine.cs
-- save-the-merged-workbook-to-a-specified-output-path-using-workbooksave-method.cs
-- export-the-combined-workbook-to-pdf-format-to-verify-visual-fidelity-of-charts-and-images.cs
-- export-each-worksheet-of-the-merged-workbook-to-csv-files-for-data-extraction-validation.cs
-- generate-an-html-representation-of-the-merged-workbook-to-inspect-content-in-a-web-browser.cs
-- save-the-merged-workbook-into-a-memory-stream-for-immediate-transmission-via-a-web-api.cs
-- attach-the-merged-workbook-file-to-an-email-using-systemnetmail-after-successful-combination.cs
-- encrypt-the-merged-workbook-with-a-password-before-saving-to-protect-confidential-data.cs
-- set-the-author-property-of-the-merged-workbook-to-the-current-user-name-after-merging.cs
-- assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs
-- add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs
-- insert-a-company-logo-image-on-the-first-worksheet-of-the-merged-workbook-after-combining-files.cs
-- apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs
-- apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
-- protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
-- set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs
-- recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs
-- validate-that-no-ref-errors-exist-in-any-cell-after-merging-workbooks-with-formulas.cs
-- log-the-file-size-of-the-merged-workbook-after-saving-to-monitor-storage-impact-of-the-combine-process.cs
+---
+
+# Input Strategy
+
+- Do NOT depend on file1.xlsx or file2.xlsx
+- Create sample workbooks in code
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure merged workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Merge two workbooks
+- Merge multiple worksheets
+- Copy worksheet between workbooks
+- Consolidate workbook data
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+❌ Merge empty workbooks
+✅ Populate sample data before merging
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary helper methods
+- Prefer clarity over abstraction
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Error-handling guidance
+- Build and run instructions
