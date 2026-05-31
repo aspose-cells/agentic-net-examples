@@ -2,7 +2,7 @@
 category: workbook-merger
 framework: .NET
 parent: ../agents.md
-version: v3
+version: v2
 ---
 
 # Persona
