@@ -9616,6 +9616,166 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
+      "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "add-a-tooltip-to-the-custom-ribbon-button-describing-its-function-for-end-users.cs",
+      "title": "Add a tooltip to the custom ribbon button describing its function for end users."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "add-error-handling-to-capture-exceptions-when-an-external-connection-path-is-invalid.cs",
+      "title": "Add error handling to capture exceptions when an external connection path is invalid."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "assign-a-keyboard-shortcut-to-the-custom-ribbon-button-for-quick-access.cs",
+      "title": "Assign a keyboard shortcut to the custom ribbon button for quick access."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs",
+      "title": "Change Description property of a DBConnection to reflect its new purpose after migration."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "change-the-absolute-path-of-an-external-link-data-source-file-programmatically-for-a-workbook.cs",
+      "title": "Change the absolute path of an external link data source file programmatically for a workbook."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs",
+      "title": "Change the Path property of an external link in an XLS workbook to a network shared folder."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "compare-odata-connection-metadata-before-and-after-modification-to-ensure-version-consistency.cs",
+      "title": "Compare OData connection metadata before and after modification to ensure version consistency."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs",
+      "title": "Create a backup of the workbook before modifying external link paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "create-a-unit-test-that-validates-external-link-path-changes-and-custom-ribbon-integration.cs",
+      "title": "Create a unit test that validates external link path changes and custom ribbon integration."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs",
+      "title": "Define a custom ribbon group within the \"Data Tools\" tab for connection management commands."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "detect-and-list-external-connections-of-type-webquery-across-a-batch-of-workbooks.cs",
+      "title": "Detect and list external connections of type WebQuery across a batch of workbooks."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs",
+      "title": "Detect hidden external links within the workbook using the appropriate API and list their source paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs",
+      "title": "Disable BackgroundRefresh on a SQL DBConnection to enforce sequential query execution."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "disable-preserveformatting-on-a-querytable-to-allow-default-formatting-during-subsequent-refreshes.cs",
+      "title": "Disable PreserveFormatting on a QueryTable to allow default formatting during subsequent refreshes."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs",
+      "title": "Disable the default \"Data\" tab in the ribbon by removing its XML definition."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs",
+      "title": "Document the steps to customize the ribbon XML and change external link paths in a developer guide."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "enable-backgroundrefresh-on-a-webquery-connection-to-avoid-blocking-ui-during-retrieval.cs",
+      "title": "Enable BackgroundRefresh on a WebQuery connection to avoid blocking UI during retrieval."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "enable-preserveformatting-on-a-querytable-to-maintain-cell-styles-after-data-refresh.cs",
+      "title": "Enable PreserveFormatting on a QueryTable to maintain cell styles after data refresh."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs",
+      "title": "Ensure the custom ribbon UI loads correctly after changing external link paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "ensure-the-solution-complies-with-security-best-practices-when-handling-external-file-paths.cs",
+      "title": "Ensure the solution complies with security best practices when handling external file paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs",
+      "title": "Export a list of all external connection names from a workbook to a plain text file."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "export-the-custom-ribbon-xml-to-a-separate-xml-file-for-version-control.cs",
+      "title": "Export the custom ribbon XML to a separate .xml file for version control."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs",
+      "title": "Extract OData connection details from the DataMashup object and log the service endpoint URL."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "generate-a-csv-file-containing-workbook-name-connection-type-and-connection-name-for-all-files-in-a-folder.cs",
+      "title": "Generate a CSV file containing workbook name, connection type, and connection name for all files in a folder."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs",
+      "title": "Generate a plain\u2011text report summarizing hidden external link paths for further analysis."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "handle-errors-when-the-external-link-file-is-missing-or-inaccessible-during-path-update.cs",
+      "title": "Handle errors when the external link file is missing or inaccessible during path update."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "hide-the-refresh-all-command-on-specific-worksheets-via-customized-ribbon-xml.cs",
+      "title": "Hide the \"Refresh All\" command on specific worksheets via customized Ribbon XML."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "implement-error-handling-for-failures-during-external-link-path-updates-invoked-from-the-ribbon.cs",
+      "title": "Implement error handling for failures during external link path updates invoked from the ribbon."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs",
+      "title": "Import custom ribbon XML from an external .xml file into an existing workbook programmatically."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
+      "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "iterate-through-dataconnections-to-identify-sql-type-connections-and-cast-each-to-dbconnection.cs",
+      "title": "Iterate through DataConnections to identify SQL type connections and cast each to DBConnection."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "load-a-workbook-from-a-file-path-and-obtain-its-dataconnections-collection.cs",
       "title": "Load a workbook from a file path and obtain its DataConnections collection."
     },
