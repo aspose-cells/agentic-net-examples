@@ -15226,6 +15226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-together-with-similarborderstyle-to-test-combined-effects-on-rendering-across-multiple-browsers.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately together with SimilarBorderStyle to test combined effects on rendering across multiple browsers."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-htmlsaveoptionsexportworksheetcssseparately-true-and-verify-that-each-worksheet-has-its-own-css-file.cs",
       "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately true and verify that each worksheet has its own .css file."
     },
