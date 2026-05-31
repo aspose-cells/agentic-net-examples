@@ -1,102 +1,111 @@
-# Document Properties Examples
+---
+category: document-properties
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Document Properties
+You are a C# developer specializing in document properties and metadata management using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE document-properties scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Document Properties**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- BuiltInDocumentPropertyCollection
+- CustomDocumentPropertyCollection
+- Workbook.BuiltInDocumentProperties
+- Workbook.CustomDocumentProperties
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Access document properties
+3. Add, read, update, or remove properties
+4. Save workbook
+5. Print success message
 
+---
 
-## Output
+# Document Properties Rules
 
-Examples may generate:
+- Use BuiltInDocumentProperties for standard metadata
+- Use CustomDocumentProperties for user-defined metadata
+- Use correct property data types
+- One example = one document-properties operation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs
-- open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs
-- instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs
-- load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs
-- open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs
-- load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs
-- create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs
-- open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs
-- load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs
-- open-a-spreadsheet-and-set-the-language-builtin-property-to-fr-fr-for-localization.cs
-- instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs
-- load-a-workbook-and-disable-the-linksuptodate-builtin-property-to-prevent-link-checks.cs
-- open-a-workbook-and-add-a-custom-property-processeddate-with-the-current-datetime-value.cs
-- load-an-excel-file-and-create-a-custom-property-projectid-with-an-integer-identifier.cs
-- open-a-workbook-and-add-a-custom-boolean-property-isreviewed-set-to-true.cs
-- load-a-workbook-locate-the-custom-property-projectid-and-update-its-integer-value.cs
-- open-a-spreadsheet-and-remove-the-custom-property-isreviewed-to-clean-obsolete-metadata.cs
-- load-a-workbook-and-check-whether-a-custom-property-clientname-exists-before-adding.cs
-- open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs
-- load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs
-- open-a-spreadsheet-and-filter-custom-properties-by-datetime-type-then-list-them.cs
-- instantiate-two-workbooks-and-copy-all-document-properties-from-source-to-destination-programmatically.cs
-- load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs
-- open-a-workbook-and-validate-that-documentversion-matches-a-semantic-version-pattern-before-saving.cs
-- load-an-excel-file-and-verify-that-language-contains-a-valid-net-culture-code.cs
-- open-a-workbook-set-scalecrop-to-true-and-ensure-the-flag-persists-when-saving-as-pdf.cs
-- instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs
-- load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs
-- open-a-workbook-and-confirm-that-application-metadata-fields-appear-in-saved-file-properties.cs
-- load-a-workbook-modify-several-properties-and-save-the-file-to-xlsx-format-preserving-changes.cs
-- open-a-workbook-update-document-properties-and-export-the-result-to-csv-format-for-downstream-processing.cs
-- instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs
-- batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs
-- iterate-through-a-directory-of-excel-files-and-update-every-documentversion-property-to-30.cs
-- create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs
-- generate-a-summary-report-that-aggregates-builtin-property-values-from-multiple-workbooks-into-a-consolidated-excel-file.cs
-- validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs
-- use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs
-- compare-custom-property-sets-between-two-workbooks-and-generate-a-list-of-differences-for-auditing.cs
-- remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs
-- add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs
-- set-the-builtin-comments-property-to-a-multiline-description-providing-detailed-notes-about-the-workbook.cs
-- read-the-keywords-builtin-property-and-use-its-values-to-populate-a-search-index.cs
-- validate-that-scalecrop-cannot-be-enabled-when-the-workbook-contains-chart-objects.cs
-- log-a-warning-whenever-code-attempts-to-modify-application-metadata-which-is-immutable.cs
-- create-a-unit-test-that-adds-a-custom-property-saves-the-workbook-reloads-it-and-verifies-persistence.cs
+# Input Strategy
+
+- Do NOT rely on external XLSX files
+- Create workbook programmatically
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Read built-in properties
+- Add custom property
+- Update property value
+- Remove property
+- Enumerate document properties
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Store all values as strings
+✅ Use appropriate property types
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
