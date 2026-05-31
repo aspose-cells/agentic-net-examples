@@ -7351,6 +7351,461 @@
     },
     {
       "category": "open-workbook",
+      "file": "after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs",
+      "title": "After loading, iterate through workbook.LoadWarnings collection and output each warning message to console."
+    },
+    {
+      "category": "open-workbook",
+      "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
+      "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
+    },
+    {
+      "category": "open-workbook",
+      "file": "apply-filterdatakind-to-load-only-numeric-and-date-cells-from-a-template-workbook-for-statistical-analysis.cs",
+      "title": "Apply FilterDataKind to load only numeric and date cells from a template workbook for statistical analysis."
+    },
+    {
+      "category": "open-workbook",
+      "file": "apply-filterdatakind-to-load-only-string-cells-from-a-template-then-concatenate-them-into-a-summary-report.cs",
+      "title": "Apply FilterDataKind to load only string cells from a template, then concatenate them into a summary report."
+    },
+    {
+      "category": "open-workbook",
+      "file": "apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs",
+      "title": "Apply FilterDefinedNames while loading a workbook to include only required named ranges for calculations."
+    },
+    {
+      "category": "open-workbook",
+      "file": "apply-filterobjects-to-exclude-data-validation-rules-during-loading-reducing-memory-footprint-for-simple-data-extraction-tasks.cs",
+      "title": "Apply FilterObjects to exclude data validation rules during loading, reducing memory footprint for simple data extraction tasks."
+    },
+    {
+      "category": "open-workbook",
+      "file": "apply-printer-paper-size-a5-during-load-and-generate-a-pdf-with-matching-page-dimensions.cs",
+      "title": "Apply printer paper size A5 during load and generate a PDF with matching page dimensions."
+    },
+    {
+      "category": "open-workbook",
+      "file": "automatically-detect-the-workbook-format-by-passing-only-the-file-path-to-the-workbook-constructor.cs",
+      "title": "Automatically detect the workbook format by passing only the file path to the Workbook constructor."
+    },
+    {
+      "category": "open-workbook",
+      "file": "batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs",
+      "title": "Batch load multiple workbooks using the same LoadOptions configuration to apply consistent worksheet filtering."
+    },
+    {
+      "category": "open-workbook",
+      "file": "batch-process-multiple-excel-files-by-loading-them-without-charts-using-loadoptions-and-saving-each-as-pdf.cs",
+      "title": "Batch process multiple Excel files by loading them without charts using LoadOptions and saving each as PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs",
+      "title": "Calculate all formulas in the loaded workbook by invoking Workbook.CalculateFormula after the file is opened."
+    },
+    {
+      "category": "open-workbook",
+      "file": "capture-load-warnings-about-unsupported-features-and-write-each-warning-message-to-the-application-log-file.cs",
+      "title": "Capture load warnings about unsupported features and write each warning message to the application log file."
+    },
+    {
+      "category": "open-workbook",
+      "file": "configure-interruptmonitor-to-abort-loading-if-processing-exceeds-30-seconds-and-log-the-interruption-event.cs",
+      "title": "Configure InterruptMonitor to abort loading if processing exceeds 30 seconds and log the interruption event."
+    },
+    {
+      "category": "open-workbook",
+      "file": "configure-interruptmonitor-to-abort-workbook-loading-after-five-seconds-then-handle-the-resulting-exception-gracefully.cs",
+      "title": "Configure InterruptMonitor to abort workbook loading after five seconds, then handle the resulting exception gracefully."
+    },
+    {
+      "category": "open-workbook",
+      "file": "configure-lightcells-to-process-cells-in-rowmajor-order-for-optimal-cache-utilization-during-large-file-reads.cs",
+      "title": "Configure LightCells to process cells in row\u2011major order for optimal cache utilization during large file reads."
+    },
+    {
+      "category": "open-workbook",
+      "file": "configure-lightcells-to-use-a-custom-buffer-size-for-reading-cells-optimizing-performance-for-highthroughput-scenarios.cs",
+      "title": "Configure LightCells to use a custom buffer size for reading cells, optimizing performance for high\u2011throughput scenarios."
+    },
+    {
+      "category": "open-workbook",
+      "file": "configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs",
+      "title": "Configure LoadOptions to load only the workbook's custom XML parts for metadata extraction without loading cell data."
+    },
+    {
+      "category": "open-workbook",
+      "file": "configure-memorysettingmemorypreference-to-low-before-opening-a-massive-xlsx-file-to-reduce-ram-usage.cs",
+      "title": "Configure MemorySetting.MemoryPreference to Low before opening a massive XLSX file to reduce RAM usage."
+    },
+    {
+      "category": "open-workbook",
+      "file": "convert-a-loaded-workbook-to-pdf-while-an-interruptmonitor-aborts-the-conversion-if-it-exceeds-twenty-seconds.cs",
+      "title": "Convert a loaded workbook to PDF while an InterruptMonitor aborts the conversion if it exceeds twenty seconds."
+    },
+    {
+      "category": "open-workbook",
+      "file": "copy-columns-a-through-d-from-the-source-worksheet-to-a-new-workbook-using-lightcells-for-efficient-selection.cs",
+      "title": "Copy columns A through D from the source worksheet to a new workbook using LightCells for efficient selection."
+    },
+    {
+      "category": "open-workbook",
+      "file": "create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs",
+      "title": "Create a custom IWarningCallback class that logs each load warning to a text file."
+    },
+    {
+      "category": "open-workbook",
+      "file": "create-a-custom-loadfilter-that-skips-invisible-worksheets-and-assign-it-to-loadoptions-before-opening.cs",
+      "title": "Create a custom LoadFilter that skips invisible worksheets and assign it to LoadOptions before opening."
+    },
+    {
+      "category": "open-workbook",
+      "file": "enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs",
+      "title": "Enable HtmlSaveOptions.ExportImagesAsBase64 to embed images directly in the HTML output for self\u2011contained files."
+    },
+    {
+      "category": "open-workbook",
+      "file": "enable-memorypreferences-in-loadoptions-to-prevent-outofmemoryexception-when-loading-a-massive-workbook.cs",
+      "title": "Enable MemoryPreferences in LoadOptions to prevent OutOfMemoryException when loading a massive workbook."
+    },
+    {
+      "category": "open-workbook",
+      "file": "enable-the-useoptimizedmemory-flag-in-loadoptions-to-improve-performance-when-loading-workbooks-containing-thousands-of-rows.cs",
+      "title": "Enable the UseOptimizedMemory flag in LoadOptions to improve performance when loading workbooks containing thousands of rows."
+    },
+    {
+      "category": "open-workbook",
+      "file": "enumerate-all-loaded-worksheets-after-opening-a-workbook-and-output-their-names-to-the-console.cs",
+      "title": "Enumerate all loaded worksheets after opening a workbook and output their names to the console."
+    },
+    {
+      "category": "open-workbook",
+      "file": "exclude-hidden-rows-during-workbook-loading-by-configuring-filterobjects-to-ignore-rows-with-visibility-set-to-false.cs",
+      "title": "Exclude hidden rows during workbook loading by configuring FilterObjects to ignore rows with visibility set to false."
+    },
+    {
+      "category": "open-workbook",
+      "file": "exclude-hidden-worksheets-during-load-by-configuring-loadoptionsloadfilter-to-ignore-them.cs",
+      "title": "Exclude hidden worksheets during load by configuring LoadOptions.LoadFilter to ignore them."
+    },
+    {
+      "category": "open-workbook",
+      "file": "export-a-loaded-workbook-to-html-and-use-interruptmonitor-to-stop-the-process-after-a-defined-timeout.cs",
+      "title": "Export a loaded workbook to HTML and use InterruptMonitor to stop the process after a defined timeout."
+    },
+    {
+      "category": "open-workbook",
+      "file": "export-hyperlinks-from-a-workbook-using-lightcells-api-and-generate-a-report-listing-url-targets-and-cell-addresses.cs",
+      "title": "Export hyperlinks from a workbook using LightCells API and generate a report listing URL targets and cell addresses."
+    },
+    {
+      "category": "open-workbook",
+      "file": "extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs",
+      "title": "Extract all formulas from loaded worksheets and store them in a dictionary keyed by cell address."
+    },
+    {
+      "category": "open-workbook",
+      "file": "filter-defined-names-containing-total-during-load-and-verify-that-only-those-names-are-retained.cs",
+      "title": "Filter defined names containing \"Total\" during load and verify that only those names are retained."
+    },
+    {
+      "category": "open-workbook",
+      "file": "filter-out-all-pictures-from-a-workbook-during-loading-to-improve-performance-for-large-spreadsheets.cs",
+      "title": "Filter out all pictures from a workbook during loading to improve performance for large spreadsheets."
+    },
+    {
+      "category": "open-workbook",
+      "file": "filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs",
+      "title": "Filter out defined names starting with \"_\" during load and verify their absence after opening."
+    },
+    {
+      "category": "open-workbook",
+      "file": "filter-rows-where-column-c-equals-active-while-streaming-with-lightcells-writing-matching-rows-to-a-new-sheet.cs",
+      "title": "Filter rows where column C equals \"Active\" while streaming with LightCells, writing matching rows to a new sheet."
+    },
+    {
+      "category": "open-workbook",
+      "file": "implement-a-commandline-utility-that-accepts-a-folder-path-loads-each-excel-file-without-charts-and-converts-them-to-pdf.cs",
+      "title": "Implement a command\u2011line utility that accepts a folder path, loads each Excel file without charts, and converts them to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs",
+      "title": "Implement an InterruptMonitor that aborts workbook loading after ten seconds to prevent excessive processing time."
+    },
+    {
+      "category": "open-workbook",
+      "file": "implement-lightcellsdatahandler-to-convert-all-text-cells-to-uppercase-while-reading-a-workbook-for-standardization.cs",
+      "title": "Implement LightCellsDataHandler to convert all text cells to uppercase while reading a workbook for standardization."
+    },
+    {
+      "category": "open-workbook",
+      "file": "implement-lightcellsdatahandler-to-replace-error-values-with-zero-during-load-ensuring-clean-numeric-datasets-for-analysis.cs",
+      "title": "Implement LightCellsDataHandler to replace error values with zero during load, ensuring clean numeric datasets for analysis."
+    },
+    {
+      "category": "open-workbook",
+      "file": "include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs",
+      "title": "Include worksheets matching the pattern \"Q[0-9]+\" using LoadOptions.LoadFilter with a regular expression filter."
+    },
+    {
+      "category": "open-workbook",
+      "file": "insert-new-hyperlinks-while-writing-cells-with-lightcellsdataprovider-to-create-navigable-references-in-the-generated-spreadsheet.cs",
+      "title": "Insert new hyperlinks while writing cells with LightCellsDataProvider to create navigable references in the generated spreadsheet."
+    },
+    {
+      "category": "open-workbook",
+      "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
+      "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
+    },
+    {
+      "category": "open-workbook",
+      "file": "interrupt-a-longrunning-workbook-load-operation-by-configuring-an-interruptmonitor-and-calling-its-cancel-method.cs",
+      "title": "Interrupt a long\u2011running workbook load operation by configuring an InterruptMonitor and calling its Cancel method."
+    },
+    {
+      "category": "open-workbook",
+      "file": "limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs",
+      "title": "Limit PDF output to the first ten pages by setting PdfSaveOptions.PageCount to ten before saving."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-large-workbook-with-lightcells-api-and-save-directly-to-pdf.cs",
+      "title": "Load a large workbook with LightCells API and save directly to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs",
+      "title": "Load a legacy XLS file from a Stream object to process its data in memory."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-partially-corrupted-excel-file-while-capturing-warnings-then-continue-processing-the-recoverable-content.cs",
+      "title": "Load a partially corrupted Excel file while capturing warnings, then continue processing the recoverable content."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-passwordprotected-xlsx-file-using-lightcells-api-by-providing-the-decryption-password-in-load-options.cs",
+      "title": "Load a password\u2011protected XLSX file using LightCells API by providing the decryption password in load options."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-and-filter-out-all-conditional-formatting-rules-to-improve-loading-speed-for-analysis-pipelines.cs",
+      "title": "Load a workbook and filter out all conditional formatting rules to improve loading speed for analysis pipelines."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-apply-printer-paper-size-a5-and-verify-that-the-generated-pdf-matches-the-specified-dimensions.cs",
+      "title": "Load a workbook, apply printer paper size A5, and verify that the generated PDF matches the specified dimensions."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-apply-printer-paper-size-letter-and-ensure-the-pdf-page-count-aligns-with-expectations.cs",
+      "title": "Load a workbook, apply printer paper size Letter, and ensure the PDF page count aligns with expectations."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs",
+      "title": "Load a workbook containing pivot tables using LightCells API and extract pivot cache data for external reporting."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-filter-defined-names-containing-total-and-generate-a-pdf-that-includes-only-those-named-ranges.cs",
+      "title": "Load a workbook, filter defined names containing \"Total\", and generate a PDF that includes only those named ranges."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs",
+      "title": "Load a workbook from an HTTP response stream to process a remotely hosted Excel file without saving locally."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-set-printer-paper-size-to-letter-via-loadoptions-and-verify-pdf-page-count-matches-expectations.cs",
+      "title": "Load a workbook, set printer paper size to Letter via LoadOptions, and verify PDF page count matches expectations."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-to-disable-charts-configure-interruptmonitor-and-save-to-pdf.cs",
+      "title": "Load a workbook using LoadOptions to disable charts, configure InterruptMonitor, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-to-disable-charts-load-only-worksheets-0-and-2-and-save-to-pdf.cs",
+      "title": "Load a workbook using LoadOptions to disable charts, load only worksheets 0 and 2, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-to-disable-charts-retrieve-loadwarnings-and-log-them.cs",
+      "title": "Load a workbook using LoadOptions to disable charts, retrieve LoadWarnings, and log them."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-to-disable-charts-set-printer-paper-size-a5-and-save-to-pdf.cs",
+      "title": "Load a workbook using LoadOptions to disable charts, set printer paper size A5, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-using-loadoptions-with-loadcharts-disabled-and-verify-loadwarnings-for-missing-chart-data.cs",
+      "title": "Load a workbook using LoadOptions with LoadCharts disabled and verify LoadWarnings for missing chart data."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs",
+      "title": "Load a workbook while excluding chart objects, then verify that the resulting worksheets contain zero charts."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-while-ignoring-all-external-links-by-setting-loadoptionsignoreexternallinks-to-true.cs",
+      "title": "Load a workbook while ignoring all external links by setting LoadOptions.IgnoreExternalLinks to true."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs",
+      "title": "Load a workbook with a specific page setup configuration and verify that margin settings are retained after processing."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-configure-interruptmonitor-for-a-30second-timeout-and-save-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, configure InterruptMonitor for a 30\u2011second timeout, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-exclude-charts-and-save-the-result-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, exclude charts, and save the result to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-load-only-worksheets-1-and-3-and-save-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, load only worksheets 1 and 3, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-retrieve-loadwarnings-after-load-and-output-them.cs",
+      "title": "Load a workbook with LightCells API, retrieve LoadWarnings after load, and output them."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, set printer paper size A3, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs",
+      "title": "Load a workbook with specific print area defined, then extract only the cells within that area using LightCells."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
+      "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-a-workbook-without-charts-by-applying-filterobjects-then-verify-that-chart-collections-are-empty-after-loading.cs",
+      "title": "Load a workbook without charts by applying FilterObjects, then verify that chart collections are empty after loading."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs",
+      "title": "Load an Excel 97\u20112003 workbook by assigning LoadOptions.Version to Excel97to2003 during initialization."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-an-xlsx-workbook-from-a-file-path-while-excluding-all-embedded-charts.cs",
+      "title": "Load an XLSX workbook from a file path while excluding all embedded charts."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs",
+      "title": "Load an XLSX workbook using LightCells API while applying FilterObjects to exclude charts."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs",
+      "title": "Load only chart objects by setting LoadOptions.LoadFilter to include charts exclusively."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-only-defined-names-from-a-workbook-by-setting-loadoptionsloadfilter-to-a-predefined-definednamesfilter.cs",
+      "title": "Load only defined names from a workbook by setting LoadOptions.LoadFilter to a predefined DefinedNamesFilter."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-only-the-first-three-worksheets-by-setting-loadoptionsstartsheetindex-to-0-and-loadoptionssheetcount-to-3.cs",
+      "title": "Load only the first three worksheets by setting LoadOptions.StartSheetIndex to 0 and LoadOptions.SheetCount to 3."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-only-the-summary-and-data-worksheets-from-the-file-using-loadoptionsloadfilter.cs",
+      "title": "Load only the \"Summary\" and \"Data\" worksheets from the file using LoadOptions.LoadFilter."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-only-visible-worksheets-by-applying-filterobjects-then-process-each-visible-sheet-sequentially-using-lightcells.cs",
+      "title": "Load only visible worksheets by applying FilterObjects, then process each visible sheet sequentially using LightCells."
+    },
+    {
+      "category": "open-workbook",
+      "file": "load-only-worksheets-with-indexes-0-and-2-using-loadoptions-and-export-them-to-separate-pdf-files.cs",
+      "title": "Load only worksheets with indexes 0 and 2 using LoadOptions and export them to separate PDF files."
+    },
+    {
+      "category": "open-workbook",
+      "file": "log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs",
+      "title": "Log warnings about unsupported formulas to a file by implementing IWarningCallback that appends messages with timestamps."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-a-workbook-and-immediately-export-its-visible-sheet-names-to-a-json-array-for-downstream-processing.cs",
+      "title": "Open a workbook and immediately export its visible sheet names to a JSON array for downstream processing."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs",
+      "title": "Open a workbook and retrieve the list of defined names without loading any worksheet data using a LoadFilter."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs",
+      "title": "Open a workbook from a byte array by wrapping it in a MemoryStream and using the Stream constructor."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-a-workbook-from-a-network-share-path-while-ensuring-unc-handling-by-using-the-file-path-constructor.cs",
+      "title": "Open a workbook from a network share path while ensuring UNC handling by using the file path constructor."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-a-workbook-from-a-zip-archive-by-extracting-the-stream-and-passing-it-to-the-workbook-constructor.cs",
+      "title": "Open a workbook from a ZIP archive by extracting the stream and passing it to the Workbook constructor."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs",
+      "title": "Open a workbook with formulas preserved but not calculated by disabling automatic calculation in LoadOptions."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-a-workbook-with-password-protection-and-then-remove-the-password-by-clearing-loadoptionspassword-after-loading.cs",
+      "title": "Open a workbook with password protection and then remove the password by clearing LoadOptions.Password after loading."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs",
+      "title": "Open an encrypted Excel workbook by providing the password in LoadOptions.Password property."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-an-excel-95-file-by-setting-loadoptionsversion-to-excel95-before-constructing-the-workbook.cs",
+      "title": "Open an Excel 95 file by setting LoadOptions.Version to Excel95 before constructing the Workbook."
+    },
+    {
+      "category": "open-workbook",
+      "file": "open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs",
+      "title": "Open an XLSB binary workbook by specifying the file path; the constructor automatically recognizes the format."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
