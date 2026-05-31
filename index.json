@@ -10621,6 +10621,136 @@
     },
     {
       "category": "save-workbook",
+      "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
+      "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-apply-data-validation-rules-and-export-the-sheet-to-a-json-file.cs",
+      "title": "Instantiate a workbook, apply data validation rules, and export the sheet to a JSON file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs",
+      "title": "Instantiate a workbook, configure CSV separator as semicolon, and export the active sheet to CSV."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs",
+      "title": "Instantiate a workbook from a stream, set workbook compression to Level6, and write to a MemoryStream."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-set-exportallsheets-false-and-export-only-the-active-sheet-to-an-xml-file.cs",
+      "title": "Instantiate a workbook, set ExportAllSheets false, and export only the active sheet to an XML file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-add-a-chart-object-and-save-the-workbook-as-a-pdf-with-embedded-chart.cs",
+      "title": "Load a workbook, add a chart object, and save the workbook as a PDF with embedded chart."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-adjust-pdf-export-quality-to-300-dpi-and-save-the-highresolution-pdf.cs",
+      "title": "Load a workbook, adjust PDF export quality to 300 DPI, and save the high\u2011resolution PDF."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-apply-a-watermark-to-each-page-and-save-the-output-as-a-pdf-document.cs",
+      "title": "Load a workbook, apply a watermark to each page, and save the output as a PDF document."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-enable-strict-compliance-and-attempt-to-save-to-a-location-with-insufficient-permissions.cs",
+      "title": "Load a workbook, enable strict compliance, and attempt to save to a location with insufficient permissions."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs",
+      "title": "Load a workbook from a network stream, adjust compression to Level9, and write to a file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-set-ooxmlcompressiontype-to-level3-and-write-the-compressed-file-to-a-stream.cs",
+      "title": "Load a workbook, set OoxmlCompressionType to Level3, and write the compressed file to a stream."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-set-pdf-export-to-embed-fonts-and-save-the-pdf-for-crossplatform-compatibility.cs",
+      "title": "Load a workbook, set PDF export to embed fonts, and save the PDF for cross\u2011platform compatibility."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs",
+      "title": "Load a workbook, set workbook settings to ISO 29500\u20112008 strict, and verify the saved file size."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs",
+      "title": "Load an SXC workbook, rename the active worksheet, and export the sheet to a CSV file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-an-xlsb-file-calculate-all-formulas-and-generate-a-json-representation-of-the-data.cs",
+      "title": "Load an XLSB file, calculate all formulas, and generate a JSON representation of the data."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-an-xlsm-file-remove-macros-and-save-the-workbook-as-a-strict-open-xml-xlsx.cs",
+      "title": "Load an XLSM file, remove macros, and save the workbook as a strict Open XML XLSX."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-fods-workbook-change-the-default-font-and-save-it-as-an-ods-document.cs",
+      "title": "Open a FODS workbook, change the default font, and save it as an ODS document."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-apply-a-custom-number-format-and-save-the-file-as-a-csv-with-tab-delimiter.cs",
+      "title": "Open a workbook, apply a custom number format, and save the file as a CSV with tab delimiter."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-configure-saveoptions-to-generate-a-single-worksheet-mht-file-and-save-it.cs",
+      "title": "Open a workbook, configure SaveOptions to generate a single worksheet MHT file, and save it."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-enable-page-margins-and-export-the-document-to-an-html-file-with-embedded-images.cs",
+      "title": "Open a workbook, enable page margins, and export the document to an HTML file with embedded images."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-enable-strict-open-xml-compliance-and-save-it-using-the-default-file-name.cs",
+      "title": "Open a workbook, enable strict Open XML compliance, and save it using the default file name."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-set-contentdisposition-to-attachment-and-deliver-the-xlsx-file-via-http-response.cs",
+      "title": "Open a workbook, set ContentDisposition to Attachment, and deliver the XLSX file via HTTP response."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs",
+      "title": "Open a workbook, set ExportAllSheets to true, and save all worksheets into a single CSV file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-set-ooxmlcompressiontype-to-level5-and-compare-resulting-file-size-to-default-compression.cs",
+      "title": "Open a workbook, set OoxmlCompressionType to Level5, and compare resulting file size to default compression."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
+      "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-an-ots-template-replace-placeholder-text-and-save-the-result-as-an-ods-file.cs",
+      "title": "Open an OTS template, replace placeholder text, and save the result as an ODS file."
+    },
+    {
+      "category": "save-workbook",
       "file": "read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs",
       "title": "Read a CSV file, filter rows by date, and export the result to an HTML file."
     },
