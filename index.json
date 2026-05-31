@@ -20776,6 +20776,161 @@
     },
     {
       "category": "xml-maps",
+      "file": "add-a-comment-to-each-cell-that-is-linked-to-an-xml-element-displaying-the-elements-xpath.cs",
+      "title": "Add a comment to each cell that is linked to an XML element, displaying the element's XPath."
+    },
+    {
+      "category": "xml-maps",
+      "file": "add-a-new-xml-map-to-a-workbook-that-already-contains-multiple-maps-and-manage-their-order.cs",
+      "title": "Add a new XML map to a workbook that already contains multiple maps and manage their order."
+    },
+    {
+      "category": "xml-maps",
+      "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
+      "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
+    },
+    {
+      "category": "xml-maps",
+      "file": "apply-a-custom-style-to-cells-mapped-to-the-customername-element-to-highlight-customer-names.cs",
+      "title": "Apply a custom style to cells mapped to the /Customer/Name element to highlight customer names."
+    },
+    {
+      "category": "xml-maps",
+      "file": "apply-data-validation-rules-to-mapped-cells-to-ensure-imported-xml-values-meet-business-constraints.cs",
+      "title": "Apply data validation rules to mapped cells to ensure imported XML values meet business constraints."
+    },
+    {
+      "category": "xml-maps",
+      "file": "batch-export-xml-data-from-multiple-workbooks-by-iterating-files-and-invoking-exportxml-for-each-map.cs",
+      "title": "Batch export XML data from multiple workbooks by iterating files and invoking ExportXml for each map."
+    },
+    {
+      "category": "xml-maps",
+      "file": "batch-process-a-folder-of-workbooks-adding-the-same-xml-map-to-each-file-programmatically.cs",
+      "title": "Batch process a folder of workbooks, adding the same XML map to each file programmatically."
+    },
+    {
+      "category": "xml-maps",
+      "file": "compare-two-xml-maps-within-the-same-workbook-to-identify-overlapping-cell-assignments-and-resolve-conflicts.cs",
+      "title": "Compare two XML maps within the same workbook to identify overlapping cell assignments and resolve conflicts."
+    },
+    {
+      "category": "xml-maps",
+      "file": "configure-the-workbook-to-automatically-refresh-xml-map-data-when-the-source-xml-file-changes-on-disk.cs",
+      "title": "Configure the workbook to automatically refresh XML map data when the source XML file changes on disk."
+    },
+    {
+      "category": "xml-maps",
+      "file": "configure-the-xml-map-to-ignore-whitespace-nodes-during-import-to-prevent-unwanted-blank-entries.cs",
+      "title": "Configure the XML map to ignore whitespace nodes during import to prevent unwanted blank entries."
+    },
+    {
+      "category": "xml-maps",
+      "file": "create-a-backup-copy-of-the-workbook-before-modifying-xml-maps-to-allow-easy-rollback-if-needed.cs",
+      "title": "Create a backup copy of the workbook before modifying XML maps to allow easy rollback if needed."
+    },
+    {
+      "category": "xml-maps",
+      "file": "create-a-custom-function-that-transforms-xml-node-values-before-they-are-written-to-mapped-cells.cs",
+      "title": "Create a custom function that transforms XML node values before they are written to mapped cells."
+    },
+    {
+      "category": "xml-maps",
+      "file": "create-a-new-workbook-add-a-worksheet-and-define-an-xml-map-using-a-xsd-file.cs",
+      "title": "Create a new workbook, add a worksheet, and define an XML map using a XSD file."
+    },
+    {
+      "category": "xml-maps",
+      "file": "create-a-pivot-table-that-summarizes-data-from-cells-mapped-to-the-ordersorder-element.cs",
+      "title": "Create a pivot table that summarizes data from cells mapped to the /Orders/Order element."
+    },
+    {
+      "category": "xml-maps",
+      "file": "create-a-scheduled-task-that-refreshes-all-xml-maps-in-a-set-of-workbooks-every-night-at-midnight.cs",
+      "title": "Create a scheduled task that refreshes all XML maps in a set of workbooks every night at midnight."
+    },
+    {
+      "category": "xml-maps",
+      "file": "enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs",
+      "title": "Enumerate the XmlMapCollection and log each map\u2019s name and root element name for debugging."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-mapped-data-to-a-json-file-by-converting-the-xml-nodes-to-equivalent-json-structures.cs",
+      "title": "Export mapped data to a JSON file by converting the XML nodes to equivalent JSON structures."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-mapped-xml-data-as-a-compressed-zip-archive-containing-separate-files-for-each-map.cs",
+      "title": "Export mapped XML data as a compressed .zip archive containing separate files for each map."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-the-current-xml-map-data-to-a-separate-xml-file-preserving-original-schema-structure.cs",
+      "title": "Export the current XML map data to a separate .xml file preserving original schema structure."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-the-workbook-to-an-ods-file-while-ensuring-that-xml-map-definitions-are-retained-in-the-output.cs",
+      "title": "Export the workbook to an ODS file while ensuring that XML map definitions are retained in the output."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-the-workbook-to-pdf-while-preserving-the-visual-representation-of-mapped-cells-and-their-data.cs",
+      "title": "Export the workbook to PDF while preserving the visual representation of mapped cells and their data."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-xml-data-for-a-specific-map-to-a-file-using-workbookexportxml-with-map-index.cs",
+      "title": "Export XML data for a specific map to a file using Workbook.ExportXml with map index."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-xml-data-for-a-specific-map-to-a-memory-stream-using-workbookexportxml-overload.cs",
+      "title": "Export XML data for a specific map to a memory stream using Workbook.ExportXml overload."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-xml-with-indentation-enabled-by-configuring-exportxmloptions-before-calling-exportxml.cs",
+      "title": "Export XML with indentation enabled by configuring ExportXmlOptions before calling ExportXml."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-xml-with-utf8-encoding-by-specifying-encodingutf8-parameter-in-exportxml-method.cs",
+      "title": "Export XML with UTF\u20118 encoding by specifying Encoding.UTF8 parameter in ExportXml method."
+    },
+    {
+      "category": "xml-maps",
+      "file": "export-xml-without-xml-declaration-by-setting-exportxmloptionsomitxmldeclaration-to-true.cs",
+      "title": "Export XML without XML declaration by setting ExportXmlOptions.OmitXmlDeclaration to true."
+    },
+    {
+      "category": "xml-maps",
+      "file": "generate-a-summary-report-listing-each-xml-map-its-root-element-and-the-number-of-linked-cells.cs",
+      "title": "Generate a summary report listing each XML map, its root element, and the number of linked cells."
+    },
+    {
+      "category": "xml-maps",
+      "file": "implement-a-routine-that-clears-all-cell-values-linked-to-a-specific-xml-map-without-removing-the-map.cs",
+      "title": "Implement a routine that clears all cell values linked to a specific XML map without removing the map."
+    },
+    {
+      "category": "xml-maps",
+      "file": "implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs",
+      "title": "Implement a UI dialog that lets users select an XML schema file to create a new map."
+    },
+    {
+      "category": "xml-maps",
+      "file": "implement-error-handling-to-catch-exceptions-when-an-xml-map-path-does-not-exist-in-the-schema.cs",
+      "title": "Implement error handling to catch exceptions when an XML map path does not exist in the schema."
+    },
+    {
+      "category": "xml-maps",
+      "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
+      "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-from-an-xsd-file-into-a-workbook-using-workbookimportxml-method.cs",
       "title": "Import an XML map from an XSD file into a workbook using Workbook.ImportXml method."
     },
