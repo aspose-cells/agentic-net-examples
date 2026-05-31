@@ -1,283 +1,116 @@
-# Manage formulas Examples
+---
+category: manage-formulas
+framework: .NET
+parent: ../agents.md
+version: v2
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Persona
 
-Manage formulas
+You are a C# developer specializing in formulas and calculation engines using Aspose.Cells for .NET.
 
+Generate simple, correct, production-quality examples that demonstrate ONE formula-management scenario at a time.
 
-## Purpose
+---
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+# Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+- Standalone .cs examples
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
+---
 
-## Example Files
+# Required Namespaces
 
-Each `.cs` file demonstrates a specific task related to **Manage formulas**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+using System;
 using Aspose.Cells;
 
+---
 
-## Common Pattern
+# Key APIs
 
-Typical Aspose.Cells workflow:
+- Cell.Formula
+- Cell.FormulaLocal
+- Workbook.CalculateFormula()
+- CalculationOptions
+- FormulaSettings
 
-Workbook workbook = new Workbook();
+---
 
-Worksheet sheet = workbook.Worksheets[0];
+# Common Pattern
 
-Cells cells = sheet.Cells;
+1. Create workbook
+2. Populate source data
+3. Add formula
+4. Calculate formulas
+5. Verify results
+6. Save workbook
+7. Print success message
 
+---
 
-## Output
+# Formula Rules
 
-Examples may generate:
+- Use valid Excel formula syntax
+- Calculate formulas after updates
+- Demonstrate one formula feature per example
+- Use meaningful sample data
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+---
 
-Output files are written to the working directory.
-- load-an-existing-workbook-then-assign-a-sum-formula-to-cell-b2-using-cellformula.cs
-- verify-that-the-assigned-formula-uses-english-us-function-names-and-commas-as-argument-separators.cs
-- loop-through-column-a-assign-incremental-row-references-in-a-multiplication-formula-and-store-results.cs
-- create-a-shared-formula-for-range-c3c12-by-invoking-cellsetsharedformula-on-the-first-cell.cs
-- configure-workbooksettingsmaxrowsofsharedformula-to-limit-shared-formula-rows-to-fifty-in-the-workbook.cs
-- set-maxrowsofsharedformula-to-zero-to-disable-shared-formulas-for-the-entire-workbook.cs
-- calculate-all-formulas-in-the-workbook-programmatically-using-workbookcalculate-and-retrieve-updated-cell-values.cs
-- read-the-calculated-result-of-cell-d5-after-invoking-the-worksheetcalculate-method.cs
-- use-calculateformula-method-to-evaluate-a-single-complex-formula-without-recalculating-the-whole-worksheet.cs
-- retrieve-the-formula-string-from-cell-e10-and-log-it-for-audit-purposes.cs
-- detect-cells-containing-calculation-errors-after-evaluation-and-log-their-addresses-for-investigation.cs
-- replace-all-instances-of-the-today-function-with-a-static-date-string-to-freeze-calculations.cs
-- replace-all-occurrences-of-concatenate-with-concat-function-across-the-workbook-for-modern-syntax.cs
-- verify-that-vlookup-function-is-supported-by-consulting-the-supported-excel-functions-documentation.cs
-- create-a-unit-test-confirming-sumproduct-function-returns-expected-results-for-a-given-data-set.cs
-- apply-a-shared-array-formula-to-a-matrix-range-and-verify-each-cell-returns-correct-aggregate-value.cs
-- create-a-conditional-formula-using-iferror-to-display-a-default-value-when-division-by-zero-occurs.cs
-- assign-the-same-formula-to-each-cell-in-column-b-using-a-loop-and-verify-correct-relative-references.cs
-- set-workbooksettingsmaxrowsofsharedformula-to-100-to-allow-larger-shared-formula-blocks.cs
-- use-cellformula-property-to-set-a-vlookup-formula-with-comma-separators-in-a-new-worksheet.cs
-- confirm-that-the-if-function-is-listed-in-the-supported-excel-functions-documentation.cs
-- create-a-unit-test-verifying-that-the-date-function-returns-correct-serial-numbers-for-valid-dates.cs
-- apply-setsharedformula-to-a-range-spanning-multiple-rows-and-columns-then-validate-calculated-results.cs
-- programmatically-change-a-formulas-arguments-to-use-commas-and-ensure-calculation-succeeds.cs
-- load-a-workbook-modify-a-formula-to-reference-a-different-cell-and-recalculate-to-verify-updated-value.cs
-- check-that-the-sumproduct-function-appears-in-the-supported-excel-functions-list-before-using-it.cs
-- implement-a-routine-that-reads-cellvalue-after-calculation-to-confirm-formula-evaluation-result.cs
-- create-a-batch-script-that-opens-multiple-workbooks-sets-a-shared-formula-and-saves-each-file.cs
-- verify-that-the-npv-function-is-supported-and-correctly-calculates-net-present-value-for-sample-cash-flows.cs
-- convert-all-formulas-to-english-us-syntax-with-commas-and-validate-successful-calculation-across-the-workbook.cs
-- generate-a-report-of-all-formulas-using-unsupported-functions-by-crossreferencing-the-supported-excel-functions-list.cs
-- load-an-existing-workbook-set-a-formula-referencing-an-external-file-and-save-changes.cs
-- set-a-formula-string-that-includes-a-vlookup-referencing-another-workbook-with-correct-path-syntax.cs
-- update-external-link-paths-in-formulas-after-moving-source-workbooks-to-a-new-directory.cs
-- programmatically-remove-all-external-references-from-formulas-in-a-workbook-to-prepare-for-distribution.cs
-- load-multiple-workbooks-in-a-batch-update-external-link-formulas-to-new-file-locations-and-save-each.cs
-- create-a-named-range-assign-a-simple-sum-formula-and-verify-the-calculated-result-programmatically.cs
-- define-a-named-range-with-an-index-formula-that-dynamically-adjusts-based-on-another-cells-value.cs
-- update-the-refersto-property-of-an-existing-named-range-to-include-a-new-column-in-its-formula.cs
-- generate-a-report-of-all-named-ranges-and-their-associated-formulas-for-documentation-purposes.cs
-- ensure-formula-strings-begin-with-an-equal-sign-before-setting-them-programmatically-to-avoid-parsing-errors.cs
-- use-the-setformula-method-to-assign-a-formula-that-references-an-external-workbook-in-a-cell.cs
-- disable-automatic-calculation-insert-formulas-then-manually-trigger-calculation-for-specific-worksheets-using-worksheetcalculateformula.cs
-- enable-the-calculation-chain-run-workbook-wide-calculation-and-measure-performance-improvement-over-default-mode.cs
-- disable-the-calculation-chain-recalculate-a-single-worksheet-and-compare-execution-time-with-chain-enabled.cs
-- benchmark-calculation-time-for-a-workbook-using-direct-evaluation-versus-calculation-chain-on-identical-formula-sets.cs
-- measure-memory-usage-while-calculating-formulas-with-and-without-the-calculation-chain-enabled-on-large-datasets.cs
-- use-the-cellcalculate-method-to-evaluate-a-formula-that-references-a-previously-defined-named-range.cs
-- retrieve-precedent-cells-for-a-specific-formula-cell-using-the-getprecedents-method-and-log-their-addresses.cs
-- retrieve-dependent-cells-for-a-formula-using-the-getdependents-method-and-export-the-list-to-a-csv-file.cs
-- export-the-list-of-dependent-cells-for-a-given-formula-to-a-csv-file-for-external-analysis.cs
-- generate-a-csv-file-listing-each-formula-cell-its-precedents-and-dependent-counts-for-audit-purposes.cs
-- extract-the-textual-representation-of-a-complex-array-formula-using-the-formulatext-function-for-debugging.cs
-- retrieve-and-log-the-formula-text-of-all-cells-in-a-worksheet-then-export-to-a-json-file.cs
-- use-the-worksheetcalculateformula-method-to-evaluate-formulas-only-on-sheets-marked-for-quarterly-reporting.cs
-- create-a-utility-that-scans-a-workbook-for-formulas-missing-the-leading-equal-sign-and-prefixes-them-automatically.cs
-- generate-a-report-of-all-formulas-that-contain-external-links-and-list-their-target-file-paths.cs
-- update-external-link-formulas-to-new-file-locations-after-migrating-source-workbooks-to-a-network-share.cs
-- verify-that-formulas-referencing-external-workbooks-are-correctly-updated-after-changing-the-source-file-paths.cs
-- use-the-refersto-property-to-modify-an-existing-named-ranges-formula-to-include-additional-cells.cs
-- create-a-named-range-using-an-offset-formula-to-define-a-dynamic-range-based-on-a-reference-cell.cs
-- load-a-workbook-from-disk-set-calculation-mode-to-manual-and-save-the-file.cs
-- retrieve-the-current-workbook-calculation-mode-and-output-its-enum-value-to-the-console.cs
-- change-workbook-calculation-mode-to-automatic-recalculate-all-formulas-and-verify-updated-cell-values.cs
-- configure-workbook-to-use-manual-calculation-then-programmatically-trigger-formula-evaluation-for-a-specific-worksheet.cs
-- set-workbook-calculation-mode-to-automaticexcepttables-ensuring-table-formulas-recalculate-while-other-formulas-remain-static.cs
-- enable-iterative-calculation-define-maximum-iterations-as-100-and-test-circular-reference-handling.cs
-- set-workbooks-iterative-calculation-maximum-change-to-0001-and-test-convergence-on-a-circular-reference-example.cs
-- load-multiple-workbooks-in-a-loop-set-each-to-manual-calculation-and-store-them-in-a-list.cs
-- batch-process-a-folder-of-excel-files-setting-each-workbooks-calculation-mode-to-manual-before-saving.cs
-- set-calculation-mode-to-manual-batch-rename-named-ranges-using-a-regex-pattern-then-enable-automatic-mode-and-recalc.cs
-- after-modifying-cell-values-invoke-workbookcalculateformula-to-refresh-dynamic-array-formulas-across-all-sheets.cs
-- insert-a-sort-dynamic-array-formula-into-cell-b2-and-verify-the-spilled-range-expands-correctly.cs
-- apply-a-unique-function-as-a-dynamic-array-formula-in-column-d-and-observe-automatic-deduplication.cs
-- change-source-data-for-a-filter-dynamic-array-formula-then-recalculate-workbook-to-update-results.cs
-- retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs
-- create-a-dynamic-array-formula-that-spills-into-empty-rows-then-insert-data-to-shift-the-spill-range.cs
-- create-a-dynamic-array-formula-that-references-a-spill-then-use-it-in-a-sum-formula-on-another-sheet.cs
-- create-a-listobject-named-salestable-add-a-column-with-a-sum-formula-and-test-propagation.cs
-- insert-a-new-row-into-salestable-and-confirm-the-column-formula-automatically-calculates-for-the-new-entry.cs
-- update-the-formula-of-a-table-column-to-include-if-logic-then-add-rows-to-verify-new-behavior.cs
-- remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs
-- convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs
-- add-a-calculated-column-to-a-listobject-using-the-xlookup-function-and-verify-automatic-propagation.cs
-- add-a-new-column-to-a-table-set-its-formula-to-reference-a-named-range-and-test-propagation.cs
-- define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs
-- retrieve-the-name-object-for-reportdata-change-its-text-property-to-summarydata-and-save-workbook.cs
-- identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs
-- clear-contents-of-the-named-range-reportdata-without-deleting-the-range-definition-itself.cs
-- remove-the-named-range-summarydata-from-the-workbook-and-verify-it-no-longer-appears-in-the-collection.cs
-- after-deleting-a-named-range-call-workbookcalculateformula-to-ensure-dependent-formulas-update-correctly.cs
-- iterate-through-all-named-ranges-output-each-name-and-its-address-to-a-debug-log.cs
-- rename-every-named-range-that-starts-with-temp-by-prefixing-archive_-using-a-loop-and-nametext.cs
-- programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs
-- validate-that-changing-a-named-ranges-address-updates-all-formulas-referencing-it-without-manual-intervention.cs
-- apply-a-custom-number-format-to-a-named-range-containing-financial-data-and-verify-display-correctness.cs
-- create-a-custom-style-with-border-fill-and-font-then-apply-it-to-the-union-of-two-ranges.cs
-- iterate-through-all-worksheets-in-a-workbook-applying-a-dynamic-array-formula-to-column-e-on-each-sheet.cs
-- disable-automatic-calculation-modify-several-cells-then-manually-invoke-workbookcalculateformula-to-update-dependent-formulas.cs
-- set-workbook-calculation-mode-to-automaticexcepttables-then-add-a-new-table-and-observe-recalculation-behavior.cs
-- add-a-new-worksheet-copy-a-table-with-formulas-and-ensure-calculation-mode-remains-consistent-across-sheets.cs
-- load-a-workbook-replace-all-occurrences-of-a-specific-named-range-with-a-new-range-and-recalc.cs
-- create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs
-- set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs
-- calculate-formulas-only-for-the-worksheet-named-summary-using-workbookcalculateformula-with-a-specific-sheet-parameter.cs
-- evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs
-- set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs
-- create-a-named-range-that-spans-multiple-worksheets-and-verify-that-formulas-can-reference-it-across-sheets.cs
-- create-a-named-range-that-spans-noncontiguous-cells-using-the-union-method-and-apply-a-custom-style.cs
-- merge-cells-across-columns-a-to-d-in-a-range-then-set-the-merged-cells-formula-to-calculate-total.cs
-- programmatically-merge-cells-in-a-named-range-then-set-the-merged-cells-formula-to-calculate-average.cs
-- apply-a-style-that-includes-text-rotation-to-a-merged-range-created-from-a-named-range.cs
-- load-a-workbook-disable-automatic-calculation-perform-bulk-data-import-then-enable-calculation-and-recalc.cs
-- create-a-named-range-that-references-a-whole-column-then-use-it-in-a-vlookup-formula-across-sheets.cs
-- set-the-workbook-to-use-iterative-calculation-create-a-circular-reference-and-verify-convergence-within-defined-tolerance.cs
-- load-workbook-from-file-stream-and-enable-iterative-calculation-for-complex-formulas.cs
-- load-workbook-from-memory-stream-modify-a-specific-formula-and-save-back-to-same-stream.cs
-- load-multiple-workbooks-merge-named-ranges-and-automatically-resolve-naming-conflicts.cs
-- set-workbook-calculation-mode-to-manual-modify-data-then-trigger-full-recalculation-on-demand.cs
-- iterate-over-all-worksheets-and-set-calculation-mode-to-automatic-after-completing-data-imports.cs
-- enable-iterative-calculation-with-a-maximum-of-100-iterations-and-a-convergence-threshold-of-0001.cs
-- programmatically-enable-iterative-calculation-with-a-custom-maximum-change-threshold-for-convergence.cs
-- set-calculation-engine-to-use-1904-date-system-for-legacy-date-dependent-formulas.cs
-- set-calculation-engine-to-ignore-circular-references-and-continue-evaluating-remaining-formulas.cs
-- configure-calculation-options-to-ignore-errors-in-formulas-referencing-empty-cells-during-evaluation.cs
-- configure-calculation-options-to-treat-division-by-zero-as-a-blank-cell-instead-of-an-error.cs
-- set-custom-calculation-engine-timeout-to-prevent-longrunning-formulas-from-hanging-the-application.cs
-- configure-workbook-to-treat-empty-strings-as-zero-when-evaluating-numeric-formulas.cs
-- configure-formula-parsing-to-use-us-english-function-names-regardless-of-system-locale-settings.cs
-- configure-workbook-to-ignore-external-link-errors-during-formula-evaluation-to-prevent-calculation-failures.cs
-- protect-a-worksheet-while-allowing-users-to-edit-cells-that-contain-formulas-only.cs
-- programmatically-disable-automatic-formula-recalculation-while-importing-large-data-sets-to-improve-import-speed.cs
-- programmatically-disable-automatic-calculation-while-performing-bulk-data-imports-then-enable-and-recalculate-once-complete.cs
-- programmatically-lock-cells-that-contain-formulas-to-prevent-accidental-overwriting-by-end-users.cs
-- programmatically-lock-all-cells-that-contain-formulas-and-unlock-only-input-cells-for-data-entry.cs
-- add-a-comment-to-each-cell-that-contains-a-formula-describing-its-purpose-for-documentation.cs
-- add-a-comment-to-each-named-range-describing-its-purpose-and-any-associated-business-rules.cs
-- create-a-custom-function-that-returns-the-median-of-a-range-and-register-it-for-use-in-formulas.cs
-- create-a-custom-function-that-returns-the-number-of-working-days-between-two-dates-for-use-in-formulas.cs
-- create-a-custom-function-that-calculates-compound-interest-and-register-it-for-financial-formulas.cs
-- create-a-custom-function-that-returns-the-fiscal-quarter-based-on-a-date-for-reporting-formulas.cs
-- create-a-custom-error-handler-that-replaces-na-results-with-a-userdefined-placeholder-text.cs
-- create-a-custom-calculation-option-that-treats-empty-cells-as-zero-when-used-in-arithmetic-formulas.cs
-- create-a-named-range-that-references-noncontiguous-cells-and-assign-a-custom-formula-to-it.cs
-- create-a-nonsequential-range-that-includes-cells-from-multiple-rows-and-columns-for-a-complex-chart.cs
-- create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-crosssheet-formula.cs
-- create-a-dynamic-named-range-that-expands-automatically-when-new-rows-are-added-to-a-table.cs
-- create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-side-of-a-table.cs
-- create-a-named-range-that-includes-cells-from-a-filtered-table-and-use-it-in-a-subtotal-formula.cs
-- create-a-named-range-that-aggregates-data-from-multiple-sheets-using-the-sum-function-for-dashboard-use.cs
-- create-a-named-range-that-references-cells-from-a-different-workbook-for-crossfile-formulas.cs
-- create-a-named-range-that-dynamically-adjusts-based-on-the-number-of-rows-in-a-table-using-offset.cs
-- create-a-named-range-that-aggregates-monthly-sales-data-using-sumifs-for-dynamic-reporting.cs
-- delete-all-named-ranges-that-start-with-the-prefix-temp_-across-every-worksheet-in-the-workbook.cs
-- copy-a-named-range-from-one-worksheet-to-another-while-preserving-its-absolute-cell-references.cs
-- retrieve-external-links-from-a-workbook-and-list-their-source-file-paths-for-audit-purposes.cs
-- update-external-link-urls-in-a-workbook-to-point-to-a-new-network-share-location.cs
-- replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs
-- create-a-formula-that-references-an-external-workbook-and-ensure-the-link-updates-when-the-source-file-moves.cs
-- identify-formulas-that-reference-external-workbooks-located-on-network-drives-and-generate-a-migration-checklist.cs
-- detect-formulas-that-reference-cells-on-hidden-worksheets-for-security-auditing.cs
-- detect-formulas-that-reference-cells-on-deleted-worksheets-and-automatically-update-them-to-reference-a-placeholder-sheet.cs
-- detect-formulas-that-reference-cells-on-worksheets-with-very-large-data-sets-and-suggest-optimization-strategies.cs
-- detect-formulas-that-reference-cells-outside-the-used-range-indicating-potential-data-errors.cs
-- identify-formulas-that-reference-named-ranges-defined-in-hidden-worksheets-and-generate-a-remediation-plan.cs
-- identify-formulas-that-reference-cells-in-deleted-rows-and-provide-correction-suggestions.cs
-- identify-cells-containing-circular-references-and-generate-a-report-highlighting-their-addresses-and-dependent-formulas.cs
-- identify-and-list-all-formulas-that-use-the-offset-function-noting-their-potential-volatility.cs
-- identify-and-list-formulas-that-use-the-indirect-function-noting-their-potential-impact-on-calculation-speed.cs
-- identify-and-list-formulas-that-use-volatile-functions-and-log-their-locations-for-performance-optimization.cs
-- identify-formulas-that-contain-hardcoded-constants-and-suggest-converting-them-to-named-parameters.cs
-- identify-formulas-that-use-the-now-deprecated-function-and-replace-them-with-the-recommended-alternative.cs
-- validate-that-all-formulas-in-a-workbook-reference-existing-cells-and-report-any-broken-references.cs
-- validate-the-syntax-of-a-userprovided-formula-string-before-inserting-it-into-a-worksheet-cell.cs
-- replace-all-instances-of-the-deprecated-sumif-function-with-sumifs-across-the-workbook.cs
-- replace-all-vlookup-formulas-with-indexmatch-combinations-to-enhance-lookup-performance.cs
-- replace-all-vlookup-formulas-that-perform-exact-matches-with-xlookup-for-improved-performance.cs
-- replace-all-occurrences-of-the-deprecated-getpivotdata-function-with-modern-structured-reference-equivalents.cs
-- replace-all-occurrences-of-the-deprecated-hlookup-function-with-xlookup-for-vertical-lookups.cs
-- replace-all-occurrences-of-the-deprecated-choose-function-with-nested-if-statements-for-compatibility.cs
-- replace-all-occurrences-of-the-deprecated-datevalue-function-with-direct-date-literals-for-readability.cs
-- replace-all-occurrences-of-the-deprecated-rept-function-with-the-newer-repeat-function-for-consistency.cs
-- replace-all-occurrences-of-the-deprecated-textjoin-function-with-concatenate-combined-with-delimiters-for-older-compatibility.cs
-- replace-all-instances-of-the-power-function-with-the-exponentiation-operator-for-simpler-syntax.cs
-- replace-all-formulas-that-use-the-today-function-with-static-dates-based-on-a-provided-snapshot-date.cs
-- replace-all-formulas-that-use-the-rand-function-with-a-static-seed-value-to-achieve-reproducible-results.cs
-- replace-all-formulas-that-reference-entire-columns-with-rangespecific-references-to-reduce-calculation-overhead.cs
-- replace-all-formulas-that-use-the-concatenate-function-with-the-modern-concat-operator-for-readability.cs
-- replace-all-formulas-that-use-the-indirect-function-with-alternatives-to-improve-calculation-stability.cs
-- apply-an-array-formula-to-a-rectangular-range-that-calculates-the-sum-of-corresponding-rows-across-sheets.cs
-- apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs
-- apply-a-custom-number-format-to-cells-containing-formulas-that-produce-negative-results.cs
-- apply-conditional-formatting-that-highlights-cells-where-the-formula-result-exceeds-a-dynamic-threshold.cs
-- apply-a-formula-that-uses-the-xlookup-function-to-replace-legacy-vlookup-implementations-across-the-workbook.cs
-- apply-a-formula-that-aggregates-data-using-sumifs-for-dynamic-monthly-sales-reporting.cs
-- convert-all-formula-cells-to-their-calculated-values-before-exporting-the-workbook-to-csv-format.cs
-- export-a-list-of-all-formulas-in-the-workbook-to-a-json-file-for-external-analysis.cs
-- export-a-list-of-named-ranges-along-with-their-associated-formulas-to-an-excel-summary-worksheet.cs
-- export-a-workbooks-formula-audit-trail-including-timestamps-of-each-calculation-to-an-xml-report.cs
-- export-the-workbooks-formula-dependency-matrix-to-a-csv-file-for-external-processing.cs
-- export-a-detailed-log-of-formula-evaluation-times-for-each-worksheet-to-assist-in-performance-tuning.cs
-- export-a-detailed-log-of-formula-errors-including-cell-address-error-type-and-timestamp.cs
-- export-a-csv-file-that-lists-each-formula-cell-its-address-and-the-evaluated-result.cs
-- export-a-csv-file-containing-each-formulas-address-text-and-last-evaluated-value-for-external-analysis.cs
-- export-a-json-representation-of-the-workbooks-formula-tree-capturing-parentchild-relationships-for-each-calculation.cs
-- export-a-list-of-formulas-that-contain-the-iferror-function-to-a-separate-worksheet-for-review.cs
-- export-all-formulas-that-use-the-sumproduct-function-to-a-separate-worksheet-for-performance-review.cs
-- export-a-detailed-audit-of-all-named-ranges-including-their-scope-address-and-any-associated-formulas.cs
-- export-a-summary-worksheet-that-aggregates-the-count-of-formulas-per-worksheet-categorized-by-function-type.cs
-- export-a-pivot-table-that-summarizes-the-results-of-all-formulas-grouped-by-worksheet-name.cs
-- export-the-workbooks-formula-evaluation-order-to-a-text-file-for-debugging-complex-dependency-chains.cs
-- generate-a-dependency-graph-of-formulas-across-worksheets-and-export-it-as-a-dot-file.cs
-- generate-a-summary-sheet-that-lists-each-named-range-its-address-and-the-formula-it-contains.cs
-- generate-a-report-of-all-formulas-that-contain-the-indirect-function-including-their-cell-addresses.cs
-- create-a-macrolike-routine-that-iterates-over-a-range-and-inserts-a-sum-formula-in-each-row.cs
-- create-a-macrostyle-loop-that-inserts-a-running-total-formula-in-each-row-of-a-financial-sheet.cs
-- create-a-macrostyle-routine-that-inserts-a-conditional-sumif-formula-into-each-row-based-on-a-flag-column.cs
-- create-a-macrostyle-routine-that-inserts-a-running-total-column-using-the-sum-function-across-rows.cs
-- programmatically-recalculate-formulas-after-bulk-inserting-rows-to-ensure-dependent-calculations-remain-accurate.cs
-- programmatically-enable-workbook-events-that-trigger-formula-recalculation-only-when-specific-cells-are-modified.cs
-- programmatically-set-the-workbooks-calculation-engine-to-use-64bit-precision-for-highaccuracy-financial-formulas.cs
-- set-the-workbooks-precision-as-displayed-property-to-true-ensuring-formulas-round-according-to-cell-formatting.cs
-- set-the-workbooks-precision-as-displayed-property-to-false-ensuring-calculations-use-full-double-precision.cs
-- set-the-calculation-engine-to-use-custom-precision-of-1012-decimal-places-for-scientific-formulas.cs
-- enable-formula-error-checking-and-collect-cells-that-produce-div0-errors.cs
-- add-a-data-validation-rule-that-restricts-formula-entry-to-cells-within-a-predefined-named-range.cs
-- extract-the-formula-text-from-each-cell-in-a-named-range-and-write-them-to-a-text-file.cs
+# Input Strategy
+
+- Do NOT rely on external XLSX files
+- Generate all worksheet data programmatically
+- Keep examples self-contained
+
+---
+
+# Output Rules
+
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
+
+---
+
+# Common Tasks
+
+- Add formulas
+- Modify formulas
+- Recalculate workbook formulas
+- Use named ranges in formulas
+- Work with array formulas
+- Configure calculation options
+
+---
+
+# Common Mistakes
+
+❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Add formulas without recalculation
+✅ Call Workbook.CalculateFormula()
+
+❌ Workbook workbook = new Workbook("input.xlsx");
+✅ Workbook workbook = new Workbook();
+
+---
+
+# Code Simplicity
+
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one formula capability per example
+
+---
+
+# General Rules
+
+Refer to the root agents.md for:
+- Boundaries
+- Testing requirements
+- Build and run instructions
