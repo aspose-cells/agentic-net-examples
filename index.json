@@ -11586,6 +11586,116 @@
     },
     {
       "category": "sparkline",
+      "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
+      "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
+    },
+    {
+      "category": "sparkline",
+      "file": "adjust-sparkline-lighting-to-soft-mode-for-improved-appearance-in-excel-2010-files.cs",
+      "title": "Adjust sparkline lighting to 'Soft' mode for improved appearance in Excel 2010 files."
+    },
+    {
+      "category": "sparkline",
+      "file": "apply-3d-formatting-with-thirty-degree-rotation-to-sparkline-group-located-at-g1.cs",
+      "title": "Apply 3D formatting with thirty-degree rotation to sparkline group located at G1."
+    },
+    {
+      "category": "sparkline",
+      "file": "apply-custom-background-color-to-sparkline-chart-area-to-match-workbook-theme-colors.cs",
+      "title": "Apply custom background color to sparkline chart area to match workbook theme colors."
+    },
+    {
+      "category": "sparkline",
+      "file": "apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs",
+      "title": "Apply custom line weight of two points to sparkline group situated in cell K7."
+    },
+    {
+      "category": "sparkline",
+      "file": "batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs",
+      "title": "Batch create sparklines for rows one through twenty, each using corresponding column data range."
+    },
+    {
+      "category": "sparkline",
+      "file": "benchmark-performance-of-creating-five-thousand-sparklines-in-a-large-workbook-to-assess-scalability.cs",
+      "title": "Benchmark performance of creating five thousand sparklines in a large workbook to assess scalability."
+    },
+    {
+      "category": "sparkline",
+      "file": "change-sparkline-material-to-plastic-to-affect-surface-shading-and-give-subtle-glossy-effect.cs",
+      "title": "Change sparkline material to 'Plastic' to affect surface shading and give subtle glossy effect."
+    },
+    {
+      "category": "sparkline",
+      "file": "clone-an-existing-sparkline-group-and-place-the-clone-into-a-different-worksheet.cs",
+      "title": "Clone an existing sparkline group and place the clone into a different worksheet."
+    },
+    {
+      "category": "sparkline",
+      "file": "configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs",
+      "title": "Configure sparkline axis minimum and maximum to fixed numeric values for consistent scaling."
+    },
+    {
+      "category": "sparkline",
+      "file": "configure-sparkline-to-ignore-hidden-cells-while-calculating-values-to-reflect-only-visible-data.cs",
+      "title": "Configure sparkline to ignore hidden cells while calculating values to reflect only visible data."
+    },
+    {
+      "category": "sparkline",
+      "file": "create-a-column-sparkline-in-cell-c5-based-on-values-from-d5d15-range.cs",
+      "title": "Create a column sparkline in cell C5 based on values from D5:D15 range."
+    },
+    {
+      "category": "sparkline",
+      "file": "create-a-sparkline-referencing-data-from-another-worksheet-named-datasheet-for-crosssheet-trends.cs",
+      "title": "Create a sparkline referencing data from another worksheet named 'DataSheet' for cross\u2011sheet trends."
+    },
+    {
+      "category": "sparkline",
+      "file": "delete-the-second-sparkline-in-the-first-sparkline-group-using-sparklinegroupremoveat-method.cs",
+      "title": "Delete the second sparkline in the first sparkline group using SparklineGroup.RemoveAt method."
+    },
+    {
+      "category": "sparkline",
+      "file": "deserialize-sparkline-configuration-from-json-file-and-apply-settings-to-newly-created-workbook.cs",
+      "title": "Deserialize sparkline configuration from JSON file and apply settings to newly created workbook."
+    },
+    {
+      "category": "sparkline",
+      "file": "enable-display-of-both-first-and-last-points-in-line-sparkline-located-at-i4.cs",
+      "title": "Enable display of both first and last points in line sparkline located at I4."
+    },
+    {
+      "category": "sparkline",
+      "file": "enable-display-of-empty-cells-as-zero-values-in-sparkline-at-cell-m9-for-accurate-totals.cs",
+      "title": "Enable display of empty cells as zero values in sparkline at cell M9 for accurate totals."
+    },
+    {
+      "category": "sparkline",
+      "file": "enable-sparkline-markers-only-for-outlier-points-exceeding-predefined-threshold-to-highlight-anomalies.cs",
+      "title": "Enable sparkline markers only for outlier points exceeding predefined threshold to highlight anomalies."
+    },
+    {
+      "category": "sparkline",
+      "file": "export-a-specific-sparkline-as-a-png-image-file-to-designated-output-directory.cs",
+      "title": "Export a specific sparkline as a PNG image file to designated output directory."
+    },
+    {
+      "category": "sparkline",
+      "file": "handle-null-values-in-source-data-range-gracefully-when-generating-sparkline-to-avoid-rendering-errors.cs",
+      "title": "Handle null values in source data range gracefully when generating sparkline to avoid rendering errors."
+    },
+    {
+      "category": "sparkline",
+      "file": "insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs",
+      "title": "Insert a win/loss sparkline at cell E2 referencing data in F2:F12 range."
+    },
+    {
+      "category": "sparkline",
+      "file": "iterate-through-each-sparkline-collect-average-values-and-store-results-in-a-list.cs",
+      "title": "Iterate through each sparkline, collect average values, and store results in a list."
+    },
+    {
+      "category": "sparkline",
       "file": "load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs",
       "title": "Load an existing workbook and import Aspose.Cells.Charts namespace for sparkline operations."
     },
