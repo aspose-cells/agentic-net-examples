@@ -4,33 +4,40 @@ AI-friendly repository containing validated C# examples for Aspose.Cells for .NE
 
 ## Overview
 
-This repository provides working code examples demonstrating Aspose.Cells for .NET capabilities. All examples are automatically generated, compiled, and validated using the Aspose.Cells Examples Generator.
+This repository provides working code examples demonstrating Aspose.Cells for .NET capabilities. All examples are automatically generated, compiled, executed, and validated using the Aspose.Cells Examples Generator.
 
 ## Repository Structure
 
 Examples are organized by feature category:
 
+- `calculate-formulas/`
 - `cells-data/`
 - `comments-and-notes/`
 - `conversion/`
 - `document-properties/`
 - `encryption-and-protection/`
+- `format-cells/`
 - `globalization-and-localization/`
 - `macro-project/`
 - `manage-formulas/`
 - `manage-workbook/`
 - `managing-ranges/`
 - `open-workbook/`
+- `pivot-table/`
 - `queries-and-connections/`
+- `rows-and-columns/`
 - `save-workbook/`
 - `slicer/`
 - `smart-markers/`
 - `sparkline/`
+- `timeline/`
 - `workbook-merger/`
+- `working-with-charts/`
 - `working-with-html/`
 - `working-with-images/`
 - `working-with-json/`
 - `working-with-pdf/`
+- `working-with-shapes/`
 - `working-with-tables/`
 - `working-with-worksheets/`
 - `xml-maps/`
@@ -49,59 +56,70 @@ Each category contains standalone `.cs` files that can be compiled and run indep
 
 Each example is a self-contained C# file. To run an example:
 
+```bash
 cd <CategoryFolder>
 dotnet new console -o ExampleProject
 cd ExampleProject
 dotnet add package Aspose.Cells
 # Copy the example .cs file as Program.cs
 dotnet build
-
 dotnet run
+```
 
 ## Code Patterns
 
 ### Loading a Workbook
 
+```csharp
 using (Workbook workbook = new Workbook("input.xlsx"))
 {
     // Work with workbook
 }
+```
 
 ### Accessing Worksheets and Cells
 
+```csharp
 Worksheet worksheet = workbook.Worksheets[0];
 Cell cell = worksheet.Cells["A1"];
 cell.PutValue("Hello World");
+```
 
 ### Saving a Workbook
 
+```csharp
 workbook.Save("output.xlsx");
+```
 
-### Important Notes
+## Important Notes
 
-- Zero-based indexing: Worksheets use 0-based indexing (Worksheets[0] = first worksheet)
-- Core object: Aspose.Cells works with Workbook instead of Document
-- Deterministic cleanup: Use using statements where applicable
+- Zero-based indexing: Worksheets use 0-based indexing (`Worksheets[0]` = first worksheet)
+- Core object: Aspose.Cells works with `Workbook` instead of `Document`
+- Supported formats: XLSX, XLS, XLSM, CSV, TSV, ODS, PDF, HTML, JSON, and more
+- Deterministic cleanup: Use `using` statements where applicable
+- Console output: Success and error messages are written to `Console.WriteLine` and `Console.Error`
 
 ## Contributing
 
 Examples in this repository are automatically generated. To suggest new examples:
 
 1. Submit tasks to the Aspose.Cells Examples Generator
-2. Generated examples are validated via compilation
+2. Generated examples are validated via compilation and execution
 3. Passing examples are included in repository updates
 
 ## Related Resources
 
-- [Aspose.Cells for .NET Documentation](https://docs.aspose.com/cells/net/)  
-- [API Reference](https://reference.aspose.com/cells/net/)  
-- [Aspose Forum](https://forum.aspose.com/c/cells/9)  
-- [AI Agent Guide (agents.md)](./agents.md)  
+- [Aspose.Cells for .NET Documentation](https://docs.aspose.com/cells/net/)
+- [API Reference](https://reference.aspose.com/cells/net/)
+- [Aspose Forum](https://forum.aspose.com/c/cells/9)
+- [AI Agent Guide (agents.md)](./agents.md)
 
 ## License
 
-All examples use Aspose.Cells for .NET and require a valid license for production use. See licensing page on Aspose website.
+All examples use Aspose.Cells for .NET and require a valid license for production use. See licensing information on the Aspose website.
 
 ---
 
-This repository is maintained by automated code generation. For AI-friendly guidance, see agents.md. Last updated: 2026-05-20
+This repository is maintained by automated code generation. For AI-friendly guidance, see agents.md.
+
+Last updated: 2026-05-25

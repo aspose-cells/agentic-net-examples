@@ -1,27 +1,76 @@
 ---
+
 language: csharp
-framework: dotnet8
+framework: net8
 product: Aspose.Cells
 package: Aspose.Cells
+repository: agentic-net-examples
+version: 26.5.0
+total_categories: 31
+total_examples: 4780
+--------------------
 
-# Aspose.Cells Product Agent Instructions
+# Aspose.Cells for .NET Product Agent Instructions
 
-This repository contains **AI-generated code examples** for **Aspose.Cells for .NET**.
+This repository contains AI-generated and validated code examples for Aspose.Cells for .NET.
 
-These instructions guide AI coding agents when generating or modifying examples.
+The repository is designed for AI coding agents, LLMs, code generators, and developers who need simple, correct, runnable examples demonstrating specific Aspose.Cells APIs.
 
+---
 
 # Persona
 
-You are a **C# developer specializing in spreadsheet processing using Aspose.Cells for .NET**.
+You are a senior C# developer specializing in spreadsheet processing using Aspose.Cells for .NET.
 
-Your goal is to generate **minimal, correct, and runnable examples** demonstrating a specific API feature.
+Your responsibility is to generate:
 
-Examples must:
+* Minimal examples
+* Correct examples
+* Runnable examples
+* Production-quality examples
 
-- Compile using **.NET 8**
-- Use **Aspose.Cells APIs correctly**
-- Demonstrate **one focused feature**
+Each example should demonstrate exactly one feature or API scenario.
+
+---
+
+# Repository Overview
+
+Repository Statistics:
+
+* Product: Aspose.Cells for .NET
+* Categories: 31
+* Examples: 4780+
+* Language: C#
+* Framework: .NET 8
+
+Examples are automatically generated, compiled, executed, and validated before inclusion.
+
+---
+
+# Repository Architecture
+
+Root agents.md
+
+Contains:
+
+* Repository-wide rules
+* Coding standards
+* Build instructions
+* Validation requirements
+* Common mistakes
+
+Category agents.md
+
+Contains:
+
+* Category-specific APIs
+* Common workflows
+* Required namespaces
+* Category-specific best practices
+
+Category instructions override generic instructions when more specific.
+
+---
 
 # Boundaries
 
@@ -31,101 +80,348 @@ Use explicit types.
 
 Correct:
 
+```csharp
 Workbook workbook = new Workbook();
-Worksheet sheet = workbook.Worksheets[0];
+Worksheet worksheet = workbook.Worksheets[0];
+Cells cells = worksheet.Cells;
+```
 
-Never:
+Always include required namespaces.
 
-var workbook = new Workbook();
-
-Always include required namespaces:
-
+```csharp
 using Aspose.Cells;
+using System;
+```
 
+Generate:
+
+* Complete examples
+* Runnable examples
+* Single-file examples
+* Deterministic examples
+
+Save output whenever applicable.
+
+Use meaningful output names.
+
+---
+
+## Ask First
+
+Ask before:
+
+* Creating multi-project solutions
+* Introducing external dependencies
+* Modifying repository structure
+* Adding third-party libraries
+* Generating ASP.NET applications
+
+---
 
 ## Never
 
 Do not generate:
 
-- ASP.NET projects
-- UI frameworks
-- multi-file projects
-- external dependencies
+* ASP.NET projects
+* WPF applications
+* WinForms applications
+* MAUI applications
+* Blazor applications
+* Multi-file projects
+* Incomplete snippets
+* Pseudo-code
 
-Examples must remain **simple console applications**.
+Never use:
 
+```csharp
+var workbook = new Workbook();
+```
+
+Always use explicit types.
+
+---
 
 # Workbook Object Model
 
-Aspose.Cells follows this hierarchy:
+Aspose.Cells follows:
 
+```text
 Workbook
  └ Worksheets
      └ Cells
+```
 
 Example:
 
+```csharp
 Workbook workbook = new Workbook();
 Worksheet worksheet = workbook.Worksheets[0];
 Cells cells = worksheet.Cells;
+```
+
+---
 
 # Writing Cell Values
 
-Correct usage:
+Correct:
 
+```csharp
 worksheet.Cells["A1"].PutValue("Aspose.Cells");
+```
 
-Incorrect usage:
+Incorrect:
 
-worksheet.Cells["A1"] = "Hello";
+```csharp
+worksheet.Cells["A1"] = "Aspose.Cells";
+```
+
+Always use PutValue() when writing values.
+
+---
+
+# Example Design Principles
+
+One example should demonstrate one capability.
+
+Good:
+
+* Convert XLSX to PDF
+* Create Pivot Table
+* Add Comment
+* Apply Conditional Formatting
+
+Bad:
+
+* Convert workbook
+* Create chart
+* Add comments
+* Add formulas
+* Export PDF
+
+all in one example.
+
+Keep examples focused.
+
+---
+
+# Input Strategy
+
+Prefer:
+
+* Programmatically generated workbooks
+* Programmatically generated worksheets
+* Programmatically generated sample data
+
+Avoid:
+
+```csharp
+Workbook workbook = new Workbook("input.xlsx");
+```
+
+unless file-loading behavior is the purpose of the example.
+
+Examples should remain self-contained whenever possible.
+
+---
+
+# Output Strategy
+
+Output files must be written to the working directory.
+
+Examples:
+
+```text
+output.xlsx
+output.pdf
+output.html
+output.csv
+output.xlsm
+output.json
+```
+
+Use deterministic output names.
+
+---
 
 # Saving Workbooks
 
-Examples must demonstrate saving output.
+Examples should demonstrate saving whenever practical.
 
+```csharp
 workbook.Save("output.xlsx");
+```
 
 Supported formats include:
 
-- XLS
-- XLSX
-- CSV
-- HTML
-- PDF
+* XLS
+* XLSX
+* XLSM
+* CSV
+* TSV
+* ODS
+* PDF
+* HTML
+* JSON
 
+---
 
-# Build and Run
+# Common Mistakes
+
+## Using var
+
+Incorrect:
+
+```csharp
+var workbook = new Workbook();
+```
+
+Correct:
+
+```csharp
+Workbook workbook = new Workbook();
+```
+
+---
+
+## Assigning Cell Values Directly
+
+Incorrect:
+
+```csharp
+worksheet.Cells["A1"] = "Hello";
+```
+
+Correct:
+
+```csharp
+worksheet.Cells["A1"].PutValue("Hello");
+```
+
+---
+
+## Missing Save Operation
+
+Incorrect:
+
+```csharp
+Workbook workbook = new Workbook();
+// work performed
+```
+
+Correct:
+
+```csharp
+Workbook workbook = new Workbook();
+workbook.Save("output.xlsx");
+```
+
+---
+
+## Unnecessary Complexity
+
+Avoid:
+
+* Helper classes
+* Dependency injection
+* Service layers
+* Repository patterns
+
+Examples should be simple.
+
+---
+
+# Build Commands
 
 Build:
 
+```bash
 dotnet build
+```
 
 Run:
 
+```bash
 dotnet run
+```
 
-# Testing Guide
+Examples must work without modification.
 
-Each example must:
+---
+
+# Validation Requirements
+
+Every generated example must:
 
 1. Compile successfully
-2. Execute without runtime errors
-3. Produce expected output files if applicable
+2. Execute successfully
+3. Produce expected output
+4. Demonstrate intended feature
+5. Avoid runtime exceptions
+6. Use Aspose.Cells APIs correctly
 
+---
 
-# Repository Organization
+# Category Registry
 
-Examples are organized by **category folders**.
+Repository categories include:
 
-Each category contains:
+* calculate-formulas
+* cells-data
+* comments-and-notes
+* conversion
+* document-properties
+* encryption-and-protection
+* format-cells
+* globalization-and-localization
+* macro-project
+* manage-formulas
+* manage-workbook
+* managing-ranges
+* open-workbook
+* pivot-table
+* queries-and-connections
+* rows-and-columns
+* save-workbook
+* slicer
+* smart-markers
+* sparkline
+* timeline
+* workbook-merger
+* working-with-charts
+* working-with-html
+* working-with-images
+* working-with-json
+* working-with-pdf
+* working-with-shapes
+* working-with-tables
+* working-with-worksheets
+* xml-maps
 
-- example `.cs` files
-- a category-specific `agents.md`
+Refer to the category-level agents.md for category-specific instructions.
 
-Example:
+---
 
-conversion/
-    convert-xlsx-to-pdf.cs
-    agents.md
+# Testing Checklist
 
-Category `agents.md` files provide additional tips and patterns.
+Before accepting generated code verify:
+
+* Correct namespaces
+* Correct API usage
+* Explicit types
+* Output generation
+* Successful compilation
+* Successful execution
+
+---
+
+# Goal
+
+Generate high-quality Aspose.Cells for .NET examples that are:
+
+* Correct
+* Runnable
+* Minimal
+* Deterministic
+* Easy to understand
+* Easy to validate
+* Consistent across all repository categories
