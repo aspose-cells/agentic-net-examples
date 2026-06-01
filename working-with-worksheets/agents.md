@@ -2,21 +2,23 @@
 category: working-with-worksheets
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with worksheets using Aspose.Cells for .NET**.
+You are a C# developer specializing in worksheet operations using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE worksheet-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE worksheet scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (create, rename, access, delete worksheets)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -29,56 +31,60 @@ using Aspose.Cells;
 
 # Key APIs
 
-- Workbook.Worksheets
 - Worksheet
-- Worksheets.Add()
-- Worksheets.RemoveAt()
-- Worksheet.Name
+- WorksheetCollection
+- Workbook.Worksheets
+- Cells
+- PageSetup
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-
-// Add worksheet
-int index = workbook.Worksheets.Add();
-Worksheet worksheet = workbook.Worksheets[index];
-worksheet.Name = "MySheet";
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Create or access worksheet
+3. Perform worksheet operation
+4. Verify worksheet state
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# Worksheet Rules
 
-- Use workbook.Worksheets to manage sheets
-- Always access worksheets via index
-- Rename using Worksheet.Name
-- One example = one operation
+- Use workbook.Worksheets to access worksheets
+- Demonstrate one worksheet feature per example
+- Use meaningful worksheet names
+- Keep worksheet operations isolated and easy to understand
 
 ---
 
 # Input Strategy
 
-- Do NOT rely on external files
-- Create workbook programmatically
+- Do NOT rely on external XLSX files
+- Create workbook and worksheets programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created successfully
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Add new worksheet
+- Add worksheet
 - Rename worksheet
-- Delete worksheet
-- Access existing worksheet
+- Remove worksheet
+- Copy worksheet
+- Move worksheet
+- Set active worksheet
+- Access worksheet properties
+- Configure page setup
 
 ---
 
@@ -87,23 +93,25 @@ workbook.Save("output.xlsx");
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
 
+❌ Hard-code invalid worksheet indexes
+✅ Verify worksheet exists before access
+
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
-
-❌ workbook.Worksheets.Add("Sheet1");
-✅ int index = workbook.Worksheets.Add();
 
 ---
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one worksheet capability per example
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

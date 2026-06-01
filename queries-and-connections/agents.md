@@ -2,21 +2,23 @@
 category: queries-and-connections
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with data connections and queries using Aspose.Cells for .NET**.
+You are a C# developer specializing in data queries, external connections, and workbook data integration using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE operation related to queries or connections.
+Generate simple, correct, production-quality examples that demonstrate ONE query or connection scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (create, access, modify connections)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies unless the example specifically demonstrates a connection type
 
 ---
 
@@ -25,60 +27,65 @@ You generate simple, correct, and runnable examples that demonstrate ONE operati
 using System;
 using Aspose.Cells;
 
+Add connection-specific namespaces only when required.
+
 ---
 
 # Key APIs
 
-- workbook.DataConnections
 - ExternalConnection
-- DBConnection
-- WebQueryConnection
+- ExternalConnectionCollection
+- Workbook.DataConnections
+- QueryTable
+- Workbook.RefreshAll()
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-
-// Example: access connections
-DataConnectionCollection connections = workbook.DataConnections;
-
-// Add or inspect connections (simplified example)
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Create or access data connection
+3. Configure query or connection settings
+4. Refresh or retrieve data
+5. Validate results
+6. Save workbook
+7. Print success message
 
 ---
 
-# Rules
+# Queries and Connections Rules
 
-- Use workbook.DataConnections to manage connections
-- Use appropriate connection type (DBConnection, WebQueryConnection)
-- Keep examples simple and self-contained
-- One example = one operation
+- Demonstrate one connection feature per example
+- Prefer mock or programmatic data when possible
+- Clearly identify connection type being demonstrated
+- Use RefreshAll() when connection refresh behavior is part of the example
 
 ---
 
 # Input Strategy
 
-- Do NOT rely on real external databases or URLs
-- Simulate or demonstrate structure only
-- Ensure example runs independently
+- Avoid dependency on unavailable external systems
+- Use self-contained examples whenever possible
+- Keep connection demonstrations simple and reproducible
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Access data connections
-- Add new connection
-- Modify connection properties
-- Remove connection
+- Create data connections
+- Access workbook connections
+- Configure query tables
+- Refresh external data
+- Inspect connection properties
+- Manage connection collections
 
 ---
 
@@ -87,6 +94,9 @@ workbook.Save("output.xlsx");
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
 
+❌ Depend on inaccessible external services
+✅ Use reproducible sample connection scenarios
+
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
 
@@ -94,14 +104,15 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid real external dependencies
-- Focus on structure, not live connections
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one query or connection capability per example
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

@@ -2,21 +2,23 @@
 category: cells-data
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with cell data using Aspose.Cells for .NET**.
+You are a C# developer specializing in cell data operations using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE cell data operation.
+Generate simple, correct, production-quality examples that demonstrate ONE cell-data scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (read / write / update / format cell data)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -29,64 +31,68 @@ using Aspose.Cells;
 
 # Key APIs
 
-- worksheet.Cells[row, column]
-- worksheet.Cells["A1"]
+- Cell
+- Cells
+- Worksheet.Cells
 - Cell.PutValue()
 - Cell.Value
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-worksheet.Cells["A1"].PutValue("Hello");
-object value = worksheet.Cells["A1"].Value;
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Access worksheet
+3. Read or write cell data
+4. Verify results
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# Cells Data Rules
 
-- Always use PutValue() to set cell data
-- Use correct data types (string, int, double, DateTime, bool)
-- Prefer A1 notation for clarity
-- One example = one clear operation
+- Use PutValue() when writing values
+- Use appropriate data types (string, int, double, DateTime, bool)
+- Demonstrate one cell-data feature per example
+- Keep sample data simple and meaningful
 
 ---
 
 # Input Strategy
 
-- Do NOT use external files
-- Create workbook programmatically
+- Do NOT rely on external XLSX files
+- Generate all worksheet data programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Write data to cells
-- Read data from cells
-- Update existing cell values
-- Work with multiple cells
+- Write cell values
+- Read cell values
+- Update cell values
+- Work with rows and columns
+- Handle data types
+- Access cell ranges
 
 ---
 
 # Common Mistakes
 
-❌ worksheet.Cells["A1"] = "Hello";
-✅ worksheet.Cells["A1"].PutValue("Hello");
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ worksheet.Cells["A1"] = "Hello";
+✅ worksheet.Cells["A1"].PutValue("Hello");
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -95,13 +101,15 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary loops unless needed
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one cell-data capability per example
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

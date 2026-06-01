@@ -2,21 +2,23 @@
 category: encryption-and-protection
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **encryption and protection features using Aspose.Cells for .NET**.
+You are a C# developer specializing in workbook, worksheet, and file protection using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE protection or encryption feature.
+Generate simple, correct, production-quality examples that demonstrate ONE encryption or protection scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (protect workbook, protect worksheet, set password, unprotect)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -29,48 +31,48 @@ using Aspose.Cells;
 
 # Key APIs
 
-- workbook.Settings.Password
-- worksheet.Protect()
-- worksheet.Unprotect()
+- Protection
 - ProtectionType
+- Worksheet.Protect()
+- Worksheet.Unprotect()
+- Workbook.Settings.Password
+- FileFormatUtil
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Protect worksheet
-worksheet.Protect(ProtectionType.All);
-
-// Set password
-workbook.Settings.Password = "1234";
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Add sample worksheet data
+3. Apply protection or encryption
+4. Validate protection settings
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# Encryption and Protection Rules
 
-- Use Protect() for worksheet protection
-- Use workbook.Settings.Password for workbook encryption
-- Use correct ProtectionType enum
-- One example = one operation
+- Demonstrate one protection feature per example
+- Use meaningful passwords in examples
+- Show both protect and unprotect workflows when applicable
+- Clearly distinguish worksheet protection from file encryption
 
 ---
 
 # Input Strategy
 
-- Do NOT use external files
+- Do NOT rely on external XLSX files
 - Create workbook programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
@@ -78,8 +80,10 @@ workbook.Save("output.xlsx");
 
 - Protect worksheet
 - Unprotect worksheet
-- Set password on workbook
-- Remove protection
+- Protect workbook structure
+- Encrypt workbook with password
+- Configure protection permissions
+- Verify protection settings
 
 ---
 
@@ -88,8 +92,8 @@ workbook.Save("output.xlsx");
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
 
-❌ worksheet.Protect();
-✅ worksheet.Protect(ProtectionType.All);
+❌ Assume worksheet protection encrypts workbook
+✅ Explain worksheet protection and file encryption separately
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -98,13 +102,15 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one protection capability per example
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

@@ -2,21 +2,23 @@
 category: save-workbook
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **saving workbooks using Aspose.Cells for .NET**.
+You are a C# developer specializing in workbook saving and export operations using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE saving operation.
+Generate simple, correct, production-quality examples that demonstrate ONE workbook-saving scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (save in different formats or with options)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -25,69 +27,73 @@ You generate simple, correct, and runnable examples that demonstrate ONE saving 
 using System;
 using Aspose.Cells;
 
+Add SaveOptions namespaces only when required.
+
 ---
 
 # Key APIs
 
 - Workbook.Save()
 - SaveFormat
-- SaveOptions
+- PdfSaveOptions
+- HtmlSaveOptions
+- OdsSaveOptions
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-
-// Add sample data
-Worksheet worksheet = workbook.Worksheets[0];
-worksheet.Cells["A1"].PutValue("Sample");
-
-// Save workbook
-workbook.Save("output.xlsx", SaveFormat.Xlsx);
+1. Create workbook
+2. Populate sample data
+3. Configure save options (if required)
+4. Save workbook
+5. Validate output
+6. Print success message
 
 ---
 
-# Rules
+# Save Workbook Rules
 
-- Always use Workbook.Save()
-- Use correct SaveFormat when needed
-- Use SaveOptions only when required
-- One example = one operation
+- Always save generated output to the working directory
+- Use the appropriate SaveFormat
+- Use SaveOptions only when demonstrating save customization
+- One example = one save operation
 
 ---
 
 # Input Strategy
 
-- Do NOT rely on external files
+- Do NOT depend on input.xlsx
 - Create workbook programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always generate output file
-- Use appropriate file extension
-- Ensure file is created
+- Always generate an output file
+- Use meaningful names such as output.xlsx, output.pdf, output.html
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Save workbook in XLSX
-- Save in PDF, CSV, HTML
-- Save with options
-- Save to stream (if needed)
+- Save XLSX workbook
+- Save as PDF
+- Save as HTML
+- Save as ODS
+- Save with custom options
 
 ---
 
 # Common Mistakes
 
-❌ workbook.Save("output.xlsx");
-✅ workbook.Save("output.xlsx", SaveFormat.Xlsx);
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ Save without specifying required options
+✅ Configure SaveOptions when demonstrating custom behavior
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -96,13 +102,14 @@ workbook.Save("output.xlsx", SaveFormat.Xlsx);
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

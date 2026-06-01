@@ -2,21 +2,23 @@
 category: timeline
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with timelines using Aspose.Cells for .NET**.
+You are a C# developer specializing in timeline features using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE timeline-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE timeline scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (create, access, modify timelines)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -32,70 +34,63 @@ using Aspose.Cells.Pivot;
 
 - Timeline
 - TimelineCollection
-- worksheet.Timelines.Add()
 - PivotTable
+- Worksheet.Timelines
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Add sample data
-worksheet.Cells["A1"].PutValue("Date");
-worksheet.Cells["A2"].PutValue(DateTime.Now);
-
-// Create pivot table
-int pivotIndex = worksheet.PivotTables.Add("A1:A2", "E5", "PivotTable1");
-
-// Add timeline
-int timelineIndex = worksheet.Timelines.Add(pivotIndex, 0, "Timeline1");
-Timeline timeline = worksheet.Timelines[timelineIndex];
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Create sample date-based data
+3. Create PivotTable
+4. Create Timeline
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# Timeline Rules
 
-- Timeline must be associated with a PivotTable
-- Ensure valid date field exists
-- Use Timelines.Add() correctly
-- One example = one operation
+- Timelines require a PivotTable data source
+- Include valid date fields
+- Use realistic sample data
+- One example = one timeline operation
 
 ---
 
 # Input Strategy
 
-- Do NOT rely on external files
-- Create workbook and sample data programmatically
+- Do NOT rely on external XLSX files
+- Create all data programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created successfully
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Create timeline for pivot table
+- Create timeline
+- Access timelines
 - Modify timeline properties
-- Filter data using timeline
-- Connect timeline to data source
+- Connect timeline to PivotTable
 
 ---
 
 # Common Mistakes
 
-❌ worksheet.Timelines.Add("A1");
-✅ worksheet.Timelines.Add(pivotIndex, 0, "Timeline1");
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ Use timeline without date fields
+✅ Create valid date-based source data
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -104,13 +99,14 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

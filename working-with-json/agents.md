@@ -2,21 +2,23 @@
 category: working-with-json
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with JSON using Aspose.Cells for .NET**.
+You are a C# developer specializing in JSON import, export, and transformation using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE JSON-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE JSON scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (import JSON, export to JSON, configure JSON options)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -30,34 +32,31 @@ using Aspose.Cells.Utility;
 
 # Key APIs
 
+- JsonUtility
 - JsonLayoutOptions
-- JsonUtility.ImportData()
-- Workbook.Save()
+- Workbook
+- Worksheet
+- Cells
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Sample JSON data
-string json = "[{\"Name\":\"John\",\"Age\":30}]";
-
-// Import JSON
-JsonLayoutOptions options = new JsonLayoutOptions();
-JsonUtility.ImportData(json, worksheet.Cells, 0, 0, options);
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Create JSON data
+3. Import or process JSON
+4. Validate worksheet content
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# JSON Rules
 
-- Use JsonUtility.ImportData() to import JSON
-- Use JsonLayoutOptions for layout control
-- Keep JSON simple and inline (no external files)
-- One example = one operation
+- Use JsonUtility for JSON operations
+- Keep JSON samples small and readable
+- Use JsonLayoutOptions when structure matters
+- One example = one JSON operation
 
 ---
 
@@ -65,13 +64,15 @@ workbook.Save("output.xlsx");
 
 - Do NOT rely on external JSON files
 - Use inline JSON strings
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
@@ -80,29 +81,33 @@ workbook.Save("output.xlsx");
 - Import JSON into worksheet
 - Convert JSON to Excel
 - Configure JSON layout
-- Handle nested JSON (basic)
+- Process nested JSON
 
 ---
 
 # Common Mistakes
 
-❌ Workbook workbook = new Workbook("input.json");
-✅ Use inline JSON string instead
-
 ❌ var workbook = new Workbook();
+✅ Workbook workbook = new Workbook();
+
+❌ Depend on external JSON files
+✅ Use inline JSON samples
+
+❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
 
 ---
 
 # Code Simplicity
 
-- Keep JSON small and readable
-- Avoid complex nested structures unless required
+- Keep examples concise
+- Avoid unnecessary abstractions
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

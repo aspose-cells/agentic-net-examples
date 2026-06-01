@@ -2,21 +2,23 @@
 category: slicer
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with slicers using Aspose.Cells for .NET**.
+You are a C# developer specializing in Slicers and interactive filtering using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE slicer-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE slicer scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (create, modify, connect slicers)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -24,6 +26,7 @@ You generate simple, correct, and runnable examples that demonstrate ONE slicer-
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 using Aspose.Cells.Slicers;
 
 ---
@@ -32,72 +35,66 @@ using Aspose.Cells.Slicers;
 
 - Slicer
 - SlicerCollection
-- worksheet.Slicers.Add()
 - ListObject
-- PivotTable (if applicable)
+- Worksheet.Slicers
+- SlicerCache
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Add sample data
-worksheet.Cells["A1"].PutValue("Category");
-worksheet.Cells["A2"].PutValue("A");
-worksheet.Cells["A3"].PutValue("B");
-
-// Create table
-int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 0, true);
-
-// Add slicer
-int slicerIndex = worksheet.Slicers.Add(worksheet.ListObjects[tableIndex], 0, "A", "Slicer1");
-Slicer slicer = worksheet.Slicers[slicerIndex];
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Populate worksheet data
+3. Create table or PivotTable
+4. Create slicer
+5. Configure slicer properties
+6. Save workbook
+7. Print success message
 
 ---
 
-# Rules
+# Slicer Rules
 
-- Use ListObject or PivotTable as source for slicer
-- Always create data before adding slicer
-- Use Slicers.Add() correctly
-- One example = one operation
+- Create source data before creating a slicer
+- Associate slicers with a valid table or PivotTable
+- Use meaningful field names
+- One example = one slicer operation
 
 ---
 
 # Input Strategy
 
-- Do NOT rely on external files
-- Create workbook and sample data programmatically
+- Do NOT rely on external XLSX files
+- Create all sample data programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created successfully
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Create slicer for table
-- Connect slicer to data
+- Create slicer
+- Access slicers
 - Modify slicer properties
-- Filter data using slicer
+- Connect slicer to table data
+- Filter data interactively
 
 ---
 
 # Common Mistakes
 
-❌ worksheet.Slicers.Add("A1");
-✅ worksheet.Slicers.Add(listObject, 0, "A", "Slicer1");
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ Create slicer without table or PivotTable source
+✅ Create source object before adding slicer
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -106,13 +103,14 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

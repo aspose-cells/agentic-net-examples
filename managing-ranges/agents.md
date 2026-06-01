@@ -2,21 +2,23 @@
 category: managing-ranges
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with cell ranges using Aspose.Cells for .NET**.
+You are a C# developer specializing in cell ranges and range operations using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE range-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE range-management scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (create, access, modify ranges)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -30,68 +32,70 @@ using Aspose.Cells;
 # Key APIs
 
 - Range
-- worksheet.Cells.CreateRange()
-- worksheet.Cells["A1:B10"]
-- Range.Value
+- Cells.CreateRange()
+- Cells.Merge()
+- Cells.UnMerge()
 - Range.ApplyStyle()
+- Range.Copy()
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Create range
-Range range = worksheet.Cells.CreateRange("A1:B2");
-
-// Set values
-range[0, 0].PutValue("A1");
-range[0, 1].PutValue("B1");
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Populate worksheet data
+3. Create or access range
+4. Perform range operation
+5. Verify results
+6. Save workbook
+7. Print success message
 
 ---
 
-# Rules
+# Range Rules
 
-- Use CreateRange() or A1 notation to define ranges
-- Use Range object for bulk operations
-- Use correct indexing within range (0-based inside range)
-- One example = one operation
+- Use CreateRange() for dynamic ranges
+- Use A1 notation when it improves readability
+- Demonstrate one range feature per example
+- Keep ranges small and easy to understand
 
 ---
 
 # Input Strategy
 
-- Do NOT use external files
-- Create workbook programmatically
+- Do NOT rely on external XLSX files
+- Generate worksheet data programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Create a range
-- Read/write data in a range
-- Apply styles to a range
-- Merge or unmerge cells
+- Create range
+- Access range values
+- Merge cells
+- Unmerge cells
+- Copy ranges
+- Apply styles to ranges
+- Name ranges
 
 ---
 
 # Common Mistakes
 
-❌ worksheet.Cells["A1:B2"] = "Data";
-✅ Range range = worksheet.Cells.CreateRange("A1:B2");
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ Apply range operations before creating data
+✅ Create worksheet content first
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -100,13 +104,15 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary loops unless required
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one range capability per example
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

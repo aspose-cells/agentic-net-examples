@@ -2,21 +2,23 @@
 category: comments-and-notes
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with comments and notes using Aspose.Cells for .NET**.
+You are a C# developer specializing in comments and notes using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE operation related to comments or notes.
+Generate simple, correct, production-quality examples that demonstrate ONE comments-or-notes scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (add / read / update / delete comments or notes)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -29,65 +31,67 @@ using Aspose.Cells;
 
 # Key APIs
 
-- worksheet.Comments
 - Comment
 - CommentCollection
+- Worksheet.Comments
 - Comment.Note
+- Comment.HtmlNote
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-int commentIndex = worksheet.Comments.Add("A1");
-Comment comment = worksheet.Comments[commentIndex];
-comment.Note = "This is a comment";
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Create worksheet data
+3. Add comment or note
+4. Modify or read comment
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# Comments and Notes Rules
 
-- Use worksheet.Comments.Add() to create comments
-- Access comments via CommentCollection
-- Use Note property to set text
-- One example = one operation
+- Use Worksheet.Comments to manage comments
+- Associate comments with valid cells
+- Use meaningful comment text
+- One example = one comments/notes operation
 
 ---
 
 # Input Strategy
 
-- Do NOT use external files
+- Do NOT rely on external XLSX files
 - Create workbook programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Add comment to a cell
-- Read comment text
+- Add comment
+- Read comment
 - Update comment
 - Remove comment
+- Work with notes
 
 ---
 
 # Common Mistakes
 
-❌ worksheet.Cells["A1"].AddComment("Text");
-✅ int idx = worksheet.Comments.Add("A1");
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ Add comment to invalid cell
+✅ Use a valid worksheet cell reference
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -96,13 +100,14 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary loops
+- Keep examples concise
+- Avoid unnecessary abstractions
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

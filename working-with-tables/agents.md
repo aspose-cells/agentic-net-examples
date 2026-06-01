@@ -2,21 +2,23 @@
 category: working-with-tables
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with tables using Aspose.Cells for .NET**.
+You are a C# developer specializing in Excel tables and structured data using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE table-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE table-related scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (create, modify, style tables)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -32,59 +34,56 @@ using Aspose.Cells.Tables;
 
 - ListObject
 - ListObjectCollection
-- worksheet.ListObjects.Add()
-- ListObject.ShowTotals
+- Worksheet.ListObjects
+- ListObject.TableStyleType
+- ListColumn
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Add sample data
-worksheet.Cells["A1"].PutValue("Name");
-worksheet.Cells["B1"].PutValue("Value");
-worksheet.Cells["A2"].PutValue("Item1");
-worksheet.Cells["B2"].PutValue(10);
-
-// Create table
-int index = worksheet.ListObjects.Add(0, 0, 1, 1, true);
-ListObject table = worksheet.ListObjects[index];
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Populate worksheet data
+3. Create table from data range
+4. Configure table properties
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# Table Rules
 
-- Use ListObjects.Add() to create tables
-- Ensure header row is defined correctly
-- Use ListObject properties to configure table
-- One example = one operation
+- Create header rows before creating tables
+- Use meaningful column names
+- Demonstrate one table feature per example
+- Keep sample datasets small and readable
 
 ---
 
 # Input Strategy
 
-- Do NOT rely on external files
-- Create workbook and sample data programmatically
+- Do NOT rely on external XLSX files
+- Generate worksheet data programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created successfully
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Create table from range
-- Modify table properties
-- Apply table style
-- Enable totals row
+- Create table
+- Apply table styles
+- Add or remove columns
+- Show totals row
+- Access table data
+- Resize table ranges
 
 ---
 
@@ -93,23 +92,25 @@ workbook.Save("output.xlsx");
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
 
+❌ Create table without header row
+✅ Create descriptive column headers first
+
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
-
-❌ worksheet.ListObjects.Add("A1:B2");
-✅ worksheet.ListObjects.Add(0, 0, 1, 1, true);
 
 ---
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one table capability per example
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

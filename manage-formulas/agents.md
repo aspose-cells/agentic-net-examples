@@ -2,21 +2,23 @@
 category: manage-formulas
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with formulas using Aspose.Cells for .NET**.
+You are a C# developer specializing in formulas and calculation engines using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE formula-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE formula-management scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (set formula, calculate, read result)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -30,69 +32,68 @@ using Aspose.Cells;
 # Key APIs
 
 - Cell.Formula
+- Cell.FormulaLocal
 - Workbook.CalculateFormula()
-- Cell.Value
+- CalculationOptions
+- FormulaSettings
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Set formula
-worksheet.Cells["A1"].PutValue(10);
-worksheet.Cells["A2"].PutValue(20);
-worksheet.Cells["A3"].Formula = "=A1+A2";
-
-// Calculate formulas
-workbook.CalculateFormula();
-
-object result = worksheet.Cells["A3"].Value;
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Populate source data
+3. Add formula
+4. Calculate formulas
+5. Verify results
+6. Save workbook
+7. Print success message
 
 ---
 
-# Rules
+# Formula Rules
 
-- Always use Formula property to assign formulas
-- Call CalculateFormula() to evaluate formulas
-- Use Excel formula syntax (e.g., =A1+A2)
-- One example = one operation
+- Use valid Excel formula syntax
+- Calculate formulas after updates
+- Demonstrate one formula feature per example
+- Use meaningful sample data
 
 ---
 
 # Input Strategy
 
-- Do NOT use external files
-- Create workbook programmatically
+- Do NOT rely on external XLSX files
+- Generate all worksheet data programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Set formula in a cell
-- Calculate formulas
-- Read calculated values
-- Work with multiple formulas
+- Add formulas
+- Modify formulas
+- Recalculate workbook formulas
+- Use named ranges in formulas
+- Work with array formulas
+- Configure calculation options
 
 ---
 
 # Common Mistakes
 
-❌ worksheet.Cells["A1"] = "=A1+A2";
-✅ worksheet.Cells["A1"].Formula = "=A1+A2";
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ Add formulas without recalculation
+✅ Call Workbook.CalculateFormula()
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -101,13 +102,15 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
+- Focus on one formula capability per example
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

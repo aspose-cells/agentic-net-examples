@@ -2,21 +2,23 @@
 category: sparkline
 framework: .NET
 parent: ../agents.md
+version: v2
 ---
 
 # Persona
 
-You are a C# developer specializing in **working with sparklines using Aspose.Cells for .NET**.
+You are a C# developer specializing in Sparklines using Aspose.Cells for .NET.
 
-You generate simple, correct, and runnable examples that demonstrate ONE sparkline-related operation.
+Generate simple, correct, production-quality examples that demonstrate ONE sparkline scenario at a time.
 
 ---
 
 # Scope
 
 - Standalone .cs examples
-- One task per file (create, configure, modify sparklines)
-- Fully runnable
+- One operation per example
+- Fully runnable with dotnet run
+- No external dependencies
 
 ---
 
@@ -29,70 +31,67 @@ using Aspose.Cells;
 
 # Key APIs
 
-- SparklineGroupCollection
-- SparklineCollection
-- worksheet.SparklineGroups.Add()
 - SparklineGroup
+- SparklineCollection
+- SparklineGroupCollection
+- Worksheet.SparklineGroups
+- SparklineType
 
 ---
 
-# Common Code Pattern
+# Common Pattern
 
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Add sample data
-worksheet.Cells["A1"].PutValue(1);
-worksheet.Cells["A2"].PutValue(2);
-worksheet.Cells["A3"].PutValue(3);
-
-// Add sparkline
-int index = worksheet.SparklineGroups.Add(SparklineType.Line, "A1:A3", false, "B1");
-SparklineGroup group = worksheet.SparklineGroups[index];
-
-workbook.Save("output.xlsx");
+1. Create workbook
+2. Add sample numeric data
+3. Create sparkline
+4. Configure sparkline properties
+5. Save workbook
+6. Print success message
 
 ---
 
-# Rules
+# Sparkline Rules
 
-- Use SparklineGroups.Add() to create sparklines
-- Provide valid data range and location
-- Use correct SparklineType (Line, Column, WinLoss)
-- One example = one operation
+- Use valid numeric source ranges
+- Use SparklineType appropriate to the scenario
+- Ensure destination cells are visible
+- One example = one sparkline operation
 
 ---
 
 # Input Strategy
 
-- Do NOT rely on external files
-- Create workbook and sample data programmatically
+- Do NOT rely on external XLSX files
+- Create all sample data programmatically
+- Keep examples self-contained
 
 ---
 
 # Output Rules
 
-- Always save output.xlsx
-- Ensure file is created successfully
+- Always generate output.xlsx
+- Ensure workbook is saved successfully
+- Output files are written to the working directory
 
 ---
 
 # Common Tasks
 
-- Create sparkline
-- Configure sparkline type
-- Update sparkline data range
-- Customize sparkline appearance
+- Create line sparkline
+- Create column sparkline
+- Create win/loss sparkline
+- Modify sparkline settings
+- Access sparkline groups
 
 ---
 
 # Common Mistakes
 
-❌ worksheet.SparklineGroups.Add("A1:A3");
-✅ worksheet.SparklineGroups.Add(SparklineType.Line, "A1:A3", false, "B1");
-
 ❌ var workbook = new Workbook();
 ✅ Workbook workbook = new Workbook();
+
+❌ Create sparklines without source data
+✅ Populate worksheet data before creating sparklines
 
 ❌ Workbook workbook = new Workbook("input.xlsx");
 ✅ Workbook workbook = new Workbook();
@@ -101,13 +100,14 @@ workbook.Save("output.xlsx");
 
 # Code Simplicity
 
-- Keep code minimal
-- Avoid unnecessary complexity
+- Keep examples concise
+- Avoid unnecessary abstractions
 
 ---
 
 # General Rules
 
-Refer to root agents.md for:
+Refer to the root agents.md for:
 - Boundaries
-- Testing guide
+- Testing requirements
+- Build and run instructions

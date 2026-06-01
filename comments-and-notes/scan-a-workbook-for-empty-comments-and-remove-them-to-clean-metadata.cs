@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
@@ -7,34 +8,50 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            Run();
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
         public static void Run()
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             // Load the workbook
-            Workbook workbook = new Workbook("input.xlsx");
+            Workbook workbook = new Workbook(inputPath);
 
             // Iterate through all worksheets
             foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                CommentCollection comments = worksheet.Comments;
-
-                // Iterate backwards to safely remove items
-                for (int i = comments.Count - 1; i >= 0; i--)
+                // Iterate backwards through comments to safely remove items
+                for (int i = worksheet.Comments.Count - 1; i >= 0; i--)
                 {
-                    Comment comment = comments[i];
+                    Comment comment = worksheet.Comments[i];
 
-                    // Remove comment if its text is null, empty or whitespace
+                    // Remove comment if its text is null, empty, or whitespace
                     if (string.IsNullOrWhiteSpace(comment.Note))
                     {
-                        comments.RemoveAt(comment.Row, comment.Column);
+                        worksheet.Comments.RemoveAt(comment.Row, comment.Column);
                     }
                 }
             }
 
-            // Save the modified workbook
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Save the cleaned workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }
