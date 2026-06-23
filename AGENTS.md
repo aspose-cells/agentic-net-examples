@@ -1,7 +1,7 @@
 ---
 
 language: csharp
-framework: net8
+framework: net10
 product: Aspose.Cells
 package: Aspose.Cells
 repository: agentic-net-examples
@@ -39,9 +39,9 @@ Repository Statistics:
 
 * Product: Aspose.Cells for .NET
 * Categories: 31
-* Examples: 4780+
+* Examples: 5054+
 * Language: C#
-* Framework: .NET 8
+* Framework: .NET 10
 
 Examples are automatically generated, compiled, executed, and validated before inclusion.
 
