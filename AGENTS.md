@@ -8,7 +8,7 @@ repository: agentic-net-examples
 version: 26.5.0
 total_categories: 31
 total_examples: 5054
---------------------
+---
 
 # Aspose.Cells for .NET Product Agent Instructions
 
