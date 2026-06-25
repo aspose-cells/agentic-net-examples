@@ -36,6 +36,11 @@
     },
     {
       "category": "timeline",
+      "file": "render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs",
+      "title": "Render a timeline with shadow effects, adjust opacity, and output the image as a PNG with transparency."
+    },
+    {
+      "category": "timeline",
       "file": "render-a-timeline-with-weekly-intervals-apply-bold-fonts-and-output-the-result-as-a-pdf-document.cs",
       "title": "Render a timeline with weekly intervals, apply bold fonts, and output the result as a PDF document."
     },
