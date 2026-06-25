@@ -10,6 +10,11 @@
       "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
     },
     {
+      "category": "timeline",
+      "file": "render-a-timeline-with-weekly-intervals-apply-bold-fonts-and-output-the-result-as-a-pdf-document.cs",
+      "title": "Render a timeline with weekly intervals, apply bold fonts, and output the result as a PDF document."
+    },
+    {
       "category": "workbook-merger",
       "file": "add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs",
       "title": "Add the library reference to a .NET project via NuGet before implementing merge logic."
