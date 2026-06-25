@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - apply-a-gradient-background-to-a-timeline-adjust-label-rotation-and-render-it-to-a-bmp-image.cs
 - batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs
 - validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs
+- embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs
