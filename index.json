@@ -16,6 +16,11 @@
     },
     {
       "category": "timeline",
+      "file": "apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs",
+      "title": "Apply a watermark text over a rendered timeline image and export the final picture as a PDF."
+    },
+    {
+      "category": "timeline",
       "file": "batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs",
       "title": "Batch convert Excel files, add a timeline to each, and save PDFs to an output directory."
     },
