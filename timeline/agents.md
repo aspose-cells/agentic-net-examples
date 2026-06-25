@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - iterate-through-rows-of-data-automatically-creating-timeline-entries-for-each-and-exporting-the-final-chart-to-pdf.cs
 - apply-a-dark-theme-to-a-timeline-change-axis-colors-and-render-the-result-to-a-pdf.cs
 - load-a-csv-file-containing-event-dates-convert-it-to-an-excel-worksheet-and-draw-a-timeline.cs
+- create-a-timeline-with-custom-date-format-ddmmmyyyy-and-export-the-chart-to-a-pdf-document.cs
