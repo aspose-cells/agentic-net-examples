@@ -13,6 +13,11 @@
       "category": "workbook-merger",
       "file": "create-a-console-application-project-in-visual-studio-to-host-the-workbook-merging-code.cs",
       "title": "Create a console application project in Visual Studio to host the workbook merging code."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "load-source-xls-workbooks-using-new-workbookfilepath-for-each-file-to-be-merged.cs",
+      "title": "Load source XLS workbooks using new Workbook(filePath) for each file to be merged."
     }
   ]
 }
