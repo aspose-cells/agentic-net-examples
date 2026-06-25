@@ -30,6 +30,11 @@
       "title": "Render a timeline with weekly intervals, apply bold fonts, and output the result as a PDF document."
     },
     {
+      "category": "timeline",
+      "file": "validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs",
+      "title": "Validate timeline date ranges against a predefined calendar and log any inconsistencies to a text file."
+    },
+    {
       "category": "workbook-merger",
       "file": "add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs",
       "title": "Add the library reference to a .NET project via NuGet before implementing merge logic."
