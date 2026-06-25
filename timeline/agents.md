@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs
 - validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs
 - embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs
+- create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs
