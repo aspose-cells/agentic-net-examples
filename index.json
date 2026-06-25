@@ -11,6 +11,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "copy-specific-worksheets-from-source-workbooks-into-the-target-workbook-using-worksheetcopy-method.cs",
+      "title": "Copy specific worksheets from source workbooks into the target workbook using Worksheet.Copy method."
+    },
+    {
+      "category": "workbook-merger",
       "file": "create-a-console-application-project-in-visual-studio-to-host-the-workbook-merging-code.cs",
       "title": "Create a console application project in Visual Studio to host the workbook merging code."
     },
