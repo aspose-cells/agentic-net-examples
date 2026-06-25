@@ -11,6 +11,11 @@
     },
     {
       "category": "timeline",
+      "file": "batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs",
+      "title": "Batch process multiple worksheets, creating individual timelines for each and saving them as separate PNG files."
+    },
+    {
+      "category": "timeline",
       "file": "draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs",
       "title": "Draw a timeline while converting the entire workbook to PDF, ensuring the timeline appears on each page."
     },
