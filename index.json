@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "timeline",
+      "file": "apply-a-dark-theme-to-a-timeline-change-axis-colors-and-render-the-result-to-a-pdf.cs",
+      "title": "Apply a dark theme to a timeline, change axis colors, and render the result to a PDF."
+    },
+    {
+      "category": "timeline",
       "file": "apply-a-gradient-background-to-a-timeline-adjust-label-rotation-and-render-it-to-a-bmp-image.cs",
       "title": "Apply a gradient background to a timeline, adjust label rotation, and render it to a BMP image."
     },
