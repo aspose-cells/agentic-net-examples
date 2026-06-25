@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - create-a-timeline-with-custom-date-format-ddmmmyyyy-and-export-the-chart-to-a-pdf-document.cs
 - batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs
 - apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs
+- generate-a-timeline-with-alternating-bar-colors-for-even-and-odd-rows-then-save-as-a-highquality-jpeg.cs
