@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - create-a-console-application-project-in-visual-studio-to-host-the-workbook-merging-code.cs
 - load-source-xls-workbooks-using-new-workbookfilepath-for-each-file-to-be-merged.cs
 - load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs
+- use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs
