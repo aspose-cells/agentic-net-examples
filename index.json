@@ -51,6 +51,11 @@
     },
     {
       "category": "timeline",
+      "file": "export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs",
+      "title": "Export a timeline directly to a memory stream in PDF format for further processing without disk I/O."
+    },
+    {
+      "category": "timeline",
       "file": "generate-a-timeline-with-alternating-bar-colors-for-even-and-odd-rows-then-save-as-a-highquality-jpeg.cs",
       "title": "Generate a timeline with alternating bar colors for even and odd rows, then save as a high\u2011quality JPEG."
     },
