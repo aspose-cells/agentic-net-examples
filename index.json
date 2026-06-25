@@ -31,6 +31,11 @@
     },
     {
       "category": "timeline",
+      "file": "iterate-through-rows-of-data-automatically-creating-timeline-entries-for-each-and-exporting-the-final-chart-to-pdf.cs",
+      "title": "Iterate through rows of data, automatically creating timeline entries for each and exporting the final chart to PDF."
+    },
+    {
+      "category": "timeline",
       "file": "load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs",
       "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
     },
