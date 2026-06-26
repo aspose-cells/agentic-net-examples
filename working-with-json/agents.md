@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - apply-a-filter-to-exclude-rows-where-the-status-column-equals-inactive-before-json-export.cs
 - preserve-cell-formulas-during-json-conversion-by-configuring-jsonsaveoptionspreserveformulas-flag.cs
 - generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs
+- convert-a-large-csv-file-to-json-using-streaming-options-to-reduce-memory-usage.cs
