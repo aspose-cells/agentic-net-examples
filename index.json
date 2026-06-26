@@ -331,6 +331,11 @@
     },
     {
       "category": "sparkline",
+      "file": "export-a-specific-sparkline-as-a-png-image-file-to-designated-output-directory.cs",
+      "title": "Export a specific sparkline as a PNG image file to designated output directory."
+    },
+    {
+      "category": "sparkline",
       "file": "insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs",
       "title": "Insert a win/loss sparkline at cell E2 referencing data in F2:F12 range."
     },
