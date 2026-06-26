@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - toggle-slicer-item-selection-based-on-values-read-from-a-database-query.cs
 - load-multiple-workbooks-remove-all-slicers-and-archive-the-resulting-pdfs-in-a-zip-file.cs
 - before-saving-automatically-select-the-first-item-if-a-slicer-has-no-selected-items.cs
+- use-the-workbooks-calculate-method-after-slicer-refresh-to-ensure-formulas-reflect-the-new-filter.cs
