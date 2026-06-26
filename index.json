@@ -246,6 +246,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "apply-a-filter-to-exclude-rows-where-the-status-column-equals-inactive-before-json-export.cs",
+      "title": "Apply a filter to exclude rows where the status column equals 'Inactive' before JSON export."
+    },
+    {
+      "category": "working-with-json",
       "file": "batch-process-a-folder-of-xls-files-converting-each-workbook-to-separate-json-files.cs",
       "title": "Batch process a folder of XLS files, converting each workbook to separate JSON files."
     },
