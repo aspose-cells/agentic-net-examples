@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs
+- create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs
