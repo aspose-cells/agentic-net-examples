@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - query-all-cell-areas-mapped-to-a-given-xml-path-using-worksheetxmlmapquery-method.cs
 - retrieve-the-address-of-the-first-cell-mapped-to-the-invoicetotal-element.cs
 - iterate-through-each-mapped-cell-area-and-log-its-row-and-column-indices-for-debugging.cs
+- filter-mapped-cell-areas-by-xpath-expression-and-process-only-those-matching-the-criteria.cs
