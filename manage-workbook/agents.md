@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - add-a-custom-document-property-named-projectversion-and-assign-it-a-semantic-version-string.cs
 - add-a-comment-to-a-cell-with-author-information-and-display-it-when-the-cell-is-selected.cs
 - merge-cells-in-a-header-row-apply-bold-font-and-center-the-text-horizontally.cs
+- apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs
