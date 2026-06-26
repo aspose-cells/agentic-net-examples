@@ -1333,6 +1333,11 @@
       "category": "xml-maps",
       "file": "retrieve-the-root-element-name-of-the-first-xml-map-via-xmlmaprootelementname-property.cs",
       "title": "Retrieve the root element name of the first XML map via XmlMap.RootElementName property."
+    },
+    {
+      "category": "xml-maps",
+      "file": "validate-linked-cells-after-importing-xml-data-by-reexecuting-worksheetxmlmapquery-and-checking-results.cs",
+      "title": "Validate linked cells after importing XML data by re\u2011executing Worksheet.XmlMapQuery and checking results."
     }
   ]
 }
