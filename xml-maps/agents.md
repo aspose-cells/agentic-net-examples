@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - export-mapped-data-to-a-json-file-by-converting-the-xml-nodes-to-equivalent-json-structures.cs
 - implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs
 - create-a-scheduled-task-that-refreshes-all-xml-maps-in-a-set-of-workbooks-every-night-at-midnight.cs
+- export-the-workbook-to-an-ods-file-while-ensuring-that-xml-map-definitions-are-retained-in-the-output.cs
