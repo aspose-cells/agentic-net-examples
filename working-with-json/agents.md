@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - load-a-json-array-representing-multiple-tables-and-map-each-element-to-a-separate-worksheet.cs
 - encrypt-the-generated-json-file-using-a-passwordprotected-stream-before-writing-to-disk.cs
 - implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs
+- configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs
