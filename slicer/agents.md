@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs
 - remove-slicers-only-if-they-are-linked-to-a-pivot-table-exceeding-one-hundred-rows.cs
 - list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs
+- load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs
