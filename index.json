@@ -35,6 +35,11 @@
       "title": "Retrieve the creation time of a threaded comment via the CreatedTime property and log it."
     },
     {
+      "category": "comments-and-notes",
+      "file": "set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs",
+      "title": "Set the text direction of a comment's shape to RightToLeft for bidirectional language support."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
