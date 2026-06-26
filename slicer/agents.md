@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - set-slicer-width-to-150-pixels-and-verify-its-appearance-on-the-worksheet.cs
 - batch-process-multiple-workbooks-adding-slicers-to-each-and-adjusting-their-widths-uniformly.cs
 - change-the-slicer-title-to-region-filter-and-update-the-workbook-accordingly.cs
+- apply-a-custom-color-scheme-to-the-slicer-style-and-verify-visual-consistency-across-sheets.cs
