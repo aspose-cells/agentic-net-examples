@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs
 - set-sparkline-markers-to-display-high-points-using-red-color-for-sparkline-in-h3.cs
 - delete-the-second-sparkline-in-the-first-sparkline-group-using-sparklinegroupremoveat-method.cs
+- read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs
