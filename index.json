@@ -210,6 +210,11 @@
       "title": "Read a TXT workbook, split cells by custom delimiter, and export the data to an XML file."
     },
     {
+      "category": "save-workbook",
+      "file": "read-a-workbook-compress-it-at-level1-for-fast-saving-and-compare-performance-with-level9.cs",
+      "title": "Read a workbook, compress it at Level1 for fast saving, and compare performance with Level9."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
