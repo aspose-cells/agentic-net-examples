@@ -426,6 +426,11 @@
     },
     {
       "category": "sparkline",
+      "file": "use-sparklinecollectionadd-with-formulabased-range-to-create-dynamic-sparklines-that-update-automatically.cs",
+      "title": "Use SparklineCollection.Add with formula\u2011based range to create dynamic sparklines that update automatically."
+    },
+    {
+      "category": "sparkline",
       "file": "validate-that-sparkline-data-range-does-not-contain-errors-before-creating-the-sparkline-object.cs",
       "title": "Validate that sparkline data range does not contain errors before creating the sparkline object."
     },
