@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - replace-all-occurrences-of-a-placeholder-string-using-a-regular-expression-across-the-entire-workbook.cs
 - search-for-dates-matching-a-pattern-and-reformat-them-to-iso-8601-using-regex-replacement.cs
 - validate-all-formulas-in-the-workbook-for-errors-and-generate-a-report-of-problematic-cells.cs
+- export-a-specific-worksheet-to-an-image-file-with-300-dpi-resolution-and-transparent-background.cs
