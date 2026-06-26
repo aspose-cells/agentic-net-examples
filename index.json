@@ -401,6 +401,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "configure-the-workbook-to-use-a-specific-culture-when-formatting-optional-property-values-during-export.cs",
+      "title": "Configure the workbook to use a specific culture when formatting optional property values during export."
+    },
+    {
+      "category": "manage-workbook",
       "file": "copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs",
       "title": "Copy a worksheet from the source workbook to a destination workbook while preserving cell styles."
     },
