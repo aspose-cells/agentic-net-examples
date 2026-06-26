@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - apply-a-custom-style-to-cells-mapped-to-the-customername-element-to-highlight-customer-names.cs
 - set-the-xmlmaps-preservewhitespace-property-to-true-to-keep-formatting-spaces-from-the-source-xml.cs
 - use-a-linq-query-on-the-workbooks-xmlmaps-collection-to-find-maps-containing-a-specific-namespace.cs
+- programmatically-disable-automatic-xml-map-refresh-during-bulk-cell-updates-to-improve-processing-speed.cs
