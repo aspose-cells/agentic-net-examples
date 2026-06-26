@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs
 - read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs
 - change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs
+- add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
