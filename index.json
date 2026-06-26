@@ -356,6 +356,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "transform-numeric-values-to-strings-in-json-output-by-applying-a-custom-value-formatter.cs",
+      "title": "Transform numeric values to strings in JSON output by applying a custom value formatter."
+    },
+    {
+      "category": "working-with-json",
       "file": "use-exportrangetojsonoptions-to-include-cell-comments-as-additional-json-fields-during-export.cs",
       "title": "Use ExportRangeToJsonOptions to include cell comments as additional JSON fields during export."
     },
