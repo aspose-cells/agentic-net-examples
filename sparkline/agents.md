@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - add-multiple-data-ranges-to-a-single-sparkline-group-to-generate-multiseries-sparkline.cs
 - set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs
 - remove-all-sparklines-from-active-worksheet-by-invoking-clear-method-on-each-sparklinegroup.cs
+- iterate-through-each-sparkline-collect-average-values-and-store-results-in-a-list.cs
