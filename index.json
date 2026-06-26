@@ -386,6 +386,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "apply-a-naming-convention-to-custom-xml-parts-by-prefixing-them-with-the-project-identifier.cs",
+      "title": "Apply a naming convention to custom XML parts by prefixing them with the project identifier."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
       "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
     },
