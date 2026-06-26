@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - create-a-pivot-table-that-summarizes-data-from-cells-mapped-to-the-ordersorder-element.cs
 - generate-a-chart-visualizing-totals-from-mapped-xml-nodes-and-embed-it-into-the-worksheet.cs
 - implement-error-handling-to-catch-exceptions-when-an-xml-map-path-does-not-exist-in-the-schema.cs
+- use-workbookloadoptions-to-preserve-existing-xml-maps-when-opening-a-workbook-in-readonly-mode.cs
