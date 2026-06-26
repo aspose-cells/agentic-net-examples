@@ -441,6 +441,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-reusable-method-that-adds-a-contenttypeproperty-and-sets-isnillable-based-on-a-boolean-parameter.cs",
+      "title": "Create a reusable method that adds a ContentTypeProperty and sets IsNillable based on a boolean parameter."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
       "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
     },
