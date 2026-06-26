@@ -386,6 +386,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "after-adding-custom-properties-verify-that-the-workbooks-core-properties-remain-unchanged.cs",
+      "title": "After adding custom properties, verify that the workbook's core properties remain unchanged."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-a-naming-convention-to-custom-xml-parts-by-prefixing-them-with-the-project-identifier.cs",
       "title": "Apply a naming convention to custom XML parts by prefixing them with the project identifier."
     },
