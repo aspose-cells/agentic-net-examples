@@ -240,6 +240,11 @@
       "title": "Read a workbook, compress it at Level1 for fast saving, and compare performance with Level9."
     },
     {
+      "category": "save-workbook",
+      "file": "read-a-workbook-filter-out-hidden-rows-and-export-the-visible-data-to-a-txt-file.cs",
+      "title": "Read a workbook, filter out hidden rows, and export the visible data to a TXT file."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
