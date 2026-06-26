@@ -391,6 +391,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs",
+      "title": "Apply a filter to process only workbooks that already contain a specific custom XML part before modification."
+    },
+    {
+      "category": "manage-workbook",
       "file": "apply-a-naming-convention-to-custom-xml-parts-by-prefixing-them-with-the-project-identifier.cs",
       "title": "Apply a naming convention to custom XML parts by prefixing them with the project identifier."
     },
