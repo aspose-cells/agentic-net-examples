@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs
 - configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs
 - apply-a-custom-border-style-with-dashed-lines-and-a-defined-thickness-to-the-slicer.cs
+- arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs
