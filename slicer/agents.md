@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs
 - enable-multiselect-on-the-slicer-to-allow-users-to-choose-several-items-simultaneously.cs
 - hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs
+- configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs
