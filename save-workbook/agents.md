@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - instantiate-a-workbook-set-contentdisposition-to-inline-and-stream-the-xlsx-file-to-an-httpresponse.cs
 - open-a-workbook-enable-strict-open-xml-compliance-and-save-it-using-the-default-file-name.cs
 - load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs
+- read-a-txt-workbook-split-cells-by-custom-delimiter-and-export-the-data-to-an-xml-file.cs
