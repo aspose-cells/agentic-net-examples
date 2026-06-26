@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs
 - add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
 - retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs
+- update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs
