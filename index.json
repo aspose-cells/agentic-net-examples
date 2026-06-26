@@ -115,6 +115,11 @@
       "title": "Set the text direction of a comment's shape to TopToBottom for vertical annotation layout."
     },
     {
+      "category": "comments-and-notes",
+      "file": "update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs",
+      "title": "Update the text direction of all comments in a worksheet to LeftToRight for standard layout."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
