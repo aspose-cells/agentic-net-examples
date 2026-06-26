@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - load-an-excel-file-and-create-a-custom-property-projectid-with-an-integer-identifier.cs
 - open-a-workbook-and-add-a-custom-boolean-property-isreviewed-set-to-true.cs
 - load-a-workbook-locate-the-custom-property-projectid-and-update-its-integer-value.cs
+- open-a-spreadsheet-and-remove-the-custom-property-isreviewed-to-clean-obsolete-metadata.cs
