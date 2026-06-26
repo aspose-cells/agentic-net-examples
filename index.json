@@ -481,6 +481,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "implement-error-handling-to-continue-batch-processing-when-a-workbook-fails-to-load-due-to-corruption.cs",
+      "title": "Implement error handling to continue batch processing when a workbook fails to load due to corruption."
+    },
+    {
+      "category": "manage-workbook",
       "file": "insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs",
       "title": "Insert a hyperlink into a cell that points to an external website and opens in a new tab."
     },
