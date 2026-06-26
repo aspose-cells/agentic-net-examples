@@ -21,6 +21,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of comments in column G to blue using Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "copy-a-threaded-comment-from-cell-e5-to-cell-f6-while-preserving-its-author-and-text.cs",
       "title": "Copy a threaded comment from cell E5 to cell F6 while preserving its author and text."
     },
