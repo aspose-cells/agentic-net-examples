@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - configure-the-xml-map-to-ignore-whitespace-nodes-during-import-to-prevent-unwanted-blank-entries.cs
 - set-a-custom-namespace-prefix-for-the-xml-map-to-handle-namespaced-xml-documents-correctly.cs
 - use-worksheetcellsfind-to-locate-a-cell-that-is-mapped-to-a-specific-xml-attribute.cs
+- apply-conditional-formatting-to-cells-based-on-values-retrieved-from-the-linked-xml-map-elements.cs
