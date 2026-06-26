@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - open-a-spreadsheet-and-set-the-language-builtin-property-to-fr-fr-for-localization.cs
 - instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs
 - load-a-workbook-and-disable-the-linksuptodate-builtin-property-to-prevent-link-checks.cs
+- open-a-workbook-and-add-a-custom-property-processeddate-with-the-current-datetime-value.cs
