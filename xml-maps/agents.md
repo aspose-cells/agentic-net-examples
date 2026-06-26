@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - use-worksheetxmlmapquery-result-to-apply-background-color-formatting-to-all-cells-mapped-to-a-path.cs
 - enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs
 - create-a-new-workbook-add-a-worksheet-and-define-an-xml-map-using-a-xsd-file.cs
+- import-xml-data-into-the-workbook-by-linking-cells-to-corresponding-xml-map-elements.cs
