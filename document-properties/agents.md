@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs
 - create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs
 - open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs
+- load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs
