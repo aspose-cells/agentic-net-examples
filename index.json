@@ -131,6 +131,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "instantiate-a-workbook-set-contentdisposition-to-inline-and-stream-the-xlsx-file-to-an-httpresponse.cs",
+      "title": "Instantiate a workbook, set ContentDisposition to Inline, and stream the XLSX file to an HttpResponse."
+    },
+    {
+      "category": "save-workbook",
       "file": "load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs",
       "title": "Load an SXC workbook, rename the active worksheet, and export the sheet to a CSV file."
     },
