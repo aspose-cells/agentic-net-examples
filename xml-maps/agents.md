@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - iterate-through-each-mapped-cell-area-and-log-its-row-and-column-indices-for-debugging.cs
 - filter-mapped-cell-areas-by-xpath-expression-and-process-only-those-matching-the-criteria.cs
 - export-the-current-xml-map-data-to-a-separate-xml-file-preserving-original-schema-structure.cs
+- validate-the-xml-map-against-its-xsd-schema-and-report-any-validation-errors-encountered.cs
