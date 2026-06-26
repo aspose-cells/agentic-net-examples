@@ -951,6 +951,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs",
+      "title": "Load workbooks in parallel threads, remove a designated slicer from each, and save results as PDFs."
+    },
+    {
+      "category": "slicer",
       "file": "modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs",
       "title": "Modify the slicer font family, size, and color to enhance label readability."
     },
