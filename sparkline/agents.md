@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs
 - copy-an-entire-sparkline-group-from-sheet1-to-sheet2-preserving-data-ranges-and-formatting.cs
 - batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs
+- configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs
