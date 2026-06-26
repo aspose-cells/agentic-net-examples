@@ -411,6 +411,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "benchmark-the-time-required-to-remove-unused-styles-from-workbooks-of-varying-size-to-determine-scaling-behavior.cs",
+      "title": "Benchmark the time required to remove unused styles from workbooks of varying size to determine scaling behavior."
+    },
+    {
+      "category": "manage-workbook",
       "file": "combine-adding-custom-xml-parts-with-style-cleanup-in-a-single-processing-pipeline-for-efficiency.cs",
       "title": "Combine adding custom XML parts with style cleanup in a single processing pipeline for efficiency."
     },
