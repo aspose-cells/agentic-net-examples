@@ -986,6 +986,11 @@
     },
     {
       "category": "slicer",
+      "file": "remove-slicers-from-all-worksheets-in-a-workbook-and-save-a-consolidated-pdf.cs",
+      "title": "Remove slicers from all worksheets in a workbook and save a consolidated PDF."
+    },
+    {
+      "category": "slicer",
       "file": "remove-slicers-only-if-they-are-linked-to-a-pivot-table-exceeding-one-hundred-rows.cs",
       "title": "Remove slicers only if they are linked to a pivot table exceeding one hundred rows."
     },
