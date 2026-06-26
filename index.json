@@ -896,6 +896,11 @@
     },
     {
       "category": "slicer",
+      "file": "load-an-xlsx-workbook-remove-a-named-slicer-and-save-the-workbook-as-xlsx.cs",
+      "title": "Load an XLSX workbook, remove a named slicer, and save the workbook as XLSX."
+    },
+    {
+      "category": "slicer",
       "file": "modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs",
       "title": "Modify the slicer font family, size, and color to enhance label readability."
     },
