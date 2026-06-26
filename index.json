@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "comments-and-notes",
+      "file": "change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of a comment by assigning a red value to Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "create-a-new-workbook-and-add-a-threaded-comment-to-cell-a1-with-author-john.cs",
       "title": "Create a new workbook and add a threaded comment to cell A1 with author John."
     },
