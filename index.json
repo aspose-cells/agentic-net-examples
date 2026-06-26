@@ -436,6 +436,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "load-an-existing-excel-file-into-a-workbook-object-and-inspect-its-contenttypeproperties-collection.cs",
+      "title": "Load an existing Excel file into a Workbook object and inspect its ContentTypeProperties collection."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-an-xlsx-workbook-from-a-file-stream-and-enable-automatic-formula-calculation.cs",
       "title": "Load an XLSX workbook from a file stream and enable automatic formula calculation."
     },
