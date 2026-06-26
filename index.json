@@ -461,6 +461,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "load-a-workbook-that-contains-numerous-unused-styles-and-invoke-removeunusedstyles-to-clean-it.cs",
+      "title": "Load a workbook that contains numerous unused styles and invoke RemoveUnusedStyles to clean it."
+    },
+    {
+      "category": "manage-workbook",
       "file": "load-an-existing-excel-file-into-a-workbook-object-and-inspect-its-contenttypeproperties-collection.cs",
       "title": "Load an existing Excel file into a Workbook object and inspect its ContentTypeProperties collection."
     },
