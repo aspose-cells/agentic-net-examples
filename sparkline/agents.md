@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - set-sparkline-group-orientation-to-vertical-for-columntype-sparklines-to-improve-readability.cs
 - use-sparklinecollectionadd-with-formulabased-range-to-create-dynamic-sparklines-that-update-automatically.cs
 - create-a-sparkline-referencing-data-from-another-worksheet-named-datasheet-for-crosssheet-trends.cs
+- handle-null-values-in-source-data-range-gracefully-when-generating-sparkline-to-avoid-rendering-errors.cs
