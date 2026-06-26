@@ -236,6 +236,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-set-ooxmlcompressiontype-to-level5-and-compare-resulting-file-size-to-default-compression.cs",
+      "title": "Open a workbook, set OoxmlCompressionType to Level5, and compare resulting file size to default compression."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-a-workbook-set-pdf-export-options-for-high-resolution-and-save-as-a-pdf-file.cs",
       "title": "Open a workbook, set PDF export options for high resolution, and save as a PDF file."
     },
