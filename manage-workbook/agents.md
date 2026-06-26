@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - set-workbook-calculation-engine-to-use-multithreaded-processing-for-faster-evaluation-of-large-data-sets.cs
 - enable-iterative-calculation-mode-and-set-maximum-iterations-to-improve-convergence-of-circular-formulas.cs
 - add-a-custom-xml-part-containing-metadata-and-retrieve-it-later-using-its-unique-identifier.cs
+- add-a-custom-document-property-named-projectversion-and-assign-it-a-semantic-version-string.cs
