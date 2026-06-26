@@ -291,6 +291,11 @@
     },
     {
       "category": "sparkline",
+      "file": "copy-an-entire-sparkline-group-from-sheet1-to-sheet2-preserving-data-ranges-and-formatting.cs",
+      "title": "Copy an entire sparkline group from Sheet1 to Sheet2 preserving data ranges and formatting."
+    },
+    {
+      "category": "sparkline",
       "file": "create-a-column-sparkline-in-cell-c5-based-on-values-from-d5d15-range.cs",
       "title": "Create a column sparkline in cell C5 based on values from D5:D15 range."
     },
