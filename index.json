@@ -831,6 +831,11 @@
     },
     {
       "category": "slicer",
+      "file": "enable-multiselect-on-the-slicer-to-allow-users-to-choose-several-items-simultaneously.cs",
+      "title": "Enable multi\u2011select on the slicer to allow users to choose several items simultaneously."
+    },
+    {
+      "category": "slicer",
       "file": "load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs",
       "title": "Load a workbook from an Excel file into memory for further manipulation."
     },
