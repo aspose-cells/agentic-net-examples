@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - export-a-specific-worksheet-to-an-image-file-with-300-dpi-resolution-and-transparent-background.cs
 - export-the-workbook-to-pdf-format-with-high-resolution-images-and-embedded-fonts.cs
 - set-workbook-theme-to-a-builtin-style-and-update-all-cell-styles-accordingly.cs
+- load-an-existing-excel-file-into-a-workbook-object-and-inspect-its-contenttypeproperties-collection.cs
