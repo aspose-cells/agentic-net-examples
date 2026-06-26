@@ -261,6 +261,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "convert-a-large-csv-file-to-json-using-streaming-options-to-reduce-memory-usage.cs",
+      "title": "Convert a large CSV file to JSON using streaming options to reduce memory usage."
+    },
+    {
+      "category": "working-with-json",
       "file": "define-a-semicolon-as-csv-delimiter-in-jsonlayoutoptions-before-converting-json-to-csv.cs",
       "title": "Define a semicolon as CSV delimiter in JsonLayoutOptions before converting JSON to CSV."
     },
