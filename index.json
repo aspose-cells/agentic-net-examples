@@ -851,6 +851,11 @@
     },
     {
       "category": "slicer",
+      "file": "apply-a-custom-color-scheme-to-the-slicer-style-and-verify-visual-consistency-across-sheets.cs",
+      "title": "Apply a custom color scheme to the slicer style and verify visual consistency across sheets."
+    },
+    {
+      "category": "slicer",
       "file": "arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs",
       "title": "Arrange slicer items in multiple columns by setting the column count property."
     },
