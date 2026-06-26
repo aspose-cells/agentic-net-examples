@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - update-an-existing-xml-map-by-readding-it-with-the-same-name-and-a-new-xsd-schema.cs
 - save-the-workbook-after-modifying-xml-maps-using-workbooksave-to-persist-changes.cs
 - load-a-workbook-from-a-memory-stream-add-an-xml-map-and-save-back-to-a-stream.cs
+- batch-process-a-folder-of-workbooks-adding-the-same-xml-map-to-each-file-programmatically.cs
