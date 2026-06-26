@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - set-workbook-theme-to-a-builtin-style-and-update-all-cell-styles-accordingly.cs
 - load-an-existing-excel-file-into-a-workbook-object-and-inspect-its-contenttypeproperties-collection.cs
 - use-workbookloadoptions-to-open-a-passwordprotected-file-then-add-optional-metadata-before-saving.cs
+- add-a-new-contenttypeproperty-named-projectid-with-a-string-value-to-the-workbook.cs
