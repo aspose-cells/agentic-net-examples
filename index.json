@@ -243,6 +243,11 @@
       "category": "workbook-merger",
       "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
+      "title": "Load an XLSX workbook from a file path and verify successful initialization."
     }
   ]
 }
