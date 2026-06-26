@@ -246,6 +246,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
+      "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."
+    },
+    {
+      "category": "working-with-json",
       "file": "apply-a-filter-to-exclude-rows-where-the-status-column-equals-inactive-before-json-export.cs",
       "title": "Apply a filter to exclude rows where the status column equals 'Inactive' before JSON export."
     },
