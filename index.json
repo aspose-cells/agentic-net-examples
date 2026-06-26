@@ -356,6 +356,11 @@
     },
     {
       "category": "sparkline",
+      "file": "save-the-modified-workbook-with-new-sparklines-to-an-xlsx-file-at-specified-path.cs",
+      "title": "Save the modified workbook with new sparklines to an XLSX file at specified path."
+    },
+    {
+      "category": "sparkline",
       "file": "set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs",
       "title": "Set sparkline group to display markers for both high and low points simultaneously."
     },
