@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs
+- add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs
