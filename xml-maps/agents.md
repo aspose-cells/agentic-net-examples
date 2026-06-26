@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-add-a-worksheet-and-define-an-xml-map-using-a-xsd-file.cs
 - import-xml-data-into-the-workbook-by-linking-cells-to-corresponding-xml-map-elements.cs
 - query-all-cell-areas-mapped-to-a-given-xml-path-using-worksheetxmlmapquery-method.cs
+- retrieve-the-address-of-the-first-cell-mapped-to-the-invoicetotal-element.cs
