@@ -91,6 +91,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs",
+      "title": "Retrieve and display the total number of threaded comments present in a workbook."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs",
       "title": "Retrieve the creation time of a threaded comment via the CreatedTime property and log it."
     },
