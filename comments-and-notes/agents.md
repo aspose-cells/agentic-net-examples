@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs
 - edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs
 - remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs
+- retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs
