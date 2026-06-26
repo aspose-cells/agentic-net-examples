@@ -826,6 +826,11 @@
     },
     {
       "category": "slicer",
+      "file": "apply-a-custom-border-style-with-dashed-lines-and-a-defined-thickness-to-the-slicer.cs",
+      "title": "Apply a custom border style with dashed lines and a defined thickness to the slicer."
+    },
+    {
+      "category": "slicer",
       "file": "configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs",
       "title": "Configure the slicer to display items with no data by toggling the show\u2011zero\u2011items option."
     },
