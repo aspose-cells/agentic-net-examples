@@ -291,6 +291,11 @@
     },
     {
       "category": "sparkline",
+      "file": "batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs",
+      "title": "Batch create sparklines for rows one through twenty, each using corresponding column data range."
+    },
+    {
+      "category": "sparkline",
       "file": "copy-an-entire-sparkline-group-from-sheet1-to-sheet2-preserving-data-ranges-and-formatting.cs",
       "title": "Copy an entire sparkline group from Sheet1 to Sheet2 preserving data ranges and formatting."
     },
