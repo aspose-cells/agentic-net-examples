@@ -916,6 +916,11 @@
     },
     {
       "category": "slicer",
+      "file": "save-the-workbook-containing-slicers-to-excel-2016-format-to-preserve-advanced-features.cs",
+      "title": "Save the workbook containing slicers to Excel 2016 format to preserve advanced features."
+    },
+    {
+      "category": "slicer",
       "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
