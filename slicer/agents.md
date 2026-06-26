@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - process-a-list-of-slicer-names-removing-each-one-and-logging-the-operation-result.cs
 - toggle-slicer-item-selection-based-on-values-read-from-a-database-query.cs
 - load-multiple-workbooks-remove-all-slicers-and-archive-the-resulting-pdfs-in-a-zip-file.cs
+- before-saving-automatically-select-the-first-item-if-a-slicer-has-no-selected-items.cs
