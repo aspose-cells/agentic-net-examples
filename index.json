@@ -30,6 +30,11 @@
       "title": "Remove a threaded comment from cell C3 using the Remove method on the comment object."
     },
     {
+      "category": "comments-and-notes",
+      "file": "retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs",
+      "title": "Retrieve the creation time of a threaded comment via the CreatedTime property and log it."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
