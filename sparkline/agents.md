@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - set-sparkline-3d-depth-property-to-higher-value-to-enhance-visual-depth-perception.cs
 - adjust-sparkline-lighting-to-soft-mode-for-improved-appearance-in-excel-2010-files.cs
 - change-sparkline-material-to-plastic-to-affect-surface-shading-and-give-subtle-glossy-effect.cs
+- enable-display-of-empty-cells-as-zero-values-in-sparkline-at-cell-m9-for-accurate-totals.cs
