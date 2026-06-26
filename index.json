@@ -1471,6 +1471,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "programmatically-disable-automatic-xml-map-refresh-during-bulk-cell-updates-to-improve-processing-speed.cs",
+      "title": "Programmatically disable automatic XML map refresh during bulk cell updates to improve processing speed."
+    },
+    {
+      "category": "xml-maps",
       "file": "query-all-cell-areas-mapped-to-a-given-xml-path-using-worksheetxmlmapquery-method.cs",
       "title": "Query all cell areas mapped to a given XML path using Worksheet.XmlMapQuery method."
     },
