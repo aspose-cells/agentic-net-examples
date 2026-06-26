@@ -1526,6 +1526,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "set-the-xmlmaps-preservewhitespace-property-to-true-to-keep-formatting-spaces-from-the-source-xml.cs",
+      "title": "Set the XmlMap's PreserveWhitespace property to true to keep formatting spaces from the source XML."
+    },
+    {
+      "category": "xml-maps",
       "file": "update-an-existing-xml-map-by-readding-it-with-the-same-name-and-a-new-xsd-schema.cs",
       "title": "Update an existing XML map by re\u2011adding it with the same name and a new XSD schema."
     },
