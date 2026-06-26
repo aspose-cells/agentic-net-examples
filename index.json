@@ -976,6 +976,11 @@
     },
     {
       "category": "slicer",
+      "file": "save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs",
+      "title": "Save the workbook after each slicer modification to create incremental versioned files for change tracking."
+    },
+    {
+      "category": "slicer",
       "file": "save-the-workbook-containing-slicers-to-excel-2016-format-to-preserve-advanced-features.cs",
       "title": "Save the workbook containing slicers to Excel 2016 format to preserve advanced features."
     },
