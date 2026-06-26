@@ -1351,6 +1351,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "filter-mapped-cell-areas-by-xpath-expression-and-process-only-those-matching-the-criteria.cs",
+      "title": "Filter mapped cell areas by XPath expression and process only those matching the criteria."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
       "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
     },
