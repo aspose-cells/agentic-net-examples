@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - mark-the-newly-added-projectid-property-as-optional-by-setting-its-isnillable-flag-to-true.cs
 - create-a-custom-xml-part-containing-a-book-catalog-schema-and-add-it-using-workbookcontenttypepropertiesadd.cs
 - add-multiple-custom-xml-parts-representing-different-data-sections-then-verify-each-appears-in-the-customxml-folder.cs
+- apply-a-naming-convention-to-custom-xml-parts-by-prefixing-them-with-the-project-identifier.cs
