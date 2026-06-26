@@ -1341,6 +1341,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "import-xml-data-from-a-stream-into-a-workbook-with-linked-cells-using-importxml-overload.cs",
+      "title": "Import XML data from a stream into a workbook with linked cells using ImportXml overload."
+    },
+    {
+      "category": "xml-maps",
       "file": "list-all-xml-maps-in-the-workbook-and-output-each-maps-name-to-the-console.cs",
       "title": "List all XML maps in the workbook and output each map\u2019s name to the console."
     },
