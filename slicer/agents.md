@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - validate-that-slicer-placement-coordinates-remain-consistent-after-saving-and-reloading-the-workbook.cs
 - export-the-workbook-containing-slicers-to-pdf-and-compare-slicer-positions-with-the-original-excel-file.cs
 - render-the-workbook-to-pdf-while-preserving-slicer-visual-properties-and-layout.cs
+- convert-the-workbook-with-slicers-to-pdf-while-preserving-slicer-appearance-and-metadata.cs
