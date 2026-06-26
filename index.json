@@ -421,6 +421,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "configure-workbooksettings-to-disable-automatic-style-creation-before-removing-unused-styles-for-faster-cleanup.cs",
+      "title": "Configure WorkbookSettings to disable automatic style creation before removing unused styles for faster cleanup."
+    },
+    {
+      "category": "manage-workbook",
       "file": "copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs",
       "title": "Copy a worksheet from the source workbook to a destination workbook while preserving cell styles."
     },
