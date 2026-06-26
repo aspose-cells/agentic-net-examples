@@ -1313,6 +1313,11 @@
       "category": "xml-maps",
       "file": "list-all-xml-maps-in-the-workbook-and-output-each-maps-name-to-the-console.cs",
       "title": "List all XML maps in the workbook and output each map\u2019s name to the console."
+    },
+    {
+      "category": "xml-maps",
+      "file": "retrieve-the-root-element-name-of-the-first-xml-map-via-xmlmaprootelementname-property.cs",
+      "title": "Retrieve the root element name of the first XML map via XmlMap.RootElementName property."
     }
   ]
 }
