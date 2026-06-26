@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - open-a-workbook-set-pdf-export-options-for-high-resolution-and-save-as-a-pdf-file.cs
 - load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs
 - instantiate-a-workbook-set-contentdisposition-to-inline-and-stream-the-xlsx-file-to-an-httpresponse.cs
+- open-a-workbook-enable-strict-open-xml-compliance-and-save-it-using-the-default-file-name.cs
