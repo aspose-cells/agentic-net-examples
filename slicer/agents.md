@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs
 - load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs
 - iterate-each-slicer-log-its-selected-items-then-deselect-all-items-and-refresh.cs
+- generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs
