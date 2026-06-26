@@ -915,6 +915,11 @@
       "title": "Set the slicer caption to a custom string to improve user understanding."
     },
     {
+      "category": "slicer",
+      "file": "set-the-slicer-to-be-printable-so-it-appears-when-the-worksheet-is-printed-to-paper.cs",
+      "title": "Set the slicer to be printable so it appears when the worksheet is printed to paper."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
