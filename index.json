@@ -166,6 +166,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs",
+      "title": "Open a workbook, set ExportAllSheets to true, and save all worksheets into a single CSV file."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-a-workbook-set-pdf-export-options-for-high-resolution-and-save-as-a-pdf-file.cs",
       "title": "Open a workbook, set PDF export options for high resolution, and save as a PDF file."
     },
