@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs
 - create-a-new-workbook-add-a-worksheet-and-define-an-xml-map-using-a-xsd-file.cs
 - import-xml-data-into-the-workbook-by-linking-cells-to-corresponding-xml-map-elements.cs
+- query-all-cell-areas-mapped-to-a-given-xml-path-using-worksheetxmlmapquery-method.cs
