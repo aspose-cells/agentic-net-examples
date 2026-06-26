@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - specify-custom-line-terminator-in-jsonlayoutoptions-when-converting-json-to-csv-for-windows-compatibility.cs
 - load-a-json-array-representing-multiple-tables-and-map-each-element-to-a-separate-worksheet.cs
 - encrypt-the-generated-json-file-using-a-passwordprotected-stream-before-writing-to-disk.cs
+- implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs
