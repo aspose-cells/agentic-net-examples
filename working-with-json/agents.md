@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - merge-multiple-json-files-into-a-single-workbook-creating-separate-worksheets-for-each-file.cs
 - apply-a-filter-to-exclude-rows-where-the-status-column-equals-inactive-before-json-export.cs
 - preserve-cell-formulas-during-json-conversion-by-configuring-jsonsaveoptionspreserveformulas-flag.cs
+- generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs
