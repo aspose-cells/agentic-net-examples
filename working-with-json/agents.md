@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs
 - merge-multiple-json-files-into-a-single-workbook-creating-separate-worksheets-for-each-file.cs
 - apply-a-filter-to-exclude-rows-where-the-status-column-equals-inactive-before-json-export.cs
+- preserve-cell-formulas-during-json-conversion-by-configuring-jsonsaveoptionspreserveformulas-flag.cs
