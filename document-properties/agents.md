@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs
 - compare-custom-property-sets-between-two-workbooks-and-generate-a-list-of-differences-for-auditing.cs
 - remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs
+- add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs
