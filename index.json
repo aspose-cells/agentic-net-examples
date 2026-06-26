@@ -296,6 +296,11 @@
     },
     {
       "category": "sparkline",
+      "file": "adjust-sparkline-lighting-to-soft-mode-for-improved-appearance-in-excel-2010-files.cs",
+      "title": "Adjust sparkline lighting to 'Soft' mode for improved appearance in Excel 2010 files."
+    },
+    {
+      "category": "sparkline",
       "file": "apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs",
       "title": "Apply custom line weight of two points to sparkline group situated in cell K7."
     },
