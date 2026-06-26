@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - create-a-backup-copy-of-the-workbook-before-modifying-xml-maps-to-allow-easy-rollback-if-needed.cs
 - export-mapped-data-to-a-json-file-by-converting-the-xml-nodes-to-equivalent-json-structures.cs
 - implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs
+- create-a-scheduled-task-that-refreshes-all-xml-maps-in-a-set-of-workbooks-every-night-at-midnight.cs
