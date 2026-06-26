@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - export-the-workbook-to-pdf-format-with-high-resolution-images-and-embedded-fonts.cs
 - set-workbook-theme-to-a-builtin-style-and-update-all-cell-styles-accordingly.cs
 - load-an-existing-excel-file-into-a-workbook-object-and-inspect-its-contenttypeproperties-collection.cs
+- use-workbookloadoptions-to-open-a-passwordprotected-file-then-add-optional-metadata-before-saving.cs
