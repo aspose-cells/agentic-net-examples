@@ -961,6 +961,11 @@
     },
     {
       "category": "slicer",
+      "file": "remove-slicers-only-if-they-are-linked-to-a-pivot-table-exceeding-one-hundred-rows.cs",
+      "title": "Remove slicers only if they are linked to a pivot table exceeding one hundred rows."
+    },
+    {
+      "category": "slicer",
       "file": "resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs",
       "title": "Resize the slicer by assigning specific height and width values for layout consistency."
     },
