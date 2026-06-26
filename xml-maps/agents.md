@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - save-the-workbook-after-modifying-xml-maps-using-workbooksave-to-persist-changes.cs
 - load-a-workbook-from-a-memory-stream-add-an-xml-map-and-save-back-to-a-stream.cs
 - batch-process-a-folder-of-workbooks-adding-the-same-xml-map-to-each-file-programmatically.cs
+- batch-export-xml-data-from-multiple-workbooks-by-iterating-files-and-invoking-exportxml-for-each-map.cs
