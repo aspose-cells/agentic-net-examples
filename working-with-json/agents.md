@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - define-a-semicolon-as-csv-delimiter-in-jsonlayoutoptions-before-converting-json-to-csv.cs
 - load-a-csv-file-into-memory-using-jsonutility-and-transform-it-into-json-format.cs
 - export-a-specific-cell-range-from-a-worksheet-to-json-using-exportrangetojsonoptions.cs
+- include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs
