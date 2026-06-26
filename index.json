@@ -180,6 +180,11 @@
       "title": "Read a CSV file, filter rows by date, and export the result to an HTML file."
     },
     {
+      "category": "save-workbook",
+      "file": "read-a-txt-workbook-split-cells-by-custom-delimiter-and-export-the-data-to-an-xml-file.cs",
+      "title": "Read a TXT workbook, split cells by custom delimiter, and export the data to an XML file."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
