@@ -301,6 +301,11 @@
     },
     {
       "category": "document-properties",
+      "file": "remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs",
+      "title": "Remove all custom properties whose names start with the prefix \"Temp_\" to clean temporary entries."
+    },
+    {
+      "category": "document-properties",
       "file": "set-the-linksuptodate-property-based-on-presence-of-external-hyperlinks-disabling-it-if-none-exist.cs",
       "title": "Set the LinksUpToDate property based on presence of external hyperlinks, disabling it if none exist."
     },
