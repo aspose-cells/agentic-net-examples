@@ -501,6 +501,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "implement-a-commandline-tool-that-accepts-a-file-path-adds-an-optional-property-and-disposes-the-workbook.cs",
+      "title": "Implement a command\u2011line tool that accepts a file path, adds an optional property, and disposes the workbook."
+    },
+    {
+      "category": "manage-workbook",
       "file": "implement-error-handling-to-continue-batch-processing-when-a-workbook-fails-to-load-due-to-corruption.cs",
       "title": "Implement error handling to continue batch processing when a workbook fails to load due to corruption."
     },
