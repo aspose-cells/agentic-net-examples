@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - implement-error-handling-when-adding-a-slicer-to-a-nonexistent-table-column-in-the-worksheet.cs
 - save-the-workbook-with-slicers-and-compare-file-sizes-with-a-version-saved-without-slicers.cs
 - generate-a-report-listing-each-slicers-title-size-and-linked-table-column-for-auditing-purposes.cs
+- render-slicer-as-a-static-image-in-pdf-to-prevent-interactivity-while-preserving-its-appearance.cs
