@@ -71,6 +71,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs",
+      "title": "Remove all comments older than thirty days from a workbook based on their CreatedTime values."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs",
       "title": "Retrieve the creation time of a threaded comment via the CreatedTime property and log it."
     },
