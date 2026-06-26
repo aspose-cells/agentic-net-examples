@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs
 - scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs
 - read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs
+- change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs
