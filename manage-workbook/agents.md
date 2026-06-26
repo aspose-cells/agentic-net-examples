@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - apply-data-validation-to-restrict-input-to-a-list-of-predefined-values-in-a-column.cs
 - set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs
 - protect-the-workbook-with-a-password-and-allow-only-readonly-access-for-users.cs
+- copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs
