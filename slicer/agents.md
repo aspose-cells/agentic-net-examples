@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs
 - apply-a-custom-border-style-with-dashed-lines-and-a-defined-thickness-to-the-slicer.cs
 - arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs
+- change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs
