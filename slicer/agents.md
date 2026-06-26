@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - export-the-slicer-as-an-image-and-embed-it-in-a-pdf-report-generated-from-the-workbook.cs
 - save-the-workbook-containing-slicers-to-excel-2016-format-to-preserve-advanced-features.cs
 - save-the-workbook-containing-slicers-to-macroenabled-excel-format-while-retaining-vba-code.cs
+- batch-create-slicers-for-each-pivot-table-in-a-workbook-using-a-loop-over-all-tables.cs
