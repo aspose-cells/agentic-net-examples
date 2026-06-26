@@ -486,6 +486,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "use-workbookloadoptions-to-open-a-passwordprotected-file-then-add-optional-metadata-before-saving.cs",
+      "title": "Use Workbook.LoadOptions to open a password\u2011protected file, then add optional metadata before saving."
+    },
+    {
+      "category": "manage-workbook",
       "file": "validate-all-formulas-in-the-workbook-for-errors-and-generate-a-report-of-problematic-cells.cs",
       "title": "Validate all formulas in the workbook for errors and generate a report of problematic cells."
     },
