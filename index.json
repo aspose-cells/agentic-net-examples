@@ -1321,6 +1321,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-xml-with-custom-namespace-prefixes-by-configuring-exportxmloptionsnamespaceprefixdictionary-before-export.cs",
+      "title": "Export XML with custom namespace prefixes by configuring ExportXmlOptions.NamespacePrefixDictionary before export."
+    },
+    {
+      "category": "xml-maps",
       "file": "export-xml-with-indentation-enabled-by-configuring-exportxmloptions-before-calling-exportxml.cs",
       "title": "Export XML with indentation enabled by configuring ExportXmlOptions before calling ExportXml."
     },
