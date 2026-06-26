@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs
 - move-a-worksheet-to-a-new-position-within-the-same-workbook-and-update-its-tab-color.cs
 - create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-summary-formula.cs
+- create-a-pivot-table-from-a-data-source-range-and-place-it-on-a-new-worksheet.cs
