@@ -146,6 +146,11 @@
     },
     {
       "category": "save-workbook",
+      "file": "open-a-workbook-set-pdf-export-options-for-high-resolution-and-save-as-a-pdf-file.cs",
+      "title": "Open a workbook, set PDF export options for high resolution, and save as a PDF file."
+    },
+    {
+      "category": "save-workbook",
       "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
       "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
     },
