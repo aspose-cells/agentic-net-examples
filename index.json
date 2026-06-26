@@ -11,6 +11,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs",
+      "title": "Edit a specific threaded comment by setting its Text property to a new string value."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs",
       "title": "Iterate through a ThreadedCommentCollection to display each comment's text, author, and creation timestamp."
     },
