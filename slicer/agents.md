@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - iterate-each-slicer-log-its-selected-items-then-deselect-all-items-and-refresh.cs
 - generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs
 - write-a-unit-test-verifying-that-slicerrefresh-updates-the-linked-pivot-tables-row-count-as-expected.cs
+- save-the-workbook-with-pdf-options-to-embed-the-slicers-visual-style-in-the-output-file.cs
