@@ -1301,6 +1301,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "apply-a-custom-style-to-cells-mapped-to-the-customername-element-to-highlight-customer-names.cs",
+      "title": "Apply a custom style to cells mapped to the /Customer/Name element to highlight customer names."
+    },
+    {
+      "category": "xml-maps",
       "file": "apply-conditional-formatting-to-cells-based-on-values-retrieved-from-the-linked-xml-map-elements.cs",
       "title": "Apply conditional formatting to cells based on values retrieved from the linked XML map elements."
     },
