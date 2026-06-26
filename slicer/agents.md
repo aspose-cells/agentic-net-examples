@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - clear-all-selected-items-in-a-slicer-to-reset-the-filter-to-its-default-state.cs
 - set-the-slicer-to-be-printable-so-it-appears-when-the-worksheet-is-printed-to-paper.cs
 - export-the-slicer-as-an-image-and-embed-it-in-a-pdf-report-generated-from-the-workbook.cs
+- save-the-workbook-containing-slicers-to-excel-2016-format-to-preserve-advanced-features.cs
