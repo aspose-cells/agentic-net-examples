@@ -1471,6 +1471,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "use-worksheetcellsfind-to-locate-a-cell-that-is-mapped-to-a-specific-xml-attribute.cs",
+      "title": "Use Worksheet.Cells.Find to locate a cell that is mapped to a specific XML attribute."
+    },
+    {
+      "category": "xml-maps",
       "file": "use-worksheetxmlmapquery-result-to-apply-background-color-formatting-to-all-cells-mapped-to-a-path.cs",
       "title": "Use Worksheet.XmlMapQuery result to apply background color formatting to all cells mapped to a path."
     },
