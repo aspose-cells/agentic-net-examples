@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - filter-mapped-cell-areas-by-xpath-expression-and-process-only-those-matching-the-criteria.cs
 - export-the-current-xml-map-data-to-a-separate-xml-file-preserving-original-schema-structure.cs
 - validate-the-xml-map-against-its-xsd-schema-and-report-any-validation-errors-encountered.cs
+- remove-an-existing-xml-map-from-the-workbook-and-ensure-all-linked-cells-are-cleared.cs
