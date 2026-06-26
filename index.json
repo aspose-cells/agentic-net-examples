@@ -476,6 +476,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-unit-test-that-asserts-the-isnillable-flag-is-true-for-a-given-contenttypeproperty-after-saving.cs",
+      "title": "Create a unit test that asserts the IsNillable flag is true for a given ContentTypeProperty after saving."
+    },
+    {
+      "category": "manage-workbook",
       "file": "enable-iterative-calculation-mode-and-set-maximum-iterations-to-improve-convergence-of-circular-formulas.cs",
       "title": "Enable iterative calculation mode and set maximum iterations to improve convergence of circular formulas."
     },
