@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - preserve-cell-formulas-during-json-conversion-by-configuring-jsonsaveoptionspreserveformulas-flag.cs
 - generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs
 - convert-a-large-csv-file-to-json-using-streaming-options-to-reduce-memory-usage.cs
+- specify-custom-line-terminator-in-jsonlayoutoptions-when-converting-json-to-csv-for-windows-compatibility.cs
