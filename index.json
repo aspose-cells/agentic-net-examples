@@ -285,6 +285,11 @@
       "title": "Read a workbook, merge cells across rows, and export the result to an HTML file with tables."
     },
     {
+      "category": "sparkline",
+      "file": "load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs",
+      "title": "Load an existing workbook and import Aspose.Cells.Charts namespace for sparkline operations."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
