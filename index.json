@@ -26,6 +26,11 @@
     },
     {
       "category": "comments-and-notes",
+      "file": "embed-an-image-as-a-comment-background-by-setting-shapefillpicture-to-a-loaded-picture-object.cs",
+      "title": "Embed an image as a comment background by setting Shape.Fill.Picture to a loaded picture object."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs",
       "title": "Iterate through a ThreadedCommentCollection to display each comment's text, author, and creation timestamp."
     },
