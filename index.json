@@ -861,6 +861,11 @@
     },
     {
       "category": "slicer",
+      "file": "delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs",
+      "title": "Delete a slicer by name from the workbook to clean up unused controls."
+    },
+    {
+      "category": "slicer",
       "file": "enable-multiselect-on-the-slicer-to-allow-users-to-choose-several-items-simultaneously.cs",
       "title": "Enable multi\u2011select on the slicer to allow users to choose several items simultaneously."
     },
