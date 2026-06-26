@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - export-xml-with-custom-namespace-prefixes-by-configuring-exportxmloptionsnamespaceprefixdictionary-before-export.cs
 - use-worksheetxmlmapquery-result-to-apply-background-color-formatting-to-all-cells-mapped-to-a-path.cs
 - enumerate-the-xmlmapcollection-and-log-each-maps-name-and-root-element-name-for-debugging.cs
+- create-a-new-workbook-add-a-worksheet-and-define-an-xml-map-using-a-xsd-file.cs
