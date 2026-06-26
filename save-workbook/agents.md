@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - open-a-fods-workbook-change-the-default-font-and-save-it-as-an-ods-document.cs
 - load-an-xlsb-file-calculate-all-formulas-and-generate-a-json-representation-of-the-data.cs
 - open-a-workbook-set-pdf-export-options-for-high-resolution-and-save-as-a-pdf-file.cs
+- load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs
