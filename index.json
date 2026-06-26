@@ -1136,6 +1136,11 @@
     },
     {
       "category": "slicer",
+      "file": "update-slicer-style-based-on-datadriven-criteria-using-the-api.cs",
+      "title": "Update slicer style based on data\u2011driven criteria using the API."
+    },
+    {
+      "category": "slicer",
       "file": "use-slicercacheitems-to-select-items-based-on-external-csv-data-then-refresh-the-slicer.cs",
       "title": "Use SlicerCacheItems to select items based on external CSV data, then refresh the slicer."
     },
