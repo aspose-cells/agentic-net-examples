@@ -446,6 +446,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "export-a-list-of-all-contenttypeproperty-names-from-a-workbook-to-a-csv-file-for-reporting.cs",
+      "title": "Export a list of all ContentTypeProperty names from a workbook to a CSV file for reporting."
+    },
+    {
+      "category": "manage-workbook",
       "file": "export-a-specific-worksheet-to-an-image-file-with-300-dpi-resolution-and-transparent-background.cs",
       "title": "Export a specific worksheet to an image file with 300 DPI resolution and transparent background."
     },
