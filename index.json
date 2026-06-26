@@ -270,6 +270,11 @@
       "title": "Read a workbook, filter out hidden rows, and export the visible data to a TXT file."
     },
     {
+      "category": "save-workbook",
+      "file": "read-a-workbook-merge-cells-across-rows-and-export-the-result-to-an-html-file-with-tables.cs",
+      "title": "Read a workbook, merge cells across rows, and export the result to an HTML file with tables."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
