@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - generate-a-chart-visualizing-totals-from-mapped-xml-nodes-and-embed-it-into-the-worksheet.cs
 - implement-error-handling-to-catch-exceptions-when-an-xml-map-path-does-not-exist-in-the-schema.cs
 - use-workbookloadoptions-to-preserve-existing-xml-maps-when-opening-a-workbook-in-readonly-mode.cs
+- export-mapped-xml-data-as-a-compressed-zip-archive-containing-separate-files-for-each-map.cs
