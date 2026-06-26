@@ -1411,6 +1411,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "use-worksheetxmlmapquery-result-to-apply-background-color-formatting-to-all-cells-mapped-to-a-path.cs",
+      "title": "Use Worksheet.XmlMapQuery result to apply background color formatting to all cells mapped to a path."
+    },
+    {
+      "category": "xml-maps",
       "file": "validate-linked-cells-after-importing-xml-data-by-reexecuting-worksheetxmlmapquery-and-checking-results.cs",
       "title": "Validate linked cells after importing XML data by re\u2011executing Worksheet.XmlMapQuery and checking results."
     }
