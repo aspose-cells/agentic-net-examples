@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - delete-the-second-sparkline-in-the-first-sparkline-group-using-sparklinegroupremoveat-method.cs
 - read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs
 - copy-an-entire-sparkline-group-from-sheet1-to-sheet2-preserving-data-ranges-and-formatting.cs
+- batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs
