@@ -346,6 +346,11 @@
     },
     {
       "category": "sparkline",
+      "file": "remove-all-sparklines-from-active-worksheet-by-invoking-clear-method-on-each-sparklinegroup.cs",
+      "title": "Remove all sparklines from active worksheet by invoking Clear method on each SparklineGroup."
+    },
+    {
+      "category": "sparkline",
       "file": "set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs",
       "title": "Set sparkline group to display markers for both high and low points simultaneously."
     },
