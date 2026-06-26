@@ -296,6 +296,11 @@
     },
     {
       "category": "sparkline",
+      "file": "configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs",
+      "title": "Configure sparkline axis minimum and maximum to fixed numeric values for consistent scaling."
+    },
+    {
+      "category": "sparkline",
       "file": "copy-an-entire-sparkline-group-from-sheet1-to-sheet2-preserving-data-ranges-and-formatting.cs",
       "title": "Copy an entire sparkline group from Sheet1 to Sheet2 preserving data ranges and formatting."
     },
