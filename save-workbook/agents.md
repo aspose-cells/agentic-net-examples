@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs
 - instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs
 - load-an-xlsm-file-remove-macros-and-save-the-workbook-as-a-strict-open-xml-xlsx.cs
+- create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs
