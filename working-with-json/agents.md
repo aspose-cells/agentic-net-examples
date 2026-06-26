@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs
 - set-json-output-encoding-to-utf-8-within-jsonsaveoptions-before-saving-workbook-as-json.cs
 - batch-process-a-folder-of-xls-files-converting-each-workbook-to-separate-json-files.cs
+- validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs
