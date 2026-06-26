@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs
 - protect-the-workbook-with-a-password-and-allow-only-readonly-access-for-users.cs
 - copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs
+- move-a-worksheet-to-a-new-position-within-the-same-workbook-and-update-its-tab-color.cs
