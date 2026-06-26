@@ -1301,6 +1301,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "apply-conditional-formatting-to-cells-based-on-values-retrieved-from-the-linked-xml-map-elements.cs",
+      "title": "Apply conditional formatting to cells based on values retrieved from the linked XML map elements."
+    },
+    {
+      "category": "xml-maps",
       "file": "batch-export-xml-data-from-multiple-workbooks-by-iterating-files-and-invoking-exportxml-for-each-map.cs",
       "title": "Batch export XML data from multiple workbooks by iterating files and invoking ExportXml for each map."
     },
