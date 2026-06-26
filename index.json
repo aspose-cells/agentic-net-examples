@@ -1376,6 +1376,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "generate-a-chart-visualizing-totals-from-mapped-xml-nodes-and-embed-it-into-the-worksheet.cs",
+      "title": "Generate a chart visualizing totals from mapped XML nodes and embed it into the worksheet."
+    },
+    {
+      "category": "xml-maps",
       "file": "import-an-xml-map-directly-from-an-xml-file-into-a-workbook-with-workbookimportxml.cs",
       "title": "Import an XML map directly from an XML file into a workbook with Workbook.ImportXml."
     },
