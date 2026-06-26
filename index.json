@@ -1386,6 +1386,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "query-all-cell-areas-mapped-to-a-given-xml-path-using-worksheetxmlmapquery-method.cs",
+      "title": "Query all cell areas mapped to a given XML path using Worksheet.XmlMapQuery method."
+    },
+    {
+      "category": "xml-maps",
       "file": "query-cells-mapped-to-a-given-xpath-expression-using-worksheetxmlmapquery-method.cs",
       "title": "Query cells mapped to a given XPath expression using Worksheet.XmlMapQuery method."
     },
