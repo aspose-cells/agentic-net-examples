@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs
 - set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs
 - position-the-slicer-by-specifying-precise-top-and-left-coordinates-programmatically.cs
+- resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs
