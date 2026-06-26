@@ -336,6 +336,11 @@
     },
     {
       "category": "sparkline",
+      "file": "iterate-through-each-sparkline-collect-average-values-and-store-results-in-a-list.cs",
+      "title": "Iterate through each sparkline, collect average values, and store results in a list."
+    },
+    {
+      "category": "sparkline",
       "file": "load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs",
       "title": "Load an existing workbook and import Aspose.Cells.Charts namespace for sparkline operations."
     },
