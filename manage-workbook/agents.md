@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - apply-a-naming-convention-to-custom-xml-parts-by-prefixing-them-with-the-project-identifier.cs
 - configure-the-workbook-to-use-a-specific-culture-when-formatting-optional-property-values-during-export.cs
 - load-a-workbook-that-contains-numerous-unused-styles-and-invoke-removeunusedstyles-to-clean-it.cs
+- measure-the-file-size-before-and-after-removing-unused-styles-to-assess-reduction-impact.cs
