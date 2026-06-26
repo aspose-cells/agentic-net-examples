@@ -451,6 +451,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "mark-the-newly-added-projectid-property-as-optional-by-setting-its-isnillable-flag-to-true.cs",
+      "title": "Mark the newly added ProjectId property as optional by setting its IsNillable flag to true."
+    },
+    {
+      "category": "manage-workbook",
       "file": "merge-cells-in-a-header-row-apply-bold-font-and-center-the-text-horizontally.cs",
       "title": "Merge cells in a header row, apply bold font, and center the text horizontally."
     },
