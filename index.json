@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "comments-and-notes",
+      "file": "apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs",
+      "title": "Apply a solid blue background to a comment using Shape.Fill.ForeColor with the appropriate color code."
+    },
+    {
+      "category": "comments-and-notes",
       "file": "change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs",
       "title": "Change the font color of a comment by assigning a red value to Shape.TextBody.Font.Color."
     },
