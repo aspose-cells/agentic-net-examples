@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - protect-the-workbook-with-a-password-and-allow-only-readonly-access-for-users.cs
 - copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs
 - move-a-worksheet-to-a-new-position-within-the-same-workbook-and-update-its-tab-color.cs
+- create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-summary-formula.cs
