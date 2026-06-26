@@ -426,6 +426,11 @@
     },
     {
       "category": "manage-workbook",
+      "file": "create-a-batch-job-that-processes-100-workbooks-adding-optional-metadata-and-removing-unused-styles.cs",
+      "title": "Create a batch job that processes 100 workbooks, adding optional metadata and removing unused styles."
+    },
+    {
+      "category": "manage-workbook",
       "file": "create-a-custom-xml-part-containing-a-book-catalog-schema-and-add-it-using-workbookcontenttypepropertiesadd.cs",
       "title": "Create a custom XML part containing a book catalog schema and add it using Workbook.ContentTypeProperties.Add."
     },
