@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs
 - configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs
 - use-exportrangetojsonoptions-to-include-cell-comments-as-additional-json-fields-during-export.cs
+- transform-numeric-values-to-strings-in-json-output-by-applying-a-custom-value-formatter.cs
