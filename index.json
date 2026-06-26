@@ -331,6 +331,11 @@
     },
     {
       "category": "working-with-json",
+      "file": "specify-custom-line-terminator-in-jsonlayoutoptions-when-converting-json-to-csv-for-windows-compatibility.cs",
+      "title": "Specify custom line terminator in JsonLayoutOptions when converting JSON to CSV for Windows compatibility."
+    },
+    {
+      "category": "working-with-json",
       "file": "validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs",
       "title": "Validate JSON structure against a predefined schema after loading with JsonUtility successfully."
     }
