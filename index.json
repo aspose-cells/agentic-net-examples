@@ -291,6 +291,11 @@
     },
     {
       "category": "sparkline",
+      "file": "add-multiple-data-ranges-to-a-single-sparkline-group-to-generate-multiseries-sparkline.cs",
+      "title": "Add multiple data ranges to a single sparkline group to generate multi\u2011series sparkline."
+    },
+    {
+      "category": "sparkline",
       "file": "apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs",
       "title": "Apply custom line weight of two points to sparkline group situated in cell K7."
     },
