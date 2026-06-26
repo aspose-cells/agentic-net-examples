@@ -346,6 +346,11 @@
     },
     {
       "category": "sparkline",
+      "file": "set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs",
+      "title": "Set sparkline group to display markers for both high and low points simultaneously."
+    },
+    {
+      "category": "sparkline",
       "file": "set-sparkline-markers-to-display-high-points-using-red-color-for-sparkline-in-h3.cs",
       "title": "Set sparkline markers to display high points using red color for sparkline in H3."
     },
