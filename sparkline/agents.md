@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - copy-an-entire-sparkline-group-from-sheet1-to-sheet2-preserving-data-ranges-and-formatting.cs
 - batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs
 - configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs
+- enable-display-of-both-first-and-last-points-in-line-sparkline-located-at-i4.cs
