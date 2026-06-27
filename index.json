@@ -416,6 +416,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs",
+      "title": "Load an XLSX workbook using LoadOptions with CultureInfo set to French, preserving thread culture."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "load-the-excel-workbook-using-workbookload-after-configuring-the-custom-globalization-settings.cs",
       "title": "Load the Excel workbook using Workbook.Load after configuring the custom globalization settings."
     },
