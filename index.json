@@ -686,6 +686,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs",
+      "title": "Export a list of all external connection names from a workbook to a plain text file."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs",
       "title": "Extract OData connection details from the DataMashup object and log the service endpoint URL."
     },
