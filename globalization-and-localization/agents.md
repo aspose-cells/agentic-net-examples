@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - test-subtotal-label-translation-for-a-specific-language-to-ensure-correct-appearance-in-the-worksheet.cs
 - save-the-localized-workbook-as-xlsx-preserving-original-formatting-comments-and-cell-styles.cs
 - generate-a-report-listing-processed-workbooks-applied-locales-and-any-localization-errors-encountered.cs
+- implement-fallback-to-english-function-names-when-a-requested-locale-lacks-a-defined-mapping.cs
