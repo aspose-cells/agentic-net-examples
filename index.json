@@ -976,6 +976,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "verify-that-the-workbook-opens-without-errors-after-applying-custom-ribbon-and-path-changes.cs",
+      "title": "Verify that the workbook opens without errors after applying custom ribbon and path changes."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "write-a-query-table-to-a-worksheet-based-on-an-existing-odata-connection-and-refresh-data.cs",
       "title": "Write a query table to a worksheet based on an existing OData connection and refresh data."
     },
