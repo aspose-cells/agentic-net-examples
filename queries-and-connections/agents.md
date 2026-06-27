@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - write-a-query-table-to-a-worksheet-based-on-an-existing-odata-connection-and-refresh-data.cs
 - save-the-modified-workbook-as-an-xlsb-file-while-preserving-all-external-connection-settings.cs
 - load-multiple-xls-files-from-a-directory-update-each-dbconnectionname-and-save-changes-in-place.cs
+- export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs
