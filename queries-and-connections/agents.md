@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - retrieve-the-first-worksheet-access-its-first-querytable-and-read-preserveformatting-flag.cs
 - iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs
 - obtain-resultrange-address-of-a-querytable-and-log-it-for-downstream-processing.cs
+- remove-a-specific-external-connection-from-the-workbook-based-on-its-description-value.cs
