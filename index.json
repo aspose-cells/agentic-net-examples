@@ -846,6 +846,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "verify-that-hidden-external-links-remain-hidden-after-encrypting-the-workbook-with-a-password.cs",
+      "title": "Verify that hidden external links remain hidden after encrypting the workbook with a password."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "write-a-query-table-to-a-worksheet-based-on-an-existing-odata-connection-and-refresh-data.cs",
       "title": "Write a query table to a worksheet based on an existing OData connection and refresh data."
     },
