@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs
+- convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs
