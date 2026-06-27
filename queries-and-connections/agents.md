@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - update-all-external-links-in-the-workbook-to-use-relative-paths-for-better-portability.cs
 - log-the-original-and-updated-external-link-paths-for-audit-purposes.cs
 - handle-errors-when-the-external-link-file-is-missing-or-inaccessible-during-path-update.cs
+- create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs
