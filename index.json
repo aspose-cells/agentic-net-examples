@@ -776,6 +776,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "implement-error-handling-for-failures-during-external-link-path-updates-invoked-from-the-ribbon.cs",
+      "title": "Implement error handling for failures during external link path updates invoked from the ribbon."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs",
       "title": "Import custom ribbon XML from an external .xml file into an existing workbook programmatically."
     },
