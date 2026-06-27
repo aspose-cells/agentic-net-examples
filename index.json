@@ -741,6 +741,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "insert-a-button-on-the-custom-ribbon-tab-that-triggers-external-link-path-refresh.cs",
+      "title": "Insert a button on the custom ribbon tab that triggers external link path refresh."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
       "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
     },
