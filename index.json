@@ -796,6 +796,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "serialize-the-powerqueryformulacollection-to-xml-for-external-auditing-compliance-purposes.cs",
+      "title": "Serialize the PowerQueryFormulaCollection to XML for external auditing compliance purposes."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs",
       "title": "Set RefreshOnLoad flag of a WebQuery connection to true for automatic data update."
     },
