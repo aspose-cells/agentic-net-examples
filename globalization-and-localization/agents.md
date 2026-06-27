@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - convert-gregorian-date-cells-to-japanese-calendar-dates-with-cellshelper-preserving-era-information-for-each-cell.cs
 - save-the-workbook-containing-japanese-era-dates-as-pdf-confirming-era-symbols-appear-correctly-in-the-output.cs
 - compare-pdf-output-of-a-workbook-loaded-with-invariant-culture-versus-french-culture-to-assess-number-format-differences.cs
+- programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs
