@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - update-a-specific-powerqueryformulaitemvalue-to-reference-a-new-csv-source-file-path.cs
 - change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs
 - detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs
+- generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs
