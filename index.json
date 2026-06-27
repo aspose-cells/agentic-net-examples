@@ -721,6 +721,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs",
+      "title": "Disable the default \"Data\" tab in the ribbon by removing its XML definition."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs",
       "title": "Export a list of all external connection names from a workbook to a plain text file."
     },
