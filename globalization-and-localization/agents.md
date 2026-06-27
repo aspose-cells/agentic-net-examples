@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - log-performance-metrics-for-each-localization-step-during-batch-processing-to-identify-bottlenecks.cs
 - load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs
 - create-a-subclass-of-globalizationsettings-that-overrides-gettotalname-to-provide-a-localized-subtotal-label.cs
+- create-a-subclass-of-globalizationsettings-overriding-getgrandtotalname-to-supply-a-culturespecific-grand-total-label.cs
