@@ -371,6 +371,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "localize-subtotal-and-grand-total-labels-by-overriding-appropriate-methods-in-the-custom-globalizationsettings.cs",
+      "title": "Localize subtotal and grand total labels by overriding appropriate methods in the custom GlobalizationSettings."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs",
       "title": "Override GetBooleanString to return localized true/false strings for the selected locale."
     },
