@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - create-a-configuration-file-mapping-locale-identifiers-to-corresponding-custom-globalizationsettings-classes.cs
 - develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs
 - implement-a-feature-that-switches-localization-at-runtime-based-on-user-selection-without-reloading-the-workbook.cs
+- measure-performance-differences-when-loading-workbooks-with-and-without-custom-globalizationsettings-applied.cs
