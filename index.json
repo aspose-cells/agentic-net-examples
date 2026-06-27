@@ -691,6 +691,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs",
+      "title": "Generate a plain\u2011text report summarizing hidden external link paths for further analysis."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
       "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
     },
