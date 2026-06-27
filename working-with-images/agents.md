@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - render-a-workbook-to-tiff-and-write-the-result-into-a-memory-stream-for-further-processing.cs
 - embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs
 - attach-the-converted-tiff-image-to-an-email-message-as-an-attachment-for-distribution.cs
+- measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs
