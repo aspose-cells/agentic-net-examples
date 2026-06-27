@@ -906,6 +906,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs",
+      "title": "Test the custom ribbon button to confirm it successfully updates external link paths."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-a-specific-powerqueryformulaitemvalue-to-reference-a-new-csv-source-file-path.cs",
       "title": "Update a specific PowerQueryFormulaItem.Value to reference a new CSV source file path."
     },
