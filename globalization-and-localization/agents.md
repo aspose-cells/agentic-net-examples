@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - implement-a-method-that-switches-globalizationsettings-at-runtime-based-on-userselected-language-before-chart-creation.cs
 - generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs
 - demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs
+- implement-logging-to-capture-which-culturespecific-label-methods-are-called-during-chart-rendering-for-debugging.cs
