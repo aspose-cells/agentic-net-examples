@@ -421,6 +421,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs",
+      "title": "Demonstrate preserving the original thread culture while loading a workbook with French CultureInfo using LoadOptions."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs",
       "title": "Develop a console application that prompts users to select a target language and applies localization to a workbook."
     },
