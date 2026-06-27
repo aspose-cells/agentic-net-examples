@@ -391,6 +391,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "test-subtotal-label-translation-for-a-specific-language-to-ensure-correct-appearance-in-the-worksheet.cs",
+      "title": "Test subtotal label translation for a specific language to ensure correct appearance in the worksheet."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "verify-that-localized-function-names-are-correctly-recognized-by-excel-when-the-workbook-is-opened.cs",
       "title": "Verify that localized function names are correctly recognized by Excel when the workbook is opened."
     },
