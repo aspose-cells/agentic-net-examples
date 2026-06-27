@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs
 - detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs
 - generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs
+- write-a-query-table-to-a-worksheet-based-on-an-existing-odata-connection-and-refresh-data.cs
