@@ -821,6 +821,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "log-the-execution-result-of-the-ribbon-button-action-for-troubleshooting.cs",
+      "title": "Log the execution result of the ribbon button action for troubleshooting."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "log-the-original-and-updated-external-link-paths-for-audit-purposes.cs",
       "title": "Log the original and updated external link paths for audit purposes."
     },
