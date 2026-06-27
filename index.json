@@ -761,6 +761,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs",
+      "title": "Import custom ribbon XML from an external .xml file into an existing workbook programmatically."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "insert-a-button-on-the-custom-ribbon-tab-that-triggers-external-link-path-refresh.cs",
       "title": "Insert a button on the custom ribbon tab that triggers external link path refresh."
     },
