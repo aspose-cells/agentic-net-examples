@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - measure-performance-differences-when-loading-workbooks-with-and-without-custom-globalizationsettings-applied.cs
 - log-performance-metrics-for-each-localization-step-during-batch-processing-to-identify-bottlenecks.cs
 - load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs
+- create-a-subclass-of-globalizationsettings-that-overrides-gettotalname-to-provide-a-localized-subtotal-label.cs
