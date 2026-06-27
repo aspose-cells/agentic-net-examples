@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs
 - test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs
 - log-the-execution-result-of-the-ribbon-button-action-for-troubleshooting.cs
+- implement-error-handling-for-failures-during-external-link-path-updates-invoked-from-the-ribbon.cs
