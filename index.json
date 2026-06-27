@@ -666,6 +666,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "create-a-reusable-method-that-returns-a-dictionary-of-connection-names-and-their-commandtexts.cs",
+      "title": "Create a reusable method that returns a dictionary of connection names and their CommandTexts."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs",
       "title": "Disable BackgroundRefresh on a SQL DBConnection to enforce sequential query execution."
     },
