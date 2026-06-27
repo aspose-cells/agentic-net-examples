@@ -751,6 +751,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "hide-the-refresh-all-command-on-specific-worksheets-via-customized-ribbon-xml.cs",
+      "title": "Hide the \"Refresh All\" command on specific worksheets via customized Ribbon XML."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "insert-a-button-on-the-custom-ribbon-tab-that-triggers-external-link-path-refresh.cs",
       "title": "Insert a button on the custom ribbon tab that triggers external link path refresh."
     },
