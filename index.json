@@ -666,6 +666,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs",
+      "title": "Change the Path property of an external link in an XLS workbook to a network shared folder."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "create-a-reusable-method-that-returns-a-dictionary-of-connection-names-and-their-commandtexts.cs",
       "title": "Create a reusable method that returns a dictionary of connection names and their CommandTexts."
     },
