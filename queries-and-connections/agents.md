@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - implement-error-handling-for-failures-during-external-link-path-updates-invoked-from-the-ribbon.cs
 - configure-the-ribbon-button-to-prompt-the-user-for-a-new-external-link-file-location.cs
 - save-the-workbook-with-updated-external-links-and-custom-ribbon-after-user-confirmation.cs
+- verify-that-the-workbook-opens-without-errors-after-applying-custom-ribbon-and-path-changes.cs
