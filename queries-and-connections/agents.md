@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - verify-that-hidden-external-links-remain-hidden-after-encrypting-the-workbook-with-a-password.cs
 - add-error-handling-to-capture-exceptions-when-an-external-connection-path-is-invalid.cs
 - generate-a-csv-file-containing-workbook-name-connection-type-and-connection-name-for-all-files-in-a-folder.cs
+- replace-all-occurrences-of-a-deprecated-database-name-within-dbconnectionname-properties-across-workbooks.cs
