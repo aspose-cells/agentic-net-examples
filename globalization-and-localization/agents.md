@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - localize-subtotal-and-grand-total-labels-by-overriding-appropriate-methods-in-the-custom-globalizationsettings.cs
 - test-subtotal-label-translation-for-a-specific-language-to-ensure-correct-appearance-in-the-worksheet.cs
 - save-the-localized-workbook-as-xlsx-preserving-original-formatting-comments-and-cell-styles.cs
+- generate-a-report-listing-processed-workbooks-applied-locales-and-any-localization-errors-encountered.cs
