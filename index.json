@@ -2176,6 +2176,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs",
+      "title": "Convert a workbook to TIFF using eight\u2011bit color depth for smaller output files."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs",
       "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
     },
