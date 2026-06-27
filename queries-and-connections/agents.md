@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - remove-a-specific-external-connection-from-the-workbook-based-on-its-description-value.cs
 - rename-an-existing-dbconnection-to-reflect-a-new-database-server-after-migration.cs
 - validate-that-all-external-connections-have-nonempty-credentials-before-saving-the-workbook.cs
+- save-the-modified-workbook-to-a-new-file-path-preserving-original-version-metadata.cs
