@@ -866,6 +866,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs",
+      "title": "Validate that the new external link path points to an existing file before applying changes."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "verify-that-hidden-external-links-remain-hidden-after-encrypting-the-workbook-with-a-password.cs",
       "title": "Verify that hidden external links remain hidden after encrypting the workbook with a password."
     },
