@@ -691,6 +691,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xls-workbook-using-the-workbook-class-and-access-its-datamashup-property.cs",
+      "title": "Load an XLS workbook using the Workbook class and access its DataMashup property."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs",
       "title": "Modify CommandText of a DBConnection to include a filter clause limiting returned rows."
     },
