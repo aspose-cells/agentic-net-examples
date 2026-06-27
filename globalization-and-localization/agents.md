@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - set-cell-formulas-with-cellformulalocal-to-apply-localized-function-names-during-workbook-processing.cs
 - verify-that-localized-function-names-are-correctly-recognized-by-excel-when-the-workbook-is-opened.cs
 - localize-subtotal-and-grand-total-labels-by-overriding-appropriate-methods-in-the-custom-globalizationsettings.cs
+- test-subtotal-label-translation-for-a-specific-language-to-ensure-correct-appearance-in-the-worksheet.cs
