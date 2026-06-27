@@ -731,6 +731,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "export-the-custom-ribbon-xml-to-a-separate-xml-file-for-version-control.cs",
+      "title": "Export the custom ribbon XML to a separate .xml file for version control."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs",
       "title": "Extract OData connection details from the DataMashup object and log the service endpoint URL."
     },
