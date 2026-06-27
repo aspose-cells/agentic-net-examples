@@ -761,6 +761,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "update-a-specific-powerqueryformulaitemvalue-to-reference-a-new-csv-source-file-path.cs",
+      "title": "Update a specific PowerQueryFormulaItem.Value to reference a new CSV source file path."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs",
       "title": "Update UserName and Password properties of a specific DBConnection with new credentials."
     },
