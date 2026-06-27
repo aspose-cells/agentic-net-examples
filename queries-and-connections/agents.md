@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs
 - insert-a-button-on-the-custom-ribbon-tab-that-triggers-external-link-path-refresh.cs
 - define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs
+- disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs
