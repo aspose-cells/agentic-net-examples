@@ -711,6 +711,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "generate-a-csv-file-containing-workbook-name-connection-type-and-connection-name-for-all-files-in-a-folder.cs",
+      "title": "Generate a CSV file containing workbook name, connection type, and connection name for all files in a folder."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs",
       "title": "Generate a plain\u2011text report summarizing hidden external link paths for further analysis."
     },
