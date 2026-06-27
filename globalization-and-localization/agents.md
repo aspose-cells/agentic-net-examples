@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - implement-a-feature-that-switches-localization-at-runtime-based-on-user-selection-without-reloading-the-workbook.cs
 - measure-performance-differences-when-loading-workbooks-with-and-without-custom-globalizationsettings-applied.cs
 - log-performance-metrics-for-each-localization-step-during-batch-processing-to-identify-bottlenecks.cs
+- load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs
