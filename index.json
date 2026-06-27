@@ -676,6 +676,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs",
+      "title": "Extract OData connection details from the DataMashup object and log the service endpoint URL."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
       "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
     },
