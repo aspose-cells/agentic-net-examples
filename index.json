@@ -2181,6 +2181,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs",
+      "title": "Embed the resulting TIFF image into an HTML page using an img tag with appropriate source attribute."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs",
       "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
     },
