@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs
 - obtain-resultrange-address-of-a-querytable-and-log-it-for-downstream-processing.cs
 - remove-a-specific-external-connection-from-the-workbook-based-on-its-description-value.cs
+- rename-an-existing-dbconnection-to-reflect-a-new-database-server-after-migration.cs
