@@ -386,6 +386,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "log-each-overridden-method-call-to-a-debug-file-for-troubleshooting-localization-behavior-at-runtime.cs",
+      "title": "Log each overridden method call to a debug file for troubleshooting localization behavior at runtime."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs",
       "title": "Override GetBooleanString to return localized true/false strings for the selected locale."
     },
