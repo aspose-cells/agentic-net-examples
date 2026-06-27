@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - programmatically-remove-a-hidden-external-link-from-the-workbook-and-verify-its-absence.cs
 - set-the-path-property-of-an-external-link-to-a-relative-path-and-test-workbook-portability.cs
 - serialize-the-powerqueryformulacollection-to-xml-for-external-auditing-compliance-purposes.cs
+- load-an-xlsb-workbook-change-the-dbconnectionname-and-log-the-modification-timestamp.cs
