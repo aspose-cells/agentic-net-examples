@@ -721,6 +721,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-multiple-xls-files-from-a-directory-update-each-dbconnectionname-and-save-changes-in-place.cs",
+      "title": "Load multiple XLS files from a directory, update each DBConnection.Name, and save changes in place."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs",
       "title": "Modify CommandText of a DBConnection to include a filter clause limiting returned rows."
     },
