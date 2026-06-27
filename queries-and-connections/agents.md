@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - change-the-absolute-path-of-an-external-link-data-source-file-programmatically-for-a-workbook.cs
 - validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs
 - update-all-external-links-in-the-workbook-to-use-relative-paths-for-better-portability.cs
+- log-the-original-and-updated-external-link-paths-for-audit-purposes.cs
