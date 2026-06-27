@@ -791,6 +791,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "write-a-query-table-to-a-worksheet-based-on-an-existing-odata-connection-and-refresh-data.cs",
+      "title": "Write a query table to a worksheet based on an existing OData connection and refresh data."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "write-a-utility-that-lists-all-worksheets-containing-query-tables-and-outputs-their-names.cs",
       "title": "Write a utility that lists all worksheets containing query tables and outputs their names."
     },
