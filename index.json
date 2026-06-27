@@ -730,6 +730,11 @@
       "title": "Update UserName and Password properties of a specific DBConnection with new credentials."
     },
     {
+      "category": "queries-and-connections",
+      "file": "validate-that-all-external-connections-have-nonempty-credentials-before-saving-the-workbook.cs",
+      "title": "Validate that all external connections have non\u2011empty credentials before saving the workbook."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
