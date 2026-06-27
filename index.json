@@ -491,6 +491,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs",
+      "title": "Programmatically set worksheet cell styles to display dates in Japanese era format after conversion, then export to PDF."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "save-the-localized-workbook-as-xlsx-preserving-original-formatting-comments-and-cell-styles.cs",
       "title": "Save the localized workbook as XLSX preserving original formatting, comments, and cell styles."
     },
