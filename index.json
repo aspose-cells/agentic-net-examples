@@ -426,6 +426,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "design-a-workflow-that-loads-a-workbook-with-arabic-cultureinfo-adds-righttoleft-subtotals-and-saves-as-pdf.cs",
+      "title": "Design a workflow that loads a workbook with Arabic CultureInfo, adds right\u2011to\u2011left subtotals, and saves as PDF."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs",
       "title": "Develop a console application that prompts users to select a target language and applies localization to a workbook."
     },
