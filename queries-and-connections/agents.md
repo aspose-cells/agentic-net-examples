@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs
 - set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs
 - disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs
+- refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs
