@@ -701,6 +701,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "configure-the-ribbon-button-to-prompt-the-user-for-a-new-external-link-file-location.cs",
+      "title": "Configure the ribbon button to prompt the user for a new external link file location."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs",
       "title": "Create a backup of the workbook before modifying external link paths."
     },
