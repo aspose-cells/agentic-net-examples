@@ -701,6 +701,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "load-an-xlsb-workbook-and-enumerate-all-powerquery-formulas-via-the-powerqueryformulacollection.cs",
+      "title": "Load an XLSB workbook and enumerate all PowerQuery formulas via the PowerQueryFormulaCollection."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs",
       "title": "Modify CommandText of a DBConnection to include a filter clause limiting returned rows."
     },
