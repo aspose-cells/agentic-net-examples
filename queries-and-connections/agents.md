@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - load-an-xlsb-workbook-and-enumerate-all-powerquery-formulas-via-the-powerqueryformulacollection.cs
 - retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs
 - rename-the-retrieved-dbconnectionname-to-a-descriptive-identifier-such-as-salesdataconnection.cs
+- update-a-specific-powerqueryformulaitemvalue-to-reference-a-new-csv-source-file-path.cs
