@@ -736,6 +736,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs",
+      "title": "Ensure the custom ribbon UI loads correctly after changing external link paths."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs",
       "title": "Export a list of all external connection names from a workbook to a plain text file."
     },
