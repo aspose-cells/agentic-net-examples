@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - design-a-workflow-that-loads-a-workbook-with-arabic-cultureinfo-adds-righttoleft-subtotals-and-saves-as-pdf.cs
 - implement-a-feature-that-automatically-selects-the-appropriate-japanese-era-based-on-year-when-converting-dates-in-bulk.cs
 - write-code-to-export-a-workbooks-chart-objects-to-separate-pdf-files-each-preserving-custom-globalization-settings.cs
+- create-a-test-suite-that-loads-workbooks-with-various-cultureinfo-values-and-verifies-date-parsing-accuracy.cs
