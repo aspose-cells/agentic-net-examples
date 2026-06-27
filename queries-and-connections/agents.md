@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs
 - modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs
 - add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs
+- set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs
