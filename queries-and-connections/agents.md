@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs
 - compare-odata-connection-metadata-before-and-after-modification-to-ensure-version-consistency.cs
 - use-workbookdatamashup-to-extract-odata-service-urls-and-store-them-in-a-json-configuration-file.cs
+- programmatically-remove-a-hidden-external-link-from-the-workbook-and-verify-its-absence.cs
