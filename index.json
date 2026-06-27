@@ -2185,6 +2185,11 @@
       "title": "Render a workbook as TIFF using 300 DPI resolution to improve image clarity."
     },
     {
+      "category": "working-with-images",
+      "file": "render-a-workbook-to-tiff-and-write-the-result-into-a-memory-stream-for-further-processing.cs",
+      "title": "Render a workbook to TIFF and write the result into a memory stream for further processing."
+    },
+    {
       "category": "working-with-json",
       "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
       "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."
