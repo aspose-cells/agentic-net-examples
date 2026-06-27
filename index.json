@@ -701,6 +701,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "remove-a-specific-external-connection-from-the-workbook-based-on-its-description-value.cs",
+      "title": "Remove a specific external connection from the workbook based on its Description value."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs",
       "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
     },
