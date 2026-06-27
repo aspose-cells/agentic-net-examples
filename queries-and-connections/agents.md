@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs
 - add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs
 - set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs
+- disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs
