@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - create-an-application-that-loads-a-workbook-with-italian-cultureinfo-adds-subtotals-and-saves-the-result-as-pdf.cs
 - implement-a-method-that-switches-globalizationsettings-at-runtime-based-on-userselected-language-before-chart-creation.cs
 - generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs
+- demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs
