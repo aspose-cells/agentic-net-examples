@@ -716,6 +716,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-digital-certificate-to-a-pem-file-for-backup.cs",
+      "title": "Export the VBA project's digital certificate to a PEM file for backup."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-a-summary-of-all-vba-modules-including-line-counts-and-write-the-report-to-a-text-file.cs",
       "title": "Generate a summary of all VBA modules, including line counts, and write the report to a text file."
     },
