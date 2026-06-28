@@ -2201,6 +2201,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs",
+      "title": "Generate a JPEG image from a worksheet with custom image quality set to 80 percent."
+    },
+    {
+      "category": "working-with-images",
       "file": "measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs",
       "title": "Measure conversion duration using Stopwatch and log elapsed time for performance analysis."
     },
