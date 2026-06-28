@@ -721,6 +721,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-a-workbook-using-loaddatafilteroptionsvba-to-retrieve-only-vba-project-data.cs",
+      "title": "Load a workbook using LoadDataFilterOptions.VBA to retrieve only VBA project data."
+    },
+    {
+      "category": "macro-project",
       "file": "load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs",
       "title": "Load workbook using LoadOptions to omit VBA project and verify macros are excluded."
     },
