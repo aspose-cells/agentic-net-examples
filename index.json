@@ -666,6 +666,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-a-macro-named-initializereport-from-a-template-workbook-to-a-target-workbook-using-designerstorage.cs",
+      "title": "Copy a macro named \"InitializeReport\" from a template workbook to a target workbook using DesignerStorage."
+    },
+    {
+      "category": "macro-project",
       "file": "copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs",
       "title": "Copy UserForm DesignerStorage from a template workbook to a target workbook preserving layout."
     },
