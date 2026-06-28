@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs
 - convert-a-workbook-to-tiff-using-twentyfourbit-color-depth-for-highquality-images.cs
 - set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs
+- convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs
