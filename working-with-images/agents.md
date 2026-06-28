@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - validate-that-the-viewbox-dimensions-in-the-svg-chart-match-the-original-worksheet-size-for-accuracy.cs
 - log-memory-consumption-before-and-after-tiff-conversion-to-assess-resource-usage-impact-on-the-application.cs
 - embed-the-png-worksheet-image-in-a-markdown-document-using-the-standard-altpath-syntax.cs
+- send-the-png-worksheet-image-to-a-slack-channel-via-webhook-for-team-notification.cs
