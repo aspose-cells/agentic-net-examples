@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - develop-a-console-application-that-accepts-a-folder-path-processes-each-xlsm-and-reports-macro-status.cs
 - save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs
 - detect-unsigned-vba-projects-across-a-directory-and-list-file-names-for-further-review.cs
+- copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs
