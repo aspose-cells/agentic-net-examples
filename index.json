@@ -2191,6 +2191,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs",
+      "title": "Convert a worksheet to SVG with the viewBox attribute enabled for scalable rendering."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs",
       "title": "Convert the first worksheet of a workbook to PNG using default resolution for quick preview."
     },
