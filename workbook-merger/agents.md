@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs
 - copy-specific-worksheets-from-source-workbooks-into-the-target-workbook-using-worksheetcopy-method.cs
 - ensure-formulas-remain-intact-by-keeping-calculation-mode-set-to-automatic-before-and-after-merging.cs
+- maintain-original-cell-formatting-by-not-altering-style-settings-during-the-combine-operation.cs
