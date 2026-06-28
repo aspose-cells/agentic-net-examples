@@ -2261,6 +2261,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "log-memory-consumption-before-and-after-tiff-conversion-to-assess-resource-usage-impact-on-the-application.cs",
+      "title": "Log memory consumption before and after TIFF conversion to assess resource usage impact on the application."
+    },
+    {
+      "category": "working-with-images",
       "file": "measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs",
       "title": "Measure conversion duration using Stopwatch and log elapsed time for performance analysis."
     },
