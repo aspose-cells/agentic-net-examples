@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - increase-the-brightness-of-the-png-worksheet-image-by-twenty-percent-using-systemdrawing-adjustments.cs
 - resize-the-png-worksheet-image-to-800-by-600-pixels-to-fit-standard-display-dimensions.cs
 - generate-an-html-img-tag-referencing-the-saved-png-worksheet-file-for-inclusion-in-web-pages.cs
+- minify-the-svg-worksheet-content-by-removing-whitespace-and-comments-to-reduce-file-size.cs
