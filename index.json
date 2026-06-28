@@ -671,6 +671,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-a-macro-that-generates-charts-from-a-template-workbook-to-multiple-target-workbooks-in-a-loop.cs",
+      "title": "Copy a macro that generates charts from a template workbook to multiple target workbooks in a loop."
+    },
+    {
+      "category": "macro-project",
       "file": "copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs",
       "title": "Copy UserForm DesignerStorage from a template workbook to a target workbook preserving layout."
     },
