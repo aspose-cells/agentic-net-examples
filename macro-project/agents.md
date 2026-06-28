@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs
 - load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs
 - sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs
+- write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs
