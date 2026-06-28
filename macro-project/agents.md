@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs
 - programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs
 - assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs
+- validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs
