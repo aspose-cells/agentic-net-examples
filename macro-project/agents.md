@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs
 - generate-a-summary-of-all-vba-modules-including-line-counts-and-write-the-report-to-a-text-file.cs
 - apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs
+- delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs
