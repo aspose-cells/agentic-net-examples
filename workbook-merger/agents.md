@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - encrypt-the-merged-workbook-with-a-password-before-saving-to-protect-confidential-data.cs
 - add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs
 - protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
+- recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs
