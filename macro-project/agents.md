@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - add-a-reference-to-the-microsoft-xml-v60-library-in-the-vba-project-to-enable-xml-parsing.cs
 - export-the-vba-projects-digital-certificate-to-a-pem-file-for-backup.cs
 - sign-the-vba-project-with-a-certificate-stored-in-the-windows-certificate-store-using-its-thumbprint.cs
+- validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs
