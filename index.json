@@ -681,6 +681,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
+      "title": "Programmatically rename a form control button while preserving its assigned macro reference."
+    },
+    {
+      "category": "macro-project",
       "file": "rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs",
       "title": "Rename an existing VBA module to DataProcessor by setting its Name property before saving."
     },
