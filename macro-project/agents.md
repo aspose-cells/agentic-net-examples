@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs
 - validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs
 - log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs
+- batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs
