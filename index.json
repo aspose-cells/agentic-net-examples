@@ -620,6 +620,11 @@
       "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
     },
     {
+      "category": "macro-project",
+      "file": "load-a-macroenabled-workbook-from-a-memory-stream-and-verify-it-contains-at-least-one-module.cs",
+      "title": "Load a macro\u2011enabled workbook from a memory stream and verify it contains at least one module."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
