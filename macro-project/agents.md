@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - save-the-workbook-as-a-macroenabled-xlsm-file-to-the-specified-location.cs
 - retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs
 - add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs
+- save-a-workbook-after-assigning-macros-then-reopen-it-to-ensure-macro-assignments-persist.cs
