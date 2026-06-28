@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - minify-the-svg-worksheet-content-by-removing-whitespace-and-comments-to-reduce-file-size.cs
 - combine-a-chart-png-image-with-a-data-table-overlay-to-produce-a-composite-visualization.cs
 - generate-multiple-resolution-png-versions-of-the-chart-for-responsive-web-design-across-devices.cs
+- apply-a-css-rotate-transform-to-the-svg-chart-element-to-display-it-at-a-45degree-angle.cs
