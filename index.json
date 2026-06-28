@@ -661,6 +661,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-new-workbook-add-vba-module-with-code-then-digitally-sign-the-vba-project.cs",
+      "title": "Create new workbook, add VBA module with code, then digitally sign the VBA project."
+    },
+    {
+      "category": "macro-project",
       "file": "delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs",
       "title": "Delete any VBA module that exceeds five hundred lines of code after enumerating the project modules."
     },
