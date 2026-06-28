@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - embed-the-png-worksheet-image-in-a-markdown-document-using-the-standard-altpath-syntax.cs
 - send-the-png-worksheet-image-to-a-slack-channel-via-webhook-for-team-notification.cs
 - use-the-png-worksheet-image-as-a-texture-in-a-3d-rendering-engine-for-visual-effects.cs
+- document-the-conversion-steps-and-options-used-for-png-worksheet-rendering-in-a-generated-readme-file.cs
