@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - apply-a-css-rotate-transform-to-the-svg-chart-element-to-display-it-at-a-45degree-angle.cs
 - save-the-svg-chart-with-a-timestamped-filename-to-avoid-overwriting-previous-exports.cs
 - validate-that-the-viewbox-dimensions-in-the-svg-chart-match-the-original-worksheet-size-for-accuracy.cs
+- log-memory-consumption-before-and-after-tiff-conversion-to-assess-resource-usage-impact-on-the-application.cs
