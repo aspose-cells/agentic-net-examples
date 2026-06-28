@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - generate-an-html-img-tag-referencing-the-saved-png-worksheet-file-for-inclusion-in-web-pages.cs
 - minify-the-svg-worksheet-content-by-removing-whitespace-and-comments-to-reduce-file-size.cs
 - combine-a-chart-png-image-with-a-data-table-overlay-to-produce-a-composite-visualization.cs
+- generate-multiple-resolution-png-versions-of-the-chart-for-responsive-web-design-across-devices.cs
