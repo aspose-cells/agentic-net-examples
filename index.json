@@ -2336,6 +2336,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "use-the-png-worksheet-image-as-a-texture-in-a-3d-rendering-engine-for-visual-effects.cs",
+      "title": "Use the PNG worksheet image as a texture in a 3D rendering engine for visual effects."
+    },
+    {
+      "category": "working-with-images",
       "file": "validate-that-the-viewbox-dimensions-in-the-svg-chart-match-the-original-worksheet-size-for-accuracy.cs",
       "title": "Validate that the viewBox dimensions in the SVG chart match the original worksheet size for accuracy."
     },
