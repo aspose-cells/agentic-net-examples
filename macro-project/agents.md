@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - load-a-macroenabled-workbook-from-a-memory-stream-and-verify-it-contains-at-least-one-module.cs
 - enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs
 - rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs
+- serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs
