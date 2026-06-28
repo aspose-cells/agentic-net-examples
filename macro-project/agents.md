@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - add-a-module-that-references-external-com-libraries-and-ensure-the-references-compile-correctly.cs
 - create-a-macro-that-iterates-through-all-worksheets-and-logs-each-sheet-name-using-the-new-module.cs
 - validate-that-the-vba-project-password-meets-minimum-length-requirements-before-invoking-the-protect-method.cs
+- insert-a-form-control-button-onto-a-specific-worksheet-cell.cs
