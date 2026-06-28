@@ -2231,6 +2231,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-an-html-img-tag-referencing-the-saved-png-worksheet-file-for-inclusion-in-web-pages.cs",
+      "title": "Generate an HTML img tag referencing the saved PNG worksheet file for inclusion in web pages."
+    },
+    {
+      "category": "working-with-images",
       "file": "increase-the-brightness-of-the-png-worksheet-image-by-twenty-percent-using-systemdrawing-adjustments.cs",
       "title": "Increase the brightness of the PNG worksheet image by twenty percent using System.Drawing adjustments."
     },
