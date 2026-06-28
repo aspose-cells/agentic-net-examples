@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - log-memory-consumption-before-and-after-tiff-conversion-to-assess-resource-usage-impact-on-the-application.cs
 - embed-the-png-worksheet-image-in-a-markdown-document-using-the-standard-altpath-syntax.cs
 - send-the-png-worksheet-image-to-a-slack-channel-via-webhook-for-team-notification.cs
+- use-the-png-worksheet-image-as-a-texture-in-a-3d-rendering-engine-for-visual-effects.cs
