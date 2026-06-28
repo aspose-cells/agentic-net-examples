@@ -2241,6 +2241,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-multiple-resolution-png-versions-of-the-chart-for-responsive-web-design-across-devices.cs",
+      "title": "Generate multiple resolution PNG versions of the chart for responsive web design across devices."
+    },
+    {
+      "category": "working-with-images",
       "file": "increase-the-brightness-of-the-png-worksheet-image-by-twenty-percent-using-systemdrawing-adjustments.cs",
       "title": "Increase the brightness of the PNG worksheet image by twenty percent using System.Drawing adjustments."
     },
