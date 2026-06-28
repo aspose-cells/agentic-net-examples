@@ -2251,6 +2251,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "minify-the-svg-worksheet-content-by-removing-whitespace-and-comments-to-reduce-file-size.cs",
+      "title": "Minify the SVG worksheet content by removing whitespace and comments to reduce file size."
+    },
+    {
+      "category": "working-with-images",
       "file": "notify-an-external-webhook-with-conversion-results-after-successfully-creating-the-tiff-workbook-image.cs",
       "title": "Notify an external webhook with conversion results after successfully creating the TIFF workbook image."
     },
