@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs
 - save-a-workbook-after-assigning-macros-then-reopen-it-to-ensure-macro-assignments-persist.cs
 - batch-export-certificates-from-all-signed-workbooks-in-a-folder-to-a-designated-output-directory.cs
+- add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs
