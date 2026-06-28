@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs
 - render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs
 - attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
+- set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
