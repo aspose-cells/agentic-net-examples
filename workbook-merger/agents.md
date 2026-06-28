@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs
 - use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs
 - copy-specific-worksheets-from-source-workbooks-into-the-target-workbook-using-worksheetcopy-method.cs
+- ensure-formulas-remain-intact-by-keeping-calculation-mode-set-to-automatic-before-and-after-merging.cs
