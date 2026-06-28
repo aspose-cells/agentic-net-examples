@@ -791,6 +791,11 @@
     },
     {
       "category": "macro-project",
+      "file": "verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs",
+      "title": "Verify whether the VBA project in the loaded workbook is password protected."
+    },
+    {
+      "category": "macro-project",
       "file": "write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs",
       "title": "Write validation errors to a text file for later analysis and compliance reporting."
     },
