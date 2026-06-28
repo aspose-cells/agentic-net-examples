@@ -2435,6 +2435,11 @@
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
     },
     {
+      "category": "workbook-merger",
+      "file": "verify-that-the-merged-workbook-contains-the-expected-number-of-worksheets-after-combination.cs",
+      "title": "Verify that the merged workbook contains the expected number of worksheets after combination."
+    },
+    {
       "category": "working-with-images",
       "file": "apply-a-css-rotate-transform-to-the-svg-chart-element-to-display-it-at-a-45degree-angle.cs",
       "title": "Apply a CSS rotate transform to the SVG chart element to display it at a 45\u2011degree angle."
