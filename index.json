@@ -635,6 +635,11 @@
       "title": "Rename an existing VBA module to DataProcessor by setting its Name property before saving."
     },
     {
+      "category": "macro-project",
+      "file": "serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs",
+      "title": "Serialize the VBA project structure, including module names and code snippets, into a JSON report file."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
