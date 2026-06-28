@@ -610,6 +610,11 @@
       "title": "Write unit tests for GetErrorString covering standard Excel error codes across multiple locales."
     },
     {
+      "category": "macro-project",
+      "file": "create-a-new-vba-module-named-automation-within-the-vbaproject.cs",
+      "title": "Create a new VBA module named Automation within the VbaProject."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
