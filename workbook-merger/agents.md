@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - export-each-worksheet-of-the-merged-workbook-to-csv-files-for-data-extraction-validation.cs
 - encrypt-the-merged-workbook-with-a-password-before-saving-to-protect-confidential-data.cs
 - add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs
+- protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
