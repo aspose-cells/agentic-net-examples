@@ -671,6 +671,11 @@
     },
     {
       "category": "macro-project",
+      "file": "retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs",
+      "title": "Retrieve the VBA project from the loaded workbook via Workbook.VbaProject."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-workbook-as-a-macroenabled-xlsm-file-to-the-specified-location.cs",
       "title": "Save the workbook as a macro\u2011enabled XLSM file to the specified location."
     },
