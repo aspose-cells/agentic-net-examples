@@ -2241,6 +2241,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "notify-an-external-webhook-with-conversion-results-after-successfully-creating-the-tiff-workbook-image.cs",
+      "title": "Notify an external webhook with conversion results after successfully creating the TIFF workbook image."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs",
       "title": "Render a chart object from the workbook to a PNG image using the ChartRender API."
     },
