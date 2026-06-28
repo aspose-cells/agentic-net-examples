@@ -615,6 +615,11 @@
       "title": "Create a new VBA module named Automation within the VbaProject."
     },
     {
+      "category": "macro-project",
+      "file": "insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs",
+      "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
