@@ -641,6 +641,11 @@
     },
     {
       "category": "macro-project",
+      "file": "batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs",
+      "title": "Batch process workbooks to add a standard library reference, then generate a summary of successes and failures."
+    },
+    {
+      "category": "macro-project",
       "file": "create-a-macro-that-iterates-through-all-worksheets-and-logs-each-sheet-name-using-the-new-module.cs",
       "title": "Create a macro that iterates through all worksheets and logs each sheet name using the new module."
     },
