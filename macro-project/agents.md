@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - create-a-macro-that-iterates-through-all-worksheets-and-logs-each-sheet-name-using-the-new-module.cs
 - validate-that-the-vba-project-password-meets-minimum-length-requirements-before-invoking-the-protect-method.cs
 - insert-a-form-control-button-onto-a-specific-worksheet-cell.cs
+- save-the-workbook-as-a-macroenabled-xlsm-file-to-the-specified-location.cs
