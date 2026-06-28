@@ -631,6 +631,11 @@
     },
     {
       "category": "macro-project",
+      "file": "assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs",
+      "title": "Assign different macros to multiple form controls on the same worksheet and verify each executes correctly."
+    },
+    {
+      "category": "macro-project",
       "file": "batch-export-certificates-from-all-signed-workbooks-in-a-folder-to-a-designated-output-directory.cs",
       "title": "Batch export certificates from all signed workbooks in a folder to a designated output directory."
     },
