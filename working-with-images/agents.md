@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - extract-every-chart-from-a-workbook-and-export-them-as-svg-files-into-a-designated-subfolder.cs
 - split-a-multipage-tiff-workbook-output-into-individual-singlepage-tiff-files-for-separate-handling.cs
 - convert-the-workbook-tiff-to-pdf-by-invoking-a-thirdparty-converter-after-image-generation.cs
+- generate-a-thumbnail-image-of-the-first-page-of-the-tiff-workbook-for-quick-visual-reference.cs
