@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs
 - attach-the-converted-tiff-image-to-an-email-message-as-an-attachment-for-distribution.cs
 - measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs
+- convert-a-workbook-to-tiff-using-twentyfourbit-color-depth-for-highquality-images.cs
