@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs
 - convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs
 - generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs
+- send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs
