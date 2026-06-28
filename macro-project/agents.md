@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - create-a-new-vba-module-named-automation-within-the-vbaproject.cs
 - insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs
+- load-a-macroenabled-workbook-from-a-memory-stream-and-verify-it-contains-at-least-one-module.cs
