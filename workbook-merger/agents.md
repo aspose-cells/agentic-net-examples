@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - verify-that-the-merged-workbook-contains-the-expected-number-of-worksheets-after-combination.cs
 - check-that-all-charts-from-source-workbooks-appear-correctly-in-the-combined-workbook.cs
 - save-the-merged-workbook-to-a-specified-output-path-using-workbooksave-method.cs
+- export-each-worksheet-of-the-merged-workbook-to-csv-files-for-data-extraction-validation.cs
