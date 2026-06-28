@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - load-a-workbook-using-loaddatafilteroptionsvba-to-retrieve-only-vba-project-data.cs
 - verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs
 - retrieve-the-list-of-com-library-references-from-the-vba-project-and-log-each-reference-name.cs
+- add-a-com-library-reference-eg-microsoft-scripting-runtime-to-the-vba-project.cs
