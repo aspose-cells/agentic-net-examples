@@ -2261,6 +2261,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "split-a-multipage-tiff-workbook-output-into-individual-singlepage-tiff-files-for-separate-handling.cs",
+      "title": "Split a multi\u2011page TIFF workbook output into individual single\u2011page TIFF files for separate handling."
+    },
+    {
+      "category": "working-with-images",
       "file": "write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs",
       "title": "Write the PNG chart image to a temporary file and schedule automatic deletion after processing."
     },
