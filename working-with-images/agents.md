@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
 - set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
 - write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs
+- iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs
