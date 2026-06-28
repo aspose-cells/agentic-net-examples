@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs
 - rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs
 - serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs
+- export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs
