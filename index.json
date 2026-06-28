@@ -2181,6 +2181,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs",
+      "title": "Attach the JPEG chart image to an email body using inline HTML to display within the message."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs",
       "title": "Convert a workbook to TIFF using eight\u2011bit color depth for smaller output files."
     },
