@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
 - write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs
 - iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs
+- extract-every-chart-from-a-workbook-and-export-them-as-svg-files-into-a-designated-subfolder.cs
