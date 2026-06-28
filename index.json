@@ -2426,6 +2426,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "maintain-original-cell-formatting-by-not-altering-style-settings-during-the-combine-operation.cs",
+      "title": "Maintain original cell formatting by not altering style settings during the combine operation."
+    },
+    {
+      "category": "workbook-merger",
       "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
       "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
     },
