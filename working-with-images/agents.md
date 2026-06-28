@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs
 - attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
 - set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
+- write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs
