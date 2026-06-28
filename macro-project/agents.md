@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - batch-export-certificates-from-all-signed-workbooks-in-a-folder-to-a-designated-output-directory.cs
 - add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs
 - programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs
+- assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs
