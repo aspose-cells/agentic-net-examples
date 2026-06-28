@@ -2221,6 +2221,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "document-the-conversion-steps-and-options-used-for-png-worksheet-rendering-in-a-generated-readme-file.cs",
+      "title": "Document the conversion steps and options used for PNG worksheet rendering in a generated README file."
+    },
+    {
+      "category": "working-with-images",
       "file": "embed-the-png-worksheet-image-in-a-markdown-document-using-the-standard-altpath-syntax.cs",
       "title": "Embed the PNG worksheet image in a Markdown document using the standard ![alt](path) syntax."
     },
