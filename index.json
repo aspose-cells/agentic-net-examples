@@ -2321,6 +2321,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "validate-that-the-viewbox-dimensions-in-the-svg-chart-match-the-original-worksheet-size-for-accuracy.cs",
+      "title": "Validate that the viewBox dimensions in the SVG chart match the original worksheet size for accuracy."
+    },
+    {
+      "category": "working-with-images",
       "file": "write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs",
       "title": "Write the PNG chart image to a temporary file and schedule automatic deletion after processing."
     },
