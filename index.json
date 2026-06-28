@@ -611,6 +611,11 @@
     },
     {
       "category": "macro-project",
+      "file": "apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs",
+      "title": "Apply password protection only when the workbook contains more than ten worksheets to enforce policy."
+    },
+    {
+      "category": "macro-project",
       "file": "create-a-new-vba-module-named-automation-within-the-vbaproject.cs",
       "title": "Create a new VBA module named Automation within the VbaProject."
     },
