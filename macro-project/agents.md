@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs
 - write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs
 - create-new-workbook-add-vba-module-with-code-then-digitally-sign-the-vba-project.cs
+- automate-signing-of-excel-files-in-continuous-integration-pipeline-to-enforce-macro-security.cs
