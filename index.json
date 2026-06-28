@@ -711,6 +711,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs",
+      "title": "Load workbook using LoadOptions to omit VBA project and verify macros are excluded."
+    },
+    {
+      "category": "macro-project",
       "file": "log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs",
       "title": "Log detailed information about each macro assignment, including worksheet name, control ID, and macro name."
     },
