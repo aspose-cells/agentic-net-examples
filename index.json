@@ -2311,6 +2311,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "send-the-png-worksheet-image-to-a-slack-channel-via-webhook-for-team-notification.cs",
+      "title": "Send the PNG worksheet image to a Slack channel via webhook for team notification."
+    },
+    {
+      "category": "working-with-images",
       "file": "send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs",
       "title": "Send the PNG worksheet image via HTTP POST to a REST endpoint for downstream processing."
     },
