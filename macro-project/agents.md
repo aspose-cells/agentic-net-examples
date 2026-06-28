@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - use-reflection-to-enumerate-all-vba-project-references-and-output-their-names-and-versions.cs
 - export-certificates-from-workbooks-using-asynchronous-tasks-to-improve-performance-on-large-file-sets.cs
 - develop-a-console-application-that-accepts-a-folder-path-processes-each-xlsm-and-reports-macro-status.cs
+- save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs
