@@ -616,6 +616,11 @@
     },
     {
       "category": "macro-project",
+      "file": "enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs",
+      "title": "Enumerate all modules in the VbaProject and output each module name to the console."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs",
       "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
     },
