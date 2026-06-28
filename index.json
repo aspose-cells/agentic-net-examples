@@ -621,6 +621,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs",
+      "title": "Export each workbook's VBA module code to separate .bas files for version control tracking."
+    },
+    {
+      "category": "macro-project",
       "file": "insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs",
       "title": "Insert a multi\u2011line VBA subroutine into the Automation module to log workbook opening events."
     },
