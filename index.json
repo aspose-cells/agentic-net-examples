@@ -2226,6 +2226,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-a-thumbnail-image-of-the-first-page-of-the-tiff-workbook-for-quick-visual-reference.cs",
+      "title": "Generate a thumbnail image of the first page of the TIFF workbook for quick visual reference."
+    },
+    {
+      "category": "working-with-images",
       "file": "iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs",
       "title": "Iterate through each worksheet in a workbook and save each as a separate PNG file."
     },
