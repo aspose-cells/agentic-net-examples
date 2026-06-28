@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs
 - batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs
 - use-reflection-to-enumerate-all-vba-project-references-and-output-their-names-and-versions.cs
+- export-certificates-from-workbooks-using-asynchronous-tasks-to-improve-performance-on-large-file-sets.cs
