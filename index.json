@@ -775,6 +775,11 @@
       "title": "Validate that the VBA project password meets minimum length requirements before invoking the Protect method."
     },
     {
+      "category": "macro-project",
+      "file": "write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs",
+      "title": "Write validation errors to a text file for later analysis and compliance reporting."
+    },
+    {
       "category": "manage-workbook",
       "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
       "title": "Add a chart to a worksheet based on a data range and customize its legend position."
