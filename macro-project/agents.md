@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs
 - create-new-workbook-add-vba-module-with-code-then-digitally-sign-the-vba-project.cs
 - automate-signing-of-excel-files-in-continuous-integration-pipeline-to-enforce-macro-security.cs
+- load-a-workbook-using-loaddatafilteroptionsvba-to-retrieve-only-vba-project-data.cs
