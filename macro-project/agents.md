@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - copy-a-macro-that-generates-charts-from-a-template-workbook-to-multiple-target-workbooks-in-a-loop.cs
 - assign-a-specific-macro-named-calculatetotals-to-a-button-form-control-on-a-worksheet-programmatically.cs
 - assign-a-macro-that-calculates-summary-statistics-to-a-shape-object-on-the-worksheet-programmatically.cs
+- load-a-workbook-with-vba-filter-then-extract-the-vba-projects-description-property-for-metadata.cs
