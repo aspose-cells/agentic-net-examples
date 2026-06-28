@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs
 - convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs
 - render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs
+- attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
