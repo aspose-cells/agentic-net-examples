@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - copy-a-macro-named-initializereport-from-a-template-workbook-to-a-target-workbook-using-designerstorage.cs
 - copy-a-macro-that-generates-charts-from-a-template-workbook-to-multiple-target-workbooks-in-a-loop.cs
 - assign-a-specific-macro-named-calculatetotals-to-a-button-form-control-on-a-worksheet-programmatically.cs
+- assign-a-macro-that-calculates-summary-statistics-to-a-shape-object-on-the-worksheet-programmatically.cs
