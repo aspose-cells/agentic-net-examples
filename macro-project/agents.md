@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - automate-signing-of-excel-files-in-continuous-integration-pipeline-to-enforce-macro-security.cs
 - load-a-workbook-using-loaddatafilteroptionsvba-to-retrieve-only-vba-project-data.cs
 - verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs
+- retrieve-the-list-of-com-library-references-from-the-vba-project-and-log-each-reference-name.cs
