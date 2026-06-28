@@ -2421,6 +2421,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "export-each-worksheet-of-the-merged-workbook-to-csv-files-for-data-extraction-validation.cs",
+      "title": "Export each worksheet of the merged workbook to CSV files for data extraction validation."
+    },
+    {
+      "category": "workbook-merger",
       "file": "load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs",
       "title": "Load large XLS files with CellsHelper.MergeFiles by providing an array of file paths and output path."
     },
