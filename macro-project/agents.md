@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - sign-the-vba-project-with-a-certificate-stored-in-the-windows-certificate-store-using-its-thumbprint.cs
 - validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs
 - copy-a-macro-named-initializereport-from-a-template-workbook-to-a-target-workbook-using-designerstorage.cs
+- copy-a-macro-that-generates-charts-from-a-template-workbook-to-multiple-target-workbooks-in-a-loop.cs
