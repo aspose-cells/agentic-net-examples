@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs
 - export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs
 - generate-a-summary-of-all-vba-modules-including-line-counts-and-write-the-report-to-a-text-file.cs
+- apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs
