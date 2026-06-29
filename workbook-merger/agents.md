@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
 - recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs
 - generate-an-html-representation-of-the-merged-workbook-to-inspect-content-in-a-web-browser.cs
+- apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
