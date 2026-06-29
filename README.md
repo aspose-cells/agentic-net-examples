@@ -1,24 +1,26 @@
 # Aspose.Cells Agentic .NET Examples
 
-Aspose.Cells Agentic .NET Examples is a repository of AI-agent-ready C# examples for creating, analyzing, modifying, converting, formatting, and automating Excel spreadsheets and workbooks using Aspose.Cells for .NET.
+Aspose.Cells Agentic .NET Examples is a repository of AI-agent-ready C# examples for **Excel file generation**, **spreadsheet automation**, and end-to-end **C# Excel processing** with the Aspose.Cells .NET API. The examples show how to create, read, analyze, modify, calculate, format, convert, secure, merge, and render Excel spreadsheets and workbooks without Microsoft Excel.
 
-This repository contains build-validated, executable C# examples designed for developers, Coding Agents, AI Coding Agents, GitHub Copilot, Semantic Kernel, MCP clients, and modern Agent Frameworks. Every example is automatically generated, compiled, executed, and validated before publication.
+This repository contains build-validated, executable **agentic AI examples** designed for .NET developers, Coding Agents, AI Coding Agents, GitHub Copilot, Semantic Kernel, MCP clients, and modern Agent Frameworks. Every example is automatically generated, compiled, executed, and validated before publication.
 
 ## Overview
 
-Aspose.Cells for .NET is a powerful spreadsheet processing API that enables developers and AI agents to create, edit, calculate, convert, secure, and analyze Microsoft Excel files without requiring Microsoft Excel installation.
+Aspose.Cells for .NET is a spreadsheet processing API for building C# and .NET applications that create, edit, calculate, convert, secure, and analyze Microsoft Excel files. The Aspose.Cells .NET API works directly with workbook formats such as XLSX, XLS, XLSM, XLSB, ODS, and SpreadsheetML and exports spreadsheet content to PDF, HTML, CSV, JSON, XML, SVG, PNG, JPEG, and TIFF.
 
 ### Common Use Cases
 
-- Generate Excel spreadsheets programmatically
+- Perform Excel file generation programmatically in C#
+- Build server-side spreadsheet automation and document-processing workflows
+- Create, load, edit, merge, protect, and save XLS, XLSX, XLSM, XLSB, and ODS workbooks
 - Create financial reports and dashboards
-- Build pivot tables and charts
+- Build pivot tables, Excel tables, charts, sparklines, slicers, and timelines
 - Import and export CSV, JSON, XML, and Excel data
-- Automate workbook processing
-- Calculate formulas without Microsoft Excel
-- Convert Excel files to PDF, HTML, CSV, JSON, and images
-- Protect and encrypt workbooks
-- Process large spreadsheet datasets
+- Calculate Excel formulas with `Workbook.CalculateFormula()` without Microsoft Excel
+- Convert Excel files to PDF and HTML with `PdfSaveOptions` and `HtmlSaveOptions`
+- Import JSON with `JsonUtility`, process XML Maps, and generate CSV or TSV output
+- Protect worksheets, encrypt workbooks, and preserve macro-enabled spreadsheet formats
+- Process large spreadsheet datasets, ranges, rows, columns, and cells
 
 | Metric | Value |
 |----------|----------|
@@ -125,7 +127,7 @@ dotnet run
 
 ---
 
-## Spreadsheet Automation Examples
+## C# Excel Processing and Spreadsheet Automation Examples
 
 ### Load a Workbook
 
@@ -159,26 +161,47 @@ workbook.CalculateFormula();
 workbook.Save("output.xlsx");
 ```
 
+### Core Aspose.Cells .NET API Operations
+
+The examples cover frequently searched Excel automation APIs and developer tasks:
+
+| Developer task | Aspose.Cells API or object |
+| --- | --- |
+| Create or load an Excel file | `new Workbook()`, `new Workbook(path)`, `LoadOptions` |
+| Access worksheets and cells | `WorksheetCollection`, `Worksheet`, `Cells`, `Cell` |
+| Process ranges, rows, and columns | `Range`, `Row`, `Column`, `Cells.ImportData` |
+| Create formulas and calculate results | `Cell.Formula`, `Workbook.CalculateFormula`, `CalculationOptions` |
+| Build Excel tables and template reports | `ListObject`, `ListColumn`, `WorkbookDesigner`, smart markers |
+| Generate charts and dashboards | `ChartCollection`, `Chart`, `SeriesCollection`, `PivotTable` |
+| Convert Excel to PDF or HTML | `PdfSaveOptions`, `HtmlSaveOptions`, `Workbook.Save` |
+| Render worksheets and charts as images | `SheetRender`, `WorkbookRender`, `ImageOrPrintOptions` |
+| Import or export JSON and XML | `JsonUtility`, `JsonLayoutOptions`, `XmlMap`, `Workbook.ImportXml` |
+| Secure spreadsheet files | `Workbook.Protect`, `Worksheet.Protect`, encryption and password options |
+
+These standalone examples answer common queries such as “How do I create an Excel file in C#?”, “How do I automate XLSX processing without Microsoft Excel?”, “How do I calculate Excel formulas in .NET?”, and “How do I convert Excel to PDF, HTML, JSON, or images?”
+
 ---
 
 ## Why Use Aspose.Cells for .NET?
 
 ### Excel Automation Without Microsoft Excel
 
-Create, modify, and process Excel files directly from .NET applications.
+Create, modify, calculate, convert, and process Excel files directly in Windows, Linux, cloud, container, web-service, desktop, and background-worker .NET applications.
 
 ### Enterprise Spreadsheet Features
 
 - Formulas and calculations
+- Excel file generation and workbook manipulation
 - Charts and graph generation
 - Pivot tables
+- Tables, ranges, rows, columns, and cell processing
 - Conditional formatting
 - Smart markers
-- Data import/export
-- Workbook protection
-- PDF conversion
-- JSON processing
-- XML mapping
+- CSV, TSV, JSON, XML, and database-style data import/export
+- Worksheet protection and workbook encryption
+- Excel-to-PDF, Excel-to-HTML, and spreadsheet-to-image conversion
+- JSON processing with `JsonUtility`
+- XSD-backed XML Maps and mapped XML data
 
 ### AI-Agent-Friendly Design
 
@@ -190,22 +213,25 @@ Optimized for:
 - Code generation
 - Automated code review
 - GitHub Copilot suggestions
+- Agentic AI examples for tool-using coding assistants
+- API-aware retrieval through category `AGENTS.md`, `README.md`, and `index.json` files
 
 ---
 
 ## What Can You Build?
 
-Using Aspose.Cells for .NET and these Agentic .NET Examples, developers and AI Coding Agents can:
+Using the Aspose.Cells .NET API and these agentic AI examples, developers and AI Coding Agents can:
 
-- Create Excel files in C#
+- Perform Excel file generation in C#
 - Read Excel spreadsheets programmatically
-- Modify existing workbooks
+- Automate XLS, XLSX, XLSM, XLSB, CSV, and ODS workbook processing
+- Modify, merge, format, and validate existing workbooks
 - Generate financial reports
 - Build pivot tables
 - Create charts and dashboards
-- Export Excel to PDF
-- Convert Excel to JSON
-- Import CSV and XML data
+- Export Excel to PDF, PDF/A, HTML, SVG, PNG, JPEG, and TIFF
+- Convert worksheet ranges between Excel and JSON
+- Import CSV, TSV, JSON, XML, and tabular data
 - Calculate formulas without Microsoft Excel
 - Protect and encrypt workbooks
 - Process large spreadsheet datasets
@@ -217,8 +243,9 @@ These examples are optimized for GitHub Copilot, Semantic Kernel, MCP clients, C
 ## Important Notes
 
 - **Zero-based indexing**: `Worksheets[0]` is the first worksheet.
-- **Core object model**: `Workbook`
+- **Core object model**: `Workbook` → `WorksheetCollection` → `Worksheet` → `Cells` → `Cell`
 - **Supported formats**: XLSX, XLS, XLSM, XLSB, ODS, CSV, TSV, JSON, XML, HTML, PDF, Images.
+- **Key operations**: Excel file generation, formula calculation, spreadsheet conversion, data import/export, charting, reporting, protection, rendering, and workbook merging.
 - **Resource management**: Use `using` statements whenever possible.
 
 ---
@@ -278,4 +305,4 @@ All examples use [Aspose.Cells for .NET](https://products.aspose.com/cells/net/)
 
 ---
 
-*This repository is maintained by automated code generation. For AI-friendly guidance, see [AGENTS.md](./AGENTS.md). Last updated: 2026-06-22*
+*This repository is maintained by automated code generation. For AI-friendly guidance, see [AGENTS.md](./AGENTS.md). Last updated: 2026-06-30*
