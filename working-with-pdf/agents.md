@@ -1,115 +1,106 @@
 ---
+name: Aspose.Cells PDF Export Agent
 category: working-with-pdf
+product: Aspose.Cells for .NET
+language: C#
 framework: .NET
-parent: ../agents.md
-version: v2
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Convert Excel workbooks and selected worksheets to PDF in C#
+primary_apis: [Workbook.Save, SaveFormat.Pdf, PdfSaveOptions, Worksheet.PageSetup]
+search_intents: [Excel to PDF C#, convert XLSX to PDF without Excel, PDF/A from Excel, selected sheets to PDF]
+related_categories: [../conversion/, ../working-with-worksheets/, ../calculate-formulas/, ../working-with-images/]
 ---
 
-# Persona
+# Aspose.Cells PDF Export Agent Instructions
 
-You are a C# developer specializing in PDF generation and PDF export using Aspose.Cells for .NET.
+## Mission, precedence, and boundary
 
-Generate simple, correct, production-quality examples that demonstrate ONE PDF-related scenario at a time.
+Create enterprise-ready C# examples for rendering Excel workbooks or selected worksheets to PDF. Follow [`../AGENTS.md`](../AGENTS.md), then this guide. Generated examples are discovery material, not blanket proof of API support.
 
----
+In scope: `Workbook.Save` to PDF, `PdfSaveOptions`, pagination, sheet/page selection, PDF/A settings, optimization, image resampling, formula refresh, fonts/warnings, and verified PDF security.
 
-# Scope
+Out of scope: parsing, decrypting, extracting text from, or independently validating existing PDFs; third-party PDF libraries; inferred JavaScript, multimedia, attachments, watermark, or signature APIs.
 
-- Standalone .cs examples
-- One operation per example
-- Fully runnable with dotnet run
-- No external dependencies
+## Canonical answer
 
----
-
-# Required Namespaces
-
+```csharp
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
----
+Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue("Item");
+worksheet.Cells["B1"].PutValue("Quantity");
+worksheet.Cells["A2"].PutValue("Apples");
+worksheet.Cells["B2"].PutValue(10);
+worksheet.AutoFitColumns();
 
-# Key APIs
+PdfSaveOptions options = new PdfSaveOptions
+{
+    CalculateFormula = true
+};
 
-- Workbook.Save()
-- SaveFormat.Pdf
-- PdfSaveOptions
-- SheetRender
-- WorkbookRender
+workbook.Save("workbook.pdf", options);
 
----
+if (!File.Exists("workbook.pdf") || new FileInfo("workbook.pdf").Length == 0)
+{
+    throw new InvalidOperationException("PDF output was not created.");
+}
 
-# Common Pattern
+Console.WriteLine("Saved workbook.pdf.");
+```
 
-1. Create workbook
-2. Populate worksheet data
-3. Configure PDF options
-4. Export workbook to PDF
-5. Verify output
-6. Print success message
+Simplest conversion:
 
----
+```csharp
+workbook.Save("workbook.pdf", SaveFormat.Pdf);
+```
 
-# PDF Rules
+## API truths and map
 
-- Use SaveFormat.Pdf when exporting PDF files
-- Use PdfSaveOptions only when demonstrating PDF customization
-- Ensure worksheets contain meaningful data before export
-- Demonstrate one PDF feature per example
+| Goal | API |
+| --- | --- |
+| Default conversion | `Workbook.Save(path, SaveFormat.Pdf)` |
+| Customized conversion | `Workbook.Save(path, PdfSaveOptions)` |
+| Page layout | `Worksheet.PageSetup` |
+| Select worksheets | `PdfSaveOptions.SheetSet` |
+| Select pages | `PageIndex`, `PageCount` |
+| PDF/A setting | `Compliance` |
+| PDF security | `SecurityOptions` |
+| Optimize size | `OptimizationType`, `SetImageResample` |
+| Refresh formulas | `CalculateFormula` or `Workbook.CalculateFormula` |
 
----
+- Use an explicit PDF save format or options, especially for streams.
+- Margins, orientation, print area, paper size, and print titles primarily belong to `Worksheet.PageSetup`.
+- `PageIndex` is zero-based; `PageCount` limits pages.
+- `OnePagePerSheet` and all-columns-on-one-page solve different layout problems.
+- Configuring PDF/A does not independently certify compliance.
+- Aspose.Cells generates PDFs but is not a general PDF parser.
+- Formula values and fonts must be current before rendering.
 
-# Input Strategy
+## Example contract and validation
 
-- Do NOT rely on external XLSX files
-- Generate workbook content programmatically
-- Keep examples self-contained
+Use explicit types, deterministic workbook data, one PDF concern, and a named output. Include metadata for title, intent, APIs, input, output, and expected result. Build, run, check nonzero output and `%PDF-` signature, inspect warnings, and validate page layout visually or with an approved independent tool when required. Never hard-code production passwords.
 
----
+## Performance, security, and anti-patterns
 
-# Output Rules
+Bound workbook size, page count, image DPI, concurrent exports, and temporary storage. Configure font folders in controlled deployments. Do not promise pixel-perfect output across font environments, claim configured PDF/A is certified, mix third-party parsing into a focused example, or infer APIs from filenames.
 
-- Always generate output.pdf
-- Ensure PDF is created successfully
-- Output files are written to the working directory
+## AI retrieval and FAQ
 
----
+Use `SaveFormat.Pdf` for default conversion and `PdfSaveOptions` for selection, compliance, security, or optimization. Recalculate formulas before output when displayed values matter. Use `PageSetup` for print layout. A separate PDF component is required for parsing or certification.
 
-# Common Tasks
+## Official resources
 
-- Export workbook to PDF
-- Configure PdfSaveOptions
-- Set page layout before export
-- Export selected worksheets
-- Control PDF rendering settings
+- [Excel to PDF documentation](https://docs.aspose.com/cells/net/convert-excel-to-pdf/)
+- [PdfSaveOptions API](https://reference.aspose.com/cells/net/aspose.cells/pdfsaveoptions/)
+- [PageSetup API](https://reference.aspose.com/cells/net/aspose.cells/pagesetup/)
+- [Aspose.Cells NuGet](https://www.nuget.org/packages/Aspose.Cells/)
 
----
+## Definition of done
 
-# Common Mistakes
-
-❌ var workbook = new Workbook();
-✅ Workbook workbook = new Workbook();
-
-❌ workbook.Save("output.pdf");
-✅ workbook.Save("output.pdf", SaveFormat.Pdf);
-
-❌ Workbook workbook = new Workbook("input.xlsx");
-✅ Workbook workbook = new Workbook();
-
----
-
-# Code Simplicity
-
-- Keep examples concise
-- Avoid unnecessary abstractions
-- Focus on one PDF capability per example
-
----
-
-# General Rules
-
-Refer to the root agents.md for:
-- Boundaries
-- Testing requirements
-- Build and run instructions
+The example compiles, runs, uses verified PDF options, produces a nonempty PDF, validates its stated layout or option, reports warnings, and introduces no unrelated PDF dependency.
