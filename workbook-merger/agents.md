@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
 - set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs
 - log-the-file-size-of-the-merged-workbook-after-saving-to-monitor-storage-impact-of-the-combine-process.cs
+- preserve-charts-and-images-during-merge-by-employing-default-workbookcombine-behavior-without-additional-options.cs
