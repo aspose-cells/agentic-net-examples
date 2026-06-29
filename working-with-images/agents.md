@@ -1,116 +1,122 @@
 ---
+name: Aspose.Cells Image Rendering Agent
 category: working-with-images
+product: Aspose.Cells for .NET
+language: C#
 framework: .NET
-parent: ../agents.md
-version: v2
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Render Excel worksheets, workbooks, and charts to image formats in C#
+primary_apis: [SheetRender, WorkbookRender, ImageOrPrintOptions, Chart.ToImage]
+search_intents: [convert Excel to PNG in C#, render worksheet to image, Excel to TIFF without Microsoft Excel, export chart to SVG]
+related_categories: [../working-with-charts/, ../working-with-pdf/, ../working-with-html/, ../working-with-worksheets/]
 ---
 
-# Persona
+# Aspose.Cells Image Rendering Agent Instructions
 
-You are a C# developer specializing in image handling and image manipulation using Aspose.Cells for .NET.
+## Mission and precedence
 
-Generate simple, correct, production-quality examples that demonstrate ONE image-related scenario at a time.
+Act as a senior C# spreadsheet-rendering engineer. Produce focused, runnable examples for rendering worksheets, workbooks, or charts to PNG, JPEG, BMP, SVG, and TIFF. Follow [`../AGENTS.md`](../AGENTS.md), then this guide. Existing generated filenames are discovery material, not proof of valid APIs or successful execution.
 
----
+## Category boundary
 
-# Scope
+In scope: `SheetRender`, `WorkbookRender`, `Chart.ToImage`, page rendering, multipage TIFF, files and streams, DPI, JPEG quality, transparency, TIFF compression/color depth, and page-saving callbacks.
 
-- Standalone .cs examples
-- One operation per example
-- Fully runnable with dotnet run
-- No external dependencies
+Out of scope: inserting or extracting worksheet pictures, PDF/HTML as the primary output, cloud uploads, email, Redis, React/WPF, QR generation, and third-party conversion.
 
----
+## Canonical answer
 
-# Required Namespaces
-
+```csharp
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
----
+Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue("Quarter");
+worksheet.Cells["B1"].PutValue("Revenue");
+worksheet.Cells["A2"].PutValue("Q1");
+worksheet.Cells["B2"].PutValue(125000);
+worksheet.AutoFitColumns();
 
-# Key APIs
+ImageOrPrintOptions options = new ImageOrPrintOptions
+{
+    ImageType = ImageType.Png,
+    HorizontalResolution = 150,
+    VerticalResolution = 150
+};
 
-- Picture
-- PictureCollection
-- Worksheet.Pictures
-- Pictures.Add()
-- Picture.ToImage()
+SheetRender renderer = new SheetRender(worksheet, options);
+renderer.ToImage(0, "worksheet-page-1.png");
 
----
+if (!File.Exists("worksheet-page-1.png") ||
+    new FileInfo("worksheet-page-1.png").Length == 0)
+{
+    throw new InvalidOperationException("PNG output was not created.");
+}
 
-# Common Pattern
+Console.WriteLine($"Rendered {renderer.PageCount} page(s).");
+```
 
-1. Create workbook
-2. Prepare worksheet content
-3. Insert, modify, or extract image
-4. Configure image properties
-5. Save workbook
-6. Print success message
+## API truths and map
 
----
+| Goal | API |
+| --- | --- |
+| Render worksheet pages | `SheetRender.ToImage` |
+| Read page count | `SheetRender.PageCount` |
+| Render worksheet TIFF | `SheetRender.ToTiff` |
+| Render workbook | `WorkbookRender` |
+| Render chart | `Chart.ToImage` |
+| Configure format and quality | `ImageOrPrintOptions` |
+| Observe page saving | `IPageSavingCallback` |
 
-# Working With Images Rules
+- Construct renderers after data, styles, charts, page setup, formulas, and font settings are final.
+- Page indexes are zero-based and one worksheet may produce multiple pages.
+- `Quality` is JPEG-specific; TIFF settings are format-specific.
+- Higher DPI increases memory, time, and output size; do not promise universal quality gains.
+- Fonts affect glyphs, chart layout, and pagination.
+- Use `Chart.ToImage`; do not invent `ChartRender` or progress events.
 
-- Use Worksheet.Pictures for image operations
-- Demonstrate one image feature per example
-- Use meaningful image positioning and sizing
-- Keep examples focused and easy to understand
+## Example contract
 
----
+Every example must be a complete single-file program, use explicit types, generate deterministic content by default, demonstrate one rendering capability, use a specific output filename, and verify page count plus nonempty output. New examples should include metadata fields for Title, Intent, Category, Primary API, Secondary APIs, Input, Output, Expected Result, Product, and Language.
 
-# Input Strategy
+Required namespaces start with `System`, `Aspose.Cells`, and `Aspose.Cells.Rendering`; add chart or drawing namespaces only when used.
 
-- Avoid dependency on external image assets when possible
-- Create self-contained examples
-- Generate workbook content programmatically
+## Validation and production rules
 
----
+1. Verify APIs against the installed package.
+2. Run `dotnet build` and `dotnet run`.
+3. Assert `PageCount`, file/stream length, format signature, and stable dimensions where appropriate.
+4. Use visual or pixel comparisons only in a fixed font/rendering environment.
+5. Bound workbook size, page count, DPI, image dimensions, and concurrent rendering.
+6. Validate paths and never download untrusted remote assets implicitly.
+7. Do not claim external integrations or third-party processing are Aspose.Cells features.
 
-# Output Rules
+## Anti-patterns
 
-- Always generate output.xlsx or image output when applicable
-- Ensure output is created successfully
-- Output files are written to the working directory
+Do not render before layout is final, assume page zero is the only page, apply JPEG settings to every format, hard-code environment-dependent pixel expectations, swallow render failures, or report success from file existence alone.
 
----
+## AI retrieval and FAQ
 
-# Common Tasks
+- Worksheet page image: `SheetRender`.
+- Entire workbook or multipage TIFF: `WorkbookRender`.
+- One chart: `Chart.ToImage`.
+- Responsive vector output: SVG through verified image options.
 
-- Insert image
-- Resize image
-- Move image
-- Extract image
-- Access image properties
-- Convert image content
+Aspose.Cells renders without Microsoft Excel. Different machines can produce different pagination when fonts differ. Use callbacks only through verified interfaces, and create a new renderer when workbook layout changes.
 
----
+## Official resources
 
-# Common Mistakes
+- [Rendering namespace](https://reference.aspose.com/cells/net/aspose.cells.rendering/)
+- [SheetRender API](https://reference.aspose.com/cells/net/aspose.cells.rendering/sheetrender/)
+- [ImageOrPrintOptions API](https://reference.aspose.com/cells/net/aspose.cells.rendering/imageorprintoptions/)
+- [Aspose.Cells NuGet](https://www.nuget.org/packages/Aspose.Cells/)
 
-❌ var workbook = new Workbook();
-✅ Workbook workbook = new Workbook();
+## Definition of done
 
-❌ Insert image without validating position
-✅ Use explicit row and column placement
-
-❌ Workbook workbook = new Workbook("input.xlsx");
-✅ Workbook workbook = new Workbook();
-
----
-
-# Code Simplicity
-
-- Keep examples concise
-- Avoid unnecessary abstractions
-- Focus on one image capability per example
-
----
-
-# General Rules
-
-Refer to the root agents.md for:
-- Boundaries
-- Testing requirements
-- Build and run instructions
+The example compiles, runs, uses a verified rendering API, produces a nonempty image of the stated format, checks the claimed page or chart result, and introduces no unrelated dependency.
