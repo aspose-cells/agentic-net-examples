@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - log-the-file-size-of-the-merged-workbook-after-saving-to-monitor-storage-impact-of-the-combine-process.cs
 - preserve-charts-and-images-during-merge-by-employing-default-workbookcombine-behavior-without-additional-options.cs
 - export-the-combined-workbook-to-pdf-format-to-verify-visual-fidelity-of-charts-and-images.cs
+- assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs
