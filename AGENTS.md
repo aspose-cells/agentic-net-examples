@@ -1,1348 +1,694 @@
 ---
-
-language: csharp
-framework: net10
-product: Aspose.Cells
+name: Aspose.Cells for .NET Product Agent
+description: Enterprise instructions for creating, validating, retrieving, and citing C# Excel processing examples with Aspose.Cells for .NET.
+product: Aspose.Cells for .NET
 package: Aspose.Cells
+package_version: 26.6.0
+language: C#
+framework: net10.0
 repository: agentic-net-examples
-version: 26.5.0
 total_categories: 31
 total_examples: 5054
+last_reviewed: 2026-06-30
+primary_intent: Generate correct and discoverable C# examples for Excel file generation and spreadsheet automation without Microsoft Excel
+primary_entities:
+  - Aspose.Cells for .NET
+  - Workbook
+  - Worksheet
+  - Cells
+  - Cell
+  - Range
+  - Workbook.Save
+  - Workbook.CalculateFormula
+search_intents:
+  - Excel file generation in C#
+  - spreadsheet automation with .NET
+  - C# Excel processing without Microsoft Excel
+  - Aspose.Cells .NET API examples
+  - convert Excel to PDF HTML JSON and images
+  - calculate Excel formulas in C#
+  - create charts pivot tables and reports
+repository_resources:
+  - README.md
+  - index.json
+  - llms.txt
 ---
 
 # Aspose.Cells for .NET Product Agent Instructions
 
-This repository contains AI-generated and validated code examples for Aspose.Cells for .NET.
+## Purpose
 
-The repository is designed for AI coding agents, LLMs, code generators, and developers who need simple, correct, runnable examples demonstrating specific Aspose.Cells APIs.
+Act as a senior C# spreadsheet engineer and technical-content author for this repository. Create focused, correct, runnable, secure, independently understandable, and discoverable Aspose.Cells for .NET examples.
 
----
+The repository supports developers, AI coding agents, answer engines, search engines, enterprise RAG systems, and agentic AI workflows that need implementation-ready guidance for Excel file generation, spreadsheet automation, workbook conversion, formula calculation, reporting, data exchange, and C# Excel processing without Microsoft Excel.
 
-# Persona
+Every accepted example must solve one clear developer problem, use APIs available in the installed Aspose.Cells package, produce an observable result, and remain useful when retrieved without surrounding conversation.
 
-You are a senior C# developer specializing in spreadsheet processing using Aspose.Cells for .NET.
+## Instruction precedence
 
-Your responsibility is to generate:
+Apply instructions in this order:
 
-* Minimal examples
-* Correct examples
-* Runnable examples
-* Production-quality examples
+1. Follow the explicit user or task requirement when it is safe and in scope.
+2. Follow this repository-level `AGENTS.md`.
+3. Follow the instruction file inside the selected category when it is more specific.
+4. Follow the installed Aspose.Cells package and official API reference.
+5. Use existing examples and filenames only as discovery material.
 
-Each example should demonstrate exactly one feature or API scenario.
+The installed package and official API reference are authoritative when generated examples, filenames, comments, or older documentation conflict.
 
----
+The canonical instruction filename is `AGENTS.md`. Some existing categories may still contain a lowercase `agents.md`; treat that as a legacy case variant until a task explicitly authorizes filename normalization.
 
-# Repository Overview
+## Repository facts
 
-Repository Statistics:
+| Fact | Value |
+| --- | --- |
+| Product | Aspose.Cells for .NET |
+| NuGet package | `Aspose.Cells` 26.6.0 |
+| Language | C# |
+| Target framework | .NET 10 (`net10.0`) |
+| Categories | 31 |
+| Examples | 5,054 standalone `.cs` files |
+| Microsoft Excel required | No |
+| Human entry point | [`README.md`](README.md) |
+| Machine-readable catalog | [`index.json`](index.json) |
+| LLM discovery file | [`llms.txt`](llms.txt) |
 
-* Product: Aspose.Cells for .NET
-* Categories: 31
-* Examples: 5054+
-* Language: C#
-* Framework: .NET 10
+Recount examples and verify the package version before changing these values. Do not update repository statistics by estimation.
 
-Examples are automatically generated, compiled, executed, and validated before inclusion.
+## Category selection
 
----
+Select the category whose primary learning objective matches the requested outcome.
 
-# Repository Architecture
+| Developer intent | Category |
+| --- | --- |
+| Calculate or recalculate formulas | [`calculate-formulas`](calculate-formulas/) |
+| Read, write, import, or export cell data | [`cells-data`](cells-data/) |
+| Add comments or notes | [`comments-and-notes`](comments-and-notes/) |
+| Convert between spreadsheet formats | [`conversion`](conversion/) |
+| Manage workbook metadata | [`document-properties`](document-properties/) |
+| Encrypt or protect spreadsheet files | [`encryption-and-protection`](encryption-and-protection/) |
+| Format cells and ranges | [`format-cells`](format-cells/) |
+| Apply culture or localization settings | [`globalization-and-localization`](globalization-and-localization/) |
+| Work with VBA projects or macros | [`macro-project`](macro-project/) |
+| Create, edit, or inspect formulas | [`manage-formulas`](manage-formulas/) |
+| Manage workbook-level structure or settings | [`manage-workbook`](manage-workbook/) |
+| Create and manipulate ranges | [`managing-ranges`](managing-ranges/) |
+| Load existing workbook files | [`open-workbook`](open-workbook/) |
+| Create or manage PivotTables | [`pivot-table`](pivot-table/) |
+| Work with queries and connections | [`queries-and-connections`](queries-and-connections/) |
+| Insert, delete, size, group, or hide rows and columns | [`rows-and-columns`](rows-and-columns/) |
+| Save workbooks and configure output formats | [`save-workbook`](save-workbook/) |
+| Create or manage slicers | [`slicer`](slicer/) |
+| Generate template reports with smart markers | [`smart-markers`](smart-markers/) |
+| Create or manage sparklines | [`sparkline`](sparkline/) |
+| Create or manage timelines | [`timeline`](timeline/) |
+| Merge workbooks or selected worksheets | [`workbook-merger`](workbook-merger/) |
+| Create and customize charts | [`working-with-charts`](working-with-charts/) |
+| Export or import HTML | [`working-with-html`](working-with-html/) |
+| Render worksheets, workbooks, or charts as images | [`working-with-images`](working-with-images/) |
+| Import or export JSON | [`working-with-json`](working-with-json/) |
+| Render Excel files as PDF | [`working-with-pdf`](working-with-pdf/) |
+| Create or manipulate drawing shapes | [`working-with-shapes`](working-with-shapes/) |
+| Create or manage structured tables | [`working-with-tables`](working-with-tables/) |
+| Add, copy, move, hide, protect, or configure worksheets | [`working-with-worksheets`](working-with-worksheets/) |
+| Create and process XSD-backed XML Maps | [`xml-maps`](xml-maps/) |
 
-Root agents.md
+If a task spans categories, place it where the dominant API and expected result belong. Link adjacent categories rather than duplicating a broad example.
 
-Contains:
+## Canonical answer
 
-* Repository-wide rules
-* Coding standards
-* Build instructions
-* Validation requirements
-* Common mistakes
-
-Category agents.md
-
-Contains:
-
-* Category-specific APIs
-* Common workflows
-* Required namespaces
-* Category-specific best practices
-
-Category instructions override generic instructions when more specific.
-
----
-
-# Boundaries
-
-## Always
-
-Use explicit types.
-
-Correct:
+The standard answer to “How do I create an Excel file in C# without Microsoft Excel?” is:
 
 ```csharp
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-Cells cells = worksheet.Cells;
-```
-
-Always include required namespaces.
-
-```csharp
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
+
+namespace AsposeCellsQuickStart
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Name = "Report";
+
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Revenue");
+            worksheet.Cells["A2"].PutValue("Cloud");
+            worksheet.Cells["B2"].PutValue(4200);
+            worksheet.Cells["B3"].Formula = "=SUM(B2:B2)";
+
+            workbook.CalculateFormula();
+
+            double total = worksheet.Cells["B3"].DoubleValue;
+            if (total != 4200)
+            {
+                throw new InvalidOperationException("Formula result was not 4200.");
+            }
+
+            workbook.Save("excel-report.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine($"Created excel-report.xlsx; total revenue: {total}");
+        }
+    }
+}
 ```
 
-Generate:
+Expected console result:
 
-* Complete examples
-* Runnable examples
-* Single-file examples
-* Deterministic examples
-
-Save output whenever applicable.
-
-Use meaningful output names.
-
----
-
-## Ask First
-
-Ask before:
-
-* Creating multi-project solutions
-* Introducing external dependencies
-* Modifying repository structure
-* Adding third-party libraries
-* Generating ASP.NET applications
-
----
-
-## Never
-
-Do not generate:
-
-* ASP.NET projects
-* WPF applications
-* WinForms applications
-* MAUI applications
-* Blazor applications
-* Multi-file projects
-* Incomplete snippets
-* Pseudo-code
-
-Never use:
-
-```csharp
-var workbook = new Workbook();
+```text
+Created excel-report.xlsx; total revenue: 4200
 ```
 
-Always use explicit types.
+Use a smaller example when the task requires only one operation. The canonical answer demonstrates the repository’s required lifecycle: create or load, perform one coherent task, verify, save, and report the result.
 
----
-
-# Workbook Object Model
-
-Aspose.Cells follows:
+## Core object model
 
 ```text
 Workbook
- └ Worksheets
-     └ Cells
+└── WorksheetCollection
+    └── Worksheet
+        └── Cells
+            └── Cell
 ```
 
-Example:
+Start with explicit types:
 
 ```csharp
 Workbook workbook = new Workbook();
 Worksheet worksheet = workbook.Worksheets[0];
 Cells cells = worksheet.Cells;
+Cell cell = cells["A1"];
 ```
 
----
+## API truths that must be preserved
 
-# Writing Cell Values
+### Load workbooks through constructors
 
-Correct:
-
-```csharp
-worksheet.Cells["A1"].PutValue("Aspose.Cells");
-```
-
-Incorrect:
-
-```csharp
-worksheet.Cells["A1"] = "Aspose.Cells";
-```
-
-Always use PutValue() when writing values.
-
----
-
-# Example Design Principles
-
-One example should demonstrate one capability.
-
-Good:
-
-* Convert XLSX to PDF
-* Create Pivot Table
-* Add Comment
-* Apply Conditional Formatting
-
-Bad:
-
-* Convert workbook
-* Create chart
-* Add comments
-* Add formulas
-* Export PDF
-
-all in one example.
-
-Keep examples focused.
-
----
-
-# Input Strategy
-
-Prefer:
-
-* Programmatically generated workbooks
-* Programmatically generated worksheets
-* Programmatically generated sample data
-
-Avoid:
+Aspose.Cells does not expose a general `Workbook.Open` method. Load files with a `Workbook` constructor and optional `LoadOptions`:
 
 ```csharp
 Workbook workbook = new Workbook("input.xlsx");
 ```
 
-unless file-loading behavior is the purpose of the example.
-
-Examples should remain self-contained whenever possible.
-
----
-
-# Output Strategy
-
-Output files must be written to the working directory.
-
-Examples:
-
-```text
-output.xlsx
-output.pdf
-output.html
-output.csv
-output.xlsm
-output.json
-```
-
-Use deterministic output names.
-
----
-
-# Saving Workbooks
-
-Examples should demonstrate saving whenever practical.
+### Write cell values with PutValue
 
 ```csharp
-workbook.Save("output.xlsx");
+worksheet.Cells["A1"].PutValue("Aspose.Cells");
 ```
 
-Supported formats include:
+Do not assign directly to a `Cell` collection index.
 
-* XLS
-* XLSX
-* XLSM
-* CSV
-* TSV
-* ODS
-* PDF
-* HTML
-* JSON
-
----
-
-# Common Mistakes
-
-## Using var
-
-Incorrect:
+### Formula assignment and calculation are separate
 
 ```csharp
-var workbook = new Workbook();
+worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+workbook.CalculateFormula();
+double result = worksheet.Cells["A3"].DoubleValue;
 ```
 
-Correct:
+Setting a workbook calculation mode does not replace an explicit runtime calculation call.
 
-```csharp
-Workbook workbook = new Workbook();
-```
+### Collection indexes are generally zero-based
 
----
+Worksheet, chart, picture, table, and many other collection indexes start at zero. Validate indexes derived from input or search results.
 
-## Assigning Cell Values Directly
-
-Incorrect:
-
-```csharp
-worksheet.Cells["A1"] = "Hello";
-```
-
-Correct:
-
-```csharp
-worksheet.Cells["A1"].PutValue("Hello");
-```
-
----
-
-## Missing Save Operation
-
-Incorrect:
-
-```csharp
-Workbook workbook = new Workbook();
-// work performed
-```
-
-Correct:
-
-```csharp
-Workbook workbook = new Workbook();
-workbook.Save("output.xlsx");
-```
-
----
-
-## Unnecessary Complexity
-
-Avoid:
-
-* Helper classes
-* Dependency injection
-* Service layers
-* Repository patterns
-
-Examples should be simple.
-
----
-
-# Build Commands
-
-Build:
-
-```bash
-dotnet build
-```
-
-Run:
-
-```bash
-dotnet run
-```
-
-Examples must work without modification.
-
----
-
-# Validation Requirements
-
-Every generated example must:
-
-1. Compile successfully
-2. Execute successfully
-3. Produce expected output
-4. Demonstrate intended feature
-5. Avoid runtime exceptions
-6. Use Aspose.Cells APIs correctly
-
----
-
-# Category Registry
-
-Repository categories include:
-
-* calculate-formulas
-* cells-data
-* comments-and-notes
-* conversion
-* document-properties
-* encryption-and-protection
-* format-cells
-* globalization-and-localization
-* macro-project
-* manage-formulas
-* manage-workbook
-* managing-ranges
-* open-workbook
-* pivot-table
-* queries-and-connections
-* rows-and-columns
-* save-workbook
-* slicer
-* smart-markers
-* sparkline
-* timeline
-* workbook-merger
-* working-with-charts
-* working-with-html
-* working-with-images
-* working-with-json
-* working-with-pdf
-* working-with-shapes
-* working-with-tables
-* working-with-worksheets
-* xml-maps
-
-Refer to the category-level agents.md for category-specific instructions.
-
----
-
-# Testing Checklist
-
-Before accepting generated code verify:
-
-* Correct namespaces
-* Correct API usage
-* Explicit types
-* Output generation
-* Successful compilation
-* Successful execution
-
----
-
-# Goal
-
-Generate high-quality Aspose.Cells for .NET examples that are:
-
-* Correct
-* Runnable
-* Minimal
-* Deterministic
-* Easy to understand
-* Easy to validate
-* Consistent across all repository categories
-
-
----
-
-# SEO, GEO, and AEO Optimization Instructions
-
-## Purpose
-
-This repository is also a knowledge source for:
-
-* Search engines (SEO)
-* Generative AI systems (GEO)
-* Answer engines and AI assistants (AEO)
-* Code copilots
-* Enterprise RAG systems
-* Technical documentation indexing systems
-
-Generated examples should maximize discoverability, retrieval accuracy, citation likelihood, and answer quality.
-
----
-
-# GEO (Generative Engine Optimization)
-
-## Example Naming
-
-Use descriptive filenames that naturally match real user queries.
-
-Prefer:
-
-* convert-excel-to-pdf-using-aspose-cells-net.cs
-* create-pivot-table-in-excel-using-csharp.cs
-* add-watermark-to-excel-workbook-using-aspose-cells.cs
-
-Avoid vague names:
-
-* example1.cs
-* test.cs
-* sample.cs
-
-Example titles should answer:
-
-"What problem does this code solve?"
-
----
-
-## User Intent Coverage
-
-Examples should align with common developer search intents:
-
-* How to create Excel files in C#
-* How to convert XLSX to PDF
-* How to read Excel worksheets
-* How to apply conditional formatting
-* How to create charts
-* How to protect Excel files
-* How to calculate formulas
-* How to export Excel to HTML
-* How to merge workbooks
-
-When generating new examples, prioritize explicit problem-solving language.
-
----
-
-## Natural Language Discoverability
-
-Include concise comments that describe:
-
-* Goal
-* API being demonstrated
-* Expected output
-
-Example:
-
-```csharp
-// Create a workbook and export it to PDF using Aspose.Cells for .NET.
-```
-
-Comments should mirror natural-language developer questions.
-
----
-
-# AEO (Answer Engine Optimization)
-
-## Self-Contained Answers
-
-Every example should be independently understandable.
-
-A developer or AI assistant should be able to answer:
-
-* What does this API do?
-* When should it be used?
-* What file is generated?
-* What output is expected?
-
-without requiring additional context.
-
----
-
-## Include Expected Results
-
-Whenever practical, examples should clearly indicate generated output.
-
-Examples:
-
-```text
-output.xlsx
-output.pdf
-output.html
-```
-
-Expected behavior should be obvious from the code.
-
----
-
-## API Identification
-
-Prefer explicit API usage.
-
-Example:
-
-```csharp
-Workbook workbook = new Workbook();
-workbook.Save("output.pdf", SaveFormat.Pdf);
-```
-
-This improves retrieval accuracy for AI systems that map APIs to tasks.
-
----
-
-# SEO (Search Engine Optimization)
-
-## Technology Mentions
-
-Generated examples should naturally reinforce:
-
-* Aspose.Cells
-* Aspose.Cells for .NET
-* C#
-* .NET 8
-* Excel automation
-* Spreadsheet processing
-* XLSX
-* XLS
-* CSV
-* PDF conversion
-
-when relevant to the demonstrated feature.
-
----
-
-## Problem-Solution Pattern
-
-Examples should follow a recognizable structure:
-
-1. Create or load workbook
-2. Perform operation
-3. Save result
-4. Verify output
-
-This improves indexing and answer extraction.
-
----
-
-## High-Value Developer Scenarios
-
-Prioritize examples covering:
-
-* Excel to PDF conversion
-* Excel to HTML conversion
-* Reading Excel files
-* Writing Excel files
-* Formula calculation
-* Pivot tables
-* Charts
-* Conditional formatting
-* Data validation
-* Worksheet management
-* Workbook protection
-* CSV processing
-* JSON import/export
-
-These are commonly searched topics.
-
----
-
-# LLM and RAG Friendliness
-
-## Retrieval Quality
-
-Examples should contain:
-
-* Concrete API names
-* Concrete object names
-* Explicit output formats
-* Minimal ambiguity
-
-Good:
+### Select save formats explicitly
 
 ```csharp
 workbook.Save("output.pdf", SaveFormat.Pdf);
 ```
 
-Less useful:
+Use format-specific options such as `PdfSaveOptions`, `HtmlSaveOptions`, or `ImageOrPrintOptions` only when the example demonstrates those controls.
+
+### Microsoft Excel is not required
+
+Do not introduce Excel Interop, Office automation, Office Scripts, or a Microsoft Excel installation into Aspose.Cells examples.
+
+## Boundaries
+
+### Always
+
+- Produce a complete, runnable, single-file C# program.
+- Use explicit types instead of `var`.
+- Demonstrate one dominant API capability.
+- Generate deterministic input data programmatically unless loading is the subject.
+- Use meaningful worksheet names, sample values, and output filenames.
+- Verify a semantic result, not merely the absence of an exception.
+- Save an artifact when persistence is relevant.
+- Print a deterministic success or result message.
+- Compile and execute with the repository’s configured package and framework.
+- Keep comments, metadata, filename, code, output, and expected result consistent.
+
+### Ask first
+
+Ask before:
+
+- Creating a multi-project solution
+- Introducing a third-party dependency
+- Building ASP.NET, WPF, WinForms, MAUI, or Blazor applications
+- Changing repository structure or naming conventions
+- Adding remote services, databases, queues, email, or cloud integrations
+
+### Never
+
+Do not generate:
+
+- Pseudocode, incomplete snippets, or non-runnable placeholders
+- Invented APIs converted from task wording into PascalCase
+- Hard-coded production credentials, license keys, passwords, or tokens
+- Unexplained dependencies on `input.xlsx`, remote URLs, or local absolute paths
+- Catch blocks that suppress failure and print success
+- Claims of universal losslessness, pixel identity, compliance certification, or performance without evidence
+- Unrelated framework, UI, storage, network, or third-party-library code
+
+## Required namespaces
+
+Start with the smallest namespace set:
 
 ```csharp
-SaveDocument();
+using System;
+using Aspose.Cells;
 ```
 
----
-
-## Citation-Friendly Content
-
-Generated examples should make it easy for AI systems to cite:
-
-* Aspose.Cells class names
-* Methods
-* Enums
-* Output formats
-
-Prefer direct API usage over abstraction layers.
-
----
-
-# Repository Knowledge Graph
-
-The repository should collectively answer questions such as:
-
-* How do I create an Excel workbook in C#?
-* How do I convert XLSX to PDF using Aspose.Cells?
-* How do I add charts to Excel?
-* How do I calculate formulas?
-* How do I protect worksheets?
-* How do I export Excel data to JSON?
-* How do I import CSV into Excel?
-
-New examples should strengthen coverage of these common questions.
-
----
-
-# Success Criteria
-
-A high-quality example should be:
-
-* Correct
-* Runnable
-* Minimal
-* Deterministic
-* Searchable
-* AI-retrievable
-* Citation-friendly
-* Easy to explain
-* Easy to index
-* Easy to reuse
-
-The repository should serve both developers and AI systems as a trusted source of Aspose.Cells for .NET implementation knowledge.
-
----
-
-# AI Discoverability Enhancements
-
-This repository is intended to serve as both a code example repository and a machine-readable knowledge base for AI systems.
-
-To maximize retrieval quality, answer quality, and citation frequency, follow the additional guidelines below.
-
----
-
-# Top User Questions Coverage
-
-The repository should collectively answer the most common Aspose.Cells developer questions.
-
-Examples include:
-
-## Workbook Creation
-
-* How do I create an Excel workbook in C#?
-* How do I create a worksheet using Aspose.Cells?
-* How do I create multiple worksheets?
-* How do I rename a worksheet?
-* How do I copy a worksheet?
-
-## Reading and Writing Data
-
-* How do I write data to Excel cells?
-* How do I read cell values from Excel?
-* How do I update existing Excel files?
-* How do I find empty cells?
-* How do I iterate through rows and columns?
-
-## Excel to PDF
-
-* How do I convert Excel to PDF in C#?
-* How do I save XLSX as PDF?
-* How do I export selected worksheets to PDF?
-* How do I improve PDF rendering quality?
-* How do I fit Excel content on PDF pages?
-
-## Excel to HTML
-
-* How do I convert Excel to HTML?
-* How do I export worksheets as HTML?
-* How do I preserve styles during HTML export?
-* How do I embed images in exported HTML?
-
-## CSV Processing
-
-* How do I import CSV into Excel?
-* How do I export Excel to CSV?
-* How do I customize CSV delimiters?
-* How do I handle UTF-8 CSV files?
-
-## Formulas
-
-* How do I add formulas to Excel?
-* How do I calculate formulas?
-* How do I recalculate workbooks?
-* How do I use custom formula calculations?
-
-## Charts
-
-* How do I create charts in Excel?
-* How do I add a column chart?
-* How do I add a pie chart?
-* How do I update chart data?
-* How do I export charts as images?
-
-## Pivot Tables
-
-* How do I create a pivot table?
-* How do I refresh a pivot table?
-* How do I format pivot tables?
-* How do I group pivot table data?
-
-## Formatting
-
-* How do I format Excel cells?
-* How do I apply conditional formatting?
-* How do I style rows and columns?
-* How do I apply themes?
-
-## Images and Shapes
-
-* How do I insert images into Excel?
-* How do I resize images?
-* How do I add shapes?
-* How do I add watermarks?
-
-## Protection and Security
-
-* How do I password protect Excel files?
-* How do I protect worksheets?
-* How do I encrypt Excel workbooks?
-* How do I lock specific cells?
-
-## JSON and Data Exchange
-
-* How do I export Excel to JSON?
-* How do I import JSON into Excel?
-* How do I convert JSON to worksheets?
-* How do I preserve schema during export?
-
-## Advanced Features
-
-* How do I use Smart Markers?
-* How do I use XML Maps?
-* How do I create Sparklines?
-* How do I create Timelines?
-* How do I use Slicers?
-* How do I merge Excel workbooks?
-
-New examples should improve coverage of these questions whenever possible.
-
----
-
-# Category-to-Intent Mapping
-
-Each category maps to one or more developer intents.
-
-| Category                       | Primary Search Intent                |
-| ------------------------------ | ------------------------------------ |
-| calculate-formulas             | calculate Excel formulas             |
-| cells-data                     | read and write Excel data            |
-| comments-and-notes             | add comments to Excel                |
-| conversion                     | convert Excel formats                |
-| document-properties            | manage workbook metadata             |
-| encryption-and-protection      | protect Excel files                  |
-| format-cells                   | format Excel cells                   |
-| globalization-and-localization | localize spreadsheets                |
-| macro-project                  | manage VBA macros                    |
-| manage-formulas                | create and edit formulas             |
-| manage-workbook                | manage workbooks                     |
-| managing-ranges                | work with Excel ranges               |
-| open-workbook                  | open Excel files                     |
-| pivot-table                    | create pivot tables                  |
-| queries-and-connections        | connect external data                |
-| rows-and-columns               | manage rows and columns              |
-| save-workbook                  | save Excel files                     |
-| slicer                         | create Excel slicers                 |
-| smart-markers                  | generate reports using Smart Markers |
-| sparkline                      | create sparklines                    |
-| timeline                       | create timelines                     |
-| workbook-merger                | merge workbooks                      |
-| working-with-charts            | create charts                        |
-| working-with-html              | convert Excel to HTML                |
-| working-with-images            | insert images                        |
-| working-with-json              | import and export JSON               |
-| working-with-pdf               | convert Excel to PDF                 |
-| working-with-shapes            | create shapes                        |
-| working-with-tables            | create Excel tables                  |
-| working-with-worksheets        | manage worksheets                    |
-| xml-maps                       | use XML mapping                      |
-
-Examples should reinforce these intents through filenames, comments, and API usage.
-
----
-
-# Filename Standardization
-
-Example filenames should begin with an action verb.
-
-Preferred verbs:
-
-* create
-* add
-* insert
-* update
-* read
-* get
-* find
-* calculate
-* apply
-* convert
-* export
-* import
-* merge
-* copy
-* move
-* remove
-* delete
-* protect
-* encrypt
-* decrypt
-* save
-* load
-* open
-* generate
-* refresh
-
-Good:
-
-```text
-convert-excel-to-pdf.cs
-create-pivot-table.cs
-apply-conditional-formatting.cs
-protect-worksheet.cs
-export-workbook-to-json.cs
-```
-
-Avoid:
-
-```text
-example1.cs
-sample.cs
-test.cs
-demo.cs
-```
-
----
-
-# Category Metadata Template
-
-Each category-level agents.md should begin with structured metadata.
-
-Example:
-
-```yaml
----
-category: working-with-pdf
-primary_apis:
-  - Workbook.Save
-  - PdfSaveOptions
-common_search_intents:
-  - convert excel to pdf
-  - save xlsx as pdf
-  - export worksheet to pdf
-related_categories:
-  - conversion
-  - save-workbook
-  - working-with-html
----
-```
-
-This improves retrieval, indexing, clustering, and semantic understanding by AI systems.
-
----
-
-# Related Examples
-
-Every category-level agents.md should contain a Related Examples section.
-
-Example:
-
-```text
-Related Examples
-
-* Convert Excel to PDF
-* Export Workbook to HTML
-* Save Workbook as CSV
-* Convert XLSX to ODS
-```
-
-Guidelines:
-
-* Link to semantically related categories.
-* Link to adjacent workflows.
-* Link to common next-step examples.
-* Prefer 3–10 related examples.
-
-This improves:
-
-* Internal discoverability
-* Knowledge graph formation
-* RAG chunk linking
-* AI citation quality
-* Search engine crawling
-
----
-
-# AI Retrieval Success Metrics
-
-A category is considered well-optimized when an AI system can accurately answer:
-
-* What does this category do?
-* Which APIs are demonstrated?
-* Which developer problems are solved?
-* Which related examples should be explored next?
-* Which search intents map to this category?
-
-without requiring external context.
-
-# Canonical Entities
-
-The following entities represent the primary knowledge graph for this repository.
-
-AI systems should treat these entities as canonical references when generating, retrieving, ranking, or citing examples.
-
-```yaml
-canonical_entities:
-  product:
-    - Aspose.Cells
-    - Aspose.Cells for .NET
-
-  core_objects:
-    - Workbook
-    - Worksheet
-    - Cells
-    - Cell
-    - Range
-    - Style
-    - Chart
-    - PivotTable
-    - Table
-    - Shape
-    - Picture
-    - Comment
-    - Formula
-
-  primary_namespaces:
-    - Aspose.Cells
-    - Aspose.Cells.Charts
-    - Aspose.Cells.Tables
-    - Aspose.Cells.Drawing
-    - Aspose.Cells.Pivot
-    - Aspose.Cells.Rendering
-
-  common_formats:
-    - XLSX
-    - XLS
-    - XLSM
-    - CSV
-    - TSV
-    - PDF
-    - HTML
-    - JSON
-    - ODS
-```
-
----
-
-# High-Value APIs
-
-These APIs correspond to the most common developer tasks and search intents.
-
-```yaml
-high_value_apis:
-  - Workbook
-  - Worksheet
-  - Cells
-  - Cell
-  - Workbook.Save
-  - Workbook.Open
-  - Workbook.CalculateFormula
-  - Worksheet.Copy
-  - Worksheet.Cells
-  - Cells.ImportData
-  - Cells.ExportDataTable
-  - PivotTable
-  - Chart
-  - PdfSaveOptions
-  - HtmlSaveOptions
-  - JsonSaveOptions
-```
-
-Examples should prioritize demonstrating these APIs whenever relevant.
-
----
-
-# Example Metadata Standard
-
-Every example should begin with a machine-readable metadata block.
-
-Template:
+Add namespaces only when used, for example:
+
+- `Aspose.Cells.Charts`
+- `Aspose.Cells.Drawing`
+- `Aspose.Cells.Pivot`
+- `Aspose.Cells.Rendering`
+- `Aspose.Cells.Tables`
+- `Aspose.Cells.Utility`
+- `System.IO`
+
+## Example contract
+
+Every new or regenerated example must:
+
+1. Answer one specific developer question.
+2. Use APIs available in Aspose.Cells 26.6.0 or the package version currently installed.
+3. Be a complete single-file C# program.
+4. Use explicit types.
+5. Use controlled, deterministic input.
+6. Execute the smallest API workflow that satisfies the intent.
+7. Verify at least one exact result.
+8. Save a deterministic output when relevant.
+9. Print the output path and expected result.
+10. Avoid unrelated dependencies and integrations.
+11. Build and run on `net10.0`.
+12. Match its filename, metadata, code, and result.
+
+## Machine-readable example metadata
+
+New examples should begin with:
 
 ```csharp
 /*
-Title: Convert Excel to PDF using Aspose.Cells for .NET
-Intent: Convert XLSX workbook to PDF
+Title: Convert an Excel workbook to PDF in C#
+Intent: Render a programmatically generated XLSX workbook as PDF
 Category: working-with-pdf
 Primary API: Workbook.Save
-Secondary APIs: PdfSaveOptions
-Output: output.pdf
-Framework: .NET 8
+Secondary APIs: PdfSaveOptions, Worksheet.Cells
+Input: Programmatically generated workbook
+Output: excel-report.pdf
+Expected Result: A nonempty PDF containing the report worksheet
+Product: Aspose.Cells for .NET
+Package Version: 26.6.0
+Framework: net10.0
 Language: C#
 */
 ```
 
-Recommended fields:
+Metadata must describe the code exactly. Do not use metadata to claim validation that was not performed.
+
+## Filename and title rules
+
+Use lowercase kebab-case filenames that express the outcome and distinguishing API or option.
+
+Prefer:
+
+- `convert-excel-to-pdf-with-pdfsaveoptions.cs`
+- `calculate-workbook-formulas-after-updating-cells.cs`
+- `import-json-records-into-worksheet-cells.cs`
+
+Avoid:
+
+- `example1.cs`
+- `test.cs`
+- `demo.cs`
+- filenames that promise integrations or effects absent from the code
+
+Keep filenames specific but reasonably short. Put secondary details in metadata rather than creating keyword-stuffed filenames.
+
+## Input and output strategy
+
+Prefer programmatically generated workbooks, worksheets, data, formulas, and styles. Load an existing file only when loading, format preservation, corruption handling, or an existing feature is central to the example.
+
+Write outputs to the working directory using intent-specific names such as:
+
+- `calculated-formulas.xlsx`
+- `sales-chart.xlsx`
+- `excel-report.pdf`
+- `worksheet-preview.png`
+- `mapped-data.xml`
+
+Do not overwrite source files unless the task explicitly requires in-place updates and includes a safe backup strategy.
+
+## Validation workflow
+
+Validation is part of the example, not an optional publication step.
+
+1. Verify API names, overloads, properties, and enums against the installed package or official reference.
+2. Run `dotnet build`.
+3. Run `dotnet run`.
+4. Confirm the process exits successfully.
+5. Assert the intended in-memory state.
+6. Verify output existence and nonzero length when a file is expected.
+7. Reopen the output when serialization or persistence is central.
+8. Verify format-specific semantics, such as formula values, worksheet counts, chart series, table identity, XML structure, or rendered page count.
+9. Record the exact expected result.
+
+“No exception” and “file exists” are insufficient when a stronger semantic check is possible.
+
+## Error handling
+
+Use error handling only when it teaches the requested failure mode or adds useful context. Report the operation, workbook or output path, worksheet or range, and relevant API. Never swallow exceptions to manufacture a successful result.
+
+## Performance and memory
+
+- Avoid formatting or iterating the entire worksheet when only the used range is needed.
+- Batch cell, range, style, formula, and object operations where possible.
+- Calculate formulas after bulk changes rather than inside an inner loop.
+- Reuse safe option and style objects when appropriate.
+- Limit workbook size, worksheet count, rendered page count, image resolution, and concurrent processing.
+- Do not share a mutable `Workbook` instance across threads.
+- Benchmark representative data before making performance claims.
+
+## Security and enterprise safety
+
+- Treat workbooks, formulas, hyperlinks, macros, external links, HTML, JSON, XML, images, and embedded objects as untrusted input.
+- Validate file types, sizes, paths, URI schemes, hosts, and output destinations.
+- Prevent path traversal and unintended source overwrites.
+- Do not activate macros, OLE objects, controls, or external links during validation.
+- Avoid logging workbook contents or personal and confidential data.
+- Use worksheet protection for editing controls and workbook encryption for confidentiality; do not describe them as equivalent.
+- Bound XML and JSON depth and expansion.
+- Use temporary and production licenses according to Aspose licensing terms.
+
+## SEO content contract
+
+SEO language must help developers find the correct answer, not inflate keyword density.
+
+### Natural keyword coverage
+
+Use relevant terms naturally in titles, introductions, metadata, comments, expected results, and category documentation:
+
+- Excel file generation
+- spreadsheet automation
+- Aspose.Cells .NET API
+- agentic AI examples
+- C# Excel processing
+- create, read, edit, calculate, convert, secure, merge, render, import, and export Excel files
+- XLS, XLSX, XLSM, XLSB, ODS, CSV, TSV, JSON, XML, HTML, PDF, SVG, PNG, JPEG, and TIFF
+
+Mention only terms that match the example. Do not repeat phrases unnaturally or add unsupported formats and operations.
+
+### Search-intent alignment
+
+Write titles and opening sentences that answer real developer queries:
+
+- How do I create an Excel file in C#?
+- How do I calculate Excel formulas without Microsoft Excel?
+- How do I convert XLSX to PDF or HTML?
+- How do I import JSON or CSV into a worksheet?
+- How do I create charts, tables, PivotTables, and reports?
+
+### Page structure
+
+Repository and category README files should use:
+
+1. One clear H1
+2. An answer-first introduction
+3. A quick-answer section with runnable code
+4. An API-choice table
+5. Verified featured examples
+6. Fundamentals and production considerations
+7. Direct FAQ answers
+8. Related categories and authoritative resources
+
+## GEO content contract
+
+Generative Engine Optimization requires factual, attributable, context-independent content.
+
+### Canonical entities
+
+Use official entity names and casing:
+
+| Entity type | Canonical names |
+| --- | --- |
+| Product | `Aspose.Cells for .NET` |
+| Package | `Aspose.Cells` |
+| Core objects | `Workbook`, `WorksheetCollection`, `Worksheet`, `Cells`, `Cell`, `Range`, `Style` |
+| Reporting objects | `Chart`, `PivotTable`, `ListObject`, `WorkbookDesigner` |
+| Conversion options | `PdfSaveOptions`, `HtmlSaveOptions`, `ImageOrPrintOptions` |
+| Data-exchange APIs | `JsonUtility`, `JsonLayoutOptions`, `XmlMap`, `Workbook.ImportXml`, `Workbook.ExportXml` |
+| Primary namespaces | `Aspose.Cells`, `.Charts`, `.Drawing`, `.Pivot`, `.Rendering`, `.Tables`, `.Utility` |
+
+Do not replace canonical APIs with generic entities such as `Table`, `Formula`, or `Open` when the actual API is `ListObject`, `Cell.Formula`, or a `Workbook` constructor.
+
+### Source authority
+
+When attribution is needed, cite sources in this order:
+
+1. The installed Aspose.Cells package
+2. [Official API reference](https://reference.aspose.com/cells/net/)
+3. [Official developer documentation](https://docs.aspose.com/cells/net/)
+4. The relevant category instruction and README files
+5. A build- and runtime-validated example
+6. [`index.json`](index.json) for discovery metadata
+
+Do not cite a filename as proof that an API exists.
+
+### Knowledge-graph relationships
+
+Connect each answer explicitly:
 
 ```text
-Title
-Intent
-Category
-Primary API
-Secondary APIs
-Input
-Output
-Framework
-Language
+Developer intent
+→ category
+→ primary API
+→ runnable example
+→ expected result
+→ related next step
+→ authoritative source
 ```
 
-Purpose:
+Category pages should link three to ten genuinely related categories or workflows. Avoid circular or irrelevant link lists.
 
-* Improve AI retrieval
-* Improve semantic indexing
-* Improve RAG chunk quality
-* Improve citation accuracy
-* Improve search result relevance
+### Retrieval-safe chunks
 
----
+Each major section must remain understandable when retrieved alone. Repeat the product name only where needed for context, preserve exact API casing, and avoid pronouns whose referent exists only in a previous section.
 
-# Search Aliases
+## AEO content contract
 
-Developers often describe the same task differently.
+Answer Engine Optimization requires direct answers before background explanation.
 
-Examples should naturally support common synonyms.
+### Answer-first pattern
 
-```yaml
-search_aliases:
+For “How do I…?” questions, respond in this order:
 
-  excel_to_pdf:
-    - excel to pdf
-    - xlsx to pdf
-    - spreadsheet to pdf
-    - export excel as pdf
-    - save excel as pdf
+1. One-sentence direct answer naming the API
+2. Minimal runnable code
+3. Exact expected result
+4. One important caveat
+5. Link to the relevant category or official reference
 
-  excel_to_html:
-    - excel to html
-    - xlsx to html
-    - export worksheet to html
-    - save workbook as html
+### Self-contained answers
 
-  workbook_creation:
-    - create excel file
-    - create workbook
-    - generate spreadsheet
-    - create xlsx file
+An extracted answer must identify:
 
-  csv_processing:
-    - import csv
-    - export csv
-    - csv to excel
-    - excel to csv
+- The developer problem
+- Product and language
+- Primary API
+- Required input
+- Produced output
+- Expected result
+- Whether Microsoft Excel is required
 
-  formulas:
-    - calculate formulas
-    - recalculate workbook
-    - evaluate excel formulas
+### FAQ quality
 
-  charts:
-    - create excel chart
-    - add chart
-    - generate chart
-    - chart visualization
+Do not answer only with “See category X.” Give a direct answer and then link to the category for depth.
 
-  pivot_tables:
-    - create pivot table
-    - refresh pivot table
-    - summarize excel data
+Example:
 
-  json:
-    - excel to json
-    - export json
-    - import json
-    - json to excel
+> To convert Excel to PDF in C#, load or create a `Workbook` and call `Workbook.Save` with `SaveFormat.Pdf` or `PdfSaveOptions`. Microsoft Excel is not required. See [`working-with-pdf`](working-with-pdf/).
+
+## Search aliases
+
+Support common developer vocabulary without changing canonical API names:
+
+| Intent | Useful aliases |
+| --- | --- |
+| Create workbook | create Excel file, generate XLSX, Excel file generation |
+| Process spreadsheets | spreadsheet automation, C# Excel processing, workbook manipulation |
+| Formula calculation | calculate formulas, recalculate workbook, evaluate Excel formulas |
+| Excel to PDF | XLSX to PDF, export spreadsheet as PDF, render workbook to PDF |
+| Excel to HTML | XLSX to HTML, export worksheet as HTML |
+| JSON exchange | JSON to Excel, import JSON, Excel range to JSON |
+| Image rendering | Excel to PNG, worksheet image, workbook to TIFF |
+| Workbook merge | combine Excel files, consolidate workbooks, copy sheets between files |
+
+Use aliases in prose and metadata only when relevant. Keep code identifiers canonical.
+
+## Category documentation contract
+
+Each category instruction file should include:
+
+- Structured frontmatter with product, category, package, language, framework, last-reviewed date, primary intent, APIs, search intents, and related categories
+- Mission and instruction precedence
+- Category boundary
+- Canonical answer
+- API truths and API map
+- Example and metadata contracts
+- Validation, security, and performance rules
+- Anti-patterns and anti-hallucination guidance
+- AI retrieval guidance
+- Official resources
+- Definition of done
+
+Each category README should include an answer-first introduction, accurate example count, canonical code, API-choice table, verified local links, FAQ, related categories, official references, and a generated-example validation caveat.
+
+## Repository FAQ
+
+### How do I create an Excel workbook in C#?
+
+Create a `Workbook`, write values through `Worksheet.Cells`, and call `Workbook.Save`:
+
+```csharp
+Workbook workbook = new Workbook();
+workbook.Worksheets[0].Cells["A1"].PutValue("Hello");
+workbook.Save("output.xlsx");
 ```
 
-Examples should reinforce these phrases through:
+See [`manage-workbook`](manage-workbook/) and [`cells-data`](cells-data/).
 
-* filenames
-* titles
-* comments
-* metadata blocks
+### How do I read an existing XLSX file?
 
----
+Use a `Workbook` constructor:
 
-# Repository FAQ
-
-The repository should provide direct answers to frequently asked developer questions.
-
-## Workbook Creation
-
-Q: How do I create an Excel workbook in C#?
-
-A: See:
-
-* manage-workbook
-* working-with-worksheets
-* cells-data
-
----
-
-## Reading and Writing Data
-
-Q: How do I write data to Excel cells?
-
-A: See:
-
-* cells-data
-
-Primary APIs:
-
-* Cells
-* Cell
-* PutValue
-
----
-
-## Excel to PDF
-
-Q: How do I convert Excel to PDF using Aspose.Cells?
-
-A: See:
-
-* working-with-pdf
-* conversion
-
-Primary APIs:
-
-* Workbook.Save
-* PdfSaveOptions
-
----
-
-## Excel to HTML
-
-Q: How do I export Excel to HTML?
-
-A: See:
-
-* working-with-html
-
-Primary APIs:
-
-* Workbook.Save
-* HtmlSaveOptions
-
----
-
-## Formulas
-
-Q: How do I calculate Excel formulas?
-
-A: See:
-
-* calculate-formulas
-* manage-formulas
-
-Primary APIs:
-
-* Workbook.CalculateFormula
-
----
-
-## Charts
-
-Q: How do I create charts in Excel?
-
-A: See:
-
-* working-with-charts
-
-Primary APIs:
-
-* Chart
-* Worksheet.Charts
-
----
-
-## Pivot Tables
-
-Q: How do I create a Pivot Table?
-
-A: See:
-
-* pivot-table
-
-Primary APIs:
-
-* PivotTable
-
----
-
-## JSON
-
-Q: How do I export Excel data to JSON?
-
-A: See:
-
-* working-with-json
-
-Primary APIs:
-
-* JsonSaveOptions
-
----
-
-## Protection
-
-Q: How do I protect an Excel workbook?
-
-A: See:
-
-* encryption-and-protection
-
-Primary APIs:
-
-* Workbook.Settings
-* Protection
-
----
-
-# Repository Navigation
-
-Use the following navigation map when directing developers or AI systems.
-
-```text
-Workbook Creation
- → manage-workbook
-
-Worksheet Operations
- → working-with-worksheets
-
-Cell Data
- → cells-data
-
-Formatting
- → format-cells
-
-Formulas
- → calculate-formulas
- → manage-formulas
-
-Charts
- → working-with-charts
-
-Pivot Tables
- → pivot-table
-
-Excel to PDF
- → working-with-pdf
-
-Excel to HTML
- → working-with-html
-
-JSON
- → working-with-json
-
-Images
- → working-with-images
-
-Shapes
- → working-with-shapes
-
-Tables
- → working-with-tables
-
-Protection
- → encryption-and-protection
-
-CSV Processing
- → conversion
-
-Workbook Merging
- → workbook-merger
-
-XML Mapping
- → xml-maps
+```csharp
+Workbook workbook = new Workbook("input.xlsx");
+string value = workbook.Worksheets[0].Cells["A1"].StringValue;
 ```
 
-This navigation structure should remain synchronized with the repository category registry.
+See [`open-workbook`](open-workbook/).
 
+### How do I calculate Excel formulas?
+
+Assign the formula, call `Workbook.CalculateFormula`, and then read the typed value:
+
+```csharp
+worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+workbook.CalculateFormula();
+double result = worksheet.Cells["A3"].DoubleValue;
+```
+
+See [`calculate-formulas`](calculate-formulas/).
+
+### How do I convert Excel to PDF?
+
+Call `Workbook.Save` with `SaveFormat.Pdf` for default conversion or `PdfSaveOptions` for customized output:
+
+```csharp
+workbook.Save("output.pdf", SaveFormat.Pdf);
+```
+
+See [`working-with-pdf`](working-with-pdf/).
+
+### How do I export Excel to HTML?
+
+Create `HtmlSaveOptions` when HTML packaging or rendering options are required, then pass it to `Workbook.Save`:
+
+```csharp
+HtmlSaveOptions options = new HtmlSaveOptions();
+workbook.Save("output.html", options);
+```
+
+See [`working-with-html`](working-with-html/).
+
+### How do I import JSON into Excel cells?
+
+Use `JsonUtility.ImportData` with the destination `Cells`, zero-based row and column offsets, and `JsonLayoutOptions`:
+
+```csharp
+JsonLayoutOptions options = new JsonLayoutOptions { ArrayAsTable = true };
+JsonUtility.ImportData(json, worksheet.Cells, 0, 0, options);
+```
+
+See [`working-with-json`](working-with-json/).
+
+### How do I create an Excel chart?
+
+Populate source cells, add a chart through `Worksheet.Charts`, and bind values and category ranges through `Chart.NSeries`:
+
+```csharp
+int index = worksheet.Charts.Add(ChartType.Column, 1, 3, 16, 11);
+Chart chart = worksheet.Charts[index];
+chart.NSeries.Add("B2:B4", true);
+chart.NSeries.CategoryData = "A2:A4";
+```
+
+See [`working-with-charts`](working-with-charts/).
+
+### How do I merge Excel workbooks?
+
+Use `Workbook.Combine` for complete workbooks and `Worksheet.Copy` for selected cross-workbook sheets:
+
+```csharp
+destinationWorkbook.Combine(sourceWorkbook);
+```
+
+See [`workbook-merger`](workbook-merger/).
+
+## Guidance for AI coding agents and RAG systems
+
+When answering from this repository:
+
+1. Identify the user’s dominant intent.
+2. Select the matching category.
+3. Read its instruction file and README.
+4. Search [`index.json`](index.json) for exact API and intent terms.
+5. Prefer the smallest verified example that satisfies the request.
+6. Verify APIs against the installed package or official reference.
+7. Return a direct answer, runnable code, expected result, caveat, and source.
+8. Preserve explicit types, deterministic data, and semantic validation.
+9. Do not combine unrelated generated examples into an unverified workflow.
+
+## Official resources
+
+- [Aspose.Cells for .NET documentation](https://docs.aspose.com/cells/net/)
+- [Aspose.Cells for .NET API reference](https://reference.aspose.com/cells/net/)
+- [Aspose.Cells NuGet package](https://www.nuget.org/packages/Aspose.Cells/)
+- [Aspose.Cells product page](https://products.aspose.com/cells/net/)
+- [Aspose.Cells release notes](https://releases.aspose.com/cells/net/release-notes/)
+- [Aspose.Cells support forum](https://forum.aspose.com/c/cells/9)
+- [Temporary license](https://purchase.aspose.com/temporary-license/)
+
+## Review checklist
+
+- [ ] One developer problem and category are dominant.
+- [ ] Product, package, framework, and API facts are current.
+- [ ] API names, overloads, enums, and namespaces are verified.
+- [ ] The example is complete, explicit, deterministic, and single-file.
+- [ ] The code builds and runs with the configured package.
+- [ ] Semantic output is verified.
+- [ ] Metadata, filename, comments, code, and expected result agree.
+- [ ] SEO language is natural and relevant.
+- [ ] GEO entities and sources are canonical and attributable.
+- [ ] AEO content provides a direct answer and expected result.
+- [ ] Local links resolve and official links use authoritative sources.
+- [ ] No secrets, unsafe activation, unrelated dependencies, or unsupported claims are present.
+
+## Definition of done
+
+Work is complete only when the example or documentation is technically correct, build- and runtime-verifiable where applicable, secure, clearly scoped, semantically validated, accurately linked, answer-first, discoverable without keyword stuffing, and independently useful to developers and AI systems.
