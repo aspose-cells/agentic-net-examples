@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs
 - generate-an-html-representation-of-the-merged-workbook-to-inspect-content-in-a-web-browser.cs
 - apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
+- set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs
