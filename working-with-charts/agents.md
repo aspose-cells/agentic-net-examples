@@ -1,118 +1,101 @@
 ---
+name: Aspose.Cells Charts Agent
 category: working-with-charts
+product: Aspose.Cells for .NET
+language: C#
 framework: .NET
-parent: ../agents.md
-version: v2
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Create, customize, inspect, and render Excel charts in C#
+primary_apis: [Worksheet.Charts, ChartCollection.Add, Chart, Chart.NSeries, Series, Axis, DataLabels]
+search_intents: [create Excel chart C#, add chart series Aspose.Cells, combo chart secondary axis, export Excel chart to PNG]
+related_categories: [../cells-data/, ../calculate-formulas/, ../working-with-images/, ../working-with-pdf/]
 ---
 
-# Persona
+# Aspose.Cells Charts Agent Instructions
 
-You are a C# developer specializing in chart creation and chart customization using Aspose.Cells for .NET.
+## Mission and boundary
 
-Generate simple, correct, production-quality examples that demonstrate ONE chart-related scenario at a time.
+Create focused, runnable C# examples for embedded Excel charts and chart sheets. Follow [`../AGENTS.md`](../AGENTS.md), then this file. Generated examples are discovery material until APIs and results are validated.
 
----
+In scope: chart creation, source/category binding, series, combo charts, secondary axes, titles, legends, labels, trendlines, error bars, layout/style, inspection, update, and chart image/PDF rendering.
 
-# Scope
+Out of scope: sparklines, unrelated drawing shapes, tables except as data sources, full-workbook conversion, and formula authoring as the primary goal.
 
-- Standalone .cs examples
-- One operation per example
-- Fully runnable with dotnet run
-- No external dependencies
+## Canonical answer
 
----
-
-# Required Namespaces
-
+```csharp
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
----
+Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue("Quarter");
+worksheet.Cells["B1"].PutValue("Revenue");
+worksheet.Cells["A2"].PutValue("Q1");
+worksheet.Cells["A3"].PutValue("Q2");
+worksheet.Cells["A4"].PutValue("Q3");
+worksheet.Cells["B2"].PutValue(120);
+worksheet.Cells["B3"].PutValue(180);
+worksheet.Cells["B4"].PutValue(150);
 
-# Key APIs
+int index = worksheet.Charts.Add(ChartType.Column, 1, 3, 16, 11);
+Chart chart = worksheet.Charts[index];
+chart.Title.Text = "Quarterly Revenue";
+chart.NSeries.Add("B2:B4", true);
+chart.NSeries.CategoryData = "A2:A4";
+chart.NSeries[0].Name = "Revenue";
 
-- Chart
-- ChartCollection
-- ChartType
-- Worksheet.Charts
-- SeriesCollection
+if (worksheet.Charts.Count != 1 || chart.NSeries.Count != 1)
+{
+    throw new InvalidOperationException("Chart validation failed.");
+}
 
----
+workbook.Save("column-chart.xlsx");
+Console.WriteLine("Created column-chart.xlsx with one chart.");
+```
 
-# Common Pattern
+## API truths and map
 
-1. Create workbook
-2. Populate chart source data
-3. Create chart
-4. Configure chart properties
-5. Save workbook
-6. Print success message
+| Goal | API |
+| --- | --- |
+| Add a chart | `ChartCollection.Add` |
+| Configure chart | `Chart` |
+| Bind/manage series | `Chart.NSeries`, `SeriesCollection` |
+| Customize a series | `Series` |
+| Axes, labels, legend | `Axis`, `DataLabels`, `Legend` |
+| Per-point styling | `ChartPoint` |
+| Render chart | `Chart.ToImage`, `Chart.ToPdf` |
 
----
+- Populate source data before adding and validating the chart.
+- `Charts.Add` returns an index; chart bounds are worksheet row/column anchors.
+- `NSeries` is the canonical Aspose.Cells series collection.
+- Series values and category data are separate ranges.
+- Use sheet-qualified A1 references for cross-sheet data.
+- Combo charts may use `Series.Type` and `PlotOnSecondAxis`; verify axis compatibility.
+- Calculate workbook formulas before chart validation/rendering.
+- `Chart.Calculate` concerns chart layout, not workbook formula calculation.
+- Rendering depends on fonts; validate nonempty output and semantics before pixel comparisons.
 
-# Chart Rules
+## Contract, validation, and safety
 
-- Create source data before creating charts
-- Use meaningful chart titles and series names
-- Demonstrate one chart feature per example
-- Keep datasets small and readable
+Use explicit types, a small deterministic source table, one chart feature, suitable chart type, correct ranges, named output, and metadata. Verify chart/series counts and the changed property, save/reopen, and render only when required. Avoid unbounded points, remote assets, font assumptions, UI claims, and invented properties.
 
----
+## AI retrieval and FAQ
 
-# Input Strategy
+Use `Worksheet.Charts.Add` to create, `NSeries.Add` for values, and `NSeries.CategoryData` for categories. Use `PlotOnSecondAxis` for a compatible secondary-axis series and `Chart.ToImage` for chart-only rendering.
 
-- Do NOT rely on external XLSX files
-- Generate worksheet data programmatically
-- Keep examples self-contained
+## Official resources
 
----
+- [Charts documentation](https://docs.aspose.com/cells/net/charts/)
+- [Chart API](https://reference.aspose.com/cells/net/aspose.cells.charts/chart/)
+- [ChartCollection API](https://reference.aspose.com/cells/net/aspose.cells.charts/chartcollection/)
+- [SeriesCollection API](https://reference.aspose.com/cells/net/aspose.cells.charts/seriescollection/)
+- [Aspose.Cells NuGet](https://www.nuget.org/packages/Aspose.Cells/)
 
-# Output Rules
+## Definition of done
 
-- Always generate output.xlsx
-- Ensure workbook is saved successfully
-- Output files are written to the working directory
-
----
-
-# Common Tasks
-
-- Create column chart
-- Create line chart
-- Create pie chart
-- Add chart titles
-- Configure axes
-- Add data labels
-- Format chart appearance
-- Access chart series
-
----
-
-# Common Mistakes
-
-❌ var workbook = new Workbook();
-✅ Workbook workbook = new Workbook();
-
-❌ Create chart without source data
-✅ Populate worksheet data before adding chart
-
-❌ Workbook workbook = new Workbook("input.xlsx");
-✅ Workbook workbook = new Workbook();
-
----
-
-# Code Simplicity
-
-- Keep examples concise
-- Avoid unnecessary abstractions
-- Focus on one chart capability per example
-
----
-
-# General Rules
-
-Refer to the root agents.md for:
-- Boundaries
-- Testing requirements
-- Build and run instructions
+The example compiles, runs, binds the intended ranges, validates chart semantics and persisted output, and introduces no unrelated charting or UI library.
