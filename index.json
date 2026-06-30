@@ -1186,6 +1186,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs",
+      "title": "Open a workbook with formulas preserved but not calculated by disabling automatic calculation in LoadOptions."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
