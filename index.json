@@ -1226,6 +1226,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs",
+      "title": "Load a workbook while excluding chart objects, then verify that the resulting worksheets contain zero charts."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
       "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
     },
