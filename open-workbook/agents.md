@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - create-a-custom-loadfilter-that-skips-invisible-worksheets-and-assign-it-to-loadoptions-before-opening.cs
 - enable-memorypreferences-in-loadoptions-to-prevent-outofmemoryexception-when-loading-a-massive-workbook.cs
 - use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs
+- calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs
