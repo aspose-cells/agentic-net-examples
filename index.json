@@ -1161,6 +1161,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
+      "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
+    },
+    {
+      "category": "open-workbook",
       "file": "calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs",
       "title": "Calculate all formulas in the loaded workbook by invoking Workbook.CalculateFormula after the file is opened."
     },
