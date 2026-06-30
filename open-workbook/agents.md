@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - set-memorysettingmemorypreference-to-normal-for-a-small-xlsx-file-to-achieve-faster-processing-speed.cs
 - save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs
 - write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs
+- load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs
