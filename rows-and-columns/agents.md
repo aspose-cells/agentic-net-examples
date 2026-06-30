@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - apply-fixedwidth-texttocolumns-on-column-c-to-divide-text-into-equal-sized-fields.cs
 - apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs
 - set-row-heights-for-a-series-of-rows-using-a-loop-that-calls-setrowheight-with-incremental-values.cs
+- enable-onlyauto-loading-then-immediately-save-the-workbook-as-pdf-to-produce-a-document-with-prefitted-rows.cs
