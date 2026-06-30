@@ -1865,6 +1865,11 @@
       "title": "Set the width of a specific column in pixels using Cells.SetColumnWidthPixel."
     },
     {
+      "category": "rows-and-columns",
+      "file": "use-worksheetautofitrows-overload-with-startrow-and-endrow-to-adjust-a-block-of-rows.cs",
+      "title": "Use Worksheet.AutoFitRows overload with startRow and endRow to adjust a block of rows."
+    },
+    {
       "category": "save-workbook",
       "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
       "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
