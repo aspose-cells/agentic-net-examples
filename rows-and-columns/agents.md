@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - set-row-heights-for-a-series-of-rows-using-a-loop-that-calls-setrowheight-with-incremental-values.cs
 - enable-onlyauto-loading-then-immediately-save-the-workbook-as-pdf-to-produce-a-document-with-prefitted-rows.cs
 - split-spacedelimited-text-in-column-a-into-separate-columns-using-texttocolumns.cs
+- duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs
