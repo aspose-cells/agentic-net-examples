@@ -1166,6 +1166,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs",
+      "title": "Apply FilterDefinedNames while loading a workbook to include only required named ranges for calculations."
+    },
+    {
+      "category": "open-workbook",
       "file": "batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs",
       "title": "Batch load multiple workbooks using the same LoadOptions configuration to apply consistent worksheet filtering."
     },
