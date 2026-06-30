@@ -1326,6 +1326,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "set-htmlsaveoptionspagetitle-to-the-workbooks-filename-ensuring-each-html-file-displays-a-meaningful-title.cs",
+      "title": "Set HtmlSaveOptions.PageTitle to the workbook's filename, ensuring each HTML file displays a meaningful title."
+    },
+    {
+      "category": "open-workbook",
       "file": "set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs",
       "title": "Set PdfSaveOptions.CompressionLevel to high when saving to reduce file size while maintaining visual fidelity."
     },
