@@ -1160,6 +1160,11 @@
       "title": "Wrap workbook loading and saving inside a using statement to guarantee deterministic disposal of resources."
     },
     {
+      "category": "open-workbook",
+      "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
+      "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
       "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
