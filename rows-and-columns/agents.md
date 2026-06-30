@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - set-row-height-for-the-header-row-to-improve-visual-emphasis-then-autofit-remaining-rows.cs
 - autofit-all-rows-in-a-worksheet-by-calling-autofitrows-with-startrow-0-and-endrow-maxrow.cs
 - autofit-all-rows-for-normal-view-using-worksheetautofitrows-before-exporting-to-other-formats.cs
+- autofit-rows-containing-merged-cells-to-ensure-merged-content-displays-correctly-in-pdf-output.cs
