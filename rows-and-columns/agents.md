@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-add-data-to-a-column-and-autofit-that-column-to-accommodate-the-longest-entry.cs
 - use-worksheetautofitrows-overload-with-startrow-and-endrow-to-adjust-a-block-of-rows.cs
 - after-loading-a-workbook-set-standardheight-and-then-autofit-rows-that-contain-formulas.cs
+- adjust-column-width-by-setting-standardwidth-before-populating-data-to-establish-a-base-width.cs
