@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs
 - open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs
 - open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs
+- read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs
