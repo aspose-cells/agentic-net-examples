@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - enable-the-useoptimizedmemory-flag-in-loadoptions-to-improve-performance-when-loading-workbooks-containing-thousands-of-rows.cs
 - open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs
 - load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs
+- apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs
