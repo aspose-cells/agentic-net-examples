@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs
+- instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs
