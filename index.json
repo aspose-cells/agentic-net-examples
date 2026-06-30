@@ -1186,6 +1186,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
+      "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs",
       "title": "Open a workbook and retrieve the list of defined names without loading any worksheet data using a LoadFilter."
     },
