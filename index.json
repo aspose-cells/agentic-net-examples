@@ -1176,6 +1176,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "capture-load-warnings-about-unsupported-features-and-write-each-warning-message-to-the-application-log-file.cs",
+      "title": "Capture load warnings about unsupported features and write each warning message to the application log file."
+    },
+    {
+      "category": "open-workbook",
       "file": "copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs",
       "title": "Copy selected rows from a source worksheet to a new workbook using LightCells to minimize memory consumption."
     },
