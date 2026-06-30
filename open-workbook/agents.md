@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs
 - read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs
 - open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs
+- process-a-collection-of-excel-files-in-a-directory-by-iterating-and-applying-identical-loadoptions-to-each-workbook.cs
