@@ -1891,6 +1891,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "copy-rows-between-worksheets-then-autofit-destination-rows-to-match-source-row-heights.cs",
+      "title": "Copy rows between worksheets then auto\u2011fit destination rows to match source row heights."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs",
       "title": "Create a custom AutoFitterOptions instance that disables auto\u2011fit for hidden rows and apply it to a specific row range."
     },
