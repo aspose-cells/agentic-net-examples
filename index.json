@@ -1191,6 +1191,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-with-password-protection-and-then-remove-the-password-by-clearing-loadoptionspassword-after-loading.cs",
+      "title": "Open a workbook with password protection and then remove the password by clearing LoadOptions.Password after loading."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs",
       "title": "Open an XLSB binary workbook by specifying the file path; the constructor automatically recognizes the format."
     },
