@@ -1276,6 +1276,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs",
+      "title": "Load a workbook with a specific page setup configuration and verify that margin settings are retained after processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
       "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
     },
