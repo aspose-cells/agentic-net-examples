@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs
 - open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs
 - process-a-collection-of-excel-files-in-a-directory-by-iterating-and-applying-identical-loadoptions-to-each-workbook.cs
+- open-a-workbook-with-password-protection-and-then-remove-the-password-by-clearing-loadoptionspassword-after-loading.cs
