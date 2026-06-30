@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs
 - parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs
 - apply-fixedwidth-texttocolumns-on-column-c-to-divide-text-into-equal-sized-fields.cs
+- apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs
