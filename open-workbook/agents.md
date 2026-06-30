@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs
 - capture-load-warnings-about-unsupported-features-and-write-each-warning-message-to-the-application-log-file.cs
 - read-numeric-cells-from-an-applegenerated-spreadsheet-calculate-their-average-and-output-the-result-to-the-console.cs
+- exclude-worksheets-named-temp-during-load-by-adding-their-names-to-loadoptionsloadfilterexcludedsheets-collection.cs
