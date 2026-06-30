@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - apply-setcolumnwidth-to-a-column-then-autofit-an-adjacent-column-for-comparison.cs
 - load-a-workbook-with-onlyauto-enabled-then-iterate-through-each-sheet-to-verify-row-heights-are-adjusted.cs
 - create-a-custom-autofitteroptions-instance-that-disables-autofit-for-hidden-rows-and-apply-it-to-a-specific-row-range.cs
+- after-autofitting-rows-export-the-worksheet-to-pdf-and-compare-file-size-with-a-nonfitted-version.cs
