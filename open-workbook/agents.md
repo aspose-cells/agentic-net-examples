@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs
 - load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs
 - create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs
+- batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs
