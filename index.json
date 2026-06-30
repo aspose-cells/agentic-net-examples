@@ -1971,6 +1971,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "transfer-a-row-from-a-source-worksheet-to-a-destination-worksheet-using-cellscopyrow.cs",
+      "title": "Transfer a row from a source worksheet to a destination worksheet using Cells.CopyRow."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "use-worksheetautofitrows-overload-with-startrow-and-endrow-to-adjust-a-block-of-rows.cs",
       "title": "Use Worksheet.AutoFitRows overload with startRow and endRow to adjust a block of rows."
     },
