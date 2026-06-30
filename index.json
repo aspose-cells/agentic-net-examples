@@ -1241,6 +1241,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs",
+      "title": "Limit PDF output to the first ten pages by setting PdfSaveOptions.PageCount to ten before saving."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs",
       "title": "Load a workbook while excluding chart objects, then verify that the resulting worksheets contain zero charts."
     },
