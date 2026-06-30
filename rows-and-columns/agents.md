@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - preserve-updated-formula-references-when-copying-rows-that-contain-relative-cell-references.cs
 - disable-formula-adjustment-in-pasteoptions-to-copy-rows-with-absolute-references-unchanged.cs
 - use-pasteoptions-to-copy-only-formatting-from-source-rows-excluding-values-and-formulas.cs
+- copy-rows-between-worksheets-then-autofit-destination-rows-to-match-source-row-heights.cs
