@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - process-a-collection-of-excel-files-in-a-directory-by-iterating-and-applying-identical-loadoptions-to-each-workbook.cs
 - open-a-workbook-with-password-protection-and-then-remove-the-password-by-clearing-loadoptionspassword-after-loading.cs
 - enable-the-useoptimizedmemory-flag-in-loadoptions-to-improve-performance-when-loading-workbooks-containing-thousands-of-rows.cs
+- open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs
