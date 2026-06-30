@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs
 - save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs
 - use-lightcells-to-iterate-rows-and-write-each-rows-data-to-a-csv-file-for-external-processing.cs
+- copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs
