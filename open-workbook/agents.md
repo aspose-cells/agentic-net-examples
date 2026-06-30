@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - read-numeric-cell-values-with-lightcells-api-and-store-them-in-a-highperformance-inmemory-collection.cs
 - load-a-passwordprotected-xlsx-file-using-lightcells-api-by-providing-the-decryption-password-in-load-options.cs
 - filter-out-all-pictures-from-a-workbook-during-loading-to-improve-performance-for-large-spreadsheets.cs
+- implement-lightcellsdatahandler-to-convert-all-text-cells-to-uppercase-while-reading-a-workbook-for-standardization.cs
