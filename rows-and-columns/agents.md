@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs
 - apply-fixedwidth-texttocolumns-on-column-c-to-divide-text-into-equal-sized-fields.cs
 - apply-a-uniform-column-width-to-all-columns-by-assigning-cellsstandardwidth.cs
+- set-row-heights-for-a-series-of-rows-using-a-loop-that-calls-setrowheight-with-incremental-values.cs
