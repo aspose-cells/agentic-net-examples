@@ -1806,6 +1806,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "apply-fixedwidth-texttocolumns-on-column-c-to-divide-text-into-equal-sized-fields.cs",
+      "title": "Apply fixed\u2011width TextToColumns on column C to divide text into equal sized fields."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "apply-setcolumnwidth-to-a-column-then-autofit-an-adjacent-column-for-comparison.cs",
       "title": "Apply SetColumnWidth to a column, then auto\u2011fit an adjacent column for comparison."
     },
