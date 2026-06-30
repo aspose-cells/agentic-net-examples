@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - autofit-all-rows-for-normal-view-using-worksheetautofitrows-before-exporting-to-other-formats.cs
 - autofit-rows-containing-merged-cells-to-ensure-merged-content-displays-correctly-in-pdf-output.cs
 - enable-automatic-row-height-adjustment-on-workbook-load-to-preserve-original-layout.cs
+- convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs
