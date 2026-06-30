@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - split-spacedelimited-text-in-column-a-into-separate-columns-using-texttocolumns.cs
 - duplicate-multiple-consecutive-rows-using-copyrows-and-verify-formula-references-update-correctly.cs
 - transfer-a-row-from-a-source-worksheet-to-a-destination-worksheet-using-cellscopyrow.cs
+- copy-a-column-from-one-worksheet-to-another-while-maintaining-column-width-and-data-types.cs
