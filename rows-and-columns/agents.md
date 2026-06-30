@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - batch-process-multiple-worksheets-to-apply-standardwidth-for-consistent-column-sizing.cs
 - load-a-workbook-modify-a-cell-value-then-autofit-the-affected-row-to-reflect-the-change.cs
 - apply-setcolumnwidthpixel-to-a-group-of-columns-after-autofitting-them-to-achieve-precise-pixel-alignment.cs
+- create-a-new-workbook-add-data-to-a-column-and-autofit-that-column-to-accommodate-the-longest-entry.cs
