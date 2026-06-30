@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - use-lightcells-to-iterate-rows-and-write-each-rows-data-to-a-csv-file-for-external-processing.cs
 - copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs
 - load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs
+- capture-load-warnings-about-unsupported-features-and-write-each-warning-message-to-the-application-log-file.cs
