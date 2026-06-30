@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - enable-automatic-row-height-adjustment-on-workbook-load-to-preserve-original-layout.cs
 - convert-commaseparated-values-in-column-b-to-individual-columns-by-specifying-comma-delimiter.cs
 - parse-semicolonseparated-strings-in-a-column-using-texttocolumns-with-semicolon-delimiter.cs
+- apply-fixedwidth-texttocolumns-on-column-c-to-divide-text-into-equal-sized-fields.cs
