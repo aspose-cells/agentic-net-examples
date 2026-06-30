@@ -1216,6 +1216,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "exclude-worksheets-named-temp-during-load-by-adding-their-names-to-loadoptionsloadfilterexcludedsheets-collection.cs",
+      "title": "Exclude worksheets named \"Temp\" during load by adding their names to LoadOptions.LoadFilter.ExcludedSheets collection."
+    },
+    {
+      "category": "open-workbook",
       "file": "extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs",
       "title": "Extract all formulas from loaded worksheets and store them in a dictionary keyed by cell address."
     },
