@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs
 - batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs
 - enumerate-all-loaded-worksheets-after-opening-a-workbook-and-output-their-names-to-the-console.cs
+- extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs
