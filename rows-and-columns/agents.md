@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - load-a-workbook-with-loadoptionsautofitteroptionsonlyauto-set-to-true-to-automatically-adjust-all-row-heights.cs
 - set-the-height-of-a-specific-row-eg-row-5-to-a-defined-point-value-using-cellssetrowheight.cs
+- apply-a-uniform-row-height-to-all-rows-in-a-worksheet-by-assigning-cellsstandardheight.cs
