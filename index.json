@@ -1161,6 +1161,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs",
+      "title": "Instantiate LoadOptions with LoadDataOnly set true to import only cell values without formatting."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
