@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - implement-lightcellsdatahandler-to-convert-all-text-cells-to-uppercase-while-reading-a-workbook-for-standardization.cs
 - set-memorysettingmemorypreference-to-normal-for-a-small-xlsx-file-to-achieve-faster-processing-speed.cs
 - save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs
+- write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs
