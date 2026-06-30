@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs
 - log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs
 - set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
+- limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs
