@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs
 - calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs
 - open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs
+- open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs
