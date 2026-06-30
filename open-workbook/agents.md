@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs
 - set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
 - limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs
+- set-htmlsaveoptionspagetitle-to-the-workbooks-filename-ensuring-each-html-file-displays-a-meaningful-title.cs
