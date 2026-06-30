@@ -1181,6 +1181,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs",
+      "title": "Open a workbook from a byte array by wrapping it in a MemoryStream and using the Stream constructor."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs",
       "title": "Open an XLSX workbook from a local file path using the default Workbook constructor."
     },
