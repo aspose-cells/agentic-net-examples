@@ -1176,6 +1176,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs",
+      "title": "Copy selected rows from a source worksheet to a new workbook using LightCells to minimize memory consumption."
+    },
+    {
+      "category": "open-workbook",
       "file": "create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs",
       "title": "Create a custom IWarningCallback class that logs each load warning to a text file."
     },
