@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs
 - protect-the-entire-table-with-a-password-allowing-only-readonly-access-for-external-users.cs
 - lock-specific-columns-in-the-table-to-prevent-accidental-modification-while-allowing-other-columns-to-edit.cs
+- add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs
