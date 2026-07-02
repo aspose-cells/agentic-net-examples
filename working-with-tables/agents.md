@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs
 - apply-conditional-formatting-to-a-table-column-that-highlights-cells-exceeding-a-defined-numeric-threshold.cs
 - autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs
+- set-a-custom-column-width-for-a-specific-table-column-to-accommodate-long-text-strings.cs
