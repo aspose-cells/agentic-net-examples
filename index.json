@@ -3471,6 +3471,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-tables-show-header-row-option-to-false-for-a-compact-layout-in-a-dashboard-view.cs",
+      "title": "Set the table's show header row option to false for a compact layout in a dashboard view."
+    },
+    {
+      "category": "working-with-tables",
       "file": "validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs",
       "title": "Validate that a table contains no duplicate rows based on a combination of key columns."
     },
