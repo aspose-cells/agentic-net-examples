@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - apply-a-predefined-table-style-to-the-created-table-and-preserve-the-original-formatting.cs
 - add-a-totals-row-to-the-table-and-configure-sum-formulas-for-numeric-columns.cs
+- set-a-custom-formula-in-the-totals-row-to-calculate-average-of-a-specific-column.cs
