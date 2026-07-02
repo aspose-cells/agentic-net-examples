@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs
 - disable-the-ability-for-users-to-add-new-rows-to-the-list-object-to-enforce-fixed-dataset-size.cs
 - set-the-list-object-to-display-a-totals-row-and-configure-count-aggregation-for-a-text-column.cs
+- load-an-existing-excel-workbook-containing-query-tables-and-enumerate-all-tables-linked-to-external-data-sources.cs
