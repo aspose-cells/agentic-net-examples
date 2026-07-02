@@ -3360,6 +3360,11 @@
       "title": "Apply a predefined table style to the created table and preserve the original formatting."
     },
     {
+      "category": "working-with-tables",
+      "file": "set-a-custom-formula-in-the-totals-row-to-calculate-average-of-a-specific-column.cs",
+      "title": "Set a custom formula in the totals row to calculate average of a specific column."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
