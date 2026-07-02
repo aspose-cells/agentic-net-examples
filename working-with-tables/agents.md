@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs
 - insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs
 - apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs
+- enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs
