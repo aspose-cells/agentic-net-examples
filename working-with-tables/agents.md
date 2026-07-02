@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - protect-the-entire-table-with-a-password-allowing-only-readonly-access-for-external-users.cs
 - lock-specific-columns-in-the-table-to-prevent-accidental-modification-while-allowing-other-columns-to-edit.cs
 - add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs
+- convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs
