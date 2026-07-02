@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs
 - add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs
 - remove-an-existing-slicer-from-a-table-and-clean-up-associated-connections.cs
+- create-a-data-validation-list-that-pulls-its-items-directly-from-a-column-in-a-worksheet-table.cs
