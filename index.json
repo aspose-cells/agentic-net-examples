@@ -3366,6 +3366,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "convert-the-existing-list-object-into-a-structured-table-to-leverage-advanced-table-features.cs",
+      "title": "Convert the existing list object into a structured table to leverage advanced table features."
+    },
+    {
+      "category": "working-with-tables",
       "file": "enable-autofilter-on-the-table-and-define-a-filter-to-show-only-rows-with-values-above-threshold.cs",
       "title": "Enable auto\u2011filter on the table and define a filter to show only rows with values above threshold."
     },
