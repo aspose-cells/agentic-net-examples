@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs
 - set-a-custom-column-width-for-a-specific-table-column-to-accommodate-long-text-strings.cs
 - validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs
+- insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs
