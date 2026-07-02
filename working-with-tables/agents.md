@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs
 - apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs
 - add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs
+- remove-an-existing-slicer-from-a-table-and-clean-up-associated-connections.cs
