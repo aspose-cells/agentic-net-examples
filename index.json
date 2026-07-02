@@ -3396,6 +3396,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-data-validation-list-that-pulls-its-items-directly-from-a-column-in-a-worksheet-table.cs",
+      "title": "Create a data validation list that pulls its items directly from a column in a worksheet table."
+    },
+    {
+      "category": "working-with-tables",
       "file": "disable-the-ability-for-users-to-add-new-rows-to-the-list-object-to-enforce-fixed-dataset-size.cs",
       "title": "Disable the ability for users to add new rows to the list object to enforce fixed dataset size."
     },
