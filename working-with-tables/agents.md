@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs
 - enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs
 - apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs
+- add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs
