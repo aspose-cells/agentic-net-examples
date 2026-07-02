@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - enable-autofilter-on-the-table-and-define-a-filter-to-show-only-rows-with-values-above-threshold.cs
 - group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs
 - protect-the-entire-table-with-a-password-allowing-only-readonly-access-for-external-users.cs
+- lock-specific-columns-in-the-table-to-prevent-accidental-modification-while-allowing-other-columns-to-edit.cs
