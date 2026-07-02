@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs
 - apply-a-unique-index-to-a-table-column-to-enforce-data-uniqueness-during-data-entry.cs
 - enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs
+- apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs
