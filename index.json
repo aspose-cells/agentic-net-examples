@@ -3396,6 +3396,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs",
+      "title": "Enable the table's auto\u2011expand feature so that adding data below expands the table range automatically."
+    },
+    {
+      "category": "working-with-tables",
       "file": "group-rows-within-the-table-based-on-category-column-and-collapse-the-groups-for-compact-view.cs",
       "title": "Group rows within the table based on category column and collapse the groups for compact view."
     },
