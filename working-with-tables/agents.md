@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - read-the-metadata-of-a-query-table-including-connection-string-command-type-and-refresh-interval.cs
 - write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs
 - apply-conditional-formatting-to-a-table-column-that-highlights-cells-exceeding-a-defined-numeric-threshold.cs
+- autofit-all-columns-of-a-table-to-match-the-longest-cell-content-for-optimal-display.cs
