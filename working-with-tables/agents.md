@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - set-the-list-object-to-display-a-totals-row-and-configure-count-aggregation-for-a-text-column.cs
 - load-an-existing-excel-workbook-containing-query-tables-and-enumerate-all-tables-linked-to-external-data-sources.cs
 - read-the-metadata-of-a-query-table-including-connection-string-command-type-and-refresh-interval.cs
+- write-a-datatable-object-into-a-new-worksheet-table-mapping-column-names-to-table-headers-automatically.cs
