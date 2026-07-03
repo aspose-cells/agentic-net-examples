@@ -126,6 +126,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-multiple-csv-files-to-json-with-formatted-dates-and-store-in-target-folder.cs",
+      "title": "Convert multiple CSV files to JSON with formatted dates and store in target folder."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-json-using-camelcase-property-naming-for-consistency.cs",
       "title": "Export a workbook to JSON using camelCase property naming for consistency."
     },
