@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-convert-it-to-a-highresolution-pdf-file.cs
 - export-each-sheet-as-jpeg-images-with-300-dpi-resolution-for-printing.cs
 - export-a-workbook-to-json-using-camelcase-property-naming-for-consistency.cs
+- convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs
