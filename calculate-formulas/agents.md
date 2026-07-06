@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - measure-memory-consumption-differences-between-automatic-and-automaticexcepttables-modes-on-large-workbooks.cs
 - log-time-taken-for-each-cell-calculation-when-using-cellcalculate-within-a-processing-loop.cs
 - create-a-utility-that-toggles-calculation-mode-based-on-workbook-size-to-optimize-memory-usage.cs
+- test-that-manual-calculation-mode-prevents-any-formula-evaluation-until-workbookcalculateformula-is-called.cs
