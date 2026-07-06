@@ -16,6 +16,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "after-renaming-a-worksheet-call-workbookcalculateformula-to-refresh-formulas-that-reference-the-sheet.cs",
+      "title": "After renaming a worksheet, call Workbook.CalculateFormula to refresh formulas that reference the sheet."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs",
       "title": "Assign a custom monitor instance to CalculationOptions.CalculationMonitor to enable interruption."
     },
