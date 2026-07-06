@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "calculate-formulas",
+      "file": "after-inserting-a-new-row-call-workbookcalculateformula-to-update-dependent-formulas-automatically.cs",
+      "title": "After inserting a new row, call Workbook.CalculateFormula to update dependent formulas automatically."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs",
       "title": "Assign a custom monitor instance to CalculationOptions.CalculationMonitor to enable interruption."
     },
