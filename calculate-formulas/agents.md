@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - set-calculationoptionsmaxiterationcount-to-100-to-limit-the-number-of-iterative-calculation-cycles.cs
 - set-calculationoptionsignoreerrorvalue-to-true-to-skip-errors-during-formula-evaluation.cs
 - enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs
+- after-inserting-a-new-row-call-workbookcalculateformula-to-update-dependent-formulas-automatically.cs
