@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - after-renaming-a-worksheet-call-workbookcalculateformula-to-refresh-formulas-that-reference-the-sheet.cs
 - after-applying-data-validation-call-workbookcalculateformula-to-evaluate-any-dependent-formulas.cs
 - after-applying-conditional-formatting-call-workbookcalculateformula-to-ensure-conditional-formulas-recalculate.cs
+- after-protecting-a-worksheet-call-workbookcalculateformula-to-verify-that-protected-cells-still-calculate.cs
