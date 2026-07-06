@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs
 - load-an-xlsx-workbook-from-a-file-path-and-set-calculation-mode-to-manual.cs
 - set-the-workbooks-calculation-mode-to-automatic-for-immediate-formula-updates.cs
+- set-calculation-mode-to-automaticexcepttables-to-exclude-table-formulas-from-automatic-updates.cs
