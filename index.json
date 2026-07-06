@@ -216,6 +216,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs",
+      "title": "Switch Workbook.Settings.CalculationMode to Manual, perform bulk updates, then call Workbook.Calculate once."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs",
       "title": "Trigger manual recalculation only for cells that have changed since the last calculation."
     },
