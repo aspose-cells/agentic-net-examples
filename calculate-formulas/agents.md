@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs
 - disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs
 - load-an-xlsx-workbook-from-a-file-path-and-set-calculation-mode-to-manual.cs
+- set-the-workbooks-calculation-mode-to-automatic-for-immediate-formula-updates.cs
