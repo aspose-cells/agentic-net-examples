@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs
 - create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs
 - assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs
+- set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs
