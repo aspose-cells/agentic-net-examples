@@ -15,6 +15,11 @@
       "title": "Load a workbook from a memory stream, change a formula, and invoke Workbook.CalculateFormula with options."
     },
     {
+      "category": "calculate-formulas",
+      "file": "return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs",
+      "title": "Return a scalar numeric result from a custom function after processing reference values."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
