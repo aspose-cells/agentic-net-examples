@@ -126,6 +126,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "implement-a-custom-worksheet-function-by-creating-a-class-that-implements-icustomfunction.cs",
+      "title": "Implement a custom worksheet function by creating a class that implements ICustomFunction."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs",
       "title": "Invoke Workbook.CalculateFormula(calculationOptions) to recalculate formulas with custom monitor enabled for each calculation."
     },
