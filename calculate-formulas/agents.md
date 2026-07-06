@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - implement-a-custom-worksheet-function-by-creating-a-class-that-implements-icustomfunction.cs
 - register-the-icustomfunction-implementation-with-the-workbook-to-enable-its-use-in-formulas.cs
 - derive-a-custom-calculation-engine-from-abstractcalculationengine-and-assign-it-to-the-workbook.cs
+- configure-the-custom-engine-to-log-each-cell-evaluation-for-performance-analysis.cs
