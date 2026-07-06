@@ -86,6 +86,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "derive-a-custom-calculation-engine-from-abstractcalculationengine-and-assign-it-to-the-workbook.cs",
+      "title": "Derive a custom calculation engine from AbstractCalculationEngine and assign it to the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs",
       "title": "Disable automatic calculation, import data from a database, then manually trigger calculation for consistency."
     },
