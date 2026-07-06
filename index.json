@@ -56,6 +56,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "compare-results-of-cellcalculate-with-those-obtained-from-workbookcalculate-for-consistency.cs",
+      "title": "Compare results of cell.Calculate with those obtained from workbook.Calculate for consistency."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs",
       "title": "Create a class derived from AbstractCalculationMonitor and override BeforeCalculate to inspect each cell."
     },
