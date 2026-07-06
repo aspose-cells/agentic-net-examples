@@ -756,6 +756,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-light1-background-to-alternate-rows-for-improved-readability-in-a-table.cs",
+      "title": "Apply the theme\u2019s Light1 background to alternate rows for improved readability in a table."
+    },
+    {
+      "category": "format-cells",
       "file": "assign-the-themes-dark1-color-to-the-fill-of-a-pivot-tables-row-headers.cs",
       "title": "Assign the theme\u2019s Dark1 color to the fill of a pivot table\u2019s row headers."
     },
