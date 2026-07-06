@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - programmatically-disable-automatic-calculation-for-tables-only-while-keeping-other-formulas-in-automatic-mode.cs
 - load-multiple-xlsx-files-from-a-directory-set-each-to-automatic-and-recalculate-formulas.cs
 - recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs
+- evaluate-a-single-cells-formula-with-cellcalculate-for-isolated-computation.cs
