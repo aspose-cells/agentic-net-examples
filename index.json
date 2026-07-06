@@ -211,6 +211,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationoptionsprecision-to-a-higher-value-when-evaluating-financial-formulas-requiring-exact-decimal-handling.cs",
+      "title": "Set CalculationOptions.Precision to a higher value when evaluating financial formulas requiring exact decimal handling."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs",
       "title": "Trigger manual recalculation only for cells that have changed since the last calculation."
     },
