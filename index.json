@@ -151,6 +151,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "programmatically-disable-automatic-calculation-for-tables-only-while-keeping-other-formulas-in-automatic-mode.cs",
+      "title": "Programmatically disable automatic calculation for tables only while keeping other formulas in Automatic mode."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs",
       "title": "Register a custom function implementing ICustomFunction (e.g., MySum) and call it via CalculateFormula for testing."
     },
