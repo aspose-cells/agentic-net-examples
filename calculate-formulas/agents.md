@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs
 - evaluate-a-single-cells-formula-with-cellcalculate-for-isolated-computation.cs
 - implement-a-custom-worksheet-function-by-creating-a-class-that-implements-icustomfunction.cs
+- register-the-icustomfunction-implementation-with-the-workbook-to-enable-its-use-in-formulas.cs
