@@ -751,6 +751,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-conditional-formatting-rule-that-colors-cells-based-on-the-accent4-theme-color-intensity.cs",
+      "title": "Apply a conditional formatting rule that colors cells based on the Accent4 theme color intensity."
+    },
+    {
+      "category": "format-cells",
       "file": "check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs",
       "title": "Check whether a workbook contains theme colors before applying bulk theme updates to multiple files."
     },
