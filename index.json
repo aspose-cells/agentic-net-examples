@@ -141,6 +141,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "load-multiple-xlsx-files-from-a-directory-set-each-to-automatic-and-recalculate-formulas.cs",
+      "title": "Load multiple XLSX files from a directory, set each to Automatic, and recalculate formulas."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs",
       "title": "Open the saved workbook in Excel and verify that the specified cells appear in the Watch Window."
     },
