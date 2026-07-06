@@ -26,6 +26,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "after-protecting-a-worksheet-call-workbookcalculateformula-to-verify-that-protected-cells-still-calculate.cs",
+      "title": "After protecting a worksheet, call Workbook.CalculateFormula to verify that protected cells still calculate."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "after-renaming-a-worksheet-call-workbookcalculateformula-to-refresh-formulas-that-reference-the-sheet.cs",
       "title": "After renaming a worksheet, call Workbook.CalculateFormula to refresh formulas that reference the sheet."
     },
