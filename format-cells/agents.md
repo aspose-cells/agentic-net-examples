@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - create-a-macrofree-template-workbook-with-predefined-theme-colors-for-downstream-processing.cs
 - validate-that-after-changing-the-theme-conditional-formatting-rules-still-reference-correct-color-indices.cs
 - export-the-modified-workbook-to-xlsx-and-verify-that-the-theme-xml-reflects-new-colors.cs
+- load-a-workbook-remove-its-existing-theme-and-assign-a-fresh-theme-with-default-colors.cs
