@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - replace-the-workbooks-theme-font-with-a-custom-font-family-and-update-all-cell-styles.cs
 - check-if-any-cells-use-the-themecolorindex-enumeration-and-log-their-addresses-for-review.cs
 - update-the-themes-hyperlink-color-to-a-dark-gray-and-ensure-all-links-display-correctly.cs
+- programmatically-compare-two-workbooks-theme-palettes-and-highlight-differences-in-a-report.cs
