@@ -91,6 +91,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "identify-cells-that-participate-in-circular-references-and-highlight-them-for-user-correction.cs",
+      "title": "Identify cells that participate in circular references and highlight them for user correction."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs",
       "title": "Invoke Workbook.CalculateFormula(calculationOptions) to recalculate formulas with custom monitor enabled for each calculation."
     },
