@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "calculate-formulas",
+      "file": "after-applying-data-validation-call-workbookcalculateformula-to-evaluate-any-dependent-formulas.cs",
+      "title": "After applying data validation, call Workbook.CalculateFormula to evaluate any dependent formulas."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "after-deleting-a-column-call-workbookcalculateformula-to-ensure-remaining-formulas-recalculate-correctly.cs",
       "title": "After deleting a column, call Workbook.CalculateFormula to ensure remaining formulas recalculate correctly."
     },
