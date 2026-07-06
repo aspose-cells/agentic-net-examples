@@ -62,3 +62,4 @@ Output files are written to the working directory.
 - validate-that-cells-using-accent1-automatically-reflect-the-updated-theme-color-after-modification.cs
 - check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs
 - use-the-api-to-enumerate-all-theme-color-types-and-output-their-default-rgb-values.cs
+- apply-a-conditional-formatting-rule-that-colors-cells-based-on-the-accent4-theme-color-intensity.cs
