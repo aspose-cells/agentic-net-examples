@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - measure-the-time-taken-to-update-all-theme-colors-in-a-large-workbook-with-thousands-of-cells.cs
 - extract-the-themes-font-scheme-and-list-the-primary-and-secondary-font-families-used.cs
 - replace-the-workbooks-theme-font-with-a-custom-font-family-and-update-all-cell-styles.cs
+- check-if-any-cells-use-the-themecolorindex-enumeration-and-log-their-addresses-for-review.cs
