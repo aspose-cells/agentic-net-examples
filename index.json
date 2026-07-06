@@ -81,6 +81,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "create-a-subclass-of-abstractcalculationengine-that-overrides-calculate-to-replace-today-with-a-fixed-date.cs",
+      "title": "Create a subclass of AbstractCalculationEngine that overrides Calculate to replace TODAY with a fixed date."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs",
       "title": "Enable rounding to displayed format by setting CalculationOptions.PrecisionAsDisplayed to true."
     },
