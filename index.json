@@ -776,6 +776,11 @@
     },
     {
       "category": "format-cells",
+      "file": "extract-the-themes-font-scheme-and-list-the-primary-and-secondary-font-families-used.cs",
+      "title": "Extract the theme\u2019s font scheme and list the primary and secondary font families used."
+    },
+    {
+      "category": "format-cells",
       "file": "load-a-workbook-disable-theme-usage-and-convert-all-themed-cells-to-explicit-rgb-formatting.cs",
       "title": "Load a workbook, disable theme usage, and convert all themed cells to explicit RGB formatting."
     },
