@@ -35,6 +35,11 @@
       "title": "Return a scalar numeric result from a custom function after processing reference values."
     },
     {
+      "category": "calculate-formulas",
+      "file": "set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs",
+      "title": "Set CalculationOptions.CalculationMode to Manual before invoking Workbook.CalculateFormula for controlled execution."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
