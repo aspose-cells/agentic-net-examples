@@ -5,6 +5,11 @@
   "framework": ".NET",
   "examples": [
     {
+      "category": "calculate-formulas",
+      "file": "load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs",
+      "title": "Load a workbook from a file stream, modify cells, then call Workbook.CalculateFormula to recalculate."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
