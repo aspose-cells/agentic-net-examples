@@ -191,6 +191,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "register-the-icustomfunction-implementation-with-the-workbook-to-enable-its-use-in-formulas.cs",
+      "title": "Register the ICustomFunction implementation with the workbook to enable its use in formulas."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs",
       "title": "Remove a cell from the Watch Window programmatically after its evaluation completes."
     },
