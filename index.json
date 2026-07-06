@@ -320,6 +320,11 @@
       "title": "Use Workbook.CalculateFormula without options to compute all formulas using default calculation settings."
     },
     {
+      "category": "calculate-formulas",
+      "file": "validate-minifs-functions-return-correct-results-after-setting-workbook-to-excel-2016-compatibility-mode.cs",
+      "title": "Validate MINIFS functions return correct results after setting workbook to Excel 2016 compatibility mode."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
