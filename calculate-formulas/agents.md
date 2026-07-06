@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - add-multiple-cells-to-the-watch-window-in-a-loop-to-monitor-a-batch-of-formulas.cs
 - remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs
 - retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs
+- open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
