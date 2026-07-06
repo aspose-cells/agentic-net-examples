@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - apply-a-custom-calculation-engine-that-substitutes-missing-functions-with-userdefined-equivalents-during-evaluation.cs
 - interrupt-an-ongoing-workbookcalculateformula-operation-using-a-cancellation-token-after-a-timeout.cs
 - generate-a-report-listing-all-cells-containing-volatile-functions-after-workbook-recalculation.cs
+- validate-minifs-functions-return-correct-results-after-setting-workbook-to-excel-2016-compatibility-mode.cs
