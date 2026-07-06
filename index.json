@@ -751,6 +751,11 @@
     },
     {
       "category": "format-cells",
+      "file": "check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs",
+      "title": "Check whether a workbook contains theme colors before applying bulk theme updates to multiple files."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-custom-color-scheme-assigning-new-rgb-values-to-accent1-and-accent2-theme-colors.cs",
       "title": "Create a custom color scheme assigning new RGB values to Accent1 and Accent2 theme colors."
     },
