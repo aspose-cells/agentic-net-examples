@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - update-the-hyperlink-theme-color-to-a-new-shade-of-blue-and-save-the-workbook.cs
 - validate-that-cells-using-accent1-automatically-reflect-the-updated-theme-color-after-modification.cs
 - check-whether-a-workbook-contains-theme-colors-before-applying-bulk-theme-updates-to-multiple-files.cs
+- use-the-api-to-enumerate-all-theme-color-types-and-output-their-default-rgb-values.cs
