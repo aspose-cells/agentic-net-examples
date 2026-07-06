@@ -156,6 +156,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "use-cellcalculate-method-to-evaluate-a-single-cells-formula-independently-of-the-workbook.cs",
+      "title": "Use cell.Calculate method to evaluate a single cell's formula independently of the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-workbookcalculateformula-without-options-to-compute-all-formulas-using-default-calculation-settings.cs",
       "title": "Use Workbook.CalculateFormula without options to compute all formulas using default calculation settings."
     },
