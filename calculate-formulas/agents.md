@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs
 - open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
 - resume-a-paused-calculation-session-and-verify-that-results-match-uninterrupted-execution.cs
+- trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs
