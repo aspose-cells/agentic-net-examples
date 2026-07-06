@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs
 - load-a-workbook-from-a-memory-stream-change-a-formula-and-invoke-workbookcalculateformula-with-options.cs
+- return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs
