@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - programmatically-clear-the-watch-window-before-adding-a-new-set-of-cells-for-monitoring.cs
 - serialize-the-watch-window-configuration-to-json-for-external-storage-and-later-restoration.cs
 - register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs
+- add-a-custom-function-that-returns-the-user-name-register-it-and-invoke-via-calculateformula-for-audit-logs.cs
