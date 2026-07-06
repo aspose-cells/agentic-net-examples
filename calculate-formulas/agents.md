@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - test-that-manual-calculation-mode-prevents-any-formula-evaluation-until-workbookcalculateformula-is-called.cs
 - create-a-commandline-tool-that-accepts-a-folder-path-recalculates-all-workbooks-and-outputs-summary-statistics.cs
 - write-a-utility-that-iterates-through-all-worksheets-sets-each-to-manual-mode-and-saves-changes.cs
+- develop-a-plugin-that-replaces-the-default-calculation-engine-with-a-parallelized-version-to-accelerate-large-workbooks.cs
