@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - iterate-over-all-worksheets-set-each-header-rows-font-color-to-the-themes-accent1.cs
 - create-a-macrofree-template-workbook-with-predefined-theme-colors-for-downstream-processing.cs
 - validate-that-after-changing-the-theme-conditional-formatting-rules-still-reference-correct-color-indices.cs
+- export-the-modified-workbook-to-xlsx-and-verify-that-the-theme-xml-reflects-new-colors.cs
