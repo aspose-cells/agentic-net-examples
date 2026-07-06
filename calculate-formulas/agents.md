@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - create-a-subclass-of-abstractcalculationengine-that-overrides-calculate-to-replace-today-with-a-fixed-date.cs
 - register-the-custom-engine-via-workbooksettingscustomengine-and-verify-all-formulas-use-the-overridden-today-implementation.cs
 - set-calculationoptionsprecision-to-a-higher-value-when-evaluating-financial-formulas-requiring-exact-decimal-handling.cs
+- switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs
