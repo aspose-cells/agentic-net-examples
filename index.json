@@ -86,6 +86,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs",
+      "title": "Disable automatic calculation, import data from a database, then manually trigger calculation for consistency."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs",
       "title": "Enable rounding to displayed format by setting CalculationOptions.PrecisionAsDisplayed to true."
     },
