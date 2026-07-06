@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - create-a-custom-color-scheme-assigning-new-rgb-values-to-accent1-and-accent2-theme-colors.cs
 - set-the-custom-accent2-theme-color-as-the-font-color-for-header-rows-across-all-worksheets.cs
 - retrieve-the-current-rgb-value-of-the-hyperlink-theme-color-from-a-loaded-workbook.cs
+- update-the-hyperlink-theme-color-to-a-new-shade-of-blue-and-save-the-workbook.cs
