@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - set-calculationoptionscalculationmode-to-automatic-and-call-workbookcalculateformula-to-trigger-full-recalculation.cs
 - use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs
 - register-the-custom-calculation-engine-with-the-workbooks-calculationengine-before-invoking-any-formulas.cs
+- assign-a-formula-that-calls-the-custom-function-to-a-target-cell-with-required-parameters.cs
