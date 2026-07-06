@@ -786,6 +786,11 @@
     },
     {
       "category": "format-cells",
+      "file": "export-the-modified-workbook-to-xlsx-and-verify-that-the-theme-xml-reflects-new-colors.cs",
+      "title": "Export the modified workbook to XLSX and verify that the theme XML reflects new colors."
+    },
+    {
+      "category": "format-cells",
       "file": "extract-the-themes-font-scheme-and-list-the-primary-and-secondary-font-families-used.cs",
       "title": "Extract the theme\u2019s font scheme and list the primary and secondary font families used."
     },
