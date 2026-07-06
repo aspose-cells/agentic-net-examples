@@ -231,6 +231,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-the-workbooks-calculation-mode-to-automatic-for-immediate-formula-updates.cs",
+      "title": "Set the workbook's calculation mode to Automatic for immediate formula updates."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs",
       "title": "Switch Workbook.Settings.CalculationMode to Manual, perform bulk updates, then call Workbook.Calculate once."
     },
