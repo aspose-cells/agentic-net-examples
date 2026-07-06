@@ -51,6 +51,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "set-calculationoptionsenableiterativecalculation-to-true-to-allow-circular-reference-evaluation-during-calculations.cs",
+      "title": "Set CalculationOptions.EnableIterativeCalculation to true to allow circular reference evaluation during calculations."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "use-workbookcalculateformula-without-options-to-compute-all-formulas-using-default-calculation-settings.cs",
       "title": "Use Workbook.CalculateFormula without options to compute all formulas using default calculation settings."
     },
