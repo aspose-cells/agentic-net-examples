@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
 - resume-a-paused-calculation-session-and-verify-that-results-match-uninterrupted-execution.cs
 - trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs
+- use-cellcalculate-method-to-evaluate-a-single-cells-formula-independently-of-the-workbook.cs
