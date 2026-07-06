@@ -131,6 +131,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "generate-a-report-listing-all-cells-containing-volatile-functions-after-workbook-recalculation.cs",
+      "title": "Generate a report listing all cells containing volatile functions after workbook recalculation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs",
       "title": "Highlight cells with error values after calculation using conditional formatting rules automatically."
     },
