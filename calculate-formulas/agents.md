@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - register-the-custom-calculation-engine-with-the-workbooks-calculationengine-before-invoking-any-formulas.cs
 - assign-a-formula-that-calls-the-custom-function-to-a-target-cell-with-required-parameters.cs
 - call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs
+- add-multiple-cells-to-the-watch-window-in-a-loop-to-monitor-a-batch-of-formulas.cs
