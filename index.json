@@ -876,6 +876,11 @@
     },
     {
       "category": "format-cells",
+      "file": "update-the-themes-accent4-color-based-on-user-input-and-refresh-all-dependent-cell-styles.cs",
+      "title": "Update the theme\u2019s Accent4 color based on user input and refresh all dependent cell styles."
+    },
+    {
+      "category": "format-cells",
       "file": "update-the-themes-hyperlink-color-to-a-dark-gray-and-ensure-all-links-display-correctly.cs",
       "title": "Update the theme\u2019s hyperlink color to a dark gray and ensure all links display correctly."
     },
