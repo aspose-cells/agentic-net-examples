@@ -96,6 +96,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "create-a-utility-that-toggles-calculation-mode-based-on-workbook-size-to-optimize-memory-usage.cs",
+      "title": "Create a utility that toggles calculation mode based on workbook size to optimize memory usage."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "derive-a-custom-calculation-engine-from-abstractcalculationengine-and-assign-it-to-the-workbook.cs",
       "title": "Derive a custom calculation engine from AbstractCalculationEngine and assign it to the workbook."
     },
