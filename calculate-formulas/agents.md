@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs
 - register-the-custom-calculation-engine-with-the-workbooks-calculationengine-before-invoking-any-formulas.cs
 - assign-a-formula-that-calls-the-custom-function-to-a-target-cell-with-required-parameters.cs
+- call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs
