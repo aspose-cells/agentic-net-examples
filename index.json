@@ -161,6 +161,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs",
+      "title": "Recalculate all formulas using Workbook.CalculateFormula after modifying worksheet data in the workbook."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs",
       "title": "Register a custom function implementing ICustomFunction (e.g., MySum) and call it via CalculateFormula for testing."
     },
