@@ -76,6 +76,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "generate-a-csv-file-containing-all-formulas-in-the-workbook-along-with-their-cell-addresses.cs",
+      "title": "Generate a CSV file containing all formulas in the workbook along with their cell addresses."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs",
       "title": "Invoke Workbook.CalculateFormula(calculationOptions) to recalculate formulas with custom monitor enabled for each calculation."
     },
