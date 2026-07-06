@@ -96,6 +96,11 @@
     },
     {
       "category": "calculate-formulas",
+      "file": "evaluate-a-single-cells-formula-with-cellcalculate-for-isolated-computation.cs",
+      "title": "Evaluate a single cell's formula with Cell.Calculate for isolated computation."
+    },
+    {
+      "category": "calculate-formulas",
       "file": "evaluate-the-builtin-ifna-function-by-writing-ifnaa1-fallback-and-calling-workbookcalculateformula.cs",
       "title": "Evaluate the built\u2011in IFNA function by writing =IFNA(A1, \"fallback\") and calling Workbook.CalculateFormula."
     },
