@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs
 - assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs
 - set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs
+- invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs
