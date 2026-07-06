@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - set-calculationoptionsenableiterativecalculation-to-true-to-allow-circular-reference-evaluation-during-calculations.cs
 - set-calculationoptionsmaxiterationcount-to-100-to-limit-the-number-of-iterative-calculation-cycles.cs
 - set-calculationoptionsignoreerrorvalue-to-true-to-skip-errors-during-formula-evaluation.cs
+- enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs
