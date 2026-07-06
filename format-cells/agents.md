@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - create-a-function-that-maps-business-status-values-to-specific-theme-accent-colors-for-cell-fill.cs
 - generate-a-summary-sheet-listing-each-theme-color-name-and-its-hexadecimal-representation.cs
 - detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs
+- apply-the-themes-light1-background-to-alternate-rows-for-improved-readability-in-a-table.cs
