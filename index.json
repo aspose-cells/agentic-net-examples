@@ -325,6 +325,11 @@
       "title": "Validate MINIFS functions return correct results after setting workbook to Excel 2016 compatibility mode."
     },
     {
+      "category": "calculate-formulas",
+      "file": "verify-minifs-calculations-respect-filtered-rows-by-applying-a-filter-before-invoking-workbookcalculateformula.cs",
+      "title": "Verify MINIFS calculations respect filtered rows by applying a filter before invoking Workbook.CalculateFormula."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
