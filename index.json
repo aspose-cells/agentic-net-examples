@@ -1765,6 +1765,11 @@
       "title": "Use WorksheetCollection.CreateUnionRange to combine address \"A1:B2,D4:E5\" and apply a bold font style to all cells."
     },
     {
+      "category": "managing-ranges",
+      "file": "use-worksheetcollectioncreateunionrange-to-merge-address-g1g3i1i3-for-batch-formatting-across-worksheets.cs",
+      "title": "Use WorksheetCollection.CreateUnionRange to merge address \"G1:G3,I1:I3\" for batch formatting across worksheets."
+    },
+    {
       "category": "open-workbook",
       "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
       "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
