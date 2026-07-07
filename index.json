@@ -1811,6 +1811,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "export-the-list-of-named-ranges-and-their-formulas-to-an-excel-sheet-for-auditing.cs",
+      "title": "Export the list of named ranges and their formulas to an Excel sheet for auditing."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-unionrange-covering-cells-x1x5-and-z1z5-then-apply-a-light-green-fill-to-both-areas.cs",
       "title": "Generate a UnionRange covering cells X1:X5 and Z1:Z5, then apply a light green fill to both areas."
     },
