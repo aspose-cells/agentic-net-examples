@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - copy-a-ranges-formulas-to-another-range-while-converting-relative-references-to-absolute-references.cs
+- export-the-contents-of-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs
