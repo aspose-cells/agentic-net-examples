@@ -1756,6 +1756,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "define-a-worksheetscoped-named-range-for-cells-b2b20-on-sheet2-including-the-sheet-name.cs",
+      "title": "Define a worksheet\u2011scoped named range for cells B2:B20 on Sheet2, including the sheet name."
+    },
+    {
+      "category": "managing-ranges",
       "file": "delete-the-range-f1f20-and-shift-remaining-cells-upward-to-fill-the-gap.cs",
       "title": "Delete the range F1:F20 and shift remaining cells upward to fill the gap."
     },
