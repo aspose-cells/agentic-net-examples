@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - delete-the-range-f1f20-and-shift-remaining-cells-upward-to-fill-the-gap.cs
 - merge-cells-within-range-a2d2-to-create-a-single-header-cell-and-center-its-text.cs
 - move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs
+- merge-cells-across-multiple-rows-and-columns-to-create-a-title-block-covering-a1f2.cs
