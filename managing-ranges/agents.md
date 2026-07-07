@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs
 - merge-cells-across-multiple-rows-and-columns-to-create-a-title-block-covering-a1f2.cs
 - unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs
+- merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs
