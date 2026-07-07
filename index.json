@@ -1771,6 +1771,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-workbookscoped-named-range-that-points-to-an-external-workbook-file-location.cs",
+      "title": "Create a workbook\u2011scoped named range that points to an external workbook file location."
+    },
+    {
+      "category": "managing-ranges",
       "file": "cut-a-range-that-includes-a-pivot-table-and-paste-it-into-a-new-location-preserving-pivot-structure.cs",
       "title": "Cut a range that includes a pivot table and paste it into a new location, preserving pivot structure."
     },
