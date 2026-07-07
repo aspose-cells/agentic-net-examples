@@ -1746,6 +1746,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "cut-a-range-that-includes-a-pivot-table-and-paste-it-into-a-new-location-preserving-pivot-structure.cs",
+      "title": "Cut a range that includes a pivot table and paste it into a new location, preserving pivot structure."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
