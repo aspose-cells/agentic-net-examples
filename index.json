@@ -1720,6 +1720,11 @@
       "title": "Export the contents of a range to a CSV file while preserving delimiters and text qualifiers."
     },
     {
+      "category": "managing-ranges",
+      "file": "render-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs",
+      "title": "Render a range as a PDF page with custom margins and page orientation settings applied."
+    },
+    {
       "category": "open-workbook",
       "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
       "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
