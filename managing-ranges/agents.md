@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-spans-a-dynamic-array-returned-by-a-formula.cs
 - generate-a-chart-series-that-pulls-data-from-a-named-range-and-updates-automatically.cs
 - programmatically-lock-cells-outside-a-named-range-while-leaving-the-range-editable.cs
+- use-a-named-range-to-define-the-data-validation-list-for-a-dropdown-in-another-cell.cs
