@@ -1705,6 +1705,11 @@
       "title": "Wrap workbook loading and saving inside a using statement to guarantee deterministic disposal of resources."
     },
     {
+      "category": "managing-ranges",
+      "file": "copy-a-ranges-formulas-to-another-range-while-converting-relative-references-to-absolute-references.cs",
+      "title": "Copy a range's formulas to another range while converting relative references to absolute references."
+    },
+    {
       "category": "open-workbook",
       "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
       "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
