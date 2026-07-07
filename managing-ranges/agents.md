@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - create-a-workbookscoped-named-range-that-points-to-an-external-workbook-file-location.cs
 - update-an-external-reference-named-range-to-point-to-a-new-file-path-after-relocation.cs
 - use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs
+- replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs
