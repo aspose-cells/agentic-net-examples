@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - render-a-range-as-a-pdf-page-with-custom-margins-and-page-orientation-settings-applied.cs
 - define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs
 - create-a-style-that-defines-a-date-number-format-and-apply-it-to-a-column-containing-date-values.cs
+- create-a-style-that-adds-a-light-blue-fill-and-thin-bottom-border-to-the-footer-row.cs
