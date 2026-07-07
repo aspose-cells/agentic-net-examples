@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - configure-findoptions-to-ignore-hidden-rows-while-searching-within-range-k1k500.cs
 - protect-a-worksheet-while-allowing-edits-only-within-named-range-editablesection.cs
 - set-findoptions-to-search-using-wildcards-for-patterns-like-2023-inside-range-l1l100.cs
+- create-a-workbookscoped-named-range-that-points-to-an-external-workbook-file-location.cs
