@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-references-a-range-on-a-hidden-worksheet-for-internal-calculations.cs
 - import-named-range-definitions-from-an-xml-file-and-add-them-to-an-existing-workbook.cs
 - create-a-named-range-that-automatically-excludes-rows-marked-as-archived-using-a-filter.cs
+- create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs
