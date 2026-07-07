@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-automatically-updates-when-the-source-table-expands-horizontally.cs
 - use-findoptions-to-perform-a-caseinsensitive-search-for-the-abbreviation-fy-within-a-range.cs
 - log-the-creation-modification-and-deletion-events-of-named-ranges-to-a-centralized-audit-file.cs
+- list-all-workbookscoped-named-ranges-and-output-their-names-to-the-console.cs
