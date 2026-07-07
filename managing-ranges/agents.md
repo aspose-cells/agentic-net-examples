@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - create-a-unionrange-spanning-rows-10-to-20-and-columns-a-to-c-then-set-an-outer-border.cs
 - generate-a-unionrange-covering-cells-x1x5-and-z1z5-then-apply-a-light-green-fill-to-both-areas.cs
 - cut-a-range-that-includes-a-pivot-table-and-paste-it-into-a-new-location-preserving-pivot-structure.cs
+- delete-the-range-f1f20-and-shift-remaining-cells-upward-to-fill-the-gap.cs
