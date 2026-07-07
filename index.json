@@ -1706,6 +1706,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-a-regular-expression-search-for-dates-formatted-as-ddmmyyyy-within-range-j1j30.cs",
+      "title": "Apply a regular expression search for dates formatted as \"dd/MM/yyyy\" within range J1:J30."
+    },
+    {
+      "category": "managing-ranges",
       "file": "configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs",
       "title": "Configure FindOptions to perform a case\u2011sensitive search within range E1:E100."
     },
