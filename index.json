@@ -1711,6 +1711,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "batch-process-ten-workbooks-adding-the-same-global-named-range-quarter-to-each-file.cs",
+      "title": "Batch process ten workbooks, adding the same global named range \"Quarter\" to each file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs",
       "title": "Configure FindOptions to perform a case\u2011sensitive search within range E1:E100."
     },
