@@ -1841,6 +1841,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "import-named-range-definitions-from-an-xml-file-and-add-them-to-an-existing-workbook.cs",
+      "title": "Import named range definitions from an XML file and add them to an existing workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs",
       "title": "Merge a range that spans the first worksheet row to create a header covering all columns."
     },
