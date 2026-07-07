@@ -1710,6 +1710,11 @@
       "title": "Copy a range's formulas to another range while converting relative references to absolute references."
     },
     {
+      "category": "managing-ranges",
+      "file": "export-the-contents-of-a-range-to-a-csv-file-while-preserving-delimiters-and-text-qualifiers.cs",
+      "title": "Export the contents of a range to a CSV file while preserving delimiters and text qualifiers."
+    },
+    {
       "category": "open-workbook",
       "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
       "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
