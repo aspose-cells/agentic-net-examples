@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - merge-cells-across-multiple-rows-and-columns-to-create-a-title-block-covering-a1f2.cs
 - unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs
 - merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs
+- merge-cells-in-a-range-that-spans-the-header-row-and-set-its-fill-color-to-navy-blue.cs
