@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - replace-all-occurrences-of-pending-with-completed-inside-range-d5d25-using-findoptions.cs
 - configure-findoptions-to-perform-a-casesensitive-search-within-range-e1e100.cs
 - set-findoptions-to-match-whole-cell-contents-when-locating-the-value-yes-in-range-f1f50.cs
+- execute-a-backward-search-for-error-in-range-i1i200-by-setting-findoptionssearchdirection.cs
