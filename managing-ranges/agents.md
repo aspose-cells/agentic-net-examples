@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - programmatically-lock-cells-outside-a-named-range-while-leaving-the-range-editable.cs
 - use-a-named-range-to-define-the-data-validation-list-for-a-dropdown-in-another-cell.cs
 - create-a-named-range-that-references-a-range-on-a-hidden-worksheet-for-internal-calculations.cs
+- import-named-range-definitions-from-an-xml-file-and-add-them-to-an-existing-workbook.cs
