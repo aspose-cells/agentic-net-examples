@@ -1816,6 +1816,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "generate-an-xml-representation-of-all-named-ranges-and-their-references-for-external-processing.cs",
+      "title": "Generate an XML representation of all named ranges and their references for external processing."
+    },
+    {
+      "category": "managing-ranges",
       "file": "merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs",
       "title": "Merge a range that spans the first worksheet row to create a header covering all columns."
     },
