@@ -1796,6 +1796,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs",
+      "title": "Unmerge a previously merged block covering D4:G4 and restore individual cell alignment to left."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-worksheetcollectioncreateunionrange-to-combine-address-a1b2d4e5-and-apply-a-bold-font-style-to-all-cells.cs",
       "title": "Use WorksheetCollection.CreateUnionRange to combine address \"A1:B2,D4:E5\" and apply a bold font style to all cells."
     },
