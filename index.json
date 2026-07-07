@@ -1741,6 +1741,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-unionrange-spanning-rows-10-to-20-and-columns-a-to-c-then-set-an-outer-border.cs",
+      "title": "Create a UnionRange spanning rows 10 to 20 and columns A to C, then set an outer border."
+    },
+    {
+      "category": "managing-ranges",
       "file": "define-a-style-with-italic-text-and-light-gray-fill-and-apply-it-to-the-entire-column-q.cs",
       "title": "Define a Style with italic text and light gray fill and apply it to the entire column Q."
     },
