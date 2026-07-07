@@ -1891,6 +1891,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "update-an-external-reference-named-range-to-point-to-a-new-file-path-after-relocation.cs",
+      "title": "Update an external reference named range to point to a new file path after relocation."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-a-named-range-as-chart-data-source-and-refresh-the-chart-after-modifying-the-range.cs",
       "title": "Use a named range as chart data source and refresh the chart after modifying the range."
     },
