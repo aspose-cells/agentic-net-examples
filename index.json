@@ -1741,6 +1741,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-automatically-updates-when-the-source-table-expands-horizontally.cs",
+      "title": "Create a named range that automatically updates when the source table expands horizontally."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs",
       "title": "Create a named range that includes only cells with data validation rules applied."
     },
