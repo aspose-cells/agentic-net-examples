@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - cut-a-range-that-includes-a-pivot-table-and-paste-it-into-a-new-location-preserving-pivot-structure.cs
 - delete-the-range-f1f20-and-shift-remaining-cells-upward-to-fill-the-gap.cs
 - merge-cells-within-range-a2d2-to-create-a-single-header-cell-and-center-its-text.cs
+- move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs
