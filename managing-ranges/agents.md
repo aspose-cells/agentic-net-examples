@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs
 - generate-an-xml-representation-of-all-named-ranges-and-their-references-for-external-processing.cs
 - validate-that-the-address-of-each-named-range-conforms-to-the-a1-reference-style.cs
+- export-the-list-of-named-ranges-and-their-formulas-to-an-excel-sheet-for-auditing.cs
