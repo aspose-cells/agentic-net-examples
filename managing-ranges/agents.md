@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - batch-process-ten-workbooks-adding-the-same-global-named-range-quarter-to-each-file.cs
 - merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs
 - compare-named-ranges-between-two-workbooks-and-generate-a-report-listing-differences.cs
+- use-a-named-range-as-chart-data-source-and-refresh-the-chart-after-modifying-the-range.cs
