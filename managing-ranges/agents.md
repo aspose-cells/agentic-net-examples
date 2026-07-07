@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - merge-cells-in-a-range-that-includes-hidden-rows-and-verify-hidden-rows-remain-hidden-after-merging.cs
 - define-a-worksheetscoped-named-range-for-cells-b2b20-on-sheet2-including-the-sheet-name.cs
 - search-for-the-text-total-within-range-a1c30-using-findoptions.cs
+- replace-all-occurrences-of-pending-with-completed-inside-range-d5d25-using-findoptions.cs
