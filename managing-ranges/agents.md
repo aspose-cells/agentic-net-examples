@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - set-the-refersto-property-of-a-named-range-using-a-named-formula-for-advanced-calculations.cs
 - create-a-named-range-that-automatically-updates-when-the-source-table-expands-horizontally.cs
 - use-findoptions-to-perform-a-caseinsensitive-search-for-the-abbreviation-fy-within-a-range.cs
+- log-the-creation-modification-and-deletion-events-of-named-ranges-to-a-centralized-audit-file.cs
