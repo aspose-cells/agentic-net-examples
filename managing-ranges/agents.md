@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - validate-that-the-address-of-each-named-range-conforms-to-the-a1-reference-style.cs
 - export-the-list-of-named-ranges-and-their-formulas-to-an-excel-sheet-for-auditing.cs
 - create-a-named-range-that-spans-a-dynamic-array-returned-by-a-formula.cs
+- generate-a-chart-series-that-pulls-data-from-a-named-range-and-updates-automatically.cs
