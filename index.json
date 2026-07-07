@@ -1821,6 +1821,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "generate-a-chart-series-that-pulls-data-from-a-named-range-and-updates-automatically.cs",
+      "title": "Generate a chart series that pulls data from a named range and updates automatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-unionrange-covering-cells-x1x5-and-z1z5-then-apply-a-light-green-fill-to-both-areas.cs",
       "title": "Generate a UnionRange covering cells X1:X5 and Z1:Z5, then apply a light green fill to both areas."
     },
