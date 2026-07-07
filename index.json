@@ -1876,6 +1876,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "set-findoptions-to-search-using-wildcards-for-patterns-like-2023-inside-range-l1l100.cs",
+      "title": "Set FindOptions to search using wildcards for patterns like \"*2023*\" inside range L1:L100."
+    },
+    {
+      "category": "managing-ranges",
       "file": "unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs",
       "title": "Unmerge a previously merged block covering D4:G4 and restore individual cell alignment to left."
     },
