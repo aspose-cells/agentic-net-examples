@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - set-findoptions-to-match-whole-cell-contents-when-locating-the-value-yes-in-range-f1f50.cs
 - execute-a-backward-search-for-error-in-range-i1i200-by-setting-findoptionssearchdirection.cs
 - apply-a-regular-expression-search-for-dates-formatted-as-ddmmyyyy-within-range-j1j30.cs
+- batch-process-ten-workbooks-adding-the-same-global-named-range-quarter-to-each-file.cs
