@@ -1930,6 +1930,11 @@
       "title": "Use WorksheetCollection.CreateUnionRange to merge address \"G1:G3,I1:I3\" for batch formatting across worksheets."
     },
     {
+      "category": "managing-ranges",
+      "file": "validate-that-the-address-of-each-named-range-conforms-to-the-a1-reference-style.cs",
+      "title": "Validate that the address of each named range conforms to the A1 reference style."
+    },
+    {
       "category": "open-workbook",
       "file": "apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs",
       "title": "Apply a LoadFilter that selects worksheets based on a user\u2011provided list of indices before loading the workbook."
