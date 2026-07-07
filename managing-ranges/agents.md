@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - export-the-list-of-named-ranges-and-their-formulas-to-an-excel-sheet-for-auditing.cs
 - create-a-named-range-that-spans-a-dynamic-array-returned-by-a-formula.cs
 - generate-a-chart-series-that-pulls-data-from-a-named-range-and-updates-automatically.cs
+- programmatically-lock-cells-outside-a-named-range-while-leaving-the-range-editable.cs
