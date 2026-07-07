@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-automatically-excludes-rows-marked-as-archived-using-a-filter.cs
 - create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs
 - set-the-refersto-property-of-a-named-range-using-a-named-formula-for-advanced-calculations.cs
+- create-a-named-range-that-automatically-updates-when-the-source-table-expands-horizontally.cs
