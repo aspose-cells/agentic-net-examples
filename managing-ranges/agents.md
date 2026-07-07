@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs
 - compare-named-ranges-between-two-workbooks-and-generate-a-report-listing-differences.cs
 - use-a-named-range-as-chart-data-source-and-refresh-the-chart-after-modifying-the-range.cs
+- rename-an-existing-named-range-from-oldname-to-newname-and-update-all-formula-references.cs
