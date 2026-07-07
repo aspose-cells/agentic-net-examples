@@ -1846,6 +1846,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "protect-a-worksheet-while-allowing-edits-only-within-named-range-editablesection.cs",
+      "title": "Protect a worksheet while allowing edits only within named range \"EditableSection\"."
+    },
+    {
+      "category": "managing-ranges",
       "file": "rename-an-existing-named-range-from-oldname-to-newname-and-update-all-formula-references.cs",
       "title": "Rename an existing named range from \"OldName\" to \"NewName\" and update all formula references."
     },
