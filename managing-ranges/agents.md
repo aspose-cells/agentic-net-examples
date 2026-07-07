@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - apply-a-regular-expression-search-for-dates-formatted-as-ddmmyyyy-within-range-j1j30.cs
 - batch-process-ten-workbooks-adding-the-same-global-named-range-quarter-to-each-file.cs
 - merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs
+- compare-named-ranges-between-two-workbooks-and-generate-a-report-listing-differences.cs
