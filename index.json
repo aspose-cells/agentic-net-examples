@@ -1741,6 +1741,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs",
+      "title": "Create a named range that includes only cells with data validation rules applied."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-references-a-range-on-a-hidden-worksheet-for-internal-calculations.cs",
       "title": "Create a named range that references a range on a hidden worksheet for internal calculations."
     },
