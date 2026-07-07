@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - merge-a-range-that-spans-the-first-worksheet-row-to-create-a-header-covering-all-columns.cs
 - merge-cells-in-a-range-that-spans-the-header-row-and-set-its-fill-color-to-navy-blue.cs
 - merge-cells-in-a-range-that-includes-hidden-rows-and-verify-hidden-rows-remain-hidden-after-merging.cs
+- define-a-worksheetscoped-named-range-for-cells-b2b20-on-sheet2-including-the-sheet-name.cs
