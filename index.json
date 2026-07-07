@@ -1871,6 +1871,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs",
+      "title": "Replace formulas that reference \"OldRange\" with references to \"NewRange\" across the workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "search-for-the-text-total-within-range-a1c30-using-findoptions.cs",
       "title": "Search for the text \"Total\" within range A1:C30 using FindOptions."
     },
