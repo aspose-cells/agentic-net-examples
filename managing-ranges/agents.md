@@ -109,3 +109,4 @@ Output files are written to the working directory.
 - import-named-range-definitions-from-an-xml-file-and-add-them-to-an-existing-workbook.cs
 - create-a-named-range-that-automatically-excludes-rows-marked-as-archived-using-a-filter.cs
 - create-a-named-range-that-includes-only-cells-with-data-validation-rules-applied.cs
+- set-the-refersto-property-of-a-named-range-using-a-named-formula-for-advanced-calculations.cs
