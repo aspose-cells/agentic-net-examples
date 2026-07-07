@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - create-a-style-that-adds-a-light-blue-fill-and-thin-bottom-border-to-the-footer-row.cs
 - create-a-style-that-applies-a-strikethrough-font-effect-and-assign-it-to-completed-task-rows.cs
 - create-a-style-that-sets-a-red-border-on-the-left-side-and-apply-it-to-column-t.cs
+- create-a-style-that-sets-a-font-family-and-size-and-apply-it-to-cells-in-the-sheet.cs
