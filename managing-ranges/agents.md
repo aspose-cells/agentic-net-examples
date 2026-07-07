@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - create-a-style-that-sets-a-red-border-on-the-left-side-and-apply-it-to-column-t.cs
 - create-a-style-that-sets-a-font-family-and-size-and-apply-it-to-cells-in-the-sheet.cs
 - create-a-unionrange-covering-a1a3-and-d1d3-on-the-first-worksheet-using-worksheetcollection.cs
+- use-worksheetcollectioncreateunionrange-to-combine-address-a1b2d4e5-and-apply-a-bold-font-style-to-all-cells.cs
