@@ -1826,6 +1826,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "merge-two-workbooks-retain-their-distinct-named-ranges-and-resolve-any-naming-conflicts.cs",
+      "title": "Merge two workbooks, retain their distinct named ranges, and resolve any naming conflicts."
+    },
+    {
+      "category": "managing-ranges",
       "file": "move-the-range-e5g10-to-a-new-location-starting-at-cell-j5-while-preserving-original-formulas.cs",
       "title": "Move the range E5:G10 to a new location starting at cell J5 while preserving original formulas."
     },
