@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - set-findoptions-to-search-using-wildcards-for-patterns-like-2023-inside-range-l1l100.cs
 - create-a-workbookscoped-named-range-that-points-to-an-external-workbook-file-location.cs
 - update-an-external-reference-named-range-to-point-to-a-new-file-path-after-relocation.cs
+- use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs
