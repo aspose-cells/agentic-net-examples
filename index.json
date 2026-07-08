@@ -3556,6 +3556,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs",
+      "title": "Preserve original cell borders while copying style by ensuring the CopyStyle attribute includes border properties."
+    },
+    {
+      "category": "smart-markers",
       "file": "replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs",
       "title": "Replace placeholder text in merged cells using smart markers while preserving the original cell merge settings."
     },
