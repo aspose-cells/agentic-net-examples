@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - compress-cell-data-by-converting-string-values-to-utf8-byte-arrays-during-enumeration-before-saving.cs
 - log-enumeration-start-and-end-timestamps-to-a-log-file-for-performance-monitoring-of-large-worksheets.cs
 - calculate-the-total-number-of-merged-regions-by-counting-merge-occurrences-while-enumerating-the-worksheet.cs
+- adjust-column-width-based-on-measured-pixel-width-of-cell-contents-using-the-measurement-api-during-enumeration.cs
