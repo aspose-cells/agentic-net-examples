@@ -3451,6 +3451,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs",
+      "title": "Assign a DataTable object to WorkbookDesigner.DataSource before processing to use a custom tabular data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs",
       "title": "Create a master\u2011detail report where the master table uses smart markers and each detail section pulls related records."
     },
