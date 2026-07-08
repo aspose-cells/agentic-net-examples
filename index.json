@@ -471,6 +471,11 @@
     },
     {
       "category": "cells-data",
+      "file": "handle-an-outofrange-column-index-in-cellssubtotal-gracefully-by-catching-the-exception.cs",
+      "title": "Handle an out\u2011of\u2011range column index in Cells.Subtotal gracefully by catching the exception."
+    },
+    {
+      "category": "cells-data",
       "file": "select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs",
       "title": "Select a worksheet by name and obtain its Cells collection for further operations."
     },
