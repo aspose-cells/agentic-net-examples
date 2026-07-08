@@ -3476,6 +3476,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs",
+      "title": "Replace placeholder text in merged cells using smart markers while preserving the original cell merge settings."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs",
       "title": "Use the If parameter within a smart marker to display data only when a field exceeds a threshold."
     },
