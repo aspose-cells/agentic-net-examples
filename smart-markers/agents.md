@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs
 - generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs
 - use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs
+- add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs
