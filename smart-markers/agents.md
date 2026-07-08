@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs
 - load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs
 - enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs
+- implement-batch-processing-to-load-multiple-workbook-templates-assign-distinct-data-sources-and-save-populated-files.cs
