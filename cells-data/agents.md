@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - calculate-average-of-numeric-cells-per-column-using-a-columns-enumerator-and-store-results-in-a-summary-row.cs
 - create-a-summary-report-of-data-types-present-in-the-sheet-by-counting-occurrences-during-cell-enumeration.cs
 - compute-the-standard-deviation-of-numeric-values-in-a-column-using-a-columns-enumerator.cs
+- group-numeric-cell-values-into-bins-to-generate-histogram-data-while-enumerating-a-specific-column.cs
