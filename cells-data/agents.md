@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - add-validation-to-a-dynamic-range-that-expands-as-new-rows-are-inserted-using-cellarea.cs
 - create-a-validation-allowing-dates-between-01012020-and-12312025-in-column-n.cs
 - add-validation-that-disallows-blank-entries-in-column-v-and-displays-an-error-alert.cs
+- create-a-validation-that-only-permits-time-values-between-0900-and-1700-in-column-t.cs
