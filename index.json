@@ -761,6 +761,11 @@
     },
     {
       "category": "cells-data",
+      "file": "set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs",
+      "title": "Set firstRow offset to five, then import a data table, pushing existing rows down without overwriting."
+    },
+    {
+      "category": "cells-data",
       "file": "set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs",
       "title": "Set the firstRow offset to zero to overwrite existing data when importing a new dataset."
     },
