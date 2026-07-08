@@ -3591,6 +3591,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs",
+      "title": "Place a variable marker in a cell to populate it with a scalar value from the data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs",
       "title": "Preserve original cell borders while copying style by ensuring the CopyStyle attribute includes border properties."
     },
