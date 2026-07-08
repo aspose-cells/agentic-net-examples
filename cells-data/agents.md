@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - build-a-dictionary-mapping-cell-addresses-to-their-values-by-enumerating-the-cells-collection.cs
 - count-nonempty-cells-in-each-row-using-a-rows-enumerator-and-output-totals-per-row.cs
 - detect-duplicate-text-entries-in-a-column-by-enumerating-the-column-and-tracking-occurrences.cs
+- log-each-cells-address-data-type-and-value-to-a-text-file-during-enumeration-for-auditing.cs
