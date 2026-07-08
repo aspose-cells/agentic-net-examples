@@ -831,6 +831,11 @@
     },
     {
       "category": "cells-data",
+      "file": "log-enumeration-start-and-end-timestamps-to-a-log-file-for-performance-monitoring-of-large-worksheets.cs",
+      "title": "Log enumeration start and end timestamps to a log file for performance monitoring of large worksheets."
+    },
+    {
+      "category": "cells-data",
       "file": "measure-execution-time-for-columnmajor-versus-rowmajor-data-population-to-determine-optimal-ordering.cs",
       "title": "Measure execution time for column\u2011major versus row\u2011major data population to determine optimal ordering."
     },
