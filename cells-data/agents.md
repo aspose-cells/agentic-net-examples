@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - create-a-hyperlink-that-links-to-a-specific-cell-in-another-workbook-using-external-reference-syntax.cs
 - import-data-from-an-arraylist-of-decimal-numbers-then-round-each-cell-value-to-two-decimal-places.cs
 - import-custom-objects-with-date-properties-then-apply-a-custom-number-format-to-display-dates-as-dd-mmm-yyyy.cs
+- after-importing-html-verify-that-line-break-tags-are-rendered-as-actual-new-lines-within-the-cell.cs
