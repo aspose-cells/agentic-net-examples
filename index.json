@@ -3561,6 +3561,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs",
+      "title": "Specify Label and LabelPosition attributes to place group labels before data rows for clear section headings."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs",
       "title": "Use the Formula parameter to compute cumulative totals across rows as smart markers import financial data."
     },
