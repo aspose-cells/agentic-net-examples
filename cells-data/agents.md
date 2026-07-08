@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - demonstrate-data-inconsistencies-by-reading-cell-values-without-enabling-multithreadreading-in-a-multithreaded-scenario.cs
 - implement-progress-reporting-by-raising-events-after-processing-each-hundred-cells-during-enumeration.cs
 - filter-enumerated-cells-to-include-only-stringtype-cells-and-collect-them-into-a-list.cs
+- count-cells-containing-a-specific-keyword-by-scanning-each-cells-text-during-enumeration.cs
