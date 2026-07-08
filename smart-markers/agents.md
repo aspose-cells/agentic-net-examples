@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - create-a-template-that-generates-a-calendar-view-filling-dates-based-on-a-start-date-variable.cs
 - use-the-if-parameter-to-conditionally-hide-columns-when-a-flag-field-is-false-in-the-data-source.cs
 - set-a-custom-data-source-that-merges-multiple-json-arrays-into-a-single-collection-for-smart-marker-consumption.cs
+- implement-logging-of-each-setvariable-call-to-trace-variable-values-used-during-smart-marker-processing.cs
