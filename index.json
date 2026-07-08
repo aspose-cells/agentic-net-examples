@@ -3566,6 +3566,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs",
+      "title": "Generate a PDF report from the processed workbook and embed hyperlinks that open the corresponding Excel worksheets."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs",
       "title": "Generate a summary sheet that aggregates totals from multiple smart marker populated worksheets using Excel formulas."
     },
