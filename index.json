@@ -3526,6 +3526,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-ismartmarkercallback-and-register-it-with-workbookdesigner-to-receive-detailed-processing-notifications.cs",
+      "title": "Implement ISmartMarkerCallBack and register it with WorkbookDesigner to receive detailed processing notifications."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-logging-of-each-setvariable-call-to-trace-variable-values-used-during-smart-marker-processing.cs",
       "title": "Implement logging of each SetVariable call to trace variable values used during smart marker processing."
     },
