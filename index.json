@@ -3466,6 +3466,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs",
+      "title": "Load a template from a stream, set marker data sources, and write the result to a byte array."
+    },
+    {
+      "category": "smart-markers",
       "file": "maintain-conditional-formatting-rules-in-the-template-as-smart-markers-replace-placeholder-values-with-actual-data.cs",
       "title": "Maintain conditional formatting rules in the template as smart markers replace placeholder values with actual data."
     },
