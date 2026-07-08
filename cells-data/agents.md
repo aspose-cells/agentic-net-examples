@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - retrieve-formatted-cell-text-replace-commas-with-semicolons-and-write-the-modified-string-back-to-the-same-cell.cs
 - create-a-hyperlink-that-opens-a-specific-sheet-and-cell-range-when-clicked-using-the-sheet1a1-syntax.cs
 - set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs
+- retrieve-raw-string-values-from-a-column-count-occurrences-of-a-specific-keyword-and-log-the-total.cs
