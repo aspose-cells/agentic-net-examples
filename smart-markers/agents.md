@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - export-the-merged-workbook-to-xls-format-to-ensure-compatibility-with-older-spreadsheet-applications.cs
 - implement-a-callback-that-modifies-cell-values-after-smart-marker-processing-but-before-saving-the-workbook.cs
 - apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs
+- load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs
