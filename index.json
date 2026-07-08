@@ -541,6 +541,11 @@
     },
     {
       "category": "cells-data",
+      "file": "compress-cell-data-by-converting-string-values-to-utf8-byte-arrays-during-enumeration-before-saving.cs",
+      "title": "Compress cell data by converting string values to UTF\u20118 byte arrays during enumeration before saving."
+    },
+    {
+      "category": "cells-data",
       "file": "compute-a-checksum-of-all-cell-values-by-concatenating-string-representations-during-enumeration-and-applying-a-hash-function.cs",
       "title": "Compute a checksum of all cell values by concatenating string representations during enumeration and applying a hash function."
     },
