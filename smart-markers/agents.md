@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
 - generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
 - apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs
+- create-a-smart-marker-that-calculates-running-totals-using-the-formula-parameter-referencing-previous-row-values.cs
