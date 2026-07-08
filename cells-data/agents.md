@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - create-a-hyperlink-that-triggers-a-mailto-email-composition-when-the-user-clicks-the-cell.cs
 - retrieve-raw-string-values-from-merged-cells-concatenate-them-and-store-the-result-in-a-separate-summary-cell.cs
 - use-importarraylist-to-add-a-list-of-guid-strings-then-format-cells-to-display-them-as-uppercase.cs
+- retrieve-a-cells-formatted-string-detect-currency-symbols-and-replace-them-with-localized-equivalents.cs
