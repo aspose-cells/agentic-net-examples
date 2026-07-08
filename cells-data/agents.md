@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - compare-two-worksheets-cell-by-cell-using-enumerators-and-generate-a-diff-report-highlighting-mismatches.cs
 - compress-cell-data-by-converting-string-values-to-utf8-byte-arrays-during-enumeration-before-saving.cs
 - log-enumeration-start-and-end-timestamps-to-a-log-file-for-performance-monitoring-of-large-worksheets.cs
+- calculate-the-total-number-of-merged-regions-by-counting-merge-occurrences-while-enumerating-the-worksheet.cs
