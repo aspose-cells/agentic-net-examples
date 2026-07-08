@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - configure-workbook-options-to-recalculate-formulas-after-smart-marker-insertion-guaranteeing-uptodate-calculations.cs
 - insert-hyperlinks-via-smart-markers-that-point-to-external-web-resources-based-on-dynamic-url-fields.cs
 - embed-comments-in-cells-using-smart-markers-pulling-comment-text-from-a-related-data-source-field.cs
+- implement-a-progress-callback-that-reports-percentage-completion-during-largescale-smart-marker-population.cs
