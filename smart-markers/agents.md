@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - maintain-conditional-formatting-rules-in-the-template-as-smart-markers-replace-placeholder-values-with-actual-data.cs
 - validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs
 - implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs
+- map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs
