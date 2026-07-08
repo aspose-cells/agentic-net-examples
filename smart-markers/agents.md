@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs
 - enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs
 - implement-batch-processing-to-load-multiple-workbook-templates-assign-distinct-data-sources-and-save-populated-files.cs
+- apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs
