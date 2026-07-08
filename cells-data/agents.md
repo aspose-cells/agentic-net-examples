@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - create-a-chart-data-series-from-column-values-by-enumerating-the-column-and-collecting-numeric-entries.cs
 - export-chart-data-series-to-json-format-by-iterating-the-source-column-and-building-a-json-array.cs
 - measure-pixel-dimensions-of-cell-text-during-enumeration-and-adjust-column-width-to-fit-content-without-clipping.cs
+- implement-a-custom-iterator-that-skips-hidden-rows-by-checking-the-rowishidden-property-during-enumeration.cs
