@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - after-importing-html-content-replace-all-br-tags-with-line-feed-characters-to-improve-cell-display.cs
 - retrieve-a-cells-formatted-string-detect-if-it-contains-a-url-and-convert-it-into-a-clickable-hyperlink.cs
 - create-a-hyperlink-that-triggers-a-mailto-email-composition-when-the-user-clicks-the-cell.cs
+- retrieve-raw-string-values-from-merged-cells-concatenate-them-and-store-the-result-in-a-separate-summary-cell.cs
