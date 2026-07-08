@@ -3626,6 +3626,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-batch-processing-to-load-multiple-workbook-templates-assign-distinct-data-sources-and-save-populated-files.cs",
+      "title": "Implement batch processing to load multiple workbook templates, assign distinct data sources, and save populated files."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs",
       "title": "Implement error handling to catch exceptions when a smart marker references a missing field in the data source."
     },
