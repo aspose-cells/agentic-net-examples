@@ -3491,6 +3491,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs",
+      "title": "Use the SetDataSource overload that accepts an IEnumerable to populate smart markers from a list of DTO objects."
+    },
+    {
+      "category": "smart-markers",
       "file": "validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs",
       "title": "Validate that all smart marker tags have been resolved after processing by checking the workbook for unresolved markers."
     },
