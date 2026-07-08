@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs
 - use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs
 - generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs
+- use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs
