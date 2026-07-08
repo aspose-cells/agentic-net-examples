@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - place-a-marker-string-defining-array-index-placeholders-in-a-cell-before-calling-process.cs
 - apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs
 - iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs
+- validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs
