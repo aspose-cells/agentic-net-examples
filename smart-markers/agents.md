@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs
 - group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs
 - create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs
+- specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs
