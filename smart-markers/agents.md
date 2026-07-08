@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - insert-a-smart-marker-referencing-a-nested-list-of-phone-numbers-using-contacts0number-syntax.cs
 - create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
 - generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
+- apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs
