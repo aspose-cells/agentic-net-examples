@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs
 - apply-a-custom-cell-style-to-smart-marker-cells-after-processing-to-maintain-consistent-formatting-across-the-workbook.cs
 - combine-variable-array-markers-with-a-slicer-to-populate-a-rectangular-block-of-cells-from-a-twodimensional-array.cs
+- enable-the-detaillink-parameter-to-create-hyperlinks-from-master-rows-to-their-corresponding-detail-worksheets.cs
