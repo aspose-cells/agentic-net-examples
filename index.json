@@ -701,6 +701,11 @@
     },
     {
       "category": "cells-data",
+      "file": "export-chart-data-series-to-json-format-by-iterating-the-source-column-and-building-a-json-array.cs",
+      "title": "Export chart data series to JSON format by iterating the source column and building a JSON array."
+    },
+    {
+      "category": "cells-data",
       "file": "export-numeric-column-data-to-a-binary-file-after-enumerating-cells-and-converting-values-to-littleendian-format.cs",
       "title": "Export numeric column data to a binary file after enumerating cells and converting values to little\u2011endian format."
     },
