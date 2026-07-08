@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
 - apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs
 - create-a-smart-marker-that-calculates-running-totals-using-the-formula-parameter-referencing-previous-row-values.cs
+- export-the-merged-workbook-to-xls-format-to-ensure-compatibility-with-older-spreadsheet-applications.cs
