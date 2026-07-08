@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - enable-preservehtml-option-in-importtableoptions-to-keep-html-formatting-when-importing-rich-text-data.cs
 - adjust-the-firstrow-parameter-to-shift-existing-rows-down-before-inserting-a-new-data-table.cs
 - validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs
+- insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs
