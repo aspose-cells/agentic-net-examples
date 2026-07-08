@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - after-importing-html-ensure-that-anchor-tags-are-converted-to-excel-hyperlinks-preserving-the-display-text.cs
 - use-importcustomobjects-with-preservehtml-enabled-to-keep-bold-tags-when-importing-product-descriptions.cs
 - create-a-hyperlink-that-links-to-a-specific-cell-in-another-workbook-using-external-reference-syntax.cs
+- import-data-from-an-arraylist-of-decimal-numbers-then-round-each-cell-value-to-two-decimal-places.cs
