@@ -3451,6 +3451,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-template-that-uses-image-markers-to-embed-photos-stored-as-base64-strings-in-the-data-source.cs",
+      "title": "Create a template that uses image markers to embed photos stored as base64 strings in the data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs",
       "title": "Define a variable in the Excel template and set its value programmatically before processing."
     },
