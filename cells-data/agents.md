@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs
 - insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs
 - read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs
+- set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs
