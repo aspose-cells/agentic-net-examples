@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - count-the-number-of-cells-per-data-type-by-iterating-all-cells-and-incrementing-typespecific-counters.cs
 - create-a-checksum-for-each-row-by-concatenating-cell-values-and-applying-a-hash-function-during-row-enumeration.cs
 - compare-cell-values-between-two-worksheets-and-output-mismatched-addresses-to-a-log-file.cs
+- log-start-and-end-timestamps-of-each-enumeration-pass-to-analyze-performance-trends-over-multiple-runs.cs
