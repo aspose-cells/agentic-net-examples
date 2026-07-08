@@ -3641,6 +3641,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "place-a-marker-string-defining-array-index-placeholders-in-a-cell-before-calling-process.cs",
+      "title": "Place a marker string defining array index placeholders in a cell before calling Process."
+    },
+    {
+      "category": "smart-markers",
       "file": "place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs",
       "title": "Place a variable marker in a cell to populate it with a scalar value from the data source."
     },
