@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs
 - inherit-background-color-using-copystyle-so-that-generated-rows-match-the-templates-shading-scheme.cs
 - implement-ismartmarkercallback-and-register-it-with-workbookdesigner-to-receive-detailed-processing-notifications.cs
+- capture-each-record-processing-event-in-the-ismartmarkercallback-implementation-to-build-a-detailed-merge-log.cs
