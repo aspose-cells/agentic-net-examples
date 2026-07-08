@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - filter-enumerated-cells-to-include-only-stringtype-cells-and-collect-them-into-a-list.cs
 - count-cells-containing-a-specific-keyword-by-scanning-each-cells-text-during-enumeration.cs
 - generate-a-list-of-unique-column-headers-by-enumerating-the-first-row-and-storing-distinct-values.cs
+- compute-a-checksum-of-all-cell-values-by-concatenating-string-representations-during-enumeration-and-applying-a-hash-function.cs
