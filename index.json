@@ -3446,6 +3446,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs",
+      "title": "Add a smart marker that calculates age from a birthdate field using the Formula parameter with date functions."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs",
       "title": "Define a variable in the Excel template and set its value programmatically before processing."
     },
