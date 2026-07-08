@@ -3586,6 +3586,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs",
+      "title": "Process multiple template files in a batch, assigning distinct data sources to each WorkbookDesigner instance."
+    },
+    {
+      "category": "smart-markers",
       "file": "replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs",
       "title": "Replace placeholder text in merged cells using smart markers while preserving the original cell merge settings."
     },
