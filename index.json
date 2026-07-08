@@ -536,6 +536,11 @@
     },
     {
       "category": "cells-data",
+      "file": "create-a-hyperlink-that-references-a-cell-in-another-worksheet-using-the-internal-excel-address-format.cs",
+      "title": "Create a hyperlink that references a cell in another worksheet, using the internal Excel address format."
+    },
+    {
+      "category": "cells-data",
       "file": "create-a-validation-allowing-dates-between-01012020-and-12312025-in-column-n.cs",
       "title": "Create a validation allowing dates between 01/01/2020 and 12/31/2025 in column N."
     },
