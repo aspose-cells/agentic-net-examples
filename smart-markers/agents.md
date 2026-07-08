@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - configure-workbookdesigner-to-treat-leading-apostrophes-as-literal-characters-preserving-original-text-formatting.cs
 - validate-that-all-smart-marker-placeholders-have-been-replaced-by-checking-for-remaining-marker-patterns-after-processing.cs
 - export-the-populated-workbook-to-pdf-format-while-preserving-charts-and-graphics-generated-by-smart-markers.cs
+- set-smart-marker-processing-mode-to-ignore-errors-allowing-partial-data-insertion-without-halting-execution.cs
