@@ -601,6 +601,11 @@
     },
     {
       "category": "cells-data",
+      "file": "retrieve-a-cells-formatted-string-value-using-getstringvalue-with-the-withformatting-strategy.cs",
+      "title": "Retrieve a cell's formatted string value using GetStringValue with the WithFormatting strategy."
+    },
+    {
+      "category": "cells-data",
       "file": "retrieve-validation-details-of-cell-j5-and-log-its-type-and-formula-values.cs",
       "title": "Retrieve validation details of cell J5 and log its type and formula values."
     },
