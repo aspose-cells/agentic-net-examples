@@ -371,6 +371,11 @@
     },
     {
       "category": "cells-data",
+      "file": "access-cell-b2-using-its-a1-style-name-set-a-numeric-value-and-save-the-workbook.cs",
+      "title": "Access cell B2 using its A1 style name, set a numeric value, and save the workbook."
+    },
+    {
+      "category": "cells-data",
       "file": "select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs",
       "title": "Select a worksheet by name and obtain its Cells collection for further operations."
     },
