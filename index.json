@@ -3445,6 +3445,11 @@
       "title": "Write a unit test verifying that Slicer.Refresh updates the linked pivot table\u2019s row count as expected."
     },
     {
+      "category": "smart-markers",
+      "file": "define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs",
+      "title": "Define a variable in the Excel template and set its value programmatically before processing."
+    },
+    {
       "category": "sparkline",
       "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
       "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
