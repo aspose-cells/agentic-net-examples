@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - sort-rows-based-on-a-computed-helper-column-that-concatenates-first-and-last-names.cs
 - define-a-cellarea-covering-rows-2100-and-apply-wholenumber-validation-to-that-range.cs
 - add-validation-restricting-column-g-values-to-integers-between-10-and-500.cs
+- retrieve-validation-details-of-cell-j5-and-log-its-type-and-formula-values.cs
