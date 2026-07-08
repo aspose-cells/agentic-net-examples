@@ -3531,6 +3531,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "inherit-background-color-using-copystyle-so-that-generated-rows-match-the-templates-shading-scheme.cs",
+      "title": "Inherit background color using CopyStyle so that generated rows match the template\u2019s shading scheme."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs",
       "title": "Insert a Formula parameter that calculates each row's total by multiplying quantity and unit price fields."
     },
