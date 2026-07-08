@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - map-a-json-document-to-a-workbook-and-apply-smart-markers-to-populate-cells-with-nested-properties.cs
 - load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs
 - use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs
+- combine-variable-markers-with-conditional-formatting-rules-to-highlight-cells-meeting-specific-thresholds-after-merging.cs
