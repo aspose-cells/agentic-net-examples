@@ -1126,6 +1126,11 @@
     },
     {
       "category": "cells-data",
+      "file": "use-a-styleflag-to-batch-update-quoteprefix-settings-for-every-cell-in-a-specified-worksheet.cs",
+      "title": "Use a StyleFlag to batch update QuotePrefix settings for every cell in a specified worksheet."
+    },
+    {
+      "category": "cells-data",
       "file": "use-cellssubtotal-with-column-index-derived-from-column-name-sales-to-sum-sales-figures.cs",
       "title": "Use Cells.Subtotal with column index derived from column name \"Sales\" to sum sales figures."
     },
