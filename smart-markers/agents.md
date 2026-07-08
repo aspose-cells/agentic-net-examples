@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs
 - add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs
 - insert-a-smart-marker-referencing-a-nested-list-of-phone-numbers-using-contacts0number-syntax.cs
+- create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
