@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - export-the-final-workbook-to-xlsx-format-after-smart-marker-processing-ensuring-all-formulas-remain-editable.cs
 - create-a-template-that-uses-image-markers-to-embed-photos-stored-as-base64-strings-in-the-data-source.cs
 - set-up-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-ensuring-hidden-data-is-also-populated.cs
+- implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs
