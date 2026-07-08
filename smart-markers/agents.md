@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs
 - apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs
 - place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs
+- enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs
