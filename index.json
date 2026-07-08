@@ -3471,6 +3471,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs",
+      "title": "Map a collection of objects to a table using smart markers, then calculate salaries with a formula marker."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs",
       "title": "Use the If parameter within a smart marker to display data only when a field exceeds a threshold."
     },
