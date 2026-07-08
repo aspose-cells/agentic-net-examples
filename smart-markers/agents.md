@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs
 - use-the-if-parameter-to-display-a-custom-message-when-a-collection-is-empty-during-smart-marker-processing.cs
 - create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs
+- use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs
