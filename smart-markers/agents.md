@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs
 - combine-variable-markers-with-conditional-formatting-rules-to-highlight-cells-meeting-specific-thresholds-after-merging.cs
 - insert-a-dynamic-excel-formula-that-references-the-previous-row-using-the-formula-parameter-to-calculate-running-totals.cs
+- apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs
