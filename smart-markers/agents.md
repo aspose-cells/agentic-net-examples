@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs
 - use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs
 - sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs
+- apply-a-custom-cell-style-to-smart-marker-cells-after-processing-to-maintain-consistent-formatting-across-the-workbook.cs
