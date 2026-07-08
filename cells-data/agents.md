@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - create-a-hyperlink-that-opens-a-specific-sheet-and-cell-range-when-clicked-using-the-sheet1a1-syntax.cs
 - set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs
 - retrieve-raw-string-values-from-a-column-count-occurrences-of-a-specific-keyword-and-log-the-total.cs
+- use-getstringvalue-with-withformatting-to-generate-a-formatted-address-line-combining-street-city-and-zip.cs
