@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - use-getstringvalue-with-withformatting-to-extract-currency-strings-then-strip-symbols-for-backend-processing.cs
 - import-an-array-of-strings-containing-file-paths-then-create-hyperlinks-in-adjacent-cells-pointing-to-those-files.cs
 - set-importtableoptionspreservehtml-to-false-import-data-and-verify-that-all-html-tags-are-removed-from-cells.cs
+- create-a-hyperlink-that-links-to-a-specific-cell-range-in-the-same-worksheet-using-the-a1b10-syntax.cs
