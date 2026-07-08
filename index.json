@@ -3701,6 +3701,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs",
+      "title": "Use the notify parameter together with a custom logger to record each successful smart marker merge event."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs",
       "title": "Use the SetDataSource overload that accepts an IEnumerable to populate smart markers from a list of DTO objects."
     },
