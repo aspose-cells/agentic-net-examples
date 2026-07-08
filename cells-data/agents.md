@@ -205,3 +205,4 @@ Output files are written to the working directory.
 - compare-cell-values-between-two-worksheets-and-output-mismatched-addresses-to-a-log-file.cs
 - log-start-and-end-timestamps-of-each-enumeration-pass-to-analyze-performance-trends-over-multiple-runs.cs
 - identify-and-process-cells-belonging-to-merged-ranges-by-checking-the-ismerged-property-during-enumeration.cs
+- adjust-column-widths-dynamically-based-on-measured-pixel-width-of-longest-cell-content-during-column-enumeration.cs
