@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs
+- access-cell-b2-using-its-a1-style-name-set-a-numeric-value-and-save-the-workbook.cs
