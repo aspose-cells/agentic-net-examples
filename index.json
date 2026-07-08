@@ -466,6 +466,11 @@
     },
     {
       "category": "cells-data",
+      "file": "after-importing-html-ensure-that-anchor-tags-are-converted-to-excel-hyperlinks-preserving-the-display-text.cs",
+      "title": "After importing HTML, ensure that anchor tags are converted to Excel hyperlinks preserving the display text."
+    },
+    {
+      "category": "cells-data",
       "file": "after-importing-html-remove-all-script-tags-to-prevent-execution-of-embedded-scripts-within-cells.cs",
       "title": "After importing HTML, remove all <script> tags to prevent execution of embedded scripts within cells."
     },
