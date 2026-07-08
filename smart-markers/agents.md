@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - insert-a-dynamic-excel-formula-that-references-the-previous-row-using-the-formula-parameter-to-calculate-running-totals.cs
 - apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs
 - protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs
+- use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs
