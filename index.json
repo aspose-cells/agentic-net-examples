@@ -3476,6 +3476,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs",
+      "title": "Implement a custom logger that records each smart marker replacement operation for audit purposes."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs",
       "title": "Implement error handling to catch exceptions when a smart marker references a missing field in the data source."
     },
