@@ -3496,6 +3496,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs",
+      "title": "Group data by adding (group:normal,skip:1) to the smart marker expression to insert blank rows between groups."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs",
       "title": "Implement a custom logger that records each smart marker replacement operation for audit purposes."
     },
