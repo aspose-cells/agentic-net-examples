@@ -3451,6 +3451,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs",
+      "title": "Apply data validation rules to cells filled by smart markers to restrict user input after generation."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs",
       "title": "Apply the formula parameter to a smart marker so Excel formulas adjust for each inserted row."
     },
