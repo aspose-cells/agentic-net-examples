@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - enable-multithreadreading-then-launch-multiple-threads-to-read-random-cells-concurrently.cs
 - measure-execution-time-for-columnmajor-versus-rowmajor-data-population-to-determine-optimal-ordering.cs
 - convert-textual-number-representations-to-numeric-types-while-assigning-values-during-data-population.cs
+- build-a-dictionary-mapping-cell-addresses-to-their-values-by-enumerating-the-cells-collection.cs
