@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs
 - insert-a-smart-marker-referencing-a-nested-list-of-phone-numbers-using-contacts0number-syntax.cs
 - create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
+- generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
