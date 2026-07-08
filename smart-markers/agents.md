@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs
 - enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs
 - save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs
+- apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs
