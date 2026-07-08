@@ -656,6 +656,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-custom-objects-with-nested-collections-flattening-nested-data-into-separate-columns-using-a-custom-mapping-function.cs",
+      "title": "Import custom objects with nested collections, flattening nested data into separate columns using a custom mapping function."
+    },
+    {
+      "category": "cells-data",
       "file": "insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs",
       "title": "Insert a hyperlink into a cell using the HyperlinkCollection.Add method with display text and URL."
     },
