@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs
 - replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs
 - load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs
+- use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs
