@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - import-custom-objects-with-nested-collections-flattening-nested-data-into-separate-columns-using-a-custom-mapping-function.cs
 - retrieve-formatted-cell-text-replace-commas-with-semicolons-and-write-the-modified-string-back-to-the-same-cell.cs
 - create-a-hyperlink-that-opens-a-specific-sheet-and-cell-range-when-clicked-using-the-sheet1a1-syntax.cs
+- set-firstrow-offset-to-five-then-import-a-data-table-pushing-existing-rows-down-without-overwriting.cs
