@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - use-the-if-parameter-to-display-a-custom-message-when-a-collection-is-empty-during-smart-marker-processing.cs
 - create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs
 - use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs
+- use-the-formula-parameter-to-compute-running-totals-across-rows-updating-each-cell-as-data-is-imported.cs
