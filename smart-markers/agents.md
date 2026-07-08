@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - combine-variable-markers-with-conditional-formatting-rules-to-highlight-cells-meeting-specific-thresholds-after-merging.cs
 - insert-a-dynamic-excel-formula-that-references-the-previous-row-using-the-formula-parameter-to-calculate-running-totals.cs
 - apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs
+- protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs
