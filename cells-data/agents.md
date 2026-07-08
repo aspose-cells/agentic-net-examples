@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - assign-simple-html-markup-to-a-cells-htmlstring-property-to-display-bold-and-italic-text.cs
 - use-importarraylist-to-add-values-from-an-arraylist-into-a-worksheet-beginning-at-row-three.cs
 - import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs
+- enable-preservehtml-option-in-importtableoptions-to-keep-html-formatting-when-importing-rich-text-data.cs
