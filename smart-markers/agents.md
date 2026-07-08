@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs
 - use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs
 - use-the-formula-parameter-to-compute-running-totals-across-rows-updating-each-cell-as-data-is-imported.cs
+- create-a-template-that-generates-a-calendar-view-filling-dates-based-on-a-start-date-variable.cs
