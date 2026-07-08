@@ -1066,6 +1066,11 @@
     },
     {
       "category": "cells-data",
+      "file": "serialize-the-richtextportion-collection-of-a-cell-to-json-for-later-reuse.cs",
+      "title": "Serialize the RichTextPortion collection of a cell to JSON for later reuse."
+    },
+    {
+      "category": "cells-data",
       "file": "set-custom-sort-order-for-priority-levels-high-medium-low-and-sort-column-m.cs",
       "title": "Set custom sort order for priority levels High, Medium, Low and sort column M."
     },
