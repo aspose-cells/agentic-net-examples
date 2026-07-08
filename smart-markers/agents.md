@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs
 - enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs
 - map-a-json-document-to-a-workbook-and-apply-smart-markers-to-populate-cells-with-nested-properties.cs
+- load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs
