@@ -3571,6 +3571,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "embed-comments-in-cells-using-smart-markers-pulling-comment-text-from-a-related-data-source-field.cs",
+      "title": "Embed comments in cells using smart markers, pulling comment text from a related data source field."
+    },
+    {
+      "category": "smart-markers",
       "file": "enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs",
       "title": "Enable auto\u2011populate feature to spill excess data into a secondary worksheet when primary sheet reaches row limit."
     },
