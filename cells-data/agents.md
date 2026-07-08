@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - obtain-a-cells-raw-numeric-string-by-calling-getstringvalue-with-the-withoutformatting-option.cs
 - assign-simple-html-markup-to-a-cells-htmlstring-property-to-display-bold-and-italic-text.cs
 - use-importarraylist-to-add-values-from-an-arraylist-into-a-worksheet-beginning-at-row-three.cs
+- import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs
