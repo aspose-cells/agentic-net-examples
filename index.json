@@ -3666,6 +3666,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs",
+      "title": "Use LINQ to filter a collection before assigning it to WorkbookDesigner, ensuring rows appear via smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs",
       "title": "Use the Formula parameter to compute cumulative totals across rows as smart markers import financial data."
     },
