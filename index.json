@@ -3456,6 +3456,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs",
+      "title": "Generate separate worksheets for each group in master\u2011detail data by using smart marker grouping with sheet break syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs",
       "title": "Implement error handling to catch exceptions when a smart marker references a missing field in the data source."
     },
