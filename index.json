@@ -606,6 +606,11 @@
     },
     {
       "category": "cells-data",
+      "file": "insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs",
+      "title": "Insert a hyperlink into a cell using the HyperlinkCollection.Add method with display text and URL."
+    },
+    {
+      "category": "cells-data",
       "file": "locate-cells-with-leading-or-trailing-spaces-and-trim-the-whitespace-programmatically.cs",
       "title": "Locate cells with leading or trailing spaces and trim the whitespace programmatically."
     },
