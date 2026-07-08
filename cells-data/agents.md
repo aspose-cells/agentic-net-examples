@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - export-worksheet-rows-that-fail-validation-to-a-separate-sheet-for-error-analysis.cs
 - export-worksheet-data-to-a-fixedwidth-text-file-using-custom-column-width-definitions.cs
 - retrieve-a-cells-formatted-string-value-using-getstringvalue-with-the-withformatting-strategy.cs
+- obtain-a-cells-raw-numeric-string-by-calling-getstringvalue-with-the-withoutformatting-option.cs
