@@ -3616,6 +3616,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-a-smart-marker-referencing-a-nested-list-of-phone-numbers-using-contacts0number-syntax.cs",
+      "title": "Insert a smart marker referencing a nested list of phone numbers using contacts[0].number syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs",
       "title": "Iterate over multiple template files, applying identical master\u2011detail smart markers to generate batch reports."
     },
