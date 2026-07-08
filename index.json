@@ -3466,6 +3466,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs",
+      "title": "Apply the Formula parameter to calculate total price by multiplying quantity and unit price during merge."
+    },
+    {
+      "category": "smart-markers",
       "file": "assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs",
       "title": "Assign a DataTable object to WorkbookDesigner.DataSource before processing to use a custom tabular data source."
     },
