@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - import-an-array-of-boolean-values-then-set-cell-background-green-for-true-and-red-for-false.cs
 - create-a-hyperlink-that-references-an-external-pdf-file-ensuring-the-link-opens-in-a-new-browser-tab.cs
 - retrieve-formatted-cell-text-detect-numeric-patterns-and-replace-them-with-localized-number-formats-for-display.cs
+- after-importing-html-ensure-that-anchor-tags-are-converted-to-excel-hyperlinks-preserving-the-display-text.cs
