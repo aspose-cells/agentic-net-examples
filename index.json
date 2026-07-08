@@ -370,6 +370,11 @@
       "title": "Write a utility that iterates through all worksheets, sets each to Manual mode, and saves changes."
     },
     {
+      "category": "cells-data",
+      "file": "select-a-worksheet-by-name-and-obtain-its-cells-collection-for-further-operations.cs",
+      "title": "Select a worksheet by name and obtain its Cells collection for further operations."
+    },
+    {
       "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
