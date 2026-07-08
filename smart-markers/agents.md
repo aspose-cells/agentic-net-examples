@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs
 - enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs
 - maintain-conditional-formatting-rules-in-the-template-as-smart-markers-replace-placeholder-values-with-actual-data.cs
+- validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs
