@@ -3471,6 +3471,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs",
+      "title": "Generate a summary sheet that aggregates totals from multiple smart marker populated worksheets using Excel formulas."
+    },
+    {
+      "category": "smart-markers",
       "file": "generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs",
       "title": "Generate separate worksheets for each group in master\u2011detail data by using smart marker grouping with sheet break syntax."
     },
