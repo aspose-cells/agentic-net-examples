@@ -3451,6 +3451,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs",
+      "title": "Apply the formula parameter to a smart marker so Excel formulas adjust for each inserted row."
+    },
+    {
+      "category": "smart-markers",
       "file": "assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs",
       "title": "Assign a DataTable object to WorkbookDesigner.DataSource before processing to use a custom tabular data source."
     },
