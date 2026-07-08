@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - search-for-cells-containing-the-text-pending-and-highlight-them-with-yellow-fill.cs
 - find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs
 - perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs
+- identify-duplicate-entries-in-column-q-and-mark-them-with-red-background.cs
