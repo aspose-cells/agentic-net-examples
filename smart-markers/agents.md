@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - set-a-custom-data-source-that-merges-multiple-json-arrays-into-a-single-collection-for-smart-marker-consumption.cs
 - implement-logging-of-each-setvariable-call-to-trace-variable-values-used-during-smart-marker-processing.cs
 - use-the-if-parameter-to-display-a-warning-message-when-a-numeric-field-falls-below-a-defined-minimum.cs
+- load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs
