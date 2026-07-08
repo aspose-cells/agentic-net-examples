@@ -3526,6 +3526,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-a-custom-data-source-that-merges-multiple-json-arrays-into-a-single-collection-for-smart-marker-consumption.cs",
+      "title": "Set a custom data source that merges multiple JSON arrays into a single collection for smart marker consumption."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-up-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-ensuring-hidden-data-is-also-populated.cs",
       "title": "Set up WorkbookDesigner to process smart markers in hidden worksheets, ensuring hidden data is also populated."
     },
