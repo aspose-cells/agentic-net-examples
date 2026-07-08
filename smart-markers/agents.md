@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs
 - preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs
 - inherit-background-color-using-copystyle-so-that-generated-rows-match-the-templates-shading-scheme.cs
+- implement-ismartmarkercallback-and-register-it-with-workbookdesigner-to-receive-detailed-processing-notifications.cs
