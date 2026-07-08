@@ -3766,6 +3766,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-smart-marker-processing-mode-to-ignore-errors-allowing-partial-data-insertion-without-halting-execution.cs",
+      "title": "Set smart marker processing mode to ignore errors, allowing partial data insertion without halting execution."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-up-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-ensuring-hidden-data-is-also-populated.cs",
       "title": "Set up WorkbookDesigner to process smart markers in hidden worksheets, ensuring hidden data is also populated."
     },
