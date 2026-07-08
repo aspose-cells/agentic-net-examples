@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - find-all-numeric-values-greater-than-1000-across-the-worksheet-and-collect-their-addresses.cs
 - perform-caseinsensitive-search-for-total-revenue-and-replace-it-with-revenue-total.cs
 - identify-duplicate-entries-in-column-q-and-mark-them-with-red-background.cs
+- search-for-cells-containing-the-word-error-ignoring-case-and-highlight-them-orange.cs
