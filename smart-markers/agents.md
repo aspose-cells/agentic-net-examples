@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs
 - use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs
 - insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs
+- enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs
