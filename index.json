@@ -3456,6 +3456,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs",
+      "title": "Calculate a running total using the Formula parameter that adds the current value to the previous subtotal cell."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs",
       "title": "Create a master\u2011detail report where the master table uses smart markers and each detail section pulls related records."
     },
