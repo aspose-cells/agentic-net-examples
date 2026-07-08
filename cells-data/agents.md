@@ -213,3 +213,4 @@ Output files are written to the working directory.
 - apply-a-styleflag-with-quoteprefix-set-to-false-to-preserve-existing-apostrophe-prefixes.cs
 - apply-a-styleflag-with-quoteprefix-set-to-true-to-add-a-leading-apostrophe-to-the-cell-value.cs
 - change-the-font-size-of-a-specific-richtextportion-to-twelve-points.cs
+- replace-characters-in-a-richtextportion-using-cellsetcharacters-with-a-new-string.cs
