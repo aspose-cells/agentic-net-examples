@@ -591,6 +591,11 @@
     },
     {
       "category": "cells-data",
+      "file": "import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs",
+      "title": "Import a collection of custom objects, mapping properties to columns, starting at row two, column one."
+    },
+    {
+      "category": "cells-data",
       "file": "locate-cells-with-leading-or-trailing-spaces-and-trim-the-whitespace-programmatically.cs",
       "title": "Locate cells with leading or trailing spaces and trim the whitespace programmatically."
     },
