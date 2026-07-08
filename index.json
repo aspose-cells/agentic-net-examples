@@ -3686,6 +3686,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs",
+      "title": "Use the skip parameter to omit every other row while populating a template with alternating entries."
+    },
+    {
+      "category": "smart-markers",
       "file": "validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs",
       "title": "Validate that all smart marker tags have been resolved after processing by checking the workbook for unresolved markers."
     },
