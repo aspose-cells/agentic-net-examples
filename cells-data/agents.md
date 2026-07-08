@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - insert-a-hyperlink-into-a-cell-using-the-hyperlinkcollectionadd-method-with-display-text-and-url.cs
 - read-a-cells-formatted-string-replace-placeholder-tokens-and-write-the-updated-string-back-to-the-cell.cs
 - set-the-firstrow-offset-to-zero-to-overwrite-existing-data-when-importing-a-new-dataset.cs
+- retrieve-a-cells-formatted-string-parse-currency-symbols-and-store-numeric-value-in-adjacent-cell-for-calculations.cs
