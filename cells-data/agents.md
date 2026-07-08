@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - count-nonempty-cells-in-each-row-using-a-rows-enumerator-and-output-totals-per-row.cs
 - detect-duplicate-text-entries-in-a-column-by-enumerating-the-column-and-tracking-occurrences.cs
 - log-each-cells-address-data-type-and-value-to-a-text-file-during-enumeration-for-auditing.cs
+- calculate-average-of-numeric-cells-per-column-using-a-columns-enumerator-and-store-results-in-a-summary-row.cs
