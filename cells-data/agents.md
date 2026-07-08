@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - convert-the-workbook-to-html-and-verify-that-leading-apostrophes-appear-correctly-in-rendered-cells.cs
 - convert-the-workbook-to-pdf-and-confirm-that-leading-apostrophes-are-displayed-as-intended.cs
 - create-a-report-listing-cells-where-stylequoteprefix-is-true-including-their-row-and-column-indices.cs
+- detect-cells-that-contain-both-a-leading-apostrophe-and-richtext-and-log-their-addresses.cs
