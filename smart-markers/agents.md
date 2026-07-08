@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs
 - configure-workbookdesigner-to-treat-leading-apostrophes-as-literal-characters-preserving-original-text-formatting.cs
 - validate-that-all-smart-marker-placeholders-have-been-replaced-by-checking-for-remaining-marker-patterns-after-processing.cs
+- export-the-populated-workbook-to-pdf-format-while-preserving-charts-and-graphics-generated-by-smart-markers.cs
