@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - set-smart-marker-processing-mode-to-ignore-errors-allowing-partial-data-insertion-without-halting-execution.cs
 - populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs
 - configure-workbook-options-to-recalculate-formulas-after-smart-marker-insertion-guaranteeing-uptodate-calculations.cs
+- insert-hyperlinks-via-smart-markers-that-point-to-external-web-resources-based-on-dynamic-url-fields.cs
