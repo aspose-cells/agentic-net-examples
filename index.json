@@ -3606,6 +3606,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-callback-that-modifies-cell-values-after-smart-marker-processing-but-before-saving-the-workbook.cs",
+      "title": "Implement a callback that modifies cell values after smart marker processing but before saving the workbook."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs",
       "title": "Implement a custom logger that records each smart marker replacement operation for audit purposes."
     },
