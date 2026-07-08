@@ -3451,6 +3451,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs",
+      "title": "Insert a Formula parameter that calculates each row's total by multiplying quantity and unit price fields."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs",
       "title": "Use the If parameter within a smart marker to display data only when a field exceeds a threshold."
     },
