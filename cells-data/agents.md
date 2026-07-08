@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - access-a-cell-by-its-numeric-index-within-the-cells-collection-modify-its-background-color-and-save.cs
 - convert-all-stringbased-numeric-values-in-the-entire-workbook-to-true-numbers-using-convertstringtonumericvalue.cs
 - convert-string-numeric-values-only-in-the-first-worksheet-while-leaving-other-sheets-unchanged.cs
+- convert-numeric-strings-within-range-a1c10-on-a-worksheet-and-verify-conversion.cs
