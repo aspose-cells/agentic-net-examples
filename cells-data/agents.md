@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - import-a-collection-of-custom-objects-mapping-properties-to-columns-starting-at-row-two-column-one.cs
 - enable-preservehtml-option-in-importtableoptions-to-keep-html-formatting-when-importing-rich-text-data.cs
 - adjust-the-firstrow-parameter-to-shift-existing-rows-down-before-inserting-a-new-data-table.cs
+- validate-cell-content-by-retrieving-raw-string-values-and-comparing-them-against-expected-numeric-strings.cs
