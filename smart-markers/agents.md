@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - bind-a-nested-object-hierarchy-such-as-employee-address-using-dot-notation-in-smart-markers.cs
 - use-foreach-syntax-in-smart-markers-to-import-variablelength-collections-like-product-reviews.cs
 - place-a-marker-string-defining-array-index-placeholders-in-a-cell-before-calling-process.cs
+- apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs
