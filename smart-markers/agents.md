@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs
 - use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs
 - use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs
+- sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs
