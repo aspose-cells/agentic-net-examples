@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - set-row-height-dynamically-according-to-the-tallest-cell-content-measured-in-pixels-while-enumerating-rows.cs
 - profile-cpu-usage-while-enumerating-a-large-worksheet-to-identify-performance-bottlenecks-in-the-iteration-loop.cs
 - create-a-chart-data-series-from-column-values-by-enumerating-the-column-and-collecting-numeric-entries.cs
+- export-chart-data-series-to-json-format-by-iterating-the-source-column-and-building-a-json-array.cs
