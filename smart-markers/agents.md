@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - create-a-template-that-uses-image-markers-to-embed-photos-stored-as-base64-strings-in-the-data-source.cs
 - set-up-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-ensuring-hidden-data-is-also-populated.cs
 - implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs
+- generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs
