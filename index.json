@@ -3446,6 +3446,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs",
+      "title": "Add a conditional formula smart marker that displays \u201cHigh\u201d when sales exceed a threshold and \u201cLow\u201d otherwise."
+    },
+    {
+      "category": "smart-markers",
       "file": "add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs",
       "title": "Add a smart marker that calculates age from a birthdate field using the Formula parameter with date functions."
     },
