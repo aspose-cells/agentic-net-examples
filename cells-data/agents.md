@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - generate-a-list-of-unique-column-headers-by-enumerating-the-first-row-and-storing-distinct-values.cs
 - compute-a-checksum-of-all-cell-values-by-concatenating-string-representations-during-enumeration-and-applying-a-hash-function.cs
 - compare-two-worksheets-cell-by-cell-using-enumerators-and-generate-a-diff-report-highlighting-mismatches.cs
+- compress-cell-data-by-converting-string-values-to-utf8-byte-arrays-during-enumeration-before-saving.cs
