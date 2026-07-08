@@ -736,6 +736,11 @@
     },
     {
       "category": "cells-data",
+      "file": "deserialize-previously-saved-json-and-reapply-the-richtext-portions-to-the-same-cell.cs",
+      "title": "Deserialize previously saved JSON and reapply the rich\u2011text portions to the same cell."
+    },
+    {
+      "category": "cells-data",
       "file": "detect-duplicate-text-entries-in-a-column-by-enumerating-the-column-and-tracking-occurrences.cs",
       "title": "Detect duplicate text entries in a column by enumerating the column and tracking occurrences."
     },
