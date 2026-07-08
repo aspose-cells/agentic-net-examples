@@ -3636,6 +3636,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs",
+      "title": "Protect the worksheet after processing smart markers, allowing only unlocked cells to be edited by end users."
+    },
+    {
+      "category": "smart-markers",
       "file": "replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs",
       "title": "Replace placeholder text in merged cells using smart markers while preserving the original cell merge settings."
     },
