@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - encrypt-a-workbook-then-attempt-to-modify-a-protected-cell-to-confirm-edit-restrictions-are-enforced.cs
 - batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs
 - batch-encrypt-a-set-of-workbooks-then-generate-a-csv-report-listing-file-names-and-applied-encryption-algorithms.cs
+- create-a-utility-that-scans-a-directory-identifies-encrypted-excel-files-and-generates-a-password-status-report.cs
