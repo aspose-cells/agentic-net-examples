@@ -1646,6 +1646,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "decrypt-an-encrypted-workbook-modify-cell-values-reencrypt-with-a-different-password-and-save-as-ods.cs",
+      "title": "Decrypt an encrypted workbook, modify cell values, re\u2011encrypt with a different password, and save as ODS."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs",
       "title": "Detect legacy encryption in a workbook and automatically upgrade it to the latest standard."
     },
