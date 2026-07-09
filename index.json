@@ -1671,6 +1671,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-the-workbook-structure-and-lock-all-worksheets-then-save-the-workbook-as-an-encrypted-xlsx-file.cs",
+      "title": "Protect the workbook structure and lock all worksheets, then save the workbook as an encrypted XLSX file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },
