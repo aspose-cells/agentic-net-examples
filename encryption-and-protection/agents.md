@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs
 - detect-the-encryption-type-of-an-ods-file-and-display-the-algorithm-name.cs
 - detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs
+- detect-the-ods-encryption-algorithm-and-output-a-humanreadable-description-of-its-security-level.cs
