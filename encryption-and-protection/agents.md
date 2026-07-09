@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - protect-the-workbook-structure-and-lock-all-worksheets-then-save-the-workbook-as-an-encrypted-xlsx-file.cs
 - apply-workbook-protection-with-a-password-and-attempt-to-add-a-new-worksheet-to-verify-restriction.cs
 - protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs
+- protect-the-workbook-structure-and-then-attempt-to-delete-a-worksheet-to-confirm-deletion-is-blocked.cs
