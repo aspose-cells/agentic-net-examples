@@ -1681,6 +1681,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs",
+      "title": "Protect the workbook structure, then attempt to copy a worksheet to another workbook to test enforcement."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs",
       "title": "Verify whether a loaded XLS file is encrypted and retrieve its encryption algorithm."
     },
