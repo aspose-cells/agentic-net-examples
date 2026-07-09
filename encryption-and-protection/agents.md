@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - validate-that-a-saved-xlsx-file-is-encrypted-by-reopening-it-and-checking-its-encryption-status.cs
 - verify-the-password-of-an-encrypted-workbook-without-fully-opening-it-using-a-lightweight-validation-method.cs
 - decrypt-an-encrypted-workbook-modify-cell-values-reencrypt-with-a-different-password-and-save-as-ods.cs
+- encrypt-a-workbook-then-attempt-to-modify-a-protected-cell-to-confirm-edit-restrictions-are-enforced.cs
