@@ -227,3 +227,4 @@ Output files are written to the working directory.
 - detect-cells-that-contain-both-a-leading-apostrophe-and-richtext-and-log-their-addresses.cs
 - implement-error-handling-for-setcharacters-when-the-specified-range-exceeds-the-cells-text-length.cs
 - benchmark-the-performance-impact-of-iterating-through-richtext-portions-in-large-worksheets.cs
+- apply-conditional-formatting-that-highlights-cells-with-quoteprefix-false-using-a-distinct-background-color.cs
