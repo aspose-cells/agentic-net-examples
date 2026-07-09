@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - load-an-excel-file-check-for-password-protection-and-prompt-the-user-for-credentials-if-needed.cs
 - protect-the-workbook-structure-and-lock-all-worksheets-then-save-the-workbook-as-an-encrypted-xlsx-file.cs
 - apply-workbook-protection-with-a-password-and-attempt-to-add-a-new-worksheet-to-verify-restriction.cs
+- protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs
