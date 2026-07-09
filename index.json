@@ -1651,6 +1651,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "build-a-tool-that-reads-a-csv-list-of-file-paths-and-passwords-then-decrypts-each-corresponding-workbook.cs",
+      "title": "Build a tool that reads a CSV list of file paths and passwords, then decrypts each corresponding workbook."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "change-the-password-to-modify-on-an-existing-workbook-without-altering-its-content.cs",
       "title": "Change the 'password to modify' on an existing workbook without altering its content."
     },
