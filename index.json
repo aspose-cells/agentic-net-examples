@@ -1691,6 +1691,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "remove-all-password-protection-from-a-workbook-making-it-freely-editable-and-viewable-without-authentication.cs",
+      "title": "Remove all password protection from a workbook, making it freely editable and viewable without authentication."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "unprotect-a-workbook-structure-using-a-recovered-password-and-log-the-unprotection-event-for-audit.cs",
       "title": "Unprotect a workbook structure using a recovered password and log the unprotection event for audit."
     },
