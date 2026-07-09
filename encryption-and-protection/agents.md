@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - protect-the-workbook-structure-and-then-attempt-to-delete-a-worksheet-to-confirm-deletion-is-blocked.cs
 - unprotect-a-workbook-structure-using-a-recovered-password-and-log-the-unprotection-event-for-audit.cs
 - remove-all-password-protection-from-a-workbook-making-it-freely-editable-and-viewable-without-authentication.cs
+- change-the-password-to-modify-on-an-existing-workbook-without-altering-its-content.cs
