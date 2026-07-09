@@ -1636,6 +1636,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-the-encryption-type-of-an-ods-file-and-display-the-algorithm-name.cs",
+      "title": "Detect the encryption type of an ODS file and display the algorithm name."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs",
       "title": "If a loaded workbook is not encrypted, apply default encryption using a preset password."
     },
