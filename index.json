@@ -1641,6 +1641,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs",
+      "title": "Batch encrypt multiple Excel files in a directory using a shared password and AES\u2011128 encryption."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "change-the-password-to-modify-on-an-existing-workbook-without-altering-its-content.cs",
       "title": "Change the 'password to modify' on an existing workbook without altering its content."
     },
