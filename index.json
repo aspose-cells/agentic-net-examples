@@ -1646,6 +1646,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-the-ods-encryption-algorithm-and-output-a-humanreadable-description-of-its-security-level.cs",
+      "title": "Detect the ODS encryption algorithm and output a human\u2011readable description of its security level."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs",
       "title": "If a loaded workbook is not encrypted, apply default encryption using a preset password."
     },
