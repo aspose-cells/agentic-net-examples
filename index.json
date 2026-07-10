@@ -3496,6 +3496,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "move-a-pivot-item-two-positions-forward-within-the-same-parent-node-using-the-move-method.cs",
+      "title": "Move a pivot item two positions forward within the same parent node using the Move method."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs",
       "title": "Programmatically disable the auto\u2011fit of column widths for a PivotTable to maintain custom column sizing."
     },
