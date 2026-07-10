@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs
 - update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs
 - configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs
+- apply-a-theme-color-to-all-pivottable-headers-using-the-formatall-method-with-a-predefined-style.cs
