@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs
 - set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs
 - assign-the-builtin-pivottablestylemedium9-autoformat-to-a-pivottable-for-quick-styling-automatically.cs
+- create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs
