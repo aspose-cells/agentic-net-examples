@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs
 - apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs
 - add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs
+- enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs
