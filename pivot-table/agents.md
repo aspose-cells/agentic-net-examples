@@ -200,3 +200,4 @@ Output files are written to the working directory.
 - apply-a-custom-descending-alphabetical-sort-to-product-category-pivot-items.cs
 - hide-selected-pivot-items-to-exclude-confidential-information-from-the-report-view.cs
 - refresh-the-pivot-table-after-modifying-source-worksheet-data-to-update-calculations.cs
+- call-pivottablecalculatedata-before-saving-to-ensure-rendered-pivot-data-accurately.cs
