@@ -3366,6 +3366,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "assign-the-custom-globalization-instance-to-workbooksettingsglobalizationsettingspivotsettings-for-the-loaded-workbook.cs",
+      "title": "Assign the custom globalization instance to WorkbookSettings.GlobalizationSettings.PivotSettings for the loaded workbook."
+    },
+    {
+      "category": "pivot-table",
       "file": "cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs",
       "title": "Cache source data to reduce load time when the workbook is opened repeatedly."
     },
