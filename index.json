@@ -3711,6 +3711,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs",
+      "title": "Rename a PivotField after hiding it to reflect updated business terminology."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs",
       "title": "Save a workbook containing a configured PivotTable to XLSX format using default save options."
     },
