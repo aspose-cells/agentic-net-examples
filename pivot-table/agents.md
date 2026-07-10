@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - log-the-number-of-rows-generated-by-a-pivottable-after-refresh-for-performance-monitoring-and-diagnostics.cs
 - programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs
 - set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs
+- programmatically-reorder-the-page-fields-to-change-filter-priority-within-the-pivottable-for-better-user-experience.cs
