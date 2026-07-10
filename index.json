@@ -3870,6 +3870,11 @@
       "title": "Use PivotItem.Move with count -1 and isSameParent true to shift an item upward within its group."
     },
     {
+      "category": "pivot-table",
+      "file": "validate-that-each-pivottable-has-a-non-empty-refreshbywho-property-before-publishing.cs",
+      "title": "Validate that each PivotTable has a non-empty RefreshByWho property before publishing."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
       "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
