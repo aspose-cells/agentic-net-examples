@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs
 - set-numeric-format-000-for-a-data-field-to-display-currency-values-correctly.cs
 - define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs
+- refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs
