@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - after-moving-items-verify-that-their-position-values-reflect-the-new-order-by-iterating-over-the-fields.cs
 - export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs
 - delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs
+- delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs
