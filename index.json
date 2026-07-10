@@ -3606,6 +3606,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-pivot-table-ribbons-in-the-generated-ods-file-for-a-cleaner-interface.cs",
+      "title": "Disable pivot table ribbons in the generated ODS file for a cleaner interface."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-row-grand-totals-in-a-pivot-table-to-simplify-the-summary-view.cs",
       "title": "Disable row grand totals in a pivot table to simplify the summary view."
     },
