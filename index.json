@@ -3551,6 +3551,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs",
+      "title": "Set the PivotTable's ShowGrandTotalsForRows property to true to display row totals at the bottom of the report."
+    },
+    {
+      "category": "pivot-table",
       "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
       "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
     },
