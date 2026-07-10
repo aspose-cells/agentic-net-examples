@@ -96,3 +96,4 @@ Output files are written to the working directory.
 - set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs
 - programmatically-reorder-the-page-fields-to-change-filter-priority-within-the-pivottable-for-better-user-experience.cs
 - apply-a-custom-background-color-to-the-pivottables-header-row-using-the-formatall-method-for-visual-emphasis.cs
+- enable-the-showexpandcollapsebuttons-property-to-provide-visual-cues-for-hierarchical-data-navigation-within-the-pivottable.cs
