@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs
 - assign-the-builtin-pivottablestylemedium9-autoformat-to-a-pivottable-for-quick-styling-automatically.cs
 - create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs
+- apply-a-predefined-style-to-all-pivottable-elements-by-calling-pivottableformatall-with-the-style.cs
