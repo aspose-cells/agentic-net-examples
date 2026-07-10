@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs
 - apply-the-compact-layout-to-an-existing-pivottable-by-invoking-the-showincompactform-method.cs
 - switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs
+- set-a-pivottable-to-tabular-layout-using-showintabularform-and-verify-column-alignment-afterwards.cs
