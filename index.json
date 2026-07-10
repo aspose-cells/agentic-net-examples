@@ -3676,6 +3676,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs",
+      "title": "Set PivotTable.IsExcel2003Compatible to false before refreshing to preserve full text length."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs",
       "title": "Set the pivot table to show row grand totals but hide column grand totals."
     },
