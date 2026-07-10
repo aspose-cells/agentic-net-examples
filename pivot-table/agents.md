@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs
 - add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs
 - hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs
+- iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs
