@@ -3571,6 +3571,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-pivot-chart-linked-to-the-pivot-table-and-export-both-to-an-ods-file.cs",
+      "title": "Create a pivot chart linked to the pivot table and export both to an ODS file."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-multiple-pivot-tables-in-a-single-worksheet-each-summarizing-different-metrics.cs",
       "title": "Create multiple pivot tables in a single worksheet, each summarizing different metrics."
     },
