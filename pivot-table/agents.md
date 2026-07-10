@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - set-the-pivottables-allowmultiplefilters-property-to-false-to-restrict-filter-selections-for-end-users.cs
 - log-the-number-of-rows-generated-by-a-pivottable-after-refresh-for-performance-monitoring-and-diagnostics.cs
 - programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs
+- set-the-pivottables-enablerefreshonopen-property-to-false-to-prevent-automatic-data-refresh-on-workbook-opening.cs
