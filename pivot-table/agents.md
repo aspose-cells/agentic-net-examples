@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - apply-a-custom-sort-order-using-a-predefined-list-of-strings-to-control-field-item-sequence.cs
 - clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs
 - enable-auto-format-for-a-pivot-table-during-creation-to-apply-default-visual-styling.cs
+- disable-row-grand-totals-in-a-pivot-table-to-simplify-the-summary-view.cs
