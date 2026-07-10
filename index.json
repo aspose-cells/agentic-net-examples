@@ -3821,6 +3821,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-all-pivot-tables-in-a-workbook-after-bulk-data-import-to-ensure-consistency.cs",
+      "title": "Refresh all pivot tables in a workbook after bulk data import to ensure consistency."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs",
       "title": "Refresh nested pivot tables recursively to ensure all child tables reflect updated source data."
     },
