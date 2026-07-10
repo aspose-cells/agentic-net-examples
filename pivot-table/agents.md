@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs
 - apply-an-ascending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs
 - apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs
+- add-a-calculated-field-that-computes-profit-margin-using-revenue-and-cost-values.cs
