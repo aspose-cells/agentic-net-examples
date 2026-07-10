@@ -3400,6 +3400,11 @@
       "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
     },
     {
+      "category": "pivot-table",
+      "file": "update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs",
+      "title": "Update the external connection's command text for a PivotTable to query a different database table."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
       "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
