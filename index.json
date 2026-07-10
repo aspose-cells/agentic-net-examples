@@ -3426,6 +3426,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-disable-the-showexpandcollapsebuttons-property-to-simplify-the-ui-for-flat-data-structures-without-hierarchy.cs",
+      "title": "Programmatically disable the ShowExpandCollapseButtons property to simplify the UI for flat data structures without hierarchy."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs",
       "title": "Programmatically reorder PivotFields within the row area to change the data hierarchy display order."
     },
