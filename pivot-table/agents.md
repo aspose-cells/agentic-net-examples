@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - set-the-pivottables-showgrandtotalsforcolumns-property-to-false-to-hide-column-totals-entirely-from-the-report.cs
 - programmatically-set-the-pivottables-displayerrorstring-to-a-custom-message-for-handling-div0-calculation-errors.cs
 - hide-the-pivottables-field-list-pane-by-setting-the-showfieldlist-property-to-false-before-saving.cs
+- apply-a-custom-style-to-the-pivottables-data-cells-only-by-using-formatall-with-a-specific-cell-style.cs
