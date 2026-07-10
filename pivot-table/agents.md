@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs
 - save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs
 - add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs
+- hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs
