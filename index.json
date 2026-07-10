@@ -3316,6 +3316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs",
+      "title": "Hide a specific PivotField from the report area by setting its Visible property to false."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
