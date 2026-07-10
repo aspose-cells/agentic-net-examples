@@ -3270,6 +3270,11 @@
       "title": "Write pivot table definitions while saving with LightCellsDataProvider to recreate analytical views in the output workbook."
     },
     {
+      "category": "pivot-table",
+      "file": "create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs",
+      "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
       "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
