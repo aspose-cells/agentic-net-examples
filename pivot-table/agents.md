@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - add-a-calculated-field-named-profit-with-expression-revenue-cost-to-the-pivottable.cs
 - hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs
 - iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs
+- export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs
