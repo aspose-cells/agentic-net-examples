@@ -3436,6 +3436,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-custom-groupings-from-a-pivotfield-by-calling-the-clearallgroups-method-directly-on-the-field.cs",
+      "title": "Remove all custom groupings from a PivotField by calling the ClearAllGroups method directly on the field."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
       "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
     },
