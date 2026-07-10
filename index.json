@@ -3426,6 +3426,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-displayerrorstring-to-a-custom-message-for-handling-div0-calculation-errors.cs",
+      "title": "Programmatically set the PivotTable's DisplayErrorString to a custom message for handling #DIV/0! calculation errors."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
