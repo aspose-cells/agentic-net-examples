@@ -3411,6 +3411,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-an-existing-pivot-table-and-replace-it-with-a-newly-configured-version.cs",
+      "title": "Delete an existing pivot table and replace it with a newly configured version."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs",
       "title": "Enable automatic refresh on workbook open so the pivot table updates."
     },
