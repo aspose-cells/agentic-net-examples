@@ -4061,6 +4061,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "use-pivottablecalculatedata-after-adding-calculated-fields-to-update-results-accurately.cs",
+      "title": "Use PivotTable.CalculateData() after adding calculated fields to update results accurately."
+    },
+    {
+      "category": "pivot-table",
       "file": "validate-that-each-pivottable-has-a-non-empty-refreshbywho-property-before-publishing.cs",
       "title": "Validate that each PivotTable has a non-empty RefreshByWho property before publishing."
     },
