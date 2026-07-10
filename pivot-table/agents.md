@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - hide-a-specific-pivotfield-from-the-report-area-by-setting-its-visible-property-to-false.cs
 - iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs
 - export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs
+- apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs
