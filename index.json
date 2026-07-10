@@ -3301,6 +3301,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs",
+      "title": "Define a custom number format '0.00%' for a percentage field within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
       "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
     },
