@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - clone-an-existing-pivottable-to-a-new-worksheet-while-preserving-its-layout-and-formatting-settings.cs
 - set-the-pivottables-refreshonfileopen-property-to-true-to-enable-autorefresh-when-workbook-loads.cs
 - customize-the-pivottables-report-filter-caption-by-assigning-a-new-descriptive-string-to-its-caption-property.cs
+- programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs
