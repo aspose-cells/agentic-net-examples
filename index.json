@@ -3356,6 +3356,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs",
+      "title": "Programmatically reorder PivotFields within the row area to change the data hierarchy display order."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
