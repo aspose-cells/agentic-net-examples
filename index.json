@@ -3406,6 +3406,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-reorder-the-page-fields-to-change-filter-priority-within-the-pivottable-for-better-user-experience.cs",
+      "title": "Programmatically reorder the page fields to change filter priority within the PivotTable for better user experience."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
