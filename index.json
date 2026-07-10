@@ -3286,6 +3286,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs",
+      "title": "Add a new data field to the PivotTable and set its aggregation function to Count for item tallying."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs",
       "title": "Add a slicer linked to a PivotTable for interactive filtering using the SlicerCollection API."
     },
