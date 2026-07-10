@@ -3306,6 +3306,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs",
+      "title": "Enable Excel 2003 compatibility before refreshing the PivotTable by setting IsCompatibleWithExcel2003 true."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
