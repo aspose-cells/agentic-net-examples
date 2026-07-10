@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs
 - add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs
 - enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs
+- group-date-fields-by-month-and-year-to-summarize-sales-trends.cs
