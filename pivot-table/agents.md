@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - apply-a-theme-color-to-all-pivottable-headers-using-the-formatall-method-with-a-predefined-style.cs
 - add-a-calculated-item-to-an-existing-field-by-calling-addcalculateditem-with-the-appropriate-expression.cs
 - remove-a-calculated-field-from-a-pivottable-using-the-calculatedfieldsremove-method-for-the-specified-field.cs
+- set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs
