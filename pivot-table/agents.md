@@ -157,3 +157,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs
 - save-the-workbook-to-a-memory-stream-and-then-write-the-stream-to-disk.cs
 - measure-memory-consumption-while-loading-a-workbook-with-parsingpivotcachedrecords-set-to-true.cs
+- compare-memory-usage-between-loading-with-cache-parsing-enabled-and-disabled-for-the-same-file.cs
