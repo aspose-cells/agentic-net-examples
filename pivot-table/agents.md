@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs
 - set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs
 - apply-number-formatting-to-show-values-as-currency-with-two-decimal-places.cs
+- add-a-calculated-field-that-computes-profit-margin-by-dividing-profit-by-revenue.cs
