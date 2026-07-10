@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs
 - set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs
 - refresh-a-specific-pivottable-programmatically-to-reflect-changes-in-its-data-source.cs
+- group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs
