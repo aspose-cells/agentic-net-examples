@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs
 - add-a-calculated-field-that-computes-profit-margin-using-revenue-and-cost-values.cs
 - add-a-calculated-field-that-concatenates-two-text-fields-with-a-hyphen-separator.cs
+- remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs
