@@ -3705,6 +3705,11 @@
       "title": "Use a dynamic named range as the source to automatically expand with new data."
     },
     {
+      "category": "pivot-table",
+      "file": "use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs",
+      "title": "Use PivotItem.Move with count -1 and isSameParent true to shift an item upward within its group."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
       "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
