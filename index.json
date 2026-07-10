@@ -3280,6 +3280,11 @@
       "title": "Create a new workbook, add source data, and generate a PivotTable on the first worksheet."
     },
     {
+      "category": "pivot-table",
+      "file": "switch-a-pivottable-to-outline-form-by-calling-the-showinoutlineform-method-on-the-table.cs",
+      "title": "Switch a PivotTable to Outline form by calling the ShowInOutlineForm method on the table."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
       "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
