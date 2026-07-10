@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - apply-a-custom-background-color-to-the-pivottables-header-row-using-the-formatall-method-for-visual-emphasis.cs
 - enable-the-showexpandcollapsebuttons-property-to-provide-visual-cues-for-hierarchical-data-navigation-within-the-pivottable.cs
 - add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs
+- set-the-pivottables-enablemultipleselection-property-to-true-to-allow-multiselect-options-in-filter-dialogs.cs
