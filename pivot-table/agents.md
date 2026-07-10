@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs
 - add-a-report-filter-field-to-allow-selection-of-a-specific-salesperson.cs
 - add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs
+- use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs
