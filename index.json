@@ -3396,6 +3396,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-disable-the-autofit-of-column-widths-for-a-pivottable-to-maintain-custom-column-sizing.cs",
+      "title": "Programmatically disable the auto\u2011fit of column widths for a PivotTable to maintain custom column sizing."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs",
       "title": "Programmatically reorder PivotFields within the row area to change the data hierarchy display order."
     },
