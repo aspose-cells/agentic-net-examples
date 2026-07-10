@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - apply-distinct-custom-globalization-settings-to-each-workbook-before-refreshing-to-generate-multilingual-pivot-labels.cs
 - programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs
 - calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs
+- create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs
