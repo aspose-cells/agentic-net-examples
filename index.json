@@ -3636,6 +3636,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-over-all-pivot-fields-and-output-each-fields-display-name-to-the-console.cs",
+      "title": "Iterate over all pivot fields and output each field\u2019s display name to the console."
+    },
+    {
+      "category": "pivot-table",
       "file": "iterate-through-all-pivot-fields-and-log-each-fields-display-name-to-a-text-file.cs",
       "title": "Iterate through all pivot fields and log each field\u2019s display name to a text file."
     },
