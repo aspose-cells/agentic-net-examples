@@ -3486,6 +3486,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-pivot-tables-from-a-worksheet-based-on-a-naming-convention-that-starts-with-temp_-prefix.cs",
+      "title": "Delete pivot tables from a worksheet based on a naming convention that starts with 'Temp_' prefix."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs",
       "title": "Enable automatic refresh on workbook open so the pivot table updates."
     },
