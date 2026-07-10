@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - hide-the-pivottables-field-list-pane-by-setting-the-showfieldlist-property-to-false-before-saving.cs
 - apply-a-custom-style-to-the-pivottables-data-cells-only-by-using-formatall-with-a-specific-cell-style.cs
 - programmatically-disable-the-showexpandcollapsebuttons-property-to-simplify-the-ui-for-flat-data-structures-without-hierarchy.cs
+- add-a-slicer-for-the-region-field-and-link-it-to-the-pivottable-for-interactive-filtering-by-users.cs
