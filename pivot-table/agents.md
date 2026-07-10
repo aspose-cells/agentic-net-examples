@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - move-a-pivot-item-two-positions-forward-within-the-same-parent-node-using-the-move-method.cs
 - transfer-a-pivot-item-to-a-different-parent-field-by-calling-move-with-issameparent-set-to-false.cs
 - after-moving-items-verify-that-their-position-values-reflect-the-new-order-by-iterating-over-the-fields.cs
+- export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs
