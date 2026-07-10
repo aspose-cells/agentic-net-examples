@@ -3691,6 +3691,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs",
+      "title": "Remove a calculated field from a PivotTable without affecting other fields."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-custom-groupings-from-a-pivotfield-by-calling-the-clearallgroups-method-directly-on-the-field.cs",
       "title": "Remove all custom groupings from a PivotField by calling the ClearAllGroups method directly on the field."
     },
