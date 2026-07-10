@@ -3506,6 +3506,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs",
+      "title": "Set the PivotTable's EnableMultipleSelection property to false to enforce single selection behavior in filter dialogs."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-enablemultipleselection-property-to-true-to-allow-multiselect-options-in-filter-dialogs.cs",
       "title": "Set the PivotTable's EnableMultipleSelection property to true to allow multi\u2011select options in filter dialogs."
     },
