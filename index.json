@@ -3461,6 +3461,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs",
+      "title": "Refresh a PivotTable in a background thread and update the UI after completion using a callback method."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
       "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
     },
