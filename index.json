@@ -3831,6 +3831,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-data-field-display-format-to-ranklargesttosmallest-for-descending-ranking.cs",
+      "title": "Set the data field display format to RankLargestToSmallest for descending ranking."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs",
       "title": "Set the pivot table to show row grand totals but hide column grand totals."
     },
