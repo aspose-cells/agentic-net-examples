@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - batch-update-the-showreportfilterpages-option-for-every-pivottable-across-multiple-workbooks.cs
 - validate-that-each-pivottable-has-a-non-empty-refreshbywho-property-before-publishing.cs
 - load-a-workbook-from-a-file-path-to-prepare-for-pivot-table-operations.cs
+- create-a-new-pivot-table-on-a-worksheet-by-specifying-target-range-and-data-source.cs
