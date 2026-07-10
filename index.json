@@ -4075,6 +4075,11 @@
       "title": "Validate that each PivotTable has a non-empty RefreshByWho property before publishing."
     },
     {
+      "category": "pivot-table",
+      "file": "validate-that-the-ods-file-contains-the-rendered-pivot-table-by-opening-and-checking-objects.cs",
+      "title": "Validate that the ODS file contains the rendered pivot table by opening and checking objects."
+    },
+    {
       "category": "queries-and-connections",
       "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
       "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
