@@ -3581,6 +3581,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "measure-memory-consumption-while-loading-a-workbook-with-parsingpivotcachedrecords-set-to-true.cs",
+      "title": "Measure memory consumption while loading a workbook with ParsingPivotCachedRecords set to true."
+    },
+    {
+      "category": "pivot-table",
       "file": "move-a-pivot-item-two-positions-forward-within-the-same-parent-node-using-the-move-method.cs",
       "title": "Move a pivot item two positions forward within the same parent node using the Move method."
     },
