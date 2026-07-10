@@ -3531,6 +3531,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-and-then-calculate-its-data-to-ensure-formulas-are-uptodate.cs",
+      "title": "Refresh the pivot table and then calculate its data to ensure formulas are up\u2011to\u2011date."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-a-calculated-field-from-a-pivottable-using-the-calculatedfieldsremove-method-for-the-specified-field.cs",
       "title": "Remove a calculated field from a PivotTable using the CalculatedFields.Remove method for the specified field."
     },
