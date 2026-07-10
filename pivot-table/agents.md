@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs
 - enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs
 - refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs
+- set-the-pivottables-showgrandtotalsforrows-property-to-true-to-display-row-totals-at-the-bottom-of-the-report.cs
