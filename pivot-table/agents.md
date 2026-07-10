@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - add-a-new-data-field-to-the-pivottable-and-set-its-aggregation-function-to-count-for-item-tallying.cs
 - set-the-pivottables-enablemultipleselection-property-to-true-to-allow-multiselect-options-in-filter-dialogs.cs
 - remove-all-custom-groupings-from-a-pivotfield-by-calling-the-clearallgroups-method-directly-on-the-field.cs
+- set-the-pivottables-enablerefreshonopen-property-to-true-so-it-automatically-updates-when-the-workbook-opens.cs
