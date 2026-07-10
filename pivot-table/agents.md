@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - iterate-through-all-pivottables-in-a-workbook-and-apply-the-outline-layout-to-each-one.cs
 - export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs
 - apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs
+- configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs
