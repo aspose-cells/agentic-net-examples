@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - add-a-top-5-filter-on-a-column-field-limiting-displayed-items-to-the-best-five.cs
 - remove-all-filters-from-a-pivot-table-to-show-unfiltered-data-across-all-fields.cs
 - set-the-data-field-display-format-to-ranklargesttosmallest-for-descending-ranking.cs
+- configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs
