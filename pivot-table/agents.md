@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - save-the-modified-workbook-as-xlsx-after-applying-pivot-table-changes-and-custom-styles.cs
 - iterate-over-all-pivot-fields-and-output-each-fields-display-name-to-the-console.cs
 - apply-a-custom-sort-order-using-a-predefined-list-of-strings-to-control-field-item-sequence.cs
+- clear-the-filter-on-one-pivot-field-while-preserving-filters-applied-to-other-fields.cs
