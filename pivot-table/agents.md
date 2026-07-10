@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - delete-a-pivot-table-from-its-worksheet-and-confirm-no-remaining-pivot-objects.cs
 - group-numeric-pivot-field-values-into-custom-ranges-for-better-data-segmentation.cs
 - apply-a-custom-sort-to-pivot-items-based-on-aggregated-sales-totals-descending.cs
+- retrieve-and-log-the-external-odbc-connection-string-used-by-a-pivot-table.cs
