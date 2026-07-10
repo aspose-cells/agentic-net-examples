@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - set-the-pivottables-enablemultipleselection-property-to-true-to-allow-multiselect-options-in-filter-dialogs.cs
 - remove-all-custom-groupings-from-a-pivotfield-by-calling-the-clearallgroups-method-directly-on-the-field.cs
 - set-the-pivottables-enablerefreshonopen-property-to-true-so-it-automatically-updates-when-the-workbook-opens.cs
+- set-the-pivottables-showgrandtotalsforcolumns-property-to-false-to-hide-column-totals-entirely-from-the-report.cs
