@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs
 - set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs
 - configure-the-pivottable-to-use-the-default-report-layout-by-resetting-the-showincompactform-setting.cs
+- add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs
