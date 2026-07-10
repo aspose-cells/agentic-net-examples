@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - programmatically-reorder-pivotfields-within-the-row-area-to-change-the-data-hierarchy-display-order.cs
 - add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs
 - update-the-external-connections-command-text-for-a-pivottable-to-query-a-different-database-table.cs
+- configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs
