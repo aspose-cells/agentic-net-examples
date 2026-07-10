@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - enable-automatic-refresh-on-workbook-open-so-the-pivot-table-updates.cs
 - group-date-fields-by-month-and-year-to-summarize-sales-trends.cs
 - set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs
+- add-a-report-filter-field-to-allow-selection-of-a-specific-salesperson.cs
