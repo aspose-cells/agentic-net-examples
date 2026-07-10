@@ -3571,6 +3571,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs",
+      "title": "Load a workbook, locate a PivotTable, and read its RefreshDate property."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-with-default-loadoptions-and-refresh-its-first-pivot-table.cs",
       "title": "Load a workbook with default LoadOptions and refresh its first pivot table."
     },
