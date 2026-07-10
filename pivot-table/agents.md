@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - transfer-a-pivot-item-to-a-different-parent-field-by-calling-move-with-issameparent-set-to-false.cs
 - after-moving-items-verify-that-their-position-values-reflect-the-new-order-by-iterating-over-the-fields.cs
 - export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs
+- delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs
