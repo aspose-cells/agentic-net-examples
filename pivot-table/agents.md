@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-loadoptionsparsingpivotcachedrecords-set-to-false-then-refresh-the-pivot-table.cs
 - access-the-first-worksheet-and-obtain-the-first-pivot-table-for-further-operations.cs
 - apply-light-blue-fill-and-black-font-color-to-the-pivot-field-header-cell-together.cs
+- set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs
