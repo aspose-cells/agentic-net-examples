@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs
 - assign-different-custom-globalization-objects-to-separate-worksheets-within-the-same-workbook-for-localized-sections.cs
 - after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs
+- create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs
