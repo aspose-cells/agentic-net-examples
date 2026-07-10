@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - add-a-calculated-field-that-concatenates-two-text-fields-with-a-hyphen-separator.cs
 - remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs
 - rename-a-pivotfield-after-hiding-it-to-reflect-updated-business-terminology.cs
+- set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs
