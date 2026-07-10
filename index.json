@@ -3311,6 +3311,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-conditional-formatting-to-highlight-rows-where-profit-margin-exceeds-twenty-percent.cs",
+      "title": "Add conditional formatting to highlight rows where profit margin exceeds twenty percent."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-background-color-to-the-pivottables-header-row-using-the-formatall-method-for-visual-emphasis.cs",
       "title": "Apply a custom background color to the PivotTable's header row using the FormatAll method for visual emphasis."
     },
