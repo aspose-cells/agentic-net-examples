@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - enable-background-refresh-to-improve-ui-responsiveness-while-updates-occur-asynchronously.cs
 - cache-source-data-to-reduce-load-time-when-the-workbook-is-opened-repeatedly.cs
 - apply-a-custom-pivotglobalizationsettings-subclass-to-modify-total-label-text-before-refreshing-the-pivot-table.cs
+- assign-the-custom-globalization-instance-to-workbooksettingsglobalizationsettingspivotsettings-for-the-loaded-workbook.cs
