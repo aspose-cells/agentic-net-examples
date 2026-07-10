@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs
 - change-the-consolidationfunction-to-average-to-compute-mean-values-in-the-pivottable-for-better-analysis.cs
 - set-the-pivottables-missingitemslimit-to-a-high-number-to-include-all-possible-items-during-refresh.cs
+- configure-the-pivottable-to-use-the-default-report-layout-by-resetting-the-showincompactform-setting.cs
