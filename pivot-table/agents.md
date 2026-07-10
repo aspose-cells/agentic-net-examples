@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - access-the-first-worksheet-and-obtain-the-first-pivot-table-for-further-operations.cs
 - apply-light-blue-fill-and-black-font-color-to-the-pivot-field-header-cell-together.cs
 - set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs
+- refresh-the-pivot-table-after-disabling-excel-2003-compatibility-to-keep-original-content.cs
