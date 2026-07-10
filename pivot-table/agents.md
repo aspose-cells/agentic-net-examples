@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs
 - configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs
 - export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs
+- clone-an-existing-pivottable-to-a-new-worksheet-while-preserving-its-layout-and-formatting-settings.cs
