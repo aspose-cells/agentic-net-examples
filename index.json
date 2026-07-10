@@ -3601,6 +3601,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs",
+      "title": "Iterate through all worksheets, locate each PivotTable, and log its RefreshDate to a file."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs",
       "title": "Load a workbook, locate a PivotTable, and read its RefreshDate property."
     },
