@@ -3611,6 +3611,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-from-a-file-path-to-prepare-for-pivot-table-operations.cs",
+      "title": "Load a workbook from a file path to prepare for pivot table operations."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-locate-a-pivottable-and-read-its-refreshdate-property.cs",
       "title": "Load a workbook, locate a PivotTable, and read its RefreshDate property."
     },
