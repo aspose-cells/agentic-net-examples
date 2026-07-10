@@ -3751,6 +3751,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs",
+      "title": "Set the AutoSort property of a PivotField to sort items based on a related value field."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivot-table-to-show-row-grand-totals-but-hide-column-grand-totals.cs",
       "title": "Set the pivot table to show row grand totals but hide column grand totals."
     },
