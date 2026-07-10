@@ -3316,6 +3316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-pivottable-to-hide-empty-rows-by-setting-the-hideemptyrows-property-to-true.cs",
+      "title": "Configure the PivotTable to hide empty rows by setting the HideEmptyRows property to true."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs",
       "title": "Create a custom Style object, configure its font color, and apply it using PivotTable.Format."
     },
