@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - remove-all-slicers-from-a-workbook-by-iterating-each-worksheet-and-clearing-each-pivottables-slicercollection.cs
 - configure-the-pivottable-to-display-values-as-percentages-of-column-total-using-the-showvaluesaspercent-property.cs
 - set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs
+- enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs
