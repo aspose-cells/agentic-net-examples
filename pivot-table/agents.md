@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - configure-the-pivottable-to-display-values-as-percentages-of-column-total-using-the-showvaluesaspercent-property.cs
 - set-the-pivottables-enablemultipleselection-property-to-false-to-enforce-single-selection-behavior-in-filter-dialogs.cs
 - enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs
+- refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs
