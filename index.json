@@ -3281,6 +3281,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-custom-data-field-that-calculates-the-percentage-of-total-using-a-formula-within-the-pivottable.cs",
+      "title": "Add a custom data field that calculates the percentage of total using a formula within the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-slicer-linked-to-a-pivottable-for-interactive-filtering-using-the-slicercollection-api.cs",
       "title": "Add a slicer linked to a PivotTable for interactive filtering using the SlicerCollection API."
     },
