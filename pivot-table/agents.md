@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - group-related-date-fields-in-a-pivottable-by-month-and-year-using-groupfields-method.cs
 - hide-the-pivottable-ribbon-interface-to-provide-a-cleaner-view-during-runtime.cs
 - modify-the-external-connection-of-a-pivottable-to-point-to-a-new-database-server.cs
+- iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs
