@@ -3306,6 +3306,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs",
+      "title": "Refresh PivotTable data after modifying its source range by calling the RefreshData method explicitly."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs",
       "title": "Remove all row fields from a PivotTable using PivotTable.RowFields.Clear to reset its layout."
     },
