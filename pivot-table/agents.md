@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - export-a-workbook-with-pivottables-to-pdf-format-while-preserving-all-pivot-formatting-details.cs
 - apply-conditional-formatting-to-pivottable-values-that-exceed-a-threshold-using-the-formatcondition-feature.cs
 - configure-the-pivottable-to-display-grand-totals-for-rows-only-by-setting-showrowgrandtotals-true.cs
+- export-a-pivottable-to-csv-by-extracting-its-data-rows-and-writing-them-with-commas.cs
