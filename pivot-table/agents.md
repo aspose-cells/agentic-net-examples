@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs
 - create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs
 - use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs
+- refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs
