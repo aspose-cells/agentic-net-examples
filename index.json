@@ -3411,6 +3411,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs",
+      "title": "Set the PivotTable's EnableMultipleFilters property to true to allow selecting multiple items per filter."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-refreshonfileopen-property-to-true-to-enable-autorefresh-when-workbook-loads.cs",
       "title": "Set the PivotTable's RefreshOnFileOpen property to true to enable auto\u2011refresh when workbook loads."
     },
