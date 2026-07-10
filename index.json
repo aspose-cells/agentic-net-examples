@@ -3426,6 +3426,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-background-refresh-to-improve-ui-responsiveness-while-updates-occur-asynchronously.cs",
+      "title": "Enable background refresh to improve UI responsiveness while updates occur asynchronously."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs",
       "title": "Enable Excel 2003 compatibility before refreshing the PivotTable by setting IsCompatibleWithExcel2003 true."
     },
