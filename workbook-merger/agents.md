@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - export-the-combined-workbook-to-pdf-format-to-verify-visual-fidelity-of-charts-and-images.cs
 - assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs
 - apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs
+- set-the-author-property-of-the-merged-workbook-to-the-current-user-name-after-merging.cs
