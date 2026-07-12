@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs
 - configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs
 - export-a-workbook-containing-embedded-hyperlinks-and-verify-that-links-remain-functional-in-the-pdf.cs
+- set-pdfsaveoptionscompressionlevel-to-maximum-to-reduce-the-size-of-the-generated-pdf-file.cs
