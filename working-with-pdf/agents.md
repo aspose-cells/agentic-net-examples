@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsonepagepersheet-to-true-to-force-each-worksheet-onto-a-separate-pdf-page.cs
 - implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs
 - detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs
+- configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs
