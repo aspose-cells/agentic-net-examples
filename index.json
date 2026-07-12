@@ -6541,6 +6541,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs",
+      "title": "Iterate through all worksheets and add a PDF bookmark for each using worksheet names as destinations."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs",
       "title": "Load an XLSX workbook from a file path and save it as a PDF document."
     },
