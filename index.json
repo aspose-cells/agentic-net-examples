@@ -6471,6 +6471,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs",
+      "title": "Convert a TXT workbook to PDF, inserting page breaks after each paragraph for clarity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs",
       "title": "Convert an XLSX workbook to PDF using default settings and verify output file size."
     },
