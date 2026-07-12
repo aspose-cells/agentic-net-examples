@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs
 - detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs
 - configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs
+- export-a-workbook-containing-embedded-hyperlinks-and-verify-that-links-remain-functional-in-the-pdf.cs
