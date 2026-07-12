@@ -6476,6 +6476,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-a-custom-page-margin-setting-via-pdfsaveoptions-to-control-pdf-page-layout.cs",
+      "title": "Apply a custom page margin setting via PdfSaveOptions to control PDF page layout."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs",
       "title": "Convert a CSV file to PDF and ensure column alignment matches source data."
     },
