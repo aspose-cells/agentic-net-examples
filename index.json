@@ -6466,6 +6466,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs",
+      "title": "Convert a TSV document to PDF applying custom page margins for better readability."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs",
       "title": "Convert an XLSX workbook to PDF using default settings and verify output file size."
     },
