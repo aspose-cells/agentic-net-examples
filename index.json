@@ -6091,6 +6091,11 @@
     },
     {
       "category": "workbook-merger",
+      "file": "set-the-author-property-of-the-merged-workbook-to-the-current-user-name-after-merging.cs",
+      "title": "Set the Author property of the merged workbook to the current user name after merging."
+    },
+    {
+      "category": "workbook-merger",
       "file": "set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs",
       "title": "Set workbook calculation mode to automatic after merging to refresh dependent formulas instantly."
     },
