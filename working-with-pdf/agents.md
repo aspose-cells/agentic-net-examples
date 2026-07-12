@@ -81,3 +81,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs
 - set-pdfsaveoptionspdfcompliance-to-pdfa1a-to-produce-pdfa1a-compliant-output-for-archival-purposes.cs
 - programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs
+- apply-a-custom-page-margin-setting-via-pdfsaveoptions-to-control-pdf-page-layout.cs
