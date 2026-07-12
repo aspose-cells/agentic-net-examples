@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs
 - create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs
 - iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs
+- set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs
