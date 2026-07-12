@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsonepagepersheet-to-true-to-generate-a-separate-pdf-page-for-each-worksheet.cs
 - set-pdfsaveoptionscompliance-to-pdfcompliancepdfa1a-for-pdfa1a-compliant-output-that-meets-archival-standards.cs
 - set-pdfsaveoptionsfitallcolumnsononepage-to-true-to-fit-all-worksheet-columns-onto-a-single-pdf-page.cs
+- define-pdfsaveoptionsmaxpages-to-limit-the-total-number-of-pages-generated-during-conversion.cs
