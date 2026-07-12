@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - convert-a-csv-file-to-pdf-and-set-pdf-creation-time-to-a-specific-historical-date.cs
 - convert-a-tsv-document-to-pdf-while-applying-pdfa2b-compliance-for-archival-purposes.cs
 - add-a-text-watermark-with-45degree-rotation-and-60-opacity-on-oddnumbered-pages.cs
+- add-a-text-watermark-with-no-rotation-and-20-opacity-on-evennumbered-pages.cs
