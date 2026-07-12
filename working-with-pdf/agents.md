@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs
 - convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs
+- convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs
