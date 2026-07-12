@@ -6591,6 +6591,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-excel-workbook-xls-or-xlsx-using-the-workbook-constructor-or-workbookload-method.cs",
+      "title": "Load an Excel workbook (XLS or XLSX) using the Workbook constructor or Workbook.Load method."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs",
       "title": "Load an XLSX workbook from a file path and save it as a PDF document."
     },
