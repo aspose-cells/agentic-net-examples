@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs
 - iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs
 - set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs
+- set-pdfsaveoptionspdfcompliance-to-pdfa1a-to-produce-pdfa1a-compliant-output-for-archival-purposes.cs
