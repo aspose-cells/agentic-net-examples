@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - add-a-text-watermark-with-no-rotation-and-20-opacity-on-evennumbered-pages.cs
 - add-an-image-watermark-from-png-byte-array-scaling-to-page-size-with-40-opacity.cs
 - create-pdf-bookmarks-for-each-worksheet-using-worksheet-names-as-bookmark-titles.cs
+- create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs
