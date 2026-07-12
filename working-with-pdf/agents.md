@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs
 - convert-an-xls-workbook-to-pdfa1b-compliant-file-and-verify-compliance-with-external-validator.cs
 - convert-an-xlsb-file-to-pdf-and-set-pdf-creation-time-to-current-utc-timestamp.cs
+- set-pdf-compliance-to-pdfa3u-and-embed-xml-metadata-for-enhanced-accessibility.cs
