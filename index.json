@@ -6490,6 +6490,11 @@
       "title": "Convert an XLSX workbook to PDF using default settings and verify output file size."
     },
     {
+      "category": "working-with-pdf",
+      "file": "set-pdf-compliance-to-pdfa3u-and-embed-xml-metadata-for-enhanced-accessibility.cs",
+      "title": "Set PDF compliance to PDF/A\u20113u and embed XML metadata for enhanced accessibility."
+    },
+    {
       "category": "working-with-tables",
       "file": "add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs",
       "title": "Add a comment to the table object describing its purpose and retrieve the comment text programmatically."
