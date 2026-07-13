@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - render-office-addins-while-converting-an-xlsb-workbook-to-pdf-preserving-interactive-elements.cs
 - render-office-addins-while-converting-an-xlsm-workbook-to-pdf-preserving-macros-ui-elements.cs
 - load-an-xlsx-workbook-from-disk-using-the-workbook-class.cs
+- recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs
