@@ -6116,6 +6116,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "document-the-steps-required-to-disable-scientific-notation-in-html-export.cs",
+      "title": "Document the steps required to disable scientific notation in HTML export."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
