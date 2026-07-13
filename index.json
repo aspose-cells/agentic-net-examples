@@ -7011,6 +7011,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsoptimizationtype-to-minimumsize-while-preserving-original-column-widths-in-pdf.cs",
+      "title": "Set PdfSaveOptions.OptimizationType to MinimumSize while preserving original column widths in PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs",
       "title": "Set PdfSaveOptions.OutputBlankPageWhenNothingToPrint to false to trigger CellsException on empty workbooks."
     },
