@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - set-htmlsaveoptions-to-omit-downlevel-revealed-comment-syntax-in-the-exported-html.cs
 - ensure-that-comments-are-not-exposed-to-browsers-that-do-not-support-modern-comment-standards.cs
 - test-html-files-in-legacy-browsers-to-confirm-comments-are-hidden-appropriately.cs
+- document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs
