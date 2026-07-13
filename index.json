@@ -6466,6 +6466,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-semitransparent-watermark-text-across-each-pdf-page-using-pdfsaveoptionswatermarktext.cs",
+      "title": "Add a semi\u2011transparent watermark text across each PDF page using PdfSaveOptions.WatermarkText."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-text-watermark-with-45degree-rotation-and-60-opacity-on-oddnumbered-pages.cs",
       "title": "Add a text watermark with 45\u2011degree rotation and 60% opacity on odd\u2011numbered pages."
     },
