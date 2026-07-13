@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - add-a-semitransparent-watermark-text-across-each-pdf-page-using-pdfsaveoptionswatermarktext.cs
 - apply-pdf-encryption-with-a-user-password-and-restrict-printing-using-pdfsaveoptionsencryptionoptions.cs
 - disable-gridline-rendering-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-cleaner-pdf-layout.cs
+- increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs
