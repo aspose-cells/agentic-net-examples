@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - set-onepagepersheet-to-true-and-limit-pdf-to-a-maximum-of-ten-pages.cs
 - set-onepagepersheet-to-true-and-fit-all-columns-on-one-pdf-page.cs
 - convert-a-tsv-workbook-to-pdf-with-one-page-per-sheet-and-no-blank-pages.cs
+- apply-aes256-encryption-with-only-a-user-password-to-protect-the-pdf.cs
