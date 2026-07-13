@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs
 - render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs
 - enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs
+- preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs
