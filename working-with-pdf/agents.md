@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - validate-that-all-columns-fit-within-a-single-page-for-each-worksheet-when-fitallcolumnsononepage-is-true.cs
 - verify-that-no-exceptions-are-thrown-during-export-when-ignoreerrors-is-enabled-and-source-errors-exist.cs
 - confirm-that-string-crossing-behavior-follows-the-crossstringinpdf-setting-in-the-final-pdf.cs
+- review-the-generated-pdf-to-confirm-that-all-configured-options-have-been-applied-correctly.cs
