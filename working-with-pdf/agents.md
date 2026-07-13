@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - configure-fontsettings-with-a-unicode-font-to-correctly-render-supplementary-characters-in-pdf.cs
 - verify-that-unicode-supplementary-characters-such-as-emojis-render-correctly-in-the-pdf-output.cs
 - render-solid-gridlines-false-verification-ensure-only-cell-borders-appear-without-solid-lines.cs
+- enable-exportdocumentstructure-to-retain-excel-bookmarks-as-pdf-outline-entries-during-conversion.cs
