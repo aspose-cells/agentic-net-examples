@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - replace-specific-unicode-characters-with-a-custom-font-when-saving-excel-as-pdf.cs
 - enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs
 - set-pdf-document-title-metadata-based-on-the-original-excel-workbook-name.cs
+- add-a-semitransparent-watermark-text-to-each-page-of-the-resulting-pdf.cs
