@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - render-solid-gridlines-in-the-pdf-output-by-setting-pdfsaveoptionsrendersolidgridlines-to-true.cs
 - configure-fontsettings-with-a-unicode-font-to-correctly-render-supplementary-characters-in-pdf.cs
 - verify-that-unicode-supplementary-characters-such-as-emojis-render-correctly-in-the-pdf-output.cs
+- render-solid-gridlines-false-verification-ensure-only-cell-borders-appear-without-solid-lines.cs
