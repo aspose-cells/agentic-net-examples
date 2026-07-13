@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - enable-exportdocumentstructure-to-retain-excel-bookmarks-as-pdf-outline-entries-during-conversion.cs
 - verify-that-exportdocumentstructure-creates-a-pdf-outline-matching-excel-sheet-hierarchy.cs
 - verify-that-exportdocumentstructure-generates-a-pdf-outline-reflecting-nested-worksheet-groups.cs
+- embed-an-image-file-as-a-pdf-attachment-using-pdfsaveoptions.cs
