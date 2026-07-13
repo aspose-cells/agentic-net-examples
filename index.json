@@ -6496,6 +6496,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "confirm-that-solid-gridlines-appear-correctly-in-the-pdf-when-rendersolidgridlines-is-enabled.cs",
+      "title": "Confirm that solid gridlines appear correctly in the PDF when RenderSolidGridlines is enabled."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs",
       "title": "Convert a CSV file to PDF and ensure column alignment matches source data."
     },
