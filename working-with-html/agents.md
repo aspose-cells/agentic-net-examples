@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - test-html-export-with-values-larger-than-10⁶-to-confirm-exponential-notation-is-suppressed.cs
 - document-the-steps-required-to-disable-scientific-notation-in-html-export.cs
 - include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs
+- enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs
