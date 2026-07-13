@@ -6531,6 +6531,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs",
+      "title": "Configure PDF page size to A4 and orientation to landscape before saving the workbook."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs",
       "title": "Configure PdfSaveOptions to use a specific PDF version for compatibility with older readers."
     },
