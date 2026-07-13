@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - load-an-xlsb-file-apply-minimumsize-optimization-and-save-as-pdf.cs
 - render-solid-gridlines-in-the-pdf-output-by-setting-pdfsaveoptionsrendersolidgridlines-to-true.cs
 - configure-fontsettings-with-a-unicode-font-to-correctly-render-supplementary-characters-in-pdf.cs
+- verify-that-unicode-supplementary-characters-such-as-emojis-render-correctly-in-the-pdf-output.cs
