@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsignoreerrors-to-true-to-continue-pdf-generation-despite-rendering-errors.cs
 - save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs
 - retrieve-draw-object-and-bound-information-from-the-drawobjecteventhandler-callback-for-custom-processing.cs
+- confirm-that-solid-gridlines-appear-correctly-in-the-pdf-when-rendersolidgridlines-is-enabled.cs
