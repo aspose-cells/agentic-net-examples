@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs
 - apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs
+- test-html-export-with-values-larger-than-10⁶-to-confirm-exponential-notation-is-suppressed.cs
