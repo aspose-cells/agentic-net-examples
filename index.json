@@ -6781,6 +6781,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "use-crossstring-to-place-a-confidential-stamp-over-the-center-of-each-pdf-page.cs",
+      "title": "Use cross\u2011string to place a 'Confidential' stamp over the center of each PDF page."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "use-workbookcalculateformula-to-ensure-all-formulas-are-evaluated-before-exporting-to-pdf.cs",
       "title": "Use Workbook.CalculateFormula to ensure all formulas are evaluated before exporting to PDF."
     },
