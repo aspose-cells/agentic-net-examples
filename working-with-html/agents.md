@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - compare-html-files-before-and-after-enabling-redundant-space-deletion.cs
 - disable-downlevel-revealed-comments-when-saving-to-html-to-improve-compatibility-with-older-browsers.cs
 - set-htmlsaveoptions-to-omit-downlevel-revealed-comment-syntax-in-the-exported-html.cs
+- ensure-that-comments-are-not-exposed-to-browsers-that-do-not-support-modern-comment-standards.cs
