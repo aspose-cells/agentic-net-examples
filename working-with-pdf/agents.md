@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - embed-javascript-in-the-pdf-to-open-a-specific-url-when-the-document-loads.cs
 - convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs
 - apply-a-custom-pdf-compression-level-to-reduce-file-size-while-maintaining-image-quality.cs
+- convert-an-xls-workbook-to-pdf-using-minimumsize-optimization-while-preserving-worksheet-colors.cs
