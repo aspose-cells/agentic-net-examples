@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
+      "title": "Enable the option to generate HTML heading elements based on worksheet names."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
       "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
     },
