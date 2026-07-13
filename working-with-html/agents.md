@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs
 - apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs
 - preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs
+- remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs
