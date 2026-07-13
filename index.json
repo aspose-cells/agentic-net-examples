@@ -6681,6 +6681,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-an-image-file-as-a-pdf-attachment-using-pdfsaveoptions.cs",
+      "title": "Embed an image file as a PDF attachment using PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "embed-javascript-in-the-pdf-to-open-a-specific-url-when-the-document-loads.cs",
       "title": "Embed JavaScript in the PDF to open a specific URL when the document loads."
     },
