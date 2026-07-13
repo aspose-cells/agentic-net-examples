@@ -6141,6 +6141,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "document-the-impact-of-space-removal-on-html-rendering-performance.cs",
+      "title": "Document the impact of space removal on HTML rendering performance."
+    },
+    {
+      "category": "working-with-html",
       "file": "document-the-steps-required-to-disable-scientific-notation-in-html-export.cs",
       "title": "Document the steps required to disable scientific notation in HTML export."
     },
