@@ -6725,6 +6725,11 @@
       "title": "Use Workbook.CalculateFormula to ensure all formulas are evaluated before exporting to PDF."
     },
     {
+      "category": "working-with-pdf",
+      "file": "validate-that-all-columns-fit-within-a-single-page-for-each-worksheet-when-fitallcolumnsononepage-is-true.cs",
+      "title": "Validate that all columns fit within a single page for each worksheet when FitAllColumnsOnOnePage is true."
+    },
+    {
       "category": "working-with-tables",
       "file": "add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs",
       "title": "Add a comment to the table object describing its purpose and retrieve the comment text programmatically."
