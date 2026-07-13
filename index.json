@@ -6851,6 +6851,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-solid-gridlines-false-verification-ensure-only-cell-borders-appear-without-solid-lines.cs",
+      "title": "Render solid gridlines false verification: ensure only cell borders appear without solid lines."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-solid-gridlines-in-the-pdf-output-by-setting-pdfsaveoptionsrendersolidgridlines-to-true.cs",
       "title": "Render solid gridlines in the PDF output by setting PdfSaveOptions.RenderSolidGridlines to true."
     },
