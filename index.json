@@ -6526,6 +6526,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-minimumsize-optimization-and-enable-font-subsetting-to-further-reduce-pdf-file-size.cs",
+      "title": "Apply MinimumSize optimization and enable font subsetting to further reduce PDF file size."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-minimumsize-optimization-and-verify-that-resulting-pdf-file-size-is-reduced-compared-to-standardsize.cs",
       "title": "Apply MinimumSize optimization and verify that resulting PDF file size is reduced compared to StandardSize."
     },
