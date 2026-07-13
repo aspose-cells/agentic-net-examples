@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs
 - configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs
 - preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs
+- render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs
