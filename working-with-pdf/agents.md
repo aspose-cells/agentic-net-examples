@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - limit-generated-pdf-pages-by-specifying-a-maximum-page-count-for-conversion.cs
 - retrieve-and-log-font-substitution-warnings-after-rendering-excel-to-pdf.cs
 - replace-specific-unicode-characters-with-a-custom-font-when-saving-excel-as-pdf.cs
+- enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs
