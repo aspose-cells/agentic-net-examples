@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - set-onepagepersheet-to-true-and-fit-all-columns-on-one-pdf-page.cs
 - convert-a-tsv-workbook-to-pdf-with-one-page-per-sheet-and-no-blank-pages.cs
 - apply-aes256-encryption-with-only-a-user-password-to-protect-the-pdf.cs
+- apply-aes256-encryption-with-both-user-and-owner-passwords-then-save-workbook-as-pdf.cs
