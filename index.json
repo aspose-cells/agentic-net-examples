@@ -6526,6 +6526,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-minimumsize-optimization-and-verify-that-resulting-pdf-file-size-is-reduced-compared-to-standardsize.cs",
+      "title": "Apply MinimumSize optimization and verify that resulting PDF file size is reduced compared to StandardSize."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-pdf-encryption-with-a-user-password-and-restrict-printing-using-pdfsaveoptionsencryptionoptions.cs",
       "title": "Apply PDF encryption with a user password and restrict printing using PdfSaveOptions.EncryptionOptions."
     },
