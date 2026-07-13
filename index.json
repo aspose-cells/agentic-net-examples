@@ -6491,6 +6491,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "check-that-the-pdf-complies-with-pdfa1a-standards-when-compliance-is-set-accordingly.cs",
+      "title": "Check that the PDF complies with PDF/A\u20111a standards when Compliance is set accordingly."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs",
       "title": "Configure PdfSaveOptions to use a specific PDF version for compatibility with older readers."
     },
