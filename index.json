@@ -6771,6 +6771,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsb-file-apply-minimumsize-optimization-and-save-as-pdf.cs",
+      "title": "Load an XLSB file, apply MinimumSize optimization, and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs",
       "title": "Load an XLSX workbook from a file path and save it as a PDF document."
     },
