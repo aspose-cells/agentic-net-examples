@@ -6110,6 +6110,11 @@
       "title": "Verify that the merged workbook contains the expected number of worksheets after combination."
     },
     {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
+      "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
+    },
+    {
       "category": "working-with-images",
       "file": "apply-a-css-rotate-transform-to-the-svg-chart-element-to-display-it-at-a-45degree-angle.cs",
       "title": "Apply a CSS rotate transform to the SVG chart element to display it at a 45\u2011degree angle."
