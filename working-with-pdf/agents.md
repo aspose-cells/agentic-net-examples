@@ -170,3 +170,4 @@ Output files are written to the working directory.
 - render-solid-gridlines-false-verification-ensure-only-cell-borders-appear-without-solid-lines.cs
 - enable-exportdocumentstructure-to-retain-excel-bookmarks-as-pdf-outline-entries-during-conversion.cs
 - verify-that-exportdocumentstructure-creates-a-pdf-outline-matching-excel-sheet-hierarchy.cs
+- verify-that-exportdocumentstructure-generates-a-pdf-outline-reflecting-nested-worksheet-groups.cs
