@@ -6846,6 +6846,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-solid-gridlines-in-the-pdf-output-by-setting-pdfsaveoptionsrendersolidgridlines-to-true.cs",
+      "title": "Render solid gridlines in the PDF output by setting PdfSaveOptions.RenderSolidGridlines to true."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "replace-specific-unicode-characters-with-a-custom-font-when-saving-excel-as-pdf.cs",
       "title": "Replace specific Unicode characters with a custom font when saving Excel as PDF."
     },
