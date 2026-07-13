@@ -6111,6 +6111,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs",
+      "title": "Apply custom number format strings to ensure large identifiers appear without scientific notation."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
