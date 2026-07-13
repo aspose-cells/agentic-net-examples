@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-strings-to-ensure-large-identifiers-appear-without-scientific-notation.cs
 - test-html-export-with-values-larger-than-10⁶-to-confirm-exponential-notation-is-suppressed.cs
 - document-the-steps-required-to-disable-scientific-notation-in-html-export.cs
+- include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs
