@@ -7006,6 +7006,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsoptimizationtype-to-minimumsize-for-an-xlsx-workbook-and-save-as-pdf.cs",
+      "title": "Set PdfSaveOptions.OptimizationType to MinimumSize for an XLSX workbook and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs",
       "title": "Set PdfSaveOptions.OutputBlankPageWhenNothingToPrint to false to trigger CellsException on empty workbooks."
     },
