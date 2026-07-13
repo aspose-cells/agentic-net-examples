@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - convert-an-xls-workbook-to-pdf-using-minimumsize-optimization-while-preserving-worksheet-colors.cs
 - load-an-xls-file-set-optimizationtype-to-minimumsize-and-save-as-pdf.cs
 - load-an-xlsb-file-apply-minimumsize-optimization-and-save-as-pdf.cs
+- render-solid-gridlines-in-the-pdf-output-by-setting-pdfsaveoptionsrendersolidgridlines-to-true.cs
