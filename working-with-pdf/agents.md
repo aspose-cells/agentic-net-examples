@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - embed-an-image-file-as-a-pdf-attachment-using-pdfsaveoptions.cs
 - embed-multiple-excel-worksheets-as-separate-attachments-in-the-pdf-for-detailed-review.cs
 - apply-standardsize-optimization-and-verify-that-resulting-pdf-file-size-is-within-expected-limits.cs
+- apply-minimumsize-optimization-and-verify-that-resulting-pdf-file-size-is-reduced-compared-to-standardsize.cs
