@@ -6671,6 +6671,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsx-workbook-from-disk-using-the-workbook-class.cs",
+      "title": "Load an XLSX workbook from disk using the Workbook class."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs",
       "title": "Programmatically remove a specific worksheet before saving the workbook as PDF to exclude its content."
     },
