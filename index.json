@@ -6766,6 +6766,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xls-file-set-optimizationtype-to-minimumsize-and-save-as-pdf.cs",
+      "title": "Load an XLS file, set OptimizationType to MinimumSize, and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs",
       "title": "Load an XLSX workbook from a file path and save it as a PDF document."
     },
