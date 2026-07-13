@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - apply-pdf-encryption-with-a-user-password-and-restrict-printing-using-pdfsaveoptionsencryptionoptions.cs
 - disable-gridline-rendering-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-cleaner-pdf-layout.cs
 - increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs
+- configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs
