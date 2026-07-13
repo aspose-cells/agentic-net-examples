@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
+      "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "document-the-steps-required-to-disable-scientific-notation-in-html-export.cs",
       "title": "Document the steps required to disable scientific notation in HTML export."
     },
