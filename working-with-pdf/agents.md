@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-from-disk-using-the-workbook-class.cs
 - recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs
 - set-pdfsaveoptionspdfacompliance-to-pdfacompliancepdfa1a-to-generate-pdfa1a-compliant-files-output.cs
+- assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs
