@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - apply-minimumsize-optimization-and-verify-that-resulting-pdf-file-size-is-reduced-compared-to-standardsize.cs
 - apply-minimumsize-optimization-and-enable-font-subsetting-to-further-reduce-pdf-file-size.cs
 - set-pdfsaveoptionsoptimizationtype-to-minimumsize-for-an-xlsx-workbook-and-save-as-pdf.cs
+- set-pdfsaveoptionsoptimizationtype-to-minimumsize-while-preserving-original-column-widths-in-pdf.cs
