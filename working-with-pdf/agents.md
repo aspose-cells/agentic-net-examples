@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - add-a-semitransparent-watermark-text-to-each-page-of-the-resulting-pdf.cs
 - encrypt-the-generated-pdf-with-a-user-password-and-restrict-printing-permissions.cs
 - produce-a-landscapeoriented-pdf-for-wide-excel-sheets-to-improve-readability.cs
+- set-a-custom-pdf-page-size-matching-excel-worksheet-dimensions-for-precise-layout-rendering.cs
