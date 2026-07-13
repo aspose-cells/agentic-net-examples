@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - disable-gridline-rendering-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-cleaner-pdf-layout.cs
 - increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs
 - configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs
+- preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs
