@@ -6741,6 +6741,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs",
+      "title": "Render merged cells correctly in the PDF by preserving their spanning across rows and columns."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-while-converting-an-xls-workbook-to-pdf-preserving-interactive-controls.cs",
       "title": "Render Office Add\u2011Ins while converting an XLS workbook to PDF, preserving interactive controls."
     },
