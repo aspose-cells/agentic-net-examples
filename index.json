@@ -7031,6 +7031,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "verify-that-exportdocumentstructure-generates-a-pdf-outline-reflecting-nested-worksheet-groups.cs",
+      "title": "Verify that ExportDocumentStructure generates a PDF outline reflecting nested worksheet groups."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "verify-that-no-exceptions-are-thrown-during-export-when-ignoreerrors-is-enabled-and-source-errors-exist.cs",
       "title": "Verify that no exceptions are thrown during export when IgnoreErrors is enabled and source errors exist."
     },
