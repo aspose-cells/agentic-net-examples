@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs
 - loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs
 - configure-pdfsaveoptionsimageresample-to-150-dpi-to-reduce-pdf-size-while-maintaining-image-clarity.cs
+- set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs
