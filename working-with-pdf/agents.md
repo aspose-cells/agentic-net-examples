@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - review-the-generated-pdf-to-confirm-that-all-configured-options-have-been-applied-correctly.cs
 - load-a-tsv-workbook-enable-onepagepersheet-and-export-to-pdf-with-default-security.cs
 - set-onepagepersheet-to-true-then-save-each-worksheet-on-a-single-pdf-page.cs
+- set-onepagepersheet-to-true-and-limit-pdf-to-a-maximum-of-ten-pages.cs
