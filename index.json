@@ -6686,6 +6686,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs",
+      "title": "Recalculate all formulas in the workbook by calling Workbook.CalculateFormula before conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-office-addins-while-converting-an-xls-workbook-to-pdf-preserving-interactive-controls.cs",
       "title": "Render Office Add\u2011Ins while converting an XLS workbook to PDF, preserving interactive controls."
     },
