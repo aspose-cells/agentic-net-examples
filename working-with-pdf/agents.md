@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - configure-pdfsaveoptionspassword-and-encryptiontype-to-encrypt-pdf-with-a-strong-password.cs
 - use-crossstring-to-overlay-the-word-confidential-at-the-bottom-of-each-pdf-page.cs
 - activate-pdfsaveoptionscrossstring-to-customize-text-placement-coordinates-for-precise-pdf-layout-control.cs
+- use-crossstring-to-place-a-confidential-stamp-over-the-center-of-each-pdf-page.cs
