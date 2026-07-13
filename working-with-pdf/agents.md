@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs
 - enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs
 - preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs
+- fit-all-worksheet-columns-onto-a-single-pdf-page-during-conversion.cs
