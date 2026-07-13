@@ -6531,6 +6531,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-standardsize-optimization-and-verify-that-resulting-pdf-file-size-is-within-expected-limits.cs",
+      "title": "Apply StandardSize optimization and verify that resulting PDF file size is within expected limits."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs",
       "title": "Assign specific worksheet indices to PdfSaveOptions.SheetSet to export selected sheets as a single PDF."
     },
