@@ -6726,6 +6726,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs",
+      "title": "Preserve cell background colors in the PDF by enabling appropriate rendering settings."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs",
       "title": "Preserve Excel charts as vector graphics in the PDF to maintain scalability and clarity."
     },
