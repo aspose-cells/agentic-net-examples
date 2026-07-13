@@ -6126,6 +6126,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-this-setting-when-exporting-workbooks-containing-extensive-cell-comments.cs",
+      "title": "Apply this setting when exporting workbooks containing extensive cell comments."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-html-files-before-and-after-enabling-redundant-space-deletion.cs",
       "title": "Compare HTML files before and after enabling redundant space deletion."
     },
