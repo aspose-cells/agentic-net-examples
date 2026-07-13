@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs
 - limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs
 - add-a-semitransparent-watermark-text-across-each-pdf-page-using-pdfsaveoptionswatermarktext.cs
+- apply-pdf-encryption-with-a-user-password-and-restrict-printing-using-pdfsaveoptionsencryptionoptions.cs
