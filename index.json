@@ -6671,6 +6671,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "fit-all-worksheet-columns-onto-a-single-pdf-page-during-conversion.cs",
+      "title": "Fit all worksheet columns onto a single PDF page during conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs",
       "title": "Implement batch conversion of multiple XLSX files in a directory to individual PDF files."
     },
