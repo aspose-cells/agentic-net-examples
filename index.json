@@ -6691,6 +6691,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-multiple-excel-worksheets-as-separate-attachments-in-the-pdf-for-detailed-review.cs",
+      "title": "Embed multiple Excel worksheets as separate attachments in the PDF for detailed review."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-exportdocumentstructure-to-retain-excel-bookmarks-as-pdf-outline-entries-during-conversion.cs",
       "title": "Enable ExportDocumentStructure to retain Excel bookmarks as PDF outline entries during conversion."
     },
