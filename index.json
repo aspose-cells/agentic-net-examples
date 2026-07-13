@@ -6686,6 +6686,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-exportdocumentstructure-to-retain-excel-bookmarks-as-pdf-outline-entries-during-conversion.cs",
+      "title": "Enable ExportDocumentStructure to retain Excel bookmarks as PDF outline entries during conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs",
       "title": "Enable hyperlink preservation so that clickable links remain functional in the generated PDF."
     },
