@@ -6120,6 +6120,11 @@
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
     {
+      "category": "working-with-html",
+      "file": "test-html-export-with-values-larger-than-10\u2076-to-confirm-exponential-notation-is-suppressed.cs",
+      "title": "Test HTML export with values larger than 10\u2076 to confirm exponential notation is suppressed."
+    },
+    {
       "category": "working-with-images",
       "file": "apply-a-css-rotate-transform-to-the-svg-chart-element-to-display-it-at-a-45degree-angle.cs",
       "title": "Apply a CSS rotate transform to the SVG chart element to display it at a 45\u2011degree angle."
