@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsfitallcolumnsononepage-to-true-to-fit-all-worksheet-columns-onto-a-single-pdf-page.cs
 - define-pdfsaveoptionsmaxpages-to-limit-the-total-number-of-pages-generated-during-conversion.cs
 - set-pdfsaveoptionsignoreerrors-to-true-to-continue-pdf-generation-despite-rendering-errors.cs
+- save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs
