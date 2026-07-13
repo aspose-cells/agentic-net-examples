@@ -6631,6 +6631,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "disable-gridline-rendering-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-cleaner-pdf-layout.cs",
+      "title": "Disable gridline rendering by setting PdfSaveOptions.RenderSolidGridlines to false for a cleaner PDF layout."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "disable-printing-of-cell-comments-during-pdf-conversion-to-produce-cleaner-document-layout.cs",
       "title": "Disable printing of cell comments during PDF conversion to produce cleaner document layout."
     },
