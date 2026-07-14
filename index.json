@@ -7410,6 +7410,11 @@
       "title": "Copy multiple worksheets whose names start with a specific prefix into a new workbook for backup."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs",
+      "title": "Move a worksheet to a new position by providing the target index within the same workbook."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
