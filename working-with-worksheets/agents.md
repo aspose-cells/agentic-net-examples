@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - copy-multiple-worksheets-whose-names-start-with-a-specific-prefix-into-a-new-workbook-for-backup.cs
 - addcopy-a-worksheet-and-specify-insertion-index-to-place-the-copy-directly-after-the-original-sheet.cs
 - copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs
+- move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs
