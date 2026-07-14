@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - instantiate-a-workbook-and-add-a-linktocontent-custom-property-sourceurl-pointing-to-an-external-url.cs
 - load-a-workbook-locate-the-custom-property-projectid-and-update-its-integer-value.cs
 - open-a-spreadsheet-and-remove-the-custom-property-isreviewed-to-clean-obsolete-metadata.cs
+- load-a-workbook-and-check-whether-a-custom-property-clientname-exists-before-adding.cs
