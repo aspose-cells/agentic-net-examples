@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs
 - open-a-workbook-and-validate-that-documentversion-matches-a-semantic-version-pattern-before-saving.cs
 - load-an-excel-file-and-verify-that-language-contains-a-valid-net-culture-code.cs
+- open-a-workbook-set-scalecrop-to-true-and-ensure-the-flag-persists-when-saving-as-pdf.cs
