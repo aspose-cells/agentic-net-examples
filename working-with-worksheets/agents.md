@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs
 - switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs
 - apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs
+- set-all-worksheets-to-normal-view-mode-to-ensure-consistent-onscreen-display-across-the-workbook.cs
