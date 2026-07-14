@@ -7430,6 +7430,11 @@
       "title": "Shift a worksheet to the last index of the workbook to place it at the end."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs",
+      "title": "Switch a worksheet back to normal view mode to display cells without page break outlines."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
