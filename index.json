@@ -1441,6 +1441,11 @@
     },
     {
       "category": "document-properties",
+      "file": "instantiate-a-workbook-and-add-a-linktocontent-custom-property-sourceurl-pointing-to-an-external-url.cs",
+      "title": "Instantiate a workbook and add a link\u2011to\u2011content custom property \"SourceUrl\" pointing to an external URL."
+    },
+    {
+      "category": "document-properties",
       "file": "instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs",
       "title": "Instantiate a workbook and deliberately access a non\u2011existent built\u2011in property to demonstrate exception handling."
     },
