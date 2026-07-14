@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs
 - instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs
 - load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs
+- open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs
