@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - copy-a-worksheet-within-the-same-workbook-using-its-name-and-ensure-content-integrity.cs
+- copy-multiple-worksheets-whose-names-start-with-a-specific-prefix-into-a-new-workbook-for-backup.cs
