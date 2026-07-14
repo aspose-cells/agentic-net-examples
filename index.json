@@ -7396,6 +7396,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs",
+      "title": "Copy a worksheet and keep all conditional formatting rules intact for consistent styling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "copy-a-worksheet-within-the-same-workbook-using-its-name-and-ensure-content-integrity.cs",
       "title": "Copy a worksheet within the same workbook using its name and ensure content integrity."
     },
