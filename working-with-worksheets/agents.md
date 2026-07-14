@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs
 - move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs
 - shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs
+- place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs
