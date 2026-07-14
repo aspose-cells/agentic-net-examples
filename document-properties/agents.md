@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs
 - generate-a-summary-report-that-aggregates-builtin-property-values-from-multiple-workbooks-into-a-consolidated-excel-file.cs
 - validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs
+- set-the-linksuptodate-property-based-on-presence-of-external-hyperlinks-disabling-it-if-none-exist.cs
