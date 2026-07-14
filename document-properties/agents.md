@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - open-a-workbook-and-add-a-custom-property-processeddate-with-the-current-datetime-value.cs
 - load-an-excel-file-and-create-a-custom-property-projectid-with-an-integer-identifier.cs
 - open-a-workbook-and-add-a-custom-boolean-property-isreviewed-set-to-true.cs
+- instantiate-a-workbook-and-add-a-linktocontent-custom-property-sourceurl-pointing-to-an-external-url.cs
