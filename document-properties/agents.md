@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs
 - load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs
 - create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs
+- open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs
