@@ -7395,6 +7395,11 @@
       "title": "Copy a worksheet within the same workbook using its name and ensure content integrity."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "copy-multiple-worksheets-whose-names-start-with-a-specific-prefix-into-a-new-workbook-for-backup.cs",
+      "title": "Copy multiple worksheets whose names start with a specific prefix into a new workbook for backup."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
