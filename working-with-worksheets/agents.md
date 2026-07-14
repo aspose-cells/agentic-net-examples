@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - addcopy-a-worksheet-and-specify-insertion-index-to-place-the-copy-directly-after-the-original-sheet.cs
 - copy-a-worksheet-and-keep-all-conditional-formatting-rules-intact-for-consistent-styling.cs
 - move-a-worksheet-to-a-new-position-by-providing-the-target-index-within-the-same-workbook.cs
+- shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs
