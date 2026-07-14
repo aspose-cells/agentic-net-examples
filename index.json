@@ -7416,6 +7416,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs",
+      "title": "Place a worksheet immediately after a specified sheet name to control sheet sequencing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs",
       "title": "Shift a worksheet to the last index of the workbook to place it at the end."
     },
