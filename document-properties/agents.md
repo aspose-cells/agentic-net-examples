@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - read-the-keywords-builtin-property-and-use-its-values-to-populate-a-search-index.cs
 - update-the-subject-builtin-property-based-on-worksheet-content-analysis-to-reflect-the-main-topic.cs
 - validate-that-scalecrop-cannot-be-enabled-when-the-workbook-contains-chart-objects.cs
+- log-a-warning-whenever-code-attempts-to-modify-application-metadata-which-is-immutable.cs
