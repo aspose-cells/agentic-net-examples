@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs
 - enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs
 - switch-a-worksheet-back-to-normal-view-mode-to-display-cells-without-page-break-outlines.cs
+- apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs
