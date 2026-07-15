@@ -6260,6 +6260,11 @@
       "title": "Create a line chart on a worksheet using data from cells A1 through A10."
     },
     {
+      "category": "working-with-charts",
+      "file": "set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs",
+      "title": "Set the chart type to stacked column for visualizing cumulative sales across quarters."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
