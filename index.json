@@ -6865,6 +6865,11 @@
       "title": "Verify leader lines visibility by checking Chart.HasLeaderLines after offsetting data labels."
     },
     {
+      "category": "working-with-charts",
+      "file": "verify-that-exporting-chart-without-setting-data-source-throws-an-appropriate-exception.cs",
+      "title": "Verify that exporting chart without setting data source throws an appropriate exception."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
