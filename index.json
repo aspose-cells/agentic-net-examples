@@ -3676,6 +3676,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-drillthrough-functionality-for-a-pivottable-by-setting-the-enabledrillthrough-option-to-true.cs",
+      "title": "Enable drill\u2011through functionality for a PivotTable by setting the EnableDrillThrough option to true."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs",
       "title": "Enable Excel 2003 compatibility before refreshing the PivotTable by setting IsCompatibleWithExcel2003 true."
     },
