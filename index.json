@@ -3871,6 +3871,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-all-pivottables-in-a-workbook-after-bulk-data-changes-using-a-foreach-loop-for-each.cs",
+      "title": "Refresh all PivotTables in a workbook after bulk data changes using a foreach loop for each."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs",
       "title": "Refresh nested pivot tables recursively to ensure all child tables reflect updated source data."
     },
