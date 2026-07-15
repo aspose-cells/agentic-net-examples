@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - iterate-through-all-charts-in-the-workbook-and-set-each-title-font-to-arial-size-12.cs
 - remove-the-third-chart-from-the-worksheet-using-the-chartsremoveat-method-call.cs
 - change-an-existing-pie-chart-to-a-doughnut-chart-by-updating-its-charttype-property.cs
+- enable-data-markers-on-a-line-series-and-set-marker-shape-to-triangle.cs
