@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - verify-custom-slice-colors-by-comparing-chartpointforegroundcolor-to-expected-rgb-values.cs
 - use-chartpointisinsecondaryplot-to-identify-points-belonging-to-the-secondary-plot.cs
 - log-indices-of-secondary-plot-points-to-a-text-file-for-later-analysis.cs
+- refresh-the-chart-display-by-calling-chartrefresh-after-modifying-labels-and-colors.cs
