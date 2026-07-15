@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - export-the-configured-pie-chart-to-a-png-image-using-charttoimage-with-default-settings.cs
 - export-the-same-pie-chart-to-a-jpeg-image-using-charttoimage-specifying-jpeg-format.cs
 - export-the-chart-to-a-memory-stream-and-write-the-stream-to-a-file.cs
+- export-the-chart-to-png-with-300-dpi-resolution-by-specifying-imageresolution-parameter.cs
