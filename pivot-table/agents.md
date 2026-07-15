@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs
 - retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs
 - save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs
+- load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs
