@@ -6836,6 +6836,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-chartpointisinsecondaryplot-returns-false-for-points-in-the-primary-plot.cs",
+      "title": "Validate that ChartPoint.IsInSecondaryPlot returns false for points in the primary plot."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs",
       "title": "Validate that the image file exists before assigning it to the chart background fill."
     },
