@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - add-a-data-label-to-each-point-in-a-column-chart-displaying-the-exact-value.cs
 - format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs
 - apply-a-gradient-fill-to-the-chart-area-background-using-two-complementary-colors.cs
+- set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs
