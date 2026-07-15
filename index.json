@@ -6255,6 +6255,11 @@
       "title": "Verify that the merged workbook contains the expected number of worksheets after combination."
     },
     {
+      "category": "working-with-charts",
+      "file": "create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs",
+      "title": "Create a line chart on a worksheet using data from cells A1 through A10."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
