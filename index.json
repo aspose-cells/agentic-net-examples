@@ -6755,6 +6755,11 @@
       "title": "Validate that the image file exists before assigning it to the chart background fill."
     },
     {
+      "category": "working-with-charts",
+      "file": "verify-leader-lines-visibility-by-checking-charthasleaderlines-after-offsetting-data-labels.cs",
+      "title": "Verify leader lines visibility by checking Chart.HasLeaderLines after offsetting data labels."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
