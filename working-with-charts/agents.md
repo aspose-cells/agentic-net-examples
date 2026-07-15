@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - retrieve-the-current-chart-position-coordinates-and-log-them-for-debugging-purposes.cs
 - resize-the-chart-to-400-points-width-and-300-points-height-for-layout-consistency.cs
 - autofit-the-chart-size-based-on-its-data-range-to-avoid-clipping.cs
+- save-the-workbook-containing-the-modified-chart-as-an-xlsx-file-to-preserve-formatting.cs
