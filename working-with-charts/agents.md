@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - adjust-the-charts-transparency-to-40-percent-for-overlaying-on-a-worksheet-image.cs
 - create-a-pyramid-chart-and-assign-distinct-colors-to-each-level-for-visual-distinction.cs
 - instantiate-a-workbook-add-a-worksheet-and-populate-cells-with-sales-data.cs
+- create-a-column-chart-object-on-the-worksheet-to-visualize-the-sales-data.cs
