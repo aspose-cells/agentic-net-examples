@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs
 - apply-a-filter-on-the-listobject-to-show-only-rows-where-region-equals-east.cs
 - define-a-dynamic-named-range-using-offset-based-on-nonempty-rows-in-column-a.cs
+- bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs
