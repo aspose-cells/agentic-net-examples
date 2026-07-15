@@ -6506,6 +6506,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "define-minimum-and-maximum-values-for-the-yaxis-to-control-chart-scaling.cs",
+      "title": "Define minimum and maximum values for the Y\u2011axis to control chart scaling."
+    },
+    {
+      "category": "working-with-charts",
       "file": "dispose-of-the-workbook-object-within-a-using-block-to-release-unmanaged-resources-promptly.cs",
       "title": "Dispose of the Workbook object within a using block to release unmanaged resources promptly."
     },
