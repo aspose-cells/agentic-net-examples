@@ -6465,6 +6465,11 @@
       "title": "Use Chart.SetChartDataRange to bind the chart to the specified range A1:B12."
     },
     {
+      "category": "working-with-charts",
+      "file": "use-index-and-match-functions-to-build-a-dynamic-range-for-a-secondary-axis-data-source.cs",
+      "title": "Use INDEX and MATCH functions to build a dynamic range for a secondary axis data source."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
