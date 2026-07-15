@@ -3686,6 +3686,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-repeat-item-labels-in-rows-by-setting-the-repeatitemlabels-property-to-true-on-the-pivottable.cs",
+      "title": "Enable repeat item labels in rows by setting the RepeatItemLabels property to true on the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-the-showerrorvalues-flag-to-display-na-for-missing-data-points-within-the-pivottable-for-clarity.cs",
       "title": "Enable the ShowErrorValues flag to display #N/A for missing data points within the PivotTable for clarity."
     },
