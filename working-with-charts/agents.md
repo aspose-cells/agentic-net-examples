@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - set-series-fill-color-using-an-rgb-value-to-match-corporate-branding-guidelines.cs
 - apply-a-picture-fill-to-the-plot-area-instead-of-the-whole-chart-for-targeted-styling.cs
 - set-the-chart-fill-format-to-a-solid-color-with-80-percent-opacity-for-subtle-shading.cs
+- create-a-stacked-column-chart-with-three-series-and-customize-each-series-color-individually.cs
