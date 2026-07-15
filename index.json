@@ -4076,6 +4076,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivottables-displayerrorstring-property-to-a-custom-message-for-handling-calculation-errors.cs",
+      "title": "Set the PivotTable's DisplayErrorString property to a custom message for handling calculation errors."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-the-pivottables-enablemultiplefilters-property-to-true-to-allow-selecting-multiple-items-per-filter.cs",
       "title": "Set the PivotTable's EnableMultipleFilters property to true to allow selecting multiple items per filter."
     },
