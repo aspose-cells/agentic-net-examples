@@ -6435,6 +6435,11 @@
       "title": "Use a formula as the data source for a chart series to calculate moving averages."
     },
     {
+      "category": "working-with-charts",
+      "file": "use-chartsetchartdatarange-to-bind-the-chart-to-the-specified-range-a1b12.cs",
+      "title": "Use Chart.SetChartDataRange to bind the chart to the specified range A1:B12."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
