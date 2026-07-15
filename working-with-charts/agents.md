@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - set-the-chart-border-thickness-to-2-points-and-color-to-dark-gray.cs
 - enable-3d-rotation-for-a-column-chart-and-set-elevation-angle-to-30-degrees.cs
 - adjust-the-gap-width-of-a-bar-chart-to-150-percent-for-tighter-column-spacing.cs
+- create-a-radar-chart-and-configure-the-radial-axis-to-display-category-names-as-labels.cs
