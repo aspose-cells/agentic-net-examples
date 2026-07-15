@@ -3936,6 +3936,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-slicers-associated-with-a-pivottable-by-clearing-its-slicercollection-completely.cs",
+      "title": "Remove all slicers associated with a PivotTable by clearing its SlicerCollection completely."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-slicers-from-a-workbook-by-iterating-each-worksheet-and-clearing-each-pivottables-slicercollection.cs",
       "title": "Remove all slicers from a workbook by iterating each worksheet and clearing each PivotTable's SlicerCollection."
     },
