@@ -6336,6 +6336,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "copy-rows-220-to-a-destination-sheet-then-update-the-chart-source-to-the-new-location.cs",
+      "title": "Copy rows 2\u201120 to a destination sheet, then update the chart source to the new location."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-column-chart-object-on-the-worksheet-to-visualize-the-sales-data.cs",
       "title": "Create a column chart object on the worksheet to visualize the sales data."
     },
