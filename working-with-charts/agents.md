@@ -71,3 +71,4 @@ Output files are written to the working directory.
 - set-the-vertical-axis-maximum-value-to-200-and-minimum-value-to-0-for-consistent-scaling.cs
 - hide-the-horizontal-axis-gridlines-to-produce-a-cleaner-appearance-for-the-scatter-plot.cs
 - add-a-data-label-to-each-point-in-a-column-chart-displaying-the-exact-value.cs
+- format-data-labels-to-show-percentages-with-one-decimal-place-on-a-pie-chart.cs
