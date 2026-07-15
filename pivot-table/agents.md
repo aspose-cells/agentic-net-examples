@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs
 - load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs
 - create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs
+- apply-a-predefined-style-to-all-pivottable-elements-by-calling-pivottableformatall-with-the-style.cs
