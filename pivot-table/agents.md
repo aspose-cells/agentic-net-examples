@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - clear-all-page-fields-from-a-pivottable-by-invoking-the-pivottablepagefieldsclear-method-first.cs
 - set-numeric-format-000-for-a-data-field-to-display-currency-values-correctly.cs
 - define-a-custom-number-format-000-for-a-percentage-field-within-the-pivottable.cs
+- enable-excel-2003-compatibility-before-refreshing-the-pivottable-by-setting-iscompatiblewithexcel2003-true.cs
