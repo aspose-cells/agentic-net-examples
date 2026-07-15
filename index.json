@@ -6655,6 +6655,11 @@
       "title": "Use INDEX and MATCH functions to build a dynamic range for a secondary axis data source."
     },
     {
+      "category": "working-with-charts",
+      "file": "validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs",
+      "title": "Validate that the image file exists before assigning it to the chart background fill."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
