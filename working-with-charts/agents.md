@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - use-chartsetchartdatarange-to-bind-the-chart-to-the-specified-range-a1b12.cs
 - assign-a-named-range-called-salesdata-as-the-chart-source-using-setchartdatarange.cs
 - convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs
+- apply-a-filter-on-the-listobject-to-show-only-rows-where-region-equals-east.cs
