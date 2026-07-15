@@ -3641,6 +3641,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-column-grand-totals-in-a-pivottable-by-setting-showcolumngrandtotals-property-to-false.cs",
+      "title": "Disable column grand totals in a PivotTable by setting ShowColumnGrandTotals property to false."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-pivot-table-ribbons-in-the-generated-ods-file-for-a-cleaner-interface.cs",
       "title": "Disable pivot table ribbons in the generated ODS file for a cleaner interface."
     },
