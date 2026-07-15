@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - use-charthasaxis-to-determine-if-a-category-axis-is-present-in-the-current-chart.cs
 - use-charthasaxis-to-check-for-the-existence-of-a-value-axis-on-the-chart.cs
 - set-the-xaxis-type-to-date-to-correctly-display-timebased-data-points.cs
+- configure-the-yaxis-type-as-value-to-represent-numeric-measurements-accurately.cs
