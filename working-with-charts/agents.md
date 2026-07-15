@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs
 - link-a-chart-series-to-a-named-range-called-salesdata-for-dynamic-updates.cs
 - use-a-formula-as-the-data-source-for-a-chart-series-to-calculate-moving-averages.cs
+- add-an-error-bar-series-to-a-line-chart-displaying-standard-deviation-values.cs
