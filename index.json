@@ -3951,6 +3951,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-all-data-fields-from-a-pivottable-to-convert-it-into-a-pure-row-and-column-summary.cs",
+      "title": "Remove all data fields from a PivotTable to convert it into a pure row and column summary."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-all-filters-from-a-pivot-table-to-show-unfiltered-data-across-all-fields.cs",
       "title": "Remove all filters from a pivot table to show unfiltered data across all fields."
     },
