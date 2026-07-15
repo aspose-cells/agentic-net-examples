@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - refresh-the-chart-display-by-calling-chartrefresh-after-modifying-labels-and-colors.cs
 - export-the-configured-pie-chart-to-a-png-image-using-charttoimage-with-default-settings.cs
 - export-the-same-pie-chart-to-a-jpeg-image-using-charttoimage-specifying-jpeg-format.cs
+- export-the-chart-to-a-memory-stream-and-write-the-stream-to-a-file.cs
