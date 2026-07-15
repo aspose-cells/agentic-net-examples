@@ -3616,6 +3616,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-a-pivottable-from-the-worksheet-using-worksheetpivottablesremoveat-with-the-appropriate-index.cs",
+      "title": "Delete a PivotTable from the worksheet using worksheet.PivotTables.RemoveAt with the appropriate index."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs",
       "title": "Delete a specific pivot table from the worksheet by passing its PivotTable object to the Remove method."
     },
