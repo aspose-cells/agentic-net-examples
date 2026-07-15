@@ -4086,6 +4086,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "update-the-source-data-of-an-existing-pivottable-by-redefining-its-sourcedata-property-accordingly.cs",
+      "title": "Update the source data of an existing PivotTable by redefining its SourceData property accordingly."
+    },
+    {
+      "category": "pivot-table",
       "file": "use-a-dynamic-named-range-as-the-source-to-automatically-expand-with-new-data.cs",
       "title": "Use a dynamic named range as the source to automatically expand with new data."
     },
