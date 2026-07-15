@@ -3896,6 +3896,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-set-the-pivottables-rowheadercaption-to-a-localized-string-for-international-user-interfaces.cs",
+      "title": "Programmatically set the PivotTable's RowHeaderCaption to a localized string for international user interfaces."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-a-pivottable-in-a-background-thread-and-update-the-ui-after-completion-using-a-callback-method.cs",
       "title": "Refresh a PivotTable in a background thread and update the UI after completion using a callback method."
     },
