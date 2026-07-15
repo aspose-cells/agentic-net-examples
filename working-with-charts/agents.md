@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - set-the-chart-title-text-to-quarterly-revenue-and-apply-bold-formatting.cs
 - configure-the-chart-legend-to-show-series-names-only-hiding-category-entries.cs
 - apply-a-custom-theme-color-palette-to-all-series-in-a-multiseries-chart.cs
+- set-the-charts-background-image-using-a-file-path-to-a-company-logo.cs
