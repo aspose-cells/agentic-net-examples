@@ -6761,6 +6761,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "verify-custom-slice-colors-by-comparing-chartpointforegroundcolor-to-expected-rgb-values.cs",
+      "title": "Verify custom slice colors by comparing ChartPoint.ForegroundColor to expected RGB values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "verify-leader-lines-visibility-by-checking-charthasleaderlines-after-offsetting-data-labels.cs",
       "title": "Verify leader lines visibility by checking Chart.HasLeaderLines after offsetting data labels."
     },
