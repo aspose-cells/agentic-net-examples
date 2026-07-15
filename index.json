@@ -3776,6 +3776,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs",
+      "title": "Load an existing Excel file, locate a PivotTable, and change its layout to Tabular."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-an-existing-workbook-locate-its-pivot-table-and-change-the-data-source-range.cs",
       "title": "Load an existing workbook, locate its pivot table, and change the data source range."
     },
