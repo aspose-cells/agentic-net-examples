@@ -64,3 +64,4 @@ Output files are written to the working directory.
 - retrieve-external-data-connection-details-from-a-pivottable-via-its-externalconnection-property.cs
 - save-a-workbook-containing-a-configured-pivottable-to-xlsx-format-using-default-save-options.cs
 - load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs
+- create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs
