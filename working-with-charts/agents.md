@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs
 - use-index-and-match-functions-to-build-a-dynamic-range-for-a-secondary-axis-data-source.cs
 - reference-a-range-on-a-different-worksheet-as-the-chart-data-source-to-enable-crosssheet-linking.cs
+- copy-rows-220-to-a-destination-sheet-then-update-the-chart-source-to-the-new-location.cs
