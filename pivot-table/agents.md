@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - load-an-existing-excel-file-locate-a-pivottable-and-change-its-layout-to-tabular.cs
 - create-a-new-workbook-add-source-data-and-generate-a-pivottable-on-the-first-worksheet.cs
 - apply-a-predefined-style-to-all-pivottable-elements-by-calling-pivottableformatall-with-the-style.cs
+- clear-all-page-fields-from-a-pivottable-by-invoking-the-pivottablepagefieldsclear-method-first.cs
