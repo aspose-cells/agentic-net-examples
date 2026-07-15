@@ -6321,6 +6321,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-picture-fill-to-the-plot-area-instead-of-the-whole-chart-for-targeted-styling.cs",
+      "title": "Apply a picture fill to the plot area instead of the whole chart for targeted styling."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-predefined-chart-style-named-style20-to-ensure-visual-consistency-across-reports.cs",
       "title": "Apply a predefined chart style named Style20 to ensure visual consistency across reports."
     },
