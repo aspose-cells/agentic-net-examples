@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - validate-that-chartpointisinsecondaryplot-returns-false-for-points-in-the-primary-plot.cs
 - validate-that-custom-slice-colors-persist-after-saving-and-reloading-the-workbook.cs
 - validate-that-exported-jpeg-image-quality-is-acceptable-by-checking-file-size-range.cs
+- verify-that-exporting-chart-without-setting-data-source-throws-an-appropriate-exception.cs
