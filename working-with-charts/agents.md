@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - apply-a-custom-theme-color-palette-to-all-series-in-a-multiseries-chart.cs
 - set-the-charts-background-image-using-a-file-path-to-a-company-logo.cs
 - enable-data-label-leader-lines-for-a-pie-chart-to-improve-readability-of-long-names.cs
+- adjust-the-charts-transparency-to-40-percent-for-overlaying-on-a-worksheet-image.cs
