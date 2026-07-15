@@ -6380,6 +6380,11 @@
       "title": "Set the vertical axis maximum value to 200 and minimum value to 0 for consistent scaling."
     },
     {
+      "category": "working-with-charts",
+      "file": "use-a-formula-as-the-data-source-for-a-chart-series-to-calculate-moving-averages.cs",
+      "title": "Use a formula as the data source for a chart series to calculate moving averages."
+    },
+    {
       "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
