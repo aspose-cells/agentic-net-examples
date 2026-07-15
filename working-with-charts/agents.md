@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - iterate-over-each-chartseries-and-assign-custom-foregroundcolor-to-specific-chartpoints.cs
 - verify-custom-slice-colors-by-comparing-chartpointforegroundcolor-to-expected-rgb-values.cs
 - use-chartpointisinsecondaryplot-to-identify-points-belonging-to-the-secondary-plot.cs
+- log-indices-of-secondary-plot-points-to-a-text-file-for-later-analysis.cs
