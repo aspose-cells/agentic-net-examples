@@ -4051,6 +4051,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "show-a-previously-hidden-column-field-in-the-pivottable-by-toggling-its-visible-flag-back.cs",
+      "title": "Show a previously hidden column field in the PivotTable by toggling its Visible flag back."
+    },
+    {
+      "category": "pivot-table",
       "file": "show-error-values-as-zero-to-avoid-displaying-div0-messages.cs",
       "title": "Show error values as zero to avoid displaying #DIV/0! messages."
     },
