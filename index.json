@@ -6706,6 +6706,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-charts-data-source-range-to-the-populated-cells-via-chartsetdatarange-method.cs",
+      "title": "Set the chart's data source range to the populated cells via Chart.SetDataRange method."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-scatter-chart-marker-size-to-8-points-and-color-to-teal.cs",
       "title": "Set the scatter chart marker size to 8 points and color to teal."
     },
