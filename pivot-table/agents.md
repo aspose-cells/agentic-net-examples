@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - assign-the-builtin-pivottablestylemedium9-autoformat-to-a-pivottable-for-quick-styling-automatically.cs
 - create-a-custom-style-object-configure-its-font-color-and-apply-it-using-pivottableformat.cs
 - remove-all-row-fields-from-a-pivottable-using-pivottablerowfieldsclear-to-reset-its-layout.cs
+- refresh-pivottable-data-after-modifying-its-source-range-by-calling-the-refreshdata-method-explicitly.cs
