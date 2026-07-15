@@ -3381,6 +3381,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-number-format-to-the-pivottables-grand-total-row-for-clearer-presentation-of-totals.cs",
+      "title": "Apply a custom number format to the PivotTable's grand total row for clearer presentation of totals."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-pivotglobalizationsettings-subclass-to-modify-total-label-text-before-refreshing-the-pivot-table.cs",
       "title": "Apply a custom PivotGlobalizationSettings subclass to modify total label text before refreshing the pivot table."
     },
