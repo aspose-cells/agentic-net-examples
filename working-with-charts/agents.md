@@ -215,3 +215,4 @@ Output files are written to the working directory.
 - assign-a-line-series-to-the-secondary-vertical-axis-by-setting-its-axisgroup-property-to-two.cs
 - configure-secondary-axis-minimum-maximum-and-major-unit-values-to-align-with-primary-axis-scaling.cs
 - render-the-modified-chart-to-a-png-image-and-save-it-in-the-output-directory.cs
+- export-the-workbook-containing-the-updated-chart-to-a-pdf-file-preserving-chart-formatting.cs
