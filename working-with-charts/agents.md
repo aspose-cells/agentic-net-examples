@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - hide-yaxis-gridlines-to-create-a-cleaner-visual-appearance-for-the-chart.cs
 - show-major-gridlines-on-the-secondary-axis-to-aid-comparison-between-data-series.cs
 - place-the-chart-legend-at-the-bottom-of-the-chart-area-for-balanced-layout.cs
+- remove-the-legend-entirely-to-maximize-plotting-area-for-data-visualization.cs
