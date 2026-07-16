@@ -213,3 +213,4 @@ Output files are written to the working directory.
 - change-the-x-axis-type-to-category-to-display-sequential-text-labels-on-the-chart.cs
 - access-the-ticklabels-object-of-the-primary-y-axis-and-rotate-labels-ninety-degrees-clockwise.cs
 - assign-a-line-series-to-the-secondary-vertical-axis-by-setting-its-axisgroup-property-to-two.cs
+- configure-secondary-axis-minimum-maximum-and-major-unit-values-to-align-with-primary-axis-scaling.cs
