@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - configure-secondary-axis-minimum-maximum-and-major-unit-values-to-align-with-primary-axis-scaling.cs
 - render-the-modified-chart-to-a-png-image-and-save-it-in-the-output-directory.cs
 - export-the-workbook-containing-the-updated-chart-to-a-pdf-file-preserving-chart-formatting.cs
+- iterate-through-all-worksheets-locate-charts-and-set-each-charts-tick-label-direction-to-rotate90.cs
