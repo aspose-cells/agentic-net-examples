@@ -7076,6 +7076,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-exported-png-image-matches-expected-dimensions-and-format.cs",
+      "title": "Validate that exported PNG image matches expected dimensions and format."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs",
       "title": "Validate that the image file exists before assigning it to the chart background fill."
     },
