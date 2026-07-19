@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - toggle-visibility-of-a-specific-series-to-hide-it-from-the-rendered-chart.cs
 - apply-a-builtin-theme-to-the-chart-to-standardize-colors-and-fonts.cs
 - adjust-the-charts-topleft-position-coordinates-to-align-it-with-worksheet-cells.cs
+- resize-the-chart-to-a-width-of-400-points-and-height-of-300-points.cs
