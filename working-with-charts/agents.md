@@ -479,3 +479,4 @@ Output files are written to the working directory.
 - retrieve-the-chart-title-position-convert-ratio-to-14000-units-and-log-the-values.cs
 - place-an-external-shape-at-the-plot-area-position-retrieved-from-the-chart-then-save-workbook.cs
 - export-a-scatter-chart-to-pdf-file-while-preserving-chart-dimensions-and-resolution.cs
+- export-chart-to-svg-format-to-retain-vector-quality-for-scalable-web-graphics.cs
