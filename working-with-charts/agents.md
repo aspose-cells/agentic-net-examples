@@ -534,3 +534,4 @@ Output files are written to the working directory.
 - set-a-data-point-as-total-in-a-column-chart-by-enabling-its-istotal-flag.cs
 - retrieve-the-x-and-y-coordinates-of-a-chart-object-within-its-worksheet-for-precise-alignment.cs
 - move-a-chart-to-start-at-cell-d5-by-setting-upperleftrow-and-upperleftcolumn-properties.cs
+- resize-a-chart-to-occupy-ten-rows-and-fifteen-columns-by-adjusting-height-and-width-properties.cs
