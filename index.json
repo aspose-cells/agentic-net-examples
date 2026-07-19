@@ -7696,6 +7696,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xlsx-workbook-assign-chartcolorpalettetypecustompalette2-to-the-third-chart-series-and-save.cs",
+      "title": "Open an XLSX workbook, assign ChartColorPaletteType.CustomPalette2 to the third chart series, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xlsx-workbook-change-each-chart-series-to-use-the-predefined-monochromaticpalette4-and-save.cs",
       "title": "Open an XLSX workbook, change each chart series to use the predefined MonochromaticPalette4, and save."
     },
