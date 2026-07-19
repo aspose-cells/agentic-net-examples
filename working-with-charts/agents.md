@@ -268,3 +268,4 @@ Output files are written to the working directory.
 - disable-data-label-text-wrapping-for-the-chart-using-datalabelsistextwrapped-false.cs
 - enable-data-label-text-wrapping-for-a-pie-chart-using-datalabelsistextwrapped-true.cs
 - read-axis-labels-after-chart-calculation-by-calling-chartcalculate-then-axisgetaxistexts.cs
+- store-retrieved-axis-label-strings-into-a-separate-worksheet-column.cs
