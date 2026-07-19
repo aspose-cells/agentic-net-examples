@@ -6451,6 +6451,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "assign-custom-text-to-each-data-point-in-a-series-using-datapointlabeltext-property.cs",
+      "title": "Assign custom text to each data point in a series using DataPoint.Label.Text property."
+    },
+    {
+      "category": "working-with-charts",
       "file": "autofit-the-chart-size-based-on-its-data-range-to-avoid-clipping.cs",
       "title": "Auto\u2011fit the chart size based on its data range to avoid clipping."
     },
