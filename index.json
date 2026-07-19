@@ -7151,6 +7151,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-the-option-to-keep-original-numeric-formatting-when-converting-excel-to-html.cs",
+      "title": "Enable the option to keep original numeric formatting when converting Excel to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-whitespace-trimming-option-to-eliminate-extra-spaces-following-line-break-characters.cs",
       "title": "Enable whitespace trimming option to eliminate extra spaces following line break characters."
     },
