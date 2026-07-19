@@ -483,3 +483,4 @@ Output files are written to the working directory.
 - generate-a-chart-thumbnail-image-of-200x150-pixels-for-use-in-a-web-dashboard.cs
 - measure-rendering-time-of-a-complex-chart-and-log-the-duration-for-performance-analysis.cs
 - create-multiple-charts-on-a-single-worksheet-each-using-different-data-ranges-and-chart-types.cs
+- insert-a-chart-into-a-specific-cell-range-ensuring-it-occupies-exactly-three-rows-and-five-columns.cs
