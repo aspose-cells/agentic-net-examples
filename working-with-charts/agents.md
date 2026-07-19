@@ -108,3 +108,4 @@ Output files are written to the working directory.
 - export-the-chart-as-a-png-image-with-300-dpi-resolution-and-store-alongside-the-workbook.cs
 - export-the-chart-as-a-highresolution-jpeg-image-for-inclusion-in-a-powerpoint-slide.cs
 - export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs
+- save-the-workbook-containing-the-chart-as-an-xlsx-file-named-quarterlyreportxlsx-in-the-output-folder.cs
