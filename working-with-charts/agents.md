@@ -446,3 +446,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-combo-chart-as-an-xlsx-file-with-macroenabled-compatibility.cs
 - retrieve-the-chart-object-from-a-worksheet-and-programmatically-list-all-its-series-names.cs
 - update-the-data-source-of-a-combo-chart-series-after-modifying-the-underlying-worksheet-table.cs
+- hide-the-gridlines-of-the-chart-plot-area-in-a-combo-chart-to-reduce-visual-clutter.cs
