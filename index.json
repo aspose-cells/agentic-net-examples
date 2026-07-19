@@ -7646,6 +7646,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "place-an-external-shape-at-the-plot-area-position-retrieved-from-the-chart-then-save-workbook.cs",
+      "title": "Place an external shape at the plot area position retrieved from the chart, then save workbook."
+    },
+    {
+      "category": "working-with-charts",
       "file": "place-the-chart-legend-at-the-bottom-of-the-chart-area-for-balanced-layout.cs",
       "title": "Place the chart legend at the bottom of the chart area for balanced layout."
     },
