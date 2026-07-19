@@ -6926,6 +6926,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-combo-chart-with-three-series-column-line-and-area-each-using-a-different-axis.cs",
+      "title": "Create a combo chart with three series: column, line, and area, each using a different axis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-formuladriven-range-using-vlookup-to-retrieve-quarterly-targets-for-the-chart.cs",
       "title": "Create a formula\u2011driven range using VLOOKUP to retrieve quarterly targets for the chart."
     },
