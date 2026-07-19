@@ -7136,6 +7136,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-conditional-formatting-to-change-tick-label-color-based-on-axis-value-thresholds-for-emphasis.cs",
+      "title": "Use conditional formatting to change tick label color based on axis value thresholds for emphasis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "use-index-and-match-functions-to-build-a-dynamic-range-for-a-secondary-axis-data-source.cs",
       "title": "Use INDEX and MATCH functions to build a dynamic range for a secondary axis data source."
     },
