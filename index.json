@@ -7906,6 +7906,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "validate-that-localized-chart-images-contain-no-broken-unicode-characters-by-scanning-the-image-metadata.cs",
+      "title": "Validate that localized chart images contain no broken Unicode characters by scanning the image metadata."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-that-the-charts-secondary-axis-exists-before-assigning-series-to-avoid-runtime-exceptions.cs",
       "title": "Validate that the chart's secondary axis exists before assigning series to avoid runtime exceptions."
     },
