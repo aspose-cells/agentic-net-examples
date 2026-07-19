@@ -480,3 +480,4 @@ Output files are written to the working directory.
 - place-an-external-shape-at-the-plot-area-position-retrieved-from-the-chart-then-save-workbook.cs
 - export-a-scatter-chart-to-pdf-file-while-preserving-chart-dimensions-and-resolution.cs
 - export-chart-to-svg-format-to-retain-vector-quality-for-scalable-web-graphics.cs
+- generate-a-chart-thumbnail-image-of-200x150-pixels-for-use-in-a-web-dashboard.cs
