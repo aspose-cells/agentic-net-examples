@@ -424,3 +424,4 @@ Output files are written to the working directory.
 - adjust-series-overlap-and-gap-width-to-visually-separate-gantt-bars-for-overlapping-tasks.cs
 - apply-a-custom-color-palette-to-gantt-chart-bars-based-on-task-priority-levels.cs
 - set-the-chart-title-and-axis-labels-for-a-gantt-chart-using-localized-strings.cs
+- export-the-workbook-containing-the-gantt-chart-to-a-pdf-file-preserving-chart-layout.cs
