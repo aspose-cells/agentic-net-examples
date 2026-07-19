@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - change-the-chart-type-of-a-specific-series-to-line-while-keeping-other-series-as-columns.cs
 - apply-a-texture-fill-to-the-chart-area-using-a-wood-grain-image-for-a-natural-look.cs
 - set-series-data-source-from-an-inmemory-list-of-objects-to-enable-dynamic-chart-updates.cs
+- create-a-new-workbook-and-populate-worksheet-cells-with-sales-data-for-the-chart.cs
