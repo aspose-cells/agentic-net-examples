@@ -7156,6 +7156,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-data-label-border-thickness-to-two-points-for-a-stacked-bar-chart.cs",
+      "title": "Set data label border thickness to two points for a stacked bar chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-major-unit-interval-on-primary-y-axis-to-10-to-standardize-chart-grid-lines-across-series.cs",
       "title": "Set major unit interval on primary Y axis to 10 to standardize chart grid lines across series."
     },
