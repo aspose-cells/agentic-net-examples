@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - export-the-same-pie-chart-to-a-jpeg-image-using-charttoimage-specifying-jpeg-format.cs
 - export-the-chart-to-png-with-300-dpi-resolution-by-specifying-imageresolution-parameter.cs
 - save-the-workbook-containing-the-chart-as-an-xlsx-file-to-the-specified-output-directory.cs
+- load-an-existing-xlsx-workbook-retrieve-its-first-chart-and-modify-leader-line-settings.cs
