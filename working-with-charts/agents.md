@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-from-a-file-path-and-obtain-the-first-chart-object.cs
 - load-a-workbook-from-a-memory-stream-and-access-its-chart-collection-for-processing.cs
 - open-a-passwordprotected-xls-file-then-retrieve-the-chart-located-on-the-second-worksheet.cs
+- iterate-through-all-worksheets-in-a-workbook-and-list-each-charts-name-and-type.cs
