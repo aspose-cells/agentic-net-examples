@@ -7266,6 +7266,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "override-getaxistitle-in-chartjapanesesettings-to-return-japanese-text-for-x-and-y-axes.cs",
+      "title": "Override GetAxisTitle in ChartJapaneseSettings to return Japanese text for X and Y axes."
+    },
+    {
+      "category": "working-with-charts",
       "file": "override-getcharttitle-in-chartchinesesettings-to-return-a-localized-chinese-title-string.cs",
       "title": "Override GetChartTitle in ChartChineseSettings to return a localized Chinese title string."
     },
