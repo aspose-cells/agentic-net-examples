@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - set-the-chart-title-dynamically-based-on-worksheet-name-using-charttitletext-property.cs
 - enable-data-labels-to-show-percentages-by-setting-chartdatalabelshowpercentage-to-true.cs
 - adjust-data-label-position-to-outsideend-to-avoid-overlap-with-leader-lines.cs
+- validate-that-custom-slice-colors-persist-after-saving-and-reloading-the-workbook.cs
