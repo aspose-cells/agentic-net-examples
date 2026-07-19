@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - check-whether-the-chart-already-contains-a-secondary-axis-before-adding-one.cs
 - add-a-secondary-yaxis-and-assign-selected-series-to-render-on-that-axis.cs
 - toggle-visibility-of-a-specific-series-to-hide-it-from-the-rendered-chart.cs
+- apply-a-builtin-theme-to-the-chart-to-standardize-colors-and-fonts.cs
