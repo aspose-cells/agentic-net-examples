@@ -6666,6 +6666,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "clone-an-existing-chart-change-its-title-and-insert-the-clone-into-a-different-worksheet.cs",
+      "title": "Clone an existing chart, change its title, and insert the clone into a different worksheet."
+    },
+    {
+      "category": "working-with-charts",
       "file": "clone-an-existing-chart-modify-its-data-label-shape-and-insert-the-clone-into-another-worksheet.cs",
       "title": "Clone an existing chart, modify its data label shape, and insert the clone into another worksheet."
     },
