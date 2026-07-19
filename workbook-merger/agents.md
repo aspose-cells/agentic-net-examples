@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - check-that-all-charts-from-source-workbooks-appear-correctly-in-the-combined-workbook.cs
 - confirm-that-embedded-images-are-retained-in-the-merged-workbook-after-using-workbookcombine.cs
 - save-the-merged-workbook-to-a-specified-output-path-using-workbooksave-method.cs
+- export-the-combined-workbook-to-pdf-format-to-verify-visual-fidelity-of-charts-and-images.cs
