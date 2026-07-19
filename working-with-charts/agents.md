@@ -388,3 +388,4 @@ Output files are written to the working directory.
 - validate-that-localized-chart-images-contain-no-broken-unicode-characters-by-scanning-the-image-metadata.cs
 - verify-that-default-english-text-appears-when-no-localization-settings-are-assigned-to-a-chart.cs
 - ensure-that-only-chart-titles-legends-and-axis-labels-are-affected-by-localization-leaving-data-values-unchanged.cs
+- document-the-steps-to-set-a-localized-region-for-chart-rendering-and-convert-the-chart-to-an-image.cs
