@@ -305,3 +305,4 @@ Output files are written to the working directory.
 - move-the-legend-to-custom-x-and-y-pixel-coordinates-relative-to-the-chart-area.cs
 - enable-the-label-contains-value-from-cells-option-for-a-pie-chart-and-link-labels-to-cells.cs
 - batch-add-a-line-chart-to-each-worksheet-and-link-data-labels-to-corresponding-cells.cs
+- create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs
