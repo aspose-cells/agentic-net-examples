@@ -6821,6 +6821,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-combo-chart-by-adding-a-column-series-and-a-line-series-to-the-same-chart-area.cs",
+      "title": "Create a Combo chart by adding a column series and a line series to the same chart area."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-formuladriven-range-using-vlookup-to-retrieve-quarterly-targets-for-the-chart.cs",
       "title": "Create a formula\u2011driven range using VLOOKUP to retrieve quarterly targets for the chart."
     },
