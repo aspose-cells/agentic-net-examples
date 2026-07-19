@@ -7191,6 +7191,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-z-axis-label-format-to-display-values-as-percentages-for-relative-comparison.cs",
+      "title": "Set the Z axis label format to display values as percentages for relative comparison."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-z-axis-maximum-to-100-and-minimum-to-0-for-standardized-scaling.cs",
       "title": "Set the Z axis maximum to 100 and minimum to 0 for standardized scaling."
     },
