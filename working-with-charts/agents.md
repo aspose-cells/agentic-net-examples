@@ -290,3 +290,4 @@ Output files are written to the working directory.
 - validate-custom-label-text-length-does-not-exceed-excels-maximum-character-limit-before-assignment.cs
 - use-linq-to-select-data-points-below-average-and-set-their-labels-to-low.cs
 - add-a-hyperlink-to-a-data-label-that-opens-a-web-page-when-clicked.cs
+- generate-a-report-listing-each-data-points-custom-label-text-alongside-its-numeric-value.cs
