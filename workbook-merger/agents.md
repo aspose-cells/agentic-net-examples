@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - insert-a-company-logo-image-on-the-first-worksheet-of-the-merged-workbook-after-combining-files.cs
 - apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs
 - apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
+- protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
