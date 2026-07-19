@@ -6401,6 +6401,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-custom-dashed-line-style-to-the-line-series-in-a-combo-chart-for-emphasis.cs",
+      "title": "Apply a custom dashed line style to the line series in a Combo chart for emphasis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-custom-date-axis-to-the-x-axis-for-time-series-data-specifying-date-format-pattern.cs",
       "title": "Apply a custom date axis to the X axis for time series data, specifying date format pattern."
     },
