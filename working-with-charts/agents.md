@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - update-the-chart-data-source-dynamically-based-on-userselected-date-range-values.cs
 - clone-an-existing-chart-change-its-series-colors-and-place-it-on-a-different-sheet.cs
 - remove-a-specific-series-from-the-chart-by-index-to-simplify-the-visual-representation.cs
+- validate-that-the-image-file-exists-before-assigning-it-to-the-chart-background-fill.cs
