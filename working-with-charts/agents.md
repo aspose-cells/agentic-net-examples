@@ -384,3 +384,4 @@ Output files are written to the working directory.
 - measure-the-performance-impact-of-applying-localization-to-charts-by-timing-export-duration-for-large-workbooks.cs
 - ensure-memory-usage-remains-stable-when-processing-multiple-localized-chart-exports-in-a-multithreaded-environment.cs
 - log-the-applied-localization-region-and-chart-name-to-a-diagnostics-file-for-audit-purposes.cs
+- create-a-reusable-method-that-accepts-a-chart-and-a-chartglobalizationsettings-instance-and-returns-a-localized-image-stream.cs
