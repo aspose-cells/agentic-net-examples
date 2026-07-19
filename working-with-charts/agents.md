@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - set-the-charts-data-source-range-to-the-populated-cells-via-chartsetdatarange-method.cs
 - enable-leader-lines-on-the-pie-chart-by-setting-chartshowleaderlines-property-to-true.cs
 - verify-leader-lines-visibility-by-checking-charthasleaderlines-after-offsetting-data-labels.cs
+- iterate-over-each-chartseries-and-assign-custom-foregroundcolor-to-specific-chartpoints.cs
