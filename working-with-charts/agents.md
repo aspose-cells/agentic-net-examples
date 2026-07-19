@@ -245,3 +245,4 @@ Output files are written to the working directory.
 - configure-the-z-axis-interval-so-that-every-second-depth-level-is-displayed-on-the-3d-chart.cs
 - set-a-custom-numeric-format-for-z-axis-labels-showing-values-with-two-decimal-places.cs
 - enable-data-labels-for-the-first-series-of-the-chart-to-display-point-values.cs
+- disable-data-labels-for-the-third-series-in-the-chart-to-keep-the-view-uncluttered.cs
