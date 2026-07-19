@@ -486,3 +486,4 @@ Output files are written to the working directory.
 - insert-a-chart-into-a-specific-cell-range-ensuring-it-occupies-exactly-three-rows-and-five-columns.cs
 - create-a-chart-template-file-then-apply-it-to-new-charts-for-consistent-styling.cs
 - programmatically-set-the-chart-background-color-to-light-gray-and-remove-any-default-fill-patterns.cs
+- apply-conditional-formatting-to-series-values-greater-than-500-changing-their-fill-color-to-red.cs
