@@ -288,3 +288,4 @@ Output files are written to the working directory.
 - batch-process-multiple-worksheets-disabling-text-wrap-for-all-chart-data-labels.cs
 - implement-error-handling-for-axisgetaxistexts-method-when-called-before-chartcalculate.cs
 - validate-custom-label-text-length-does-not-exceed-excels-maximum-character-limit-before-assignment.cs
+- use-linq-to-select-data-points-below-average-and-set-their-labels-to-low.cs
