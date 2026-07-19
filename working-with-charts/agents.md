@@ -451,3 +451,4 @@ Output files are written to the working directory.
 - apply-a-custom-dashed-line-style-to-the-line-series-in-a-combo-chart-for-emphasis.cs
 - bind-progress-percentages-from-a-worksheet-column-to-the-visible-series-of-the-progress-bar-chart.cs
 - set-the-invisible-series-of-the-progress-bar-chart-to-a-transparent-fill-to-simulate-progress-effect.cs
+- apply-conditional-formatting-to-the-progress-bar-chart-colors-based-on-threshold-values.cs
