@@ -487,3 +487,4 @@ Output files are written to the working directory.
 - create-a-chart-template-file-then-apply-it-to-new-charts-for-consistent-styling.cs
 - programmatically-set-the-chart-background-color-to-light-gray-and-remove-any-default-fill-patterns.cs
 - apply-conditional-formatting-to-series-values-greater-than-500-changing-their-fill-color-to-red.cs
+- create-a-line-chart-with-markers-then-hide-the-markers-for-the-first-series-only.cs
