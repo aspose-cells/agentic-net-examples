@@ -7971,6 +7971,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-data-label-number-format-to-currency-with-two-decimal-places-on-a-bar-chart.cs",
+      "title": "Set data label number format to currency with two decimal places on a bar chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-data-label-text-alignment-to-rightjustify-for-a-horizontal-bar-chart.cs",
       "title": "Set data label text alignment to right\u2011justify for a horizontal bar chart."
     },
