@@ -7231,6 +7231,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-shape-type-of-data-labels-to-ellipse-for-a-bubble-chart.cs",
+      "title": "Set the shape type of data labels to ellipse for a bubble chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-vertical-axis-maximum-value-to-200-and-minimum-value-to-0-for-consistent-scaling.cs",
       "title": "Set the vertical axis maximum value to 200 and minimum value to 0 for consistent scaling."
     },
