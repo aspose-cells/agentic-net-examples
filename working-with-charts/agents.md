@@ -121,3 +121,4 @@ Output files are written to the working directory.
 - set-the-series-values-format-code-to-a-custom-currency-pattern-like-0.cs
 - configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs
 - apply-a-radial-gradient-fill-to-the-chart-using-three-color-stops-for-smooth-transition.cs
+- set-a-predefined-texture-fill-on-the-chart-background-to-give-it-a-fabric-appearance.cs
