@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - read-the-chart-title-modify-it-to-a-custom-string-and-apply-the-change.cs
 - change-the-chart-type-from-column-to-line-programmatically-before-exporting-to-pdf.cs
 - set-the-xaxis-title-to-a-descriptive-label-that-reflects-the-data-range.cs
+- define-minimum-and-maximum-values-for-the-yaxis-to-control-chart-scaling.cs
