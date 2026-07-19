@@ -409,3 +409,4 @@ Output files are written to the working directory.
 - export-the-same-chart-to-a-jpeg-image-specifying-seventyfive-percent-quality-for-compression.cs
 - generate-an-svg-representation-of-a-chart-for-scalable-vector-display-in-web-applications.cs
 - load-a-workbook-from-a-memory-stream-modify-chart-subtitles-and-save-back-to-a-new-stream.cs
+- clone-an-existing-chart-change-its-title-and-insert-the-clone-into-a-different-worksheet.cs
