@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - verify-leader-lines-visibility-by-checking-charthasleaderlines-after-offsetting-data-labels.cs
 - iterate-over-each-chartseries-and-assign-custom-foregroundcolor-to-specific-chartpoints.cs
 - verify-custom-slice-colors-by-comparing-chartpointforegroundcolor-to-expected-rgb-values.cs
+- use-chartpointisinsecondaryplot-to-identify-points-belonging-to-the-secondary-plot.cs
