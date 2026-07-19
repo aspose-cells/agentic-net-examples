@@ -457,3 +457,4 @@ Output files are written to the working directory.
 - change-the-chart-title-of-the-progress-bar-chart-dynamically-based-on-the-current-project-phase.cs
 - add-data-labels-to-the-visible-series-of-the-progress-bar-chart-showing-exact-percentage-values.cs
 - adjust-the-gap-width-of-the-progress-bar-chart-to-make-bars-appear-thicker-for-better-visibility.cs
+- loop-through-all-charts-in-a-workbook-and-set-each-charts-background-color-to-light-gray.cs
