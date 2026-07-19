@@ -7816,6 +7816,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "save-the-workbook-containing-the-combo-chart-as-an-xlsx-file-with-macroenabled-compatibility.cs",
+      "title": "Save the workbook containing the Combo chart as an XLSX file with macro\u2011enabled compatibility."
+    },
+    {
+      "category": "working-with-charts",
       "file": "save-the-workbook-containing-the-customized-chart-to-xlsx-format.cs",
       "title": "Save the workbook containing the customized chart to XLSX format."
     },
