@@ -7076,6 +7076,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "add-a-table-of-contents-linking-to-each-heading-generated-from-worksheet-names.cs",
+      "title": "Add a table of contents linking to each heading generated from worksheet names."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-a-postprocessing-step-to-strip-redundant-spaces-from-generated-html.cs",
       "title": "Apply a post\u2011processing step to strip redundant spaces from generated HTML."
     },
