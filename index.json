@@ -6346,6 +6346,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "add-data-labels-to-the-visible-series-of-the-progress-bar-chart-showing-exact-percentage-values.cs",
+      "title": "Add data labels to the visible series of the Progress Bar chart showing exact percentage values."
+    },
+    {
+      "category": "working-with-charts",
       "file": "adjust-data-label-position-to-outsideend-to-avoid-overlap-with-leader-lines.cs",
       "title": "Adjust data label position to OutsideEnd to avoid overlap with leader lines."
     },
