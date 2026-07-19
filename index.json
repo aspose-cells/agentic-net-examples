@@ -6641,6 +6641,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "compare-the-english-version-of-the-chart-image-with-the-chinese-version-to-ensure-localization-differences.cs",
+      "title": "Compare the English version of the chart image with the Chinese version to ensure localization differences."
+    },
+    {
+      "category": "working-with-charts",
       "file": "configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs",
       "title": "Configure a linear gradient fill for the chart background with two contrasting colors."
     },
