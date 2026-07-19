@@ -484,3 +484,4 @@ Output files are written to the working directory.
 - measure-rendering-time-of-a-complex-chart-and-log-the-duration-for-performance-analysis.cs
 - create-multiple-charts-on-a-single-worksheet-each-using-different-data-ranges-and-chart-types.cs
 - insert-a-chart-into-a-specific-cell-range-ensuring-it-occupies-exactly-three-rows-and-five-columns.cs
+- create-a-chart-template-file-then-apply-it-to-new-charts-for-consistent-styling.cs
