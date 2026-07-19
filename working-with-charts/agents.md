@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - create-a-series-from-an-inmemory-double-array-and-assign-it-to-the-chart.cs
 - set-the-series-values-format-code-to-a-custom-currency-pattern-like-0.cs
 - configure-a-linear-gradient-fill-for-the-chart-background-with-two-contrasting-colors.cs
+- apply-a-radial-gradient-fill-to-the-chart-using-three-color-stops-for-smooth-transition.cs
