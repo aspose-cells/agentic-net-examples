@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - set-series-data-source-from-an-inmemory-list-of-objects-to-enable-dynamic-chart-updates.cs
 - create-a-new-workbook-and-populate-worksheet-cells-with-sales-data-for-the-chart.cs
 - add-a-pie-chart-object-to-the-worksheet-using-charttypepie.cs
+- set-the-charts-data-source-range-to-the-populated-cells-via-chartsetdatarange-method.cs
