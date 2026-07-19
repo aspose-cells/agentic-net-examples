@@ -402,3 +402,4 @@ Output files are written to the working directory.
 - apply-a-gradient-fill-to-the-wordart-watermark-transitioning-from-light-gray-to-dark-blue.cs
 - create-a-new-chart-sheet-and-add-a-stock-chart-of-type-ohlc.cs
 - change-the-stock-chart-type-to-candlestick-and-adjust-the-candle-width-to-twenty-percent-of-bar-spacing.cs
+- apply-the-predefined-chart-style-style1-to-improve-visual-appearance-of-all-charts-in-the-workbook.cs
