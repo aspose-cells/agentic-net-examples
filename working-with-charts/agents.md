@@ -97,3 +97,4 @@ Output files are written to the working directory.
 - delete-a-row-from-the-listobject-and-verify-the-chart-series-contracts-accordingly.cs
 - define-a-dynamic-named-range-using-offset-based-on-nonempty-rows-in-column-a.cs
 - bind-the-chart-to-the-offsetbased-named-range-for-automatic-expansion-with-new-data.cs
+- create-a-formuladriven-range-using-vlookup-to-retrieve-quarterly-targets-for-the-chart.cs
