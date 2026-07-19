@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - add-a-trendline-to-the-line-chart-and-configure-it-to-display-the-equation-and-rsquared-value.cs
 - enable-the-chart-to-refresh-automatically-when-the-workbook-is-opened-ensuring-latest-data-is-displayed.cs
 - set-the-charts-data-label-position-to-inside-end-for-column-series-to-improve-readability.cs
+- lock-the-chart-object-programmatically-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs
