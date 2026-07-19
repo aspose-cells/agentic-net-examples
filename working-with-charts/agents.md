@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - lock-the-chart-object-programmatically-to-prevent-users-from-moving-or-resizing-it-in-the-excel-ui.cs
 - load-a-workbook-add-a-column-chart-to-the-first-worksheet.cs
 - add-a-new-series-to-the-chart-using-a-worksheet-range-as-data-source.cs
+- create-a-series-from-an-inmemory-double-array-and-assign-it-to-the-chart.cs
