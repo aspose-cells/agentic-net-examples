@@ -6771,6 +6771,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "convert-the-workbook-containing-the-waterfall-chart-to-pdf-while-embedding-the-chart-image.cs",
+      "title": "Convert the workbook containing the Waterfall chart to PDF while embedding the chart image."
+    },
+    {
+      "category": "working-with-charts",
       "file": "copy-rows-220-to-a-destination-sheet-then-update-the-chart-source-to-the-new-location.cs",
       "title": "Copy rows 2\u201120 to a destination sheet, then update the chart source to the new location."
     },
