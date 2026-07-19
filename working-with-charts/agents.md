@@ -281,3 +281,4 @@ Output files are written to the working directory.
 - set-data-label-border-thickness-to-two-points-for-a-stacked-bar-chart.cs
 - disable-data-label-autofit-feature-to-maintain-consistent-label-width.cs
 - set-data-label-text-alignment-to-rightjustify-for-a-horizontal-bar-chart.cs
+- position-data-labels-inside-end-for-a-column-chart-to-avoid-overlapping-bars.cs
