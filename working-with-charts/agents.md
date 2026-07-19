@@ -540,3 +540,4 @@ Output files are written to the working directory.
 - set-the-istotal-flag-on-the-last-data-point-of-a-stacked-area-chart-to-display-cumulative-total.cs
 - apply-a-derived-chartglobalizationsettings-instance-to-a-chart-to-translate-all-component-texts-into-a-target-language.cs
 - use-the-chart-filtering-api-to-hide-series-with-zero-values-across-multiple-charts-in-a-workbook.cs
+- access-a-charts-parent-worksheet-via-chartworksheet-and-log-its-name-for-diagnostic-tracking.cs
