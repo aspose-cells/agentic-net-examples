@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs
 - apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
 - protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
+- set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs
