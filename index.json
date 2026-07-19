@@ -7741,6 +7741,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xls-file-remove-all-trendlines-from-a-chart-before-exporting-as-an-image-then-save.cs",
+      "title": "Open an XLS file, remove all trendlines from a chart before exporting as an image, then save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xls-file-retrieve-a-chart-trendline-equation-text-and-store-it-in-a-worksheet-cell.cs",
       "title": "Open an XLS file, retrieve a chart trendline equation text and store it in a worksheet cell."
     },
