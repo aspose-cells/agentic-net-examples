@@ -229,3 +229,4 @@ Output files are written to the working directory.
 - enable-automatic-scaling-for-secondary-axis-allowing-asposecells-to-calculate-optimal-minimum-and-maximum-values.cs
 - clone-an-existing-chart-modify-its-secondary-axis-settings-and-insert-the-clone-into-a-new-worksheet.cs
 - set-charts-secondary-axis-title-to-revenue-usd-and-format-the-font-to-bold-italic.cs
+- adjust-the-gap-width-of-column-series-on-the-primary-axis-to-improve-spacing-between-bars.cs
