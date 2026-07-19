@@ -6866,6 +6866,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-chart-template-file-then-apply-it-to-new-charts-for-consistent-styling.cs",
+      "title": "Create a chart template file, then apply it to new charts for consistent styling."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs",
       "title": "Create a chart template that includes predefined legend position and data label settings."
     },
