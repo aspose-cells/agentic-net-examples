@@ -6531,6 +6531,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "configure-the-z-axis-interval-so-that-every-second-depth-level-is-displayed-on-the-3d-chart.cs",
+      "title": "Configure the Z axis interval so that every second depth level is displayed on the 3D chart."
+    },
+    {
+      "category": "working-with-charts",
       "file": "convert-the-data-range-into-a-listobject-to-enable-automatic-chart-updates.cs",
       "title": "Convert the data range into a ListObject to enable automatic chart updates."
     },
