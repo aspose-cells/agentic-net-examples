@@ -527,3 +527,4 @@ Output files are written to the working directory.
 - hide-a-specific-series-in-a-stacked-bar-chart-by-setting-its-isvisible-property-to-false.cs
 - apply-a-custom-color-palette-to-a-chart-by-setting-specific-rgb-values-for-each-series-style.cs
 - construct-a-combo-chart-that-combines-a-column-series-with-a-line-series-sharing-a-secondary-axis.cs
+- create-a-combo-chart-with-three-series-column-line-and-area-each-using-a-different-axis.cs
