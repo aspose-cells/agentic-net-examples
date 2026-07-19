@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - save-each-generated-chart-image-as-a-png-file-named-after-its-worksheet-for-easy-identification.cs
 - save-each-generated-chart-image-as-a-jpeg-file-named-after-its-worksheet-for-easy-identification.cs
 - set-the-chart-title-dynamically-based-on-worksheet-name-using-charttitletext-property.cs
+- enable-data-labels-to-show-percentages-by-setting-chartdatalabelshowpercentage-to-true.cs
