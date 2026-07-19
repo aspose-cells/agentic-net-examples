@@ -444,3 +444,4 @@ Output files are written to the working directory.
 - apply-distinct-fill-colors-to-column-and-line-series-in-a-combo-chart-for-visual-differentiation.cs
 - export-the-combo-chart-to-pdf-with-embedded-fonts-to-ensure-consistent-rendering-across-platforms.cs
 - save-the-workbook-containing-the-combo-chart-as-an-xlsx-file-with-macroenabled-compatibility.cs
+- retrieve-the-chart-object-from-a-worksheet-and-programmatically-list-all-its-series-names.cs
