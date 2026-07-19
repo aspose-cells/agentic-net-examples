@@ -304,3 +304,4 @@ Output files are written to the working directory.
 - change-the-legend-font-size-to-twelve-points-and-set-the-font-name-to-arial.cs
 - move-the-legend-to-custom-x-and-y-pixel-coordinates-relative-to-the-chart-area.cs
 - enable-the-label-contains-value-from-cells-option-for-a-pie-chart-and-link-labels-to-cells.cs
+- batch-add-a-line-chart-to-each-worksheet-and-link-data-labels-to-corresponding-cells.cs
