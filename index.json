@@ -7181,6 +7181,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-a-chart-to-pdf-with-a-transparent-background-for-overlaying-on-other-documents.cs",
+      "title": "Export a chart to PDF with a transparent background for overlaying on other documents."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs",
       "title": "Export all charts in the workbook as separate SVG files for scalable vector graphics usage."
     },
