@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - define-minimum-and-maximum-values-for-the-yaxis-to-control-chart-scaling.cs
 - enable-automatic-units-on-the-yaxis-so-values-display-similarly-to-excel.cs
 - check-whether-the-chart-already-contains-a-secondary-axis-before-adding-one.cs
+- add-a-secondary-yaxis-and-assign-selected-series-to-render-on-that-axis.cs
