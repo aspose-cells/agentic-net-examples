@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - apply-a-diagonal-stripe-pattern-fill-to-the-chart-background-for-a-stylized-look.cs
 - change-the-chart-theme-to-the-builtin-office-theme-programmatically-for-consistent-styling.cs
 - modify-individual-theme-colors-of-the-chart-by-accessing-the-themecolorscheme-collection.cs
+- retrieve-the-current-chart-position-coordinates-and-log-them-for-debugging-purposes.cs
