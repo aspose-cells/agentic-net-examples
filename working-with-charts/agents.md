@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - use-conditional-formatting-to-change-tick-label-color-based-on-axis-value-thresholds-for-emphasis.cs
 - export-chart-to-emf-format-for-highresolution-printing-in-windows-applications-compatible.cs
 - create-a-new-workbook-instance-and-add-a-single-worksheet-to-it.cs
+- populate-the-worksheet-cells-with-the-required-source-data-that-will-drive-the-chart.cs
