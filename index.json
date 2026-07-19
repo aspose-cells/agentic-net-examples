@@ -7726,6 +7726,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xlsx-workbook-set-custom-axis-titles-for-the-pivotchart-using-pivotoptions-and-save.cs",
+      "title": "Open an XLSX workbook, set custom axis titles for the PivotChart using PivotOptions, and save."
+    },
+    {
+      "category": "working-with-charts",
       "file": "override-getaxistitle-in-chartjapanesesettings-to-return-japanese-text-for-x-and-y-axes.cs",
       "title": "Override GetAxisTitle in ChartJapaneseSettings to return Japanese text for X and Y axes."
     },
