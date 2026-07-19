@@ -406,3 +406,4 @@ Output files are written to the working directory.
 - position-the-chart-legend-at-the-bottom-right-corner-and-set-its-font-to-calibri-size-ten.cs
 - add-axis-titles-to-both-x-and-y-axes-using-bold-formatting-and-a-twelvepoint-font-size.cs
 - save-the-workbook-containing-modified-charts-to-an-xlsx-file-while-preserving-all-chart-controls.cs
+- export-the-same-chart-to-a-jpeg-image-specifying-seventyfive-percent-quality-for-compression.cs
