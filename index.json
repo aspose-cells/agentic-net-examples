@@ -7731,6 +7731,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "open-an-xls-file-retrieve-a-chart-trendline-equation-text-and-store-it-in-a-worksheet-cell.cs",
+      "title": "Open an XLS file, retrieve a chart trendline equation text and store it in a worksheet cell."
+    },
+    {
+      "category": "working-with-charts",
       "file": "open-an-xlsx-workbook-assign-chartcolorpalettetypecustompalette2-to-the-third-chart-series-and-save.cs",
       "title": "Open an XLSX workbook, assign ChartColorPaletteType.CustomPalette2 to the third chart series, and save."
     },
