@@ -431,3 +431,4 @@ Output files are written to the working directory.
 - create-a-waterfall-chart-and-designate-a-specific-data-point-as-the-total-segment.cs
 - apply-a-predefined-theme-to-the-waterfall-chart-to-match-corporate-branding-guidelines.cs
 - export-the-waterfall-chart-as-a-highresolution-png-image-for-inclusion-in-reports.cs
+- convert-the-workbook-containing-the-waterfall-chart-to-pdf-while-embedding-the-chart-image.cs
