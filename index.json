@@ -7241,6 +7241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-the-saveoptions-property-to-enforce-nonexponential-display-for-all-numeric-cells.cs",
+      "title": "Use the SaveOptions property to enforce non\u2011exponential display for all numeric cells."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs",
       "title": "Validate that cell content with line breaks displays correctly without extra spacing."
     },
