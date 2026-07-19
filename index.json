@@ -7121,6 +7121,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-same-chart-to-a-jpeg-image-specifying-seventyfive-percent-quality-for-compression.cs",
+      "title": "Export the same chart to a JPEG image, specifying seventy\u2011five percent quality for compression."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-same-pie-chart-to-a-jpeg-image-using-charttoimage-specifying-jpeg-format.cs",
       "title": "Export the same pie chart to a JPEG image using Chart.ToImage specifying JPEG format."
     },
