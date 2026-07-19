@@ -6466,6 +6466,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "apply-a-predefined-theme-to-the-waterfall-chart-to-match-corporate-branding-guidelines.cs",
+      "title": "Apply a predefined theme to the Waterfall chart to match corporate branding guidelines."
+    },
+    {
+      "category": "working-with-charts",
       "file": "apply-a-radial-gradient-fill-to-the-chart-using-three-color-stops-for-smooth-transition.cs",
       "title": "Apply a radial gradient fill to the chart using three color stops for smooth transition."
     },
