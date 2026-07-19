@@ -455,3 +455,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-progress-bar-chart-to-xlsx-while-preserving-cell-formulas.cs
 - retrieve-the-worksheet-containing-the-progress-bar-chart-and-validate-that-required-data-columns-exist.cs
 - change-the-chart-title-of-the-progress-bar-chart-dynamically-based-on-the-current-project-phase.cs
+- add-data-labels-to-the-visible-series-of-the-progress-bar-chart-showing-exact-percentage-values.cs
