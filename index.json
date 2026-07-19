@@ -7196,6 +7196,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "resize-data-label-shapes-after-applying-bold-font-weight-to-prevent-text-overflow.cs",
+      "title": "Resize data label shapes after applying bold font weight to prevent text overflow."
+    },
+    {
+      "category": "working-with-charts",
       "file": "resize-each-data-label-shape-automatically-to-fit-its-text-after-updating-label-values.cs",
       "title": "Resize each data label shape automatically to fit its text after updating label values."
     },
