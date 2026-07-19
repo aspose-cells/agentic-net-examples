@@ -436,3 +436,4 @@ Output files are written to the working directory.
 - set-custom-number-formats-for-the-waterfall-chart-axis-to-display-currency-values.cs
 - enable-data-point-labels-only-for-the-total-point-in-a-waterfall-chart-to-highlight-summary-values.cs
 - create-a-waterfall-chart-with-custom-colors-for-increase-decrease-and-total-columns.cs
+- update-the-data-source-of-all-waterfall-charts-in-a-workbook-after-a-bulk-data-import.cs
