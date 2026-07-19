@@ -6976,6 +6976,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "measure-chart-rendering-time-after-disabling-data-label-text-wrapping-for-performance-assessment.cs",
+      "title": "Measure chart rendering time after disabling data label text wrapping for performance assessment."
+    },
+    {
+      "category": "working-with-charts",
       "file": "modify-individual-theme-colors-of-the-chart-by-accessing-the-themecolorscheme-collection.cs",
       "title": "Modify individual theme colors of the chart by accessing the Theme.ColorScheme collection."
     },
