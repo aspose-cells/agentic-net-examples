@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - apply-a-builtin-theme-to-the-chart-to-standardize-colors-and-fonts.cs
 - adjust-the-charts-topleft-position-coordinates-to-align-it-with-worksheet-cells.cs
 - resize-the-chart-to-a-width-of-400-points-and-height-of-300-points.cs
+- center-the-chart-within-the-pdf-page-during-conversion-to-achieve-balanced-layout.cs
