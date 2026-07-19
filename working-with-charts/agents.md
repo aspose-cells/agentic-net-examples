@@ -359,3 +359,4 @@ Output files are written to the working directory.
 - enable-data-labels-to-pull-values-from-a-dynamic-named-range-and-ensure-shapes-resize-on-range-change.cs
 - hide-legend-for-charts-with-a-single-series-to-avoid-redundant-information.cs
 - enable-data-labels-for-boxandwhisker-chart-source-values-from-a-statistical-summary-range.cs
+- hide-legend-when-generating-a-series-of-charts-for-a-slideshow-presentation-to-reduce-visual-noise.cs
