@@ -478,3 +478,4 @@ Output files are written to the working directory.
 - set-the-legend-position-to-the-top-right-corner-of-the-chart-area-for-better-readability.cs
 - retrieve-the-chart-title-position-convert-ratio-to-14000-units-and-log-the-values.cs
 - place-an-external-shape-at-the-plot-area-position-retrieved-from-the-chart-then-save-workbook.cs
+- export-a-scatter-chart-to-pdf-file-while-preserving-chart-dimensions-and-resolution.cs
