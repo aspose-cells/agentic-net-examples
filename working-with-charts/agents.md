@@ -408,3 +408,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-modified-charts-to-an-xlsx-file-while-preserving-all-chart-controls.cs
 - export-the-same-chart-to-a-jpeg-image-specifying-seventyfive-percent-quality-for-compression.cs
 - generate-an-svg-representation-of-a-chart-for-scalable-vector-display-in-web-applications.cs
+- load-a-workbook-from-a-memory-stream-modify-chart-subtitles-and-save-back-to-a-new-stream.cs
