@@ -7256,6 +7256,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "override-getlegendentry-in-chartchinesesettings-to-supply-chinese-legend-text-based-on-series-index.cs",
+      "title": "Override GetLegendEntry in ChartChineseSettings to supply Chinese legend text based on series index."
+    },
+    {
+      "category": "working-with-charts",
       "file": "place-the-chart-legend-at-the-bottom-of-the-chart-area-for-balanced-layout.cs",
       "title": "Place the chart legend at the bottom of the chart area for balanced layout."
     },
