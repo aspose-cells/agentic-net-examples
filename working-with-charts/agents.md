@@ -386,3 +386,4 @@ Output files are written to the working directory.
 - log-the-applied-localization-region-and-chart-name-to-a-diagnostics-file-for-audit-purposes.cs
 - create-a-reusable-method-that-accepts-a-chart-and-a-chartglobalizationsettings-instance-and-returns-a-localized-image-stream.cs
 - validate-that-localized-chart-images-contain-no-broken-unicode-characters-by-scanning-the-image-metadata.cs
+- verify-that-default-english-text-appears-when-no-localization-settings-are-assigned-to-a-chart.cs
