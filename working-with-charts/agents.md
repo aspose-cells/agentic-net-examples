@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - reference-a-range-on-a-different-worksheet-as-the-chart-data-source-to-enable-crosssheet-linking.cs
 - copy-rows-220-to-a-destination-sheet-then-update-the-chart-source-to-the-new-location.cs
 - duplicate-an-existing-chart-place-the-copy-on-a-new-worksheet-and-assign-a-distinct-data-range.cs
+- move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs
