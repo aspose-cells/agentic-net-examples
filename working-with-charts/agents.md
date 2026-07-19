@@ -423,3 +423,4 @@ Output files are written to the working directory.
 - populate-gantt-chart-series-with-task-start-dates-and-durations-extracted-from-worksheet-cells.cs
 - adjust-series-overlap-and-gap-width-to-visually-separate-gantt-bars-for-overlapping-tasks.cs
 - apply-a-custom-color-palette-to-gantt-chart-bars-based-on-task-priority-levels.cs
+- set-the-chart-title-and-axis-labels-for-a-gantt-chart-using-localized-strings.cs
