@@ -8446,6 +8446,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-istotal-flag-on-the-last-data-point-of-a-stacked-area-chart-to-display-cumulative-total.cs",
+      "title": "Set the IsTotal flag on the last data point of a stacked area chart to display cumulative total."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-legend-position-of-each-chart-to-the-bottom-right-corner-to-avoid-overlapping-data.cs",
       "title": "Set the legend position of each chart to the bottom right corner to avoid overlapping data."
     },
