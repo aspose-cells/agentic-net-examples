@@ -7176,6 +7176,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-the-waterfall-chart-as-a-highresolution-png-image-for-inclusion-in-reports.cs",
+      "title": "Export the Waterfall chart as a high\u2011resolution PNG image for inclusion in reports."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-the-workbook-containing-the-gantt-chart-to-a-pdf-file-preserving-chart-layout.cs",
       "title": "Export the workbook containing the Gantt chart to a PDF file preserving chart layout."
     },
