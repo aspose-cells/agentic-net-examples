@@ -427,3 +427,4 @@ Output files are written to the working directory.
 - export-the-workbook-containing-the-gantt-chart-to-a-pdf-file-preserving-chart-layout.cs
 - save-the-workbook-with-the-gantt-chart-as-a-new-xlsx-file-in-a-specified-output-folder.cs
 - update-the-data-range-of-the-gantt-chart-after-inserting-additional-task-rows-in-the-worksheet.cs
+- hide-the-legend-of-the-gantt-chart-to-produce-a-cleaner-visual-presentation.cs
