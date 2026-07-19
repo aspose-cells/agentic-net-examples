@@ -7216,6 +7216,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "export-a-scatter-chart-to-pdf-file-while-preserving-chart-dimensions-and-resolution.cs",
+      "title": "Export a scatter chart to PDF file while preserving chart dimensions and resolution."
+    },
+    {
+      "category": "working-with-charts",
       "file": "export-all-charts-in-the-workbook-as-separate-svg-files-for-scalable-vector-graphics-usage.cs",
       "title": "Export all charts in the workbook as separate SVG files for scalable vector graphics usage."
     },
