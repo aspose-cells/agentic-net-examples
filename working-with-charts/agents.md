@@ -357,3 +357,4 @@ Output files are written to the working directory.
 - set-legend-rotation-angle-to-ninety-degrees-and-ensure-transparent-entry-fill-remains-unaffected.cs
 - set-legend-entry-fill-to-none-for-all-charts-in-a-template-workbook-before-user-customization.cs
 - enable-data-labels-to-pull-values-from-a-dynamic-named-range-and-ensure-shapes-resize-on-range-change.cs
+- hide-legend-for-charts-with-a-single-series-to-avoid-redundant-information.cs
