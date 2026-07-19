@@ -6786,6 +6786,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "modify-individual-theme-colors-of-the-chart-by-accessing-the-themecolorscheme-collection.cs",
+      "title": "Modify individual theme colors of the chart by accessing the Theme.ColorScheme collection."
+    },
+    {
+      "category": "working-with-charts",
       "file": "move-the-chart-legend-to-the-bottom-position-and-hide-its-border-for-cleaner-layout.cs",
       "title": "Move the chart legend to the bottom position and hide its border for cleaner layout."
     },
