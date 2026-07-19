@@ -507,3 +507,4 @@ Output files are written to the working directory.
 - load-a-workbook-add-a-linear-trendline-to-a-chart-series-extract-the-formula-and-output-to-console.cs
 - open-an-xlsx-workbook-retrieve-polynomial-trendline-equation-from-a-scatter-chart-and-display-in-a-message-box.cs
 - load-a-workbook-add-trendlines-to-each-bar-chart-series-collect-equations-and-write-to-a-log-file.cs
+- open-an-xls-file-remove-all-trendlines-from-a-chart-before-exporting-as-an-image-then-save.cs
