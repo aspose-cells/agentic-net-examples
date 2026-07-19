@@ -364,3 +364,4 @@ Output files are written to the working directory.
 - create-chart-position-its-legend-at-the-center-of-the-plot-area-and-verify-no-overlap-occurs.cs
 - load-an-xlsx-workbook-containing-a-chart-and-retrieve-the-first-chart-object.cs
 - create-a-chartchinesesettings-subclass-of-chartglobalizationsettings-to-provide-chinese-translations.cs
+- override-getcharttitle-in-chartchinesesettings-to-return-a-localized-chinese-title-string.cs
