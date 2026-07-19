@@ -7616,6 +7616,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "measure-rendering-time-of-a-complex-chart-and-log-the-duration-for-performance-analysis.cs",
+      "title": "Measure rendering time of a complex chart and log the duration for performance analysis."
+    },
+    {
+      "category": "working-with-charts",
       "file": "measure-the-performance-impact-of-applying-localization-to-charts-by-timing-export-duration-for-large-workbooks.cs",
       "title": "Measure the performance impact of applying localization to charts by timing export duration for large workbooks."
     },
