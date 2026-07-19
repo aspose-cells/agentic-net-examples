@@ -273,3 +273,4 @@ Output files are written to the working directory.
 - assign-custom-label-to-the-first-data-point-of-each-series-within-a-loop.cs
 - set-the-shape-type-of-data-labels-to-ellipse-for-a-bubble-chart.cs
 - set-the-shape-type-of-data-labels-to-triangle-for-a-custom-chart-type.cs
+- change-data-label-font-size-to-twelve-points-and-color-to-blue-for-a-radar-chart.cs
