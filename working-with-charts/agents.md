@@ -381,3 +381,4 @@ Output files are written to the working directory.
 - hide-specific-data-series-in-the-chart-before-applying-localization-to-test-series-visibility-handling.cs
 - export-the-localized-chart-to-a-highresolution-png-image-to-evaluate-text-clarity.cs
 - implement-a-unit-test-that-confirms-chartchinesesettings-returns-expected-chinese-strings-for-title-and-legend.cs
+- measure-the-performance-impact-of-applying-localization-to-charts-by-timing-export-duration-for-large-workbooks.cs
