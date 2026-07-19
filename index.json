@@ -7251,6 +7251,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "override-getcharttitle-in-chartchinesesettings-to-return-a-localized-chinese-title-string.cs",
+      "title": "Override GetChartTitle in ChartChineseSettings to return a localized Chinese title string."
+    },
+    {
+      "category": "working-with-charts",
       "file": "place-the-chart-legend-at-the-bottom-of-the-chart-area-for-balanced-layout.cs",
       "title": "Place the chart legend at the bottom of the chart area for balanced layout."
     },
