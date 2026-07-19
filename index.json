@@ -7866,6 +7866,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "set-the-chart-title-and-axis-labels-for-a-gantt-chart-using-localized-strings.cs",
+      "title": "Set the chart title and axis labels for a Gantt chart using localized strings."
+    },
+    {
+      "category": "working-with-charts",
       "file": "set-the-chart-title-dynamically-based-on-worksheet-name-using-charttitletext-property.cs",
       "title": "Set the chart title dynamically based on worksheet name using Chart.Title.Text property."
     },
