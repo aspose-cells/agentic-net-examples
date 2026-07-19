@@ -441,3 +441,4 @@ Output files are written to the working directory.
 - change-the-second-series-type-from-column-to-line-after-initial-chart-creation-for-a-combo-chart.cs
 - assign-a-secondary-axis-to-the-line-series-in-a-combo-chart-to-improve-data-readability.cs
 - customize-marker-styles-for-the-line-series-in-a-combo-chart-to-highlight-key-data-points.cs
+- apply-distinct-fill-colors-to-column-and-line-series-in-a-combo-chart-for-visual-differentiation.cs
