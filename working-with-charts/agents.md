@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - automate-chart-creation-for-each-worksheet-tab-using-a-loop-to-ensure-consistency.cs
 - set-series-visibility-to-false-for-hidden-data-points-without-removing-them-from-the-chart.cs
 - change-the-chart-type-of-a-specific-series-to-line-while-keeping-other-series-as-columns.cs
+- apply-a-texture-fill-to-the-chart-area-using-a-wood-grain-image-for-a-natural-look.cs
