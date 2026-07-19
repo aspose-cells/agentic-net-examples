@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - create-a-line-chart-on-a-worksheet-using-data-from-cells-a1-through-a10.cs
+- set-the-chart-type-to-stacked-column-for-visualizing-cumulative-sales-across-quarters.cs
