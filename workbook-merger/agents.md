@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs
 - add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs
 - insert-a-company-logo-image-on-the-first-worksheet-of-the-merged-workbook-after-combining-files.cs
+- apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs
