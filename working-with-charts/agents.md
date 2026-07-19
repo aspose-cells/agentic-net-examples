@@ -499,3 +499,4 @@ Output files are written to the working directory.
 - open-an-xls-file-add-a-pivotchart-bound-to-an-existing-pivottable-and-save-the-workbook.cs
 - load-a-workbook-configure-the-newly-added-pivotchart-layout-to-tabular-using-pivotoptions-then-save.cs
 - load-a-workbook-hide-the-pivotchart-legend-using-pivotoptions-then-save-the-file.cs
+- open-an-xlsx-workbook-set-custom-axis-titles-for-the-pivotchart-using-pivotoptions-and-save.cs
