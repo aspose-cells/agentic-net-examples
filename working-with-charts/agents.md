@@ -252,3 +252,4 @@ Output files are written to the working directory.
 - apply-scientific-notation-number-format-to-data-labels-of-the-fourth-series-for-high-magnitude-values.cs
 - apply-a-thousandseparator-number-format-to-data-labels-of-the-fourth-series-for-readability.cs
 - format-data-labels-of-the-second-series-with-bold-font-red-color-and-yellow-background.cs
+- create-a-richtext-data-label-for-a-specific-chart-point-using-mixed-font-sizes.cs
