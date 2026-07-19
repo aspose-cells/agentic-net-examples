@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - open-a-passwordprotected-xls-file-then-retrieve-the-chart-located-on-the-second-worksheet.cs
 - iterate-through-all-worksheets-in-a-workbook-and-list-each-charts-name-and-type.cs
 - read-the-chart-title-modify-it-to-a-custom-string-and-apply-the-change.cs
+- change-the-chart-type-from-column-to-line-programmatically-before-exporting-to-pdf.cs
