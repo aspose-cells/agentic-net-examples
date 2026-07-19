@@ -285,3 +285,4 @@ Output files are written to the working directory.
 - measure-chart-rendering-time-after-disabling-data-label-text-wrapping-for-performance-assessment.cs
 - save-the-workbook-containing-the-customized-chart-to-xlsx-format.cs
 - clone-an-existing-chart-modify-its-data-label-shape-and-insert-the-clone-into-another-worksheet.cs
+- batch-process-multiple-worksheets-disabling-text-wrap-for-all-chart-data-labels.cs
