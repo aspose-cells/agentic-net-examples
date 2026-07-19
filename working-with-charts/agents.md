@@ -376,3 +376,4 @@ Output files are written to the working directory.
 - export-the-localized-chart-to-a-jpeg-image-file-using-the-toimage-method.cs
 - verify-that-the-chart-title-appears-in-japanese-characters-within-the-exported-jpeg-image.cs
 - compare-the-english-version-of-the-chart-image-with-the-chinese-version-to-ensure-localization-differences.cs
+- batch-process-all-charts-in-a-workbook-applying-chinese-localization-to-each-before-image-export.cs
