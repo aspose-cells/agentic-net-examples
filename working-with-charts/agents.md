@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - generate-a-report-that-lists-each-charts-axis-type-and-tick-label-direction-for-auditing-purposes.cs
 - apply-a-logarithmic-scale-to-the-primary-y-axis-to-better-visualize-data-with-large-value-ranges.cs
 - set-the-secondary-axis-to-display-values-in-percentage-format-by-applying-a-custom-number-format-string.cs
+- use-conditional-formatting-to-change-tick-label-color-based-on-axis-value-thresholds-for-emphasis.cs
