@@ -6571,6 +6571,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "delete-a-row-from-the-listobject-and-verify-the-chart-series-contracts-accordingly.cs",
+      "title": "Delete a row from the ListObject and verify the chart series contracts accordingly."
+    },
+    {
+      "category": "working-with-charts",
       "file": "dispose-of-the-workbook-object-within-a-using-block-to-release-unmanaged-resources-promptly.cs",
       "title": "Dispose of the Workbook object within a using block to release unmanaged resources promptly."
     },
