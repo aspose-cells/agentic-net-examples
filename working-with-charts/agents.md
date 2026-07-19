@@ -375,3 +375,4 @@ Output files are written to the working directory.
 - assign-an-instance-of-chartjapanesesettings-to-the-charts-globalizationsettings-property-before-exporting.cs
 - export-the-localized-chart-to-a-jpeg-image-file-using-the-toimage-method.cs
 - verify-that-the-chart-title-appears-in-japanese-characters-within-the-exported-jpeg-image.cs
+- compare-the-english-version-of-the-chart-image-with-the-chinese-version-to-ensure-localization-differences.cs
