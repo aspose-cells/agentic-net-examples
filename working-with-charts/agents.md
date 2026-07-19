@@ -280,3 +280,4 @@ Output files are written to the working directory.
 - disable-data-label-background-fill-for-a-doughnut-chart-to-improve-clarity.cs
 - set-data-label-border-thickness-to-two-points-for-a-stacked-bar-chart.cs
 - disable-data-label-autofit-feature-to-maintain-consistent-label-width.cs
+- set-data-label-text-alignment-to-rightjustify-for-a-horizontal-bar-chart.cs
