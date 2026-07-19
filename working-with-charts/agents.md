@@ -113,3 +113,4 @@ Output files are written to the working directory.
 - iterate-through-a-collection-of-workbooks-add-a-predefined-chart-template-to-each-and-save-changes.cs
 - add-a-trendline-to-the-line-chart-and-configure-it-to-display-the-equation-and-rsquared-value.cs
 - enable-the-chart-to-refresh-automatically-when-the-workbook-is-opened-ensuring-latest-data-is-displayed.cs
+- set-the-charts-data-label-position-to-inside-end-for-column-series-to-improve-readability.cs
