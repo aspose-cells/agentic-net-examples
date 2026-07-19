@@ -6646,6 +6646,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "combine-chart-localization-with-a-predefined-theme-by-setting-the-charts-theme-property-before-export.cs",
+      "title": "Combine chart localization with a predefined theme by setting the chart's Theme property before export."
+    },
+    {
+      "category": "working-with-charts",
       "file": "compare-the-english-version-of-the-chart-image-with-the-chinese-version-to-ensure-localization-differences.cs",
       "title": "Compare the English version of the chart image with the Chinese version to ensure localization differences."
     },
