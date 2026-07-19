@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - validate-that-the-charts-secondary-axis-exists-before-assigning-series-to-avoid-runtime-exceptions.cs
 - load-a-workbook-from-a-stream-modify-chart-axes-and-write-the-workbook-back-to-a-byte-array.cs
 - use-charttextdirectiontype-enumeration-to-set-tick-labels-direction-to-stacked-for-vertical-orientation.cs
+- retrieve-current-tick-label-direction-log-it-then-change-direction-to-horizontal-for-better-readability.cs
