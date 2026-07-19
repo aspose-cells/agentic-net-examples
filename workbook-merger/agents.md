@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - attach-the-merged-workbook-file-to-an-email-using-systemnetmail-after-successful-combination.cs
 - encrypt-the-merged-workbook-with-a-password-before-saving-to-protect-confidential-data.cs
 - set-the-author-property-of-the-merged-workbook-to-the-current-user-name-after-merging.cs
+- assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs
