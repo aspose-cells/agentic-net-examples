@@ -261,3 +261,4 @@ Output files are written to the working directory.
 - set-the-z-axis-label-format-to-display-values-as-percentages-for-relative-comparison.cs
 - change-the-chart-type-to-cone3d-and-adjust-the-z-axis-depth-for-better-perspective.cs
 - load-an-existing-workbook-duplicate-its-chart-and-assign-a-new-category-axis-range.cs
+- batch-process-multiple-worksheets-inserting-identical-charts-with-distinct-data-ranges-on-each-sheet.cs
