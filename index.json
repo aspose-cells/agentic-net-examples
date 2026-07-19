@@ -6776,6 +6776,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "create-a-reusable-method-that-accepts-a-chart-and-a-chartglobalizationsettings-instance-and-returns-a-localized-image-stream.cs",
+      "title": "Create a reusable method that accepts a chart and a ChartGlobalizationSettings instance and returns a localized image stream."
+    },
+    {
+      "category": "working-with-charts",
       "file": "create-a-richtext-data-label-for-a-specific-chart-point-using-mixed-font-sizes.cs",
       "title": "Create a rich\u2011text data label for a specific chart point using mixed font sizes."
     },
