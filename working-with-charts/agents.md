@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - modify-individual-theme-colors-of-the-chart-by-accessing-the-themecolorscheme-collection.cs
 - retrieve-the-current-chart-position-coordinates-and-log-them-for-debugging-purposes.cs
 - set-the-charts-topleft-corner-to-row-5-column-3-using-the-position-property.cs
+- resize-the-chart-to-400-points-width-and-300-points-height-for-layout-consistency.cs
