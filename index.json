@@ -7471,6 +7471,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "populate-gantt-chart-series-with-task-start-dates-and-durations-extracted-from-worksheet-cells.cs",
+      "title": "Populate Gantt chart series with task start dates and durations extracted from worksheet cells."
+    },
+    {
+      "category": "working-with-charts",
       "file": "populate-the-worksheet-cells-with-the-required-source-data-that-will-drive-the-chart.cs",
       "title": "Populate the worksheet cells with the required source data that will drive the chart."
     },
