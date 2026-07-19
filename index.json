@@ -7406,6 +7406,11 @@
     },
     {
       "category": "working-with-charts",
+      "file": "use-linq-to-select-data-points-below-average-and-set-their-labels-to-low.cs",
+      "title": "Use LINQ to select data points below average and set their labels to \"Low\"."
+    },
+    {
+      "category": "working-with-charts",
       "file": "validate-custom-label-text-length-does-not-exceed-excels-maximum-character-limit-before-assignment.cs",
       "title": "Validate custom label text length does not exceed Excel's maximum character limit before assignment."
     },
