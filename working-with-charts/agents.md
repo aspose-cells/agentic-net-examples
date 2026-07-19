@@ -475,3 +475,4 @@ Output files are written to the working directory.
 - set-data-label-number-format-to-currency-with-two-decimal-places-on-a-bar-chart.cs
 - remove-all-gridlines-from-a-pie-chart-to-achieve-a-cleaner-visual-presentation.cs
 - hide-the-chart-legend-entirely-to-produce-a-minimalist-chart-layout-for-presentation-slides.cs
+- set-the-legend-position-to-the-top-right-corner-of-the-chart-area-for-better-readability.cs
