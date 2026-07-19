@@ -528,3 +528,4 @@ Output files are written to the working directory.
 - apply-a-custom-color-palette-to-a-chart-by-setting-specific-rgb-values-for-each-series-style.cs
 - construct-a-combo-chart-that-combines-a-column-series-with-a-line-series-sharing-a-secondary-axis.cs
 - create-a-combo-chart-with-three-series-column-line-and-area-each-using-a-different-axis.cs
+- build-a-progress-bar-chart-by-configuring-a-stacked-column-chart-with-completed-and-remaining-work-series.cs
