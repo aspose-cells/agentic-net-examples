@@ -286,3 +286,4 @@ Output files are written to the working directory.
 - save-the-workbook-containing-the-customized-chart-to-xlsx-format.cs
 - clone-an-existing-chart-modify-its-data-label-shape-and-insert-the-clone-into-another-worksheet.cs
 - batch-process-multiple-worksheets-disabling-text-wrap-for-all-chart-data-labels.cs
+- implement-error-handling-for-axisgetaxistexts-method-when-called-before-chartcalculate.cs
