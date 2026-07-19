@@ -482,3 +482,4 @@ Output files are written to the working directory.
 - export-chart-to-svg-format-to-retain-vector-quality-for-scalable-web-graphics.cs
 - generate-a-chart-thumbnail-image-of-200x150-pixels-for-use-in-a-web-dashboard.cs
 - measure-rendering-time-of-a-complex-chart-and-log-the-duration-for-performance-analysis.cs
+- create-multiple-charts-on-a-single-worksheet-each-using-different-data-ranges-and-chart-types.cs
