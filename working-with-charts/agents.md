@@ -470,3 +470,4 @@ Output files are written to the working directory.
 - add-a-dropdown-list-control-to-the-worksheet-and-bind-it-to-the-chart-data-source-for-updates.cs
 - validate-that-chart-data-range-does-not-contain-empty-cells-before-generating-the-chart.cs
 - add-a-secondary-yaxis-to-a-column-chart-and-assign-a-different-data-series-to-it.cs
+- apply-a-logarithmic-scale-to-the-xaxis-of-a-scatter-chart-for-better-data-distribution-visualization.cs
