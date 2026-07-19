@@ -472,3 +472,4 @@ Output files are written to the working directory.
 - add-a-secondary-yaxis-to-a-column-chart-and-assign-a-different-data-series-to-it.cs
 - apply-a-logarithmic-scale-to-the-xaxis-of-a-scatter-chart-for-better-data-distribution-visualization.cs
 - set-data-labels-to-show-percentages-on-a-stacked-column-chart-and-adjust-label-font-size.cs
+- set-data-label-number-format-to-currency-with-two-decimal-places-on-a-bar-chart.cs
