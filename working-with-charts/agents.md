@@ -365,3 +365,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-containing-a-chart-and-retrieve-the-first-chart-object.cs
 - create-a-chartchinesesettings-subclass-of-chartglobalizationsettings-to-provide-chinese-translations.cs
 - override-getcharttitle-in-chartchinesesettings-to-return-a-localized-chinese-title-string.cs
+- override-getlegendentry-in-chartchinesesettings-to-supply-chinese-legend-text-based-on-series-index.cs
