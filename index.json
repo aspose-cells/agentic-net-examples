@@ -10521,6 +10521,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-each-worksheet-contains-exactly-one-locked-wordart-watermark-and-report-any-discrepancies.cs",
+      "title": "Validate each worksheet contains exactly one locked WordArt watermark and report any discrepancies."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "validate-that-each-activex-control-has-a-unique-name-property-before-saving-the-workbook.cs",
       "title": "Validate that each ActiveX control has a unique name property before saving the workbook."
     },
