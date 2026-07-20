@@ -198,3 +198,4 @@ Output files are written to the working directory.
 - group-three-selected-shapes-into-a-composite-object-and-assign-a-descriptive-name-for-reference.cs
 - lock-a-specific-picture-shape-to-prevent-editing-during-worksheet-protection-and-verify-its-locked-property.cs
 - unlock-all-shapes-on-a-worksheet-by-iterating-through-shapecollection-and-clearing-each-shapes-locked-flag.cs
+- apply-a-soft-shadow-effect-with-custom-offset-and-color-to-a-chart-shape-for-visual-depth.cs
