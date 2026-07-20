@@ -10001,6 +10001,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "adjust-the-wordart-shapes-top-left-width-and-height-to-cover-the-entire-worksheet.cs",
+      "title": "Adjust the WordArt shape's top, left, width, and height to cover the entire worksheet."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-a-conditional-formatting-rule-using-an-icon-set-to-display-custom-emoji-icons-based-on-text-values.cs",
       "title": "Apply a conditional formatting rule using an icon set to display custom emoji icons based on text values."
     },
