@@ -10411,6 +10411,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "save-the-workbook-containing-wordart-watermarks-as-an-xlsx-file-preserving-all-shape-attributes.cs",
+      "title": "Save the workbook containing WordArt watermarks as an XLSX file preserving all shape attributes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "save-the-workbook-to-persist-the-inserted-ole-object-and-its-properties.cs",
       "title": "Save the workbook to persist the inserted OLE object and its properties."
     },
