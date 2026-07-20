@@ -80,3 +80,4 @@ Output files are written to the working directory.
 - insert-a-picture-and-assign-a-descriptive-name-property-to-facilitate-later-retrieval-via-api.cs
 - add-a-picture-and-enable-aspect-ratio-lock-to-maintain-proportional-dimensions-during-resizing.cs
 - add-a-picture-and-overlay-a-semitransparent-watermark-to-protect-intellectual-property-rights.cs
+- create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs
