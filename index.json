@@ -10526,6 +10526,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "read-the-current-shadow-color-of-a-shape-and-output-its-rgb-values-for-logging-purposes.cs",
+      "title": "Read the current shadow color of a shape and output its RGB values for logging purposes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-a-camera-shape-programmatically-using-the-api-method-to-ensure-current-range-content-is-shown.cs",
       "title": "Refresh a camera shape programmatically using the API method to ensure current range content is shown."
     },
