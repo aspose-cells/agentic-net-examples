@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - copy-all-pictures-from-the-first-worksheet-to-a-new-worksheet-preserving-original-dimensions.cs
 - transfer-a-chart-from-sheet1-to-sheet3-using-shapesaddcopy-while-maintaining-data-source-references.cs
 - group-three-selected-shapes-into-a-composite-object-and-assign-a-descriptive-name-for-reference.cs
+- lock-a-specific-picture-shape-to-prevent-editing-during-worksheet-protection-and-verify-its-locked-property.cs
