@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - apply-preset-wordart-style-bold-wave-to-a-shape-using-fontsettingsetwordartstyle-method.cs
 - group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs
 - copy-all-pictures-from-the-first-worksheet-to-a-new-worksheet-preserving-original-dimensions.cs
+- transfer-a-chart-from-sheet1-to-sheet3-using-shapesaddcopy-while-maintaining-data-source-references.cs
