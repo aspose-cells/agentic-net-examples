@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - send-the-inserted-wordart-shape-to-the-back-of-the-sheet-to-act-as-background-watermark.cs
 - lock-the-wordart-watermark-to-prevent-selection-movement-editing-and-resizing-by-users.cs
 - add-a-second-wordart-shape-with-builtin-style-simple-fill-and-custom-font-size.cs
+- use-fontsettingcollection-to-apply-the-bold-wave-preset-style-to-all-worksheet-wordart-shapes.cs
