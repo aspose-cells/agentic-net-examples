@@ -10371,6 +10371,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "save-the-workbook-after-adding-new-controls-or-updating-existing-ones-to-preserve-changes.cs",
+      "title": "Save the workbook after adding new controls or updating existing ones to preserve changes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "save-the-workbook-after-refreshing-linked-ole-objects-to-apply-the-updates.cs",
       "title": "Save the workbook after refreshing linked OLE objects to apply the updates."
     },
