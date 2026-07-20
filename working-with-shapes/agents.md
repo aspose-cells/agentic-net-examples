@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - transfer-a-chart-from-sheet1-to-sheet3-using-shapesaddcopy-while-maintaining-data-source-references.cs
 - group-three-selected-shapes-into-a-composite-object-and-assign-a-descriptive-name-for-reference.cs
 - lock-a-specific-picture-shape-to-prevent-editing-during-worksheet-protection-and-verify-its-locked-property.cs
+- unlock-all-shapes-on-a-worksheet-by-iterating-through-shapecollection-and-clearing-each-shapes-locked-flag.cs
