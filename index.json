@@ -10086,6 +10086,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "group-three-shapespicture-rectangle-and-text-boxinto-a-single-group-shape-and-lock-the-group.cs",
+      "title": "Group three shapes\u2014picture, rectangle, and text box\u2014into a single group shape and lock the group."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs",
       "title": "Insert a linked picture from a secure intranet URL, configure authentication headers, and handle access denied errors."
     },
