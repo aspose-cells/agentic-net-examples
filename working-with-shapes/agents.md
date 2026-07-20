@@ -209,3 +209,4 @@ Output files are written to the working directory.
 - link-a-shape-to-cell-b5-using-its-hyperlink-property-to-navigate-when-the-shape-is-clicked.cs
 - assign-a-cell-range-anchor-to-a-shape-so-it-moves-dynamically-when-rows-or-columns-are-inserted.cs
 - read-the-current-shadow-color-of-a-shape-and-output-its-rgb-values-for-logging-purposes.cs
+- extract-the-glow-color-from-a-shape-and-compare-it-against-a-predefined-palette-for-consistency-checks.cs
