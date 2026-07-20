@@ -10161,6 +10161,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs",
+      "title": "Determine Z\u2011order of all shapes programmatically and bring the most important WordArt to front."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs",
       "title": "Duplicate the WordArt shape, move the copy to a different cell range, and change its text."
     },
