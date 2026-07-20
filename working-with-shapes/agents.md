@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - obtain-all-connection-points-of-a-shape-to-calculate-attachment-positions-for-linked-arrows-and-connectors.cs
 - send-a-specific-shape-to-the-front-of-the-zorder-stack-to-ensure-it-overlays-other-objects.cs
 - link-a-shape-to-cell-b5-using-its-hyperlink-property-to-navigate-when-the-shape-is-clicked.cs
+- assign-a-cell-range-anchor-to-a-shape-so-it-moves-dynamically-when-rows-or-columns-are-inserted.cs
