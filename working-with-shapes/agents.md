@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - place-a-shape-and-set-its-rotation-angle-to-ninety-degrees-for-diagonal-orientation.cs
 - create-a-shape-and-apply-a-solid-fill-color-using-the-specified-rgb-color-value.cs
 - insert-a-shape-and-configure-a-linear-gradient-fill-transitioning-between-two-chosen-colors.cs
+- add-a-shape-and-define-its-line-style-including-dash-pattern-and-thickness-settings.cs
