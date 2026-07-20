@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - insert-an-ole-object-representing-a-visio-diagram-set-its-size-to-match-cell-dimensions-and-lock-it.cs
 - extract-the-embedded-ole-object-stream-from-cell-j7-write-it-to-a-temporary-file-and-close-workbook.cs
 - extract-ole-object-data-decompress-if-necessary-and-save-the-original-file-format-to-a-specified-folder.cs
+- extract-an-ole-object-rename-the-extracted-file-based-on-worksheet-name-and-save-to-output-directory.cs
