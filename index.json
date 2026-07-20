@@ -10256,6 +10256,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "design-a-routine-that-extracts-all-shape-hyperlinks-and-generates-a-report-listing-source-cells-and-target-urls.cs",
+      "title": "Design a routine that extracts all shape hyperlinks and generates a report listing source cells and target URLs."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "determine-zorder-of-all-shapes-programmatically-and-bring-the-most-important-wordart-to-front.cs",
       "title": "Determine Z\u2011order of all shapes programmatically and bring the most important WordArt to front."
     },
