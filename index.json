@@ -10251,6 +10251,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-logging-to-record-timestamp-and-worksheet-name-each-time-a-wordart-shape-is-added.cs",
+      "title": "Implement logging to record timestamp and worksheet name each time a WordArt shape is added."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs",
       "title": "Insert a linked picture from a secure intranet URL, configure authentication headers, and handle access denied errors."
     },
