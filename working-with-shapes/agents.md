@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - create-a-shape-and-apply-a-solid-fill-color-using-the-specified-rgb-color-value.cs
 - insert-a-shape-and-configure-a-linear-gradient-fill-transitioning-between-two-chosen-colors.cs
 - add-a-shape-and-define-its-line-style-including-dash-pattern-and-thickness-settings.cs
+- insert-a-shape-and-attach-a-hyperlink-directing-users-to-an-external-website-when-clicked.cs
