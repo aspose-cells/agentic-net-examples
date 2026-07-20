@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - iterate-over-all-shapes-identify-wordart-objects-and-change-their-text-color-to-dark-blue.cs
 - create-a-wordart-shape-set-adjustment-values-to-create-custom-curvature-and-save-the-workbook.cs
 - apply-preset-wordart-style-bold-wave-to-a-shape-using-fontsettingsetwordartstyle-method.cs
+- group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs
