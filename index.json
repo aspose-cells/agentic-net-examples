@@ -10446,6 +10446,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "ungroup-the-previously-grouped-wordart-shapes-to-modify-individual-shape-properties-independently.cs",
+      "title": "Ungroup the previously grouped WordArt shapes to modify individual shape properties independently."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "update-the-display-label-of-a-linked-ole-object-to-a-descriptive-string.cs",
       "title": "Update the display label of a linked OLE object to a descriptive string."
     },
