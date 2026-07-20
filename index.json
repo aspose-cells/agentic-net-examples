@@ -10316,6 +10316,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "lock-the-wordart-watermark-to-prevent-selection-movement-editing-and-resizing-by-users.cs",
+      "title": "Lock the WordArt watermark to prevent selection, movement, editing, and resizing by users."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs",
       "title": "Log the original file name and size of each extracted OLE object for traceability."
     },
