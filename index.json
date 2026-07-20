@@ -10186,6 +10186,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "group-the-two-wordart-shapes-together-and-lock-the-group-to-maintain-layout-integrity.cs",
+      "title": "Group the two WordArt shapes together and lock the group to maintain layout integrity."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "group-three-shapespicture-rectangle-and-text-boxinto-a-single-group-shape-and-lock-the-group.cs",
       "title": "Group three shapes\u2014picture, rectangle, and text box\u2014into a single group shape and lock the group."
     },
