@@ -10261,6 +10261,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs",
+      "title": "Develop a validation script that ensures no shape exceeds a specified width and height threshold across the workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-the-wordart-shape-move-the-copy-to-a-different-cell-range-and-change-its-text.cs",
       "title": "Duplicate the WordArt shape, move the copy to a different cell range, and change its text."
     },
