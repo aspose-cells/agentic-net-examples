@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - lock-the-wordart-watermark-to-prevent-selection-movement-editing-and-resizing-by-users.cs
 - add-a-second-wordart-shape-with-builtin-style-simple-fill-and-custom-font-size.cs
 - use-fontsettingcollection-to-apply-the-bold-wave-preset-style-to-all-worksheet-wordart-shapes.cs
+- group-the-two-wordart-shapes-together-and-lock-the-group-to-maintain-layout-integrity.cs
