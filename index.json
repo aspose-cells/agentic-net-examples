@@ -10281,6 +10281,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs",
+      "title": "Group three WordArt shapes, lock the group, and export the worksheet as an XLSX file."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs",
       "title": "Implement error handling to catch exceptions when adding WordArt to a protected worksheet."
     },
