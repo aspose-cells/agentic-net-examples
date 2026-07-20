@@ -9936,6 +9936,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-and-apply-a-solid-fill-color-using-the-specified-rgb-color-value.cs",
+      "title": "Create a shape and apply a solid fill color using the specified RGB color value."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
       "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     },
