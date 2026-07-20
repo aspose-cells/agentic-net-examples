@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - create-a-wordart-shape-set-adjustment-values-to-create-custom-curvature-and-save-the-workbook.cs
 - apply-preset-wordart-style-bold-wave-to-a-shape-using-fontsettingsetwordartstyle-method.cs
 - group-three-wordart-shapes-lock-the-group-and-export-the-worksheet-as-an-xlsx-file.cs
+- copy-all-pictures-from-the-first-worksheet-to-a-new-worksheet-preserving-original-dimensions.cs
