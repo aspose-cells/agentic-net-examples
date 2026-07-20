@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - ungroup-the-previously-grouped-wordart-shapes-to-modify-individual-shape-properties-independently.cs
 - iterate-through-all-worksheets-and-add-a-semitransparent-wordart-watermark-to-each-sheet.cs
 - save-the-workbook-containing-wordart-watermarks-as-an-xlsx-file-preserving-all-shape-attributes.cs
+- export-the-workbook-with-wordart-watermarks-to-pdf-format-ensuring-watermark-visibility-in-output.cs
