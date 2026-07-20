@@ -10346,6 +10346,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "serialize-the-oleobjects-collection-to-json-for-external-auditing-and-integration-purposes.cs",
+      "title": "Serialize the OleObjects collection to JSON for external auditing and integration purposes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-the-oleobjectlockaspectratio-flag-to-preserve-original-proportions-during-resizing.cs",
       "title": "Set the OleObject.LockAspectRatio flag to preserve original proportions during resizing."
     },
