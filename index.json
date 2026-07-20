@@ -9930,6 +9930,11 @@
       "title": "Verify that Unicode supplementary characters, such as emojis, render correctly in the PDF output."
     },
     {
+      "category": "working-with-shapes",
+      "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
+      "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
+    },
+    {
       "category": "working-with-tables",
       "file": "add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs",
       "title": "Add a comment to the table object describing its purpose and retrieve the comment text programmatically."
