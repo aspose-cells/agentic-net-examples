@@ -10135,6 +10135,11 @@
       "title": "Refresh linked pictures in parallel threads to improve performance when updating dozens of external images."
     },
     {
+      "category": "working-with-shapes",
+      "file": "send-a-chart-shape-backward-so-that-a-linked-picture-appears-above-it-in-the-worksheet.cs",
+      "title": "Send a chart shape backward so that a linked picture appears above it in the worksheet."
+    },
+    {
       "category": "working-with-tables",
       "file": "add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs",
       "title": "Add a comment to the table object describing its purpose and retrieve the comment text programmatically."
