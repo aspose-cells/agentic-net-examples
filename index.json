@@ -10341,6 +10341,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-a-feature-that-automatically-applies-a-predefined-shadow-style-to-every-newly-added-picture-shape.cs",
+      "title": "Implement a feature that automatically applies a predefined shadow style to every newly added picture shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-a-reflection-effect-on-a-shape-with-defined-transparency-and-size-parameters-to-simulate-glass.cs",
       "title": "Implement a reflection effect on a shape with defined transparency and size parameters to simulate glass."
     },
