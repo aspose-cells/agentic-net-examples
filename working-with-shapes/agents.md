@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - create-a-macrolike-routine-that-groups-shapes-by-type-then-locks-each-group-to-prevent-accidental-edits.cs
 - develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs
 - implement-a-feature-that-automatically-applies-a-predefined-shadow-style-to-every-newly-added-picture-shape.cs
+- write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs
