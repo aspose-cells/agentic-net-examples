@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - refresh-a-camera-shape-programmatically-using-the-api-method-to-ensure-current-range-content-is-shown.cs
 - load-a-workbook-file-insert-a-picture-linked-to-cell-a1-and-save-as-xlsx.cs
 - insert-a-linked-picture-from-a-secure-intranet-url-configure-authentication-headers-and-handle-access-denied-errors.cs
+- refresh-all-linked-pictures-in-the-workbook-after-updating-source-images-on-the-web-server.cs
