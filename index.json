@@ -10361,6 +10361,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs",
+      "title": "Implement error handling that logs a warning when attempting to lock a shape already marked as locked."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs",
       "title": "Implement error handling to catch exceptions when adding WordArt to a protected worksheet."
     },
