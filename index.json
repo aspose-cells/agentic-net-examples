@@ -10116,6 +10116,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "copy-all-pictures-from-the-first-worksheet-to-a-new-worksheet-preserving-original-dimensions.cs",
+      "title": "Copy all pictures from the first worksheet to a new worksheet preserving original dimensions."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-batch-process-that-adds-the-same-wav-ole-object-to-every-worksheet.cs",
       "title": "Create a batch process that adds the same WAV OLE object to every worksheet."
     },
