@@ -9986,6 +9986,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-camera-shape-for-a-specified-range-to-capture-its-visual-representation-as-an-image.cs",
+      "title": "Create a camera shape for a specified range to capture its visual representation as an image."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-and-apply-a-solid-fill-color-using-the-specified-rgb-color-value.cs",
       "title": "Create a shape and apply a solid fill color using the specified RGB color value."
     },
