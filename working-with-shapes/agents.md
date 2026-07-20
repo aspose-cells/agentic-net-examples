@@ -117,3 +117,4 @@ Output files are written to the working directory.
 - group-three-shapespicture-rectangle-and-text-boxinto-a-single-group-shape-and-lock-the-group.cs
 - create-a-shape-group-lock-it-then-attempt-to-move-an-inner-shape-to-test-lock-enforcement.cs
 - ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs
+- batch-process-multiple-worksheets-by-inserting-a-picture-linked-to-cell-a1-in-each-sheet-and-saving-file.cs
