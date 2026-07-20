@@ -10436,6 +10436,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-a-shape-to-cell-b5-using-its-hyperlink-property-to-navigate-when-the-shape-is-clicked.cs",
+      "title": "Link a shape to cell B5 using its hyperlink property to navigate when the shape is clicked."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shapes-text-to-cell-k3-so-the-shape-updates-automatically-when-the-cell-value-changes.cs",
       "title": "Link a shape's text to cell K3 so the shape updates automatically when the cell value changes."
     },
