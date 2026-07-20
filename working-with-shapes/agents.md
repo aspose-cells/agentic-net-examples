@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - save-the-workbook-to-persist-the-inserted-ole-object-and-its-properties.cs
 - retrieve-an-oleobject-by-name-from-the-worksheets-oleobjects-collection-for-modification.cs
 - change-the-position-of-a-retrieved-oleobject-using-top-and-left-offset-values.cs
+- update-the-display-label-of-a-linked-ole-object-to-a-descriptive-string.cs
