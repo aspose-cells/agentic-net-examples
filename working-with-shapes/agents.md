@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - use-shapecollectionaddwordart-overload-that-accepts-a-style-name-to-directly-apply-a-builtin-style.cs
 - iterate-over-all-shapes-identify-wordart-objects-and-change-their-text-color-to-dark-blue.cs
 - create-a-wordart-shape-set-adjustment-values-to-create-custom-curvature-and-save-the-workbook.cs
+- apply-preset-wordart-style-bold-wave-to-a-shape-using-fontsettingsetwordartstyle-method.cs
