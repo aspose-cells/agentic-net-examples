@@ -215,3 +215,4 @@ Output files are written to the working directory.
 - develop-a-validation-script-that-ensures-no-shape-exceeds-a-specified-width-and-height-threshold-across-the-workbook.cs
 - implement-a-feature-that-automatically-applies-a-predefined-shadow-style-to-every-newly-added-picture-shape.cs
 - write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs
+- design-a-routine-that-extracts-all-shape-hyperlinks-and-generates-a-report-listing-source-cells-and-target-urls.cs
