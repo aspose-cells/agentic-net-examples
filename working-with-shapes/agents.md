@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - assign-a-unique-name-to-the-textbox-for-later-identification-and-manipulation.cs
 - retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs
 - validate-that-each-activex-control-has-a-unique-name-property-before-saving-the-workbook.cs
+- generate-a-report-listing-all-shape-types-present-in-a-workbook-along-with-their-cell-coordinates.cs
