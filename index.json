@@ -10240,6 +10240,11 @@
       "title": "Send a chart shape backward so that a linked picture appears above it in the worksheet."
     },
     {
+      "category": "working-with-shapes",
+      "file": "ungroup-a-previously-created-shape-group-modify-each-individual-shapes-position-and-save-changes.cs",
+      "title": "Ungroup a previously created shape group, modify each individual shape's position, and save changes."
+    },
+    {
       "category": "working-with-tables",
       "file": "add-a-comment-to-the-table-object-describing-its-purpose-and-retrieve-the-comment-text-programmatically.cs",
       "title": "Add a comment to the table object describing its purpose and retrieve the comment text programmatically."
