@@ -10306,6 +10306,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "implement-a-reflection-effect-on-a-shape-with-defined-transparency-and-size-parameters-to-simulate-glass.cs",
+      "title": "Implement a reflection effect on a shape with defined transparency and size parameters to simulate glass."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-error-handling-to-catch-exceptions-when-adding-wordart-to-a-protected-worksheet.cs",
       "title": "Implement error handling to catch exceptions when adding WordArt to a protected worksheet."
     },
