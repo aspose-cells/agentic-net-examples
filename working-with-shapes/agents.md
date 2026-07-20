@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - retrieve-the-absolute-topleft-coordinates-of-a-shape-to-align-it-precisely-with-a-target-cell-range.cs
 - obtain-all-connection-points-of-a-shape-to-calculate-attachment-positions-for-linked-arrows-and-connectors.cs
 - send-a-specific-shape-to-the-front-of-the-zorder-stack-to-ensure-it-overlays-other-objects.cs
+- link-a-shape-to-cell-b5-using-its-hyperlink-property-to-navigate-when-the-shape-is-clicked.cs
