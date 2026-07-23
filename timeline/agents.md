@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs
 - export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs
 - add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs
+- render-a-timeline-with-a-3d-perspective-effect-adjust-depth-and-output-as-a-png-image.cs
