@@ -60,3 +60,4 @@ Output files are written to the working directory.
 - render-a-timeline-with-weekly-intervals-apply-bold-fonts-and-output-the-result-as-a-pdf-document.cs
 - draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs
 - validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs
+- update-an-existing-timeline-by-adding-a-new-data-series-and-rerender-it-to-a-pdf-with-annotations.cs
