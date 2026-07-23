@@ -6111,6 +6111,11 @@
     },
     {
       "category": "timeline",
+      "file": "serialize-a-timeline-object-to-json-modify-its-properties-programmatically-and-deserialize-it-back-to-render.cs",
+      "title": "Serialize a timeline object to JSON, modify its properties programmatically, and deserialize it back to render."
+    },
+    {
+      "category": "timeline",
       "file": "update-an-existing-timeline-by-adding-a-new-data-series-and-rerender-it-to-a-pdf-with-annotations.cs",
       "title": "Update an existing timeline by adding a new data series and re\u2011render it to a PDF with annotations."
     },
