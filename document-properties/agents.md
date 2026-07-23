@@ -87,3 +87,4 @@ Output files are written to the working directory.
 - open-a-workbook-update-document-properties-and-export-the-result-to-csv-format-for-downstream-processing.cs
 - instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs
 - batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs
+- iterate-through-a-directory-of-excel-files-and-update-every-documentversion-property-to-30.cs
