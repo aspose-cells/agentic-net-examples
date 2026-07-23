@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - update-an-existing-timeline-by-adding-a-new-data-series-and-rerender-it-to-a-pdf-with-annotations.cs
 - serialize-a-timeline-object-to-json-modify-its-properties-programmatically-and-deserialize-it-back-to-render.cs
 - apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs
+- generate-a-timeline-with-monthly-ticks-hide-weekends-and-save-the-chart-as-a-highquality-tiff.cs
