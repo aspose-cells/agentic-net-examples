@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs
 - apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs
 - export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs
+- add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs
