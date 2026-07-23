@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs
 - generate-a-timeline-with-monthly-ticks-hide-weekends-and-save-the-chart-as-a-highquality-tiff.cs
 - create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs
+- render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs
