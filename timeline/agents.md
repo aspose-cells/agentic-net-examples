@@ -59,3 +59,4 @@ Output files are written to the working directory.
 - generate-a-timeline-with-custom-colors-based-on-project-phases-and-export-it-to-a-highresolution-jpeg.cs
 - render-a-timeline-with-weekly-intervals-apply-bold-fonts-and-output-the-result-as-a-pdf-document.cs
 - draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs
+- validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs
