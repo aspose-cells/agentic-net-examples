@@ -57,3 +57,4 @@ Output files are written to the working directory.
 - load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs
 - create-a-timeline-from-excel-data-using-default-style-and-save-it-as-a-png-image.cs
 - generate-a-timeline-with-custom-colors-based-on-project-phases-and-export-it-to-a-highresolution-jpeg.cs
+- render-a-timeline-with-weekly-intervals-apply-bold-fonts-and-output-the-result-as-a-pdf-document.cs
