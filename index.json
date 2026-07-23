@@ -6076,6 +6076,11 @@
     },
     {
       "category": "timeline",
+      "file": "generate-a-timeline-with-custom-colors-based-on-project-phases-and-export-it-to-a-highresolution-jpeg.cs",
+      "title": "Generate a timeline with custom colors based on project phases and export it to a high\u2011resolution JPEG."
+    },
+    {
+      "category": "timeline",
       "file": "iterate-through-rows-of-data-automatically-creating-timeline-entries-for-each-and-exporting-the-final-chart-to-pdf.cs",
       "title": "Iterate through rows of data, automatically creating timeline entries for each and exporting the final chart to PDF."
     },
