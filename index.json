@@ -6086,6 +6086,11 @@
     },
     {
       "category": "timeline",
+      "file": "generate-a-timeline-with-monthly-ticks-hide-weekends-and-save-the-chart-as-a-highquality-tiff.cs",
+      "title": "Generate a timeline with monthly ticks, hide weekends, and save the chart as a high\u2011quality TIFF."
+    },
+    {
+      "category": "timeline",
       "file": "iterate-through-rows-of-data-automatically-creating-timeline-entries-for-each-and-exporting-the-final-chart-to-pdf.cs",
       "title": "Iterate through rows of data, automatically creating timeline entries for each and exporting the final chart to PDF."
     },
