@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs
 - instantiate-two-workbooks-and-copy-all-document-properties-from-source-to-destination-programmatically.cs
 - load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs
+- open-a-workbook-and-validate-that-documentversion-matches-a-semantic-version-pattern-before-saving.cs
