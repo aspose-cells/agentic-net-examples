@@ -6031,6 +6031,11 @@
     },
     {
       "category": "timeline",
+      "file": "apply-conditional-formatting-to-timeline-bars-based-on-performance-thresholds-and-export-the-result-as-a-pdf.cs",
+      "title": "Apply conditional formatting to timeline bars based on performance thresholds and export the result as a PDF."
+    },
+    {
+      "category": "timeline",
       "file": "batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs",
       "title": "Batch convert Excel files, add a timeline to each, and save PDFs to an output directory."
     },
