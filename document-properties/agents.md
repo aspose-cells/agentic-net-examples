@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - load-a-workbook-modify-several-properties-and-save-the-file-to-xlsx-format-preserving-changes.cs
 - open-a-workbook-update-document-properties-and-export-the-result-to-csv-format-for-downstream-processing.cs
 - instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs
+- batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs
