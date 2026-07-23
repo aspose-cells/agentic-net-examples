@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs
+- create-a-timeline-from-excel-data-using-default-style-and-save-it-as-a-png-image.cs
