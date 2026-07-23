@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs
 - open-a-workbook-and-confirm-that-application-metadata-fields-appear-in-saved-file-properties.cs
 - load-a-workbook-modify-several-properties-and-save-the-file-to-xlsx-format-preserving-changes.cs
+- open-a-workbook-update-document-properties-and-export-the-result-to-csv-format-for-downstream-processing.cs
