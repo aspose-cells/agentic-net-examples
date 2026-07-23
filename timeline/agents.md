@@ -67,3 +67,4 @@ Output files are written to the working directory.
 - create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs
 - render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs
 - iterate-through-rows-of-data-automatically-creating-timeline-entries-for-each-and-exporting-the-final-chart-to-pdf.cs
+- combine-two-separate-timelines-into-a-single-composite-view-and-save-the-merged-chart-as-an-svg-file.cs
