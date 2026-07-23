@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs
 - iterate-through-a-directory-of-excel-files-and-update-every-documentversion-property-to-30.cs
 - create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs
+- generate-a-summary-report-that-aggregates-builtin-property-values-from-multiple-workbooks-into-a-consolidated-excel-file.cs
