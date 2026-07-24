@@ -2076,6 +2076,11 @@
     },
     {
       "category": "conversion",
+      "file": "validate-formulas-across-all-worksheets-reporting-any-errors-or-circular-references-found.cs",
+      "title": "Validate formulas across all worksheets, reporting any errors or circular references found."
+    },
+    {
+      "category": "conversion",
       "file": "validate-numeric-columns-after-loading-csv-by-checking-cell-data-types-and-logging-mismatches.cs",
       "title": "Validate numeric columns after loading CSV by checking cell data types and logging mismatches."
     },
