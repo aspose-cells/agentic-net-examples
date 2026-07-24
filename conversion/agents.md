@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - set-odssaveoptions-to-odfversionversion13-and-save-as-ods-complying-with-odf-13.cs
 - save-a-workbook-as-sxc-format-using-odssaveoptions-for-opendocument-spreadsheet-compatibility.cs
 - save-a-workbook-as-fods-format-flat-ods-using-odssaveoptions.cs
+- assign-a-graphic-stream-to-odspagebackground-and-save-the-workbook-as-ods-with-colored-background.cs
