@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - set-txtloadoptionsseparator-to-a-pipe-character-load-a-pipedelimited-file-and-save-as-xlsx.cs
 - enable-txtloadoptionsismultiencoded-read-a-mixedencoding-csv-and-verify-unicode-characters-persist.cs
 - load-a-csv-file-with-a-custom-comment-character-ignore-commented-lines-and-export-clean-data-to-tsv.cs
+- load-a-csv-file-trim-whitespace-from-all-string-cells-and-save-the-cleaned-data-as-csv.cs
