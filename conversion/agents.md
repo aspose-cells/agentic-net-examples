@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - apply-odspagebackground-solid-blue-color-and-save-ods-with-background.cs
 - retrieve-the-odspagebackground-color-from-an-ods-file-for-auditing.cs
 - extract-the-graphic-background-stream-from-an-ods-file-and-save-as-png.cs
+- read-odspagebackground-graphic-data-from-an-ods-file-and-write-it-to-a-jpeg-file.cs
