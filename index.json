@@ -1466,6 +1466,11 @@
     },
     {
       "category": "conversion",
+      "file": "export-a-workbook-to-pdf-excluding-hidden-rows-and-columns-to-generate-a-clean-report.cs",
+      "title": "Export a workbook to PDF excluding hidden rows and columns to generate a clean report."
+    },
+    {
+      "category": "conversion",
       "file": "export-a-workbook-to-pdf-while-including-hidden-rows-and-columns-for-complete-data-capture.cs",
       "title": "Export a workbook to PDF while including hidden rows and columns for complete data capture."
     },
