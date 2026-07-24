@@ -1371,6 +1371,11 @@
     },
     {
       "category": "conversion",
+      "file": "batch-convert-multiple-xlsx-files-to-pdf-and-store-results-in-an-output-folder.cs",
+      "title": "Batch convert multiple XLSX files to PDF and store results in an output folder."
+    },
+    {
+      "category": "conversion",
       "file": "convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs",
       "title": "Convert an XLS workbook to a Markdown document with aligned tables."
     },
