@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - load-multiple-csv-files-and-convert-each-to-ods-using-default-odf-version-verifying-compliance.cs
 - load-a-commadelimited-csv-file-using-txtloadoptions-and-save-the-workbook-as-xlsx.cs
 - configure-txtloadoptionsseparator-to-a-semicolon-load-a-csv-file-and-export-it-to-xlsx.cs
+- set-txtloadoptionsseparator-to-a-pipe-character-load-a-pipedelimited-file-and-save-as-xlsx.cs
