@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - load-a-tsv-file-using-loadformattsv-and-export-its-content-to-a-csv-file-with-commas.cs
 - read-a-txt-file-with-tab-delimiters-convert-it-to-an-excel-workbook-and-save-as-xlsx.cs
 - load-a-passwordprotected-xls-file-and-export-it-to-pdf-with-embedded-fonts-for-printing.cs
+- load-an-encrypted-workbook-using-a-password-and-convert-it-to-pdf-with-watermark-overlay.cs
