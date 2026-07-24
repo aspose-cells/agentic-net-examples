@@ -1406,6 +1406,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-with-grayscale-rendering-for-reduced-file-size-and-printing-speed.cs",
+      "title": "Convert a workbook to PDF with grayscale rendering for reduced file size and printing speed."
+    },
+    {
+      "category": "conversion",
       "file": "convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs",
       "title": "Convert an XLS workbook to a Markdown document with aligned tables."
     },
