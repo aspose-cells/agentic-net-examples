@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-using-custom-page-margins-of-05-inches-on-each-side.cs
 - export-a-workbook-to-pdf-while-including-hidden-rows-and-columns-for-complete-data-capture.cs
 - export-a-workbook-to-pdf-excluding-hidden-rows-and-columns-to-generate-a-clean-report.cs
+- export-a-workbook-to-pdf-while-preserving-cell-background-colors-for-visual-consistency.cs
