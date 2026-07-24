@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - read-a-txt-file-with-tab-delimiters-convert-it-to-an-excel-workbook-and-save-as-xlsx.cs
 - load-a-passwordprotected-xls-file-and-export-it-to-pdf-with-embedded-fonts-for-printing.cs
 - load-an-encrypted-workbook-using-a-password-and-convert-it-to-pdf-with-watermark-overlay.cs
+- load-a-workbook-with-custom-load-options-to-ignore-missing-fonts-during-conversion-process.cs
