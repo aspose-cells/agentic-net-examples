@@ -77,3 +77,4 @@ Output files are written to the working directory.
 - assign-a-graphic-stream-to-odspagebackground-and-save-the-workbook-as-ods-with-colored-background.cs
 - apply-odspagebackground-solid-blue-color-and-save-ods-with-background.cs
 - retrieve-the-odspagebackground-color-from-an-ods-file-for-auditing.cs
+- extract-the-graphic-background-stream-from-an-ods-file-and-save-as-png.cs
