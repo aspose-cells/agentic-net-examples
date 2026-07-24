@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - verify-that-an-ods-background-graphic-appears-in-the-exported-pdf.cs
 - convert-a-workbook-to-an-xps-document-for-highquality-printing.cs
 - export-a-workbook-to-json-with-prettyprinted-indentation-for-readability.cs
+- load-multiple-csv-files-and-convert-each-to-ods-using-default-odf-version-verifying-compliance.cs
