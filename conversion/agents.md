@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - save-a-workbook-as-fods-format-flat-ods-using-odssaveoptions.cs
 - assign-a-graphic-stream-to-odspagebackground-and-save-the-workbook-as-ods-with-colored-background.cs
 - apply-odspagebackground-solid-blue-color-and-save-ods-with-background.cs
+- retrieve-the-odspagebackground-color-from-an-ods-file-for-auditing.cs
