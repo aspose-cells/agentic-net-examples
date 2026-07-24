@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-enable-document-encryption-with-a-user-password.cs
 - convert-a-workbook-to-pdf-and-set-viewer-preferences-to-hide-the-toolbar.cs
 - export-a-specific-worksheet-to-csv-trimming-leading-blank-rows-and-columns-during-export.cs
+- save-an-entire-workbook-as-csv-while-keeping-separators-for-blank-rows-to-maintain-structure.cs
