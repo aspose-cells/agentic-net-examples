@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - open-an-ods-workbook-set-odfstrictversion-to-11-and-save-with-odf-11-compliance.cs
 - save-a-workbook-as-ods-complying-with-odf-12-using-odfversionversion12.cs
 - set-odssaveoptions-to-odfversionversion13-and-save-as-ods-complying-with-odf-13.cs
+- save-a-workbook-as-sxc-format-using-odssaveoptions-for-opendocument-spreadsheet-compatibility.cs
