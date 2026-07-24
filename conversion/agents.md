@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-disable-accessibility-tags-to-produce-a-simpler-document-structure.cs
 - convert-a-workbook-to-pdf-and-embed-external-linked-images-directly-into-the-pdf-document.cs
 - convert-a-workbook-to-pdf-and-embed-a-cover-page-with-a-custom-logo.cs
+- convert-a-workbook-to-pdf-and-apply-watermarks-on-odd-pages-only.cs
