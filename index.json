@@ -1396,6 +1396,11 @@
     },
     {
       "category": "conversion",
+      "file": "generate-githubflavored-markdown-tables-from-a-workbook-for-documentation-purposes.cs",
+      "title": "Generate GitHub\u2011flavored Markdown tables from a workbook for documentation purposes."
+    },
+    {
+      "category": "conversion",
       "file": "load-a-tsv-workbook-and-convert-it-to-an-html-page-with-external-css.cs",
       "title": "Load a TSV workbook and convert it to an HTML page with external CSS."
     },
