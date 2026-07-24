@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - enable-txtloadoptionsismultiencoded-read-a-mixedencoding-csv-and-verify-unicode-characters-persist.cs
 - load-a-csv-file-with-a-custom-comment-character-ignore-commented-lines-and-export-clean-data-to-tsv.cs
 - load-a-csv-file-trim-whitespace-from-all-string-cells-and-save-the-cleaned-data-as-csv.cs
+- replace-invalid-characters-automatically-during-csv-load-and-confirm-no-exceptions-are-thrown.cs
