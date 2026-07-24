@@ -1436,6 +1436,11 @@
     },
     {
       "category": "conversion",
+      "file": "convert-a-workbook-to-pdf-and-apply-watermarks-on-odd-pages-only.cs",
+      "title": "Convert a workbook to PDF and apply watermarks on odd pages only."
+    },
+    {
+      "category": "conversion",
       "file": "convert-a-workbook-to-pdf-and-assign-the-author-property-to-reflect-content-creator.cs",
       "title": "Convert a workbook to PDF and assign the author property to reflect content creator."
     },
