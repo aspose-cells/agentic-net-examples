@@ -99,3 +99,4 @@ Output files are written to the working directory.
 - load-a-csv-file-containing-formulas-without-loaddataonly-flag-and-ensure-formulas-remain-functional.cs
 - import-a-csv-file-into-an-existing-workbook-starting-at-cell-d4-then-save-as-xlsx.cs
 - batch-process-all-csv-files-in-a-directory-applying-a-custom-delimiter-and-generate-xlsx-files.cs
+- create-a-utility-that-monitors-a-folder-and-automatically-converts-newly-added-csv-files-to-xlsx.cs
