@@ -1495,6 +1495,11 @@
       "title": "Set OdsSaveOptions to OdfVersion.Version13 and save as ODS complying with ODF 1.3."
     },
     {
+      "category": "conversion",
+      "file": "verify-that-an-ods-background-graphic-appears-in-the-exported-pdf.cs",
+      "title": "Verify that an ODS background graphic appears in the exported PDF."
+    },
+    {
       "category": "document-properties",
       "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
       "title": "Add a custom property containing an array of string tags to categorize workbook content."
