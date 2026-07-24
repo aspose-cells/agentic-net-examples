@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - replace-invalid-characters-automatically-during-csv-load-and-confirm-no-exceptions-are-thrown.cs
 - load-a-csv-file-replace-all-occurrences-of-a-specific-substring-in-text-cells-and-export-cleaned-csv.cs
 - load-a-csv-file-remove-rows-where-the-first-column-is-empty-then-export-back-to-csv.cs
+- load-a-csv-file-detect-duplicate-rows-based-on-a-key-column-and-remove-them-before-saving.cs
