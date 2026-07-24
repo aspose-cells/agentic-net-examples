@@ -63,3 +63,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-json-using-camelcase-property-naming-for-consistency.cs
 - convert-an-xls-workbook-to-a-markdown-document-with-aligned-tables.cs
 - generate-githubflavored-markdown-tables-from-a-workbook-for-documentation-purposes.cs
+- generate-an-mhtml-document-with-utf8-encoding-and-embedded-resources.cs
