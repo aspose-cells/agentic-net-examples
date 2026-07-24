@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - load-a-csv-file-replace-all-occurrences-of-a-specific-substring-in-text-cells-and-export-cleaned-csv.cs
 - load-a-csv-file-remove-rows-where-the-first-column-is-empty-then-export-back-to-csv.cs
 - load-a-csv-file-detect-duplicate-rows-based-on-a-key-column-and-remove-them-before-saving.cs
+- validate-numeric-columns-after-loading-csv-by-checking-cell-data-types-and-logging-mismatches.cs
