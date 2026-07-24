@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - load-a-csv-file-detect-duplicate-rows-based-on-a-key-column-and-remove-them-before-saving.cs
 - validate-numeric-columns-after-loading-csv-by-checking-cell-data-types-and-logging-mismatches.cs
 - configure-txtloadoptionspreferredparsers-to-a-custom-numeric-parser-and-load-csv-to-enforce-precision.cs
+- create-a-custom-parser-to-interpret-dates-in-ddmmyyyy-format-and-assign-it-to-preferredparsers.cs
