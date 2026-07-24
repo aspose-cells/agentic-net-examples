@@ -1455,6 +1455,11 @@
       "title": "Set HTML image options DPI to 200 and export HTML with high\u2011resolution images."
     },
     {
+      "category": "conversion",
+      "file": "set-odssaveoptions-to-odfversionversion13-and-save-as-ods-complying-with-odf-13.cs",
+      "title": "Set OdsSaveOptions to OdfVersion.Version13 and save as ODS complying with ODF 1.3."
+    },
+    {
       "category": "document-properties",
       "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
       "title": "Add a custom property containing an array of string tags to categorize workbook content."
