@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - embed-images-as-base64-in-a-single-html-file-during-export.cs
 - export-a-workbook-as-xml-with-a-custom-root-element.cs
 - set-html-image-options-dpi-to-200-and-export-html-with-highresolution-images.cs
+- set-html-image-options-dpi-to-150-and-export-html-with-sharper-images.cs
