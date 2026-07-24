@@ -84,3 +84,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-json-with-prettyprinted-indentation-for-readability.cs
 - load-multiple-csv-files-and-convert-each-to-ods-using-default-odf-version-verifying-compliance.cs
 - load-a-commadelimited-csv-file-using-txtloadoptions-and-save-the-workbook-as-xlsx.cs
+- configure-txtloadoptionsseparator-to-a-semicolon-load-a-csv-file-and-export-it-to-xlsx.cs
