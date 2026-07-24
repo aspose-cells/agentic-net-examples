@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-include-custom-document-properties-for-applicationspecific-data.cs
 - convert-a-workbook-to-pdf-and-include-all-cell-comments-as-footnotes-in-the-output.cs
 - convert-a-workbook-to-pdf-and-exclude-cell-comments-to-produce-a-cleaner-document.cs
+- convert-a-workbook-to-pdf-and-preserve-all-hyperlinks-for-interactive-navigation.cs
