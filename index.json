@@ -9666,6 +9666,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-encrypt-the-resulting-workbook-with-a-password-for-protection.cs",
+      "title": "Convert HTML to Excel and encrypt the resulting workbook with a password for protection."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
       "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
     },
