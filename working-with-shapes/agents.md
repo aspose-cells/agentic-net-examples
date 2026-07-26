@@ -238,3 +238,4 @@ Output files are written to the working directory.
 - update-the-linked-cell-reference-of-an-existing-checkbox-to-reflect-layout-changes.cs
 - insert-a-radiobutton-control-assign-it-to-a-group-and-set-the-default-selected-option.cs
 - create-a-combobox-control-populate-it-with-five-items-and-define-its-dropdown-width.cs
+- read-the-currently-selected-value-from-an-activex-combobox-on-the-second-sheet.cs
