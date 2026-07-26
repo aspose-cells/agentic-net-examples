@@ -9696,6 +9696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-asynchronously-and-report-conversion-progress-to-callers-via-events.cs",
+      "title": "Convert HTML to PDF asynchronously and report conversion progress to callers via events."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-using-a-dpi-setting-of-300-for-highquality-graphics.cs",
       "title": "Convert HTML to PDF using a DPI setting of 300 for high\u2011quality graphics."
     },
