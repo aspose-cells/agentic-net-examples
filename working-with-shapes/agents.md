@@ -411,3 +411,4 @@ Output files are written to the working directory.
 - filter-shapes-by-autoshapetype-and-process-only-those-matching-given-criteria.cs
 - replace-smartart-text-using-a-dictionary-mapping-shape-names-to-replacement-strings.cs
 - update-a-linked-shape-after-changing-a-formula-in-the-source-cell.cs
+- verify-that-pdf-output-reflects-updated-linked-shape-image-after-refresh-operation.cs
