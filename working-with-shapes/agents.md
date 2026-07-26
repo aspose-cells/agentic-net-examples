@@ -375,3 +375,4 @@ Output files are written to the working directory.
 - replace-the-text-property-of-a-specific-child-shape-based-on-a-lookup-table.cs
 - modify-the-first-adjustment-value-of-the-smartart-shape-via-shapeadjustments-collection.cs
 - apply-multiple-adjustment-values-to-customize-the-smartart-layout-configuration.cs
+- link-the-smartart-shape-to-a-target-worksheet-cell-using-shapelinktocell.cs
