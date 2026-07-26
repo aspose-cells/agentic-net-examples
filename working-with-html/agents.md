@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-while-preserving-righttoleft-text-direction-for-arabic-content.cs
 - convert-html-to-pdf-and-include-accessibility-tags-for-screen-reader-compatibility.cs
 - convert-html-to-pdf-with-custom-font-mapping-to-replace-missing-fonts.cs
+- convert-html-to-pdf-and-add-a-header-with-the-source-file-name-on-each-page.cs
