@@ -410,3 +410,4 @@ Output files are written to the working directory.
 - generate-a-report-listing-each-shapes-type-position-and-adjustment-values-in-a-summary-worksheet.cs
 - filter-shapes-by-autoshapetype-and-process-only-those-matching-given-criteria.cs
 - replace-smartart-text-using-a-dictionary-mapping-shape-names-to-replacement-strings.cs
+- update-a-linked-shape-after-changing-a-formula-in-the-source-cell.cs
