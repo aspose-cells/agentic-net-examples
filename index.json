@@ -9656,6 +9656,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs",
+      "title": "Convert HTML to PDF and embed document metadata such as title and author."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-encrypt-the-output-file-with-a-user-password.cs",
       "title": "Convert HTML to PDF and encrypt the output file with a user password."
     },
