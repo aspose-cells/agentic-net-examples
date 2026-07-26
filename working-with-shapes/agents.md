@@ -453,3 +453,4 @@ Output files are written to the working directory.
 - programmatically-set-a-shapes-z-order-to-a-large-negative-number-and-confirm-it-is-sent-to-the-back.cs
 - create-a-shape-set-its-z-order-to-a-specific-negative-value-and-confirm-it-resides-beneath-gridlines.cs
 - programmatically-set-a-shapes-z-order-to-a-specific-positive-value-then-retrieve-and-confirm-the-same-value.cs
+- create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs
