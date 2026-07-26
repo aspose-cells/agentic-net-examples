@@ -10961,6 +10961,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-multiple-adjustment-values-to-customize-the-smartart-layout-configuration.cs",
+      "title": "Apply multiple adjustment values to customize the SmartArt layout configuration."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "apply-preset-wordart-style-bold-wave-to-a-shape-using-fontsettingsetwordartstyle-method.cs",
       "title": "Apply preset WordArt style Bold Wave to a shape using FontSetting.SetWordArtStyle method."
     },
