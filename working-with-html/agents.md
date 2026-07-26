@@ -65,3 +65,4 @@ Output files are written to the working directory.
 - load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs
 - load-a-workbook-enable-exportgridlines-and-produce-html-that-displays-worksheet-gridlines.cs
 - load-a-workbook-with-conditional-formatting-activate-databar-export-and-save-html-preserving-databar-visuals.cs
+- combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs
