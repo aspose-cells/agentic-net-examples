@@ -376,3 +376,4 @@ Output files are written to the working directory.
 - modify-the-first-adjustment-value-of-the-smartart-shape-via-shapeadjustments-collection.cs
 - apply-multiple-adjustment-values-to-customize-the-smartart-layout-configuration.cs
 - link-the-smartart-shape-to-a-target-worksheet-cell-using-shapelinktocell.cs
+- refresh-the-linked-smartart-shape-after-updating-the-target-cell-with-shaperefreshlinkedshape.cs
