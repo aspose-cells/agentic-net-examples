@@ -9666,6 +9666,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-apply-a-digital-signature-using-a-provided-certificate.cs",
+      "title": "Convert HTML to PDF and apply a digital signature using a provided certificate."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs",
       "title": "Convert HTML to PDF and embed document metadata such as title and author."
     },
