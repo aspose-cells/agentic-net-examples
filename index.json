@@ -9916,6 +9916,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-pdf-from-html-and-set-page-size-to-a4-landscape-orientation.cs",
+      "title": "Generate PDF from HTML and set page size to A4 landscape orientation."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs",
       "title": "Implement IFilePathProvider that converts worksheet names to lowercase URLs for consistent linking."
     },
