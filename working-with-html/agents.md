@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-while-preserving-gradient-fills-in-css-background-images.cs
 - convert-html-to-pdf-and-retain-embedded-video-placeholders-as-static-images.cs
 - convert-html-to-pdf-and-ensure-table-borders-render-with-exact-pixel-widths.cs
+- convert-html-to-pdf-and-preserve-css-pseudoelements-like-before-and-after.cs
