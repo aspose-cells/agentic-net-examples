@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - batch-process-a-folder-of-workbooks-adding-a-standard-disclaimer-comment-to-each-worksheets-top-left-cell.cs
 - read-all-threaded-comments-from-a-worksheet-and-count-the-number-of-comments-per-author.cs
 - remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs
+- scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs
