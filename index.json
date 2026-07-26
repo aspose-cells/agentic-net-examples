@@ -9561,6 +9561,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-a-set-of-xls-files-to-html-applying-exportgridlines-only-to-worksheets-that-contain-tables.cs",
+      "title": "Batch convert a set of XLS files to HTML, applying ExportGridLines only to worksheets that contain tables."
+    },
+    {
+      "category": "working-with-html",
       "file": "combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs",
       "title": "Combine ExcludeUnusedStyles and IsExportComments options, then save workbook as HTML for compact output with comments."
     },
@@ -9671,8 +9676,18 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-extract-the-generated-css-classes-for-analysis.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and extract the generated CSS classes for analysis."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-overlapping-rules-and-ensure-both-rules-are-represented-in-html.cs",
       "title": "Export a workbook with conditional formatting that includes overlapping rules, and ensure both rules are represented in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
+      "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
     },
     {
       "category": "working-with-html",
