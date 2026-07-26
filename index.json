@@ -11016,6 +11016,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "change-latinfontname-to-calibri-while-keeping-fareastfontname-unchanged-for-western-font-style.cs",
+      "title": "Change LatinFontName to \"Calibri\" while keeping FarEastFontName unchanged for western font style."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "change-the-line-style-of-shape-divider-to-dashed-and-set-its-thickness-to-two-points.cs",
       "title": "Change the line style of shape Divider to dashed and set its thickness to two points."
     },
