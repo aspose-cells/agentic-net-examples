@@ -278,3 +278,4 @@ Output files are written to the working directory.
 - develop-a-method-to-set-a-shapes-glow-intensity-based-on-its-importance-level-defined-in-a-property.cs
 - write-a-routine-that-copies-a-chart-shape-changes-its-title-and-places-it-on-a-summary-worksheet.cs
 - implement-a-feature-that-automatically-unlocks-all-shapes-when-the-workbook-is-opened-in-edit-mode.cs
+- create-a-script-that-applies-a-uniform-shadow-offset-to-every-shape-ensuring-consistent-visual-alignment.cs
