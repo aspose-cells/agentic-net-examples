@@ -299,3 +299,4 @@ Output files are written to the working directory.
 - create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs
 - validate-that-all-shapes-have-a-glow-effect-defined-before-exporting-the-workbook-to-xlsx.cs
 - set-threedimensional-rotation-angles-x20-y45-z10-for-a-chart-and-save.cs
+- set-the-reflection-distance-to-twelve-points-and-verify-visual-change-using-automated-screenshot-comparison.cs
