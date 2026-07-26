@@ -11616,6 +11616,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "import-shape-geometry-from-an-xml-file-and-apply-it-to-an-existing-shape.cs",
+      "title": "Import shape geometry from an XML file and apply it to an existing shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-button-control-assign-a-macro-name-and-position-it-at-cell-d5.cs",
       "title": "Insert a Button control, assign a macro name, and position it at cell D5."
     },
