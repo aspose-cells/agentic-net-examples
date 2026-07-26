@@ -12101,6 +12101,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-script-that-loads-a-workbook-from-a-url-applies-texture-tiling-and-saves-to-cloud-storage.cs",
+      "title": "Write a script that loads a workbook from a URL, applies texture tiling, and saves to cloud storage."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-a-utility-that-copies-all-chart-shapes-from-a-source-workbook-to-a-destination-workbook-preserving-formatting.cs",
       "title": "Write a utility that copies all chart shapes from a source workbook to a destination workbook preserving formatting."
     },
