@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs",
+      "title": "Convert HTML to Excel and apply date format detection based on locale settings."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
       "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
     },
