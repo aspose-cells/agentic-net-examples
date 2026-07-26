@@ -9561,13 +9561,33 @@
     },
     {
       "category": "working-with-html",
+      "file": "assign-a-custom-ifilepathprovider-instance-to-htmlsaveoptionsfilepathprovider-to-fix-broken-worksheet-hyperlinks.cs",
+      "title": "Assign a custom IFilePathProvider instance to HtmlSaveOptions.FilePathProvider to fix broken worksheet hyperlinks."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-a-set-of-xls-files-to-html-applying-exportgridlines-only-to-worksheets-that-contain-tables.cs",
       "title": "Batch convert a set of XLS files to HTML, applying ExportGridLines only to worksheets that contain tables."
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-all-xlsx-files-in-a-directory-to-html-using-default-conversion-settings.cs",
+      "title": "Batch convert all XLSX files in a directory to HTML using default conversion settings."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
       "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-xlsx-files-to-html-while-disabling-css-generation-to-reduce-file-size.cs",
+      "title": "Batch convert XLSX files to HTML while disabling CSS generation to reduce file size."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-xlsx-files-to-html-while-omitting-document-properties-for-privacy-compliance.cs",
+      "title": "Batch convert XLSX files to HTML while omitting document properties for privacy compliance."
     },
     {
       "category": "working-with-html",
@@ -9626,6 +9646,191 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-containing-base64-images-to-pdf-ensuring-images-retain-original-resolution.cs",
+      "title": "Convert HTML containing base64 images to PDF, ensuring images retain original resolution."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-file-to-excel-while-preserving-cell-background-colors-defined-by-css-styles.cs",
+      "title": "Convert HTML file to Excel while preserving cell background colors defined by CSS styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-tables-with-colspan-and-rowspan-attributes-to-merged-cells-in-the-worksheet.cs",
+      "title": "Convert HTML tables with colspan and rowspan attributes to merged cells in the worksheet."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs",
+      "title": "Convert HTML to Excel and apply date format detection based on locale settings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-encrypt-the-resulting-workbook-with-a-password-for-protection.cs",
+      "title": "Convert HTML to Excel and encrypt the resulting workbook with a password for protection."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
+      "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
+      "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-using-a-stream-provider-that-writes-output-directly-to-cloud-storage.cs",
+      "title": "Convert HTML to Excel using a stream provider that writes output directly to cloud storage."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-while-preserving-numeric-formats-such-as-currency-and-percentages.cs",
+      "title": "Convert HTML to Excel while preserving numeric formats such as currency and percentages."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-add-a-footer-displaying-page-numbers-in-roman-numerals.cs",
+      "title": "Convert HTML to PDF and add a footer displaying page numbers in Roman numerals."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-add-a-header-with-the-source-file-name-on-each-page.cs",
+      "title": "Convert HTML to PDF and add a header with the source file name on each page."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-add-a-visible-watermark-text-across-each-page.cs",
+      "title": "Convert HTML to PDF and add a visible watermark text across each page."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-apply-a-digital-signature-using-a-provided-certificate.cs",
+      "title": "Convert HTML to PDF and apply a digital signature using a provided certificate."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-compress-the-final-document-using-object-stream-compression.cs",
+      "title": "Convert HTML to PDF and compress the final document using object stream compression."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-embed-a-custom-icc-color-profile-for-accurate-reproduction.cs",
+      "title": "Convert HTML to PDF and embed a custom ICC color profile for accurate reproduction."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs",
+      "title": "Convert HTML to PDF and embed document metadata such as title and author."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-enable-vector-graphics-rendering-for-scalable-charts.cs",
+      "title": "Convert HTML to PDF and enable vector graphics rendering for scalable charts."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-encrypt-the-output-file-with-a-user-password.cs",
+      "title": "Convert HTML to PDF and encrypt the output file with a user password."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-ensure-table-borders-render-with-exact-pixel-widths.cs",
+      "title": "Convert HTML to PDF and ensure table borders render with exact pixel widths."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-include-accessibility-tags-for-screen-reader-compatibility.cs",
+      "title": "Convert HTML to PDF and include accessibility tags for screen reader compatibility."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-maintain-original-line-spacing-and-paragraph-indentation.cs",
+      "title": "Convert HTML to PDF and maintain original line spacing and paragraph indentation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-preserve-css-pseudoelements-like-before-and-after.cs",
+      "title": "Convert HTML to PDF and preserve CSS pseudo\u2011elements like ::before and ::after."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-retain-embedded-video-placeholders-as-static-images.cs",
+      "title": "Convert HTML to PDF and retain embedded video placeholders as static images."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-set-pdf-version-to-17-for-advanced-features.cs",
+      "title": "Convert HTML to PDF and set PDF version to 1.7 for advanced features."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-applying-custom-margins-of-one-centimeter-on-all-sides.cs",
+      "title": "Convert HTML to PDF applying custom margins of one centimeter on all sides."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-asynchronously-and-report-conversion-progress-to-callers-via-events.cs",
+      "title": "Convert HTML to PDF asynchronously and report conversion progress to callers via events."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-in-a-multithreaded-batch-processing-fifty-files-simultaneously.cs",
+      "title": "Convert HTML to PDF in a multi\u2011threaded batch processing fifty files simultaneously."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-using-a-dpi-setting-of-300-for-highquality-graphics.cs",
+      "title": "Convert HTML to PDF using a DPI setting of 300 for high\u2011quality graphics."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-gradient-fills-in-css-background-images.cs",
+      "title": "Convert HTML to PDF while preserving gradient fills in CSS background images."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-hyperlinks-and-making-them-clickable.cs",
+      "title": "Convert HTML to PDF while preserving hyperlinks and making them clickable."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-righttoleft-text-direction-for-arabic-content.cs",
+      "title": "Convert HTML to PDF while preserving right\u2011to\u2011left text direction for Arabic content."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-with-custom-font-mapping-to-replace-missing-fonts.cs",
+      "title": "Convert HTML to PDF with custom font mapping to replace missing fonts."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-with-high-image-compression-level-to-reduce-file-size.cs",
+      "title": "Convert HTML to PDF with high image compression level to reduce file size."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-pdf-with-pdfa1b-compliance-for-longterm-archival-storage.cs",
+      "title": "Convert HTML to PDF with PDF/A\u20111b compliance for long\u2011term archival storage."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-with-embedded-images-to-excel-inserting-each-image-into-the-corresponding-cell.cs",
+      "title": "Convert HTML with embedded images to Excel, inserting each image into the corresponding cell."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-with-external-css-files-to-pdf-while-preserving-original-stylesheet-rules.cs",
+      "title": "Convert HTML with external CSS files to PDF while preserving original stylesheet rules."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-with-inline-styles-to-excel-and-map-css-font-sizes-to-row-heights.cs",
+      "title": "Convert HTML with inline styles to Excel and map CSS font sizes to row heights."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
       "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
     },
@@ -9636,13 +9841,28 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-external-css-files-per-worksheet-and-ensure-html-references-point-to-the-correct-stylesheet-locations.cs",
+      "title": "Create external CSS files per worksheet and ensure HTML references point to the correct stylesheet locations."
+    },
+    {
+      "category": "working-with-html",
       "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
       "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
     },
     {
       "category": "working-with-html",
+      "file": "disable-css-generation-during-html-export-by-setting-disablecss-to-true.cs",
+      "title": "Disable CSS generation during HTML export by setting DisableCss to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-downlevel-revealed-comments-when-saving-to-html-to-improve-compatibility-with-older-browsers.cs",
       "title": "Disable downlevel revealed comments when saving to HTML to improve compatibility with older browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "disable-embedded-css-and-manually-link-an-external-stylesheet-after-html-export-for-custom-styling.cs",
+      "title": "Disable embedded CSS and manually link an external stylesheet after HTML export for custom styling."
     },
     {
       "category": "working-with-html",
@@ -9658,6 +9878,16 @@
       "category": "working-with-html",
       "file": "document-the-steps-required-to-disable-scientific-notation-in-html-export.cs",
       "title": "Document the steps required to disable scientific notation in HTML export."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-custom-css-properties-during-html-export-by-setting-enablecustomproperties-to-true.cs",
+      "title": "Enable custom CSS properties during HTML export by setting EnableCustomProperties to true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs",
+      "title": "Enable HtmlSaveOptions.IsIECompatible before saving to MHTML to allow worksheet tab switching in Internet Explorer."
     },
     {
       "category": "working-with-html",
@@ -9693,6 +9923,56 @@
       "category": "working-with-html",
       "file": "ensure-that-html-output-does-not-contain-unnecessary-blank-spaces-after-br-tags.cs",
       "title": "Ensure that HTML output does not contain unnecessary blank spaces after <br> tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "explicitly-enable-right-to-left-text-support-by-setting-rtltextsupport-to-true-before-saving.cs",
+      "title": "Explicitly enable right-to-left text support by setting RtlTextSupport to true before saving."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-singlesheet-workbook-to-html-with-exportworksheetcssseparately-enabled-creating-a-css-folder.cs",
+      "title": "Export a single\u2011sheet workbook to HTML with ExportWorksheetCSSSeparately enabled, creating a CSS folder."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-and-worksheet-properties-together.cs",
+      "title": "Export a workbook to HTML while omitting document and worksheet properties together."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-properties-by-setting-exportdocumentproperties-to-false.cs",
+      "title": "Export a workbook to HTML while omitting document properties by setting ExportDocumentProperties to false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-document-workbook-and-worksheet-properties-simultaneously.cs",
+      "title": "Export a workbook to HTML while omitting document, workbook, and worksheet properties simultaneously."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-workbook-and-worksheet-properties-together.cs",
+      "title": "Export a workbook to HTML while omitting workbook and worksheet properties together."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-workbook-properties-by-disabling-exportworkbookproperties-flag.cs",
+      "title": "Export a workbook to HTML while omitting workbook properties by disabling ExportWorkbookProperties flag."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-worksheet-properties-by-setting-exportworksheetproperties-to-false.cs",
+      "title": "Export a workbook to HTML while omitting worksheet properties by setting ExportWorksheetProperties to false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-both-css-disabled-and-custom-properties-enabled.cs",
+      "title": "Export a workbook to HTML with both CSS disabled and custom properties enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-custom-properties-enabled-while-preserving-default-css-generation.cs",
+      "title": "Export a workbook to HTML with custom properties enabled while preserving default CSS generation."
     },
     {
       "category": "working-with-html",
@@ -9736,6 +10016,66 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-defined-print-area-while-disabling-css-generation-by-setting-exportprintareaonly-true-and-disablecss-true.cs",
+      "title": "Export defined print area while disabling CSS generation by setting ExportPrintAreaOnly true and DisableCss true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-defined-print-area-while-omitting-document-properties-by-combining-exportprintareaonly-and-exportdocumentproperties-false.cs",
+      "title": "Export defined print area while omitting document properties by combining ExportPrintAreaOnly and ExportDocumentProperties false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-defined-print-area-while-omitting-worksheet-properties-by-combining-exportprintareaonly-and-exportworksheetproperties-false.cs",
+      "title": "Export defined print area while omitting worksheet properties by combining ExportPrintAreaOnly and ExportWorksheetProperties false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
+      "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-right-to-left-aligned-text-correctly-using-default-htmlsaveoptions-during-conversion.cs",
+      "title": "Export right-to-left aligned text correctly using default HtmlSaveOptions during conversion."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-and-disabling-css-generation.cs",
+      "title": "Export workbook to HTML after defining a print area and disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-and-omitting-worksheet-properties.cs",
+      "title": "Export workbook to HTML after defining a print area and omitting worksheet properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-after-defining-a-print-area-ensuring-only-that-area-appears.cs",
+      "title": "Export workbook to HTML after defining a print area, ensuring only that area appears."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-while-preserving-original-worksheet-order-by-not-altering-ifilepathprovider-mapping.cs",
+      "title": "Export workbook to HTML while preserving original worksheet order by not altering IFilePathProvider mapping."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-with-custom-css-folder-path-and-ensure-the-folder-is-created-relative-to-output.cs",
+      "title": "Export workbook to HTML with custom CSS folder path and ensure the folder is created relative to output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-with-custom-file-naming-pattern-using-ifilepathprovider-that-appends-timestamps.cs",
+      "title": "Export workbook to HTML with custom file naming pattern using IFilePathProvider that appends timestamps."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-workbook-to-html-with-embedded-css-and-compare-file-size-against-external-css-approach.cs",
+      "title": "Export workbook to HTML with embedded CSS and compare file size against external CSS approach."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
       "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
     },
@@ -9743,6 +10083,31 @@
       "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-excludeunusedstyles-to-compare-full-style-set-against-reduced-version.cs",
       "title": "Generate HTML from a workbook while disabling ExcludeUnusedStyles to compare full style set against reduced version."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-iecompatible-mhtml-from-a-multisheet-workbook-and-verify-tab-switching-functionality-in-internet-explorer.cs",
+      "title": "Generate IE\u2011compatible MHTML from a multi\u2011sheet workbook and verify tab switching functionality in Internet Explorer."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-pdf-from-html-and-set-page-size-to-a4-landscape-orientation.cs",
+      "title": "Generate PDF from HTML and set page size to A4 landscape orientation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs",
+      "title": "Implement IFilePathProvider that converts worksheet names to lowercase URLs for consistent linking."
+    },
+    {
+      "category": "working-with-html",
+      "file": "implement-ifilepathprovider-that-generates-unique-file-names-for-worksheets-with-duplicate-titles.cs",
+      "title": "Implement IFilePathProvider that generates unique file names for worksheets with duplicate titles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "implement-ifilepathprovider-to-customize-html-file-paths-for-each-exported-worksheet-and-maintain-link-integrity.cs",
+      "title": "Implement IFilePathProvider to customize HTML file paths for each exported worksheet and maintain link integrity."
     },
     {
       "category": "working-with-html",
@@ -9781,6 +10146,26 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-file-from-disk-and-convert-it-to-pdf-using-default-options.cs",
+      "title": "Load an HTML file from disk and convert it to PDF using default options."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-while-preserving-div-tag-layout-using-enabledivtaglayout.cs",
+      "title": "Load an HTML file into a workbook while preserving DIV tag layout using EnableDivTagLayout."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-without-preserving-div-layout-by-leaving-enabledivtaglayout-false.cs",
+      "title": "Load an HTML file into a workbook without preserving DIV layout by leaving EnableDivTagLayout false."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-html-string-in-memory-and-generate-a-pdf-with-embedded-fonts.cs",
+      "title": "Load an HTML string in memory and generate a PDF with embedded fonts."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
       "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
     },
@@ -9793,6 +10178,31 @@
       "category": "working-with-html",
       "file": "load-an-xlsx-workbook-enable-excludeunusedstyles-and-save-as-html-to-reduce-file-size.cs",
       "title": "Load an XLSX workbook, enable ExcludeUnusedStyles, and save as HTML to reduce file size."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-from-a-url-and-convert-it-to-an-excel-workbook-using-a-custom-stream-provider.cs",
+      "title": "Load HTML from a URL and convert it to an Excel workbook using a custom stream provider."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs",
+      "title": "Load HTML, modify a cell, and export to HTML while disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-modify-a-cell-value-programmatically-and-export-to-html-with-default-options.cs",
+      "title": "Load HTML, modify a cell value programmatically, and export to HTML with default options."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-preserving-div-layout-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs",
+      "title": "Load HTML preserving DIV layout, modify a cell, and export to HTML while disabling CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-html-preserving-div-layout-then-re-export-to-html-and-verify-div-structure-remains-unchanged.cs",
+      "title": "Load HTML preserving DIV layout, then re-export to HTML and verify DIV structure remains unchanged."
     },
     {
       "category": "working-with-html",
@@ -9831,8 +10241,33 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-htmlsaveoptionsexportworksheetcssseparately-to-true-to-generate-distinct-stylesheet-files-per-worksheet-individually.cs",
+      "title": "Set HtmlSaveOptions.ExportWorksheetCSSSeparately to true to generate distinct stylesheet files per worksheet individually."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptionssimilarborderstyle-to-true-to-provide-fallback-borders-for-unsupported-browsers-in-html.cs",
+      "title": "Set HtmlSaveOptions.SimilarBorderStyle to true to provide fallback borders for unsupported browsers in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "store-exported-html-files-in-a-temporary-folder-via-ifilepathprovider-and-clean-up-after-processing.cs",
+      "title": "Store exported HTML files in a temporary folder via IFilePathProvider and clean up after processing."
+    },
+    {
+      "category": "working-with-html",
       "file": "test-cells-containing-multiline-text-to-confirm-proper-space-handling.cs",
       "title": "Test cells containing multi\u2011line text to confirm proper space handling."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-fallback-border-rendering-in-firefox-by-exporting-with-similarborderstyle-enabled-and-inspecting-css.cs",
+      "title": "Test fallback border rendering in Firefox by exporting with SimilarBorderStyle enabled and inspecting CSS."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-fallback-border-rendering-in-safari-by-exporting-with-similarborderstyle-enabled-and-reviewing-html-output.cs",
+      "title": "Test fallback border rendering in Safari by exporting with SimilarBorderStyle enabled and reviewing HTML output."
     },
     {
       "category": "working-with-html",
@@ -9846,8 +10281,48 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-mhtml-output-in-google-chrome-with-isiecompatible-false-and-confirm-standard-rendering-without-iespecific-features.cs",
+      "title": "Test MHTML output in Google Chrome with IsIECompatible false and confirm standard rendering without IE\u2011specific features."
+    },
+    {
+      "category": "working-with-html",
+      "file": "test-mhtml-output-in-microsoft-edge-after-enabling-isiecompatible-and-assess-compatibility-with-modern-browsers.cs",
+      "title": "Test MHTML output in Microsoft Edge after enabling IsIECompatible and assess compatibility with modern browsers."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs",
       "title": "Use a sample workbook to demonstrate whitespace cleanup during export."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-false-and-confirm-that-css-is-embedded-within-the-html.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately false and confirm that CSS is embedded within the HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-together-with-similarborderstyle-to-test-combined-effects-on-rendering-across-multiple-browsers.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately together with SimilarBorderStyle to test combined effects on rendering across multiple browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-true-and-verify-that-each-worksheet-has-its-own-css-file.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately true and verify that each worksheet has its own .css file."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptionssimilarborderstyle-to-generate-fallback-border-styles-and-test-rendering-in-legacy-browsers.cs",
+      "title": "Use HtmlSaveOptions.SimilarBorderStyle to generate fallback border styles and test rendering in legacy browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-ifilepathprovider-to-generate-relative-paths-for-html-files-to-support-offline-browsing.cs",
+      "title": "Use IFilePathProvider to generate relative paths for HTML files to support offline browsing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-ifilepathprovider-to-store-html-files-in-a-network-share-path-and-validate-accessibility-via-unc.cs",
+      "title": "Use IFilePathProvider to store HTML files in a network share path and validate accessibility via UNC."
     },
     {
       "category": "working-with-html",
