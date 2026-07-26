@@ -11896,6 +11896,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-current-topmarginpt-leftmarginpt-bottommarginpt-and-rightmarginpt-values-from-a-shape.cs",
+      "title": "Retrieve current TopMarginPt, LeftMarginPt, BottomMarginPt, and RightMarginPt values from a shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-absolute-position-of-a-shape-anchored-at-cell-f5-and-log-its-x-and-y-coordinates.cs",
       "title": "Retrieve the absolute position of a shape anchored at cell F5 and log its X and Y coordinates."
     },
