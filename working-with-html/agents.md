@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs
 - export-defined-print-area-while-omitting-document-properties-by-combining-exportprintareaonly-and-exportdocumentproperties-false.cs
 - export-defined-print-area-while-omitting-worksheet-properties-by-combining-exportprintareaonly-and-exportworksheetproperties-false.cs
+- export-defined-print-area-while-disabling-css-generation-by-setting-exportprintareaonly-true-and-disablecss-true.cs
