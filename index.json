@@ -11796,6 +11796,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-function-that-calculates-the-distance-between-two-shapes-using-their-absolute-positions-for-collision-detection.cs",
+      "title": "Write a function that calculates the distance between two shapes using their absolute positions for collision detection."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-a-utility-that-copies-all-chart-shapes-from-a-source-workbook-to-a-destination-workbook-preserving-formatting.cs",
       "title": "Write a utility that copies all chart shapes from a source workbook to a destination workbook preserving formatting."
     },
