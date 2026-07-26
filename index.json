@@ -11531,6 +11531,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "identify-smartart-shapes-in-a-worksheet-and-list-their-names.cs",
+      "title": "Identify SmartArt shapes in a worksheet and list their names."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "implement-a-batch-operation-that-locks-all-shapes-on-every-worksheet-before-exporting-the-workbook-to-pdf.cs",
       "title": "Implement a batch operation that locks all shapes on every worksheet before exporting the workbook to PDF."
     },
