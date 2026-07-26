@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-in-a-workbook-saving-each-as-separate-html-files-while-preserving-gridlines.cs
 - validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs
 - compare-html-file-sizes-with-and-without-excludeunusedstyles-to-quantify-reduction-achieved-by-style-omission.cs
+- verify-that-unused-named-styles-are-omitted-from-the-html-output-when-excludeunusedstyles-is-enabled.cs
