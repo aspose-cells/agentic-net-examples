@@ -9646,6 +9646,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-with-external-css-files-to-pdf-while-preserving-original-stylesheet-rules.cs",
+      "title": "Convert HTML with external CSS files to PDF while preserving original stylesheet rules."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
       "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
     },
