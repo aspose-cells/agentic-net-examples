@@ -10736,6 +10736,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-checkbox-control-to-a-worksheet-and-link-its-state-to-cell-b2.cs",
+      "title": "Add a CheckBox control to a worksheet and link its state to cell B2."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-glowing-outer-border-to-a-picture-shape-using-specified-glow-radius-and-color-value.cs",
       "title": "Add a glowing outer border to a picture shape using specified glow radius and color value."
     },
