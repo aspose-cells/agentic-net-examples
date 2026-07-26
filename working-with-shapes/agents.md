@@ -313,3 +313,4 @@ Output files are written to the working directory.
 - load-an-image-from-a-url-and-use-it-as-texture-for-a-specific-shape.cs
 - check-if-the-shapes-dimensions-exceed-the-image-size-before-enabling-tiling.cs
 - create-a-new-text-box-shape-and-set-its-text-using-textbodytext-property.cs
+- retrieve-the-fontsetting-object-from-a-shapes-textbody-to-modify-text-appearance.cs
