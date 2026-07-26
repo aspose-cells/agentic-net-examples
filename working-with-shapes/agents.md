@@ -219,3 +219,4 @@ Output files are written to the working directory.
 - programmatically-set-the-zorder-of-a-shape-based-on-its-importance-level-defined-in-a-custom-metadata-field.cs
 - develop-a-process-to-ungroup-nested-shape-groups-recursively-until-only-individual-shapes-remain-on-the-sheet.cs
 - implement-error-handling-that-logs-a-warning-when-attempting-to-lock-a-shape-already-marked-as-locked.cs
+- generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs
