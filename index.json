@@ -9701,6 +9701,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-maintain-original-line-spacing-and-paragraph-indentation.cs",
+      "title": "Convert HTML to PDF and maintain original line spacing and paragraph indentation."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-preserve-css-pseudoelements-like-before-and-after.cs",
       "title": "Convert HTML to PDF and preserve CSS pseudo\u2011elements like ::before and ::after."
     },
