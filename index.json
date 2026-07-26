@@ -10011,6 +10011,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-mhtml-output-in-google-chrome-with-isiecompatible-false-and-confirm-standard-rendering-without-iespecific-features.cs",
+      "title": "Test MHTML output in Google Chrome with IsIECompatible false and confirm standard rendering without IE\u2011specific features."
+    },
+    {
+      "category": "working-with-html",
       "file": "test-mhtml-output-in-microsoft-edge-after-enabling-isiecompatible-and-assess-compatibility-with-modern-browsers.cs",
       "title": "Test MHTML output in Microsoft Edge after enabling IsIECompatible and assess compatibility with modern browsers."
     },
