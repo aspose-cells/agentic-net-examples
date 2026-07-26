@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-and-add-a-visible-watermark-text-across-each-page.cs
 - convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs
 - convert-html-to-pdf-with-high-image-compression-level-to-reduce-file-size.cs
+- convert-html-to-pdf-using-a-dpi-setting-of-300-for-highquality-graphics.cs
