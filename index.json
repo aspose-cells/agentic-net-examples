@@ -11241,6 +11241,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "disable-all-shape-reflections-while-preserving-other-effects-and-save-the-workbook.cs",
+      "title": "Disable all shape reflections while preserving other effects and save the workbook."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "duplicate-form-controls-from-one-worksheet-to-another-ensuring-linked-cell-addresses-remain-unchanged.cs",
       "title": "Duplicate form controls from one worksheet to another ensuring linked cell addresses remain unchanged."
     },
