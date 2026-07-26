@@ -462,3 +462,4 @@ Output files are written to the working directory.
 - programmatically-retrieve-connection-points-of-a-shape-calculate-euclidean-distance-between-first-two-points-and-store-result.cs
 - add-a-shape-retrieve-its-connection-points-and-map-them-to-corresponding-cell-addresses-for-documentation.cs
 - add-a-shape-retrieve-its-connection-points-and-compare-them-against-expected-coordinates-defined-in-a-config-file.cs
+- add-a-shape-retrieve-its-connection-points-and-export-the-points-list-to-a-json-file-for-use.cs
