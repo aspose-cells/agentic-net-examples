@@ -274,3 +274,4 @@ Output files are written to the working directory.
 - create-a-validation-rule-that-ensures-every-shape-linked-to-a-cell-references-a-valid-nonempty-cell-address.cs
 - develop-a-script-that-iterates-through-all-shapes-unlocking-those-with-a-specific-tag-attribute-for-editing.cs
 - write-code-to-apply-a-custom-reflection-gradient-to-a-picture-shape-adjusting-both-opacity-and-size-parameters.cs
+- create-a-utility-that-lists-each-shapes-zorder-index-and-sorts-them-alphabetically-by-name-for-reporting.cs
