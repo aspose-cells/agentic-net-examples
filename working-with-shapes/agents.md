@@ -258,3 +258,4 @@ Output files are written to the working directory.
 - import-shape-configuration-from-a-json-file-and-recreate-the-controls-on-a-target-worksheet.cs
 - apply-conditional-formatting-to-a-textbox-based-on-the-numeric-value-of-its-linked-cell.cs
 - synchronize-the-checked-state-of-multiple-checkbox-controls-with-corresponding-cells-in-a-data-table.cs
+- apply-the-preset-wordart-style-wave-to-the-first-shapes-text-using-fontsetting.cs
