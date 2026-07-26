@@ -290,3 +290,4 @@ Output files are written to the working directory.
 - enable-threedimensional-formatting-on-a-chart-shape-setting-depth-to-fifteen-points.cs
 - set-threedimensional-material-to-plastic-and-apply-lighting-preset-soft-with-seventy-percent-intensity.cs
 - rotate-the-threedimensional-shape-by-thirty-degrees-around-the-x-axis.cs
+- tile-a-picture-file-as-texture-inside-a-rectangle-shape-while-preserving-aspect-ratio.cs
