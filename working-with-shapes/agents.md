@@ -264,3 +264,4 @@ Output files are written to the working directory.
 - move-a-shape-to-the-back-of-the-zorder-hierarchy-so-underlying-cells-become-visible-through-it.cs
 - write-a-utility-that-copies-all-chart-shapes-from-a-source-workbook-to-a-destination-workbook-preserving-formatting.cs
 - create-a-script-that-applies-a-uniform-glow-effect-to-every-shape-whose-name-contains-important.cs
+- develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs
