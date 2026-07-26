@@ -9566,6 +9566,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
+      "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs",
       "title": "Batch process a collection of workbooks, applying ExportGridLines and IsExportComments simultaneously to each HTML output."
     },
@@ -9691,6 +9696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-embed-the-scale-definitions-within-a-style-block.cs",
+      "title": "Export a workbook with conditional formatting that includes ColorScale, and embed the scale definitions within a <style> block."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs",
       "title": "Export a workbook with conditional formatting that includes ColorScale, and extract the CSS gradient definitions for reuse."
     },
@@ -9698,6 +9708,11 @@
       "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-extract-the-generated-css-classes-for-analysis.cs",
       "title": "Export a workbook with conditional formatting that includes DataBar, and extract the generated CSS classes for analysis."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-generate-a-separate-css-file-containing-bar-styles.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and generate a separate CSS file containing bar styles."
     },
     {
       "category": "working-with-html",
@@ -9768,6 +9783,11 @@
       "category": "working-with-html",
       "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
       "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-xlsx-workbook-and-export-to-html-using-default-settings-preserving-all-content.cs",
+      "title": "Load an XLSX workbook and export to HTML using default settings, preserving all content."
     },
     {
       "category": "working-with-html",
