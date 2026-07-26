@@ -442,3 +442,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-with-a-dynamic-named-range-and-verify-shape-updates.cs
 - add-a-shape-link-it-to-a-cell-with-a-circular-reference-and-handle-the-resulting-error-gracefully.cs
 - programmatically-duplicate-a-shape-link-the-duplicate-to-a-different-cell-and-compare-their-displayed-contents.cs
+- programmatically-move-a-shape-to-the-front-layer-using-a-positive-integer-argument-in-tofrontorback.cs
