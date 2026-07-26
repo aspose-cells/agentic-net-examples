@@ -262,3 +262,4 @@ Output files are written to the working directory.
 - adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs
 - duplicate-form-controls-from-one-worksheet-to-another-ensuring-linked-cell-addresses-remain-unchanged.cs
 - move-a-shape-to-the-back-of-the-zorder-hierarchy-so-underlying-cells-become-visible-through-it.cs
+- write-a-utility-that-copies-all-chart-shapes-from-a-source-workbook-to-a-destination-workbook-preserving-formatting.cs
