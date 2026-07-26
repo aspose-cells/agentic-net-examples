@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs
 - retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs
 - set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs
+- set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs
