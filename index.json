@@ -11296,6 +11296,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "insert-a-radiobutton-control-assign-it-to-a-group-and-set-the-default-selected-option.cs",
+      "title": "Insert a RadioButton control, assign it to a group, and set the default selected option."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "insert-a-rectangle-shape-of-a-specific-type-at-the-target-cell-location-in-the-worksheet.cs",
       "title": "Insert a rectangle shape of a specific type at the target cell location in the worksheet."
     },
