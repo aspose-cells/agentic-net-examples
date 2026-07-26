@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - generate-pdf-from-html-and-set-page-size-to-a4-landscape-orientation.cs
 - convert-html-to-pdf-applying-custom-margins-of-one-centimeter-on-all-sides.cs
 - convert-html-to-pdf-while-preserving-hyperlinks-and-making-them-clickable.cs
+- convert-html-to-pdf-with-pdfa1b-compliance-for-longterm-archival-storage.cs
