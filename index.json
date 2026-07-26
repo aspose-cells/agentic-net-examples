@@ -11346,6 +11346,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "enable-rotatetextwithshape-property-to-true-to-rotate-text-together-with-the-shape.cs",
+      "title": "Enable RotateTextWithShape property to true to rotate text together with the shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "enable-threedimensional-formatting-on-a-chart-shape-setting-depth-to-fifteen-points.cs",
       "title": "Enable three\u2011dimensional formatting on a chart shape, setting depth to fifteen points."
     },
