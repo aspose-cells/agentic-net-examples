@@ -469,3 +469,4 @@ Output files are written to the working directory.
 - obtain-the-absolute-pixel-position-of-a-grouped-shape-and-convert-it-to-inches-for-reporting.cs
 - place-a-shape-over-a-merged-cell-range-and-verify-its-absolute-position-aligns-with-the-merged-area.cs
 - calculate-the-pixel-offset-between-two-shapes-using-their-absolute-positions-and-store-the-result-in-a-cell.cs
+- retrieve-a-shapes-absolute-position-convert-pixels-to-centimeters-and-store-conversion-in-a-cell.cs
