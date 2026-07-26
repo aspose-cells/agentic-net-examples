@@ -9666,6 +9666,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-custom-css-properties-during-html-export-by-setting-enablecustomproperties-to-true.cs",
+      "title": "Enable custom CSS properties during HTML export by setting EnableCustomProperties to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-the-option-to-generate-html-heading-elements-based-on-worksheet-names.cs",
       "title": "Enable the option to generate HTML heading elements based on worksheet names."
     },
