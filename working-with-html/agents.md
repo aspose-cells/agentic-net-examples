@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs
 - convert-html-to-excel-using-a-stream-provider-that-writes-output-directly-to-cloud-storage.cs
 - convert-html-to-excel-and-encrypt-the-resulting-workbook-with-a-password-for-protection.cs
+- convert-html-to-excel-and-preserve-conditional-formatting-rules-defined-in-css-classes.cs
