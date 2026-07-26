@@ -396,3 +396,4 @@ Output files are written to the working directory.
 - replace-smartart-text-using-a-csv-mapping-of-shape-names-to-new-values.cs
 - apply-custom-adjustment-values-to-a-collection-of-shapes-in-a-loop-for-uniformity.cs
 - reset-all-shape-adjustment-values-to-their-default-settings-programmatically.cs
+- save-the-workbook-after-geometry-changes-to-an-xlsx-file-preserving-original-data.cs
