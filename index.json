@@ -11726,6 +11726,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "link-the-smartart-shape-to-a-target-worksheet-cell-using-shapelinktocell.cs",
+      "title": "Link the SmartArt shape to a target worksheet cell using Shape.LinkToCell."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-a-workbook-add-a-conditional-icon-set-that-shows-cell-values-and-save-file-as-xlsm-macro-enabled.cs",
       "title": "Load a workbook, add a conditional icon set that shows cell values, and save file as XLSM macro-enabled."
     },
