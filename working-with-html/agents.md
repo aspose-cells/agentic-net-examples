@@ -183,3 +183,4 @@ Output files are written to the working directory.
 - convert-html-with-embedded-images-to-excel-inserting-each-image-into-the-corresponding-cell.cs
 - convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs
 - convert-html-to-excel-while-preserving-numeric-formats-such-as-currency-and-percentages.cs
+- convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs
