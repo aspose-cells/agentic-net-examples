@@ -12506,6 +12506,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-a-shapes-absolute-position-using-pixel-values-derived-from-dpi-scaling-and-test-accuracy.cs",
+      "title": "Set a shape's absolute position using pixel values derived from DPI scaling, and test accuracy."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-character-spacing-to-5-points-on-the-shapes-text-via-textoptionscharacterspacing.cs",
       "title": "Set character spacing to 5 points on the shape's text via TextOptions.CharacterSpacing."
     },
