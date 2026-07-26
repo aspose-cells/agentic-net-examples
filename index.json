@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
+      "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-add-a-footer-displaying-page-numbers-in-roman-numerals.cs",
       "title": "Convert HTML to PDF and add a footer displaying page numbers in Roman numerals."
     },
