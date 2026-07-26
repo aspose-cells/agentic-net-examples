@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs
 - embed-an-image-as-a-comment-background-by-setting-shapefillpicture-to-a-loaded-picture-object.cs
 - create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs
+- load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs
