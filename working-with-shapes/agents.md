@@ -372,3 +372,4 @@ Output files are written to the working directory.
 - enumerate-child-shapes-within-the-groupshape-to-access-individual-components.cs
 - read-the-text-property-of-each-child-shape-to-extract-gear-type-smartart-content.cs
 - concatenate-extracted-child-shape-texts-into-a-single-string-for-further-processing.cs
+- replace-the-text-property-of-a-specific-child-shape-based-on-a-lookup-table.cs
