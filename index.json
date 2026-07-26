@@ -11906,6 +11906,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "validate-that-all-shapes-have-a-glow-effect-defined-before-exporting-the-workbook-to-xlsx.cs",
+      "title": "Validate that all shapes have a glow effect defined before exporting the workbook to XLSX."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "validate-that-each-activex-control-has-a-unique-name-property-before-saving-the-workbook.cs",
       "title": "Validate that each ActiveX control has a unique name property before saving the workbook."
     },
