@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - add-a-checkbox-control-to-a-worksheet-and-link-its-state-to-cell-b2.cs
 - update-the-linked-cell-reference-of-an-existing-checkbox-to-reflect-layout-changes.cs
 - insert-a-radiobutton-control-assign-it-to-a-group-and-set-the-default-selected-option.cs
+- create-a-combobox-control-populate-it-with-five-items-and-define-its-dropdown-width.cs
