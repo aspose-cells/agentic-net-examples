@@ -10081,6 +10081,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-htmlsaveoptionsexportworksheetcssseparately-false-and-confirm-that-css-is-embedded-within-the-html.cs",
+      "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately false and confirm that CSS is embedded within the HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-htmlsaveoptionsexportworksheetcssseparately-together-with-similarborderstyle-to-test-combined-effects-on-rendering-across-multiple-browsers.cs",
       "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately together with SimilarBorderStyle to test combined effects on rendering across multiple browsers."
     },
