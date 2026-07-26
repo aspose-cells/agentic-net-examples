@@ -11806,6 +11806,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-the-current-shadow-preset-of-a-shapes-text-and-log-it-for-debugging.cs",
+      "title": "Retrieve the current shadow preset of a shape's text and log it for debugging."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-first-shape-in-the-worksheet-for-effect-modifications.cs",
       "title": "Retrieve the first shape in the worksheet for effect modifications."
     },
