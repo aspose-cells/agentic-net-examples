@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs
 - implement-ifilepathprovider-that-generates-unique-file-names-for-worksheets-with-duplicate-titles.cs
 - store-exported-html-files-in-a-temporary-folder-via-ifilepathprovider-and-clean-up-after-processing.cs
+- export-workbook-to-html-with-custom-file-naming-pattern-using-ifilepathprovider-that-appends-timestamps.cs
