@@ -368,3 +368,4 @@ Output files are written to the working directory.
 - retrieve-the-shapes-collection-of-the-selected-worksheet-for-further-processing.cs
 - iterate-through-each-shape-and-use-shapeissmartart-to-identify-smartart-objects.cs
 - filter-shapes-to-process-only-those-where-issmartart-returns-true.cs
+- cast-the-conversion-result-to-groupshape-and-verify-the-object-type-is-groupshape.cs
