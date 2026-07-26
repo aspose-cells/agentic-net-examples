@@ -11191,6 +11191,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "develop-a-method-to-set-a-shapes-glow-intensity-based-on-its-importance-level-defined-in-a-property.cs",
+      "title": "Develop a method to set a shape's glow intensity based on its importance level defined in a property."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "develop-a-process-to-ungroup-nested-shape-groups-recursively-until-only-individual-shapes-remain-on-the-sheet.cs",
       "title": "Develop a process to ungroup nested shape groups recursively until only individual shapes remain on the sheet."
     },
