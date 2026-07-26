@@ -11591,6 +11591,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "update-the-linked-cell-reference-of-an-existing-checkbox-to-reflect-layout-changes.cs",
+      "title": "Update the linked cell reference of an existing CheckBox to reflect layout changes."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-fontsettingcollection-to-apply-the-bold-wave-preset-style-to-all-worksheet-wordart-shapes.cs",
       "title": "Use FontSettingCollection to apply the Bold Wave preset style to all worksheet WordArt shapes."
     },
