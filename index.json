@@ -9706,6 +9706,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-while-omitting-worksheet-properties-by-setting-exportworksheetproperties-to-false.cs",
+      "title": "Export a workbook to HTML while omitting worksheet properties by setting ExportWorksheetProperties to false."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-embed-the-scale-definitions-within-a-style-block.cs",
       "title": "Export a workbook with conditional formatting that includes ColorScale, and embed the scale definitions within a <style> block."
     },
