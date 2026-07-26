@@ -147,3 +147,4 @@ Output files are written to the working directory.
 - export-workbook-to-html-with-custom-css-folder-path-and-ensure-the-folder-is-created-relative-to-output.cs
 - export-workbook-to-html-with-embedded-css-and-compare-file-size-against-external-css-approach.cs
 - load-an-html-file-from-disk-and-convert-it-to-pdf-using-default-options.cs
+- load-an-html-string-in-memory-and-generate-a-pdf-with-embedded-fonts.cs
