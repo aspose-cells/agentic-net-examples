@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - enable-custom-css-properties-during-html-export-by-setting-enablecustomproperties-to-true.cs
 - load-an-html-file-into-a-workbook-while-preserving-div-tag-layout-using-enabledivtaglayout.cs
 - load-an-html-file-into-a-workbook-without-preserving-div-layout-by-leaving-enabledivtaglayout-false.cs
+- load-html-preserving-div-layout-then-re-export-to-html-and-verify-div-structure-remains-unchanged.cs
