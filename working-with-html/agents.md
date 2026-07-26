@@ -92,3 +92,4 @@ Output files are written to the working directory.
 - export-a-workbook-with-conditional-formatting-that-includes-databar-and-generate-a-separate-css-file-containing-bar-styles.cs
 - export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-embed-the-scale-definitions-within-a-style-block.cs
 - load-an-xlsx-workbook-and-export-to-html-using-default-settings-preserving-all-content.cs
+- export-a-workbook-to-html-while-omitting-document-properties-by-setting-exportdocumentproperties-to-false.cs
