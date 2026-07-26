@@ -12111,6 +12111,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "serialize-groupshape-properties-including-child-shapes-to-json-for-persistence.cs",
+      "title": "Serialize GroupShape properties, including child shapes, to JSON for persistence."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "serialize-the-oleobjects-collection-to-json-for-external-auditing-and-integration-purposes.cs",
       "title": "Serialize the OleObjects collection to JSON for external auditing and integration purposes."
     },
