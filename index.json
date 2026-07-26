@@ -9651,6 +9651,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-file-to-excel-while-preserving-cell-background-colors-defined-by-css-styles.cs",
+      "title": "Convert HTML file to Excel while preserving cell background colors defined by CSS styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-add-a-footer-displaying-page-numbers-in-roman-numerals.cs",
       "title": "Convert HTML to PDF and add a footer displaying page numbers in Roman numerals."
     },
