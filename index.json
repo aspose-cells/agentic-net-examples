@@ -11391,6 +11391,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-shape-set-its-absolute-position-using-pixel-values-from-a-configuration-file-and-validate-placement.cs",
+      "title": "Create a shape, set its absolute position using pixel values from a configuration file, and validate placement."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-shape-set-its-linked-cell-to-a-cell-with-an-if-statement-and-display-conditional-text.cs",
       "title": "Create a shape, set its linked cell to a cell with an IF statement, and display conditional text."
     },
