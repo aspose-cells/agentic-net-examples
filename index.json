@@ -11766,6 +11766,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "save-the-modified-workbook-to-a-new-file-preserving-original-formatting-and-textures.cs",
+      "title": "Save the modified workbook to a new file preserving original formatting and textures."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "save-the-workbook-after-adding-new-controls-or-updating-existing-ones-to-preserve-changes.cs",
       "title": "Save the workbook after adding new controls or updating existing ones to preserve changes."
     },
