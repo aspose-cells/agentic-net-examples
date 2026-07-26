@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - use-htmlsaveoptionsexportworksheetcssseparately-true-and-verify-that-each-worksheet-has-its-own-css-file.cs
 - use-htmlsaveoptionsexportworksheetcssseparately-false-and-confirm-that-css-is-embedded-within-the-html.cs
 - export-workbook-to-html-with-custom-css-folder-path-and-ensure-the-folder-is-created-relative-to-output.cs
+- export-workbook-to-html-with-embedded-css-and-compare-file-size-against-external-css-approach.cs
