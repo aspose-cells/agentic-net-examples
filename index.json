@@ -11581,6 +11581,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-over-all-text-boxes-in-a-worksheet-and-set-their-character-spacing-uniformly.cs",
+      "title": "Iterate over all text boxes in a worksheet and set their character spacing uniformly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "iterate-through-all-oleobjects-in-a-workbook-and-extract-each-to-a-folder.cs",
       "title": "Iterate through all OleObjects in a workbook and extract each to a folder."
     },
