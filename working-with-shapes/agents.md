@@ -358,3 +358,4 @@ Output files are written to the working directory.
 - apply-character-spacing-of-12-points-to-all-text-within-shapes-to-improve-readability.cs
 - set-text-alignment-to-center-horizontally-and-middle-vertically-for-a-specific-shape.cs
 - retrieve-current-topmarginpt-leftmarginpt-bottommarginpt-and-rightmarginpt-values-from-a-shape.cs
+- reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs
