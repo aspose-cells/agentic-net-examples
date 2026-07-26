@@ -447,3 +447,4 @@ Output files are written to the working directory.
 - move-a-shape-to-the-front-layer-then-immediately-send-it-to-the-back-layer-verifying-final-order.cs
 - programmatically-move-a-shape-to-the-front-capture-its-z-order-index-and-store-it-in-a-log-file.cs
 - programmatically-adjust-a-shapes-z-order-by-adding-five-to-its-current-value-and-observe-layer-change.cs
+- programmatically-adjust-a-shapes-z-order-by-subtracting-three-from-its-current-value-and-verify-new-order.cs
