@@ -427,3 +427,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-containing-an-if-statement-and-ensure-shape-reflects-conditional-output.cs
 - add-a-shape-link-it-to-a-cell-containing-a-nested-formula-and-verify-shape-reflects-final-result.cs
 - add-a-shape-link-it-to-a-cell-containing-a-sum-formula-and-verify-shape-shows-total-sum.cs
+- link-a-shape-to-a-cell-that-uses-the-rept-function-to-repeat-characters-and-display-repeated-pattern.cs
