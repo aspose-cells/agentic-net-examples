@@ -10751,6 +10751,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-line-shape-using-the-drawing-toolbar-and-set-its-color-to-dark-gray.cs",
+      "title": "Add a Line shape using the drawing toolbar and set its color to dark gray."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-listbox-control-enable-multiselection-mode-and-populate-it-with-ten-entries.cs",
       "title": "Add a ListBox control, enable multi\u2011selection mode, and populate it with ten entries."
     },
