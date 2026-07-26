@@ -11401,6 +11401,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-through-all-worksheets-and-delete-any-checkbox-controls-linked-to-cells-containing-zero.cs",
+      "title": "Iterate through all worksheets and delete any CheckBox controls linked to cells containing zero."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-cell-b5-using-its-hyperlink-property-to-navigate-when-the-shape-is-clicked.cs",
       "title": "Link a shape to cell B5 using its hyperlink property to navigate when the shape is clicked."
     },
