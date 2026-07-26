@@ -259,3 +259,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-to-a-textbox-based-on-the-numeric-value-of-its-linked-cell.cs
 - synchronize-the-checked-state-of-multiple-checkbox-controls-with-corresponding-cells-in-a-data-table.cs
 - apply-the-preset-wordart-style-wave-to-the-first-shapes-text-using-fontsetting.cs
+- adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs
