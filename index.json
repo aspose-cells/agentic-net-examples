@@ -9671,6 +9671,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-using-a-dpi-setting-of-300-for-highquality-graphics.cs",
+      "title": "Convert HTML to PDF using a DPI setting of 300 for high\u2011quality graphics."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-while-preserving-hyperlinks-and-making-them-clickable.cs",
       "title": "Convert HTML to PDF while preserving hyperlinks and making them clickable."
     },
