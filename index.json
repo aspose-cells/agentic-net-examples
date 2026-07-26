@@ -12451,6 +12451,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs",
+      "title": "Write a unit test verifying SmartArt text replacement works correctly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-a-utility-that-copies-all-chart-shapes-from-a-source-workbook-to-a-destination-workbook-preserving-formatting.cs",
       "title": "Write a utility that copies all chart shapes from a source workbook to a destination workbook preserving formatting."
     },
