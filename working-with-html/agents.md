@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - verify-that-unused-named-styles-are-omitted-from-the-html-output-when-excludeunusedstyles-is-enabled.cs
 - load-a-workbook-with-hidden-rows-enable-exportgridlines-and-ensure-hidden-rows-do-not-affect-gridline-rendering.cs
 - create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs
+- export-a-workbook-with-conditional-formatting-that-includes-overlapping-rules-and-ensure-both-rules-are-represented-in-html.cs
