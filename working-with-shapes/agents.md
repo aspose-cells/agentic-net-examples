@@ -412,3 +412,4 @@ Output files are written to the working directory.
 - replace-smartart-text-using-a-dictionary-mapping-shape-names-to-replacement-strings.cs
 - update-a-linked-shape-after-changing-a-formula-in-the-source-cell.cs
 - verify-that-pdf-output-reflects-updated-linked-shape-image-after-refresh-operation.cs
+- measure-file-size-differences-between-workbooks-before-and-after-shape-modifications.cs
