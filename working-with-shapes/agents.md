@@ -394,3 +394,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-and-replace-smartart-text-in-all-shapes.cs
 - identify-smartart-shapes-in-a-worksheet-and-list-their-names.cs
 - replace-smartart-text-using-a-csv-mapping-of-shape-names-to-new-values.cs
+- apply-custom-adjustment-values-to-a-collection-of-shapes-in-a-loop-for-uniformity.cs
