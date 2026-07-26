@@ -11906,6 +11906,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "replace-the-text-property-of-a-specific-child-shape-based-on-a-lookup-table.cs",
+      "title": "Replace the Text property of a specific child shape based on a lookup table."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs",
       "title": "Reset all shape text formatting properties to defaults using the ClearFormatting method."
     },
