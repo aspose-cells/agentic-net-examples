@@ -9721,6 +9721,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-gradient-fills-in-css-background-images.cs",
+      "title": "Convert HTML to PDF while preserving gradient fills in CSS background images."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-while-preserving-hyperlinks-and-making-them-clickable.cs",
       "title": "Convert HTML to PDF while preserving hyperlinks and making them clickable."
     },
