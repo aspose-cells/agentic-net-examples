@@ -468,3 +468,4 @@ Output files are written to the working directory.
 - add-a-shape-retrieve-its-connection-points-and-compare-them-against-a-baseline-defined-in-a-json-schema.cs
 - obtain-the-absolute-pixel-position-of-a-grouped-shape-and-convert-it-to-inches-for-reporting.cs
 - place-a-shape-over-a-merged-cell-range-and-verify-its-absolute-position-aligns-with-the-merged-area.cs
+- calculate-the-pixel-offset-between-two-shapes-using-their-absolute-positions-and-store-the-result-in-a-cell.cs
