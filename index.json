@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-conditional-formatting-rules-defined-in-css-classes.cs",
+      "title": "Convert HTML to Excel and preserve conditional formatting rules defined in CSS classes."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
       "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
     },
