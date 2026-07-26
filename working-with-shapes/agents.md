@@ -325,3 +325,4 @@ Output files are written to the working directory.
 - measure-performance-impact-of-enabling-texture-tiling-on-large-worksheets-with-many-shapes.cs
 - compare-visual-quality-between-tiled-texture-and-stretched-texture-by-toggling-istiling.cs
 - use-presetshadowtypeinnershadow-to-create-a-subtle-inset-effect-on-shape-text.cs
+- retrieve-the-current-shadow-preset-of-a-shapes-text-and-log-it-for-debugging.cs
