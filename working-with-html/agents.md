@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - convert-html-file-to-excel-while-preserving-cell-background-colors-defined-by-css-styles.cs
 - convert-html-tables-with-colspan-and-rowspan-attributes-to-merged-cells-in-the-worksheet.cs
 - convert-html-with-inline-styles-to-excel-and-map-css-font-sizes-to-row-heights.cs
+- convert-html-with-embedded-images-to-excel-inserting-each-image-into-the-corresponding-cell.cs
