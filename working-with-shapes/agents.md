@@ -424,3 +424,4 @@ Output files are written to the working directory.
 - create-a-shape-link-it-to-a-cell-using-text-for-scientific-notation-and-verify-display.cs
 - link-a-shape-to-a-cell-containing-a-vlookup-formula-and-ensure-shape-updates-with-lookup-result.cs
 - create-a-shape-set-its-linked-cell-to-a-cell-with-an-if-statement-and-display-conditional-text.cs
+- add-a-shape-link-it-to-a-cell-containing-an-if-statement-and-ensure-shape-reflects-conditional-output.cs
