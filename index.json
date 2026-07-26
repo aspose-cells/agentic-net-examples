@@ -9651,6 +9651,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-applying-custom-margins-of-one-centimeter-on-all-sides.cs",
+      "title": "Convert HTML to PDF applying custom margins of one centimeter on all sides."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-with-external-css-files-to-pdf-while-preserving-original-stylesheet-rules.cs",
       "title": "Convert HTML with external CSS files to PDF while preserving original stylesheet rules."
     },
