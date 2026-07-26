@@ -11626,6 +11626,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-the-size-and-position-of-an-activex-control-after-insertion-using-the-shape-objects-properties.cs",
+      "title": "Set the size and position of an ActiveX control after insertion using the Shape object's properties."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-wordart-shapes-text-alignment-to-center-horizontally-and-vertically-within-the-shape-bounds.cs",
       "title": "Set WordArt shape's text alignment to center horizontally and vertically within the shape bounds."
     },
