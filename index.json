@@ -12001,6 +12001,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "iterate-worksheets-add-a-shape-to-each-link-to-a-summary-cell-and-log-results.cs",
+      "title": "Iterate worksheets, add a shape to each, link to a summary cell, and log results."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "link-a-shape-to-a-cell-containing-a-datevalue-function-and-ensure-the-shape-displays-the-formatted-date.cs",
       "title": "Link a shape to a cell containing a DATEVALUE function and ensure the shape displays the formatted date."
     },
