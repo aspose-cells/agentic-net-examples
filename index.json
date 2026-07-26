@@ -11216,6 +11216,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "group-multiple-rectangle-shapes-into-a-single-container-for-collective-movement.cs",
+      "title": "Group multiple Rectangle shapes into a single container for collective movement."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "group-the-two-wordart-shapes-together-and-lock-the-group-to-maintain-layout-integrity.cs",
       "title": "Group the two WordArt shapes together and lock the group to maintain layout integrity."
     },
