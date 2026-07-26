@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-with-high-image-compression-level-to-reduce-file-size.cs",
+      "title": "Convert HTML to PDF with high image compression level to reduce file size."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-with-pdfa1b-compliance-for-longterm-archival-storage.cs",
       "title": "Convert HTML to PDF with PDF/A\u20111b compliance for long\u2011term archival storage."
     },
