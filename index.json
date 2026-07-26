@@ -11436,6 +11436,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs",
+      "title": "Create multiple shapes, assign each a different Z-order value, and confirm rendering order matches expectations."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "deserialize-saved-groupshape-json-and-reconstruct-the-smartart-hierarchy-within-a-workbook.cs",
       "title": "Deserialize saved GroupShape JSON and reconstruct the SmartArt hierarchy within a workbook."
     },
