@@ -463,3 +463,4 @@ Output files are written to the working directory.
 - add-a-shape-retrieve-its-connection-points-and-map-them-to-corresponding-cell-addresses-for-documentation.cs
 - add-a-shape-retrieve-its-connection-points-and-compare-them-against-expected-coordinates-defined-in-a-config-file.cs
 - add-a-shape-retrieve-its-connection-points-and-export-the-points-list-to-a-json-file-for-use.cs
+- add-a-shape-retrieve-its-connection-points-and-generate-a-csv-file-listing-point-indices-and-coordinates.cs
