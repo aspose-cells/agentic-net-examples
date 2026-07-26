@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - load-an-html-string-in-memory-and-generate-a-pdf-with-embedded-fonts.cs
 - convert-html-with-external-css-files-to-pdf-while-preserving-original-stylesheet-rules.cs
 - convert-html-containing-base64-images-to-pdf-ensuring-images-retain-original-resolution.cs
+- generate-pdf-from-html-and-set-page-size-to-a4-landscape-orientation.cs
