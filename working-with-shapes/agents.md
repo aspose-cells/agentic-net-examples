@@ -360,3 +360,4 @@ Output files are written to the working directory.
 - retrieve-current-topmarginpt-leftmarginpt-bottommarginpt-and-rightmarginpt-values-from-a-shape.cs
 - reset-all-shape-text-formatting-properties-to-defaults-using-the-clearformatting-method.cs
 - use-shapetextalignment-object-to-read-current-line-spacing-before-applying-changes.cs
+- apply-a-custom-paragraph-style-by-setting-line-spacing-space-before-and-space-after-simultaneously.cs
