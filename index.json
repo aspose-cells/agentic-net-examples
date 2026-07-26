@@ -9671,6 +9671,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-compress-the-final-document-using-object-stream-compression.cs",
+      "title": "Convert HTML to PDF and compress the final document using object stream compression."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs",
       "title": "Convert HTML to PDF and embed document metadata such as title and author."
     },
