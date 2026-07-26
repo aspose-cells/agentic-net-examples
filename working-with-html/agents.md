@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-while-omitting-document-and-worksheet-properties-together.cs
 - export-right-to-left-aligned-text-correctly-using-default-htmlsaveoptions-during-conversion.cs
 - explicitly-enable-right-to-left-text-support-by-setting-rtltextsupport-to-true-before-saving.cs
+- export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs
