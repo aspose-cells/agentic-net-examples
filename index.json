@@ -9656,6 +9656,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "iterate-through-all-worksheets-in-a-workbook-saving-each-as-separate-html-files-while-preserving-gridlines.cs",
+      "title": "Iterate through all worksheets in a workbook, saving each as separate HTML files while preserving gridlines."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-workbook-enable-exportgridlines-and-produce-html-that-displays-worksheet-gridlines.cs",
       "title": "Load a workbook, enable ExportGridLines, and produce HTML that displays worksheet gridlines."
     },
