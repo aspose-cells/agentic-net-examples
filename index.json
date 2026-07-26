@@ -10916,6 +10916,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "apply-the-preset-wordart-style-wave-to-the-first-shapes-text-using-fontsetting.cs",
+      "title": "Apply the preset WordArt style Wave to the first shape's text using FontSetting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "assign-a-cell-range-anchor-to-a-shape-so-it-moves-dynamically-when-rows-or-columns-are-inserted.cs",
       "title": "Assign a cell range anchor to a shape so it moves dynamically when rows or columns are inserted."
     },
