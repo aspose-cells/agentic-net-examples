@@ -11956,6 +11956,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-spaceafterpt-four-points-to-add-spacing-after-each-paragraph.cs",
+      "title": "Set SpaceAfterPt four points to add spacing after each paragraph."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-the-oleobjectlockaspectratio-flag-to-preserve-original-proportions-during-resizing.cs",
       "title": "Set the OleObject.LockAspectRatio flag to preserve original proportions during resizing."
     },
