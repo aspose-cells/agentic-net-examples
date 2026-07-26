@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-while-preserving-hyperlinks-and-making-them-clickable.cs
 - convert-html-to-pdf-with-pdfa1b-compliance-for-longterm-archival-storage.cs
 - convert-html-to-pdf-and-encrypt-the-output-file-with-a-user-password.cs
+- convert-html-to-pdf-and-add-a-visible-watermark-text-across-each-page.cs
