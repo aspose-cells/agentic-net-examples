@@ -334,3 +334,4 @@ Output files are written to the working directory.
 - create-a-macrolike-routine-that-toggles-texture-tiling-on-a-shape-each-execution.cs
 - write-a-script-that-loads-a-workbook-from-a-url-applies-texture-tiling-and-saves-to-cloud-storage.cs
 - implement-a-feature-that-disables-texture-tiling-when-the-shapes-area-is-smaller-than-the-image-dimensions.cs
+- create-a-custom-enumeration-mapping-between-presetshadowtype-values-and-descriptive-labels-for-ui-display.cs
