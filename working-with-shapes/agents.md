@@ -283,3 +283,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-from-a-file-and-access-the-first-worksheet.cs
 - retrieve-the-first-shape-in-the-worksheet-for-effect-modifications.cs
 - apply-a-50-transparent-reflection-to-the-selected-shape-using-shapereflection.cs
+- set-reflection-size-to-30-points-and-blur-radius-to-5-points-on-the-shape.cs
