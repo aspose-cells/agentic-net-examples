@@ -11246,6 +11246,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "enable-threedimensional-formatting-on-a-chart-shape-setting-depth-to-fifteen-points.cs",
+      "title": "Enable three\u2011dimensional formatting on a chart shape, setting depth to fifteen points."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-a-worksheet-containing-ole-objects-to-pdf-while-preserving-object-placeholders.cs",
       "title": "Export a worksheet containing OLE objects to PDF while preserving object placeholders."
     },
