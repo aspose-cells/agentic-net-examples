@@ -9696,6 +9696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-retain-embedded-video-placeholders-as-static-images.cs",
+      "title": "Convert HTML to PDF and retain embedded video placeholders as static images."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-set-pdf-version-to-17-for-advanced-features.cs",
       "title": "Convert HTML to PDF and set PDF version to 1.7 for advanced features."
     },
