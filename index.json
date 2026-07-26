@@ -11601,6 +11601,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "load-an-image-from-a-url-and-use-it-as-texture-for-a-specific-shape.cs",
+      "title": "Load an image from a URL and use it as texture for a specific shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "load-the-workbook-and-select-the-target-worksheet-before-performing-any-shape-operations.cs",
       "title": "Load the workbook and select the target worksheet before performing any shape operations."
     },
