@@ -11126,6 +11126,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-macrolike-routine-that-toggles-texture-tiling-on-a-shape-each-execution.cs",
+      "title": "Create a macro\u2011like routine that toggles texture tiling on a shape each execution."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-new-text-box-shape-and-set-its-text-using-textbodytext-property.cs",
       "title": "Create a new text box shape and set its text using TextBody.Text property."
     },
