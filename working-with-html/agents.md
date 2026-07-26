@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-and-preserve-css-pseudoelements-like-before-and-after.cs
 - convert-html-to-pdf-and-maintain-original-line-spacing-and-paragraph-indentation.cs
 - convert-html-to-pdf-and-embed-a-custom-icc-color-profile-for-accurate-reproduction.cs
+- load-html-from-a-url-and-convert-it-to-an-excel-workbook-using-a-custom-stream-provider.cs
