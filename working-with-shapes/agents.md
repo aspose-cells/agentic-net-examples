@@ -451,3 +451,4 @@ Output files are written to the working directory.
 - programmatically-set-a-shapes-z-order-to-zero-and-verify-it-appears-at-the-default-layer-position.cs
 - create-a-shape-set-its-z-order-using-a-large-positive-integer-and-confirm-it-appears-above-all-layers.cs
 - programmatically-set-a-shapes-z-order-to-a-large-negative-number-and-confirm-it-is-sent-to-the-back.cs
+- create-a-shape-set-its-z-order-to-a-specific-negative-value-and-confirm-it-resides-beneath-gridlines.cs
