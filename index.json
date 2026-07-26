@@ -10816,6 +10816,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-tooltip-to-shape-infobox-that-displays-custom-help-text-when-the-user-hovers-over-it.cs",
+      "title": "Add a tooltip to shape InfoBox that displays custom help text when the user hovers over it."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-wordart-shape-to-a-specific-cell-range-and-anchor-it-so-it-moves-with-cells.cs",
       "title": "Add a WordArt shape to a specific cell range and anchor it so it moves with cells."
     },
