@@ -11711,6 +11711,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "rotate-the-threedimensional-shape-by-thirty-degrees-around-the-x-axis.cs",
+      "title": "Rotate the three\u2011dimensional shape by thirty degrees around the X axis."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "save-the-workbook-after-adding-new-controls-or-updating-existing-ones-to-preserve-changes.cs",
       "title": "Save the workbook after adding new controls or updating existing ones to preserve changes."
     },
