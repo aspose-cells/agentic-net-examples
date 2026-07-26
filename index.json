@@ -11136,6 +11136,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "generate-mathml-for-each-formula-in-column-h-and-store-the-markup-in-adjacent-cells.cs",
+      "title": "Generate MathML for each formula in column H and store the markup in adjacent cells."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "group-the-two-wordart-shapes-together-and-lock-the-group-to-maintain-layout-integrity.cs",
       "title": "Group the two WordArt shapes together and lock the group to maintain layout integrity."
     },
