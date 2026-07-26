@@ -446,3 +446,4 @@ Output files are written to the working directory.
 - send-a-picture-shape-to-the-back-of-the-worksheet-by-calling-tofrontorback-with-a-negative-value.cs
 - move-a-shape-to-the-front-layer-then-immediately-send-it-to-the-back-layer-verifying-final-order.cs
 - programmatically-move-a-shape-to-the-front-capture-its-z-order-index-and-store-it-in-a-log-file.cs
+- programmatically-adjust-a-shapes-z-order-by-adding-five-to-its-current-value-and-observe-layer-change.cs
