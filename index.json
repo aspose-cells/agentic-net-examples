@@ -9656,6 +9656,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-tables-with-colspan-and-rowspan-attributes-to-merged-cells-in-the-worksheet.cs",
+      "title": "Convert HTML tables with colspan and rowspan attributes to merged cells in the worksheet."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-add-a-footer-displaying-page-numbers-in-roman-numerals.cs",
       "title": "Convert HTML to PDF and add a footer displaying page numbers in Roman numerals."
     },
