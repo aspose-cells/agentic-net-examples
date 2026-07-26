@@ -9696,6 +9696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-embed-the-scale-definitions-within-a-style-block.cs",
+      "title": "Export a workbook with conditional formatting that includes ColorScale, and embed the scale definitions within a <style> block."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs",
       "title": "Export a workbook with conditional formatting that includes ColorScale, and extract the CSS gradient definitions for reuse."
     },
