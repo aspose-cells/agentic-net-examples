@@ -9691,6 +9691,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-ensure-table-borders-render-with-exact-pixel-widths.cs",
+      "title": "Convert HTML to PDF and ensure table borders render with exact pixel widths."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-include-accessibility-tags-for-screen-reader-compatibility.cs",
       "title": "Convert HTML to PDF and include accessibility tags for screen reader compatibility."
     },
