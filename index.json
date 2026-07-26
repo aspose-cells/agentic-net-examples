@@ -11676,6 +11676,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-the-first-shape-in-the-worksheet-for-effect-modifications.cs",
+      "title": "Retrieve the first shape in the worksheet for effect modifications."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-the-textbox-by-its-assigned-name-to-modify-its-properties-programmatically.cs",
       "title": "Retrieve the textbox by its assigned name to modify its properties programmatically."
     },
