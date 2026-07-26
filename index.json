@@ -11106,6 +11106,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "export-all-shapes-xml-definitions-to-a-separate-file-for-external-analysis-and-version-control-tracking.cs",
+      "title": "Export all shapes' XML definitions to a separate file for external analysis and version control tracking."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-the-workbook-with-wordart-watermarks-to-pdf-format-ensuring-watermark-visibility-in-output.cs",
       "title": "Export the workbook with WordArt watermarks to PDF format ensuring watermark visibility in output."
     },
