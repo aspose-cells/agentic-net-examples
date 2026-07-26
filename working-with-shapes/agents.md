@@ -298,3 +298,4 @@ Output files are written to the working directory.
 - set-shadow-color-using-argb-values-25512800-and-transparency-to-thirty-percent.cs
 - create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs
 - validate-that-all-shapes-have-a-glow-effect-defined-before-exporting-the-workbook-to-xlsx.cs
+- set-threedimensional-rotation-angles-x20-y45-z10-for-a-chart-and-save.cs
