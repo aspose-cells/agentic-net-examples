@@ -12046,6 +12046,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "move-a-shape-to-the-front-layer-then-immediately-send-it-to-the-back-layer-verifying-final-order.cs",
+      "title": "Move a shape to the front layer, then immediately send it to the back layer, verifying final order."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "obtain-all-connection-points-of-a-shape-to-calculate-attachment-positions-for-linked-arrows-and-connectors.cs",
       "title": "Obtain all connection points of a shape to calculate attachment positions for linked arrows and connectors."
     },
