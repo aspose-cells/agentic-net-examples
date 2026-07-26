@@ -9666,6 +9666,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-while-preserving-numeric-formats-such-as-currency-and-percentages.cs",
+      "title": "Convert HTML to Excel while preserving numeric formats such as currency and percentages."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-add-a-footer-displaying-page-numbers-in-roman-numerals.cs",
       "title": "Convert HTML to PDF and add a footer displaying page numbers in Roman numerals."
     },
