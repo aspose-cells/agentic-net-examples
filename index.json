@@ -12021,6 +12021,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-text-alignment-to-center-horizontally-and-middle-vertically-for-a-specific-shape.cs",
+      "title": "Set text alignment to center horizontally and middle vertically for a specific shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "set-the-oleobjectlockaspectratio-flag-to-preserve-original-proportions-during-resizing.cs",
       "title": "Set the OleObject.LockAspectRatio flag to preserve original proportions during resizing."
     },
