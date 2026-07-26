@@ -355,3 +355,4 @@ Output files are written to the working directory.
 - create-a-utility-method-that-accepts-a-shape-and-applies-predefined-paragraph-formatting-parameters.cs
 - batch-process-multiple-workbooks-updating-all-shape-text-margins-to-standard-values-in-each-file.cs
 - use-linq-to-select-shapes-with-rotatetextwithshape-set-to-true-and-disable-rotation-for-them.cs
+- apply-character-spacing-of-12-points-to-all-text-within-shapes-to-improve-readability.cs
