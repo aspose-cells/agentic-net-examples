@@ -11771,6 +11771,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "write-a-utility-that-copies-all-chart-shapes-from-a-source-workbook-to-a-destination-workbook-preserving-formatting.cs",
+      "title": "Write a utility that copies all chart shapes from a source workbook to a destination workbook preserving formatting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-code-to-clone-a-chart-shape-modify-its-data-series-and-place-it-on-another-worksheet.cs",
       "title": "Write code to clone a chart shape, modify its data series, and place it on another worksheet."
     },
