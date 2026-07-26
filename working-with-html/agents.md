@@ -69,3 +69,4 @@ Output files are written to the working directory.
 - process-multiple-xlsx-files-in-a-directory-applying-excludeunusedstyles-to-each-and-batch-save-reduced-size-html-files.cs
 - iterate-through-all-worksheets-in-a-workbook-saving-each-as-separate-html-files-while-preserving-gridlines.cs
 - validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs
+- compare-html-file-sizes-with-and-without-excludeunusedstyles-to-quantify-reduction-achieved-by-style-omission.cs
