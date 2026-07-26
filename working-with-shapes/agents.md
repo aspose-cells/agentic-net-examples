@@ -265,3 +265,4 @@ Output files are written to the working directory.
 - write-a-utility-that-copies-all-chart-shapes-from-a-source-workbook-to-a-destination-workbook-preserving-formatting.cs
 - create-a-script-that-applies-a-uniform-glow-effect-to-every-shape-whose-name-contains-important.cs
 - develop-a-method-to-retrieve-and-display-absolute-positions-of-all-shapes-on-a-worksheet-for-analysis.cs
+- implement-a-batch-operation-that-locks-all-shapes-on-every-worksheet-before-exporting-the-workbook-to-pdf.cs
