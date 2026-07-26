@@ -405,3 +405,4 @@ Output files are written to the working directory.
 - write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs
 - write-an-integration-test-confirming-linked-shape-refresh-updates-picture-after-cell-change.cs
 - import-shape-geometry-from-an-xml-file-and-apply-it-to-an-existing-shape.cs
+- compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs
