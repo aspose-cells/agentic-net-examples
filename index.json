@@ -9786,6 +9786,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-with-embedded-images-to-excel-inserting-each-image-into-the-corresponding-cell.cs",
+      "title": "Convert HTML with embedded images to Excel, inserting each image into the corresponding cell."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-with-external-css-files-to-pdf-while-preserving-original-stylesheet-rules.cs",
       "title": "Convert HTML with external CSS files to PDF while preserving original stylesheet rules."
     },
