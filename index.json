@@ -9671,6 +9671,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-include-accessibility-tags-for-screen-reader-compatibility.cs",
+      "title": "Convert HTML to PDF and include accessibility tags for screen reader compatibility."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-applying-custom-margins-of-one-centimeter-on-all-sides.cs",
       "title": "Convert HTML to PDF applying custom margins of one centimeter on all sides."
     },
