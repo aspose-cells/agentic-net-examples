@@ -9876,6 +9876,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-workbook-to-html-with-custom-css-folder-path-and-ensure-the-folder-is-created-relative-to-output.cs",
+      "title": "Export workbook to HTML with custom CSS folder path and ensure the folder is created relative to output."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-workbook-to-html-with-custom-file-naming-pattern-using-ifilepathprovider-that-appends-timestamps.cs",
       "title": "Export workbook to HTML with custom file naming pattern using IFilePathProvider that appends timestamps."
     },
