@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - synchronize-the-checked-state-of-multiple-checkbox-controls-with-corresponding-cells-in-a-data-table.cs
 - apply-the-preset-wordart-style-wave-to-the-first-shapes-text-using-fontsetting.cs
 - adjust-wordart-shapes-transparency-to-thirty-percent-to-create-a-subtle-background-effect.cs
+- duplicate-form-controls-from-one-worksheet-to-another-ensuring-linked-cell-addresses-remain-unchanged.cs
