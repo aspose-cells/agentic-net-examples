@@ -9686,6 +9686,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-while-preserving-righttoleft-text-direction-for-arabic-content.cs",
+      "title": "Convert HTML to PDF while preserving right\u2011to\u2011left text direction for Arabic content."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-with-high-image-compression-level-to-reduce-file-size.cs",
       "title": "Convert HTML to PDF with high image compression level to reduce file size."
     },
