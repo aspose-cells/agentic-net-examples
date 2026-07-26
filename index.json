@@ -11046,6 +11046,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-a-rectangle-shape-fill-it-with-light-blue-and-place-it-behind-chart-objects.cs",
+      "title": "Create a Rectangle shape, fill it with light blue, and place it behind chart objects."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "create-a-reusable-method-that-adds-a-wordart-watermark-with-specified-text-style-and-lock-settings.cs",
       "title": "Create a reusable method that adds a WordArt watermark with specified text, style, and lock settings."
     },
