@@ -426,3 +426,4 @@ Output files are written to the working directory.
 - create-a-shape-set-its-linked-cell-to-a-cell-with-an-if-statement-and-display-conditional-text.cs
 - add-a-shape-link-it-to-a-cell-containing-an-if-statement-and-ensure-shape-reflects-conditional-output.cs
 - add-a-shape-link-it-to-a-cell-containing-a-nested-formula-and-verify-shape-reflects-final-result.cs
+- add-a-shape-link-it-to-a-cell-containing-a-sum-formula-and-verify-shape-shows-total-sum.cs
