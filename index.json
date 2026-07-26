@@ -9971,6 +9971,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-string-in-memory-and-generate-a-pdf-with-embedded-fonts.cs",
+      "title": "Load an HTML string in memory and generate a PDF with embedded fonts."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-xls-workbook-set-isexportcomments-to-true-and-generate-html-that-includes-all-cell-comments.cs",
       "title": "Load an XLS workbook, set IsExportComments to true, and generate HTML that includes all cell comments."
     },
