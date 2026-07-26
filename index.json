@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-pdf-and-embed-a-custom-icc-color-profile-for-accurate-reproduction.cs",
+      "title": "Convert HTML to PDF and embed a custom ICC color profile for accurate reproduction."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-pdf-and-embed-document-metadata-such-as-title-and-author.cs",
       "title": "Convert HTML to PDF and embed document metadata such as title and author."
     },
