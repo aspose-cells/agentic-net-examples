@@ -11816,6 +11816,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "log-detailed-information-for-each-smartart-shape-including-type-position-and-size.cs",
+      "title": "Log detailed information for each SmartArt shape, including type, position, and size."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "log-the-original-file-name-and-size-of-each-extracted-ole-object-for-traceability.cs",
       "title": "Log the original file name and size of each extracted OLE object for traceability."
     },
