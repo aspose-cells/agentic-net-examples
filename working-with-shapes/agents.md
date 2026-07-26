@@ -287,3 +287,4 @@ Output files are written to the working directory.
 - configure-shadow-effect-with-45-degree-angle-10-point-distance-and-dark-gray-color.cs
 - apply-an-outer-shadow-preset-and-set-its-transparency-to-40-percent-for-the-shape.cs
 - read-the-current-glow-color-of-a-specific-shape-and-log-it-to-the-console.cs
+- enable-threedimensional-formatting-on-a-chart-shape-setting-depth-to-fifteen-points.cs
