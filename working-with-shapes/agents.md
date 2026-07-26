@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - export-worksheet-shapes-as-separate-svg-files-preserving-visual-properties-for-reuse-in-web-pages.cs
 - validate-inserted-svg-files-to-ensure-they-do-not-contain-unsupported-elements-that-could-cause-rendering-errors.cs
 - implement-a-batch-operation-that-replaces-date-tags-in-all-textboxes-with-the-current-system-date-formatted-yyyymmdd.cs
+- add-a-tooltip-to-shape-infobox-that-displays-custom-help-text-when-the-user-hovers-over-it.cs
