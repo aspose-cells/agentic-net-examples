@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-with-custom-font-mapping-to-replace-missing-fonts.cs
 - convert-html-to-pdf-and-add-a-header-with-the-source-file-name-on-each-page.cs
 - convert-html-to-pdf-and-add-a-footer-displaying-page-numbers-in-roman-numerals.cs
+- convert-html-to-pdf-and-set-pdf-version-to-17-for-advanced-features.cs
