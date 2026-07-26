@@ -10131,6 +10131,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-html-from-a-url-and-convert-it-to-an-excel-workbook-using-a-custom-stream-provider.cs",
+      "title": "Load HTML from a URL and convert it to an Excel workbook using a custom stream provider."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-html-modify-a-cell-and-export-to-html-while-disabling-css-generation.cs",
       "title": "Load HTML, modify a cell, and export to HTML while disabling CSS generation."
     },
