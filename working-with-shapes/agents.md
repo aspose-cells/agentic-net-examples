@@ -247,3 +247,4 @@ Output files are written to the working directory.
 - add-a-line-shape-using-the-drawing-toolbar-and-set-its-color-to-dark-gray.cs
 - resize-the-line-to-span-cells-b2-through-e2-and-adjust-its-thickness.cs
 - create-a-rectangle-shape-fill-it-with-light-blue-and-place-it-behind-chart-objects.cs
+- group-multiple-rectangle-shapes-into-a-single-container-for-collective-movement.cs
