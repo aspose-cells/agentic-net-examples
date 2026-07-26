@@ -312,3 +312,4 @@ Output files are written to the working directory.
 - iterate-through-all-shapes-in-the-worksheet-and-apply-tiled-texture-to-each.cs
 - load-an-image-from-a-url-and-use-it-as-texture-for-a-specific-shape.cs
 - check-if-the-shapes-dimensions-exceed-the-image-size-before-enabling-tiling.cs
+- create-a-new-text-box-shape-and-set-its-text-using-textbodytext-property.cs
