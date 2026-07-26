@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - verify-that-html-output-contains-only-standard-comment-tags-without-downlevel-revealed-format.cs
 - test-html-files-in-legacy-browsers-to-confirm-comments-are-hidden-appropriately.cs
+- document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs
