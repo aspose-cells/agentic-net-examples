@@ -297,3 +297,4 @@ Output files are written to the working directory.
 - apply-a-custom-reflection-preset-with-size-forty-blur-three-and-distance-six-points.cs
 - set-shadow-color-using-argb-values-25512800-and-transparency-to-thirty-percent.cs
 - create-a-gradient-glow-transitioning-from-red-to-yellow-with-size-five-points.cs
+- validate-that-all-shapes-have-a-glow-effect-defined-before-exporting-the-workbook-to-xlsx.cs
