@@ -282,3 +282,4 @@ Output files are written to the working directory.
 - write-code-that-links-each-shape-to-its-corresponding-data-cell-enabling-dynamic-updates-when-cell-values-change.cs
 - load-an-excel-workbook-from-a-file-and-access-the-first-worksheet.cs
 - retrieve-the-first-shape-in-the-worksheet-for-effect-modifications.cs
+- apply-a-50-transparent-reflection-to-the-selected-shape-using-shapereflection.cs
