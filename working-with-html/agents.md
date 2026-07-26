@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-and-apply-a-digital-signature-using-a-provided-certificate.cs
 - convert-html-to-pdf-and-compress-the-final-document-using-object-stream-compression.cs
 - convert-html-to-pdf-while-preserving-gradient-fills-in-css-background-images.cs
+- convert-html-to-pdf-and-retain-embedded-video-placeholders-as-static-images.cs
