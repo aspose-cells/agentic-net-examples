@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - convert-html-to-pdf-using-a-dpi-setting-of-300-for-highquality-graphics.cs
 - convert-html-to-pdf-and-enable-vector-graphics-rendering-for-scalable-charts.cs
 - convert-html-to-pdf-while-preserving-righttoleft-text-direction-for-arabic-content.cs
+- convert-html-to-pdf-and-include-accessibility-tags-for-screen-reader-compatibility.cs
