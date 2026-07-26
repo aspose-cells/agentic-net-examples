@@ -9566,6 +9566,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs",
+      "title": "Batch process a collection of workbooks, applying ExportGridLines and IsExportComments simultaneously to each HTML output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-process-a-folder-of-xlsx-files-applying-excludeunusedstyles-only-to-files-larger-than-5-mb.cs",
+      "title": "Batch process a folder of XLSX files, applying ExcludeUnusedStyles only to files larger than 5\u202fMB."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-process-workbooks-applying-both-excludeunusedstyles-and-exportgridlines-and-compare-processing-time-against-default-settings.cs",
       "title": "Batch process workbooks, applying both ExcludeUnusedStyles and ExportGridLines, and compare processing time against default settings."
     },
@@ -9681,8 +9691,18 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-extract-the-css-gradient-definitions-for-reuse.cs",
+      "title": "Export a workbook with conditional formatting that includes ColorScale, and extract the CSS gradient definitions for reuse."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-extract-the-generated-css-classes-for-analysis.cs",
       "title": "Export a workbook with conditional formatting that includes DataBar, and extract the generated CSS classes for analysis."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-with-conditional-formatting-that-includes-databar-and-verify-bar-lengths-match-cell-values-in-html.cs",
+      "title": "Export a workbook with conditional formatting that includes DataBar, and verify bar lengths match cell values in HTML."
     },
     {
       "category": "working-with-html",
@@ -9698,6 +9718,11 @@
       "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
       "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-from-a-workbook-while-disabling-excludeunusedstyles-to-compare-full-style-set-against-reduced-version.cs",
+      "title": "Generate HTML from a workbook while disabling ExcludeUnusedStyles to compare full style set against reduced version."
     },
     {
       "category": "working-with-html",
