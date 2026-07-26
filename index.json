@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-using-a-stream-provider-that-writes-output-directly-to-cloud-storage.cs",
+      "title": "Convert HTML to Excel using a stream provider that writes output directly to cloud storage."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-while-preserving-numeric-formats-such-as-currency-and-percentages.cs",
       "title": "Convert HTML to Excel while preserving numeric formats such as currency and percentages."
     },
