@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs
 - retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs
 - replace-the-background-picture-of-a-comment-with-a-semi-transparent-overlay-image.cs
+- copy-formatting-of-a-comments-shape-including-background-color-and-font-color-to-another-comment.cs
