@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - export-a-singlesheet-workbook-to-html-with-exportworksheetcssseparately-enabled-creating-a-css-folder.cs
 - create-external-css-files-per-worksheet-and-ensure-html-references-point-to-the-correct-stylesheet-locations.cs
 - disable-embedded-css-and-manually-link-an-external-stylesheet-after-html-export-for-custom-styling.cs
+- use-htmlsaveoptionsexportworksheetcssseparately-together-with-similarborderstyle-to-test-combined-effects-on-rendering-across-multiple-browsers.cs
