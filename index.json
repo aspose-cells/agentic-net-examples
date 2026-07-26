@@ -10931,6 +10931,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "batch-add-textbox-controls-to-each-worksheet-assigning-unique-identifiers.cs",
+      "title": "Batch add TextBox controls to each worksheet, assigning unique identifiers."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "batch-copy-all-pictures-from-multiple-worksheets-into-a-summary-sheet-preserving-each-pictures-original-size.cs",
       "title": "Batch copy all pictures from multiple worksheets into a summary sheet, preserving each picture's original size."
     },
