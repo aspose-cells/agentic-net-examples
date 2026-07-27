@@ -10896,6 +10896,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-table-headers-include-column-letters-when-exporting-column-headers.cs",
+      "title": "Generate HTML and ensure table headers include column letters when exporting column headers."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-ensure-text-wrapping-is-preserved-in-cells-where-wrap-text-is-enabled.cs",
       "title": "Generate HTML and ensure text wrapping is preserved in cells where wrap text is enabled."
     },
