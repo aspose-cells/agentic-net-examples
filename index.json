@@ -4176,6 +4176,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "write-formulas-to-cells-while-streaming-data-using-lightcellsdataprovider-to-preserve-calculation-logic.cs",
+      "title": "Write formulas to cells while streaming data using LightCellsDataProvider to preserve calculation logic."
+    },
+    {
+      "category": "open-workbook",
       "file": "write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs",
       "title": "Write pivot table definitions while saving with LightCellsDataProvider to recreate analytical views in the output workbook."
     },
