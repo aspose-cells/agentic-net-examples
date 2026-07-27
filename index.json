@@ -11046,6 +11046,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "verify-that-hidden-worksheets-are-absent-from-the-generated-html-when-exporthiddenworksheet-is-false.cs",
+      "title": "Verify that hidden worksheets are absent from the generated HTML when ExportHiddenWorksheet is false."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-html-output-contains-only-standard-comment-tags-without-downlevel-revealed-format.cs",
       "title": "Verify that HTML output contains only standard comment tags without downlevel revealed format."
     },
