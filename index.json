@@ -9546,6 +9546,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-a-reflection-effect-to-wordart-during-html-export-and-ensure-gradient-fill-remains-visible.cs",
+      "title": "Apply a reflection effect to WordArt during HTML export and ensure gradient fill remains visible."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-a-shadow-effect-to-wordart-during-pdf-conversion-while-preserving-the-underlying-gradient-fill.cs",
+      "title": "Apply a shadow effect to WordArt during PDF conversion while preserving the underlying gradient fill."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs",
       "title": "Apply CSS classes to heading elements for consistent styling across exported pages."
     },
@@ -9643,6 +9653,51 @@
       "category": "working-with-html",
       "file": "configure-workbooks-numberformat-to-display-full-integer-values-when-exporting-to-html.cs",
       "title": "Configure workbook's NumberFormat to display full integer values when exporting to HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs",
+      "title": "Convert a spreadsheet containing multiple WordArt objects to PDF and verify each gradient renders independently."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-containing-wordart-to-pdf-and-render-gradient-fills-accurately-in-the-output.cs",
+      "title": "Convert a spreadsheet containing WordArt to PDF and render gradient fills accurately in the output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-with-wordart-to-html-and-include-inline-svg-definitions-for-complex-gradients.cs",
+      "title": "Convert a spreadsheet with WordArt to HTML and include inline SVG definitions for complex gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-with-wordart-to-pdf-and-embed-the-gradient-fill-as-an-iccprofileaware-color-space.cs",
+      "title": "Convert a spreadsheet with WordArt to PDF and embed the gradient fill as an ICC\u2011profile\u2011aware color space."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-spreadsheet-with-wordart-to-svg-and-ensure-gradient-definitions-are-preserved-as-vector-data.cs",
+      "title": "Convert a spreadsheet with WordArt to SVG and ensure gradient definitions are preserved as vector data."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-html-and-ensure-output-passes-w3c-validation-for-css-gradients.cs",
+      "title": "Convert a workbook with WordArt to HTML and ensure output passes W3C validation for CSS gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-html-and-minify-the-generated-css-defining-gradient-fills.cs",
+      "title": "Convert a workbook with WordArt to HTML and minify the generated CSS defining gradient fills."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-pdf-and-add-a-security-restriction-preventing-editing-of-gradient-layers.cs",
+      "title": "Convert a workbook with WordArt to PDF and add a security restriction preventing editing of gradient layers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-pdf-and-set-output-to-pdfa2b-compliance-while-preserving-gradients.cs",
+      "title": "Convert a workbook with WordArt to PDF and set output to PDF/A\u20112b compliance while preserving gradients."
     },
     {
       "category": "working-with-html",
@@ -9911,6 +9966,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-multiple-spreadsheets-containing-wordart-to-pdf-in-a-batch-ensuring-each-gradient-renders-correctly.cs",
+      "title": "Convert multiple spreadsheets containing WordArt to PDF in a batch, ensuring each gradient renders correctly."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-multiple-spreadsheets-with-wordart-to-html-in-a-batch-generating-separate-css-files-for-gradients.cs",
+      "title": "Convert multiple spreadsheets with WordArt to HTML in a batch, generating separate CSS files for gradients."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
       "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
     },
@@ -9926,6 +9991,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "customize-gradient-angle-for-wordart-during-html-conversion-and-reflect-the-angle-in-css-gradient-syntax.cs",
+      "title": "Customize gradient angle for WordArt during HTML conversion and reflect the angle in CSS gradient syntax."
+    },
+    {
+      "category": "working-with-html",
+      "file": "customize-gradient-angle-for-wordart-during-pdf-conversion-using-a-specific-rotation-parameter.cs",
+      "title": "Customize gradient angle for WordArt during PDF conversion using a specific rotation parameter."
+    },
+    {
+      "category": "working-with-html",
       "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
       "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
     },
@@ -9933,6 +10008,11 @@
       "category": "working-with-html",
       "file": "disable-css-generation-during-html-export-by-setting-disablecss-to-true.cs",
       "title": "Disable CSS generation during HTML export by setting DisableCss to true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "disable-default-css-generation-and-rely-solely-on-tablecssid-to-style-exported-html-tables.cs",
+      "title": "Disable default CSS generation and rely solely on TableCssId to style exported HTML tables."
     },
     {
       "category": "working-with-html",
@@ -9958,6 +10038,11 @@
       "category": "working-with-html",
       "file": "document-the-steps-required-to-disable-scientific-notation-in-html-export.cs",
       "title": "Document the steps required to disable scientific notation in HTML export."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-css-custom-properties-in-htmlsaveoptions-while-using-tablecssid-to-enhance-table-styling-flexibility.cs",
+      "title": "Enable CSS custom properties in HtmlSaveOptions while using TableCssId to enhance table styling flexibility."
     },
     {
       "category": "working-with-html",
@@ -10121,6 +10206,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-localespecific-number-formatting-based-on-workbook-culture.cs",
+      "title": "Export Excel to HTML and apply locale\u2011specific number formatting based on workbook culture."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-apply-responsive-design-techniques-for-optimal-mobile-device-viewing.cs",
       "title": "Export Excel to HTML and apply responsive design techniques for optimal mobile device viewing."
     },
@@ -10128,6 +10218,11 @@
       "category": "working-with-html",
       "file": "export-excel-to-html-and-compress-the-output-html-using-gzip-stream-for-faster-transmission.cs",
       "title": "Export Excel to HTML and compress the output HTML using GZIP stream for faster transmission."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-embed-custom-javascript-for-interactive-sorting-of-table-columns.cs",
+      "title": "Export Excel to HTML and embed custom JavaScript for interactive sorting of table columns."
     },
     {
       "category": "working-with-html",
@@ -10143,6 +10238,16 @@
       "category": "working-with-html",
       "file": "export-excel-to-html-and-ensure-formulas-are-displayed-as-values-not-as-formula-strings.cs",
       "title": "Export Excel to HTML and ensure formulas are displayed as values, not as formula strings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-ensure-merged-cells-spanning-multiple-rows-render-correctly.cs",
+      "title": "Export Excel to HTML and ensure merged cells spanning multiple rows render correctly."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-generate-a-printable-version-using-css-media-print-rules.cs",
+      "title": "Export Excel to HTML and generate a printable version using CSS @media print rules."
     },
     {
       "category": "working-with-html",
@@ -10221,6 +10326,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-the-workbook-with-gridlines-enabled-while-applying-a-specified-tablecssid-for-table-styling.cs",
+      "title": "Export the workbook with gridlines enabled while applying a specified TableCssId for table styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-workbook-to-html-after-defining-a-print-area-and-disabling-css-generation.cs",
       "title": "Export workbook to HTML after defining a print area and disabling CSS generation."
     },
@@ -10291,8 +10401,18 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-cell-comments-in-the-html-export-and-ensure-they-inherit-the-tablecssid-prefixed-styles.cs",
+      "title": "Include cell comments in the HTML export and ensure they inherit the TableCssId prefixed styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
       "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "include-worksheet-headings-in-the-html-output-and-prefix-table-styles-with-the-chosen-tablecssid.cs",
+      "title": "Include worksheet headings in the HTML output and prefix table styles with the chosen TableCssId."
     },
     {
       "category": "working-with-html",
@@ -10308,6 +10428,11 @@
       "category": "working-with-html",
       "file": "load-a-workbook-featuring-iconset-rules-set-iconset-export-to-true-and-produce-html-showing-icons.cs",
       "title": "Load a workbook featuring IconSet rules, set IconSet export to true, and produce HTML showing icons."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-a-workbook-from-an-excel-file-and-export-to-html-using-a-custom-tablecssid.cs",
+      "title": "Load a workbook from an Excel file and export to HTML using a custom TableCssId."
     },
     {
       "category": "working-with-html",
@@ -10391,6 +10516,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
+      "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
+    },
+    {
+      "category": "working-with-html",
+      "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-pdf-reporting-progress-of-gradient-rendering.cs",
+      "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to PDF, reporting progress of gradient rendering."
+    },
+    {
+      "category": "working-with-html",
       "file": "preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs",
       "title": "Preserve original worksheet name capitalization when creating HTML heading tags."
     },
@@ -10408,6 +10543,46 @@
       "category": "working-with-html",
       "file": "remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs",
       "title": "Remove redundant spaces after line breaks in cell text while converting to HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-conversion-and-allow-configuration-of-gradient-direction-via-api.cs",
+      "title": "Render WordArt gradient fills during conversion and allow configuration of gradient direction via API."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-html-export-and-apply-custom-css-classes-for-gradient-control.cs",
+      "title": "Render WordArt gradient fills during HTML export and apply custom CSS classes for gradient control."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-pdf-conversion-and-embed-a-fallback-raster-image-for-unsupported-viewers.cs",
+      "title": "Render WordArt gradient fills during PDF conversion and embed a fallback raster image for unsupported viewers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-pdf-conversion-and-enable-antialiasing-for-smoother-edges.cs",
+      "title": "Render WordArt gradient fills during PDF conversion and enable anti\u2011aliasing for smoother edges."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-and-support-custom-start-and-end-colors-defined-in-the-workbook.cs",
+      "title": "Render WordArt gradient fills while converting and support custom start and end colors defined in the workbook."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-html-and-include-fallback-solid-colors-for-older-browsers.cs",
+      "title": "Render WordArt gradient fills while converting to HTML and include fallback solid colors for older browsers."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-html-and-provide-a-javascript-fallback-that-draws-gradients-on-canvas.cs",
+      "title": "Render WordArt gradient fills while converting to HTML and provide a JavaScript fallback that draws gradients on canvas."
+    },
+    {
+      "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-pdf-and-embed-the-gradient-as-a-pdf-shading-pattern.cs",
+      "title": "Render WordArt gradient fills while converting to PDF and embed the gradient as a PDF shading pattern."
     },
     {
       "category": "working-with-html",
@@ -10433,6 +10608,11 @@
       "category": "working-with-html",
       "file": "set-htmlsaveoptionssimilarborderstyle-to-true-to-provide-fallback-borders-for-unsupported-browsers-in-html.cs",
       "title": "Set HtmlSaveOptions.SimilarBorderStyle to true to provide fallback borders for unsupported browsers in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-the-html-encoding-to-utf-8-and-apply-a-custom-tablecssid-for-consistent-table-class-naming.cs",
+      "title": "Set the HTML encoding to UTF-8 and apply a custom TableCssId for consistent table class naming."
     },
     {
       "category": "working-with-html",
@@ -10528,6 +10708,11 @@
       "category": "working-with-html",
       "file": "validate-that-generated-html-contains-comment-tags-by-searching-for-after-enabling-isexportcomments.cs",
       "title": "Validate that generated HTML contains comment tags by searching for \u201c<!--\u201d after enabling IsExportComments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "validate-that-gradient-fills-in-wordart-appear-identical-in-pdf-output-compared-to-the-original-spreadsheet.cs",
+      "title": "Validate that gradient fills in WordArt appear identical in PDF output compared to the original spreadsheet."
     },
     {
       "category": "working-with-html",
