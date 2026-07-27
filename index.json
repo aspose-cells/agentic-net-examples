@@ -10361,6 +10361,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-console-application-that-accepts-an-excel-file-path-and-outputs-html-using-bestfit-layout.cs",
+      "title": "Create a console application that accepts an Excel file path and outputs HTML using best\u2011fit layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-script-that-extracts-excel-files-from-a-zip-archive-and-converts-each-to-html.cs",
       "title": "Create a script that extracts Excel files from a zip archive and converts each to HTML."
     },
