@@ -348,3 +348,4 @@ Output files are written to the working directory.
 - compare-html-file-size-when-enablecsscustomproperties-is-true-versus-false-for-same-workbook.cs
 - compare-html-file-size-when-disablecss-is-true-versus-false-to-assess-markup-reduction.cs
 - ensure-cell-comments-appear-in-html-output-when-exportcomments-option-is-enabled.cs
+- ensure-conditional-formatting-colors-are-retained-in-html-when-exportconditionalformatting-is-true.cs
