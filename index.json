@@ -541,6 +541,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-multiple-workbooks-synchronize-their-theme-palettes-to-a-master-theme-and-save-changes.cs",
+      "title": "Load multiple workbooks, synchronize their theme palettes to a master theme, and save changes."
+    },
+    {
+      "category": "format-cells",
       "file": "validate-that-after-changing-the-theme-conditional-formatting-rules-still-reference-correct-color-indices.cs",
       "title": "Validate that after changing the theme, conditional formatting rules still reference correct color indices."
     }
