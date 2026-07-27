@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-ensure-merged-cells-spanning-multiple-rows-render-correctly.cs
 - convert-a-spreadsheet-containing-wordart-to-pdf-and-render-gradient-fills-accurately-in-the-output.cs
 - convert-a-spreadsheet-with-wordart-to-svg-and-ensure-gradient-definitions-are-preserved-as-vector-data.cs
+- render-wordart-gradient-fills-during-pdf-conversion-and-enable-antialiasing-for-smoother-edges.cs
