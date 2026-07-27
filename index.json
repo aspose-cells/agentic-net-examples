@@ -31,6 +31,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "combine-file-format-detection-with-encryption-status-check-to-decide-whether-to-decrypt-before-processing.cs",
+      "title": "Combine file format detection with encryption status check to decide whether to decrypt before processing."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs",
       "title": "Create a batch process encrypting all workbooks in a SharePoint library using a centralized password."
     },
