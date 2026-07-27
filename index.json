@@ -10301,6 +10301,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-asserting-css-custom-property-definitions-appear-within-a-root-selector-when-enabled.cs",
+      "title": "Create a unit test asserting CSS custom property definitions appear within a :root selector when enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-unit-test-asserting-no-style-tags-exist-when-disablecss-option-is-true.cs",
       "title": "Create a unit test asserting no style tags exist when DisableCss option is true."
     },
