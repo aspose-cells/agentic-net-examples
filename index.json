@@ -11066,6 +11066,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "measure-memory-usage-when-converting-the-same-large-workbook-to-html-with-css-disabled.cs",
+      "title": "Measure memory usage when converting the same large workbook to HTML with CSS disabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs",
       "title": "Measure rendering performance of HTML with CSS disabled versus enabled using a stopwatch timer."
     },
