@@ -205,3 +205,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-set-workbook-calculation-mode-to-automatic-for-formula-evaluation.cs
 - load-an-excel-workbook-from-a-file-and-export-it-to-html-using-a-custom-stream-provider.cs
 - export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs
+- export-excel-to-html-and-generate-a-separate-css-file-for-styling-instead-of-inline-styles.cs
