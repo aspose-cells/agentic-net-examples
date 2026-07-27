@@ -384,3 +384,4 @@ Output files are written to the working directory.
 - create-a-script-that-extracts-excel-files-from-a-zip-archive-and-converts-each-to-html.cs
 - implement-error-handling-for-missing-worksheets-when-exporthiddenworksheet-option-is-enabled.cs
 - implement-logging-of-conversion-duration-for-each-workbook-during-batch-html-processing.cs
+- set-exportactiveworksheetonly-true-to-generate-html-containing-only-the-currently-active-worksheet.cs
