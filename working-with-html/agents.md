@@ -416,3 +416,4 @@ Output files are written to the working directory.
 - generate-html-and-then-use-an-html-parser-to-ensure-no-inline-style-attributes-exist-when-css-is-disabled.cs
 - generate-html-and-then-use-an-html-parser-to-ensure-css-custom-properties-are-defined-in-a-root-selector.cs
 - create-a-unit-test-that-fails-when-presentationpreferencebestfit-produces-html-larger-than-2-mb-for-a-given-workbook.cs
+- create-a-unit-test-that-passes-when-exporthiddenworksheet-true-includes-hidden-sheet-titles-in-the-html-output.cs
