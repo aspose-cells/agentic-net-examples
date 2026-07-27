@@ -631,6 +631,11 @@
     },
     {
       "category": "format-cells",
+      "file": "programmatically-detect-workbooks-that-lack-a-theme-and-assign-a-default-theme-before-processing.cs",
+      "title": "Programmatically detect workbooks that lack a theme and assign a default theme before processing."
+    },
+    {
+      "category": "format-cells",
       "file": "programmatically-list-all-worksheets-that-contain-cells-using-the-light1-theme-background.cs",
       "title": "Programmatically list all worksheets that contain cells using the Light1 theme background."
     },
