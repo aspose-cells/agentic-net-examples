@@ -105,3 +105,4 @@ Examples may generate:
 - apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs
 - unprotect-a-worksheet-add-a-data-validation-rule-then-reprotect-and-verify-validation-remains-active.cs
 - encrypt-a-workbook-then-use-a-checksum-to-ensure-the-encrypted-file-has-not-been-tampered-with.cs
+- detect-the-file-format-of-an-unknown-workbook-and-log-the-identified-format.cs
