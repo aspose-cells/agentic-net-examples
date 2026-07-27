@@ -541,6 +541,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-custom-theme-that-swaps-the-default-dark1-and-light1-colors-and-apply-it.cs",
+      "title": "Create a custom theme that swaps the default Dark1 and Light1 colors and apply it."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-custom-theme-that-uses-corporate-brand-colors-and-apply-it-to-existing-reports.cs",
       "title": "Create a custom theme that uses corporate brand colors and apply it to existing reports."
     },
