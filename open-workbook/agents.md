@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - read-numeric-cells-from-an-applegenerated-spreadsheet-calculate-their-average-and-output-the-result-to-the-console.cs
 - exclude-worksheets-named-temp-during-load-by-adding-their-names-to-loadoptionsloadfilterexcludedsheets-collection.cs
 - include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs
+- set-loadoptionsloadfilter-to-load-only-data-cells-skipping-chart-objects-to-reduce-memory-usage.cs
