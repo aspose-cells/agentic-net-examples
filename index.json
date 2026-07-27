@@ -10521,6 +10521,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-html-with-exporthiddenworksheet-true-and-htmlcrosstypecross-for-performance-on-large-workbooks.cs",
+      "title": "Export HTML with ExportHiddenWorksheet true and HtmlCrossType.Cross for performance on large workbooks."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-only-the-active-worksheet-to-html-while-applying-a-specific-tablecssid-to-style-its-tables.cs",
       "title": "Export only the active worksheet to HTML while applying a specific TableCssId to style its tables."
     },
