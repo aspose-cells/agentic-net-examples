@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - open-a-workbook-from-a-network-share-path-while-ensuring-unc-handling-by-using-the-file-path-constructor.cs
 - open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs
 - process-a-collection-of-excel-files-in-a-directory-by-iterating-and-applying-identical-loadoptions-to-each-workbook.cs
+- open-a-workbook-with-password-protection-and-then-remove-the-password-by-clearing-loadoptionspassword-after-loading.cs
