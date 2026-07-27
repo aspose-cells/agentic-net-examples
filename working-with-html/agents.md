@@ -345,3 +345,4 @@ Output files are written to the working directory.
 - validate-generated-html-contains-link-target-attribute-_blank-after-setting-linktargettype-to-blank.cs
 - validate-generated-html-contains-link-target-attribute-_parent-after-setting-linktargettype-to-parent.cs
 - verify-css-custom-properties-reduce-duplicate-base64-image-strings-compared-to-default-output.cs
+- compare-html-file-size-when-enablecsscustomproperties-is-true-versus-false-for-same-workbook.cs
