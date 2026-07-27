@@ -26,6 +26,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-commandline-utility-that-accepts-a-directory-path-encrypts-all-excel-files-and-outputs-a-summary-report.cs",
+      "title": "Create a command\u2011line utility that accepts a directory path, encrypts all Excel files, and outputs a summary report."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "create-a-utility-extracting-encryption-metadata-from-an-excel-file-and-displaying-it-in-a-readable-format.cs",
       "title": "Create a utility extracting encryption metadata from an Excel file and displaying it in a readable format."
     },
