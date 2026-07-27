@@ -10141,6 +10141,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-ensure-formulas-are-displayed-as-values-not-as-formula-strings.cs",
+      "title": "Export Excel to HTML and ensure formulas are displayed as values, not as formula strings."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-generate-a-separate-css-file-for-styling-instead-of-inline-styles.cs",
       "title": "Export Excel to HTML and generate a separate CSS file for styling instead of inline styles."
     },
