@@ -10951,6 +10951,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "implement-logging-of-conversion-duration-for-each-workbook-during-batch-html-processing.cs",
+      "title": "Implement logging of conversion duration for each workbook during batch HTML processing."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-a-timestamp-in-the-html-filename-and-retain-the-tablecssid-prefix-to-track-export-versions-over-time.cs",
       "title": "Include a timestamp in the HTML filename and retain the TableCssId prefix to track export versions over time."
     },
