@@ -10176,6 +10176,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-gridlines-during-export-to-retain-cell-borders-and-ensure-tablecssid-prefixes-style-those-borders-correctly.cs",
+      "title": "Enable gridlines during export to retain cell borders and ensure TableCssId prefixes style those borders correctly."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs",
       "title": "Enable HtmlSaveOptions.IsIECompatible before saving to MHTML to allow worksheet tab switching in Internet Explorer."
     },
