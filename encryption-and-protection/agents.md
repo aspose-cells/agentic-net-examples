@@ -141,3 +141,4 @@ Examples may generate:
 - save-an-encrypted-workbook-to-a-memory-stream-then-read-stream-length-to-confirm-encryption-overhead.cs
 - detect-an-encrypted-office-open-xml-file-and-extract-its-encryption-algorithm-identifier-for-auditing.cs
 - open-an-encrypted-workbook-with-correct-password-decrypt-contents-and-save-as-new-xlsx-file.cs
+- attempt-to-open-an-encrypted-workbook-with-incorrect-password-and-capture-exception-details.cs
