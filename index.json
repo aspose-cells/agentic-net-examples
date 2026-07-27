@@ -9711,6 +9711,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-hidden-rows-and-columns-indicated-by-css-displaynone.cs",
+      "title": "Convert HTML to Excel and preserve hidden rows and columns indicated by CSS display:none."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-retain-embedded-svg-graphics-as-scalable-vector-shapes.cs",
       "title": "Convert HTML to Excel and retain embedded SVG graphics as scalable vector shapes."
     },
