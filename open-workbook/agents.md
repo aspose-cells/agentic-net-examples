@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs
 - read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs
 - open-a-workbook-from-a-network-share-path-while-ensuring-unc-handling-by-using-the-file-path-constructor.cs
+- open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs
