@@ -506,6 +506,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-theme-to-a-workbook-and-then-export-the-workbook-as-an-xlsx-file.cs",
+      "title": "Apply a custom theme to a workbook and then export the workbook as an XLSX file."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-themes-accent5-color-to-the-data-bars-of-a-conditional-formatting-rule.cs",
       "title": "Apply the theme\u2019s Accent5 color to the data bars of a conditional formatting rule."
     },
