@@ -10561,6 +10561,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-gridlines-in-html-output-by-setting-htmlsaveoptionsenablegridlines-to-true.cs",
+      "title": "Enable gridlines in HTML output by setting HtmlSaveOptions.EnableGridlines to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs",
       "title": "Enable HtmlSaveOptions.IsIECompatible before saving to MHTML to allow worksheet tab switching in Internet Explorer."
     },
@@ -11176,6 +11181,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-worksheet-comments-in-html-by-setting-htmlsaveoptionsincludecomments-to-true.cs",
+      "title": "Include worksheet comments in HTML by setting HtmlSaveOptions.IncludeComments to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
       "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
     },
@@ -11551,6 +11561,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "specify-times-new-roman-as-default-font-for-html-rendering-via-htmlsaveoptions.cs",
+      "title": "Specify \"Times New Roman\" as default font for HTML rendering via HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "store-exported-html-files-in-a-temporary-folder-via-ifilepathprovider-and-clean-up-after-processing.cs",
       "title": "Store exported HTML files in a temporary folder via IFilePathProvider and clean up after processing."
     },
@@ -11608,6 +11623,11 @@
       "category": "working-with-html",
       "file": "use-htmlcrosstypefittocell-together-with-addtooltiptext-to-provide-full-content-on-hover-without-overflow.cs",
       "title": "Use HtmlCrossType.FitToCell together with AddTooltipText to provide full content on hover without overflow."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptions-to-set-default-font-to-courier-new-and-verify-fallback-behavior.cs",
+      "title": "Use HtmlSaveOptions to set default font to \"Courier New\" and verify fallback behavior."
     },
     {
       "category": "working-with-html",
