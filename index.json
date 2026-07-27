@@ -11406,6 +11406,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "verify-duplicate-image-files-are-not-created-when-exportimagesasbase64-is-false-during-conversion.cs",
+      "title": "Verify duplicate image files are not created when ExportImagesAsBase64 is false during conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-exporthiddenworksheet-false-correctly-hides-hidden-sheets-while-preserving-visible-content.cs",
       "title": "Verify that ExportHiddenWorksheet false correctly hides hidden sheets while preserving visible content."
     },
