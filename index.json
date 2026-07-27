@@ -9876,6 +9876,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-and-enable-css-custom-properties-for-image-reuse.cs",
+      "title": "Convert an Excel workbook to HTML with default options and enable CSS custom properties for image reuse."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-an-excel-workbook-to-html-with-default-options-and-set-hyperlink-target-to-blank.cs",
       "title": "Convert an Excel workbook to HTML with default options and set hyperlink target to blank."
     },
