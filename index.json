@@ -10821,6 +10821,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-workbooksaveashtml-shortcut-with-preconfigured-htmlsaveoptions-that-include-a-custom-tablecssid-for-quick-export.cs",
+      "title": "Use Workbook.SaveAsHtml shortcut with pre\u2011configured HtmlSaveOptions that include a custom TableCssId for quick export."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs",
       "title": "Validate that cell content with line breaks displays correctly without extra spacing."
     },
