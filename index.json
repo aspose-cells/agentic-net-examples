@@ -10836,6 +10836,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-the-exported-html-using-an-html-validator-to-confirm-correct-tablecssid-prefixes-on-table-elements.cs",
+      "title": "Validate the exported HTML using an HTML validator to confirm correct TableCssId prefixes on table elements."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
       "title": "Verify that generated HTML contains heading tags matching worksheet titles."
     },
