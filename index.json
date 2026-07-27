@@ -6621,6 +6621,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-retry-mechanism-for-smart-marker-population-when-networkbased-data-sources-experience-transient-failures.cs",
+      "title": "Implement a retry mechanism for smart marker population when network\u2011based data sources experience transient failures."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-batch-processing-to-load-multiple-workbook-templates-assign-distinct-data-sources-and-save-populated-files.cs",
       "title": "Implement batch processing to load multiple workbook templates, assign distinct data sources, and save populated files."
     },
