@@ -301,3 +301,4 @@ Output files are written to the working directory.
 - use-htmlcrosstypefittocell-together-with-addtooltiptext-to-provide-full-content-on-hover-without-overflow.cs
 - use-htmlcrosstypedefault-with-addtooltiptext-enabled-to-show-full-cell-content-while-preserving-overflow-behavior.cs
 - export-only-visible-worksheets-by-setting-exporthiddenworksheet-to-false-before-saving.cs
+- include-hidden-worksheets-by-leaving-exporthiddenworksheet-set-to-true-during-html-export.cs
