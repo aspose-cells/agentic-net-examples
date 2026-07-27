@@ -10536,6 +10536,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-gridlines-and-comments-together-in-htmlsaveoptions-for-comprehensive-html-export.cs",
+      "title": "Enable gridlines and comments together in HtmlSaveOptions for comprehensive HTML export."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-gridlines-during-export-to-retain-cell-borders-and-ensure-tablecssid-prefixes-style-those-borders-correctly.cs",
       "title": "Enable gridlines during export to retain cell borders and ensure TableCssId prefixes style those borders correctly."
     },
