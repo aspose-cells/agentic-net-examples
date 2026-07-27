@@ -10391,6 +10391,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-that-fails-when-presentationpreferencebestfit-produces-html-larger-than-2-mb-for-a-given-workbook.cs",
+      "title": "Create a unit test that fails when PresentationPreference.BestFit produces HTML larger than 2\u202fMB for a given workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
