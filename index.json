@@ -10706,6 +10706,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "log-each-export-operation-with-details-such-as-source-workbook-tablecssid-used-and-destination-path-for-audit-purposes.cs",
+      "title": "Log each export operation with details such as source workbook, TableCssId used, and destination path for audit purposes."
+    },
+    {
+      "category": "working-with-html",
       "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
       "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
     },
