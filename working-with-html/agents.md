@@ -229,3 +229,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-embed-custom-javascript-for-interactive-sorting-of-table-columns.cs
 - export-excel-to-html-and-ensure-merged-cells-spanning-multiple-rows-render-correctly.cs
 - convert-a-spreadsheet-containing-wordart-to-pdf-and-render-gradient-fills-accurately-in-the-output.cs
+- convert-a-spreadsheet-with-wordart-to-svg-and-ensure-gradient-definitions-are-preserved-as-vector-data.cs
