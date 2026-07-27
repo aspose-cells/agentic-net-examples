@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "encryption-and-protection",
+      "file": "create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs",
+      "title": "Create a batch process encrypting all workbooks in a SharePoint library using a centralized password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs",
       "title": "Detect if a workbook contains digitally signed worksheets and list their signer names."
     },
