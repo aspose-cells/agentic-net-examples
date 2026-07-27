@@ -115,3 +115,4 @@ Examples may generate:
 - add-a-signature-line-to-a-specific-worksheet-setting-signer-name-and-title-properties.cs
 - add-multiple-signature-lines-to-different-worksheets-each-with-unique-signer-information-and-comments.cs
 - add-a-signature-line-with-a-visible-image-placeholder-and-customize-its-appearance-using-picture-properties.cs
+- create-a-signature-line-then-digitally-sign-the-workbook-using-an-external-xades-signature-tool.cs
