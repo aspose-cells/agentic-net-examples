@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-spreadsheet-with-wordart-to-pdf-and-embed-the-gradient-fill-as-an-iccprofileaware-color-space.cs",
+      "title": "Convert a spreadsheet with WordArt to PDF and embed the gradient fill as an ICC\u2011profile\u2011aware color space."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-a-spreadsheet-with-wordart-to-svg-and-ensure-gradient-definitions-are-preserved-as-vector-data.cs",
       "title": "Convert a spreadsheet with WordArt to SVG and ensure gradient definitions are preserved as vector data."
     },
