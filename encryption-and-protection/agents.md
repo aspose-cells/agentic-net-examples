@@ -150,3 +150,4 @@ Examples may generate:
 - determine-if-a-workbook-requires-a-password-for-opening-versus-modifying-and-log-both-statuses.cs
 - validate-a-supplied-password-for-modifying-a-workbook-without-opening-the-file-returning-true-or-false.cs
 - protect-workbook-structure-with-a-password-to-prevent-adding-or-removing-worksheets-then-verify-protection.cs
+- unprotect-workbook-structure-by-providing-correct-password-and-confirm-sheet-modifications-are-allowed.cs
