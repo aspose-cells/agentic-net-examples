@@ -141,6 +141,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-with-aes256-encryption-strength-and-verify-that-the-file-size-increases-appropriately.cs",
+      "title": "Encrypt a workbook with AES\u2011256 encryption strength and verify that the file size increases appropriately."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs",
       "title": "Ensure a digitally signed workbook retains its signature after being encrypted and then decrypted."
     },
