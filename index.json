@@ -9656,6 +9656,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs",
+      "title": "Convert a spreadsheet containing multiple WordArt objects to PDF and verify each gradient renders independently."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-a-spreadsheet-containing-wordart-to-pdf-and-render-gradient-fills-accurately-in-the-output.cs",
       "title": "Convert a spreadsheet containing WordArt to PDF and render gradient fills accurately in the output."
     },
