@@ -123,3 +123,4 @@ Examples may generate:
 - verify-that-a-workbook-saved-after-encryption-can-be-opened-with-the-same-password-on-another-machine.cs
 - batch-process-all-excel-files-in-a-directory-adding-identical-signature-lines-to-each-workbook.cs
 - validate-that-a-workbook-is-not-encrypted-before-performing-bulk-data-extraction-across-multiple-sheets.cs
+- encrypt-workbooks-using-randomly-generated-passwords-store-passwords-securely-and-log-encryption-timestamps.cs
