@@ -10441,6 +10441,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-conversion-and-allow-configuration-of-gradient-direction-via-api.cs",
+      "title": "Render WordArt gradient fills during conversion and allow configuration of gradient direction via API."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-wordart-gradient-fills-during-html-export-and-apply-custom-css-classes-for-gradient-control.cs",
       "title": "Render WordArt gradient fills during HTML export and apply custom CSS classes for gradient control."
     },
