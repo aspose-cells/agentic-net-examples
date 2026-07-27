@@ -16,6 +16,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-worksheet-protection-allowing-comment-insertion-but-preventing-editing-of-existing-comments.cs",
+      "title": "Apply worksheet protection allowing comment insertion but preventing editing of existing comments."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs",
       "title": "Apply worksheet protection disabling editing of pivot tables while allowing data refresh operations."
     },
