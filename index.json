@@ -9901,6 +9901,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-while-exporting-conditional-formatting.cs",
+      "title": "Convert an Excel workbook to HTML with default options while exporting conditional formatting."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-an-excel-workbook-to-html-with-presentationpreferenceautofit-for-compact-column-widths.cs",
       "title": "Convert an Excel workbook to HTML with PresentationPreference.AutoFit for compact column widths."
     },
