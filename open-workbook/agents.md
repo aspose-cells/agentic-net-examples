@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - filter-defined-names-containing-total-during-load-and-verify-that-only-those-names-are-retained.cs
 - use-loadoptions-to-load-only-defined-names-that-start-with-report-and-generate-a-pdf-containing-those-ranges.cs
 - configure-interruptmonitor-to-abort-loading-if-processing-exceeds-30-seconds-and-log-the-interruption-event.cs
+- after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs
