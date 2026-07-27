@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-set-the-output-encoding-to-utf8-for-international-character-support.cs
 - export-excel-to-html-and-apply-responsive-design-techniques-for-optimal-mobile-device-viewing.cs
 - export-excel-to-html-and-embed-hyperlinks-so-they-remain-functional-in-the-browser.cs
+- export-excel-to-html-and-include-custom-metadata-tags-extracted-from-workbook-properties.cs
