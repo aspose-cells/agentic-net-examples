@@ -11401,6 +11401,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "prevent-exponential-notation-for-large-numbers-in-html-by-setting-htmlsaveoptionsexportnumericformat-to-plain-text.cs",
+      "title": "Prevent exponential notation for large numbers in HTML by setting HtmlSaveOptions.ExportNumericFormat to plain text."
+    },
+    {
+      "category": "working-with-html",
       "file": "prevent-exponential-notation-for-large-numeric-values-during-html-export-by-adjusting-number-format-options.cs",
       "title": "Prevent exponential notation for large numeric values during HTML export by adjusting number format options."
     },
