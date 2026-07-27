@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - generate-a-visual-preview-of-each-theme-color-by-creating-a-sample-cell-grid.cs
 - load-a-workbook-disable-theme-usage-convert-all-themed-cells-to-explicit-colors-and-save.cs
 - create-a-macrofree-report-that-lists-all-cells-using-the-hyperlink-theme-color.cs
+- update-the-themes-font-scheme-to-use-a-sansserif-primary-font-and-apply-globally.cs
