@@ -616,6 +616,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-the-themes-accent1-color-to-match-a-brands-primary-hex-code-and-update-cells.cs",
+      "title": "Set the theme\u2019s Accent1 color to match a brand\u2019s primary hex code and update cells."
+    },
+    {
+      "category": "format-cells",
       "file": "set-the-themes-light2-color-as-the-default-fill-for-newly-inserted-rows.cs",
       "title": "Set the theme\u2019s Light2 color as the default fill for newly inserted rows."
     },
