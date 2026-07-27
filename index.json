@@ -10701,6 +10701,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "recognize-selfclosing-tags-in-the-html-output-and-ensure-they-are-correctly-prefixed-with-the-tablecssid-identifier.cs",
+      "title": "Recognize self\u2011closing tags in the HTML output and ensure they are correctly prefixed with the TableCssId identifier."
+    },
+    {
+      "category": "working-with-html",
       "file": "remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs",
       "title": "Remove redundant spaces after line breaks in cell text while converting to HTML."
     },
