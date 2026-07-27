@@ -315,3 +315,4 @@ Output files are written to the working directory.
 - batch-process-workbooks-applying-exporthiddenworksheet-false-only-to-those-containing-confidential-worksheets.cs
 - verify-that-exporthiddenworksheet-false-correctly-hides-hidden-sheets-while-preserving-visible-content.cs
 - ensure-that-combining-exporthiddenworksheet-false-with-htmlcrosstypefittocell-limits-overflow-and-hides-hidden-worksheets.cs
+- validate-that-htmlcrosstypecross-improves-performance-for-workbooks-containing-thousands-of-rows.cs
