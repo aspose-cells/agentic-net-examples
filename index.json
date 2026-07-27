@@ -251,6 +251,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "save-an-encrypted-workbook-to-a-memory-stream-then-read-stream-length-to-confirm-encryption-overhead.cs",
+      "title": "Save an encrypted workbook to a memory stream, then read stream length to confirm encryption overhead."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "scan-a-directory-and-report-encryption-status-for-each-xlsx-and-xls-file.cs",
       "title": "Scan a directory and report encryption status for each XLSX and XLS file."
     },
