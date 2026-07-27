@@ -310,3 +310,4 @@ Output files are written to the working directory.
 - compare-html-file-size-when-widthscalable-is-true-versus-false-for-the-same-workbook.cs
 - test-that-enabling-widthscalable-does-not-affect-nonhtml-export-formats.cs
 - create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs
+- batch-convert-a-folder-of-excel-files-to-html-using-default-htmlsaveoptions-and-log-conversion-errors.cs
