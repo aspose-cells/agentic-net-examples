@@ -273,3 +273,4 @@ Output files are written to the working directory.
 - export-a-workbook-containing-hidden-rows-and-columns-confirming-that-tablecssid-prefixes-only-appear-on-visible-tables.cs
 - hide-overlaid-content-using-crosshideright-while-exporting-to-html-and-apply-a-custom-tablecssid-for-table-styling.cs
 - recognize-selfclosing-tags-in-the-html-output-and-ensure-they-are-correctly-prefixed-with-the-tablecssid-identifier.cs
+- autofit-columns-and-rows-after-loading-html-into-a-workbook-then-export-with-tablecssid-to-preserve-layout.cs
