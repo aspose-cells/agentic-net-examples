@@ -108,3 +108,4 @@ Examples may generate:
 - detect-the-file-format-of-an-unknown-workbook-and-log-the-identified-format.cs
 - detect-the-format-of-an-encrypted-ooxml-workbook-without-providing-a-password-and-record-the-result.cs
 - combine-file-format-detection-with-encryption-status-check-to-decide-whether-to-decrypt-before-processing.cs
+- check-whether-a-loaded-workbook-is-encrypted-and-display-a-warning-if-encryption-is-detected.cs
