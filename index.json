@@ -23,6 +23,11 @@
       "category": "encryption-and-protection",
       "file": "protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs",
       "title": "Protect a worksheet, then attempt to copy it to a new workbook without providing the password."
+    },
+    {
+      "category": "encryption-and-protection",
+      "file": "validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs",
+      "title": "Validate that changing a worksheet's protection password does not alter its cell formulas or values."
     }
   ]
 }
