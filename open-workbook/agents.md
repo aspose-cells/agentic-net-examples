@@ -73,3 +73,4 @@ Output files are written to the working directory.
 - read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs
 - open-a-workbook-from-a-network-share-path-while-ensuring-unc-handling-by-using-the-file-path-constructor.cs
 - open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs
+- process-a-collection-of-excel-files-in-a-directory-by-iterating-and-applying-identical-loadoptions-to-each-workbook.cs
