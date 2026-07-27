@@ -4101,6 +4101,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, set printer paper size A3, and save to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
       "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
     },
