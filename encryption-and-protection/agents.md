@@ -176,3 +176,4 @@ Examples may generate:
 - save-an-encrypted-workbook-directly-to-a-cloud-storage-stream-ensuring-encryption-metadata-is-preserved.cs
 - load-a-workbook-from-a-network-share-check-encryption-status-and-log-any-access-permission-issues-encountered.cs
 - create-a-batch-job-that-encrypts-every-newly-created-workbook-in-a-folder-with-a-timestamped-password.cs
+- develop-a-script-that-removes-passwords-from-all-workbooks-in-a-directory-and-archives-the-original-encrypted-files.cs
