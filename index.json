@@ -9741,6 +9741,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-excel-files-to-html-with-exportgridlines-enabled-to-display-spreadsheet-grid-structure.cs",
+      "title": "Batch convert Excel files to HTML with ExportGridLines enabled to display spreadsheet grid structure."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-excel-workbooks-to-html-while-disabling-css-generation-for-lightweight-files.cs",
       "title": "Batch convert Excel workbooks to HTML while disabling CSS generation for lightweight files."
     },
