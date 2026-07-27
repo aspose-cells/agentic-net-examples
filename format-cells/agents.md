@@ -104,3 +104,4 @@ Output files are written to the working directory.
 - create-a-batch-process-that-applies-a-corporate-theme-to-all-workbooks-in-a-network-share.cs
 - set-the-themes-accent1-color-to-match-a-brands-primary-hex-code-and-update-cells.cs
 - programmatically-list-all-worksheets-that-contain-cells-using-the-light1-theme-background.cs
+- apply-a-data-bar-conditional-format-that-uses-the-themes-accent4-color-for-positive-values.cs
