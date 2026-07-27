@@ -393,3 +393,4 @@ Output files are written to the working directory.
 - generate-html-and-compare-its-dom-structure-against-an-expected-xml-document-to-validate-layout.cs
 - set-exportchartimageformat-to-png-and-verify-chart-images-in-html-are-png-files.cs
 - set-exportchartimageformat-to-jpeg-and-verify-chart-images-in-html-are-jpeg-files.cs
+- generate-html-and-then-modify-the-output-to-add-a-custom-css-class-to-header-rows.cs
