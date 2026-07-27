@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs
 - export-excel-to-html-and-include-a-custom-html-header-containing-the-workbook-title.cs
 - export-excel-to-html-and-add-a-footer-with-page-numbers-generated-by-javascript.cs
+- export-excel-to-html-and-set-the-output-encoding-to-utf8-for-international-character-support.cs
