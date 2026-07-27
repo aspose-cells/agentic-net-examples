@@ -10601,6 +10601,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-that-gradient-fills-in-wordart-appear-identical-in-pdf-output-compared-to-the-original-spreadsheet.cs",
+      "title": "Validate that gradient fills in WordArt appear identical in PDF output compared to the original spreadsheet."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
       "title": "Verify that generated HTML contains heading tags matching worksheet titles."
     },
