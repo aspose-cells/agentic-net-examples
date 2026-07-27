@@ -11226,6 +11226,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-exportactiveworksheetonly-true-to-generate-html-containing-only-the-currently-active-worksheet.cs",
+      "title": "Set ExportActiveWorksheetOnly true to generate HTML containing only the currently active worksheet."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-exportcomments-false-and-verify-comment-markers-are-absent-from-generated-html.cs",
       "title": "Set ExportComments false and verify comment markers are absent from generated HTML."
     },
