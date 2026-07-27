@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-preserve-cell-comments-as-html-tooltip-attributes.cs
 - convert-html-to-excel-and-handle-nested-tables-by-creating-separate-worksheets-for-each-level.cs
 - convert-html-to-excel-and-maintain-original-html-page-breaks-as-worksheet-page-breaks.cs
+- convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs
