@@ -449,3 +449,4 @@ Output files are written to the working directory.
 - save-a-workbook-to-html-while-preserving-original-cell-styles-falling-back-to-default-font-when-unavailable.cs
 - batch-convert-multiple-workbooks-to-html-each-using-a-distinct-default-font-defined-in-htmlsaveoptions.cs
 - disable-css-file-generation-and-embed-styles-directly-in-html-using-custom-css-properties.cs
+- set-htmlsaveoptionshtmllinktargettype-to-_blank-to-make-all-links-open-in-new-windows.cs
