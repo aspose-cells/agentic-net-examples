@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "encryption-and-protection",
+      "file": "detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs",
+      "title": "Detect if a workbook contains digitally signed worksheets and list their signer names."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs",
       "title": "Encrypt a workbook, then measure the time required to open it in a headless automation environment."
     }
