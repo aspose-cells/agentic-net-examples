@@ -11396,6 +11396,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "verify-base64-image-strings-are-deduplicated-when-enablecsscustomproperties-is-true-during-conversion.cs",
+      "title": "Verify base64 image strings are deduplicated when EnableCssCustomProperties is true during conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-css-custom-properties-reduce-duplicate-base64-image-strings-compared-to-default-output.cs",
       "title": "Verify CSS custom properties reduce duplicate base64 image strings compared to default output."
     },
