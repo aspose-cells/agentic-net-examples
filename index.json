@@ -10301,6 +10301,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-asserting-no-style-tags-exist-when-disablecss-option-is-true.cs",
+      "title": "Create a unit test asserting no style tags exist when DisableCss option is true."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
