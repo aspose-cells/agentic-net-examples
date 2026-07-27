@@ -274,3 +274,4 @@ Output files are written to the working directory.
 - hide-overlaid-content-using-crosshideright-while-exporting-to-html-and-apply-a-custom-tablecssid-for-table-styling.cs
 - recognize-selfclosing-tags-in-the-html-output-and-ensure-they-are-correctly-prefixed-with-the-tablecssid-identifier.cs
 - autofit-columns-and-rows-after-loading-html-into-a-workbook-then-export-with-tablecssid-to-preserve-layout.cs
+- export-only-the-active-worksheet-to-html-while-applying-a-specific-tablecssid-to-style-its-tables.cs
