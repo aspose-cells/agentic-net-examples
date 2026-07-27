@@ -4216,6 +4216,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "write-cell-comments-while-saving-a-workbook-with-lightcellsdataprovider-to-preserve-user-annotations-in-the-output-file.cs",
+      "title": "Write cell comments while saving a workbook with LightCellsDataProvider to preserve user annotations in the output file."
+    },
+    {
+      "category": "open-workbook",
       "file": "write-formulas-to-cells-while-streaming-data-using-lightcellsdataprovider-to-preserve-calculation-logic.cs",
       "title": "Write formulas to cells while streaming data using LightCellsDataProvider to preserve calculation logic."
     },
