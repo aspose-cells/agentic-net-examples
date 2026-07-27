@@ -124,3 +124,4 @@ Examples may generate:
 - batch-process-all-excel-files-in-a-directory-adding-identical-signature-lines-to-each-workbook.cs
 - validate-that-a-workbook-is-not-encrypted-before-performing-bulk-data-extraction-across-multiple-sheets.cs
 - encrypt-workbooks-using-randomly-generated-passwords-store-passwords-securely-and-log-encryption-timestamps.cs
+- load-a-workbook-remove-all-existing-signature-lines-and-add-a-new-line-with-updated-signer-details.cs
