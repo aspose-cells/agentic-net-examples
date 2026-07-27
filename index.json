@@ -521,6 +521,11 @@
     },
     {
       "category": "format-cells",
+      "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
+      "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
+    },
+    {
+      "category": "format-cells",
       "file": "export-the-modified-workbook-to-xlsx-and-verify-that-the-theme-xml-reflects-new-colors.cs",
       "title": "Export the modified workbook to XLSX and verify that the theme XML reflects new colors."
     },
