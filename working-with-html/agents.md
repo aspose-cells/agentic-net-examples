@@ -419,3 +419,4 @@ Output files are written to the working directory.
 - create-a-unit-test-that-passes-when-exporthiddenworksheet-true-includes-hidden-sheet-titles-in-the-html-output.cs
 - create-a-unit-test-that-passes-when-exportcomments-true-includes-comment-icons-in-the-generated-html.cs
 - create-a-unit-test-that-verifies-link-target-attribute-equals-_blank-when-linktargettype-is-set-to-blank.cs
+- create-a-unit-test-that-verifies-link-target-attribute-equals-_parent-when-linktargettype-is-set-to-parent.cs
