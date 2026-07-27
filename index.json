@@ -10291,6 +10291,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-widthscalable-set-to-true-for-embased-column-sizing.cs",
+      "title": "Export a workbook to HTML with WidthScalable set to true for em\u2011based column sizing."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-with-conditional-formatting-that-includes-colorscale-and-embed-the-scale-definitions-within-a-style-block.cs",
       "title": "Export a workbook with conditional formatting that includes ColorScale, and embed the scale definitions within a <style> block."
     },
