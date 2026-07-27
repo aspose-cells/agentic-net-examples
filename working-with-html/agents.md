@@ -415,3 +415,4 @@ Output files are written to the working directory.
 - generate-html-and-then-use-an-html-parser-to-verify-each-table-cell-has-a-datacell-attribute.cs
 - generate-html-and-then-use-an-html-parser-to-ensure-no-inline-style-attributes-exist-when-css-is-disabled.cs
 - generate-html-and-then-use-an-html-parser-to-ensure-css-custom-properties-are-defined-in-a-root-selector.cs
+- create-a-unit-test-that-fails-when-presentationpreferencebestfit-produces-html-larger-than-2-mb-for-a-given-workbook.cs
