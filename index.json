@@ -151,6 +151,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs",
+      "title": "Programmatically verify that a workbook's password protection flag is set after saving the encrypted file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs",
       "title": "Protect a worksheet, then attempt to copy it to a new workbook without providing the password."
     },
