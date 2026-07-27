@@ -289,3 +289,4 @@ Output files are written to the working directory.
 - generate-html-using-htmlcrosstypedefault-to-mimic-excel-overflow-for-long-strings.cs
 - produce-html-with-htmlcrosstypefittocell-to-restrict-text-overflow-within-cell-bounds.cs
 - create-html-using-htmlcrosstypecross-for-highperformance-export-of-large-workbooks.cs
+- export-a-workbook-to-html-with-htmlcrosstypemsexport-to-replicate-excels-native-html-style.cs
