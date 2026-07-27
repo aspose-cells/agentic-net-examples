@@ -41,6 +41,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-then-compute-its-sha256-hash-for-integrity-verification.cs",
+      "title": "Encrypt a workbook, then compute its SHA\u2011256 hash for integrity verification."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs",
       "title": "Encrypt a workbook, then measure the time required to open it in a headless automation environment."
     },
