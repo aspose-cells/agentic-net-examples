@@ -10871,6 +10871,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-text-wrapping-is-preserved-in-cells-where-wrap-text-is-enabled.cs",
+      "title": "Generate HTML and ensure text wrapping is preserved in cells where wrap text is enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-then-compress-it-using-gzipstream-for-efficient-web-transmission.cs",
       "title": "Generate HTML and then compress it using GZipStream for efficient web transmission."
     },
