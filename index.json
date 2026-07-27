@@ -3921,6 +3921,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs",
+      "title": "Load a workbook from an HTTP response stream to process a remotely hosted Excel file without saving locally."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs",
       "title": "Load a workbook while excluding chart objects, then verify that the resulting worksheets contain zero charts."
     },
