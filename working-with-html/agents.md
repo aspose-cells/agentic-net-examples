@@ -269,3 +269,4 @@ Output files are written to the working directory.
 - use-workbooksaveashtml-shortcut-with-preconfigured-htmlsaveoptions-that-include-a-custom-tablecssid-for-quick-export.cs
 - load-an-html-file-into-a-workbook-then-reexport-it-to-html-with-a-different-tablecssid-applied.cs
 - apply-conditional-formatting-in-the-source-workbook-and-verify-its-visual-preservation-in-html-output-using-tablecssid.cs
+- enable-gridlines-during-export-to-retain-cell-borders-and-ensure-tablecssid-prefixes-style-those-borders-correctly.cs
