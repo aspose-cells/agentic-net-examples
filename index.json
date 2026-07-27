@@ -10011,6 +10011,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-file-to-html-and-ensure-hyperlinks-open-in-new-tabs-via-htmlsaveoptions.cs",
+      "title": "Convert an Excel file to HTML and ensure hyperlinks open in new tabs via HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-an-excel-workbook-to-html-using-default-htmlsaveoptions.cs",
       "title": "Convert an Excel workbook to HTML using default HtmlSaveOptions."
     },
