@@ -12969,23 +12969,8 @@
     },
     {
       "category": "working-with-html",
-      "file": "convert-html-to-excel-and-apply-a-custom-theme-based-on-css-variables-defined-in-the-html.cs",
-      "title": "Convert HTML to Excel and apply a custom theme based on CSS variables defined in the HTML."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-apply-custom-number-formats-for-scientific-notation-values.cs",
-      "title": "Convert HTML to Excel and apply custom number formats for scientific notation values."
-    },
-    {
-      "category": "working-with-html",
       "file": "convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs",
       "title": "Convert HTML to Excel and apply date format detection based on locale settings."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-embed-custom-document-properties-extracted-from-html-meta-tags.cs",
-      "title": "Convert HTML to Excel and embed custom document properties extracted from HTML meta tags."
     },
     {
       "category": "working-with-html",
@@ -12994,78 +12979,13 @@
     },
     {
       "category": "working-with-html",
-      "file": "convert-html-to-excel-and-handle-nested-tables-by-creating-separate-worksheets-for-each-level.cs",
-      "title": "Convert HTML to Excel and handle nested tables by creating separate worksheets for each level."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-maintain-original-html-page-breaks-as-worksheet-page-breaks.cs",
-      "title": "Convert HTML to Excel and maintain original HTML page breaks as worksheet page breaks."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-map-css-border-styles-to-excel-cell-border-line-styles.cs",
-      "title": "Convert HTML to Excel and map CSS border styles to Excel cell border line styles."
-    },
-    {
-      "category": "working-with-html",
       "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
       "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
     },
     {
       "category": "working-with-html",
-      "file": "convert-html-to-excel-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
-      "title": "Convert HTML to Excel and preserve cell comments as HTML tooltip attributes."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-preserve-conditional-formatting-rules-defined-in-css-classes.cs",
-      "title": "Convert HTML to Excel and preserve conditional formatting rules defined in CSS classes."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-preserve-hidden-rows-and-columns-indicated-by-css-displaynone.cs",
-      "title": "Convert HTML to Excel and preserve hidden rows and columns indicated by CSS display:none."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs",
-      "title": "Convert HTML to Excel and retain background images by inserting them as worksheet background."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-retain-embedded-svg-graphics-as-scalable-vector-shapes.cs",
-      "title": "Convert HTML to Excel and retain embedded SVG graphics as scalable vector shapes."
-    },
-    {
-      "category": "working-with-html",
       "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
       "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-set-workbook-calculation-mode-to-automatic-for-formula-evaluation.cs",
-      "title": "Convert HTML to Excel and set workbook calculation mode to automatic for formula evaluation."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs",
-      "title": "Convert HTML to Excel and set workbook culture to French for proper decimal separators."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-asynchronously-and-provide-a-callback-when-conversion-completes.cs",
-      "title": "Convert HTML to Excel asynchronously and provide a callback when conversion completes."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-in-a-batch-job-processing-a-directory-of-files-into-separate-workbooks.cs",
-      "title": "Convert HTML to Excel in a batch job processing a directory of files into separate workbooks."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs",
-      "title": "Convert HTML to Excel using a memory stream to process large files without temporary files."
     },
     {
       "category": "working-with-html",
