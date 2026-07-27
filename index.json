@@ -11101,6 +11101,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "save-html-output-to-a-memorystream-instead-of-a-physical-file-for-inmemory-processing.cs",
+      "title": "Save HTML output to a MemoryStream instead of a physical file for in\u2011memory processing."
+    },
+    {
+      "category": "working-with-html",
       "file": "save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs",
       "title": "Save HTML with AddTooltipText enabled so full cell text appears as hover tooltip."
     },
