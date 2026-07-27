@@ -263,3 +263,4 @@ Output files are written to the working directory.
 - set-the-html-encoding-to-utf-8-and-apply-a-custom-tablecssid-for-consistent-table-class-naming.cs
 - batch-process-multiple-workbooks-exporting-them-to-html-using-a-shared-tablecssid-to-maintain-uniform-styling.cs
 - batch-export-several-workbooks-to-html-assigning-each-a-distinct-tablecssid-to-differentiate-table-class-prefixes.cs
+- link-the-generated-html-to-an-external-stylesheet-that-targets-the-prefixed-tablecssid-classes-for-sitewide-styling.cs
