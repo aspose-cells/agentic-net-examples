@@ -9711,6 +9711,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "adjust-htmlsaveoptions-to-export-numeric-cells-using-plain-text-format-rather-than-scientific-notation.cs",
+      "title": "Adjust HtmlSaveOptions to export numeric cells using plain text format rather than scientific notation."
+    },
+    {
+      "category": "working-with-html",
       "file": "append-a-custom-css-class-to-the-html-body-element-after-conversion-for-additional-styling.cs",
       "title": "Append a custom CSS class to the HTML body element after conversion for additional styling."
     },
