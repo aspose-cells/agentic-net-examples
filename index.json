@@ -9876,6 +9876,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "combine-disabling-external-css-and-enabling-custom-css-properties-for-embedded-styling-in-html.cs",
+      "title": "Combine disabling external CSS and enabling custom CSS properties for embedded styling in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs",
       "title": "Combine ExcludeUnusedStyles and IsExportComments options, then save workbook as HTML for compact output with comments."
     },
