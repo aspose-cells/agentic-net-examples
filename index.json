@@ -9746,6 +9746,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-with-exportconditionalformatting-enabled-to-retain-visual-rules.cs",
+      "title": "Batch convert Excel workbooks to HTML with ExportConditionalFormatting enabled to retain visual rules."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-excel-workbooks-to-html-with-presentationpreferencebestfit-for-each-file.cs",
       "title": "Batch convert Excel workbooks to HTML with PresentationPreference.BestFit for each file."
     },
