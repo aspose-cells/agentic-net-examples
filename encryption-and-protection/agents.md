@@ -174,3 +174,4 @@ Examples may generate:
 - detect-whether-an-excel-file-uses-legacy-binary-format-xls-and-apply-appropriate-encryption-method-for-that-format.cs
 - encrypt-a-workbook-then-immediately-attempt-to-open-it-without-a-password-to-confirm-access-denial.cs
 - save-an-encrypted-workbook-directly-to-a-cloud-storage-stream-ensuring-encryption-metadata-is-preserved.cs
+- load-a-workbook-from-a-network-share-check-encryption-status-and-log-any-access-permission-issues-encountered.cs
