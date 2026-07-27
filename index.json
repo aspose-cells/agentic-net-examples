@@ -4236,6 +4236,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-lightcells-api-to-read-merged-cell-ranges-and-output-their-start-and-end-coordinates-for-layout-analysis.cs",
+      "title": "Use LightCells API to read merged cell ranges and output their start and end coordinates for layout analysis."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
