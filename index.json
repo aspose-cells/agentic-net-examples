@@ -10806,6 +10806,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-for-a-workbook-with-frozen-panes-and-verify-pane-positions-are-reflected.cs",
+      "title": "Generate HTML for a workbook with frozen panes and verify pane positions are reflected."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
       "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
     },
