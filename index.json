@@ -641,6 +641,11 @@
     },
     {
       "category": "format-cells",
+      "file": "replace-the-themes-light2-background-with-a-patterned-fill-while-preserving-theme-color-references.cs",
+      "title": "Replace the theme\u2019s Light2 background with a patterned fill while preserving theme color references."
+    },
+    {
+      "category": "format-cells",
       "file": "set-the-themes-accent1-color-to-match-a-brands-primary-hex-code-and-update-cells.cs",
       "title": "Set the theme\u2019s Accent1 color to match a brand\u2019s primary hex code and update cells."
     },
