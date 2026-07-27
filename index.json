@@ -506,6 +506,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-accent5-color-to-the-data-bars-of-a-conditional-formatting-rule.cs",
+      "title": "Apply the theme\u2019s Accent5 color to the data bars of a conditional formatting rule."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-function-that-maps-business-status-values-to-specific-theme-accent-colors-for-cell-fill.cs",
       "title": "Create a function that maps business status values to specific theme accent colors for cell fill."
     },
