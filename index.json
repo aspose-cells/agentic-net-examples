@@ -9736,6 +9736,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-excel-files-to-html-with-exportcomments-enabled-to-include-all-cell-notes.cs",
+      "title": "Batch convert Excel files to HTML with ExportComments enabled to include all cell notes."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-excel-workbooks-to-html-while-disabling-css-generation-for-lightweight-files.cs",
       "title": "Batch convert Excel workbooks to HTML while disabling CSS generation for lightweight files."
     },
