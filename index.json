@@ -301,6 +301,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "remove-both-the-opening-password-and-structure-protection-from-a-workbook-in-a-single-operation-and-save.cs",
+      "title": "Remove both the opening password and structure protection from a workbook in a single operation and save."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "remove-password-protection-from-a-workbook-and-save-the-unprotected-version-to-a-new-location.cs",
       "title": "Remove password protection from a workbook and save the unprotected version to a new location."
     },
