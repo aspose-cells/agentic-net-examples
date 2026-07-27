@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs
 - copy-columns-a-through-d-from-the-source-worksheet-to-a-new-workbook-using-lightcells-for-efficient-selection.cs
 - set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
+- enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs
