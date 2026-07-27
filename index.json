@@ -3841,6 +3841,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "copy-columns-a-through-d-from-the-source-worksheet-to-a-new-workbook-using-lightcells-for-efficient-selection.cs",
+      "title": "Copy columns A through D from the source worksheet to a new workbook using LightCells for efficient selection."
+    },
+    {
+      "category": "open-workbook",
       "file": "copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs",
       "title": "Copy selected rows from a source worksheet to a new workbook using LightCells to minimize memory consumption."
     },
