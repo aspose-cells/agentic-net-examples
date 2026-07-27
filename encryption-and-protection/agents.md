@@ -101,3 +101,4 @@ Examples may generate:
 - validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-a-thirdparty-viewer-lacking-decryption-support.cs
 - protect-a-worksheet-then-attempt-to-copy-its-protected-range-to-another-workbook-without-providing-the-password.cs
 - create-a-batch-script-that-decrypts-workbooks-removes-all-protection-and-reencrypts-them-with-a-unified-password.cs
+- detect-whether-a-workbook-contains-hidden-protected-worksheets-and-list-their-names-for-review.cs
