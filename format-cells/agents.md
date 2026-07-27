@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - apply-the-themes-accent6-color-to-the-header-row-of-a-dynamically-generated-report.cs
 - create-a-script-that-logs-the-beforeandafter-rgb-values-of-each-theme-color-change.cs
 - apply-a-custom-theme-to-a-workbook-and-then-generate-a-thumbnail-image-of-the-first-sheet.cs
+- extract-the-themes-accent-colors-and-compare-them-against-a-corporate-style-guide-for-compliance.cs
