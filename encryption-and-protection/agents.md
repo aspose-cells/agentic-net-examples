@@ -95,3 +95,4 @@ Examples may generate:
 - encrypt-a-workbook-then-compute-its-sha256-hash-for-integrity-verification.cs
 - ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs
 - apply-workbook-protection-preventing-changes-to-default-view-settings-such-as-zoom-level.cs
+- unprotect-a-worksheet-insert-a-protected-range-then-reprotect-and-verify-the-range-remains-locked.cs
