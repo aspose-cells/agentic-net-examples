@@ -10121,6 +10121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-include-a-custom-html-header-containing-the-workbook-title.cs",
+      "title": "Export Excel to HTML and include a custom HTML header containing the workbook title."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
       "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
     },
