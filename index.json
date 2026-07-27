@@ -11191,6 +11191,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-generated-html-contains-link-target-attribute-_parent-after-setting-linktargettype-to-parent.cs",
+      "title": "Validate generated HTML contains link target attribute \"_parent\" after setting LinkTargetType to Parent."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs",
       "title": "Validate that cell content with line breaks displays correctly without extra spacing."
     },
