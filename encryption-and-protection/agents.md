@@ -144,3 +144,4 @@ Examples may generate:
 - attempt-to-open-an-encrypted-workbook-with-incorrect-password-and-capture-exception-details.cs
 - encrypt-a-workbook-using-a-strong-password-and-then-programmatically-verify-that-the-password-meets-complexity-rules.cs
 - convert-an-encrypted-xlsx-file-to-an-unencrypted-xlsx-file-while-preserving-formulas-and-formatting.cs
+- compare-file-size-of-an-unencrypted-workbook-versus-its-encrypted-counterpart-to-assess-encryption-impact.cs
