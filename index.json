@@ -16,6 +16,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "add-a-signature-line-to-the-last-worksheet-in-a-workbook-using-the-worksheet-count-to-locate-it.cs",
+      "title": "Add a signature line to the last worksheet in a workbook, using the worksheet count to locate it."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "add-a-signature-line-with-a-visible-image-placeholder-and-customize-its-appearance-using-picture-properties.cs",
       "title": "Add a signature line with a visible image placeholder and customize its appearance using picture properties."
     },
