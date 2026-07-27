@@ -10941,6 +10941,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-htmlcrosstypefittocell-together-with-addtooltiptext-to-provide-full-content-on-hover-without-overflow.cs",
+      "title": "Use HtmlCrossType.FitToCell together with AddTooltipText to provide full content on hover without overflow."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-htmlsaveoptionsexportworksheetcssseparately-false-and-confirm-that-css-is-embedded-within-the-html.cs",
       "title": "Use HtmlSaveOptions.ExportWorksheetCSSSeparately false and confirm that CSS is embedded within the HTML."
     },
