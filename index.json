@@ -576,6 +576,11 @@
     },
     {
       "category": "format-cells",
+      "file": "programmatically-detect-if-a-workbooks-theme-includes-a-custom-color-scheme-and-log-its-details.cs",
+      "title": "Programmatically detect if a workbook\u2019s theme includes a custom color scheme and log its details."
+    },
+    {
+      "category": "format-cells",
       "file": "set-the-themes-light2-color-as-the-default-fill-for-newly-inserted-rows.cs",
       "title": "Set the theme\u2019s Light2 color as the default fill for newly inserted rows."
     },
