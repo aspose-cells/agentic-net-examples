@@ -31,6 +31,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "add-a-signature-line-with-a-custom-label-and-ensure-the-label-appears-in-the-document-properties-panel.cs",
+      "title": "Add a signature line with a custom label, and ensure the label appears in the document properties panel."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "add-a-signature-line-with-a-mandatory-comment-field-requiring-the-signer-to-provide-additional-information.cs",
       "title": "Add a signature line with a mandatory comment field, requiring the signer to provide additional information."
     },
