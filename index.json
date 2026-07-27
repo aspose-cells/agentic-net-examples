@@ -10136,6 +10136,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-embed-custom-javascript-for-interactive-sorting-of-table-columns.cs",
+      "title": "Export Excel to HTML and embed custom JavaScript for interactive sorting of table columns."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-embed-hyperlinks-so-they-remain-functional-in-the-browser.cs",
       "title": "Export Excel to HTML and embed hyperlinks so they remain functional in the browser."
     },
