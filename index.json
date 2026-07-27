@@ -4096,6 +4096,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-exclude-charts-and-save-the-result-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, exclude charts, and save the result to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs",
       "title": "Load a workbook with the option to preserve original cell formatting while ignoring formula results using LoadOptions."
     },
