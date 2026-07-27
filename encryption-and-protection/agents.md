@@ -99,3 +99,4 @@ Examples may generate:
 - create-a-commandline-utility-that-accepts-a-directory-path-encrypts-all-excel-files-and-outputs-a-summary-report.cs
 - apply-worksheet-protection-allowing-comment-insertion-but-preventing-editing-of-existing-comments.cs
 - validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-a-thirdparty-viewer-lacking-decryption-support.cs
+- protect-a-worksheet-then-attempt-to-copy-its-protected-range-to-another-workbook-without-providing-the-password.cs
