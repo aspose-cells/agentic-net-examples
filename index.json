@@ -71,6 +71,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-signature-line-then-digitally-sign-the-workbook-using-an-external-xades-signature-tool.cs",
+      "title": "Create a signature line, then digitally sign the workbook using an external XAdES signature tool."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "create-a-utility-extracting-encryption-metadata-from-an-excel-file-and-displaying-it-in-a-readable-format.cs",
       "title": "Create a utility extracting encryption metadata from an Excel file and displaying it in a readable format."
     },
