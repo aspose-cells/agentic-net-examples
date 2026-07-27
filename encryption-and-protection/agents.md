@@ -148,3 +148,4 @@ Examples may generate:
 - apply-an-opening-password-to-a-workbook-then-remove-it-and-save-unchanged-file.cs
 - check-whether-a-particular-password-is-required-to-modify-a-workbook-and-return-boolean-result.cs
 - determine-if-a-workbook-requires-a-password-for-opening-versus-modifying-and-log-both-statuses.cs
+- validate-a-supplied-password-for-modifying-a-workbook-without-opening-the-file-returning-true-or-false.cs
