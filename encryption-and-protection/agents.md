@@ -137,3 +137,4 @@ Examples may generate:
 - scan-a-directory-and-report-encryption-status-for-each-xlsx-and-xls-file.cs
 - load-an-unencrypted-workbook-verify-its-format-and-log-confirmation-to-console.cs
 - use-loadoptions-to-identify-the-file-format-of-an-excel-document-without-fully-loading-its-contents.cs
+- load-a-workbook-from-a-memory-stream-detect-its-encryption-status-and-output-format-to-console.cs
