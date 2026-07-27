@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs
+- pause-calculation-after-a-predefined-time-threshold-and-resume-it-later-without-data-loss.cs
