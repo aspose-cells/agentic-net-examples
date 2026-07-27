@@ -10121,6 +10121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-localespecific-number-formatting-based-on-workbook-culture.cs",
+      "title": "Export Excel to HTML and apply locale\u2011specific number formatting based on workbook culture."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-apply-responsive-design-techniques-for-optimal-mobile-device-viewing.cs",
       "title": "Export Excel to HTML and apply responsive design techniques for optimal mobile device viewing."
     },
