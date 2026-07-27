@@ -10661,6 +10661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "programmatically-change-the-tablecssid-after-initial-export-resave-the-html-and-verify-updated-class-names.cs",
+      "title": "Programmatically change the TableCssId after initial export, re\u2011save the HTML, and verify updated class names."
+    },
+    {
+      "category": "working-with-html",
       "file": "remove-redundant-spaces-after-line-breaks-in-cell-text-while-converting-to-html.cs",
       "title": "Remove redundant spaces after line breaks in cell text while converting to HTML."
     },
