@@ -9876,6 +9876,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-and-disable-css-generation-for-minimal-output.cs",
+      "title": "Convert an Excel workbook to HTML with default options and disable CSS generation for minimal output."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-an-excel-workbook-to-html-with-default-options-and-enable-css-custom-properties-for-image-reuse.cs",
       "title": "Convert an Excel workbook to HTML with default options and enable CSS custom properties for image reuse."
     },
