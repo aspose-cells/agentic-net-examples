@@ -275,3 +275,4 @@ Output files are written to the working directory.
 - recognize-selfclosing-tags-in-the-html-output-and-ensure-they-are-correctly-prefixed-with-the-tablecssid-identifier.cs
 - autofit-columns-and-rows-after-loading-html-into-a-workbook-then-export-with-tablecssid-to-preserve-layout.cs
 - export-only-the-active-worksheet-to-html-while-applying-a-specific-tablecssid-to-style-its-tables.cs
+- generate-html-with-a-custom-tablecssid-and-verify-that-no-css-class-name-collisions-occur-with-existing-styles.cs
