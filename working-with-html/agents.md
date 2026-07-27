@@ -394,3 +394,4 @@ Output files are written to the working directory.
 - set-exportchartimageformat-to-png-and-verify-chart-images-in-html-are-png-files.cs
 - set-exportchartimageformat-to-jpeg-and-verify-chart-images-in-html-are-jpeg-files.cs
 - generate-html-and-then-modify-the-output-to-add-a-custom-css-class-to-header-rows.cs
+- generate-html-and-ensure-numeric-values-retain-their-original-formatting-as-displayed-in-excel.cs
