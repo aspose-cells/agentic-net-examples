@@ -10316,6 +10316,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-the-workbook-with-gridlines-enabled-while-applying-a-specified-tablecssid-for-table-styling.cs",
+      "title": "Export the workbook with gridlines enabled while applying a specified TableCssId for table styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-workbook-to-html-after-defining-a-print-area-and-disabling-css-generation.cs",
       "title": "Export workbook to HTML after defining a print area and disabling CSS generation."
     },
