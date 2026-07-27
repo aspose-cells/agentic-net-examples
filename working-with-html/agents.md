@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-retain-embedded-svg-graphics-as-scalable-vector-shapes.cs
 - convert-html-to-excel-and-apply-custom-number-formats-for-scientific-notation-values.cs
 - convert-html-to-excel-and-preserve-cell-comments-as-html-tooltip-attributes.cs
+- convert-html-to-excel-and-handle-nested-tables-by-creating-separate-worksheets-for-each-level.cs
