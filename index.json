@@ -61,6 +61,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-the-file-format-of-an-unknown-workbook-and-log-the-identified-format.cs",
+      "title": "Detect the file format of an unknown workbook and log the identified format."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-whether-a-workbook-contains-hidden-protected-worksheets-and-list-their-names-for-review.cs",
       "title": "Detect whether a workbook contains hidden protected worksheets and list their names for review."
     },
