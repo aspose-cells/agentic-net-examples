@@ -61,6 +61,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-an-opening-password-to-a-workbook-then-remove-it-and-save-unchanged-file.cs",
+      "title": "Apply an opening password to a workbook, then remove it and save unchanged file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs",
       "title": "Apply workbook protection disabling changes to the default file format when saving."
     },
