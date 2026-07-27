@@ -3896,6 +3896,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "filter-out-defined-names-that-start-with-temp_-using-loadoptionsloadfilter-during-workbook-loading.cs",
+      "title": "Filter out defined names that start with \"temp_\" using LoadOptions.LoadFilter during workbook loading."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs",
       "title": "Implement an InterruptMonitor that aborts workbook loading after ten seconds to prevent excessive processing time."
     },
