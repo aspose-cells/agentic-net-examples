@@ -286,3 +286,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-with-widthscalable-set-to-true-for-embased-column-sizing.cs
 - apply-widthscalable-false-and-confirm-column-widths-render-as-fixed-pixel-values.cs
 - apply-widthscalable-true-and-confirm-column-widths-adapt-using-em-units.cs
+- generate-html-using-htmlcrosstypedefault-to-mimic-excel-overflow-for-long-strings.cs
