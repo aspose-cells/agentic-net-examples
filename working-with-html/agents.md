@@ -288,3 +288,4 @@ Output files are written to the working directory.
 - apply-widthscalable-true-and-confirm-column-widths-adapt-using-em-units.cs
 - generate-html-using-htmlcrosstypedefault-to-mimic-excel-overflow-for-long-strings.cs
 - produce-html-with-htmlcrosstypefittocell-to-restrict-text-overflow-within-cell-bounds.cs
+- create-html-using-htmlcrosstypecross-for-highperformance-export-of-large-workbooks.cs
