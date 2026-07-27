@@ -350,3 +350,4 @@ Output files are written to the working directory.
 - ensure-cell-comments-appear-in-html-output-when-exportcomments-option-is-enabled.cs
 - ensure-conditional-formatting-colors-are-retained-in-html-when-exportconditionalformatting-is-true.cs
 - ensure-gridlines-are-visible-in-html-output-when-exportgridlines-option-is-enabled.cs
+- ensure-hidden-worksheet-content-appears-in-html-when-exporthiddenworksheet-option-is-true.cs
