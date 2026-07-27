@@ -358,3 +358,4 @@ Output files are written to the working directory.
 - write-html-bytes-from-a-memorystream-directly-to-an-aspnet-response-for-immediate-download.cs
 - append-a-custom-css-class-to-the-html-body-element-after-conversion-for-additional-styling.cs
 - replace-all-hyperlink-urls-in-generated-html-with-absolute-urls-using-string-replacement-logic.cs
+- set-exporthiddenworksheet-false-and-verify-hidden-sheets-are-omitted-from-resulting-html.cs
