@@ -127,3 +127,4 @@ Examples may generate:
 - load-a-workbook-remove-all-existing-signature-lines-and-add-a-new-line-with-updated-signer-details.cs
 - add-a-signature-line-to-a-chart-sheet-and-ensure-it-appears-correctly-when-rendered.cs
 - add-a-signature-line-to-the-last-worksheet-in-a-workbook-using-the-worksheet-count-to-locate-it.cs
+- add-a-signature-line-with-a-mandatory-comment-field-requiring-the-signer-to-provide-additional-information.cs
