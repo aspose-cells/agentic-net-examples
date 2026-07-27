@@ -9716,6 +9716,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs",
+      "title": "Convert HTML to Excel and set workbook culture to French for proper decimal separators."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-using-a-stream-provider-that-writes-output-directly-to-cloud-storage.cs",
       "title": "Convert HTML to Excel using a stream provider that writes output directly to cloud storage."
     },
