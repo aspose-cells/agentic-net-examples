@@ -353,3 +353,4 @@ Output files are written to the working directory.
 - ensure-hidden-worksheet-content-appears-in-html-when-exporthiddenworksheet-option-is-true.cs
 - measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs
 - generate-html-with-a-custom-page-title-by-setting-htmlsaveoptionshtmltitle-property.cs
+- generate-html-using-utf-8-encoding-by-assigning-htmlsaveoptionsencoding-to-encodingutf8.cs
