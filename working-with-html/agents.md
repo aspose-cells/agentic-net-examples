@@ -399,3 +399,4 @@ Output files are written to the working directory.
 - generate-html-and-ensure-text-wrapping-is-preserved-in-cells-where-wrap-text-is-enabled.cs
 - generate-html-and-ensure-font-styles-such-as-bold-and-italic-are-retained-with-css-enabled.cs
 - generate-html-and-ensure-hyperlinks-retain-their-original-url-targets-after-conversion.cs
+- generate-html-and-ensure-table-headers-include-column-letters-when-exporting-column-headers.cs
