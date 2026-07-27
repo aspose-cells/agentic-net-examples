@@ -286,6 +286,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "implement-a-logging-mechanism-that-records-timestamp-file-name-and-encryption-action-performed-for-each-workbook.cs",
+      "title": "Implement a logging mechanism that records timestamp, file name, and encryption action performed for each workbook."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "implement-error-handling-that-retries-decryption-with-an-alternate-password-when-the-first-attempt-fails.cs",
       "title": "Implement error handling that retries decryption with an alternate password when the first attempt fails."
     },
