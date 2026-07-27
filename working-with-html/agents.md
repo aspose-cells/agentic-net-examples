@@ -277,3 +277,4 @@ Output files are written to the working directory.
 - export-only-the-active-worksheet-to-html-while-applying-a-specific-tablecssid-to-style-its-tables.cs
 - generate-html-with-a-custom-tablecssid-and-verify-that-no-css-class-name-collisions-occur-with-existing-styles.cs
 - create-inline-css-definitions-within-the-exported-html-and-prefix-them-using-tablecssid-for-immediate-preview.cs
+- export-a-worksheet-containing-multiple-tables-and-ensure-each-table-receives-the-tablecssid-prefixed-style-class.cs
