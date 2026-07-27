@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-set-page-break-markers-as-html-comments-for-later-processing.cs
 - export-excel-to-html-and-include-a-navigation-pane-linking-to-each-worksheet-section.cs
 - export-excel-to-html-and-handle-hidden-rows-by-omitting-them-from-the-generated-markup.cs
+- export-excel-to-html-and-preserve-background-images-by-linking-to-external-image-files.cs
