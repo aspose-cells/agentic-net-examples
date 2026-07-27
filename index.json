@@ -131,6 +131,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-an-encrypted-office-open-xml-file-and-extract-its-encryption-algorithm-identifier-for-auditing.cs",
+      "title": "Detect an encrypted Office Open XML file and extract its encryption algorithm identifier for auditing."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs",
       "title": "Detect if a workbook contains digitally signed worksheets and list their signer names."
     },
