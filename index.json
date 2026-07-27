@@ -566,6 +566,11 @@
     },
     {
       "category": "format-cells",
+      "file": "extract-the-themes-accent-colors-and-generate-a-css-file-for-web-styling.cs",
+      "title": "Extract the theme\u2019s accent colors and generate a CSS file for web styling."
+    },
+    {
+      "category": "format-cells",
       "file": "generate-a-summary-sheet-listing-each-theme-color-name-and-its-hexadecimal-representation.cs",
       "title": "Generate a summary sheet listing each theme color name and its hexadecimal representation."
     },
