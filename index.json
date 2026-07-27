@@ -3981,6 +3981,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "open-an-excel-95-file-by-setting-loadoptionsversion-to-excel95-before-constructing-the-workbook.cs",
+      "title": "Open an Excel 95 file by setting LoadOptions.Version to Excel95 before constructing the Workbook."
+    },
+    {
+      "category": "open-workbook",
       "file": "open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs",
       "title": "Open an XLSB binary workbook by specifying the file path; the constructor automatically recognizes the format."
     },
