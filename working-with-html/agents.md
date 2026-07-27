@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-maintain-original-html-page-breaks-as-worksheet-page-breaks.cs
 - convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs
 - convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs
+- convert-html-to-excel-asynchronously-and-provide-a-callback-when-conversion-completes.cs
