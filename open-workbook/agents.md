@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - load-only-the-summary-and-data-worksheets-from-the-file-using-loadoptionsloadfilter.cs
 - exclude-hidden-worksheets-during-load-by-configuring-loadoptionsloadfilter-to-ignore-them.cs
 - filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs
+- load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs
