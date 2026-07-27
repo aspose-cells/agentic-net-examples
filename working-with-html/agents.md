@@ -271,3 +271,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-in-the-source-workbook-and-verify-its-visual-preservation-in-html-output-using-tablecssid.cs
 - enable-gridlines-during-export-to-retain-cell-borders-and-ensure-tablecssid-prefixes-style-those-borders-correctly.cs
 - export-a-workbook-containing-hidden-rows-and-columns-confirming-that-tablecssid-prefixes-only-appear-on-visible-tables.cs
+- hide-overlaid-content-using-crosshideright-while-exporting-to-html-and-apply-a-custom-tablecssid-for-table-styling.cs
