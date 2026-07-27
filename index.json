@@ -9801,6 +9801,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "confirm-that-htmlcrosstypefittocell-wraps-text-within-cell-boundaries-when-enabled.cs",
+      "title": "Confirm that HtmlCrossType.FitToCell wraps text within cell boundaries when enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs",
       "title": "Convert a spreadsheet containing multiple WordArt objects to PDF and verify each gradient renders independently."
     },
