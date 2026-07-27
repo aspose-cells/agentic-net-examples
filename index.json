@@ -10391,6 +10391,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-that-ensures-css-custom-properties-are-present-in-the-root-selector-when-enabled.cs",
+      "title": "Create a unit test that ensures CSS custom properties are present in the :root selector when enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-unit-test-that-ensures-html-does-not-contain-any-style-tags-when-disablecss-option-is-enabled.cs",
       "title": "Create a unit test that ensures HTML does not contain any style tags when DisableCss option is enabled."
     },
