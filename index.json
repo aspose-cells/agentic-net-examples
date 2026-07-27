@@ -11,6 +11,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-workbook-protection-preventing-changes-to-default-view-settings-such-as-zoom-level.cs",
+      "title": "Apply workbook protection preventing changes to default view settings such as zoom level."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs",
       "title": "Apply worksheet protection disabling editing of pivot tables while allowing data refresh operations."
     },
