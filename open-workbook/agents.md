@@ -89,3 +89,4 @@ Output files are written to the working directory.
 - load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs
 - stream-rows-from-a-large-worksheet-using-lightcells-api-to-avoid-loading-the-entire-workbook.cs
 - implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs
+- create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs
