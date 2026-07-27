@@ -3801,6 +3801,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "automatically-detect-the-workbook-format-by-passing-only-the-file-path-to-the-workbook-constructor.cs",
+      "title": "Automatically detect the workbook format by passing only the file path to the Workbook constructor."
+    },
+    {
+      "category": "open-workbook",
       "file": "batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs",
       "title": "Batch load multiple workbooks using the same LoadOptions configuration to apply consistent worksheet filtering."
     },
