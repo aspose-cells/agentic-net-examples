@@ -326,6 +326,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "remove-protection-from-a-worksheet-using-correct-password-and-modify-a-cell-value-successfully.cs",
+      "title": "Remove protection from a worksheet using correct password and modify a cell value successfully."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "save-a-workbook-after-adding-a-signature-line-preserving-the-original-file-extension-and-format.cs",
       "title": "Save a workbook after adding a signature line, preserving the original file extension and format."
     },
