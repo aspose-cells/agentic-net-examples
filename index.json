@@ -11081,6 +11081,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "verify-that-exporthiddenworksheet-false-correctly-hides-hidden-sheets-while-preserving-visible-content.cs",
+      "title": "Verify that ExportHiddenWorksheet false correctly hides hidden sheets while preserving visible content."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
       "title": "Verify that generated HTML contains heading tags matching worksheet titles."
     },
