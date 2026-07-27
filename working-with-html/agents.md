@@ -296,3 +296,4 @@ Output files are written to the working directory.
 - save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs
 - generate-html-with-addtooltiptext-disabled-to-improve-rendering-speed-significantly.cs
 - verify-tooltip-attributes-appear-only-for-cells-whose-displayed-text-is-truncated.cs
+- ensure-cells-with-short-text-do-not-receive-tooltip-attributes-when-addtooltiptext-is-enabled.cs
