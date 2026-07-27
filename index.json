@@ -10861,6 +10861,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-numeric-values-retain-their-original-formatting-as-displayed-in-excel.cs",
+      "title": "Generate HTML and ensure numeric values retain their original formatting as displayed in Excel."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-then-compress-it-using-gzipstream-for-efficient-web-transmission.cs",
       "title": "Generate HTML and then compress it using GZipStream for efficient web transmission."
     },
