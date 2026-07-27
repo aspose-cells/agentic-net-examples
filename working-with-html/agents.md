@@ -255,3 +255,4 @@ Output files are written to the working directory.
 - render-wordart-gradient-fills-while-converting-to-html-and-provide-a-javascript-fallback-that-draws-gradients-on-canvas.cs
 - convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs
 - load-a-workbook-from-an-excel-file-and-export-to-html-using-a-custom-tablecssid.cs
+- export-the-workbook-with-gridlines-enabled-while-applying-a-specified-tablecssid-for-table-styling.cs
