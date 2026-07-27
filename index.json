@@ -9731,6 +9731,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-with-presentationpreferencebestfit-for-each-file.cs",
+      "title": "Batch convert Excel workbooks to HTML with PresentationPreference.BestFit for each file."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
       "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
     },
