@@ -9866,6 +9866,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-multiple-workbooks-to-html-each-using-a-distinct-default-font-defined-in-htmlsaveoptions.cs",
+      "title": "Batch convert multiple workbooks to HTML, each using a distinct default font defined in HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
       "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
     },
@@ -10541,6 +10546,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-css-file-generation-and-embed-styles-directly-in-html-using-custom-css-properties.cs",
+      "title": "Disable CSS file generation and embed styles directly in HTML using custom CSS properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-css-generation-during-html-export-by-setting-disablecss-to-true.cs",
       "title": "Disable CSS generation during HTML export by setting DisableCss to true."
     },
@@ -10738,6 +10748,11 @@
       "category": "working-with-html",
       "file": "export-a-workbook-to-html-with-custom-properties-enabled-while-preserving-default-css-generation.cs",
       "title": "Export a workbook to HTML with custom properties enabled while preserving default CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-headings-enabled-producing-separate-tables-for-each-worksheet.cs",
+      "title": "Export a workbook to HTML with headings enabled, producing separate tables for each worksheet."
     },
     {
       "category": "working-with-html",
@@ -11016,6 +11031,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-worksheet-headings-as-separate-html-tables-by-enabling-htmlsaveoptionsexportheadings.cs",
+      "title": "Export worksheet headings as separate HTML tables by enabling HtmlSaveOptions.ExportHeadings."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-compare-its-dom-structure-against-an-expected-xml-document-to-validate-layout.cs",
       "title": "Generate HTML and compare its DOM structure against an expected XML document to validate layout."
     },
@@ -11253,6 +11273,11 @@
       "category": "working-with-html",
       "file": "include-worksheet-headings-in-the-html-output-and-prefix-table-styles-with-the-chosen-tablecssid.cs",
       "title": "Include worksheet headings in the HTML output and prefix table styles with the chosen TableCssId."
+    },
+    {
+      "category": "working-with-html",
+      "file": "include-worksheet-names-as-headings-in-html-output-via-htmlsaveoptionsexportheadings.cs",
+      "title": "Include worksheet names as headings in HTML output via HtmlSaveOptions.ExportHeadings."
     },
     {
       "category": "working-with-html",
@@ -11521,6 +11546,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "save-a-workbook-to-html-while-preserving-original-cell-styles-falling-back-to-default-font-when-unavailable.cs",
+      "title": "Save a workbook to HTML while preserving original cell styles, falling back to default font when unavailable."
+    },
+    {
+      "category": "working-with-html",
       "file": "save-a-workbook-to-html-with-exportgridlines-disabled-then-confirm-that-gridlines-are-absent-in-the-output.cs",
       "title": "Save a workbook to HTML with ExportGridLines disabled, then confirm that gridlines are absent in the output."
     },
@@ -11608,6 +11638,11 @@
       "category": "working-with-html",
       "file": "set-htmlsaveoptionsexportworksheetcssseparately-to-true-to-generate-distinct-stylesheet-files-per-worksheet-individually.cs",
       "title": "Set HtmlSaveOptions.ExportWorksheetCSSSeparately to true to generate distinct stylesheet files per worksheet individually."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-htmlsaveoptionshtmllinktargettype-to-_blank-to-make-all-links-open-in-new-windows.cs",
+      "title": "Set HtmlSaveOptions.HtmlLinkTargetType to \"_blank\" to make all links open in new windows."
     },
     {
       "category": "working-with-html",
