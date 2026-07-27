@@ -3951,6 +3951,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-only-defined-names-from-a-workbook-by-setting-loadoptionsloadfilter-to-a-predefined-definednamesfilter.cs",
+      "title": "Load only defined names from a workbook by setting LoadOptions.LoadFilter to a predefined DefinedNamesFilter."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-only-the-first-three-worksheets-from-an-xlsx-file-using-lightcells-to-minimize-memory-consumption.cs",
       "title": "Load only the first three worksheets from an XLSX file using LightCells to minimize memory consumption."
     },
