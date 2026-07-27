@@ -118,3 +118,4 @@ Examples may generate:
 - create-a-signature-line-then-digitally-sign-the-workbook-using-an-external-xades-signature-tool.cs
 - save-a-workbook-after-adding-a-signature-line-preserving-the-original-file-extension-and-format.cs
 - remove-password-protection-from-a-workbook-and-save-the-unprotected-version-to-a-new-location.cs
+- programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs
