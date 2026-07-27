@@ -10951,6 +10951,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-ensure-no-inline-style-attributes-exist-when-css-is-disabled.cs",
+      "title": "Generate HTML and then use an HTML parser to ensure no inline style attributes exist when CSS is disabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-then-use-an-html-parser-to-extract-all-hyperlink-urls-for-link-analysis.cs",
       "title": "Generate HTML and then use an HTML parser to extract all hyperlink URLs for link analysis."
     },
