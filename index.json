@@ -10871,6 +10871,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-font-styles-such-as-bold-and-italic-are-retained-with-css-enabled.cs",
+      "title": "Generate HTML and ensure font styles such as bold and italic are retained with CSS enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-ensure-numeric-values-retain-their-original-formatting-as-displayed-in-excel.cs",
       "title": "Generate HTML and ensure numeric values retain their original formatting as displayed in Excel."
     },
