@@ -16,6 +16,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-utility-extracting-encryption-metadata-from-an-excel-file-and-displaying-it-in-a-readable-format.cs",
+      "title": "Create a utility extracting encryption metadata from an Excel file and displaying it in a readable format."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs",
       "title": "Detect if a workbook contains digitally signed worksheets and list their signer names."
     },
