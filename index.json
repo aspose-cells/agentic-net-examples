@@ -176,6 +176,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-utility-that-accepts-file-paths-determines-which-are-encrypted-and-returns-the-encrypted-files-list.cs",
+      "title": "Create a utility that accepts file paths, determines which are encrypted, and returns the encrypted files list."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "decrypt-an-existing-passwordprotected-workbook-modify-a-cell-value-and-reencrypt-before-saving.cs",
       "title": "Decrypt an existing password\u2011protected workbook, modify a cell value, and re\u2011encrypt before saving."
     },
