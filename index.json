@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "encryption-and-protection",
+      "file": "apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs",
+      "title": "Apply workbook protection disabling changes to the default file format when saving."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-workbook-protection-preventing-changes-to-default-file-properties-such-as-author-and-title.cs",
       "title": "Apply workbook protection preventing changes to default file properties such as author and title."
     },
