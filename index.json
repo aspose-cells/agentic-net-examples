@@ -581,6 +581,11 @@
     },
     {
       "category": "format-cells",
+      "file": "export-the-workbooks-theme-palette-to-an-excel-sheet-for-manual-review-by-designers.cs",
+      "title": "Export the workbook\u2019s theme palette to an Excel sheet for manual review by designers."
+    },
+    {
+      "category": "format-cells",
       "file": "extract-the-themes-accent-colors-and-generate-a-css-file-for-web-styling.cs",
       "title": "Extract the theme\u2019s accent colors and generate a CSS file for web styling."
     },
