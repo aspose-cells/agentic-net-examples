@@ -10396,6 +10396,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-windows-service-that-monitors-a-directory-and-converts-new-excel-files-to-html-with-custom-options.cs",
+      "title": "Create a Windows service that monitors a directory and converts new Excel files to HTML with custom options."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
       "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
     },
