@@ -331,6 +331,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "unprotect-the-workbook-structure-rename-a-worksheet-and-then-reapply-structure-protection-with-a-new-password.cs",
+      "title": "Unprotect the workbook structure, rename a worksheet, and then re\u2011apply structure protection with a new password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "unprotect-workbook-structure-by-providing-correct-password-and-confirm-sheet-modifications-are-allowed.cs",
       "title": "Unprotect workbook structure by providing correct password and confirm sheet modifications are allowed."
     },
