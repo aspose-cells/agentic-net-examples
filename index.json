@@ -10541,6 +10541,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-gridlines-in-html-output-by-setting-htmlsaveoptionsenablegridlines-to-true.cs",
+      "title": "Enable gridlines in HTML output by setting HtmlSaveOptions.EnableGridlines to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-htmlsaveoptionsisiecompatible-before-saving-to-mhtml-to-allow-worksheet-tab-switching-in-internet-explorer.cs",
       "title": "Enable HtmlSaveOptions.IsIECompatible before saving to MHTML to allow worksheet tab switching in Internet Explorer."
     },
