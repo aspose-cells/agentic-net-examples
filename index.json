@@ -10941,6 +10941,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "use-htmlcrosstypedefault-with-addtooltiptext-enabled-to-show-full-cell-content-while-preserving-overflow-behavior.cs",
+      "title": "Use HtmlCrossType.Default with AddTooltipText enabled to show full cell content while preserving overflow behavior."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-htmlcrosstypefittocell-together-with-addtooltiptext-to-provide-full-content-on-hover-without-overflow.cs",
       "title": "Use HtmlCrossType.FitToCell together with AddTooltipText to provide full content on hover without overflow."
     },
