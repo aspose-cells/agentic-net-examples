@@ -11231,6 +11231,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "verify-css-custom-properties-reduce-duplicate-base64-image-strings-compared-to-default-output.cs",
+      "title": "Verify CSS custom properties reduce duplicate base64 image strings compared to default output."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-exporthiddenworksheet-false-correctly-hides-hidden-sheets-while-preserving-visible-content.cs",
       "title": "Verify that ExportHiddenWorksheet false correctly hides hidden sheets while preserving visible content."
     },
