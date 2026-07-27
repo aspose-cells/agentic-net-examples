@@ -414,3 +414,4 @@ Output files are written to the working directory.
 - generate-html-and-then-use-an-html-parser-to-count-the-number-of-image-tags-present.cs
 - generate-html-and-then-use-an-html-parser-to-verify-each-table-cell-has-a-datacell-attribute.cs
 - generate-html-and-then-use-an-html-parser-to-ensure-no-inline-style-attributes-exist-when-css-is-disabled.cs
+- generate-html-and-then-use-an-html-parser-to-ensure-css-custom-properties-are-defined-in-a-root-selector.cs
