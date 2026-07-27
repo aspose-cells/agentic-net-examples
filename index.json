@@ -10426,6 +10426,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-hidden-worksheet-content-appears-in-html-when-exporthiddenworksheet-option-is-true.cs",
+      "title": "Ensure hidden worksheet content appears in HTML when ExportHiddenWorksheet option is true."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-combining-exporthiddenworksheet-false-with-htmlcrosstypefittocell-limits-overflow-and-hides-hidden-worksheets.cs",
       "title": "Ensure that combining ExportHiddenWorksheet false with HtmlCrossType.FitToCell limits overflow and hides hidden worksheets."
     },
