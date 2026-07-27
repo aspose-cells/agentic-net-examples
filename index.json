@@ -206,6 +206,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "validate-that-a-workbook-is-not-encrypted-before-performing-bulk-data-extraction-across-multiple-sheets.cs",
+      "title": "Validate that a workbook is not encrypted before performing bulk data extraction across multiple sheets."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs",
       "title": "Validate that changing a worksheet's protection password does not alter its cell formulas or values."
     },
