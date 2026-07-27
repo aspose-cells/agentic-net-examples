@@ -403,3 +403,4 @@ Output files are written to the working directory.
 - generate-html-and-ensure-row-numbers-are-displayed-when-exportrowheaders-option-is-enabled.cs
 - generate-html-and-ensure-column-letters-are-displayed-when-exportcolumnheaders-option-is-enabled.cs
 - create-a-console-application-that-accepts-an-excel-file-path-and-outputs-html-using-bestfit-layout.cs
+- create-a-windows-service-that-monitors-a-directory-and-converts-new-excel-files-to-html-with-custom-options.cs
