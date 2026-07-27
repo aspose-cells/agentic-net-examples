@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - set-pdf-page-orientation-to-landscape-before-converting-the-chart-to-ensure-full-width-usage.cs
 - load-an-excel-workbook-locate-a-chart-and-set-tick-labels-direction-to-horizontal.cs
+- retrieve-the-charts-x-axis-and-change-its-type-to-value-for-continuous-numeric-scaling.cs
