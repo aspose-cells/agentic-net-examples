@@ -10876,6 +10876,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-embedded-images-as-separate-files-by-setting-exportimagesasbase64-false.cs",
+      "title": "Generate HTML with embedded images as separate files by setting ExportImagesAsBase64 false."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-widthscalable-enabled-and-addtooltiptext-enabled-to-create-scalable-columns-with-hover-tooltips.cs",
       "title": "Generate HTML with WidthScalable enabled and AddTooltipText enabled to create scalable columns with hover tooltips."
     },
