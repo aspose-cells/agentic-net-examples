@@ -92,3 +92,4 @@ Examples may generate:
 - unprotect-a-workbook-structure-rename-several-sheets-and-reprotect-using-a-password-retrieved-from-azure-key-vault.cs
 - detect-whether-a-workbook-is-encrypted-with-a-password-meeting-organizational-complexity-requirements.cs
 - apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs
+- encrypt-a-workbook-then-compute-its-sha256-hash-for-integrity-verification.cs
