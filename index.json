@@ -10266,6 +10266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-that-setting-exporthiddenworksheet-to-true-includes-hidden-worksheets-in-the-html-output.cs",
+      "title": "Ensure that setting ExportHiddenWorksheet to true includes hidden worksheets in the HTML output."
+    },
+    {
+      "category": "working-with-html",
       "file": "explicitly-enable-right-to-left-text-support-by-setting-rtltextsupport-to-true-before-saving.cs",
       "title": "Explicitly enable right-to-left text support by setting RtlTextSupport to true before saving."
     },
