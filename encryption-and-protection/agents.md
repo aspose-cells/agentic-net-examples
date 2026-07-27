@@ -94,3 +94,4 @@ Examples may generate:
 - apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs
 - encrypt-a-workbook-then-compute-its-sha256-hash-for-integrity-verification.cs
 - ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs
+- apply-workbook-protection-preventing-changes-to-default-view-settings-such-as-zoom-level.cs
