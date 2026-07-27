@@ -10011,6 +10011,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-default-css-generation-and-rely-solely-on-tablecssid-to-style-exported-html-tables.cs",
+      "title": "Disable default CSS generation and rely solely on TableCssId to style exported HTML tables."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-downlevel-revealed-comments-when-saving-to-html-to-improve-compatibility-with-older-browsers.cs",
       "title": "Disable downlevel revealed comments when saving to HTML to improve compatibility with older browsers."
     },
