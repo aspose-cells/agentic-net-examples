@@ -11536,6 +11536,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-html-hyperlink-target-type-to-_blank-using-htmlsaveoptionshtmllinktargettype-for-all-links.cs",
+      "title": "Set HTML hyperlink target type to \"_blank\" using HtmlSaveOptions.HtmlLinkTargetType for all links."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
