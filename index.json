@@ -10956,6 +10956,31 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-count-the-number-of-image-tags-present.cs",
+      "title": "Generate HTML and then use an HTML parser to count the number of image tags present."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-ensure-css-custom-properties-are-defined-in-a-root-selector.cs",
+      "title": "Generate HTML and then use an HTML parser to ensure CSS custom properties are defined in a :root selector."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-ensure-no-inline-style-attributes-exist-when-css-is-disabled.cs",
+      "title": "Generate HTML and then use an HTML parser to ensure no inline style attributes exist when CSS is disabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-extract-all-hyperlink-urls-for-link-analysis.cs",
+      "title": "Generate HTML and then use an HTML parser to extract all hyperlink URLs for link analysis."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-verify-each-table-cell-has-a-datacell-attribute.cs",
+      "title": "Generate HTML and then use an HTML parser to verify each table cell has a data\u2011cell attribute."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-for-a-workbook-containing-merged-cells-and-verify-merged-layout-is-preserved.cs",
       "title": "Generate HTML for a workbook containing merged cells and verify merged layout is preserved."
     },
@@ -11101,6 +11126,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "integrate-html-conversion-into-a-web-api-endpoint-that-returns-html-content-as-a-string-response.cs",
+      "title": "Integrate HTML conversion into a Web API endpoint that returns HTML content as a string response."
+    },
+    {
+      "category": "working-with-html",
       "file": "integrate-html-conversion-into-an-aspnet-mvc-controller-action-that-returns-a-fileresult-containing-the-html.cs",
       "title": "Integrate HTML conversion into an ASP.NET MVC controller action that returns a FileResult containing the HTML."
     },
@@ -11243,6 +11273,21 @@
       "category": "working-with-html",
       "file": "measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs",
       "title": "Measure rendering performance of HTML with CSS disabled versus enabled using a stopwatch timer."
+    },
+    {
+      "category": "working-with-html",
+      "file": "perform-a-performance-benchmark-converting-a-10-mb-workbook-to-html-with-css-enabled-versus-disabled.cs",
+      "title": "Perform a performance benchmark converting a 10\u202fMB workbook to HTML with CSS enabled versus disabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "perform-a-performance-benchmark-converting-a-workbook-with-500-worksheets-using-exportallworksheets-true-to-assess-scalability.cs",
+      "title": "Perform a performance benchmark converting a workbook with 500 worksheets using ExportAllWorksheets true to assess scalability."
+    },
+    {
+      "category": "working-with-html",
+      "file": "perform-a-performance-benchmark-converting-a-workbook-with-exportactiveworksheetonly-true-to-measure-singlesheet-processing-speed.cs",
+      "title": "Perform a performance benchmark converting a workbook with ExportActiveWorksheetOnly true to measure single\u2011sheet processing speed."
     },
     {
       "category": "working-with-html",
