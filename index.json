@@ -11231,6 +11231,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-worksheet-names-as-headings-in-html-output-via-htmlsaveoptionsexportheadings.cs",
+      "title": "Include worksheet names as headings in HTML output via HtmlSaveOptions.ExportHeadings."
+    },
+    {
+      "category": "working-with-html",
       "file": "integrate-html-conversion-into-a-web-api-endpoint-that-returns-html-content-as-a-string-response.cs",
       "title": "Integrate HTML conversion into a Web API endpoint that returns HTML content as a string response."
     },
