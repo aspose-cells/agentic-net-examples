@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - save-the-chartfree-workbook-to-a-pdf-document-preserving-original-cell-formatting.cs
 - apply-printer-paper-size-a5-during-load-and-generate-a-pdf-with-matching-page-dimensions.cs
 - reload-the-same-workbook-with-printer-paper-size-a3-and-compare-pdf-file-sizes-between-a5-and-a3-outputs.cs
+- use-lightcells-api-to-open-a-large-xlsx-file-while-limiting-memory-usage-to-200-mb.cs
