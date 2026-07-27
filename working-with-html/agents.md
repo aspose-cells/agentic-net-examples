@@ -357,3 +357,4 @@ Output files are written to the working directory.
 - save-html-output-to-a-memorystream-instead-of-a-physical-file-for-inmemory-processing.cs
 - write-html-bytes-from-a-memorystream-directly-to-an-aspnet-response-for-immediate-download.cs
 - append-a-custom-css-class-to-the-html-body-element-after-conversion-for-additional-styling.cs
+- replace-all-hyperlink-urls-in-generated-html-with-absolute-urls-using-string-replacement-logic.cs
