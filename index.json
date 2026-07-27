@@ -556,6 +556,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-function-that-maps-numeric-risk-levels-to-specific-theme-accent-colors-for-heat-maps.cs",
+      "title": "Create a function that maps numeric risk levels to specific theme accent colors for heat maps."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-macrofree-report-that-lists-all-cells-using-the-hyperlink-theme-color.cs",
       "title": "Create a macro\u2011free report that lists all cells using the Hyperlink theme color."
     },
