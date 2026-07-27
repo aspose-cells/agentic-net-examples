@@ -11201,6 +11201,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-exporthiddenworksheet-false-and-verify-hidden-worksheets-are-excluded-from-html-conversion.cs",
+      "title": "Set ExportHiddenWorksheet false and verify hidden worksheets are excluded from HTML conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-exporthiddenworksheet-true-and-verify-hidden-sheets-are-included-in-generated-html.cs",
       "title": "Set ExportHiddenWorksheet true and verify hidden sheets are included in generated HTML."
     },
