@@ -86,3 +86,4 @@ Examples may generate:
 - validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs
 - apply-workbook-protection-preventing-changes-to-default-file-properties-such-as-author-and-title.cs
 - encrypt-a-workbook-using-a-password-stored-in-a-hardware-security-module-and-confirm-successful-decryption.cs
+- detect-if-a-workbooks-encryption-uses-a-deprecated-algorithm-and-flag-it-for-migration.cs
