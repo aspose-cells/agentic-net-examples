@@ -11,6 +11,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "add-multiple-signature-lines-to-different-worksheets-each-with-unique-signer-information-and-comments.cs",
+      "title": "Add multiple signature lines to different worksheets, each with unique signer information and comments."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs",
       "title": "Apply workbook protection disabling changes to the default file format when saving."
     },
