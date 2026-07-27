@@ -167,3 +167,4 @@ Examples may generate:
 - generate-a-csv-report-summarizing-file-name-format-and-encryption-state-for-all-excel-files-in-a-folder.cs
 - create-a-utility-that-accepts-file-paths-determines-which-are-encrypted-and-returns-the-encrypted-files-list.cs
 - implement-error-handling-that-retries-decryption-with-an-alternate-password-when-the-first-attempt-fails.cs
+- implement-a-logging-mechanism-that-records-timestamp-file-name-and-encryption-action-performed-for-each-workbook.cs
