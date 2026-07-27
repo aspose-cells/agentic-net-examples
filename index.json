@@ -9721,6 +9721,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-asynchronously-and-provide-a-callback-when-conversion-completes.cs",
+      "title": "Convert HTML to Excel asynchronously and provide a callback when conversion completes."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs",
       "title": "Convert HTML to Excel using a memory stream to process large files without temporary files."
     },
