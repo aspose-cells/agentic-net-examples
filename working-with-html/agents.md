@@ -320,3 +320,4 @@ Output files are written to the working directory.
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-for-improved-layout.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferenceautofit-for-compact-column-widths.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-while-exporting-cell-comments.cs
+- convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-render-gridlines.cs
