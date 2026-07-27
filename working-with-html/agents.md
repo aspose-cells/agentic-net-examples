@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs
 - export-excel-to-html-and-generate-a-separate-css-file-for-styling-instead-of-inline-styles.cs
 - export-excel-to-html-and-embed-images-as-base64-data-uris-within-the-html-output.cs
+- export-excel-to-html-and-retain-merged-cells-using-appropriate-colspan-and-rowspan-attributes.cs
