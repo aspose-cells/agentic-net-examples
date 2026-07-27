@@ -443,3 +443,4 @@ Output files are written to the working directory.
 - prevent-exponential-notation-for-large-numbers-in-html-by-setting-htmlsaveoptionsexportnumericformat-to-plain-text.cs
 - export-numeric-cells-as-plain-text-instead-of-scientific-notation-using-htmlsaveoptions.cs
 - adjust-htmlsaveoptions-to-export-numeric-cells-using-plain-text-format-rather-than-scientific-notation.cs
+- export-worksheet-headings-as-separate-html-tables-by-enabling-htmlsaveoptionsexportheadings.cs
