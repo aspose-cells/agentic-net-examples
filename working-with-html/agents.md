@@ -335,3 +335,4 @@ Output files are written to the working directory.
 - convert-an-excel-workbook-to-html-with-default-options-while-exporting-gridlines.cs
 - convert-an-excel-workbook-to-html-with-default-options-while-exporting-hidden-worksheets.cs
 - batch-convert-all-excel-files-in-a-folder-to-html-using-default-htmlsaveoptions.cs
+- batch-convert-excel-workbooks-to-html-with-presentationpreferencebestfit-for-each-file.cs
