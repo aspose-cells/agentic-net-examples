@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - replace-the-themes-light2-background-with-a-patterned-fill-while-preserving-theme-color-references.cs
 - programmatically-detect-workbooks-that-lack-a-theme-and-assign-a-default-theme-before-processing.cs
 - apply-the-themes-accent6-color-to-the-header-row-of-a-dynamically-generated-report.cs
+- create-a-script-that-logs-the-beforeandafter-rgb-values-of-each-theme-color-change.cs
