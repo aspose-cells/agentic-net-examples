@@ -11436,6 +11436,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-default-font-to-arial-for-html-export-using-htmlsaveoptionsdefaultfontname.cs",
+      "title": "Set default font to Arial for HTML export using HtmlSaveOptions.DefaultFontName."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-exportactiveworksheetonly-true-to-generate-html-containing-only-the-currently-active-worksheet.cs",
       "title": "Set ExportActiveWorksheetOnly true to generate HTML containing only the currently active worksheet."
     },
