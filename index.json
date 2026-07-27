@@ -9861,6 +9861,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-visual-fidelity-of-html-generated-with-presentationpreferencebestfit-versus-default-layout.cs",
+      "title": "Compare visual fidelity of HTML generated with PresentationPreference.BestFit versus default layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs",
       "title": "Configure HtmlSaveOptions to collapse multiple spaces after newline characters in HTML."
     },
