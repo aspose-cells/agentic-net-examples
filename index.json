@@ -9661,8 +9661,23 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-a-custom-theme-based-on-css-variables-defined-in-the-html.cs",
+      "title": "Convert HTML to Excel and apply a custom theme based on CSS variables defined in the HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-custom-number-formats-for-scientific-notation-values.cs",
+      "title": "Convert HTML to Excel and apply custom number formats for scientific notation values."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs",
       "title": "Convert HTML to Excel and apply date format detection based on locale settings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-embed-custom-document-properties-extracted-from-html-meta-tags.cs",
+      "title": "Convert HTML to Excel and embed custom document properties extracted from HTML meta tags."
     },
     {
       "category": "working-with-html",
@@ -9671,13 +9686,78 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-handle-nested-tables-by-creating-separate-worksheets-for-each-level.cs",
+      "title": "Convert HTML to Excel and handle nested tables by creating separate worksheets for each level."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-maintain-original-html-page-breaks-as-worksheet-page-breaks.cs",
+      "title": "Convert HTML to Excel and maintain original HTML page breaks as worksheet page breaks."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-map-css-border-styles-to-excel-cell-border-line-styles.cs",
+      "title": "Convert HTML to Excel and map CSS border styles to Excel cell border line styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
       "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
+      "title": "Convert HTML to Excel and preserve cell comments as HTML tooltip attributes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-conditional-formatting-rules-defined-in-css-classes.cs",
+      "title": "Convert HTML to Excel and preserve conditional formatting rules defined in CSS classes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-hidden-rows-and-columns-indicated-by-css-displaynone.cs",
+      "title": "Convert HTML to Excel and preserve hidden rows and columns indicated by CSS display:none."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs",
+      "title": "Convert HTML to Excel and retain background images by inserting them as worksheet background."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-embedded-svg-graphics-as-scalable-vector-shapes.cs",
+      "title": "Convert HTML to Excel and retain embedded SVG graphics as scalable vector shapes."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
       "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-set-workbook-calculation-mode-to-automatic-for-formula-evaluation.cs",
+      "title": "Convert HTML to Excel and set workbook calculation mode to automatic for formula evaluation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs",
+      "title": "Convert HTML to Excel and set workbook culture to French for proper decimal separators."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-asynchronously-and-provide-a-callback-when-conversion-completes.cs",
+      "title": "Convert HTML to Excel asynchronously and provide a callback when conversion completes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-in-a-batch-job-processing-a-directory-of-files-into-separate-workbooks.cs",
+      "title": "Convert HTML to Excel in a batch job processing a directory of files into separate workbooks."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs",
+      "title": "Convert HTML to Excel using a memory stream to process large files without temporary files."
     },
     {
       "category": "working-with-html",
@@ -10031,6 +10111,61 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-add-a-footer-with-page-numbers-generated-by-javascript.cs",
+      "title": "Export Excel to HTML and add a footer with page numbers generated by JavaScript."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-responsive-design-techniques-for-optimal-mobile-device-viewing.cs",
+      "title": "Export Excel to HTML and apply responsive design techniques for optimal mobile device viewing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-embed-hyperlinks-so-they-remain-functional-in-the-browser.cs",
+      "title": "Export Excel to HTML and embed hyperlinks so they remain functional in the browser."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-embed-images-as-base64-data-uris-within-the-html-output.cs",
+      "title": "Export Excel to HTML and embed images as base64 data URIs within the HTML output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-generate-a-separate-css-file-for-styling-instead-of-inline-styles.cs",
+      "title": "Export Excel to HTML and generate a separate CSS file for styling instead of inline styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-include-a-custom-html-header-containing-the-workbook-title.cs",
+      "title": "Export Excel to HTML and include a custom HTML header containing the workbook title."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-include-custom-metadata-tags-extracted-from-workbook-properties.cs",
+      "title": "Export Excel to HTML and include custom metadata tags extracted from workbook properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
+      "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-retain-merged-cells-using-appropriate-colspan-and-rowspan-attributes.cs",
+      "title": "Export Excel to HTML and retain merged cells using appropriate colspan and rowspan attributes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-set-the-output-encoding-to-utf8-for-international-character-support.cs",
+      "title": "Export Excel to HTML and set the output encoding to UTF\u20118 for international character support."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs",
+      "title": "Export Excel to HTML while preserving cell formatting such as font styles and colors."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
       "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
     },
@@ -10143,6 +10278,11 @@
       "category": "working-with-html",
       "file": "load-a-workbook-with-hidden-rows-enable-exportgridlines-and-ensure-hidden-rows-do-not-affect-gridline-rendering.cs",
       "title": "Load a workbook with hidden rows, enable ExportGridLines, and ensure hidden rows do not affect gridline rendering."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-an-excel-workbook-from-a-file-and-export-it-to-html-using-a-custom-stream-provider.cs",
+      "title": "Load an Excel workbook from a file and export it to HTML using a custom stream provider."
     },
     {
       "category": "working-with-html",
