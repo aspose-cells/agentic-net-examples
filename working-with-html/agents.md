@@ -359,3 +359,4 @@ Output files are written to the working directory.
 - append-a-custom-css-class-to-the-html-body-element-after-conversion-for-additional-styling.cs
 - replace-all-hyperlink-urls-in-generated-html-with-absolute-urls-using-string-replacement-logic.cs
 - set-exporthiddenworksheet-false-and-verify-hidden-sheets-are-omitted-from-resulting-html.cs
+- set-exporthiddenworksheet-true-and-verify-hidden-sheets-are-included-in-generated-html.cs
