@@ -9766,6 +9766,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "combine-widthscalable-htmlcrosstypefittocell-and-addtooltiptext-to-produce-responsive-html-with-tooltips.cs",
+      "title": "Combine WidthScalable, HtmlCrossType.FitToCell, and AddTooltipText to produce responsive HTML with tooltips."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs",
       "title": "Compare exported HTML with and without exponential notation suppression for accuracy."
     },
