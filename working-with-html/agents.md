@@ -259,3 +259,4 @@ Output files are written to the working directory.
 - include-worksheet-headings-in-the-html-output-and-prefix-table-styles-with-the-chosen-tablecssid.cs
 - disable-default-css-generation-and-rely-solely-on-tablecssid-to-style-exported-html-tables.cs
 - enable-css-custom-properties-in-htmlsaveoptions-while-using-tablecssid-to-enhance-table-styling-flexibility.cs
+- include-cell-comments-in-the-html-export-and-ensure-they-inherit-the-tablecssid-prefixed-styles.cs
