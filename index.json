@@ -9721,6 +9721,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-all-excel-files-in-a-folder-to-html-using-default-htmlsaveoptions.cs",
+      "title": "Batch convert all Excel files in a folder to HTML using default HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-all-xlsx-files-in-a-directory-to-html-using-default-conversion-settings.cs",
       "title": "Batch convert all XLSX files in a directory to HTML using default conversion settings."
     },
