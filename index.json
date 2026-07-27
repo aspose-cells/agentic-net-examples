@@ -9546,6 +9546,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-a-reflection-effect-to-wordart-during-html-export-and-ensure-gradient-fill-remains-visible.cs",
+      "title": "Apply a reflection effect to WordArt during HTML export and ensure gradient fill remains visible."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-a-shadow-effect-to-wordart-during-pdf-conversion-while-preserving-the-underlying-gradient-fill.cs",
       "title": "Apply a shadow effect to WordArt during PDF conversion while preserving the underlying gradient fill."
     },
