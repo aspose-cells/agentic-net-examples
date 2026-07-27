@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - validate-that-after-theme-updates-chart-series-colors-automatically-update-to-the-new-theme-accents.cs
 - create-a-utility-that-reads-a-csv-of-color-values-and-builds-a-corresponding-theme-palette.cs
 - apply-the-themes-accent3-color-to-the-fill-of-merged-cells-spanning-multiple-rows.cs
+- set-the-themes-light2-color-as-the-default-fill-for-newly-inserted-rows.cs
