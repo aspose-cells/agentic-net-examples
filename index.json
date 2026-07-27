@@ -9956,6 +9956,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "customize-gradient-angle-for-wordart-during-pdf-conversion-using-a-specific-rotation-parameter.cs",
+      "title": "Customize gradient angle for WordArt during PDF conversion using a specific rotation parameter."
+    },
+    {
+      "category": "working-with-html",
       "file": "customize-heading-levels-h1-h2-for-nested-worksheets-during-html-conversion.cs",
       "title": "Customize heading levels (h1, h2) for nested worksheets during HTML conversion."
     },
