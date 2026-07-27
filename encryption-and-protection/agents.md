@@ -121,3 +121,4 @@ Examples may generate:
 - programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs
 - encrypt-a-workbook-with-aes256-encryption-strength-and-verify-that-the-file-size-increases-appropriately.cs
 - verify-that-a-workbook-saved-after-encryption-can-be-opened-with-the-same-password-on-another-machine.cs
+- batch-process-all-excel-files-in-a-directory-adding-identical-signature-lines-to-each-workbook.cs
