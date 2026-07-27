@@ -408,3 +408,4 @@ Output files are written to the working directory.
 - integrate-html-conversion-into-an-aspnet-mvc-controller-action-that-returns-a-fileresult-containing-the-html.cs
 - integrate-html-conversion-into-a-web-api-endpoint-that-returns-html-content-as-a-string-response.cs
 - perform-a-performance-benchmark-converting-a-10-mb-workbook-to-html-with-css-enabled-versus-disabled.cs
+- perform-a-performance-benchmark-converting-a-workbook-with-500-worksheets-using-exportallworksheets-true-to-assess-scalability.cs
