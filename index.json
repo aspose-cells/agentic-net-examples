@@ -66,6 +66,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-both-an-opening-password-and-workbook-structure-protection-to-a-workbook-then-test-each-protection-independently.cs",
+      "title": "Apply both an opening password and workbook structure protection to a workbook, then test each protection independently."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs",
       "title": "Apply workbook protection disabling changes to the default file format when saving."
     },
