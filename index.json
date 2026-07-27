@@ -9736,6 +9736,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-set-workbook-calculation-mode-to-automatic-for-formula-evaluation.cs",
+      "title": "Convert HTML to Excel and set workbook calculation mode to automatic for formula evaluation."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs",
       "title": "Convert HTML to Excel and set workbook culture to French for proper decimal separators."
     },
