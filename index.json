@@ -9826,6 +9826,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-html-file-size-when-enablecsscustomproperties-is-true-versus-false-for-same-workbook.cs",
+      "title": "Compare HTML file size when EnableCssCustomProperties is true versus false for same workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-html-file-size-when-widthscalable-is-true-versus-false-for-the-same-workbook.cs",
       "title": "Compare HTML file size when WidthScalable is true versus false for the same workbook."
     },
