@@ -11266,6 +11266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-exportchartimageformat-to-jpeg-and-verify-chart-images-in-html-are-jpeg-files.cs",
+      "title": "Set ExportChartImageFormat to JPEG and verify chart images in HTML are JPEG files."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-exportchartimageformat-to-png-and-verify-chart-images-in-html-are-png-files.cs",
       "title": "Set ExportChartImageFormat to PNG and verify chart images in HTML are PNG files."
     },
