@@ -251,6 +251,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "develop-a-script-that-removes-passwords-from-all-workbooks-in-a-directory-and-archives-the-original-encrypted-files.cs",
+      "title": "Develop a script that removes passwords from all workbooks in a directory and archives the original encrypted files."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "enable-worksheetlevel-protection-on-a-specific-sheet-restricting-cell-editing-while-allowing-formatting-changes.cs",
       "title": "Enable worksheet\u2011level protection on a specific sheet, restricting cell editing while allowing formatting changes."
     },
