@@ -361,3 +361,4 @@ Output files are written to the working directory.
 - set-exporthiddenworksheet-false-and-verify-hidden-sheets-are-omitted-from-resulting-html.cs
 - set-exporthiddenworksheet-true-and-verify-hidden-sheets-are-included-in-generated-html.cs
 - create-a-unit-test-asserting-a-specific-cell-value-appears-in-the-html-output.cs
+- create-a-unit-test-asserting-no-style-tags-exist-when-disablecss-option-is-true.cs
