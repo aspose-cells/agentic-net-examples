@@ -10521,6 +10521,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-pdf-conversion-and-embed-a-fallback-raster-image-for-unsupported-viewers.cs",
+      "title": "Render WordArt gradient fills during PDF conversion and embed a fallback raster image for unsupported viewers."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-wordart-gradient-fills-during-pdf-conversion-and-enable-antialiasing-for-smoother-edges.cs",
       "title": "Render WordArt gradient fills during PDF conversion and enable anti\u2011aliasing for smoother edges."
     },
