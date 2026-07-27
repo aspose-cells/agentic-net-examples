@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-html-and-minify-the-generated-css-defining-gradient-fills.cs",
+      "title": "Convert a workbook with WordArt to HTML and minify the generated CSS defining gradient fills."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-a-workbook-with-wordart-to-pdf-and-add-a-security-restriction-preventing-editing-of-gradient-layers.cs",
       "title": "Convert a workbook with WordArt to PDF and add a security restriction preventing editing of gradient layers."
     },
