@@ -325,3 +325,4 @@ Output files are written to the working directory.
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-enable-css-custom-properties-for-image-deduplication.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-while-disabling-all-css-generation.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-set-hyperlink-target-to-blank.cs
+- convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-set-hyperlink-target-to-parent.cs
