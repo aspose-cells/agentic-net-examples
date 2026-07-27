@@ -136,3 +136,4 @@ Examples may generate:
 - detect-workbook-file-format-and-encryption-status-given-a-file-path.cs
 - scan-a-directory-and-report-encryption-status-for-each-xlsx-and-xls-file.cs
 - load-an-unencrypted-workbook-verify-its-format-and-log-confirmation-to-console.cs
+- use-loadoptions-to-identify-the-file-format-of-an-excel-document-without-fully-loading-its-contents.cs
