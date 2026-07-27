@@ -9956,6 +9956,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "customize-gradient-angle-for-wordart-during-html-conversion-and-reflect-the-angle-in-css-gradient-syntax.cs",
+      "title": "Customize gradient angle for WordArt during HTML conversion and reflect the angle in CSS gradient syntax."
+    },
+    {
+      "category": "working-with-html",
       "file": "customize-gradient-angle-for-wordart-during-pdf-conversion-using-a-specific-rotation-parameter.cs",
       "title": "Customize gradient angle for WordArt during PDF conversion using a specific rotation parameter."
     },
