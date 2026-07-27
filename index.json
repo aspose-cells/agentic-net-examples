@@ -10116,6 +10116,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-a-custom-stylesheet-that-overrides-default-cell-colors.cs",
+      "title": "Export Excel to HTML and apply a custom stylesheet that overrides default cell colors."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-apply-responsive-design-techniques-for-optimal-mobile-device-viewing.cs",
       "title": "Export Excel to HTML and apply responsive design techniques for optimal mobile device viewing."
     },
