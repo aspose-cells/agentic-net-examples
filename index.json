@@ -266,6 +266,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "use-loadoptions-to-identify-the-file-format-of-an-excel-document-without-fully-loading-its-contents.cs",
+      "title": "Use LoadOptions to identify the file format of an Excel document without fully loading its contents."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-a-thirdparty-viewer-lacking-decryption-support.cs",
       "title": "Validate that a workbook encrypted with a password cannot be opened by a third\u2011party viewer lacking decryption support."
     },
