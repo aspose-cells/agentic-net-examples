@@ -158,3 +158,4 @@ Examples may generate:
 - enable-worksheetlevel-protection-on-a-specific-sheet-restricting-cell-editing-while-allowing-formatting-changes.cs
 - protect-a-worksheet-while-allowing-users-to-format-cells-then-verify-editing-cell-values-remains-blocked.cs
 - attempt-to-edit-a-protected-worksheet-without-password-and-record-failure-outcome.cs
+- remove-protection-from-a-worksheet-using-correct-password-and-modify-a-cell-value-successfully.cs
