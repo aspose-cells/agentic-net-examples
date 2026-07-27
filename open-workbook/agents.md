@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - reload-the-same-workbook-with-printer-paper-size-a3-and-compare-pdf-file-sizes-between-a5-and-a3-outputs.cs
 - use-lightcells-api-to-open-a-large-xlsx-file-while-limiting-memory-usage-to-200-mb.cs
 - load-a-large-workbook-with-lightcells-api-and-save-directly-to-pdf.cs
+- load-only-worksheets-with-indexes-0-and-2-using-loadoptions-and-export-them-to-separate-pdf-files.cs
