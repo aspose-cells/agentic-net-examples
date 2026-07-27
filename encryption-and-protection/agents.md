@@ -135,3 +135,4 @@ Examples may generate:
 - add-a-signature-line-then-lock-the-worksheet-to-prevent-further-edits-without-a-password.cs
 - detect-workbook-file-format-and-encryption-status-given-a-file-path.cs
 - scan-a-directory-and-report-encryption-status-for-each-xlsx-and-xls-file.cs
+- load-an-unencrypted-workbook-verify-its-format-and-log-confirmation-to-console.cs
