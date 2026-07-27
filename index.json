@@ -1254,12 +1254,2094 @@
       "file": "validate-that-cellssubtotal-throws-an-informative-error-when-startrow-exceeds-endrow.cs",
       "title": "Validate that Cells.Subtotal throws an informative error when startRow exceeds endRow."
     },
-    {
-      "category": "comments-and-notes",
+    {      "category": "comments-and-notes",
       "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
       "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
     },
+    {      "category": "comments-and-notes",
+      "file": "apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs",
+      "title": "Apply a solid blue background to a comment using Shape.Fill.ForeColor with the appropriate color code."
+    },
     {
+      "category": "comments-and-notes",
+      "file": "batch-process-a-folder-of-workbooks-adding-a-standard-disclaimer-comment-to-each-worksheets-top-left-cell.cs",
+      "title": "Batch process a folder of workbooks, adding a standard disclaimer comment to each worksheet's top-left cell."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of a comment by assigning a red value to Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of comments in column G to blue using Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "copy-a-threaded-comment-from-cell-e5-to-cell-f6-while-preserving-its-author-and-text.cs",
+      "title": "Copy a threaded comment from cell E5 to cell F6 while preserving its author and text."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "create-a-new-workbook-and-add-a-threaded-comment-to-cell-a1-with-author-john.cs",
+      "title": "Create a new workbook and add a threaded comment to cell A1 with author John."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs",
+      "title": "Create a workbook, add threaded comments to multiple cells, and save the file in XLSX format."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs",
+      "title": "Edit a specific threaded comment by setting its Text property to a new string value."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "embed-an-image-as-a-comment-background-by-setting-shapefillpicture-to-a-loaded-picture-object.cs",
+      "title": "Embed an image as a comment background by setting Shape.Fill.Picture to a loaded picture object."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs",
+      "title": "Iterate through a ThreadedCommentCollection to display each comment's text, author, and creation timestamp."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs",
+      "title": "Load a workbook, modify comment font colors based on author, and save changes to a new file."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs",
+      "title": "Load an existing workbook, retrieve all threaded comments from column B, and list their authors."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "read-all-threaded-comments-from-a-worksheet-and-count-the-number-of-comments-per-author.cs",
+      "title": "Read all threaded comments from a worksheet and count the number of comments per author."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs",
+      "title": "Read the author of each threaded comment in a worksheet and output the list."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs",
+      "title": "Remove a threaded comment from cell C3 using the Remove method on the comment object."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs",
+      "title": "Remove all comments older than thirty days from a workbook based on their CreatedTime values."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs",
+      "title": "Retrieve and display the total number of threaded comments present in a workbook."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs",
+      "title": "Retrieve the creation time of a threaded comment via the CreatedTime property and log it."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs",
+      "title": "Scan a workbook for empty comments and remove them to clean metadata."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs",
+      "title": "Set the text direction of a comment's shape to RightToLeft for bidirectional language support."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs",
+      "title": "Set the text direction of a comment's shape to TopToBottom for vertical annotation layout."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs",
+      "title": "Update the text direction of all comments in a worksheet to LeftToRight for standard layout."
+    },
+    {
+      "category": "document-properties",
+      "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
+      "title": "Add a custom property containing an array of string tags to categorize workbook content."
+    },
+    {
+      "category": "document-properties",
+      "file": "batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs",
+      "title": "Batch process all workbooks in a folder, setting each file's Language property to \"en-GB\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "compare-custom-property-sets-between-two-workbooks-and-generate-a-list-of-differences-for-auditing.cs",
+      "title": "Compare custom property sets between two workbooks and generate a list of differences for auditing."
+    },
+    {
+      "category": "document-properties",
+      "file": "create-a-unit-test-that-adds-a-custom-property-saves-the-workbook-reloads-it-and-verifies-persistence.cs",
+      "title": "Create a unit test that adds a custom property, saves the workbook, reloads it, and verifies persistence."
+    },
+    {
+      "category": "document-properties",
+      "file": "create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs",
+      "title": "Create a utility that reads custom properties from a workbook and writes them into a \"Metadata\" worksheet."
+    },
+    {
+      "category": "document-properties",
+      "file": "create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs",
+      "title": "Create a workbook and set the Title built\u2011in property to a descriptive project name."
+    },
+    {
+      "category": "document-properties",
+      "file": "generate-a-summary-report-that-aggregates-builtin-property-values-from-multiple-workbooks-into-a-consolidated-excel-file.cs",
+      "title": "Generate a summary report that aggregates built\u2011in property values from multiple workbooks into a consolidated Excel file."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs",
+      "title": "Instantiate a workbook, adjust built\u2011in properties, and save the document as PDF to embed metadata."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs",
+      "title": "Instantiate a workbook and deliberately access a non\u2011existent built\u2011in property to demonstrate exception handling."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs",
+      "title": "Instantiate a workbook and enable the ScaleCrop built\u2011in property to preserve image proportions."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs",
+      "title": "Instantiate a workbook and obtain the DocumentVersion built\u2011in property to check version information."
+    },
+    {
+      "category": "document-properties",
+      "file": "instantiate-two-workbooks-and-copy-all-document-properties-from-source-to-destination-programmatically.cs",
+      "title": "Instantiate two workbooks and copy all document properties from source to destination programmatically."
+    },
+    {
+      "category": "document-properties",
+      "file": "iterate-through-a-directory-of-excel-files-and-update-every-documentversion-property-to-30.cs",
+      "title": "Iterate through a directory of Excel files and update every DocumentVersion property to \"3.0\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs",
+      "title": "Load a spreadsheet and read the Language built\u2011in property to determine locale settings."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs",
+      "title": "Load a spreadsheet and use try\u2011catch to safely read a custom property \"Reviewer\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs",
+      "title": "Load a template workbook and clone its built\u2011in properties into a newly created workbook."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs",
+      "title": "Load a workbook and assign the DocumentVersion built\u2011in property the value \"2.0\"."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-check-whether-a-custom-property-clientname-exists-before-adding.cs",
+      "title": "Load a workbook and check whether a custom property \"ClientName\" exists before adding."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-disable-the-linksuptodate-builtin-property-to-prevent-link-checks.cs",
+      "title": "Load a workbook and disable the LinksUpToDate built\u2011in property to prevent link checks."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs",
+      "title": "Load a workbook and enumerate custom properties, exporting their names, types, and values to JSON."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs",
+      "title": "Load a workbook and retrieve the Title built\u2011in property for verification."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-locate-the-custom-property-projectid-and-update-its-integer-value.cs",
+      "title": "Load a workbook, locate the custom property \"ProjectId\", and update its integer value."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-a-workbook-modify-several-properties-and-save-the-file-to-xlsx-format-preserving-changes.cs",
+      "title": "Load a workbook, modify several properties, and save the file to XLSX format preserving changes."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs",
+      "title": "Load an Excel document and inspect the LinksUpToDate built\u2011in property for hyperlink status."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-an-excel-file-and-create-a-custom-property-projectid-with-an-integer-identifier.cs",
+      "title": "Load an Excel file and create a custom property \"ProjectId\" with an integer identifier."
+    },
+    {
+      "category": "document-properties",
+      "file": "load-an-excel-file-and-verify-that-language-contains-a-valid-net-culture-code.cs",
+      "title": "Load an Excel file and verify that Language contains a valid .NET culture code."
+    },
+    {
+      "category": "document-properties",
+      "file": "log-a-warning-whenever-code-attempts-to-modify-application-metadata-which-is-immutable.cs",
+      "title": "Log a warning whenever code attempts to modify application metadata, which is immutable."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs",
+      "title": "Open a file and iterate through all built\u2011in properties, logging each name and value."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs",
+      "title": "Open a file and update the Author built\u2011in property with the correct contributor identifier."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-spreadsheet-and-remove-the-custom-property-isreviewed-to-clean-obsolete-metadata.cs",
+      "title": "Open a spreadsheet and remove the custom property \"IsReviewed\" to clean obsolete metadata."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-spreadsheet-and-set-the-language-builtin-property-to-fr-fr-for-localization.cs",
+      "title": "Open a spreadsheet and set the Language built\u2011in property to \"fr-FR\" for localization."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-workbook-and-add-a-custom-boolean-property-isreviewed-set-to-true.cs",
+      "title": "Open a workbook and add a custom Boolean property \"IsReviewed\" set to true."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-workbook-and-add-a-custom-property-processeddate-with-the-current-datetime-value.cs",
+      "title": "Open a workbook and add a custom property \"ProcessedDate\" with the current DateTime value."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-workbook-and-confirm-that-application-metadata-fields-appear-in-saved-file-properties.cs",
+      "title": "Open a workbook and confirm that application metadata fields appear in saved file properties."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs",
+      "title": "Open a workbook and query the ScaleCrop built\u2011in property to view image scaling flag."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-workbook-and-validate-that-documentversion-matches-a-semantic-version-pattern-before-saving.cs",
+      "title": "Open a workbook and validate that DocumentVersion matches a semantic version pattern before saving."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-workbook-set-scalecrop-to-true-and-ensure-the-flag-persists-when-saving-as-pdf.cs",
+      "title": "Open a workbook, set ScaleCrop to true, and ensure the flag persists when saving as PDF."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-a-workbook-update-document-properties-and-export-the-result-to-csv-format-for-downstream-processing.cs",
+      "title": "Open a workbook, update document properties, and export the result to CSV format for downstream processing."
+    },
+    {
+      "category": "document-properties",
+      "file": "open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs",
+      "title": "Open an Excel file and read the Author built\u2011in property to identify the creator."
+    },
+    {
+      "category": "document-properties",
+      "file": "read-the-keywords-builtin-property-and-use-its-values-to-populate-a-search-index.cs",
+      "title": "Read the Keywords built\u2011in property and use its values to populate a search index."
+    },
+    {
+      "category": "document-properties",
+      "file": "remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs",
+      "title": "Remove all custom properties whose names start with the prefix \"Temp_\" to clean temporary entries."
+    },
+    {
+      "category": "document-properties",
+      "file": "set-the-builtin-comments-property-to-a-multiline-description-providing-detailed-notes-about-the-workbook.cs",
+      "title": "Set the built\u2011in Comments property to a multiline description providing detailed notes about the workbook."
+    },
+    {
+      "category": "document-properties",
+      "file": "set-the-linksuptodate-property-based-on-presence-of-external-hyperlinks-disabling-it-if-none-exist.cs",
+      "title": "Set the LinksUpToDate property based on presence of external hyperlinks, disabling it if none exist."
+    },
+    {
+      "category": "document-properties",
+      "file": "update-the-subject-builtin-property-based-on-worksheet-content-analysis-to-reflect-the-main-topic.cs",
+      "title": "Update the Subject built\u2011in property based on worksheet content analysis to reflect the main topic."
+    },
+    {
+      "category": "document-properties",
+      "file": "use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs",
+      "title": "Use DocumentPropertyCollection to retrieve the total count of properties and display the number in logs."
+    },
+    {
+      "category": "document-properties",
+      "file": "validate-that-scalecrop-cannot-be-enabled-when-the-workbook-contains-chart-objects.cs",
+      "title": "Validate that ScaleCrop cannot be enabled when the workbook contains chart objects."
+    },
+    {
+      "category": "document-properties",
+      "file": "validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs",
+      "title": "Validate that the Title built\u2011in property is not empty before exporting the workbook to any external format."
+    },
+    {
+      "category": "globalization-and-localization",
+      "file": "create-a-custom-globalizationsettings-class-overriding-getlocalfunctionname-for-target-language-functions.cs",
+      "title": "Create a custom GlobalizationSettings class overriding GetLocalFunctionName for target language functions."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-chart-to-a-worksheet-based-on-a-data-range-and-customize-its-legend-position.cs",
+      "title": "Add a chart to a worksheet based on a data range and customize its legend position."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-comment-to-a-cell-with-author-information-and-display-it-when-the-cell-is-selected.cs",
+      "title": "Add a comment to a cell with author information and display it when the cell is selected."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-custom-document-property-named-projectversion-and-assign-it-a-semantic-version-string.cs",
+      "title": "Add a custom document property named ProjectVersion and assign it a semantic version string."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-custom-xml-part-containing-metadata-and-retrieve-it-later-using-its-unique-identifier.cs",
+      "title": "Add a custom XML part containing metadata and retrieve it later using its unique identifier."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-a-new-contenttypeproperty-named-projectid-with-a-string-value-to-the-workbook.cs",
+      "title": "Add a new ContentTypeProperty named ProjectId with a string value to the workbook."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "add-multiple-custom-xml-parts-representing-different-data-sections-then-verify-each-appears-in-the-customxml-folder.cs",
+      "title": "Add multiple custom XML parts representing different data sections, then verify each appears in the customXml folder."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "after-adding-custom-properties-verify-that-the-workbooks-core-properties-remain-unchanged.cs",
+      "title": "After adding custom properties, verify that the workbook's core properties remain unchanged."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "after-processing-call-workbookdispose-explicitly-for-each-workbook-to-release-file-handles-and-memory.cs",
+      "title": "After processing, call Workbook.Dispose explicitly for each workbook to release file handles and memory."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "apply-a-filter-to-process-only-workbooks-that-already-contain-a-specific-custom-xml-part-before-modification.cs",
+      "title": "Apply a filter to process only workbooks that already contain a specific custom XML part before modification."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "apply-a-naming-convention-to-custom-xml-parts-by-prefixing-them-with-the-project-identifier.cs",
+      "title": "Apply a naming convention to custom XML parts by prefixing them with the project identifier."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "apply-conditional-formatting-to-highlight-cells-containing-values-greater-than-a-specified-threshold.cs",
+      "title": "Apply conditional formatting to highlight cells containing values greater than a specified threshold."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "apply-data-validation-to-restrict-input-to-a-list-of-predefined-values-in-a-column.cs",
+      "title": "Apply data validation to restrict input to a list of predefined values in a column."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "benchmark-the-time-required-to-remove-unused-styles-from-workbooks-of-varying-size-to-determine-scaling-behavior.cs",
+      "title": "Benchmark the time required to remove unused styles from workbooks of varying size to determine scaling behavior."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "combine-adding-custom-xml-parts-with-style-cleanup-in-a-single-processing-pipeline-for-efficiency.cs",
+      "title": "Combine adding custom XML parts with style cleanup in a single processing pipeline for efficiency."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "compare-two-workbooks-one-with-unused-styles-removed-and-one-without-to-evaluate-visual-consistency.cs",
+      "title": "Compare two workbooks, one with unused styles removed and one without, to evaluate visual consistency."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "configure-the-workbook-to-use-a-specific-culture-when-formatting-optional-property-values-during-export.cs",
+      "title": "Configure the workbook to use a specific culture when formatting optional property values during export."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "configure-workbooksettings-to-disable-automatic-style-creation-before-removing-unused-styles-for-faster-cleanup.cs",
+      "title": "Configure WorkbookSettings to disable automatic style creation before removing unused styles for faster cleanup."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "copy-a-worksheet-from-the-source-workbook-to-a-destination-workbook-while-preserving-cell-styles.cs",
+      "title": "Copy a worksheet from the source workbook to a destination workbook while preserving cell styles."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-batch-job-that-processes-100-workbooks-adding-optional-metadata-and-removing-unused-styles.cs",
+      "title": "Create a batch job that processes 100 workbooks, adding optional metadata and removing unused styles."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-custom-xml-part-containing-a-book-catalog-schema-and-add-it-using-workbookcontenttypepropertiesadd.cs",
+      "title": "Create a custom XML part containing a book catalog schema and add it using Workbook.ContentTypeProperties.Add."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-summary-formula.cs",
+      "title": "Create a named range that spans multiple worksheets and use it in a summary formula."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-pivot-table-from-a-data-source-range-and-place-it-on-a-new-worksheet.cs",
+      "title": "Create a pivot table from a data source range and place it on a new worksheet."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-reusable-method-that-adds-a-contenttypeproperty-and-sets-isnillable-based-on-a-boolean-parameter.cs",
+      "title": "Create a reusable method that adds a ContentTypeProperty and sets IsNillable based on a boolean parameter."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-shared-workbook-instance-and-configure-it-for-concurrent-editing-by-multiple-users.cs",
+      "title": "Create a shared workbook instance and configure it for concurrent editing by multiple users."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "create-a-unit-test-that-asserts-the-isnillable-flag-is-true-for-a-given-contenttypeproperty-after-saving.cs",
+      "title": "Create a unit test that asserts the IsNillable flag is true for a given ContentTypeProperty after saving."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "enable-iterative-calculation-mode-and-set-maximum-iterations-to-improve-convergence-of-circular-formulas.cs",
+      "title": "Enable iterative calculation mode and set maximum iterations to improve convergence of circular formulas."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "export-a-list-of-all-contenttypeproperty-names-from-a-workbook-to-a-csv-file-for-reporting.cs",
+      "title": "Export a list of all ContentTypeProperty names from a workbook to a CSV file for reporting."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "export-a-specific-worksheet-to-an-image-file-with-300-dpi-resolution-and-transparent-background.cs",
+      "title": "Export a specific worksheet to an image file with 300 DPI resolution and transparent background."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "export-the-workbook-to-pdf-format-with-high-resolution-images-and-embedded-fonts.cs",
+      "title": "Export the workbook to PDF format with high resolution images and embedded fonts."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "generate-a-report-listing-workbooks-that-contain-optional-contenttypeproperties-lacking-the-isnillable-flag.cs",
+      "title": "Generate a report listing workbooks that contain optional ContentTypeProperties lacking the IsNillable flag."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "implement-a-commandline-tool-that-accepts-a-file-path-adds-an-optional-property-and-disposes-the-workbook.cs",
+      "title": "Implement a command\u2011line tool that accepts a file path, adds an optional property, and disposes the workbook."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "implement-error-handling-to-continue-batch-processing-when-a-workbook-fails-to-load-due-to-corruption.cs",
+      "title": "Implement error handling to continue batch processing when a workbook fails to load due to corruption."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "insert-a-hyperlink-into-a-cell-that-points-to-an-external-website-and-opens-in-a-new-tab.cs",
+      "title": "Insert a hyperlink into a cell that points to an external website and opens in a new tab."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "integrate-workbook-disposal-into-a-finally-block-to-guarantee-resource-release-even-when-exceptions-occur.cs",
+      "title": "Integrate workbook disposal into a finally block to guarantee resource release even when exceptions occur."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "iterate-through-multiple-workbooks-in-a-directory-adding-a-shared-contenttypeproperty-to-each-file.cs",
+      "title": "Iterate through multiple workbooks in a directory, adding a shared ContentTypeProperty to each file."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-a-csv-file-into-a-workbook-specify-the-delimiter-and-treat-the-first-row-as-headers.cs",
+      "title": "Load a CSV file into a workbook, specify the delimiter, and treat the first row as headers."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-a-workbook-from-a-memory-stream-modify-a-cell-value-and-write-back-to-the-stream.cs",
+      "title": "Load a workbook from a memory stream, modify a cell value, and write back to the stream."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-a-workbook-that-contains-numerous-unused-styles-and-invoke-removeunusedstyles-to-clean-it.cs",
+      "title": "Load a workbook that contains numerous unused styles and invoke RemoveUnusedStyles to clean it."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-an-existing-excel-file-into-a-workbook-object-and-inspect-its-contenttypeproperties-collection.cs",
+      "title": "Load an existing Excel file into a Workbook object and inspect its ContentTypeProperties collection."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "load-an-xlsx-workbook-from-a-file-stream-and-enable-automatic-formula-calculation.cs",
+      "title": "Load an XLSX workbook from a file stream and enable automatic formula calculation."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "log-the-duration-of-each-workbooks-processing-steps-to-identify-performance-bottlenecks.cs",
+      "title": "Log the duration of each workbook's processing steps to identify performance bottlenecks."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "mark-the-newly-added-projectid-property-as-optional-by-setting-its-isnillable-flag-to-true.cs",
+      "title": "Mark the newly added ProjectId property as optional by setting its IsNillable flag to true."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "measure-the-file-size-before-and-after-removing-unused-styles-to-assess-reduction-impact.cs",
+      "title": "Measure the file size before and after removing unused styles to assess reduction impact."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "merge-cells-in-a-header-row-apply-bold-font-and-center-the-text-horizontally.cs",
+      "title": "Merge cells in a header row, apply bold font, and center the text horizontally."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "move-a-worksheet-to-a-new-position-within-the-same-workbook-and-update-its-tab-color.cs",
+      "title": "Move a worksheet to a new position within the same workbook and update its tab color."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "open-the-saved-xlsx-file-as-a-zip-archive-and-verify-the-presence-of-the-customxml-folder.cs",
+      "title": "Open the saved .xlsx file as a zip archive and verify the presence of the customXml folder."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "protect-the-workbook-with-a-password-and-allow-only-readonly-access-for-users.cs",
+      "title": "Protect the workbook with a password and allow only read\u2011only access for users."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "read-the-optional-flag-of-each-contenttypeproperty-and-generate-a-summary-indicating-which-are-nillable.cs",
+      "title": "Read the optional flag of each ContentTypeProperty and generate a summary indicating which are nillable."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "replace-all-occurrences-of-a-placeholder-string-using-a-regular-expression-across-the-entire-workbook.cs",
+      "title": "Replace all occurrences of a placeholder string using a regular expression across the entire workbook."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "search-for-dates-matching-a-pattern-and-reformat-them-to-iso-8601-using-regex-replacement.cs",
+      "title": "Search for dates matching a pattern and reformat them to ISO 8601 using regex replacement."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "serialize-the-workbooks-custom-xml-part-to-a-string-and-log-its-xml-content-for-debugging.cs",
+      "title": "Serialize the workbook's custom XML part to a string and log its XML content for debugging."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "set-isnillable-to-true-for-the-shared-property-across-all-workbooks-to-ensure-optional-metadata.cs",
+      "title": "Set IsNillable to true for the shared property across all workbooks to ensure optional metadata."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "set-page-margins-to-narrow-values-and-configure-the-workbook-to-print-in-landscape-orientation.cs",
+      "title": "Set page margins to narrow values and configure the workbook to print in landscape orientation."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "set-workbook-calculation-engine-to-use-multithreaded-processing-for-faster-evaluation-of-large-data-sets.cs",
+      "title": "Set workbook calculation engine to use multi\u2011threaded processing for faster evaluation of large data sets."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "set-workbook-theme-to-a-builtin-style-and-update-all-cell-styles-accordingly.cs",
+      "title": "Set workbook theme to a built\u2011in style and update all cell styles accordingly."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "use-a-memory-stream-to-load-a-workbook-add-metadata-and-save-back-without-touching-the-file-system.cs",
+      "title": "Use a memory stream to load a workbook, add metadata, and save back without touching the file system."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "use-workbookloadoptions-to-open-a-passwordprotected-file-then-add-optional-metadata-before-saving.cs",
+      "title": "Use Workbook.LoadOptions to open a password\u2011protected file, then add optional metadata before saving."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "validate-all-formulas-in-the-workbook-for-errors-and-generate-a-report-of-problematic-cells.cs",
+      "title": "Validate all formulas in the workbook for errors and generate a report of problematic cells."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "validate-that-each-saved-workbook-contains-the-expected-custom-xml-part-by-checking-the-zip-entry-name.cs",
+      "title": "Validate that each saved workbook contains the expected custom XML part by checking the zip entry name."
+    },
+    {
+      "category": "manage-workbook",
+      "file": "wrap-workbook-loading-and-saving-inside-a-using-statement-to-guarantee-deterministic-disposal-of-resources.cs",
+      "title": "Wrap workbook loading and saving inside a using statement to guarantee deterministic disposal of resources."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs",
+      "title": "Add a custom HTTP header to a WebQuery connection for required authentication token."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs",
+      "title": "Add a custom ribbon tab named \"Data Tools\" using Ribbon XML definition."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "add-a-tooltip-to-the-custom-ribbon-button-describing-its-function-for-end-users.cs",
+      "title": "Add a tooltip to the custom ribbon button describing its function for end users."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "add-error-handling-to-capture-exceptions-when-an-external-connection-path-is-invalid.cs",
+      "title": "Add error handling to capture exceptions when an external connection path is invalid."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "assign-a-keyboard-shortcut-to-the-custom-ribbon-button-for-quick-access.cs",
+      "title": "Assign a keyboard shortcut to the custom ribbon button for quick access."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs",
+      "title": "Change Description property of a DBConnection to reflect its new purpose after migration."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "change-the-absolute-path-of-an-external-link-data-source-file-programmatically-for-a-workbook.cs",
+      "title": "Change the absolute path of an external link data source file programmatically for a workbook."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs",
+      "title": "Change the Path property of an external link in an XLS workbook to a network shared folder."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "compare-odata-connection-metadata-before-and-after-modification-to-ensure-version-consistency.cs",
+      "title": "Compare OData connection metadata before and after modification to ensure version consistency."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "configure-the-ribbon-button-to-prompt-the-user-for-a-new-external-link-file-location.cs",
+      "title": "Configure the ribbon button to prompt the user for a new external link file location."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs",
+      "title": "Create a backup of the workbook before modifying external link paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "create-a-reusable-method-that-returns-a-dictionary-of-connection-names-and-their-commandtexts.cs",
+      "title": "Create a reusable method that returns a dictionary of connection names and their CommandTexts."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "create-a-unit-test-that-validates-external-link-path-changes-and-custom-ribbon-integration.cs",
+      "title": "Create a unit test that validates external link path changes and custom ribbon integration."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs",
+      "title": "Define a custom ribbon group within the \"Data Tools\" tab for connection management commands."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "detect-and-list-external-connections-of-type-webquery-across-a-batch-of-workbooks.cs",
+      "title": "Detect and list external connections of type WebQuery across a batch of workbooks."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs",
+      "title": "Detect hidden external links within the workbook using the appropriate API and list their source paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs",
+      "title": "Disable BackgroundRefresh on a SQL DBConnection to enforce sequential query execution."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs",
+      "title": "Disable the default \"Data\" tab in the ribbon by removing its XML definition."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs",
+      "title": "Document the steps to customize the ribbon XML and change external link paths in a developer guide."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs",
+      "title": "Ensure the custom ribbon UI loads correctly after changing external link paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "ensure-the-solution-complies-with-security-best-practices-when-handling-external-file-paths.cs",
+      "title": "Ensure the solution complies with security best practices when handling external file paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs",
+      "title": "Export a list of all external connection names from a workbook to a plain text file."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "export-the-custom-ribbon-xml-to-a-separate-xml-file-for-version-control.cs",
+      "title": "Export the custom ribbon XML to a separate .xml file for version control."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs",
+      "title": "Extract OData connection details from the DataMashup object and log the service endpoint URL."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "generate-a-csv-file-containing-workbook-name-connection-type-and-connection-name-for-all-files-in-a-folder.cs",
+      "title": "Generate a CSV file containing workbook name, connection type, and connection name for all files in a folder."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs",
+      "title": "Generate a plain\u2011text report summarizing hidden external link paths for further analysis."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "handle-errors-when-the-external-link-file-is-missing-or-inaccessible-during-path-update.cs",
+      "title": "Handle errors when the external link file is missing or inaccessible during path update."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "hide-the-refresh-all-command-on-specific-worksheets-via-customized-ribbon-xml.cs",
+      "title": "Hide the \"Refresh All\" command on specific worksheets via customized Ribbon XML."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "implement-error-handling-for-failures-during-external-link-path-updates-invoked-from-the-ribbon.cs",
+      "title": "Implement error handling for failures during external link path updates invoked from the ribbon."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs",
+      "title": "Import custom ribbon XML from an external .xml file into an existing workbook programmatically."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "insert-a-button-on-the-custom-ribbon-tab-that-triggers-external-link-path-refresh.cs",
+      "title": "Insert a button on the custom ribbon tab that triggers external link path refresh."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs",
+      "title": "Iterate through all QueryTables in all worksheets and set PreserveFormatting to true."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "iterate-through-dataconnections-to-identify-sql-type-connections-and-cast-each-to-dbconnection.cs",
+      "title": "Iterate through DataConnections to identify SQL type connections and cast each to DBConnection."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "load-a-workbook-from-a-file-path-and-obtain-its-dataconnections-collection.cs",
+      "title": "Load a workbook from a file path and obtain its DataConnections collection."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "load-an-xls-workbook-using-the-workbook-class-and-access-its-datamashup-property.cs",
+      "title": "Load an XLS workbook using the Workbook class and access its DataMashup property."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "load-an-xlsb-workbook-and-enumerate-all-powerquery-formulas-via-the-powerqueryformulacollection.cs",
+      "title": "Load an XLSB workbook and enumerate all PowerQuery formulas via the PowerQueryFormulaCollection."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "load-an-xlsb-workbook-change-the-dbconnectionname-and-log-the-modification-timestamp.cs",
+      "title": "Load an XLSB workbook, change the DBConnection.Name, and log the modification timestamp."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "load-multiple-xls-files-from-a-directory-update-each-dbconnectionname-and-save-changes-in-place.cs",
+      "title": "Load multiple XLS files from a directory, update each DBConnection.Name, and save changes in place."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "log-the-execution-result-of-the-ribbon-button-action-for-troubleshooting.cs",
+      "title": "Log the execution result of the ribbon button action for troubleshooting."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "log-the-original-and-updated-external-link-paths-for-audit-purposes.cs",
+      "title": "Log the original and updated external link paths for audit purposes."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs",
+      "title": "Modify CommandText of a DBConnection to include a filter clause limiting returned rows."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "obtain-resultrange-address-of-a-querytable-and-log-it-for-downstream-processing.cs",
+      "title": "Obtain ResultRange address of a QueryTable and log it for downstream processing."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "package-the-custom-ribbon-xml-and-path-update-logic-into-a-reusable-net-library.cs",
+      "title": "Package the custom ribbon XML and path update logic into a reusable .NET library."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "programmatically-remove-a-hidden-external-link-from-the-workbook-and-verify-its-absence.cs",
+      "title": "Programmatically remove a hidden external link from the workbook and verify its absence."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "provide-sample-code-demonstrating-how-to-programmatically-change-external-link-paths-and-customize-the-ribbon.cs",
+      "title": "Provide sample code demonstrating how to programmatically change external link paths and customize the ribbon."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs",
+      "title": "Refresh all external data connections sequentially to ensure data consistency across the workbook."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "remove-a-specific-external-connection-from-the-workbook-based-on-its-description-value.cs",
+      "title": "Remove a specific external connection from the workbook based on its Description value."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "rename-an-existing-dbconnection-to-reflect-a-new-database-server-after-migration.cs",
+      "title": "Rename an existing DBConnection to reflect a new database server after migration."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "rename-the-retrieved-dbconnectionname-to-a-descriptive-identifier-such-as-salesdataconnection.cs",
+      "title": "Rename the retrieved DBConnection.Name to a descriptive identifier such as SalesDataConnection."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "replace-all-occurrences-of-a-deprecated-database-name-within-dbconnectionname-properties-across-workbooks.cs",
+      "title": "Replace all occurrences of a deprecated database name within DBConnection.Name properties across workbooks."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs",
+      "title": "Retrieve CommandText, CommandType, and ConnectionInfo from each DBConnection for inspection."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs",
+      "title": "Retrieve the first external DBConnection from a workbook and read its current Name property."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "retrieve-the-first-worksheet-access-its-first-querytable-and-read-preserveformatting-flag.cs",
+      "title": "Retrieve the first worksheet, access its first QueryTable, and read PreserveFormatting flag."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "review-and-update-the-custom-ribbon-xml-to-maintain-compatibility-with-future-office-versions.cs",
+      "title": "Review and update the custom ribbon XML to maintain compatibility with future Office versions."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "save-the-modified-workbook-as-an-xlsb-file-while-preserving-all-external-connection-settings.cs",
+      "title": "Save the modified workbook as an XLSB file while preserving all external connection settings."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "save-the-modified-workbook-to-a-new-file-path-preserving-original-version-metadata.cs",
+      "title": "Save the modified workbook to a new file path preserving original version metadata."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "save-the-workbook-with-updated-external-links-and-custom-ribbon-after-user-confirmation.cs",
+      "title": "Save the workbook with updated external links and custom ribbon after user confirmation."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "serialize-the-powerqueryformulacollection-to-xml-for-external-auditing-compliance-purposes.cs",
+      "title": "Serialize the PowerQueryFormulaCollection to XML for external auditing compliance purposes."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs",
+      "title": "Set RefreshOnLoad flag of a WebQuery connection to true for automatic data update."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "set-the-path-property-of-an-external-link-to-a-relative-path-and-test-workbook-portability.cs",
+      "title": "Set the Path property of an external link to a relative path and test workbook portability."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs",
+      "title": "Test the custom ribbon button to confirm it successfully updates external link paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "update-a-specific-powerqueryformulaitemvalue-to-reference-a-new-csv-source-file-path.cs",
+      "title": "Update a specific PowerQueryFormulaItem.Value to reference a new CSV source file path."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "update-all-external-links-in-the-workbook-to-use-relative-paths-for-better-portability.cs",
+      "title": "Update all external links in the workbook to use relative paths for better portability."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "update-the-source-file-location-of-a-power-query-data-source-to-a-cloud-storage-url.cs",
+      "title": "Update the source file location of a Power Query data source to a cloud storage URL."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs",
+      "title": "Update UserName and Password properties of a specific DBConnection with new credentials."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "use-workbookdatamashup-to-extract-odata-service-urls-and-store-them-in-a-json-configuration-file.cs",
+      "title": "Use Workbook.DataMashup to extract OData service URLs and store them in a JSON configuration file."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "validate-that-all-external-connections-have-nonempty-credentials-before-saving-the-workbook.cs",
+      "title": "Validate that all external connections have non\u2011empty credentials before saving the workbook."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "validate-that-the-imported-ribbon-xml-conforms-to-the-office-open-xml-schema-before-applying.cs",
+      "title": "Validate that the imported Ribbon XML conforms to the Office Open XML schema before applying."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs",
+      "title": "Validate that the new external link path points to an existing file before applying changes."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "verify-that-hidden-external-links-remain-hidden-after-encrypting-the-workbook-with-a-password.cs",
+      "title": "Verify that hidden external links remain hidden after encrypting the workbook with a password."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "verify-that-the-workbook-opens-without-errors-after-applying-custom-ribbon-and-path-changes.cs",
+      "title": "Verify that the workbook opens without errors after applying custom ribbon and path changes."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "write-a-query-table-to-a-worksheet-based-on-an-existing-odata-connection-and-refresh-data.cs",
+      "title": "Write a query table to a worksheet based on an existing OData connection and refresh data."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "write-a-utility-that-lists-all-worksheets-containing-query-tables-and-outputs-their-names.cs",
+      "title": "Write a utility that lists all worksheets containing query tables and outputs their names."
+    },
+    {
+      "category": "save-workbook",
+      "file": "create-a-workbook-populate-data-programmatically-and-export-it-as-a-tabdelimited-txt-file.cs",
+      "title": "Create a workbook, populate data programmatically, and export it as a tab\u2011delimited TXT file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-apply-data-validation-rules-and-export-the-sheet-to-a-json-file.cs",
+      "title": "Instantiate a workbook, apply data validation rules, and export the sheet to a JSON file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-configure-csv-separator-as-semicolon-and-export-the-active-sheet-to-csv.cs",
+      "title": "Instantiate a workbook, configure CSV separator as semicolon, and export the active sheet to CSV."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-from-a-stream-set-workbook-compression-to-level6-and-write-to-a-memorystream.cs",
+      "title": "Instantiate a workbook from a stream, set workbook compression to Level6, and write to a MemoryStream."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-set-contentdisposition-to-inline-and-stream-the-xlsx-file-to-an-httpresponse.cs",
+      "title": "Instantiate a workbook, set ContentDisposition to Inline, and stream the XLSX file to an HttpResponse."
+    },
+    {
+      "category": "save-workbook",
+      "file": "instantiate-a-workbook-set-exportallsheets-false-and-export-only-the-active-sheet-to-an-xml-file.cs",
+      "title": "Instantiate a workbook, set ExportAllSheets false, and export only the active sheet to an XML file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-add-a-chart-object-and-save-the-workbook-as-a-pdf-with-embedded-chart.cs",
+      "title": "Load a workbook, add a chart object, and save the workbook as a PDF with embedded chart."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-adjust-pdf-export-quality-to-300-dpi-and-save-the-highresolution-pdf.cs",
+      "title": "Load a workbook, adjust PDF export quality to 300 DPI, and save the high\u2011resolution PDF."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-apply-a-watermark-to-each-page-and-save-the-output-as-a-pdf-document.cs",
+      "title": "Load a workbook, apply a watermark to each page, and save the output as a PDF document."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-enable-strict-compliance-and-attempt-to-save-to-a-location-with-insufficient-permissions.cs",
+      "title": "Load a workbook, enable strict compliance, and attempt to save to a location with insufficient permissions."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-from-a-network-stream-adjust-compression-to-level9-and-write-to-a-file.cs",
+      "title": "Load a workbook from a network stream, adjust compression to Level9, and write to a file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-set-ooxmlcompressiontype-to-level3-and-write-the-compressed-file-to-a-stream.cs",
+      "title": "Load a workbook, set OoxmlCompressionType to Level3, and write the compressed file to a stream."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-set-pdf-export-to-embed-fonts-and-save-the-pdf-for-crossplatform-compatibility.cs",
+      "title": "Load a workbook, set PDF export to embed fonts, and save the PDF for cross\u2011platform compatibility."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-a-workbook-set-workbook-settings-to-iso-295002008-strict-and-verify-the-saved-file-size.cs",
+      "title": "Load a workbook, set workbook settings to ISO 29500\u20112008 strict, and verify the saved file size."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-an-sxc-workbook-rename-the-active-worksheet-and-export-the-sheet-to-a-csv-file.cs",
+      "title": "Load an SXC workbook, rename the active worksheet, and export the sheet to a CSV file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-an-xlsb-file-calculate-all-formulas-and-generate-a-json-representation-of-the-data.cs",
+      "title": "Load an XLSB file, calculate all formulas, and generate a JSON representation of the data."
+    },
+    {
+      "category": "save-workbook",
+      "file": "load-an-xlsm-file-remove-macros-and-save-the-workbook-as-a-strict-open-xml-xlsx.cs",
+      "title": "Load an XLSM file, remove macros, and save the workbook as a strict Open XML XLSX."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-fods-workbook-change-the-default-font-and-save-it-as-an-ods-document.cs",
+      "title": "Open a FODS workbook, change the default font, and save it as an ODS document."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-apply-a-custom-number-format-and-save-the-file-as-a-csv-with-tab-delimiter.cs",
+      "title": "Open a workbook, apply a custom number format, and save the file as a CSV with tab delimiter."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-configure-saveoptions-to-generate-a-single-worksheet-mht-file-and-save-it.cs",
+      "title": "Open a workbook, configure SaveOptions to generate a single worksheet MHT file, and save it."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-enable-page-margins-and-export-the-document-to-an-html-file-with-embedded-images.cs",
+      "title": "Open a workbook, enable page margins, and export the document to an HTML file with embedded images."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-enable-strict-open-xml-compliance-and-save-it-using-the-default-file-name.cs",
+      "title": "Open a workbook, enable strict Open XML compliance, and save it using the default file name."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-set-contentdisposition-to-attachment-and-deliver-the-xlsx-file-via-http-response.cs",
+      "title": "Open a workbook, set ContentDisposition to Attachment, and deliver the XLSX file via HTTP response."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-set-exportallsheets-to-true-and-save-all-worksheets-into-a-single-csv-file.cs",
+      "title": "Open a workbook, set ExportAllSheets to true, and save all worksheets into a single CSV file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-set-ooxmlcompressiontype-to-level5-and-compare-resulting-file-size-to-default-compression.cs",
+      "title": "Open a workbook, set OoxmlCompressionType to Level5, and compare resulting file size to default compression."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-a-workbook-set-pdf-export-options-for-high-resolution-and-save-as-a-pdf-file.cs",
+      "title": "Open a workbook, set PDF export options for high resolution, and save as a PDF file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-an-ods-workbook-hide-specific-columns-and-save-the-modified-file-in-xlsx-format.cs",
+      "title": "Open an ODS workbook, hide specific columns, and save the modified file in XLSX format."
+    },
+    {
+      "category": "save-workbook",
+      "file": "open-an-ots-template-replace-placeholder-text-and-save-the-result-as-an-ods-file.cs",
+      "title": "Open an OTS template, replace placeholder text, and save the result as an ODS file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs",
+      "title": "Read a CSV file, filter rows by date, and export the result to an HTML file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "read-a-txt-workbook-split-cells-by-custom-delimiter-and-export-the-data-to-an-xml-file.cs",
+      "title": "Read a TXT workbook, split cells by custom delimiter, and export the data to an XML file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "read-a-workbook-compress-it-at-level1-for-fast-saving-and-compare-performance-with-level9.cs",
+      "title": "Read a workbook, compress it at Level1 for fast saving, and compare performance with Level9."
+    },
+    {
+      "category": "save-workbook",
+      "file": "read-a-workbook-filter-out-hidden-rows-and-export-the-visible-data-to-a-txt-file.cs",
+      "title": "Read a workbook, filter out hidden rows, and export the visible data to a TXT file."
+    },
+    {
+      "category": "save-workbook",
+      "file": "read-a-workbook-merge-cells-across-rows-and-export-the-result-to-an-html-file-with-tables.cs",
+      "title": "Read a workbook, merge cells across rows, and export the result to an HTML file with tables."
+    },
+    {
+      "category": "slicer",
+      "file": "add-a-pivot-table-connection-to-the-slicer-for-dynamic-data-filtering.cs",
+      "title": "Add a pivot table connection to the slicer for dynamic data filtering."
+    },
+    {
+      "category": "slicer",
+      "file": "add-a-slicer-to-a-worksheet-that-contains-a-chart-to-filter-chart-data-dynamically.cs",
+      "title": "Add a slicer to a worksheet that contains a chart to filter chart data dynamically."
+    },
+    {
+      "category": "slicer",
+      "file": "adjust-slicer-row-height-to-30-points-after-linking-it-to-the-second-table-column.cs",
+      "title": "Adjust slicer row height to 30 points after linking it to the second table column."
+    },
+    {
+      "category": "slicer",
+      "file": "after-adding-new-items-to-a-slicers-cache-call-refresh-and-confirm-the-pivot-table-reflects-the-additions.cs",
+      "title": "After adding new items to a slicer\u2019s cache, call Refresh and confirm the pivot table reflects the additions."
+    },
+    {
+      "category": "slicer",
+      "file": "after-updating-slicer-items-verify-the-associated-pivot-table-reflects-the-new-filter-criteria.cs",
+      "title": "After updating slicer items, verify the associated pivot table reflects the new filter criteria."
+    },
+    {
+      "category": "slicer",
+      "file": "apply-a-builtin-slicer-style-such-as-light-1-for-quick-visual-formatting.cs",
+      "title": "Apply a built\u2011in slicer style such as \u201cLight\u202f1\u201d for quick visual formatting."
+    },
+    {
+      "category": "slicer",
+      "file": "apply-a-custom-border-style-with-dashed-lines-and-a-defined-thickness-to-the-slicer.cs",
+      "title": "Apply a custom border style with dashed lines and a defined thickness to the slicer."
+    },
+    {
+      "category": "slicer",
+      "file": "apply-a-custom-color-scheme-to-the-slicer-style-and-verify-visual-consistency-across-sheets.cs",
+      "title": "Apply a custom color scheme to the slicer style and verify visual consistency across sheets."
+    },
+    {
+      "category": "slicer",
+      "file": "apply-the-slicerstylelight1-formatting-style-to-the-slicer-and-save-changes-in-the-workbook.cs",
+      "title": "Apply the 'SlicerStyleLight1' formatting style to the slicer and save changes in the workbook."
+    },
+    {
+      "category": "slicer",
+      "file": "arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs",
+      "title": "Arrange slicer items in multiple columns by setting the column count property."
+    },
+    {
+      "category": "slicer",
+      "file": "batch-create-slicers-for-each-pivot-table-in-a-workbook-using-a-loop-over-all-tables.cs",
+      "title": "Batch create slicers for each pivot table in a workbook using a loop over all tables."
+    },
+    {
+      "category": "slicer",
+      "file": "batch-process-multiple-workbooks-adding-slicers-to-each-and-adjusting-their-widths-uniformly.cs",
+      "title": "Batch process multiple workbooks, adding slicers to each and adjusting their widths uniformly."
+    },
+    {
+      "category": "slicer",
+      "file": "before-exporting-to-pdf-set-pdf-conversion-options-to-embed-fonts-and-retain-slicer-formatting.cs",
+      "title": "Before exporting to PDF, set PDF conversion options to embed fonts and retain slicer formatting."
+    },
+    {
+      "category": "slicer",
+      "file": "before-saving-automatically-select-the-first-item-if-a-slicer-has-no-selected-items.cs",
+      "title": "Before saving, automatically select the first item if a slicer has no selected items."
+    },
+    {
+      "category": "slicer",
+      "file": "change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs",
+      "title": "Change the slicer layout direction to right\u2011to\u2011left for languages that read RTL."
+    },
+    {
+      "category": "slicer",
+      "file": "change-the-slicer-title-to-region-filter-and-update-the-workbook-accordingly.cs",
+      "title": "Change the slicer title to 'Region Filter' and update the workbook accordingly."
+    },
+    {
+      "category": "slicer",
+      "file": "clear-all-selected-items-in-a-slicer-to-reset-the-filter-to-its-default-state.cs",
+      "title": "Clear all selected items in a slicer to reset the filter to its default state."
+    },
+    {
+      "category": "slicer",
+      "file": "clone-an-existing-slicer-and-place-the-copy-on-another-worksheet-for-parallel-filtering.cs",
+      "title": "Clone an existing slicer and place the copy on another worksheet for parallel filtering."
+    },
+    {
+      "category": "slicer",
+      "file": "compare-slicer-selection-states-before-and-after-calling-refresh-to-ensure-changes-are-applied-correctly.cs",
+      "title": "Compare slicer selection states before and after calling Refresh to ensure changes are applied correctly."
+    },
+    {
+      "category": "slicer",
+      "file": "configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs",
+      "title": "Configure the slicer to display items with no data by toggling the show\u2011zero\u2011items option."
+    },
+    {
+      "category": "slicer",
+      "file": "convert-the-workbook-with-slicers-to-pdf-while-preserving-slicer-appearance-and-metadata.cs",
+      "title": "Convert the workbook with slicers to PDF while preserving slicer appearance and metadata."
+    },
+    {
+      "category": "slicer",
+      "file": "create-a-batch-process-that-removes-a-named-slicer-from-multiple-xlsx-workbooks-and-saves-each-as-pdf.cs",
+      "title": "Create a batch process that removes a named slicer from multiple XLSX workbooks and saves each as PDF."
+    },
+    {
+      "category": "slicer",
+      "file": "create-a-function-returning-true-if-a-slicer-contains-any-selected-items-otherwise-false.cs",
+      "title": "Create a function returning true if a slicer contains any selected items, otherwise false."
+    },
+    {
+      "category": "slicer",
+      "file": "create-a-slicer-and-retrieve-its-identifier-for-use-in-subsequent-api-calls.cs",
+      "title": "Create a slicer and retrieve its identifier for use in subsequent API calls."
+    },
+    {
+      "category": "slicer",
+      "file": "create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs",
+      "title": "Create a slicer linked to a pivot table within the loaded workbook."
+    },
+    {
+      "category": "slicer",
+      "file": "create-a-slicer-linked-to-a-table-column-then-set-its-placement-to-the-topright-corner.cs",
+      "title": "Create a slicer linked to a table column, then set its placement to the top\u2011right corner."
+    },
+    {
+      "category": "slicer",
+      "file": "create-a-slicer-then-copy-its-properties-to-a-new-slicer-on-another-worksheet.cs",
+      "title": "Create a slicer, then copy its properties to a new slicer on another worksheet."
+    },
+    {
+      "category": "slicer",
+      "file": "delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs",
+      "title": "Delete a slicer by name from the workbook to clean up unused controls."
+    },
+    {
+      "category": "slicer",
+      "file": "enable-multiselect-on-the-slicer-to-allow-users-to-choose-several-items-simultaneously.cs",
+      "title": "Enable multi\u2011select on the slicer to allow users to choose several items simultaneously."
+    },
+    {
+      "category": "slicer",
+      "file": "export-a-workbook-containing-slicers-to-pdf-ensuring-all-slicers-appear-on-the-same-page.cs",
+      "title": "Export a workbook containing slicers to PDF, ensuring all slicers appear on the same page."
+    },
+    {
+      "category": "slicer",
+      "file": "export-the-slicer-as-an-image-and-embed-it-in-a-pdf-report-generated-from-the-workbook.cs",
+      "title": "Export the slicer as an image and embed it in a PDF report generated from the workbook."
+    },
+    {
+      "category": "slicer",
+      "file": "export-the-workbook-containing-slicers-to-pdf-and-compare-slicer-positions-with-the-original-excel-file.cs",
+      "title": "Export the workbook containing slicers to PDF and compare slicer positions with the original Excel file."
+    },
+    {
+      "category": "slicer",
+      "file": "generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs",
+      "title": "Generate a PDF report that includes only the slicer region by setting the worksheet\u2019s print area."
+    },
+    {
+      "category": "slicer",
+      "file": "generate-a-report-listing-each-slicers-title-size-and-linked-table-column-for-auditing-purposes.cs",
+      "title": "Generate a report listing each slicer\u2019s title, size, and linked table column for auditing purposes."
+    },
+    {
+      "category": "slicer",
+      "file": "hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs",
+      "title": "Hide the slicer header row to create a compact filtering control without a title."
+    },
+    {
+      "category": "slicer",
+      "file": "identify-slicers-starting-with-region-remove-them-and-save-the-workbook-in-xlsx-format.cs",
+      "title": "Identify slicers starting with \"Region\", remove them, and save the workbook in XLSX format."
+    },
+    {
+      "category": "slicer",
+      "file": "implement-error-handling-when-adding-a-slicer-to-a-nonexistent-table-column-in-the-worksheet.cs",
+      "title": "Implement error handling when adding a slicer to a non\u2011existent table column in the worksheet."
+    },
+    {
+      "category": "slicer",
+      "file": "iterate-all-worksheets-delete-every-slicer-and-export-the-modified-workbook-to-pdf.cs",
+      "title": "Iterate all worksheets, delete every slicer, and export the modified workbook to PDF."
+    },
+    {
+      "category": "slicer",
+      "file": "iterate-each-slicer-log-its-selected-items-then-deselect-all-items-and-refresh.cs",
+      "title": "Iterate each slicer, log its selected items, then deselect all items and refresh."
+    },
+    {
+      "category": "slicer",
+      "file": "iterate-over-slicercacheitems-to-deselect-items-matching-a-specific-keyword.cs",
+      "title": "Iterate over SlicerCacheItems to deselect items matching a specific keyword."
+    },
+    {
+      "category": "slicer",
+      "file": "iterate-through-all-slicers-in-the-workbook-and-set-each-printable-flag-to-false.cs",
+      "title": "Iterate through all slicers in the workbook and set each printable flag to false."
+    },
+    {
+      "category": "slicer",
+      "file": "list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs",
+      "title": "List all slicer names on a worksheet and write them to a text file."
+    },
+    {
+      "category": "slicer",
+      "file": "load-a-workbook-create-slicers-for-multiple-table-columns-and-align-them-vertically-with-equal-spacing.cs",
+      "title": "Load a workbook, create slicers for multiple table columns, and align them vertically with equal spacing."
+    },
+    {
+      "category": "slicer",
+      "file": "load-a-workbook-from-a-memory-stream-update-slicer-selections-refresh-pivot-tables-and-write-pdf-to-stream.cs",
+      "title": "Load a workbook from a memory stream, update slicer selections, refresh pivot tables, and write PDF to stream."
+    },
+    {
+      "category": "slicer",
+      "file": "load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs",
+      "title": "Load a workbook from an Excel file into memory for further manipulation."
+    },
+    {
+      "category": "slicer",
+      "file": "load-an-xlsx-workbook-create-a-slicer-for-a-table-column-and-save-the-file.cs",
+      "title": "Load an XLSX workbook, create a slicer for a table column, and save the file."
+    },
+    {
+      "category": "slicer",
+      "file": "load-an-xlsx-workbook-remove-a-named-slicer-and-save-the-workbook-as-xlsx.cs",
+      "title": "Load an XLSX workbook, remove a named slicer, and save the workbook as XLSX."
+    },
+    {
+      "category": "slicer",
+      "file": "load-multiple-workbooks-remove-all-slicers-and-archive-the-resulting-pdfs-in-a-zip-file.cs",
+      "title": "Load multiple workbooks, remove all slicers, and archive the resulting PDFs in a zip file."
+    },
+    {
+      "category": "slicer",
+      "file": "load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs",
+      "title": "Load workbooks in parallel threads, remove a designated slicer from each, and save results as PDFs."
+    },
+    {
+      "category": "slicer",
+      "file": "mark-the-slicer-as-nonprintable-and-ensure-it-does-not-appear-in-printed-output.cs",
+      "title": "Mark the slicer as non\u2011printable and ensure it does not appear in printed output."
+    },
+    {
+      "category": "slicer",
+      "file": "modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs",
+      "title": "Modify the slicer font family, size, and color to enhance label readability."
+    },
+    {
+      "category": "slicer",
+      "file": "position-the-slicer-by-specifying-precise-top-and-left-coordinates-programmatically.cs",
+      "title": "Position the slicer by specifying precise top and left coordinates programmatically."
+    },
+    {
+      "category": "slicer",
+      "file": "process-a-list-of-slicer-names-removing-each-one-and-logging-the-operation-result.cs",
+      "title": "Process a list of slicer names, removing each one and logging the operation result."
+    },
+    {
+      "category": "slicer",
+      "file": "programmatically-retrieve-slicer-properties-log-them-and-modify-row-height-based-on-logged-values.cs",
+      "title": "Programmatically retrieve slicer properties, log them, and modify row height based on logged values."
+    },
+    {
+      "category": "slicer",
+      "file": "programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs",
+      "title": "Programmatically select specific slicer items based on a predefined list of values."
+    },
+    {
+      "category": "slicer",
+      "file": "remove-an-existing-pivot-connection-from-the-slicer-to-stop-automatic-updates.cs",
+      "title": "Remove an existing pivot connection from the slicer to stop automatic updates."
+    },
+    {
+      "category": "slicer",
+      "file": "remove-slicers-from-all-worksheets-in-a-workbook-and-save-a-consolidated-pdf.cs",
+      "title": "Remove slicers from all worksheets in a workbook and save a consolidated PDF."
+    },
+    {
+      "category": "slicer",
+      "file": "remove-slicers-only-if-they-are-linked-to-a-pivot-table-exceeding-one-hundred-rows.cs",
+      "title": "Remove slicers only if they are linked to a pivot table exceeding one hundred rows."
+    },
+    {
+      "category": "slicer",
+      "file": "render-slicer-as-a-static-image-in-pdf-to-prevent-interactivity-while-preserving-its-appearance.cs",
+      "title": "Render slicer as a static image in PDF to prevent interactivity while preserving its appearance."
+    },
+    {
+      "category": "slicer",
+      "file": "render-the-workbook-to-pdf-while-preserving-slicer-visual-properties-and-layout.cs",
+      "title": "Render the workbook to PDF while preserving slicer visual properties and layout."
+    },
+    {
+      "category": "slicer",
+      "file": "resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs",
+      "title": "Resize the slicer by assigning specific height and width values for layout consistency."
+    },
+    {
+      "category": "slicer",
+      "file": "retrieve-a-slicer-programmatically-select-multiple-items-refresh-it-and-save-changes-to-xlsx.cs",
+      "title": "Retrieve a slicer, programmatically select multiple items, refresh it, and save changes to XLSX."
+    },
+    {
+      "category": "slicer",
+      "file": "retrieve-the-collection-of-slicers-from-a-worksheet-and-iterate-to-log-each-name.cs",
+      "title": "Retrieve the collection of slicers from a worksheet and iterate to log each name."
+    },
+    {
+      "category": "slicer",
+      "file": "save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs",
+      "title": "Save the workbook after each slicer modification to create incremental versioned files for change tracking."
+    },
+    {
+      "category": "slicer",
+      "file": "save-the-workbook-containing-slicers-to-excel-2016-format-to-preserve-advanced-features.cs",
+      "title": "Save the workbook containing slicers to Excel 2016 format to preserve advanced features."
+    },
+    {
+      "category": "slicer",
+      "file": "save-the-workbook-containing-slicers-to-macroenabled-excel-format-while-retaining-vba-code.cs",
+      "title": "Save the workbook containing slicers to macro\u2011enabled Excel format while retaining VBA code."
+    },
+    {
+      "category": "slicer",
+      "file": "save-the-workbook-with-pdf-options-to-embed-the-slicers-visual-style-in-the-output-file.cs",
+      "title": "Save the workbook with PDF options to embed the slicer\u2019s visual style in the output file."
+    },
+    {
+      "category": "slicer",
+      "file": "save-the-workbook-with-slicers-and-compare-file-sizes-with-a-version-saved-without-slicers.cs",
+      "title": "Save the workbook with slicers and compare file sizes with a version saved without slicers."
+    },
+    {
+      "category": "slicer",
+      "file": "set-slicer-placement-and-ensure-it-remains-unchanged-after-saving-and-reloading-the-workbook.cs",
+      "title": "Set slicer placement and ensure it remains unchanged after saving and reloading the workbook."
+    },
+    {
+      "category": "slicer",
+      "file": "set-slicer-row-height-dynamically-based-on-the-number-of-unique-items-in-the-linked-column.cs",
+      "title": "Set slicer row height dynamically based on the number of unique items in the linked column."
+    },
+    {
+      "category": "slicer",
+      "file": "set-slicer-width-to-150-pixels-and-verify-its-appearance-on-the-worksheet.cs",
+      "title": "Set slicer width to 150 pixels and verify its appearance on the worksheet."
+    },
+    {
+      "category": "slicer",
+      "file": "set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs",
+      "title": "Set the slicer caption to a custom string to improve user understanding."
+    },
+    {
+      "category": "slicer",
+      "file": "set-the-slicer-to-be-printable-so-it-appears-when-the-worksheet-is-printed-to-paper.cs",
+      "title": "Set the slicer to be printable so it appears when the worksheet is printed to paper."
+    },
+    {
+      "category": "slicer",
+      "file": "set-the-worksheet-print-area-to-slicer-bounds-then-render-the-slicer-as-an-image-file.cs",
+      "title": "Set the worksheet print area to slicer bounds, then render the slicer as an image file."
+    },
+    {
+      "category": "slicer",
+      "file": "synchronize-two-slicers-so-that-selecting-an-item-in-one-updates-the-other-automatically.cs",
+      "title": "Synchronize two slicers so that selecting an item in one updates the other automatically."
+    },
+    {
+      "category": "slicer",
+      "file": "toggle-slicer-item-selection-based-on-values-read-from-a-database-query.cs",
+      "title": "Toggle slicer item selection based on values read from a database query."
+    },
+    {
+      "category": "slicer",
+      "file": "unselect-all-items-in-a-slicer-call-refresh-and-export-the-workbook-to-pdf-preserving-slicer-appearance.cs",
+      "title": "Unselect all items in a slicer, call Refresh, and export the workbook to PDF preserving slicer appearance."
+    },
+    {
+      "category": "slicer",
+      "file": "update-slicer-properties-across-all-worksheets-in-a-workbook-to-enforce-a-corporate-style.cs",
+      "title": "Update slicer properties across all worksheets in a workbook to enforce a corporate style."
+    },
+    {
+      "category": "slicer",
+      "file": "update-slicer-style-based-on-datadriven-criteria-using-the-api.cs",
+      "title": "Update slicer style based on data\u2011driven criteria using the API."
+    },
+    {
+      "category": "slicer",
+      "file": "use-slicercacheitems-to-select-items-based-on-external-csv-data-then-refresh-the-slicer.cs",
+      "title": "Use SlicerCacheItems to select items based on external CSV data, then refresh the slicer."
+    },
+    {
+      "category": "slicer",
+      "file": "use-the-workbooks-calculate-method-after-slicer-refresh-to-ensure-formulas-reflect-the-new-filter.cs",
+      "title": "Use the workbook\u2019s Calculate method after slicer refresh to ensure formulas reflect the new filter."
+    },
+    {
+      "category": "slicer",
+      "file": "use-worksheetslicersremoveall-to-clear-every-slicer-from-a-sheet-then-save-the-workbook-as-xlsx.cs",
+      "title": "Use Worksheet.Slicers.RemoveAll to clear every slicer from a sheet, then save the workbook as XLSX."
+    },
+    {
+      "category": "slicer",
+      "file": "validate-that-slicer-placement-coordinates-remain-consistent-after-saving-and-reloading-the-workbook.cs",
+      "title": "Validate that slicer placement coordinates remain consistent after saving and reloading the workbook."
+    },
+    {
+      "category": "slicer",
+      "file": "validate-that-the-slicer-printable-flag-is-true-before-exporting-the-workbook-to-pdf.cs",
+      "title": "Validate that the slicer printable flag is true before exporting the workbook to PDF."
+    },
+    {
+      "category": "slicer",
+      "file": "write-a-unit-test-verifying-that-slicerrefresh-updates-the-linked-pivot-tables-row-count-as-expected.cs",
+      "title": "Write a unit test verifying that Slicer.Refresh updates the linked pivot table\u2019s row count as expected."
+    },
+    {
+      "category": "sparkline",
+      "file": "add-a-line-sparkline-to-column-b-using-data-range-a1a10-via-sparklinecollectionadd.cs",
+      "title": "Add a line sparkline to column B using data range A1:A10 via SparklineCollection.Add."
+    },
+    {
+      "category": "sparkline",
+      "file": "add-multiple-data-ranges-to-a-single-sparkline-group-to-generate-multiseries-sparkline.cs",
+      "title": "Add multiple data ranges to a single sparkline group to generate multi\u2011series sparkline."
+    },
+    {
+      "category": "sparkline",
+      "file": "adjust-sparkline-lighting-to-soft-mode-for-improved-appearance-in-excel-2010-files.cs",
+      "title": "Adjust sparkline lighting to 'Soft' mode for improved appearance in Excel 2010 files."
+    },
+    {
+      "category": "sparkline",
+      "file": "apply-custom-line-weight-of-two-points-to-sparkline-group-situated-in-cell-k7.cs",
+      "title": "Apply custom line weight of two points to sparkline group situated in cell K7."
+    },
+    {
+      "category": "sparkline",
+      "file": "batch-create-sparklines-for-rows-one-through-twenty-each-using-corresponding-column-data-range.cs",
+      "title": "Batch create sparklines for rows one through twenty, each using corresponding column data range."
+    },
+    {
+      "category": "sparkline",
+      "file": "benchmark-performance-of-creating-five-thousand-sparklines-in-a-large-workbook-to-assess-scalability.cs",
+      "title": "Benchmark performance of creating five thousand sparklines in a large workbook to assess scalability."
+    },
+    {
+      "category": "sparkline",
+      "file": "change-sparkline-material-to-plastic-to-affect-surface-shading-and-give-subtle-glossy-effect.cs",
+      "title": "Change sparkline material to 'Plastic' to affect surface shading and give subtle glossy effect."
+    },
+    {
+      "category": "sparkline",
+      "file": "clone-an-existing-sparkline-group-and-place-the-clone-into-a-different-worksheet.cs",
+      "title": "Clone an existing sparkline group and place the clone into a different worksheet."
+    },
+    {
+      "category": "sparkline",
+      "file": "configure-sparkline-axis-minimum-and-maximum-to-fixed-numeric-values-for-consistent-scaling.cs",
+      "title": "Configure sparkline axis minimum and maximum to fixed numeric values for consistent scaling."
+    },
+    {
+      "category": "sparkline",
+      "file": "configure-sparkline-to-ignore-hidden-cells-while-calculating-values-to-reflect-only-visible-data.cs",
+      "title": "Configure sparkline to ignore hidden cells while calculating values to reflect only visible data."
+    },
+    {
+      "category": "sparkline",
+      "file": "copy-an-entire-sparkline-group-from-sheet1-to-sheet2-preserving-data-ranges-and-formatting.cs",
+      "title": "Copy an entire sparkline group from Sheet1 to Sheet2 preserving data ranges and formatting."
+    },
+    {
+      "category": "sparkline",
+      "file": "create-a-column-sparkline-in-cell-c5-based-on-values-from-d5d15-range.cs",
+      "title": "Create a column sparkline in cell C5 based on values from D5:D15 range."
+    },
+    {
+      "category": "sparkline",
+      "file": "create-a-sparkline-referencing-data-from-another-worksheet-named-datasheet-for-crosssheet-trends.cs",
+      "title": "Create a sparkline referencing data from another worksheet named 'DataSheet' for cross\u2011sheet trends."
+    },
+    {
+      "category": "sparkline",
+      "file": "delete-the-second-sparkline-in-the-first-sparkline-group-using-sparklinegroupremoveat-method.cs",
+      "title": "Delete the second sparkline in the first sparkline group using SparklineGroup.RemoveAt method."
+    },
+    {
+      "category": "sparkline",
+      "file": "deserialize-sparkline-configuration-from-json-file-and-apply-settings-to-newly-created-workbook.cs",
+      "title": "Deserialize sparkline configuration from JSON file and apply settings to newly created workbook."
+    },
+    {
+      "category": "sparkline",
+      "file": "enable-display-of-both-first-and-last-points-in-line-sparkline-located-at-i4.cs",
+      "title": "Enable display of both first and last points in line sparkline located at I4."
+    },
+    {
+      "category": "sparkline",
+      "file": "enable-display-of-empty-cells-as-zero-values-in-sparkline-at-cell-m9-for-accurate-totals.cs",
+      "title": "Enable display of empty cells as zero values in sparkline at cell M9 for accurate totals."
+    },
+    {
+      "category": "sparkline",
+      "file": "enable-sparkline-markers-only-for-outlier-points-exceeding-predefined-threshold-to-highlight-anomalies.cs",
+      "title": "Enable sparkline markers only for outlier points exceeding predefined threshold to highlight anomalies."
+    },
+    {
+      "category": "sparkline",
+      "file": "export-a-specific-sparkline-as-a-png-image-file-to-designated-output-directory.cs",
+      "title": "Export a specific sparkline as a PNG image file to designated output directory."
+    },
+    {
+      "category": "sparkline",
+      "file": "handle-null-values-in-source-data-range-gracefully-when-generating-sparkline-to-avoid-rendering-errors.cs",
+      "title": "Handle null values in source data range gracefully when generating sparkline to avoid rendering errors."
+    },
+    {
+      "category": "sparkline",
+      "file": "insert-a-winloss-sparkline-at-cell-e2-referencing-data-in-f2f12-range.cs",
+      "title": "Insert a win/loss sparkline at cell E2 referencing data in F2:F12 range."
+    },
+    {
+      "category": "sparkline",
+      "file": "iterate-through-each-sparkline-collect-average-values-and-store-results-in-a-list.cs",
+      "title": "Iterate through each sparkline, collect average values, and store results in a list."
+    },
+    {
+      "category": "sparkline",
+      "file": "load-an-existing-workbook-and-import-asposecellscharts-namespace-for-sparkline-operations.cs",
+      "title": "Load an existing workbook and import Aspose.Cells.Charts namespace for sparkline operations."
+    },
+    {
+      "category": "sparkline",
+      "file": "move-a-sparkline-from-original-location-to-new-cell-range-by-removing-and-readding-programmatically.cs",
+      "title": "Move a sparkline from original location to new cell range by removing and re\u2011adding programmatically."
+    },
+    {
+      "category": "sparkline",
+      "file": "read-the-value-of-the-third-sparkline-in-the-second-sparkline-group-and-log-it.cs",
+      "title": "Read the value of the third sparkline in the second sparkline group and log it."
+    },
+    {
+      "category": "sparkline",
+      "file": "remove-all-sparklines-from-active-worksheet-by-invoking-clear-method-on-each-sparklinegroup.cs",
+      "title": "Remove all sparklines from active worksheet by invoking Clear method on each SparklineGroup."
+    },
+    {
+      "category": "sparkline",
+      "file": "render-a-sparkline-to-a-memory-stream-for-embedding-into-a-pdf-report-later.cs",
+      "title": "Render a sparkline to a memory stream for embedding into a PDF report later."
+    },
+    {
+      "category": "sparkline",
+      "file": "save-the-modified-workbook-with-new-sparklines-to-an-xlsx-file-at-specified-path.cs",
+      "title": "Save the modified workbook with new sparklines to an XLSX file at specified path."
+    },
+    {
+      "category": "sparkline",
+      "file": "serialize-sparkline-group-settings-to-json-string-for-later-reuse-or-configuration-sharing.cs",
+      "title": "Serialize sparkline group settings to JSON string for later reuse or configuration sharing."
+    },
+    {
+      "category": "sparkline",
+      "file": "set-sparkline-3d-depth-property-to-higher-value-to-enhance-visual-depth-perception.cs",
+      "title": "Set sparkline 3D depth property to higher value to enhance visual depth perception."
+    },
+    {
+      "category": "sparkline",
+      "file": "set-sparkline-group-orientation-to-vertical-for-columntype-sparklines-to-improve-readability.cs",
+      "title": "Set sparkline group orientation to vertical for column\u2011type sparklines to improve readability."
+    },
+    {
+      "category": "sparkline",
+      "file": "set-sparkline-group-to-display-markers-for-both-high-and-low-points-simultaneously.cs",
+      "title": "Set sparkline group to display markers for both high and low points simultaneously."
+    },
+    {
+      "category": "sparkline",
+      "file": "set-sparkline-markers-to-display-high-points-using-red-color-for-sparkline-in-h3.cs",
+      "title": "Set sparkline markers to display high points using red color for sparkline in H3."
+    },
+    {
+      "category": "sparkline",
+      "file": "set-sparkline-to-show-negative-points-using-custom-blue-color-in-cell-j6.cs",
+      "title": "Set sparkline to show negative points using custom blue color in cell J6."
+    },
+    {
+      "category": "sparkline",
+      "file": "use-sparklinecollectionadd-with-formulabased-range-to-create-dynamic-sparklines-that-update-automatically.cs",
+      "title": "Use SparklineCollection.Add with formula\u2011based range to create dynamic sparklines that update automatically."
+    },
+    {
+      "category": "sparkline",
+      "file": "validate-that-sparkline-data-range-does-not-contain-errors-before-creating-the-sparkline-object.cs",
+      "title": "Validate that sparkline data range does not contain errors before creating the sparkline object."
+    },
+    {
+      "category": "sparkline",
+      "file": "write-a-unit-test-verifying-that-adding-a-sparkline-increases-sparkline-count-by-exactly-one.cs",
+      "title": "Write a unit test verifying that adding a sparkline increases sparkline count by exactly one."
+    },
+    {
+      "category": "timeline",
+      "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
+      "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
+    },
+    {
+      "category": "timeline",
+      "file": "apply-a-dark-theme-to-a-timeline-change-axis-colors-and-render-the-result-to-a-pdf.cs",
+      "title": "Apply a dark theme to a timeline, change axis colors, and render the result to a PDF."
+    },
+    {
+      "category": "timeline",
+      "file": "apply-a-gradient-background-to-a-timeline-adjust-label-rotation-and-render-it-to-a-bmp-image.cs",
+      "title": "Apply a gradient background to a timeline, adjust label rotation, and render it to a BMP image."
+    },
+    {
+      "category": "timeline",
+      "file": "apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs",
+      "title": "Apply a watermark text over a rendered timeline image and export the final picture as a PDF."
+    },
+    {
+      "category": "timeline",
+      "file": "batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs",
+      "title": "Batch convert Excel files, add a timeline to each, and save PDFs to an output directory."
+    },
+    {
+      "category": "timeline",
+      "file": "batch-process-multiple-worksheets-creating-individual-timelines-for-each-and-saving-them-as-separate-png-files.cs",
+      "title": "Batch process multiple worksheets, creating individual timelines for each and saving them as separate PNG files."
+    },
+    {
+      "category": "timeline",
+      "file": "create-a-timeline-using-a-custom-template-file-then-replace-placeholder-text-with-dynamic-project-names.cs",
+      "title": "Create a timeline using a custom template file, then replace placeholder text with dynamic project names."
+    },
+    {
+      "category": "timeline",
+      "file": "create-a-timeline-with-custom-date-format-ddmmmyyyy-and-export-the-chart-to-a-pdf-document.cs",
+      "title": "Create a timeline with custom date format (dd\u2011MMM\u2011yyyy) and export the chart to a PDF document."
+    },
+    {
+      "category": "timeline",
+      "file": "draw-a-timeline-while-converting-the-entire-workbook-to-pdf-ensuring-the-timeline-appears-on-each-page.cs",
+      "title": "Draw a timeline while converting the entire workbook to PDF, ensuring the timeline appears on each page."
+    },
+    {
+      "category": "timeline",
+      "file": "embed-a-rendered-timeline-image-into-a-pdf-report-header-aligning-it-with-the-document-title.cs",
+      "title": "Embed a rendered timeline image into a PDF report header, aligning it with the document title."
+    },
+    {
+      "category": "timeline",
+      "file": "export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs",
+      "title": "Export a timeline directly to a memory stream in PDF format for further processing without disk I/O."
+    },
+    {
+      "category": "timeline",
+      "file": "generate-a-timeline-with-alternating-bar-colors-for-even-and-odd-rows-then-save-as-a-highquality-jpeg.cs",
+      "title": "Generate a timeline with alternating bar colors for even and odd rows, then save as a high\u2011quality JPEG."
+    },
+    {
+      "category": "timeline",
+      "file": "iterate-through-rows-of-data-automatically-creating-timeline-entries-for-each-and-exporting-the-final-chart-to-pdf.cs",
+      "title": "Iterate through rows of data, automatically creating timeline entries for each and exporting the final chart to PDF."
+    },
+    {
+      "category": "timeline",
+      "file": "load-a-csv-file-containing-event-dates-convert-it-to-an-excel-worksheet-and-draw-a-timeline.cs",
+      "title": "Load a CSV file containing event dates, convert it to an Excel worksheet, and draw a timeline."
+    },
+    {
+      "category": "timeline",
+      "file": "load-an-excel-worksheet-insert-a-timeline-for-sales-data-and-export-the-sheet-to-pdf.cs",
+      "title": "Load an Excel worksheet, insert a timeline for sales data, and export the sheet to PDF."
+    },
+    {
+      "category": "timeline",
+      "file": "render-a-timeline-with-a-3d-perspective-effect-adjust-depth-and-output-as-a-png-image.cs",
+      "title": "Render a timeline with a 3\u2011D perspective effect, adjust depth, and output as a PNG image."
+    },
+    {
+      "category": "timeline",
+      "file": "render-a-timeline-with-shadow-effects-adjust-opacity-and-output-the-image-as-a-png-with-transparency.cs",
+      "title": "Render a timeline with shadow effects, adjust opacity, and output the image as a PNG with transparency."
+    },
+    {
+      "category": "timeline",
+      "file": "render-a-timeline-with-weekly-intervals-apply-bold-fonts-and-output-the-result-as-a-pdf-document.cs",
+      "title": "Render a timeline with weekly intervals, apply bold fonts, and output the result as a PDF document."
+    },
+    {
+      "category": "timeline",
+      "file": "validate-timeline-date-ranges-against-a-predefined-calendar-and-log-any-inconsistencies-to-a-text-file.cs",
+      "title": "Validate timeline date ranges against a predefined calendar and log any inconsistencies to a text file."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs",
+      "title": "Add the library reference to a .NET project via NuGet before implementing merge logic."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "copy-specific-worksheets-from-source-workbooks-into-the-target-workbook-using-worksheetcopy-method.cs",
+      "title": "Copy specific worksheets from source workbooks into the target workbook using Worksheet.Copy method."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "create-a-console-application-project-in-visual-studio-to-host-the-workbook-merging-code.cs",
+      "title": "Create a console application project in Visual Studio to host the workbook merging code."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs",
+      "title": "Load large XLS files with CellsHelper.MergeFiles by providing an array of file paths and output path."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "load-source-xls-workbooks-using-new-workbookfilepath-for-each-file-to-be-merged.cs",
+      "title": "Load source XLS workbooks using new Workbook(filePath) for each file to be merged."
+    },
+    {
+      "category": "workbook-merger",
+      "file": "use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs",
+      "title": "Use Workbook.Combine to merge two or more workbooks when file sizes are moderate."
+    },
+    {
+      "category": "working-with-json",
+      "file": "apply-a-custom-culture-setting-to-format-dates-in-json-according-to-iso-8601-standard.cs",
+      "title": "Apply a custom culture setting to format dates in JSON according to ISO 8601 standard."
+    },
+    {
+      "category": "working-with-json",
+      "file": "apply-a-filter-to-exclude-rows-where-the-status-column-equals-inactive-before-json-export.cs",
+      "title": "Apply a filter to exclude rows where the status column equals 'Inactive' before JSON export."
+    },
+    {
+      "category": "working-with-json",
+      "file": "batch-process-a-folder-of-xls-files-converting-each-workbook-to-separate-json-files.cs",
+      "title": "Batch process a folder of XLS files, converting each workbook to separate JSON files."
+    },
+    {
+      "category": "working-with-json",
+      "file": "configure-jsonsaveoptions-to-exclude-hidden-rows-and-columns-from-the-exported-json-data.cs",
+      "title": "Configure JsonSaveOptions to exclude hidden rows and columns from the exported JSON data."
+    },
+    {
+      "category": "working-with-json",
+      "file": "convert-a-json-file-containing-nested-objects-into-a-flattened-json-structure-before-saving.cs",
+      "title": "Convert a JSON file containing nested objects into a flattened JSON structure before saving."
+    },
+    {
+      "category": "working-with-json",
+      "file": "convert-a-json-file-containing-tabular-data-to-csv-using-jsonutility-with-a-custom-delimiter.cs",
+      "title": "Convert a JSON file containing tabular data to CSV using JsonUtility with a custom delimiter."
+    },
+    {
+      "category": "working-with-json",
+      "file": "convert-a-large-csv-file-to-json-using-streaming-options-to-reduce-memory-usage.cs",
+      "title": "Convert a large CSV file to JSON using streaming options to reduce memory usage."
+    },
+    {
+      "category": "working-with-json",
+      "file": "create-a-batch-job-that-converts-all-json-files-in-a-directory-to-matching-csv-files.cs",
+      "title": "Create a batch job that converts all JSON files in a directory to matching CSV files."
+    },
+    {
+      "category": "working-with-json",
+      "file": "define-a-semicolon-as-csv-delimiter-in-jsonlayoutoptions-before-converting-json-to-csv.cs",
+      "title": "Define a semicolon as CSV delimiter in JsonLayoutOptions before converting JSON to CSV."
+    },
+    {
+      "category": "working-with-json",
+      "file": "encrypt-the-generated-json-file-using-a-passwordprotected-stream-before-writing-to-disk.cs",
+      "title": "Encrypt the generated JSON file using a password\u2011protected stream before writing to disk."
+    },
+    {
+      "category": "working-with-json",
+      "file": "exclude-empty-rows-from-json-output-by-setting-jsonsaveoptionsincludeemptyrows-to-false.cs",
+      "title": "Exclude empty rows from JSON output by setting JsonSaveOptions.IncludeEmptyRows to false."
+    },
+    {
+      "category": "working-with-json",
+      "file": "export-a-specific-cell-range-from-a-worksheet-to-json-using-exportrangetojsonoptions.cs",
+      "title": "Export a specific cell range from a worksheet to JSON using ExportRangeToJsonOptions."
+    },
+    {
+      "category": "working-with-json",
+      "file": "export-the-active-worksheet-of-the-loaded-workbook-to-json-using-default-saveformat-settings.cs",
+      "title": "Export the active worksheet of the loaded workbook to JSON using default SaveFormat settings."
+    },
+    {
+      "category": "working-with-json",
+      "file": "export-the-entire-workbook-to-json-with-column-headers-included-via-jsonsaveoptions.cs",
+      "title": "Export the entire workbook to JSON with column headers included via JsonSaveOptions."
+    },
+    {
+      "category": "working-with-json",
+      "file": "generate-json-for-a-pivot-table-by-exporting-its-underlying-data-source-range.cs",
+      "title": "Generate JSON for a pivot table by exporting its underlying data source range."
+    },
+    {
+      "category": "working-with-json",
+      "file": "generate-prettyprinted-json-with-indentation-by-setting-jsonsaveoptionsprettyprint-to-true.cs",
+      "title": "Generate pretty\u2011printed JSON with indentation by setting JsonSaveOptions.PrettyPrint to true."
+    },
+    {
+      "category": "working-with-json",
+      "file": "implement-error-handling-to-catch-jsonutilityload-exceptions-when-source-json-file-is-malformed.cs",
+      "title": "Implement error handling to catch JsonUtility.Load exceptions when source JSON file is malformed."
+    },
+    {
+      "category": "working-with-json",
+      "file": "include-column-names-as-keys-in-json-output-by-enabling-includecolumnnames-option.cs",
+      "title": "Include column names as keys in JSON output by enabling IncludeColumnNames option."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-a-csv-file-into-memory-using-jsonutility-and-transform-it-into-json-format.cs",
+      "title": "Load a CSV file into memory using JsonUtility and transform it into JSON format."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-a-json-array-representing-multiple-tables-and-map-each-element-to-a-separate-worksheet.cs",
+      "title": "Load a JSON array representing multiple tables and map each element to a separate worksheet."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-an-xls-workbook-remove-empty-columns-then-export-the-cleaned-data-to-json.cs",
+      "title": "Load an XLS workbook, remove empty columns, then export the cleaned data to JSON."
+    },
+    {
+      "category": "working-with-json",
+      "file": "load-an-xlsx-workbook-from-a-file-path-and-verify-successful-initialization.cs",
+      "title": "Load an XLSX workbook from a file path and verify successful initialization."
+    },
+    {
+      "category": "working-with-json",
+      "file": "merge-multiple-json-files-into-a-single-workbook-creating-separate-worksheets-for-each-file.cs",
+      "title": "Merge multiple JSON files into a single workbook, creating separate worksheets for each file."
+    },
+    {
+      "category": "working-with-json",
+      "file": "preserve-cell-formulas-during-json-conversion-by-configuring-jsonsaveoptionspreserveformulas-flag.cs",
+      "title": "Preserve cell formulas during JSON conversion by configuring JsonSaveOptions.PreserveFormulas flag."
+    },
+    {
+      "category": "working-with-json",
+      "file": "read-a-json-file-encoded-in-utf16-and-convert-it-to-csv-with-utf8-encoding.cs",
+      "title": "Read a JSON file encoded in UTF\u201116 and convert it to CSV with UTF\u20118 encoding."
+    },
+    {
+      "category": "working-with-json",
+      "file": "set-json-output-encoding-to-utf-8-within-jsonsaveoptions-before-saving-workbook-as-json.cs",
+      "title": "Set JSON output encoding to UTF-8 within JsonSaveOptions before saving workbook as JSON."
+    },
+    {
+      "category": "working-with-json",
+      "file": "set-jsonlayoutoptionsquoteallfields-to-true-to-ensure-every-csv-field-is-enclosed-in-quotes.cs",
+      "title": "Set JsonLayoutOptions.QuoteAllFields to true to ensure every CSV field is enclosed in quotes."
+    },
+    {
+      "category": "working-with-json",
+      "file": "specify-a-custom-date-format-in-jsonsaveoptions-before-exporting-workbook-to-json.cs",
+      "title": "Specify a custom date format in JsonSaveOptions before exporting workbook to JSON."
+    },
+    {
+      "category": "working-with-json",
+      "file": "specify-custom-line-terminator-in-jsonlayoutoptions-when-converting-json-to-csv-for-windows-compatibility.cs",
+      "title": "Specify custom line terminator in JsonLayoutOptions when converting JSON to CSV for Windows compatibility."
+    },
+    {
+      "category": "working-with-json",
+      "file": "transform-numeric-values-to-strings-in-json-output-by-applying-a-custom-value-formatter.cs",
+      "title": "Transform numeric values to strings in JSON output by applying a custom value formatter."
+    },
+    {
+      "category": "working-with-json",
+      "file": "use-exportrangetojsonoptions-to-include-cell-comments-as-additional-json-fields-during-export.cs",
+      "title": "Use ExportRangeToJsonOptions to include cell comments as additional JSON fields during export."
+    },
+    {
+      "category": "working-with-json",
+      "file": "use-jsonutilityload-with-a-stream-to-read-json-data-from-a-network-source.cs",
+      "title": "Use JsonUtility.Load with a stream to read JSON data from a network source."
+    },
+    {
+      "category": "working-with-json",
+      "file": "validate-json-structure-against-a-predefined-schema-after-loading-with-jsonutility-successfully.cs",
+      "title": "Validate JSON structure against a predefined schema after loading with JsonUtility successfully."
+    },
+    {
+      "category": "working-with-json",
+      "file": "validate-that-exported-json-includes-expected-number-of-rows-by-comparing-with-original-worksheet-row-count.cs",
+      "title": "Validate that exported JSON includes expected number of rows by comparing with original worksheet row count."
+=======
       "category": "comments-and-notes",
       "file": "apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs",
       "title": "Apply a solid blue background to a comment using Shape.Fill.ForeColor with the appropriate color code."
