@@ -351,3 +351,4 @@ Output files are written to the working directory.
 - ensure-conditional-formatting-colors-are-retained-in-html-when-exportconditionalformatting-is-true.cs
 - ensure-gridlines-are-visible-in-html-output-when-exportgridlines-option-is-enabled.cs
 - ensure-hidden-worksheet-content-appears-in-html-when-exporthiddenworksheet-option-is-true.cs
+- measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs
