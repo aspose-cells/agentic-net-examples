@@ -155,3 +155,4 @@ Examples may generate:
 - unprotect-the-workbook-structure-rename-a-worksheet-and-then-reapply-structure-protection-with-a-new-password.cs
 - apply-both-an-opening-password-and-workbook-structure-protection-to-a-workbook-then-test-each-protection-independently.cs
 - remove-both-the-opening-password-and-structure-protection-from-a-workbook-in-a-single-operation-and-save.cs
+- enable-worksheetlevel-protection-on-a-specific-sheet-restricting-cell-editing-while-allowing-formatting-changes.cs
