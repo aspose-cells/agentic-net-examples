@@ -385,3 +385,4 @@ Output files are written to the working directory.
 - implement-error-handling-for-missing-worksheets-when-exporthiddenworksheet-option-is-enabled.cs
 - implement-logging-of-conversion-duration-for-each-workbook-during-batch-html-processing.cs
 - set-exportactiveworksheetonly-true-to-generate-html-containing-only-the-currently-active-worksheet.cs
+- set-exportallworksheets-true-to-generate-a-single-html-file-that-includes-all-workbook-worksheets.cs
