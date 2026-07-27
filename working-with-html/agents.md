@@ -244,3 +244,4 @@ Output files are written to the working directory.
 - customize-gradient-angle-for-wordart-during-pdf-conversion-using-a-specific-rotation-parameter.cs
 - customize-gradient-angle-for-wordart-during-html-conversion-and-reflect-the-angle-in-css-gradient-syntax.cs
 - convert-a-spreadsheet-with-wordart-to-pdf-and-embed-the-gradient-fill-as-an-iccprofileaware-color-space.cs
+- convert-a-spreadsheet-with-wordart-to-html-and-include-inline-svg-definitions-for-complex-gradients.cs
