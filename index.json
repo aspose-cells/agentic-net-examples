@@ -326,6 +326,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "validate-a-supplied-password-for-modifying-a-workbook-without-opening-the-file-returning-true-or-false.cs",
+      "title": "Validate a supplied password for modifying a workbook without opening the file, returning true or false."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-a-thirdparty-viewer-lacking-decryption-support.cs",
       "title": "Validate that a workbook encrypted with a password cannot be opened by a third\u2011party viewer lacking decryption support."
     },
