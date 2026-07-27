@@ -323,3 +323,4 @@ Output files are written to the working directory.
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-render-gridlines.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-export-hidden-worksheets.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-enable-css-custom-properties-for-image-deduplication.cs
+- convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-while-disabling-all-css-generation.cs
