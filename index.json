@@ -11241,6 +11241,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "perform-a-performance-benchmark-converting-a-10-mb-workbook-to-html-with-css-enabled-versus-disabled.cs",
+      "title": "Perform a performance benchmark converting a 10\u202fMB workbook to HTML with CSS enabled versus disabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
       "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
     },
