@@ -375,3 +375,4 @@ Output files are written to the working directory.
 - set-exportcomments-false-and-verify-comment-markers-are-absent-from-generated-html.cs
 - set-exportconditionalformatting-false-and-verify-conditional-style-attributes-are-missing-in-html.cs
 - set-exportgridlines-false-and-verify-gridline-elements-are-not-rendered-in-html-output.cs
+- set-exporthiddenworksheet-false-and-verify-hidden-worksheets-are-excluded-from-html-conversion.cs
