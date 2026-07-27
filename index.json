@@ -10511,6 +10511,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-external-css-generation-during-html-export-with-htmlsaveoptionsdisablecss-set-to-true.cs",
+      "title": "Disable external CSS generation during HTML export with HtmlSaveOptions.DisableCss set to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs",
       "title": "Document the configuration required to turn off downlevel revealed comments."
     },
