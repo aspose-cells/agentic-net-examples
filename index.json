@@ -4086,6 +4086,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "stream-rows-from-a-large-worksheet-using-lightcells-api-to-avoid-loading-the-entire-workbook.cs",
+      "title": "Stream rows from a large worksheet using LightCells API to avoid loading the entire workbook."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-interruptmonitor-to-abort-workbook-loading-if-processing-exceeds-a-predefined-time-limit.cs",
       "title": "Use InterruptMonitor to abort workbook loading if processing exceeds a predefined time limit."
     },
