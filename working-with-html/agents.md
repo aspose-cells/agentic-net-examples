@@ -276,3 +276,4 @@ Output files are written to the working directory.
 - autofit-columns-and-rows-after-loading-html-into-a-workbook-then-export-with-tablecssid-to-preserve-layout.cs
 - export-only-the-active-worksheet-to-html-while-applying-a-specific-tablecssid-to-style-its-tables.cs
 - generate-html-with-a-custom-tablecssid-and-verify-that-no-css-class-name-collisions-occur-with-existing-styles.cs
+- create-inline-css-definitions-within-the-exported-html-and-prefix-them-using-tablecssid-for-immediate-preview.cs
