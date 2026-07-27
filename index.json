@@ -10121,6 +10121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
+      "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-retain-merged-cells-using-appropriate-colspan-and-rowspan-attributes.cs",
       "title": "Export Excel to HTML and retain merged cells using appropriate colspan and rowspan attributes."
     },
