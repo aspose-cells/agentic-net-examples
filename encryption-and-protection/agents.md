@@ -156,3 +156,4 @@ Examples may generate:
 - apply-both-an-opening-password-and-workbook-structure-protection-to-a-workbook-then-test-each-protection-independently.cs
 - remove-both-the-opening-password-and-structure-protection-from-a-workbook-in-a-single-operation-and-save.cs
 - enable-worksheetlevel-protection-on-a-specific-sheet-restricting-cell-editing-while-allowing-formatting-changes.cs
+- protect-a-worksheet-while-allowing-users-to-format-cells-then-verify-editing-cell-values-remains-blocked.cs
