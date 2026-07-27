@@ -10971,6 +10971,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-that-enabling-widthscalable-does-not-affect-nonhtml-export-formats.cs",
+      "title": "Test that enabling WidthScalable does not affect non\u2011HTML export formats."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs",
       "title": "Use a sample workbook to demonstrate whitespace cleanup during export."
     },
