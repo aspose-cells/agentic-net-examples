@@ -10326,6 +10326,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-script-that-extracts-excel-files-from-a-zip-archive-and-converts-each-to-html.cs",
+      "title": "Create a script that extracts Excel files from a zip archive and converts each to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-unit-test-asserting-a-specific-cell-value-appears-in-the-html-output.cs",
       "title": "Create a unit test asserting a specific cell value appears in the HTML output."
     },
