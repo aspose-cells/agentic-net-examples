@@ -31,6 +31,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-whether-a-workbook-is-encrypted-with-a-password-meeting-organizational-complexity-requirements.cs",
+      "title": "Detect whether a workbook is encrypted with a password meeting organizational complexity requirements."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs",
       "title": "Encrypt a workbook, then measure the time required to open it in a headless automation environment."
     },
