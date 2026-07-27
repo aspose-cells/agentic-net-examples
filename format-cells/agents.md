@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - set-the-themes-light2-color-as-the-default-fill-for-newly-inserted-rows.cs
 - programmatically-detect-if-a-workbooks-theme-includes-a-custom-color-scheme-and-log-its-details.cs
 - replace-the-themes-dark1-color-with-a-userspecified-hexadecimal-value-and-save-the-workbook.cs
+- apply-conditional-formatting-that-uses-the-themes-accent2-color-to-highlight-values-above-a-threshold.cs
