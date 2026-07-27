@@ -513,6 +513,11 @@
       "category": "format-cells",
       "file": "iterate-over-all-worksheets-set-each-header-rows-font-color-to-the-themes-accent1.cs",
       "title": "Iterate over all worksheets, set each header row\u2019s font color to the theme\u2019s Accent1."
+    },
+    {
+      "category": "format-cells",
+      "file": "validate-that-after-changing-the-theme-conditional-formatting-rules-still-reference-correct-color-indices.cs",
+      "title": "Validate that after changing the theme, conditional formatting rules still reference correct color indices."
     }
   ]
 }
