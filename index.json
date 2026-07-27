@@ -10521,6 +10521,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "hide-overlaid-content-using-crosshideright-while-exporting-to-html-and-apply-a-custom-tablecssid-for-table-styling.cs",
+      "title": "Hide overlaid content using CrossHideRight while exporting to HTML and apply a custom TableCssId for table styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs",
       "title": "Implement IFilePathProvider that converts worksheet names to lowercase URLs for consistent linking."
     },
