@@ -206,6 +206,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "enable-worksheetlevel-protection-on-a-specific-sheet-restricting-cell-editing-while-allowing-formatting-changes.cs",
+      "title": "Enable worksheet\u2011level protection on a specific sheet, restricting cell editing while allowing formatting changes."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-newly-created-workbook-using-a-userspecified-password-and-save-it-as-a-protected-file.cs",
       "title": "Encrypt a newly created workbook using a user\u2011specified password and save it as a protected file."
     },
