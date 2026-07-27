@@ -111,3 +111,4 @@ Output files are written to the working directory.
 - copy-columns-a-through-d-from-the-source-worksheet-to-a-new-workbook-using-lightcells-for-efficient-selection.cs
 - set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
 - enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs
+- configure-htmlsaveoptionsexportchartimageformat-to-png-then-save-the-workbook-as-html-with-highresolution-charts.cs
