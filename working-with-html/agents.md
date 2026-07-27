@@ -448,3 +448,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-with-headings-enabled-producing-separate-tables-for-each-worksheet.cs
 - save-a-workbook-to-html-while-preserving-original-cell-styles-falling-back-to-default-font-when-unavailable.cs
 - batch-convert-multiple-workbooks-to-html-each-using-a-distinct-default-font-defined-in-htmlsaveoptions.cs
+- disable-css-file-generation-and-embed-styles-directly-in-html-using-custom-css-properties.cs
