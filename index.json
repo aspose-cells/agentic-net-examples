@@ -9836,6 +9836,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-multiple-workbooks-to-html-each-using-a-distinct-default-font-defined-in-htmlsaveoptions.cs",
+      "title": "Batch convert multiple workbooks to HTML, each using a distinct default font defined in HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-workbooks-toggling-exportgridlines-based-on-whether-the-source-worksheet-contains-borders.cs",
       "title": "Batch convert workbooks, toggling ExportGridLines based on whether the source worksheet contains borders."
     },
