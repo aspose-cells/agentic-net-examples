@@ -116,6 +116,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "load-a-passwordprotected-workbook-prompt-the-user-for-the-password-and-open-it-for-reading.cs",
+      "title": "Load a password\u2011protected workbook, prompt the user for the password, and open it for reading."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs",
       "title": "Protect a worksheet, then attempt to copy it to a new workbook without providing the password."
     },
