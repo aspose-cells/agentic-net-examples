@@ -10121,6 +10121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-compress-the-output-html-using-gzip-stream-for-faster-transmission.cs",
+      "title": "Export Excel to HTML and compress the output HTML using GZIP stream for faster transmission."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-embed-hyperlinks-so-they-remain-functional-in-the-browser.cs",
       "title": "Export Excel to HTML and embed hyperlinks so they remain functional in the browser."
     },
