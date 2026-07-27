@@ -396,6 +396,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "save-an-encrypted-workbook-directly-to-a-cloud-storage-stream-ensuring-encryption-metadata-is-preserved.cs",
+      "title": "Save an encrypted workbook directly to a cloud storage stream, ensuring encryption metadata is preserved."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "save-an-encrypted-workbook-to-a-memory-stream-then-read-stream-length-to-confirm-encryption-overhead.cs",
       "title": "Save an encrypted workbook to a memory stream, then read stream length to confirm encryption overhead."
     },
