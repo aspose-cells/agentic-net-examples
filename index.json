@@ -511,6 +511,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-light1-background-to-alternate-rows-for-improved-readability-in-a-table.cs",
+      "title": "Apply the theme\u2019s Light1 background to alternate rows for improved readability in a table."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-function-that-maps-business-status-values-to-specific-theme-accent-colors-for-cell-fill.cs",
       "title": "Create a function that maps business status values to specific theme accent colors for cell fill."
     },
