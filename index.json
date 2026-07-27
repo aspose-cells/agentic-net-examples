@@ -9666,6 +9666,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-embed-custom-document-properties-extracted-from-html-meta-tags.cs",
+      "title": "Convert HTML to Excel and embed custom document properties extracted from HTML meta tags."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-encrypt-the-resulting-workbook-with-a-password-for-protection.cs",
       "title": "Convert HTML to Excel and encrypt the resulting workbook with a password for protection."
     },
