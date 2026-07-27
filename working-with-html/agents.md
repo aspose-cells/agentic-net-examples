@@ -381,3 +381,4 @@ Output files are written to the working directory.
 - generate-html-with-embedded-images-as-base64-strings-by-setting-exportimagesasbase64-true.cs
 - verify-base64-image-strings-are-deduplicated-when-enablecsscustomproperties-is-true-during-conversion.cs
 - verify-duplicate-image-files-are-not-created-when-exportimagesasbase64-is-false-during-conversion.cs
+- create-a-script-that-extracts-excel-files-from-a-zip-archive-and-converts-each-to-html.cs
