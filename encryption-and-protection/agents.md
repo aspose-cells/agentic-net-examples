@@ -103,3 +103,4 @@ Examples may generate:
 - create-a-batch-script-that-decrypts-workbooks-removes-all-protection-and-reencrypts-them-with-a-unified-password.cs
 - detect-whether-a-workbook-contains-hidden-protected-worksheets-and-list-their-names-for-review.cs
 - apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs
+- unprotect-a-worksheet-add-a-data-validation-rule-then-reprotect-and-verify-validation-remains-active.cs
