@@ -4111,6 +4111,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "set-loadoptionsloadfilter-to-load-only-data-cells-skipping-chart-objects-to-reduce-memory-usage.cs",
+      "title": "Set LoadOptions.LoadFilter to load only data cells, skipping chart objects to reduce memory usage."
+    },
+    {
+      "category": "open-workbook",
       "file": "set-memorysettingmemorypreference-to-normal-for-a-small-xlsx-file-to-achieve-faster-processing-speed.cs",
       "title": "Set MemorySetting.MemoryPreference to Normal for a small XLSX file to achieve faster processing speed."
     },
