@@ -48,6 +48,11 @@
       "category": "encryption-and-protection",
       "file": "validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs",
       "title": "Validate that changing a worksheet's protection password does not alter its cell formulas or values."
+    },
+    {
+      "category": "encryption-and-protection",
+      "file": "verify-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-older-excel-versions.cs",
+      "title": "Verify that a workbook encrypted with a password cannot be opened by older Excel versions."
     }
   ]
 }
