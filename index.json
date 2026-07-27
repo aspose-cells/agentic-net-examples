@@ -10526,6 +10526,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-only-visible-worksheets-by-setting-exporthiddenworksheet-to-false-before-saving.cs",
+      "title": "Export only visible worksheets by setting ExportHiddenWorksheet to false before saving."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-right-to-left-aligned-text-correctly-using-default-htmlsaveoptions-during-conversion.cs",
       "title": "Export right-to-left aligned text correctly using default HtmlSaveOptions during conversion."
     },
