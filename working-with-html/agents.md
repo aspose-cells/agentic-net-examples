@@ -372,3 +372,4 @@ Output files are written to the working directory.
 - compare-visual-fidelity-of-html-generated-with-presentationpreferencebestfit-versus-default-layout.cs
 - measure-memory-usage-when-converting-a-large-workbook-to-html-with-css-enabled.cs
 - measure-memory-usage-when-converting-the-same-large-workbook-to-html-with-css-disabled.cs
+- set-exportcomments-false-and-verify-comment-markers-are-absent-from-generated-html.cs
