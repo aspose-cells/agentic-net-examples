@@ -10526,6 +10526,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-a-custom-tablecssid-and-verify-that-no-css-class-name-collisions-occur-with-existing-styles.cs",
+      "title": "Generate HTML with a custom TableCssId and verify that no CSS class name collisions occur with existing styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-iecompatible-mhtml-from-a-multisheet-workbook-and-verify-tab-switching-functionality-in-internet-explorer.cs",
       "title": "Generate IE\u2011compatible MHTML from a multi\u2011sheet workbook and verify tab switching functionality in Internet Explorer."
     },
