@@ -31,6 +31,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "check-whether-a-loaded-workbook-is-encrypted-and-display-a-warning-if-encryption-is-detected.cs",
+      "title": "Check whether a loaded workbook is encrypted and display a warning if encryption is detected."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "combine-file-format-detection-with-encryption-status-check-to-decide-whether-to-decrypt-before-processing.cs",
       "title": "Combine file format detection with encryption status check to decide whether to decrypt before processing."
     },
