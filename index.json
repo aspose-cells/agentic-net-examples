@@ -10866,6 +10866,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-then-modify-the-output-to-add-a-custom-css-class-to-header-rows.cs",
+      "title": "Generate HTML and then modify the output to add a custom CSS class to header rows."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-for-a-workbook-containing-merged-cells-and-verify-merged-layout-is-preserved.cs",
       "title": "Generate HTML for a workbook containing merged cells and verify merged layout is preserved."
     },
