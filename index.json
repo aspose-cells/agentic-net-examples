@@ -9881,6 +9881,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-export-hidden-worksheets.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and export hidden worksheets."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-render-gridlines.cs",
       "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and render gridlines."
     },
