@@ -160,3 +160,4 @@ Examples may generate:
 - attempt-to-edit-a-protected-worksheet-without-password-and-record-failure-outcome.cs
 - remove-protection-from-a-worksheet-using-correct-password-and-modify-a-cell-value-successfully.cs
 - unprotect-a-worksheet-while-preserving-its-previously-set-formatting-permissions-and-then-update-a-cell-formula.cs
+- apply-worksheet-protection-with-a-password-that-expires-after-a-specified-time-interval-then-test-expiration-behavior.cs
