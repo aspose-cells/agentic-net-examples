@@ -146,6 +146,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "compare-performance-of-encrypting-workbooks-in-parallel-threads-versus-sequential-processing-for-large-datasets.cs",
+      "title": "Compare performance of encrypting workbooks in parallel threads versus sequential processing for large datasets."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "convert-an-encrypted-xlsx-file-to-an-unencrypted-xlsx-file-while-preserving-formulas-and-formatting.cs",
       "title": "Convert an encrypted XLSX file to an unencrypted XLSX file while preserving formulas and formatting."
     },
