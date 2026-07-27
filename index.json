@@ -4101,6 +4101,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-with-lightcells-api-filter-defined-names-containing-total-and-save-to-pdf.cs",
+      "title": "Load a workbook with LightCells API, filter defined names containing \"Total\", and save to PDF."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs",
       "title": "Load a workbook with LightCells API, set printer paper size A3, and save to PDF."
     },
