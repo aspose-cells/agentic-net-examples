@@ -531,6 +531,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-accent6-color-to-the-header-row-of-a-dynamically-generated-report.cs",
+      "title": "Apply the theme\u2019s Accent6 color to the header row of a dynamically generated report."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-themes-light1-background-to-alternate-rows-for-improved-readability-in-a-table.cs",
       "title": "Apply the theme\u2019s Light1 background to alternate rows for improved readability in a table."
     },
