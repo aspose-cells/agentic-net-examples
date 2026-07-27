@@ -147,3 +147,4 @@ Examples may generate:
 - compare-file-size-of-an-unencrypted-workbook-versus-its-encrypted-counterpart-to-assess-encryption-impact.cs
 - apply-an-opening-password-to-a-workbook-then-remove-it-and-save-unchanged-file.cs
 - check-whether-a-particular-password-is-required-to-modify-a-workbook-and-return-boolean-result.cs
+- determine-if-a-workbook-requires-a-password-for-opening-versus-modifying-and-log-both-statuses.cs
