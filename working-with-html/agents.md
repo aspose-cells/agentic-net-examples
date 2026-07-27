@@ -363,3 +363,4 @@ Output files are written to the working directory.
 - create-a-unit-test-asserting-a-specific-cell-value-appears-in-the-html-output.cs
 - create-a-unit-test-asserting-no-style-tags-exist-when-disablecss-option-is-true.cs
 - create-a-unit-test-asserting-css-custom-property-definitions-appear-within-a-root-selector-when-enabled.cs
+- generate-html-for-a-workbook-containing-merged-cells-and-verify-merged-layout-is-preserved.cs
