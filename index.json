@@ -96,6 +96,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "attempt-to-edit-a-protected-worksheet-without-password-and-record-failure-outcome.cs",
+      "title": "Attempt to edit a protected worksheet without password and record failure outcome."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "attempt-to-open-an-encrypted-workbook-with-incorrect-password-and-capture-exception-details.cs",
       "title": "Attempt to open an encrypted workbook with incorrect password and capture exception details."
     },
