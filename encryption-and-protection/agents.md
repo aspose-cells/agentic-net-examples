@@ -87,3 +87,4 @@ Examples may generate:
 - apply-workbook-protection-preventing-changes-to-default-file-properties-such-as-author-and-title.cs
 - encrypt-a-workbook-using-a-password-stored-in-a-hardware-security-module-and-confirm-successful-decryption.cs
 - detect-if-a-workbooks-encryption-uses-a-deprecated-algorithm-and-flag-it-for-migration.cs
+- create-a-utility-extracting-encryption-metadata-from-an-excel-file-and-displaying-it-in-a-readable-format.cs
