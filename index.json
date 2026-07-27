@@ -10141,6 +10141,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-multiple-workbooks-in-a-loop-applying-different-htmlcrosstype-values-based-on-file-size.cs",
+      "title": "Convert multiple workbooks in a loop, applying different HtmlCrossType values based on file size."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
