@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - disable-default-css-generation-and-rely-solely-on-tablecssid-to-style-exported-html-tables.cs
 - enable-css-custom-properties-in-htmlsaveoptions-while-using-tablecssid-to-enhance-table-styling-flexibility.cs
 - include-cell-comments-in-the-html-export-and-ensure-they-inherit-the-tablecssid-prefixed-styles.cs
+- set-the-html-encoding-to-utf-8-and-apply-a-custom-tablecssid-for-consistent-table-class-naming.cs
