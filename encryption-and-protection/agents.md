@@ -142,3 +142,4 @@ Examples may generate:
 - detect-an-encrypted-office-open-xml-file-and-extract-its-encryption-algorithm-identifier-for-auditing.cs
 - open-an-encrypted-workbook-with-correct-password-decrypt-contents-and-save-as-new-xlsx-file.cs
 - attempt-to-open-an-encrypted-workbook-with-incorrect-password-and-capture-exception-details.cs
+- encrypt-a-workbook-using-a-strong-password-and-then-programmatically-verify-that-the-password-meets-complexity-rules.cs
