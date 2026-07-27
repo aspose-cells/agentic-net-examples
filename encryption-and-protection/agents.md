@@ -140,3 +140,4 @@ Examples may generate:
 - load-a-workbook-from-a-memory-stream-detect-its-encryption-status-and-output-format-to-console.cs
 - save-an-encrypted-workbook-to-a-memory-stream-then-read-stream-length-to-confirm-encryption-overhead.cs
 - detect-an-encrypted-office-open-xml-file-and-extract-its-encryption-algorithm-identifier-for-auditing.cs
+- open-an-encrypted-workbook-with-correct-password-decrypt-contents-and-save-as-new-xlsx-file.cs
