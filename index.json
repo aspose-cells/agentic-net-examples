@@ -66,6 +66,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-the-format-of-an-encrypted-ooxml-workbook-without-providing-a-password-and-record-the-result.cs",
+      "title": "Detect the format of an encrypted OOXML workbook without providing a password and record the result."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-whether-a-workbook-contains-hidden-protected-worksheets-and-list-their-names-for-review.cs",
       "title": "Detect whether a workbook contains hidden protected worksheets and list their names for review."
     },
