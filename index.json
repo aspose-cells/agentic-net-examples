@@ -6491,6 +6491,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs",
+      "title": "Define a custom data source reading JSON files and mapping properties to smart marker fields for reports."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs",
       "title": "Define a variable in the Excel template and set its value programmatically before processing."
     },
