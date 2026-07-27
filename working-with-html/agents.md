@@ -410,3 +410,4 @@ Output files are written to the working directory.
 - perform-a-performance-benchmark-converting-a-10-mb-workbook-to-html-with-css-enabled-versus-disabled.cs
 - perform-a-performance-benchmark-converting-a-workbook-with-500-worksheets-using-exportallworksheets-true-to-assess-scalability.cs
 - perform-a-performance-benchmark-converting-a-workbook-with-exportactiveworksheetonly-true-to-measure-singlesheet-processing-speed.cs
+- generate-html-and-then-use-an-html-parser-to-extract-all-hyperlink-urls-for-link-analysis.cs
