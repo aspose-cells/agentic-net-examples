@@ -163,3 +163,4 @@ Examples may generate:
 - apply-worksheet-protection-with-a-password-that-expires-after-a-specified-time-interval-then-test-expiration-behavior.cs
 - load-an-encrypted-workbook-change-its-password-to-a-new-value-and-save-the-updated-encrypted-file.cs
 - batch-encrypt-all-xls-files-in-a-source-folder-using-a-common-password-and-save-to-target-directory.cs
+- batch-decrypt-every-encrypted-xlsx-file-in-a-collection-using-a-list-of-possible-passwords-logging-successes.cs
