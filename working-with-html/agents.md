@@ -201,3 +201,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-apply-a-custom-theme-based-on-css-variables-defined-in-the-html.cs
 - convert-html-to-excel-and-preserve-hidden-rows-and-columns-indicated-by-css-displaynone.cs
 - convert-html-to-excel-and-map-css-border-styles-to-excel-cell-border-line-styles.cs
+- convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs
