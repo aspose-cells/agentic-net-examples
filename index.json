@@ -166,6 +166,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "load-a-workbook-remove-all-existing-signature-lines-and-add-a-new-line-with-updated-signer-details.cs",
+      "title": "Load a workbook, remove all existing signature lines, and add a new line with updated signer details."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs",
       "title": "Programmatically verify that a workbook's password protection flag is set after saving the encrypted file."
     },
