@@ -9691,6 +9691,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-widthscalable-false-and-confirm-column-widths-render-as-fixed-pixel-values.cs",
+      "title": "Apply WidthScalable false and confirm column widths render as fixed pixel values."
+    },
+    {
+      "category": "working-with-html",
       "file": "assign-a-custom-ifilepathprovider-instance-to-htmlsaveoptionsfilepathprovider-to-fix-broken-worksheet-hyperlinks.cs",
       "title": "Assign a custom IFilePathProvider instance to HtmlSaveOptions.FilePathProvider to fix broken worksheet hyperlinks."
     },
