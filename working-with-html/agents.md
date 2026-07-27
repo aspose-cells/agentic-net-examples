@@ -378,3 +378,4 @@ Output files are written to the working directory.
 - set-exporthiddenworksheet-false-and-verify-hidden-worksheets-are-excluded-from-html-conversion.cs
 - combine-exportcomments-false-exportconditionalformatting-false-and-exportgridlines-false-to-generate-minimal-html.cs
 - generate-html-with-embedded-images-as-separate-files-by-setting-exportimagesasbase64-false.cs
+- generate-html-with-embedded-images-as-base64-strings-by-setting-exportimagesasbase64-true.cs
