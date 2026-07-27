@@ -445,3 +445,4 @@ Output files are written to the working directory.
 - adjust-htmlsaveoptions-to-export-numeric-cells-using-plain-text-format-rather-than-scientific-notation.cs
 - export-worksheet-headings-as-separate-html-tables-by-enabling-htmlsaveoptionsexportheadings.cs
 - include-worksheet-names-as-headings-in-html-output-via-htmlsaveoptionsexportheadings.cs
+- export-a-workbook-to-html-with-headings-enabled-producing-separate-tables-for-each-worksheet.cs
