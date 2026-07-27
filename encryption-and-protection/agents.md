@@ -102,3 +102,4 @@ Examples may generate:
 - protect-a-worksheet-then-attempt-to-copy-its-protected-range-to-another-workbook-without-providing-the-password.cs
 - create-a-batch-script-that-decrypts-workbooks-removes-all-protection-and-reencrypts-them-with-a-unified-password.cs
 - detect-whether-a-workbook-contains-hidden-protected-worksheets-and-list-their-names-for-review.cs
+- apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs
