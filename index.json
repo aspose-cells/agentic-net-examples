@@ -286,6 +286,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-the-workbook-structure-then-attempt-to-rename-a-worksheet-and-confirm-that-the-operation-is-blocked.cs",
+      "title": "Protect the workbook structure, then attempt to rename a worksheet and confirm that the operation is blocked."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "protect-workbook-structure-with-a-password-to-prevent-adding-or-removing-worksheets-then-verify-protection.cs",
       "title": "Protect workbook structure with a password to prevent adding or removing worksheets, then verify protection."
     },
