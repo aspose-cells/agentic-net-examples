@@ -9721,6 +9721,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs",
+      "title": "Convert HTML to Excel using a memory stream to process large files without temporary files."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-using-a-stream-provider-that-writes-output-directly-to-cloud-storage.cs",
       "title": "Convert HTML to Excel using a stream provider that writes output directly to cloud storage."
     },
