@@ -10296,6 +10296,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-asserting-a-specific-cell-value-appears-in-the-html-output.cs",
+      "title": "Create a unit test asserting a specific cell value appears in the HTML output."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
