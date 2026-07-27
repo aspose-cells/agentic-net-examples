@@ -165,3 +165,4 @@ Examples may generate:
 - batch-encrypt-all-xls-files-in-a-source-folder-using-a-common-password-and-save-to-target-directory.cs
 - batch-decrypt-every-encrypted-xlsx-file-in-a-collection-using-a-list-of-possible-passwords-logging-successes.cs
 - generate-a-csv-report-summarizing-file-name-format-and-encryption-state-for-all-excel-files-in-a-folder.cs
+- create-a-utility-that-accepts-file-paths-determines-which-are-encrypted-and-returns-the-encrypted-files-list.cs
