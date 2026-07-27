@@ -11,6 +11,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "add-a-signature-line-with-a-visible-image-placeholder-and-customize-its-appearance-using-picture-properties.cs",
+      "title": "Add a signature line with a visible image placeholder and customize its appearance using picture properties."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "add-multiple-signature-lines-to-different-worksheets-each-with-unique-signer-information-and-comments.cs",
       "title": "Add multiple signature lines to different worksheets, each with unique signer information and comments."
     },
