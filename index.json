@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-custom-number-formats-for-scientific-notation-values.cs",
+      "title": "Convert HTML to Excel and apply custom number formats for scientific notation values."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs",
       "title": "Convert HTML to Excel and apply date format detection based on locale settings."
     },
