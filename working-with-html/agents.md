@@ -299,3 +299,4 @@ Output files are written to the working directory.
 - ensure-cells-with-short-text-do-not-receive-tooltip-attributes-when-addtooltiptext-is-enabled.cs
 - combine-widthscalable-htmlcrosstypefittocell-and-addtooltiptext-to-produce-responsive-html-with-tooltips.cs
 - use-htmlcrosstypefittocell-together-with-addtooltiptext-to-provide-full-content-on-hover-without-overflow.cs
+- use-htmlcrosstypedefault-with-addtooltiptext-enabled-to-show-full-cell-content-while-preserving-overflow-behavior.cs
