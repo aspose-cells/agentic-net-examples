@@ -9706,6 +9706,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-process-multiple-workbooks-exporting-them-to-html-using-a-shared-tablecssid-to-maintain-uniform-styling.cs",
+      "title": "Batch process multiple workbooks, exporting them to HTML using a shared TableCssId to maintain uniform styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-process-workbooks-applying-both-excludeunusedstyles-and-exportgridlines-and-compare-processing-time-against-default-settings.cs",
       "title": "Batch process workbooks, applying both ExcludeUnusedStyles and ExportGridLines, and compare processing time against default settings."
     },
