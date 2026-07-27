@@ -11101,6 +11101,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "replace-all-hyperlink-urls-in-generated-html-with-absolute-urls-using-string-replacement-logic.cs",
+      "title": "Replace all hyperlink URLs in generated HTML with absolute URLs using string replacement logic."
+    },
+    {
+      "category": "working-with-html",
       "file": "save-a-workbook-to-html-with-exportgridlines-disabled-then-confirm-that-gridlines-are-absent-in-the-output.cs",
       "title": "Save a workbook to HTML with ExportGridLines disabled, then confirm that gridlines are absent in the output."
     },
