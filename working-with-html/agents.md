@@ -355,3 +355,4 @@ Output files are written to the working directory.
 - generate-html-with-a-custom-page-title-by-setting-htmlsaveoptionshtmltitle-property.cs
 - generate-html-using-utf-8-encoding-by-assigning-htmlsaveoptionsencoding-to-encodingutf8.cs
 - save-html-output-to-a-memorystream-instead-of-a-physical-file-for-inmemory-processing.cs
+- write-html-bytes-from-a-memorystream-directly-to-an-aspnet-response-for-immediate-download.cs
