@@ -9696,6 +9696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "autofit-columns-and-rows-after-loading-html-into-a-workbook-then-export-with-tablecssid-to-preserve-layout.cs",
+      "title": "Autofit columns and rows after loading HTML into a workbook, then export with TableCssId to preserve layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-a-set-of-xls-files-to-html-applying-exportgridlines-only-to-worksheets-that-contain-tables.cs",
       "title": "Batch convert a set of XLS files to HTML, applying ExportGridLines only to worksheets that contain tables."
     },
