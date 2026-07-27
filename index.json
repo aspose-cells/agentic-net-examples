@@ -10416,6 +10416,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-conditional-formatting-colors-are-retained-in-html-when-exportconditionalformatting-is-true.cs",
+      "title": "Ensure conditional formatting colors are retained in HTML when ExportConditionalFormatting is true."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-combining-exporthiddenworksheet-false-with-htmlcrosstypefittocell-limits-overflow-and-hides-hidden-worksheets.cs",
       "title": "Ensure that combining ExportHiddenWorksheet false with HtmlCrossType.FitToCell limits overflow and hides hidden worksheets."
     },
