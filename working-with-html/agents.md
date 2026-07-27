@@ -331,3 +331,4 @@ Output files are written to the working directory.
 - convert-an-excel-workbook-to-html-with-default-options-and-enable-css-custom-properties-for-image-reuse.cs
 - convert-an-excel-workbook-to-html-with-default-options-and-disable-css-generation-for-minimal-output.cs
 - convert-an-excel-workbook-to-html-with-default-options-while-exporting-cell-comments.cs
+- convert-an-excel-workbook-to-html-with-default-options-while-exporting-conditional-formatting.cs
