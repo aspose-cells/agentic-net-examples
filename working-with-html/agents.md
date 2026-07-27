@@ -303,3 +303,4 @@ Output files are written to the working directory.
 - export-only-visible-worksheets-by-setting-exporthiddenworksheet-to-false-before-saving.cs
 - include-hidden-worksheets-by-leaving-exporthiddenworksheet-set-to-true-during-html-export.cs
 - export-html-with-exporthiddenworksheet-false-while-using-widthscalable-true-for-responsive-columns.cs
+- export-html-with-exporthiddenworksheet-true-and-htmlcrosstypecross-for-performance-on-large-workbooks.cs
