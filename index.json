@@ -4351,6 +4351,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-lightcells-api-to-open-a-large-workbook-then-monitor-memory-usage-statistics-during-processing.cs",
+      "title": "Use LightCells API to open a large workbook, then monitor memory usage statistics during processing."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-to-open-a-large-xlsx-file-while-limiting-memory-usage-to-200-mb.cs",
       "title": "Use LightCells API to open a large XLSX file while limiting memory usage to 200\u202fMB."
     },
