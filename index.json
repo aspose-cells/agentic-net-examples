@@ -10556,6 +10556,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-using-htmlcrosstypedefault-to-mimic-excel-overflow-for-long-strings.cs",
+      "title": "Generate HTML using HtmlCrossType.Default to mimic Excel overflow for long strings."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-a-custom-tablecssid-and-verify-that-no-css-class-name-collisions-occur-with-existing-styles.cs",
       "title": "Generate HTML with a custom TableCssId and verify that no CSS class name collisions occur with existing styles."
     },
