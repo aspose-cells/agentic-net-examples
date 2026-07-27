@@ -11091,6 +11091,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "integrate-html-conversion-into-a-web-api-endpoint-that-returns-html-content-as-a-string-response.cs",
+      "title": "Integrate HTML conversion into a Web API endpoint that returns HTML content as a string response."
+    },
+    {
+      "category": "working-with-html",
       "file": "integrate-html-conversion-into-an-aspnet-mvc-controller-action-that-returns-a-fileresult-containing-the-html.cs",
       "title": "Integrate HTML conversion into an ASP.NET MVC controller action that returns a FileResult containing the HTML."
     },
