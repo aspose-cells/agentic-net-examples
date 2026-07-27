@@ -10116,8 +10116,18 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-apply-a-custom-stylesheet-that-overrides-default-cell-colors.cs",
+      "title": "Export Excel to HTML and apply a custom stylesheet that overrides default cell colors."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-apply-responsive-design-techniques-for-optimal-mobile-device-viewing.cs",
       "title": "Export Excel to HTML and apply responsive design techniques for optimal mobile device viewing."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-compress-the-output-html-using-gzip-stream-for-faster-transmission.cs",
+      "title": "Export Excel to HTML and compress the output HTML using GZIP stream for faster transmission."
     },
     {
       "category": "working-with-html",
@@ -10128,6 +10138,11 @@
       "category": "working-with-html",
       "file": "export-excel-to-html-and-embed-images-as-base64-data-uris-within-the-html-output.cs",
       "title": "Export Excel to HTML and embed images as base64 data URIs within the HTML output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-ensure-formulas-are-displayed-as-values-not-as-formula-strings.cs",
+      "title": "Export Excel to HTML and ensure formulas are displayed as values, not as formula strings."
     },
     {
       "category": "working-with-html",
@@ -10143,6 +10158,16 @@
       "category": "working-with-html",
       "file": "export-excel-to-html-and-include-custom-metadata-tags-extracted-from-workbook-properties.cs",
       "title": "Export Excel to HTML and include custom metadata tags extracted from workbook properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-maintain-original-column-widths-using-css-width-properties.cs",
+      "title": "Export Excel to HTML and maintain original column widths using CSS width properties."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
+      "title": "Export Excel to HTML and preserve cell comments as HTML tooltip attributes."
     },
     {
       "category": "working-with-html",
