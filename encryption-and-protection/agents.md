@@ -132,3 +132,4 @@ Examples may generate:
 - add-a-signature-line-that-references-a-specific-certificate-thumbprint-stored-in-the-windows-certificate-store.cs
 - add-a-signature-line-with-a-predefined-signer-email-address-and-automatically-populate-the-contact-field.cs
 - add-a-signature-line-with-a-custom-label-and-ensure-the-label-appears-in-the-document-properties-panel.cs
+- add-a-signature-line-then-lock-the-worksheet-to-prevent-further-edits-without-a-password.cs
