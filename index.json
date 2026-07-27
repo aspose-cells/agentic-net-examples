@@ -10331,6 +10331,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-worksheet-containing-multiple-tables-and-ensure-each-table-receives-the-tablecssid-prefixed-style-class.cs",
+      "title": "Export a worksheet containing multiple tables and ensure each table receives the TableCssId prefixed style class."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-defined-print-area-while-disabling-css-generation-by-setting-exportprintareaonly-true-and-disablecss-true.cs",
       "title": "Export defined print area while disabling CSS generation by setting ExportPrintAreaOnly true and DisableCss true."
     },
