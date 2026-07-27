@@ -516,6 +516,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-custom-theme-that-uses-corporate-brand-colors-and-apply-it-to-existing-reports.cs",
+      "title": "Create a custom theme that uses corporate brand colors and apply it to existing reports."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-function-that-maps-business-status-values-to-specific-theme-accent-colors-for-cell-fill.cs",
       "title": "Create a function that maps business status values to specific theme accent colors for cell fill."
     },
