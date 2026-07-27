@@ -10796,6 +10796,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-a-custom-page-title-by-setting-htmlsaveoptionshtmltitle-property.cs",
+      "title": "Generate HTML with a custom page title by setting HtmlSaveOptions.HtmlTitle property."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-a-custom-tablecssid-and-verify-that-no-css-class-name-collisions-occur-with-existing-styles.cs",
       "title": "Generate HTML with a custom TableCssId and verify that no CSS class name collisions occur with existing styles."
     },
