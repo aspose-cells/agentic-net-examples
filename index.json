@@ -9836,6 +9836,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "combine-exportcomments-false-exportconditionalformatting-false-and-exportgridlines-false-to-generate-minimal-html.cs",
+      "title": "Combine ExportComments false, ExportConditionalFormatting false, and ExportGridLines false to generate minimal HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "combine-widthscalable-htmlcrosstypefittocell-and-addtooltiptext-to-produce-responsive-html-with-tooltips.cs",
       "title": "Combine WidthScalable, HtmlCrossType.FitToCell, and AddTooltipText to produce responsive HTML with tooltips."
     },
@@ -10886,6 +10891,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-embedded-images-as-base64-strings-by-setting-exportimagesasbase64-true.cs",
+      "title": "Generate HTML with embedded images as base64 strings by setting ExportImagesAsBase64 true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-with-embedded-images-as-separate-files-by-setting-exportimagesasbase64-false.cs",
+      "title": "Generate HTML with embedded images as separate files by setting ExportImagesAsBase64 false."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-widthscalable-enabled-and-addtooltiptext-enabled-to-create-scalable-columns-with-hover-tooltips.cs",
       "title": "Generate HTML with WidthScalable enabled and AddTooltipText enabled to create scalable columns with hover tooltips."
     },
@@ -11213,6 +11228,11 @@
       "category": "working-with-html",
       "file": "set-exporthiddenworksheet-false-and-verify-hidden-sheets-are-omitted-from-resulting-html.cs",
       "title": "Set ExportHiddenWorksheet false and verify hidden sheets are omitted from resulting HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-exporthiddenworksheet-false-and-verify-hidden-worksheets-are-excluded-from-html-conversion.cs",
+      "title": "Set ExportHiddenWorksheet false and verify hidden worksheets are excluded from HTML conversion."
     },
     {
       "category": "working-with-html",
