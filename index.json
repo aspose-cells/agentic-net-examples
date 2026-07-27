@@ -10141,6 +10141,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-include-custom-metadata-tags-extracted-from-workbook-properties.cs",
+      "title": "Export Excel to HTML and include custom metadata tags extracted from workbook properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
       "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
     },
