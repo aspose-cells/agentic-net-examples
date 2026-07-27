@@ -154,3 +154,4 @@ Examples may generate:
 - protect-the-workbook-structure-then-attempt-to-rename-a-worksheet-and-confirm-that-the-operation-is-blocked.cs
 - unprotect-the-workbook-structure-rename-a-worksheet-and-then-reapply-structure-protection-with-a-new-password.cs
 - apply-both-an-opening-password-and-workbook-structure-protection-to-a-workbook-then-test-each-protection-independently.cs
+- remove-both-the-opening-password-and-structure-protection-from-a-workbook-in-a-single-operation-and-save.cs
