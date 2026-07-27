@@ -4121,6 +4121,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs",
+      "title": "Validate that required worksheets \"Invoice\" and \"Summary\" exist after loading, throwing an exception if missing."
+    },
+    {
+      "category": "open-workbook",
       "file": "write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs",
       "title": "Write pivot table definitions while saving with LightCellsDataProvider to recreate analytical views in the output workbook."
     },
