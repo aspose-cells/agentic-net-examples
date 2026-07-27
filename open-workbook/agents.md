@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - load-a-workbook-using-loadoptions-to-disable-charts-set-printer-paper-size-a5-and-save-to-pdf.cs
 - load-a-workbook-using-loadoptions-to-disable-charts-filter-defined-names-total-and-save-to-pdf.cs
 - load-a-workbook-using-loadoptions-to-disable-charts-load-only-worksheets-0-and-2-and-save-to-pdf.cs
+- load-a-workbook-using-loadoptions-to-disable-charts-configure-interruptmonitor-and-save-to-pdf.cs
