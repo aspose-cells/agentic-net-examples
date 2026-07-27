@@ -21,6 +21,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-if-a-workbooks-encryption-uses-a-deprecated-algorithm-and-flag-it-for-migration.cs",
+      "title": "Detect if a workbook's encryption uses a deprecated algorithm and flag it for migration."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs",
       "title": "Encrypt a workbook, then measure the time required to open it in a headless automation environment."
     },
