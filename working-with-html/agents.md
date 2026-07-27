@@ -292,3 +292,4 @@ Output files are written to the working directory.
 - export-a-workbook-to-html-with-htmlcrosstypemsexport-to-replicate-excels-native-html-style.cs
 - confirm-that-htmlcrosstypefittocell-wraps-text-within-cell-boundaries-when-enabled.cs
 - measure-export-time-for-a-large-workbook-using-htmlcrosstypecross-versus-default.cs
+- validate-that-htmlcrosstypecross-improves-performance-without-altering-visual-rendering-compared-to-default.cs
