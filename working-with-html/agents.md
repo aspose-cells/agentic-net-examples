@@ -437,3 +437,4 @@ Output files are written to the working directory.
 - activate-custom-css-properties-in-html-output-by-enabling-htmlsaveoptionsenablecsscustomproperties.cs
 - combine-disabling-external-css-and-enabling-custom-css-properties-for-embedded-styling-in-html.cs
 - generate-html-with-embedded-css-by-disabling-external-css-and-enabling-custom-css-properties.cs
+- set-html-hyperlink-target-type-to-_blank-using-htmlsaveoptionshtmllinktargettype-for-all-links.cs
