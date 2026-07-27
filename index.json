@@ -10711,6 +10711,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-headings-enabled-producing-separate-tables-for-each-worksheet.cs",
+      "title": "Export a workbook to HTML with headings enabled, producing separate tables for each worksheet."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-to-html-with-htmlcrosstypemsexport-to-replicate-excels-native-html-style.cs",
       "title": "Export a workbook to HTML with HtmlCrossType.MSExport to replicate Excel\u2019s native HTML style."
     },
