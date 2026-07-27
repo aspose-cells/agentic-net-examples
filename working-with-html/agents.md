@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - convert-html-to-excel-and-map-css-border-styles-to-excel-cell-border-line-styles.cs
 - convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs
 - convert-html-to-excel-and-set-workbook-calculation-mode-to-automatic-for-formula-evaluation.cs
+- load-an-excel-workbook-from-a-file-and-export-it-to-html-using-a-custom-stream-provider.cs
