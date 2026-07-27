@@ -31,6 +31,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-batch-script-that-decrypts-workbooks-removes-all-protection-and-reencrypts-them-with-a-unified-password.cs",
+      "title": "Create a batch script that decrypts workbooks, removes all protection, and re\u2011encrypts them with a unified password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "create-a-commandline-utility-that-accepts-a-directory-path-encrypts-all-excel-files-and-outputs-a-summary-report.cs",
       "title": "Create a command\u2011line utility that accepts a directory path, encrypts all Excel files, and outputs a summary report."
     },
