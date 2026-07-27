@@ -10616,6 +10616,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-widthscalable-enabled-and-addtooltiptext-enabled-to-create-scalable-columns-with-hover-tooltips.cs",
+      "title": "Generate HTML with WidthScalable enabled and AddTooltipText enabled to create scalable columns with hover tooltips."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-iecompatible-mhtml-from-a-multisheet-workbook-and-verify-tab-switching-functionality-in-internet-explorer.cs",
       "title": "Generate IE\u2011compatible MHTML from a multi\u2011sheet workbook and verify tab switching functionality in Internet Explorer."
     },
