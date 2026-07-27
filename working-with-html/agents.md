@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - render-wordart-gradient-fills-during-html-export-and-apply-custom-css-classes-for-gradient-control.cs
 - render-wordart-gradient-fills-while-converting-to-pdf-and-embed-the-gradient-as-a-pdf-shading-pattern.cs
 - render-wordart-gradient-fills-while-converting-to-html-and-include-fallback-solid-colors-for-older-browsers.cs
+- render-wordart-gradient-fills-during-conversion-and-allow-configuration-of-gradient-direction-via-api.cs
