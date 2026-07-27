@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - load-only-the-first-three-worksheets-from-an-xlsx-file-using-lightcells-to-minimize-memory-consumption.cs
 - exclude-hidden-rows-during-workbook-loading-by-configuring-filterobjects-to-ignore-rows-with-visibility-set-to-false.cs
 - read-numeric-cell-values-with-lightcells-api-and-store-them-in-a-highperformance-inmemory-collection.cs
+- write-formulas-to-cells-while-streaming-data-using-lightcellsdataprovider-to-preserve-calculation-logic.cs
