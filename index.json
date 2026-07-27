@@ -10901,6 +10901,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-row-numbers-are-displayed-when-exportrowheaders-option-is-enabled.cs",
+      "title": "Generate HTML and ensure row numbers are displayed when ExportRowHeaders option is enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-ensure-table-headers-include-column-letters-when-exporting-column-headers.cs",
       "title": "Generate HTML and ensure table headers include column letters when exporting column headers."
     },
