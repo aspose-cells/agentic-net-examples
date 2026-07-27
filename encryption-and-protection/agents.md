@@ -90,3 +90,4 @@ Examples may generate:
 - create-a-utility-extracting-encryption-metadata-from-an-excel-file-and-displaying-it-in-a-readable-format.cs
 - verify-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-older-excel-versions.cs
 - unprotect-a-workbook-structure-rename-several-sheets-and-reprotect-using-a-password-retrieved-from-azure-key-vault.cs
+- detect-whether-a-workbook-is-encrypted-with-a-password-meeting-organizational-complexity-requirements.cs
