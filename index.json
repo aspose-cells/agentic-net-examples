@@ -281,6 +281,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "load-an-encrypted-workbook-change-its-password-to-a-new-value-and-save-the-updated-encrypted-file.cs",
+      "title": "Load an encrypted workbook, change its password to a new value, and save the updated encrypted file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "load-an-unencrypted-workbook-verify-its-format-and-log-confirmation-to-console.cs",
       "title": "Load an unencrypted workbook, verify its format, and log confirmation to console."
     },
