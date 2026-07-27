@@ -442,3 +442,4 @@ Output files are written to the working directory.
 - convert-an-excel-file-to-html-and-ensure-hyperlinks-open-in-new-tabs-via-htmlsaveoptions.cs
 - prevent-exponential-notation-for-large-numbers-in-html-by-setting-htmlsaveoptionsexportnumericformat-to-plain-text.cs
 - export-numeric-cells-as-plain-text-instead-of-scientific-notation-using-htmlsaveoptions.cs
+- adjust-htmlsaveoptions-to-export-numeric-cells-using-plain-text-format-rather-than-scientific-notation.cs
