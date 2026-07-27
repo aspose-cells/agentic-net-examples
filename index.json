@@ -10861,6 +10861,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-date-values-are-formatted-according-to-the-workbooks-locale-settings.cs",
+      "title": "Generate HTML and ensure date values are formatted according to the workbook\u2019s locale settings."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-ensure-numeric-values-retain-their-original-formatting-as-displayed-in-excel.cs",
       "title": "Generate HTML and ensure numeric values retain their original formatting as displayed in Excel."
     },
