@@ -9686,6 +9686,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
+      "title": "Convert HTML to Excel and preserve cell comments as HTML tooltip attributes."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-preserve-conditional-formatting-rules-defined-in-css-classes.cs",
       "title": "Convert HTML to Excel and preserve conditional formatting rules defined in CSS classes."
     },
