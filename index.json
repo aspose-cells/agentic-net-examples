@@ -211,6 +211,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "load-a-workbook-from-a-memory-stream-detect-its-encryption-status-and-output-format-to-console.cs",
+      "title": "Load a workbook from a memory stream, detect its encryption status, and output format to console."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "load-a-workbook-remove-all-existing-signature-lines-and-add-a-new-line-with-updated-signer-details.cs",
       "title": "Load a workbook, remove all existing signature lines, and add a new line with updated signer details."
     },
