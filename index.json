@@ -10041,6 +10041,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-css-custom-properties-in-htmlsaveoptions-while-using-tablecssid-to-enhance-table-styling-flexibility.cs",
+      "title": "Enable CSS custom properties in HtmlSaveOptions while using TableCssId to enhance table styling flexibility."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-custom-css-properties-during-html-export-by-setting-enablecustomproperties-to-true.cs",
       "title": "Enable custom CSS properties during HTML export by setting EnableCustomProperties to true."
     },
