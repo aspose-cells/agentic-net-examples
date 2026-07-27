@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "append-a-custom-css-class-to-the-html-body-element-after-conversion-for-additional-styling.cs",
+      "title": "Append a custom CSS class to the HTML body element after conversion for additional styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-a-custom-style-to-a-range-enable-excludeunusedstyles-and-verify-only-used-styles-appear-in-html.cs",
       "title": "Apply a custom style to a range, enable ExcludeUnusedStyles, and verify only used styles appear in HTML."
     },
@@ -10301,6 +10306,21 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-asserting-a-specific-cell-value-appears-in-the-html-output.cs",
+      "title": "Create a unit test asserting a specific cell value appears in the HTML output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-asserting-css-custom-property-definitions-appear-within-a-root-selector-when-enabled.cs",
+      "title": "Create a unit test asserting CSS custom property definitions appear within a :root selector when enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-asserting-no-style-tags-exist-when-disablecss-option-is-true.cs",
+      "title": "Create a unit test asserting no style tags exist when DisableCss option is true."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
@@ -10791,6 +10811,31 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-for-a-workbook-containing-merged-cells-and-verify-merged-layout-is-preserved.cs",
+      "title": "Generate HTML for a workbook containing merged cells and verify merged layout is preserved."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-for-a-workbook-with-data-validation-dropdowns-and-verify-they-appear-as-select-elements.cs",
+      "title": "Generate HTML for a workbook with data validation dropdowns and verify they appear as select elements."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-for-a-workbook-with-formulas-and-verify-calculated-results-are-displayed-correctly.cs",
+      "title": "Generate HTML for a workbook with formulas and verify calculated results are displayed correctly."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-for-a-workbook-with-frozen-panes-and-verify-pane-positions-are-reflected.cs",
+      "title": "Generate HTML for a workbook with frozen panes and verify pane positions are reflected."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-for-a-workbook-with-hidden-rows-and-verify-they-are-omitted-unless-exporthiddenworksheet-is-true.cs",
+      "title": "Generate HTML for a workbook with hidden rows and verify they are omitted unless ExportHiddenWorksheet is true."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-from-a-workbook-while-disabling-all-conditional-formatting-export-to-produce-a-plain-visual-representation.cs",
       "title": "Generate HTML from a workbook while disabling all conditional formatting export to produce a plain visual representation."
     },
@@ -10803,6 +10848,16 @@
       "category": "working-with-html",
       "file": "generate-html-using-htmlcrosstypedefault-to-mimic-excel-overflow-for-long-strings.cs",
       "title": "Generate HTML using HtmlCrossType.Default to mimic Excel overflow for long strings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-using-utf-8-encoding-by-assigning-htmlsaveoptionsencoding-to-encodingutf8.cs",
+      "title": "Generate HTML using UTF-8 encoding by assigning HtmlSaveOptions.Encoding to Encoding.UTF8."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-with-a-custom-page-title-by-setting-htmlsaveoptionshtmltitle-property.cs",
+      "title": "Generate HTML with a custom page title by setting HtmlSaveOptions.HtmlTitle property."
     },
     {
       "category": "working-with-html",
@@ -11006,6 +11061,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs",
+      "title": "Measure rendering performance of HTML with CSS disabled versus enabled using a stopwatch timer."
+    },
+    {
+      "category": "working-with-html",
       "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
       "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
     },
@@ -11091,13 +11151,33 @@
     },
     {
       "category": "working-with-html",
+      "file": "replace-all-hyperlink-urls-in-generated-html-with-absolute-urls-using-string-replacement-logic.cs",
+      "title": "Replace all hyperlink URLs in generated HTML with absolute URLs using string replacement logic."
+    },
+    {
+      "category": "working-with-html",
       "file": "save-a-workbook-to-html-with-exportgridlines-disabled-then-confirm-that-gridlines-are-absent-in-the-output.cs",
       "title": "Save a workbook to HTML with ExportGridLines disabled, then confirm that gridlines are absent in the output."
     },
     {
       "category": "working-with-html",
+      "file": "save-html-output-to-a-memorystream-instead-of-a-physical-file-for-inmemory-processing.cs",
+      "title": "Save HTML output to a MemoryStream instead of a physical file for in\u2011memory processing."
+    },
+    {
+      "category": "working-with-html",
       "file": "save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs",
       "title": "Save HTML with AddTooltipText enabled so full cell text appears as hover tooltip."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-exporthiddenworksheet-false-and-verify-hidden-sheets-are-omitted-from-resulting-html.cs",
+      "title": "Set ExportHiddenWorksheet false and verify hidden sheets are omitted from resulting HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-exporthiddenworksheet-true-and-verify-hidden-sheets-are-included-in-generated-html.cs",
+      "title": "Set ExportHiddenWorksheet true and verify hidden sheets are included in generated HTML."
     },
     {
       "category": "working-with-html",
@@ -11308,6 +11388,11 @@
       "category": "working-with-html",
       "file": "verify-tooltip-attributes-appear-only-for-cells-whose-displayed-text-is-truncated.cs",
       "title": "Verify tooltip attributes appear only for cells whose displayed text is truncated."
+    },
+    {
+      "category": "working-with-html",
+      "file": "write-html-bytes-from-a-memorystream-directly-to-an-aspnet-response-for-immediate-download.cs",
+      "title": "Write HTML bytes from a MemoryStream directly to an ASP.NET response for immediate download."
     },
     {
       "category": "working-with-images",
