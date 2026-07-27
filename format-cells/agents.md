@@ -85,3 +85,4 @@ Output files are written to the working directory.
 - apply-the-themes-light1-background-to-alternate-rows-for-improved-readability-in-a-table.cs
 - update-the-themes-accent4-color-based-on-user-input-and-refresh-all-dependent-cell-styles.cs
 - apply-the-themes-accent5-color-to-the-data-bars-of-a-conditional-formatting-rule.cs
+- load-multiple-workbooks-synchronize-their-theme-palettes-to-a-master-theme-and-save-changes.cs
