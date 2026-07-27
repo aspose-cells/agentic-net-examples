@@ -112,3 +112,4 @@ Examples may generate:
 - load-a-passwordprotected-workbook-prompt-the-user-for-the-password-and-open-it-for-reading.cs
 - decrypt-an-existing-passwordprotected-workbook-modify-a-cell-value-and-reencrypt-before-saving.cs
 - encrypt-a-newly-created-workbook-using-a-userspecified-password-and-save-it-as-a-protected-file.cs
+- add-a-signature-line-to-a-specific-worksheet-setting-signer-name-and-title-properties.cs
