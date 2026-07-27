@@ -431,6 +431,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "validate-that-a-workbook-encrypted-with-one-password-cannot-be-opened-with-a-different-similar-password.cs",
+      "title": "Validate that a workbook encrypted with one password cannot be opened with a different, similar password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-that-a-workbook-is-not-encrypted-before-performing-bulk-data-extraction-across-multiple-sheets.cs",
       "title": "Validate that a workbook is not encrypted before performing bulk data extraction across multiple sheets."
     },
