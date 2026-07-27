@@ -10926,6 +10926,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "implement-error-handling-for-missing-worksheets-when-exporthiddenworksheet-option-is-enabled.cs",
+      "title": "Implement error handling for missing worksheets when ExportHiddenWorksheet option is enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-exception-handling-to-catch-invalid-tablecssid-values-and-provide-descriptive-error-messages-to-developers.cs",
       "title": "Implement exception handling to catch invalid TableCssId values and provide descriptive error messages to developers."
     },
