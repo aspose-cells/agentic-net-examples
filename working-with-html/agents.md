@@ -297,3 +297,4 @@ Output files are written to the working directory.
 - generate-html-with-addtooltiptext-disabled-to-improve-rendering-speed-significantly.cs
 - verify-tooltip-attributes-appear-only-for-cells-whose-displayed-text-is-truncated.cs
 - ensure-cells-with-short-text-do-not-receive-tooltip-attributes-when-addtooltiptext-is-enabled.cs
+- combine-widthscalable-htmlcrosstypefittocell-and-addtooltiptext-to-produce-responsive-html-with-tooltips.cs
