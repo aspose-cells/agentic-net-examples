@@ -56,6 +56,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-whether-a-workbook-contains-hidden-protected-worksheets-and-list-their-names-for-review.cs",
+      "title": "Detect whether a workbook contains hidden protected worksheets and list their names for review."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-whether-a-workbook-is-encrypted-with-a-password-meeting-organizational-complexity-requirements.cs",
       "title": "Detect whether a workbook is encrypted with a password meeting organizational complexity requirements."
     },
