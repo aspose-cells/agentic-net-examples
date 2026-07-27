@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-conditional-formatting-in-the-source-workbook-and-verify-its-visual-preservation-in-html-output-using-tablecssid.cs",
+      "title": "Apply conditional formatting in the source workbook and verify its visual preservation in HTML output using TableCssId."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-css-classes-to-heading-elements-for-consistent-styling-across-exported-pages.cs",
       "title": "Apply CSS classes to heading elements for consistent styling across exported pages."
     },
