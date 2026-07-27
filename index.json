@@ -276,6 +276,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "generate-a-csv-report-summarizing-file-name-format-and-encryption-state-for-all-excel-files-in-a-folder.cs",
+      "title": "Generate a CSV report summarizing file name, format, and encryption state for all Excel files in a folder."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "load-a-passwordprotected-workbook-prompt-the-user-for-the-password-and-open-it-for-reading.cs",
       "title": "Load a password\u2011protected workbook, prompt the user for the password, and open it for reading."
     },
