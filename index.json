@@ -511,6 +511,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-data-bar-conditional-format-that-uses-the-themes-accent4-color-for-positive-values.cs",
+      "title": "Apply a data bar conditional format that uses the theme\u2019s Accent4 color for positive values."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-conditional-formatting-that-uses-the-themes-accent2-color-to-highlight-values-above-a-threshold.cs",
       "title": "Apply conditional formatting that uses the theme\u2019s Accent2 color to highlight values above a threshold."
     },
