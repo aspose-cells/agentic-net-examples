@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - exclude-worksheets-named-temp-during-load-by-adding-their-names-to-loadoptionsloadfilterexcludedsheets-collection.cs
 - include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs
 - set-loadoptionsloadfilter-to-load-only-data-cells-skipping-chart-objects-to-reduce-memory-usage.cs
+- log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs
