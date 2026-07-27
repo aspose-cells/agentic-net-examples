@@ -10156,6 +10156,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-ensure-merged-cells-spanning-multiple-rows-render-correctly.cs",
+      "title": "Export Excel to HTML and ensure merged cells spanning multiple rows render correctly."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-generate-a-printable-version-using-css-media-print-rules.cs",
       "title": "Export Excel to HTML and generate a printable version using CSS @media print rules."
     },
