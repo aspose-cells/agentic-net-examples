@@ -10331,6 +10331,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-with-hidden-worksheets-and-confirm-that-tablecssid-prefixed-styles-are-generated-only-for-visible-sheets.cs",
+      "title": "Export a workbook with hidden worksheets and confirm that TableCssId prefixed styles are generated only for visible sheets."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-worksheet-containing-multiple-tables-and-ensure-each-table-receives-the-tablecssid-prefixed-style-class.cs",
       "title": "Export a worksheet containing multiple tables and ensure each table receives the TableCssId prefixed style class."
     },
