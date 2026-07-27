@@ -175,3 +175,4 @@ Examples may generate:
 - encrypt-a-workbook-then-immediately-attempt-to-open-it-without-a-password-to-confirm-access-denial.cs
 - save-an-encrypted-workbook-directly-to-a-cloud-storage-stream-ensuring-encryption-metadata-is-preserved.cs
 - load-a-workbook-from-a-network-share-check-encryption-status-and-log-any-access-permission-issues-encountered.cs
+- create-a-batch-job-that-encrypts-every-newly-created-workbook-in-a-folder-with-a-timestamped-password.cs
