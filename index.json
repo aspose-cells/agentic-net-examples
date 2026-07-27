@@ -10236,6 +10236,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-cells-with-short-text-do-not-receive-tooltip-attributes-when-addtooltiptext-is-enabled.cs",
+      "title": "Ensure cells with short text do not receive tooltip attributes when AddTooltipText is enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-comment-visibility-settings-respect-user-privacy-requirements-strictly.cs",
       "title": "Ensure that comment visibility settings respect user privacy requirements strictly."
     },
