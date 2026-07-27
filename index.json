@@ -286,6 +286,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-workbook-structure-with-a-password-to-prevent-adding-or-removing-worksheets-then-verify-protection.cs",
+      "title": "Protect workbook structure with a password to prevent adding or removing worksheets, then verify protection."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "remove-password-protection-from-a-workbook-and-save-the-unprotected-version-to-a-new-location.cs",
       "title": "Remove password protection from a workbook and save the unprotected version to a new location."
     },
