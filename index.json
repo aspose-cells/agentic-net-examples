@@ -10756,6 +10756,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "measure-export-time-for-a-large-workbook-using-htmlcrosstypecross-versus-default.cs",
+      "title": "Measure export time for a large workbook using HtmlCrossType.Cross versus Default."
+    },
+    {
+      "category": "working-with-html",
       "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
       "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
     },
