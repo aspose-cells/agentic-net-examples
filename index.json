@@ -9871,6 +9871,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-visual-fidelity-of-html-generated-with-presentationpreferencebestfit-versus-default-layout.cs",
+      "title": "Compare visual fidelity of HTML generated with PresentationPreference.BestFit versus default layout."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-collapse-multiple-spaces-after-newline-characters-in-html.cs",
       "title": "Configure HtmlSaveOptions to collapse multiple spaces after newline characters in HTML."
     },
@@ -9913,6 +9918,11 @@
       "category": "working-with-html",
       "file": "convert-a-spreadsheet-with-wordart-to-svg-and-ensure-gradient-definitions-are-preserved-as-vector-data.cs",
       "title": "Convert a spreadsheet with WordArt to SVG and ensure gradient definitions are preserved as vector data."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-a-workbook-to-html-then-reload-it-using-loadoptions-to-verify-roundtrip-fidelity.cs",
+      "title": "Convert a workbook to HTML then reload it using LoadOptions to verify round\u2011trip fidelity."
     },
     {
       "category": "working-with-html",
@@ -11061,6 +11071,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "measure-memory-usage-when-converting-a-large-workbook-to-html-with-css-enabled.cs",
+      "title": "Measure memory usage when converting a large workbook to HTML with CSS enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "measure-memory-usage-when-converting-the-same-large-workbook-to-html-with-css-disabled.cs",
+      "title": "Measure memory usage when converting the same large workbook to HTML with CSS disabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs",
       "title": "Measure rendering performance of HTML with CSS disabled versus enabled using a stopwatch timer."
     },
@@ -11168,6 +11188,21 @@
       "category": "working-with-html",
       "file": "save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs",
       "title": "Save HTML with AddTooltipText enabled so full cell text appears as hover tooltip."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-exportcomments-false-and-verify-comment-markers-are-absent-from-generated-html.cs",
+      "title": "Set ExportComments false and verify comment markers are absent from generated HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-exportconditionalformatting-false-and-verify-conditional-style-attributes-are-missing-in-html.cs",
+      "title": "Set ExportConditionalFormatting false and verify conditional style attributes are missing in HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-exportgridlines-false-and-verify-gridline-elements-are-not-rendered-in-html-output.cs",
+      "title": "Set ExportGridLines false and verify gridline elements are not rendered in HTML output."
     },
     {
       "category": "working-with-html",
