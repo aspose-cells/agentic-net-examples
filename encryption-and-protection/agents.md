@@ -162,3 +162,4 @@ Examples may generate:
 - unprotect-a-worksheet-while-preserving-its-previously-set-formatting-permissions-and-then-update-a-cell-formula.cs
 - apply-worksheet-protection-with-a-password-that-expires-after-a-specified-time-interval-then-test-expiration-behavior.cs
 - load-an-encrypted-workbook-change-its-password-to-a-new-value-and-save-the-updated-encrypted-file.cs
+- batch-encrypt-all-xls-files-in-a-source-folder-using-a-common-password-and-save-to-target-directory.cs
