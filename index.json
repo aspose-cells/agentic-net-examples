@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-html-and-ensure-output-passes-w3c-validation-for-css-gradients.cs",
+      "title": "Convert a workbook with WordArt to HTML and ensure output passes W3C validation for CSS gradients."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-a-workbook-with-wordart-to-html-and-minify-the-generated-css-defining-gradient-fills.cs",
       "title": "Convert a workbook with WordArt to HTML and minify the generated CSS defining gradient fills."
     },
