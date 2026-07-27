@@ -2471,6 +2471,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs",
+      "title": "Encrypt a workbook, then measure the time required to open it in a headless automation environment."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs",
       "title": "If a loaded workbook is not encrypted, apply default encryption using a preset password."
     },
