@@ -9686,6 +9686,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-pdf-and-set-output-to-pdfa2b-compliance-while-preserving-gradients.cs",
+      "title": "Convert a workbook with WordArt to PDF and set output to PDF/A\u20112b compliance while preserving gradients."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-containing-base64-images-to-pdf-ensuring-images-retain-original-resolution.cs",
       "title": "Convert HTML containing base64 images to PDF, ensuring images retain original resolution."
     },
