@@ -9951,6 +9951,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptions-to-use-courier-new-as-fallback-font-when-original-font-missing.cs",
+      "title": "Configure HtmlSaveOptions to use \"Courier New\" as fallback font when original font missing."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-workbooks-numberformat-to-display-full-integer-values-when-exporting-to-html.cs",
       "title": "Configure workbook's NumberFormat to display full integer values when exporting to HTML."
     },
@@ -10406,6 +10411,46 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-that-ensures-css-custom-properties-are-present-in-the-root-selector-when-enabled.cs",
+      "title": "Create a unit test that ensures CSS custom properties are present in the :root selector when enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-ensures-html-does-not-contain-any-style-tags-when-disablecss-option-is-enabled.cs",
+      "title": "Create a unit test that ensures HTML does not contain any style tags when DisableCss option is enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-fails-when-presentationpreferencebestfit-produces-html-larger-than-2-mb-for-a-given-workbook.cs",
+      "title": "Create a unit test that fails when PresentationPreference.BestFit produces HTML larger than 2\u202fMB for a given workbook."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-passes-when-exportcomments-true-includes-comment-icons-in-the-generated-html.cs",
+      "title": "Create a unit test that passes when ExportComments true includes comment icons in the generated HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-passes-when-exporthiddenworksheet-true-includes-hidden-sheet-titles-in-the-html-output.cs",
+      "title": "Create a unit test that passes when ExportHiddenWorksheet true includes hidden sheet titles in the HTML output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-validates-html-includes-gridline-elements-only-when-exportgridlines-option-is-true.cs",
+      "title": "Create a unit test that validates HTML includes gridline elements only when ExportGridLines option is true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-verifies-link-target-attribute-equals-_blank-when-linktargettype-is-set-to-blank.cs",
+      "title": "Create a unit test that verifies link target attribute equals \"_blank\" when LinkTargetType is set to Blank."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-verifies-link-target-attribute-equals-_parent-when-linktargettype-is-set-to-parent.cs",
+      "title": "Create a unit test that verifies link target attribute equals \"_parent\" when LinkTargetType is set to Parent."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
@@ -10413,6 +10458,11 @@
       "category": "working-with-html",
       "file": "create-a-windows-service-that-monitors-a-directory-and-converts-new-excel-files-to-html-with-custom-options.cs",
       "title": "Create a Windows service that monitors a directory and converts new Excel files to HTML with custom options."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-workbook-assign-a-nonexistent-font-to-a-cell-and-verify-default-font-appears-in-html.cs",
+      "title": "Create a workbook, assign a non\u2011existent font to a cell, and verify default font appears in HTML."
     },
     {
       "category": "working-with-html",
@@ -11186,6 +11236,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-excel-file-modify-cell-b4-text-and-save-as-html-with-a-custom-default-font.cs",
+      "title": "Load an Excel file, modify cell B4 text, and save as HTML with a custom default font."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-excel-workbook-from-a-file-and-export-it-to-html-using-a-custom-stream-provider.cs",
       "title": "Load an Excel workbook from a file and export it to HTML using a custom stream provider."
     },
@@ -11398,6 +11453,11 @@
       "category": "working-with-html",
       "file": "save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs",
       "title": "Save HTML with AddTooltipText enabled so full cell text appears as hover tooltip."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-default-font-to-arial-for-html-export-using-htmlsaveoptionsdefaultfontname.cs",
+      "title": "Set default font to Arial for HTML export using HtmlSaveOptions.DefaultFontName."
     },
     {
       "category": "working-with-html",
