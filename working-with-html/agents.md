@@ -317,3 +317,4 @@ Output files are written to the working directory.
 - ensure-that-combining-exporthiddenworksheet-false-with-htmlcrosstypefittocell-limits-overflow-and-hides-hidden-worksheets.cs
 - validate-that-htmlcrosstypecross-improves-performance-for-workbooks-containing-thousands-of-rows.cs
 - convert-an-excel-workbook-to-html-using-default-htmlsaveoptions.cs
+- convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-for-improved-layout.cs
