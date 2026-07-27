@@ -248,3 +248,4 @@ Output files are written to the working directory.
 - perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-pdf-reporting-progress-of-gradient-rendering.cs
 - perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs
 - convert-a-workbook-with-wordart-to-pdf-and-add-a-security-restriction-preventing-editing-of-gradient-layers.cs
+- convert-a-workbook-with-wordart-to-html-and-minify-the-generated-css-defining-gradient-fills.cs
