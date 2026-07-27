@@ -11266,6 +11266,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-exportchartimageformat-to-png-and-verify-chart-images-in-html-are-png-files.cs",
+      "title": "Set ExportChartImageFormat to PNG and verify chart images in HTML are PNG files."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-exportcomments-false-and-verify-comment-markers-are-absent-from-generated-html.cs",
       "title": "Set ExportComments false and verify comment markers are absent from generated HTML."
     },
