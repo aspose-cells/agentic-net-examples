@@ -11,6 +11,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs",
+      "title": "Apply worksheet protection disabling editing of pivot tables while allowing data refresh operations."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs",
       "title": "Create a batch process encrypting all workbooks in a SharePoint library using a centralized password."
     },
