@@ -10516,6 +10516,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-html-with-exporthiddenworksheet-false-while-using-widthscalable-true-for-responsive-columns.cs",
+      "title": "Export HTML with ExportHiddenWorksheet false while using WidthScalable true for responsive columns."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-only-the-active-worksheet-to-html-while-applying-a-specific-tablecssid-to-style-its-tables.cs",
       "title": "Export only the active worksheet to HTML while applying a specific TableCssId to style its tables."
     },
