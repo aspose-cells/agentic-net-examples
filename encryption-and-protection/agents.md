@@ -93,3 +93,4 @@ Examples may generate:
 - detect-whether-a-workbook-is-encrypted-with-a-password-meeting-organizational-complexity-requirements.cs
 - apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs
 - encrypt-a-workbook-then-compute-its-sha256-hash-for-integrity-verification.cs
+- ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs
