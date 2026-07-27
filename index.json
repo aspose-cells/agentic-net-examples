@@ -531,6 +531,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-batch-process-that-applies-a-corporate-theme-to-all-workbooks-in-a-network-share.cs",
+      "title": "Create a batch process that applies a corporate theme to all workbooks in a network share."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-custom-theme-that-uses-corporate-brand-colors-and-apply-it-to-existing-reports.cs",
       "title": "Create a custom theme that uses corporate brand colors and apply it to existing reports."
     },
