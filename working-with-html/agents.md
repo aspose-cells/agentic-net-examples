@@ -371,3 +371,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-html-then-reload-it-using-loadoptions-to-verify-roundtrip-fidelity.cs
 - compare-visual-fidelity-of-html-generated-with-presentationpreferencebestfit-versus-default-layout.cs
 - measure-memory-usage-when-converting-a-large-workbook-to-html-with-css-enabled.cs
+- measure-memory-usage-when-converting-the-same-large-workbook-to-html-with-css-disabled.cs
