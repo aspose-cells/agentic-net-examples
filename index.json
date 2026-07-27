@@ -11096,6 +11096,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "integrate-html-conversion-into-an-aspnet-mvc-controller-action-that-returns-a-fileresult-containing-the-html.cs",
+      "title": "Integrate HTML conversion into an ASP.NET MVC controller action that returns a FileResult containing the HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "iterate-through-all-worksheets-in-a-workbook-saving-each-as-separate-html-files-while-preserving-gridlines.cs",
       "title": "Iterate through all worksheets in a workbook, saving each as separate HTML files while preserving gridlines."
     },
