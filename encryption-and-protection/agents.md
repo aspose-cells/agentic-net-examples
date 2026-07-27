@@ -125,3 +125,4 @@ Examples may generate:
 - validate-that-a-workbook-is-not-encrypted-before-performing-bulk-data-extraction-across-multiple-sheets.cs
 - encrypt-workbooks-using-randomly-generated-passwords-store-passwords-securely-and-log-encryption-timestamps.cs
 - load-a-workbook-remove-all-existing-signature-lines-and-add-a-new-line-with-updated-signer-details.cs
+- add-a-signature-line-to-a-chart-sheet-and-ensure-it-appears-correctly-when-rendered.cs
