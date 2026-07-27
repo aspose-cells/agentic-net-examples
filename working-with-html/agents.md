@@ -427,3 +427,4 @@ Output files are written to the working directory.
 - load-an-excel-file-modify-cell-b4-text-and-save-as-html-with-a-custom-default-font.cs
 - set-default-font-to-arial-for-html-export-using-htmlsaveoptionsdefaultfontname.cs
 - configure-htmlsaveoptions-to-use-courier-new-as-fallback-font-when-original-font-missing.cs
+- specify-times-new-roman-as-default-font-for-html-rendering-via-htmlsaveoptions.cs
