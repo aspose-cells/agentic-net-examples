@@ -6396,6 +6396,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs",
+      "title": "Apply conditional smart marker syntax to display rows only when numeric column values exceed a defined threshold."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs",
       "title": "Apply conditional smart markers that display \u201cPass\u201d or \u201cFail\u201d based on a numeric score property."
     },
@@ -6563,6 +6568,11 @@
       "category": "smart-markers",
       "file": "group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs",
       "title": "Group data by adding (group:normal,skip:1) to the smart marker expression to insert blank rows between groups."
+    },
+    {
+      "category": "smart-markers",
+      "file": "group-smart-markers-to-aggregate-sales-data-by-region-and-insert-subtotal-rows-within-the-worksheet.cs",
+      "title": "Group smart markers to aggregate sales data by region and insert subtotal rows within the worksheet."
     },
     {
       "category": "smart-markers",
