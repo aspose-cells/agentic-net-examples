@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-preserve-background-images-by-linking-to-external-image-files.cs
 - export-excel-to-html-and-apply-localespecific-number-formatting-based-on-workbook-culture.cs
 - export-excel-to-html-and-generate-a-printable-version-using-css-media-print-rules.cs
+- export-excel-to-html-and-embed-custom-javascript-for-interactive-sorting-of-table-columns.cs
