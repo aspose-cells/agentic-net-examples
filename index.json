@@ -10881,6 +10881,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-column-letters-are-displayed-when-exportcolumnheaders-option-is-enabled.cs",
+      "title": "Generate HTML and ensure column letters are displayed when ExportColumnHeaders option is enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-ensure-date-values-are-formatted-according-to-the-workbooks-locale-settings.cs",
       "title": "Generate HTML and ensure date values are formatted according to the workbook\u2019s locale settings."
     },
