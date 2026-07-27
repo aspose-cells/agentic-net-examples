@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs
 - write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs
 - apply-filterdatakind-to-load-only-string-cells-from-a-template-then-concatenate-them-into-a-summary-report.cs
+- use-lightcells-api-to-read-merged-cell-ranges-and-output-their-start-and-end-coordinates-for-layout-analysis.cs
