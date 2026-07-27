@@ -343,3 +343,4 @@ Output files are written to the working directory.
 - batch-convert-excel-files-to-html-with-exportgridlines-enabled-to-display-spreadsheet-grid-structure.cs
 - batch-convert-excel-workbooks-to-html-with-exporthiddenworksheet-enabled-to-include-hidden-sheet-data.cs
 - validate-generated-html-contains-link-target-attribute-_blank-after-setting-linktargettype-to-blank.cs
+- validate-generated-html-contains-link-target-attribute-_parent-after-setting-linktargettype-to-parent.cs
