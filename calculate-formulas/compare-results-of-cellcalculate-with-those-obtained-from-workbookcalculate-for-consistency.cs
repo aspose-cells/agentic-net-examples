@@ -7,7 +7,7 @@
 // AI Prompts: Write C# code that logs cells where cell.Calculate differs from workbook.CalculateFormula, including expected and actual values with precision handling. | Show how to set up CalculationOptions for iterative functions and then compare the outcomes of cell.Calculate and workbook.CalculateFormula. | Provide a method that returns a collection of mismatched cells together with their formulas and both result sets.
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsFormulaComparison

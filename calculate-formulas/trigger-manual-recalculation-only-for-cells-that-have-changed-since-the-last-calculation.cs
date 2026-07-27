@@ -14,11 +14,17 @@ namespace AsposeCellsRecalcDemo
 {
     // Custom monitor to detect cells whose values changed after calculation
     // Shows how to set Aspose.Cells to manual calculation mode, change a source value, and run CalculateFormula with a custom CalculationMonitor that logs only the cells whose values actually changed. Includes an initial full calculation, dependent updates, and saving without automatic recalculation.
+
+namespace AsposeCellsExamples
+{
+    // Custom monitor to report cells whose values changed after calculation
     public class ChangedCellMonitor : AbstractCalculationMonitor
     {
         public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
         {
             // Report only cells whose value actually changed
+
+            // ValueChanged is true only when the cell's value differs from the previous value
             if (ValueChanged)
             {
                 Console.WriteLine($"Cell {CellReference(rowIndex, colIndex)} changed from [{OriginalValue}] to [{CalculatedValue}]");
@@ -28,6 +34,10 @@ namespace AsposeCellsRecalcDemo
         // Helper to convert row/column indexes to A1 style reference
         private string CellReference(int row, int col)
         {
+
+        private string CellReference(int row, int col)
+        {
+            // Convert zero‑based row/col to A1 style reference
             return CellsHelper.CellIndexToName(row, col);
         }
     }

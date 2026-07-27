@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Aspose.Cells;
 
 // Demonstrates how to pause a long‑running CalculateFormula operation with ThreadInterruptMonitor, catch the interruption, resume the calculation, and compare the resumed cell values with those from an uninterrupted run to ensure they match.
+
 class ResumeCalculationDemo
 {
     static void Main()
@@ -57,6 +58,27 @@ class ResumeCalculationDemo
         try
         {
             wbInterrupted.CalculateFormula(); // This will be interrupted
+            // Create a workbook with data and formulas
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            for (int i = 0; i < 1000; i++)
+            {
+                ws.Cells[i, 0].PutValue(i);               // Column A
+                ws.Cells[i, 1].PutValue(i * 2);           // Column B
+                ws.Cells[i, 2].Formula = $"=A{i + 1}+B{i + 1}"; // Column C = A+B
+            }
+
+            // Save the original workbook (unmodified)
+            wb.Save("Original.xlsx");
+
+            // Load the workbook with an interrupt monitor that will pause calculation
+            SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
+            LoadOptions loadOptions = new LoadOptions { InterruptMonitor = monitor };
+            Workbook wbInterrupted = new Workbook("Original.xlsx", loadOptions);
+
+            // Start monitoring with a very short time limit to force interruption
+            monitor.StartMonitor(10); // 10 milliseconds
+      
         }
         catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
         {

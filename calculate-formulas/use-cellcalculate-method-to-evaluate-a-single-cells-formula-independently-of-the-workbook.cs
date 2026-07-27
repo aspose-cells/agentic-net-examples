@@ -12,6 +12,7 @@ using Aspose.Cells;
 namespace AsposeCellsCellCalculateDemo
 {
     // Demonstrates how to evaluate only one cell’s formula in an in‑memory workbook using Aspose.Cells for .NET. The example fills A1‑A3, sets a SUM formula in B1, calls Cell.Calculate with CalculationOptions, and returns B1’s result while leaving the rest of the sheet untouched.
+
     class Program
     {
         static void Main()
