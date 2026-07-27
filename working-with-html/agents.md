@@ -295,3 +295,4 @@ Output files are written to the working directory.
 - validate-that-htmlcrosstypecross-improves-performance-without-altering-visual-rendering-compared-to-default.cs
 - save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs
 - generate-html-with-addtooltiptext-disabled-to-improve-rendering-speed-significantly.cs
+- verify-tooltip-attributes-appear-only-for-cells-whose-displayed-text-is-truncated.cs
