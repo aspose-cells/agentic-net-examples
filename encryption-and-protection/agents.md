@@ -81,3 +81,4 @@ Examples may generate:
 - build-a-tool-that-reads-a-csv-list-of-file-paths-and-passwords-then-decrypts-each-corresponding-workbook.cs
 - encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs
 - detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs
+- protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs
