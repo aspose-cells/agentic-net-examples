@@ -10271,6 +10271,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-that-combining-exporthiddenworksheet-false-with-htmlcrosstypefittocell-limits-overflow-and-hides-hidden-worksheets.cs",
+      "title": "Ensure that combining ExportHiddenWorksheet false with HtmlCrossType.FitToCell limits overflow and hides hidden worksheets."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-comment-visibility-settings-respect-user-privacy-requirements-strictly.cs",
       "title": "Ensure that comment visibility settings respect user privacy requirements strictly."
     },
