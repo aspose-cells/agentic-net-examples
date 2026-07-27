@@ -373,3 +373,4 @@ Output files are written to the working directory.
 - measure-memory-usage-when-converting-a-large-workbook-to-html-with-css-enabled.cs
 - measure-memory-usage-when-converting-the-same-large-workbook-to-html-with-css-disabled.cs
 - set-exportcomments-false-and-verify-comment-markers-are-absent-from-generated-html.cs
+- set-exportconditionalformatting-false-and-verify-conditional-style-attributes-are-missing-in-html.cs
