@@ -268,3 +268,4 @@ Output files are written to the working directory.
 - programmatically-change-the-tablecssid-after-initial-export-resave-the-html-and-verify-updated-class-names.cs
 - use-workbooksaveashtml-shortcut-with-preconfigured-htmlsaveoptions-that-include-a-custom-tablecssid-for-quick-export.cs
 - load-an-html-file-into-a-workbook-then-reexport-it-to-html-with-a-different-tablecssid-applied.cs
+- apply-conditional-formatting-in-the-source-workbook-and-verify-its-visual-preservation-in-html-output-using-tablecssid.cs
