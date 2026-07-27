@@ -11616,6 +11616,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "write-a-powershell-script-that-invokes-the-net-library-to-batch-convert-excel-files-to-html.cs",
+      "title": "Write a PowerShell script that invokes the .NET library to batch convert Excel files to HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "write-html-bytes-from-a-memorystream-directly-to-an-aspnet-response-for-immediate-download.cs",
       "title": "Write HTML bytes from a MemoryStream directly to an ASP.NET response for immediate download."
     },
