@@ -10396,6 +10396,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-that-passes-when-exportcomments-true-includes-comment-icons-in-the-generated-html.cs",
+      "title": "Create a unit test that passes when ExportComments true includes comment icons in the generated HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-unit-test-that-passes-when-exporthiddenworksheet-true-includes-hidden-sheet-titles-in-the-html-output.cs",
       "title": "Create a unit test that passes when ExportHiddenWorksheet true includes hidden sheet titles in the HTML output."
     },
