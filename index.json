@@ -9711,6 +9711,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-a-folder-of-excel-files-to-html-using-default-htmlsaveoptions-and-log-conversion-errors.cs",
+      "title": "Batch convert a folder of Excel files to HTML using default HtmlSaveOptions and log conversion errors."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-a-set-of-xls-files-to-html-applying-exportgridlines-only-to-worksheets-that-contain-tables.cs",
       "title": "Batch convert a set of XLS files to HTML, applying ExportGridLines only to worksheets that contain tables."
     },
