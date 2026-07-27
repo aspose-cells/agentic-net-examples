@@ -10576,6 +10576,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-a-timestamp-in-the-html-filename-and-retain-the-tablecssid-prefix-to-track-export-versions-over-time.cs",
+      "title": "Include a timestamp in the HTML filename and retain the TableCssId prefix to track export versions over time."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-cell-comments-in-the-html-export-and-ensure-they-inherit-the-tablecssid-prefixed-styles.cs",
       "title": "Include cell comments in the HTML export and ensure they inherit the TableCssId prefixed styles."
     },
