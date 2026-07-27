@@ -379,3 +379,4 @@ Output files are written to the working directory.
 - combine-exportcomments-false-exportconditionalformatting-false-and-exportgridlines-false-to-generate-minimal-html.cs
 - generate-html-with-embedded-images-as-separate-files-by-setting-exportimagesasbase64-false.cs
 - generate-html-with-embedded-images-as-base64-strings-by-setting-exportimagesasbase64-true.cs
+- verify-base64-image-strings-are-deduplicated-when-enablecsscustomproperties-is-true-during-conversion.cs
