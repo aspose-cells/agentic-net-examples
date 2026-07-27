@@ -169,3 +169,4 @@ Examples may generate:
 - implement-error-handling-that-retries-decryption-with-an-alternate-password-when-the-first-attempt-fails.cs
 - implement-a-logging-mechanism-that-records-timestamp-file-name-and-encryption-action-performed-for-each-workbook.cs
 - validate-that-a-workbook-encrypted-with-one-password-cannot-be-opened-with-a-different-similar-password.cs
+- compare-performance-of-encrypting-workbooks-in-parallel-threads-versus-sequential-processing-for-large-datasets.cs
