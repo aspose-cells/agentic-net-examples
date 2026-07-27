@@ -156,6 +156,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-batch-job-that-encrypts-every-newly-created-workbook-in-a-folder-with-a-timestamped-password.cs",
+      "title": "Create a batch job that encrypts every newly created workbook in a folder with a timestamped password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs",
       "title": "Create a batch process encrypting all workbooks in a SharePoint library using a centralized password."
     },
