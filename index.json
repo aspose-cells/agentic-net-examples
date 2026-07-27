@@ -9661,6 +9661,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-apply-a-custom-theme-based-on-css-variables-defined-in-the-html.cs",
+      "title": "Convert HTML to Excel and apply a custom theme based on CSS variables defined in the HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-apply-custom-number-formats-for-scientific-notation-values.cs",
       "title": "Convert HTML to Excel and apply custom number formats for scientific notation values."
     },
