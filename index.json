@@ -9731,6 +9731,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-excel-files-to-html-enabling-css-custom-properties-to-deduplicate-images.cs",
+      "title": "Batch convert Excel files to HTML enabling CSS custom properties to deduplicate images."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-excel-workbooks-to-html-with-presentationpreferencebestfit-for-each-file.cs",
       "title": "Batch convert Excel workbooks to HTML with PresentationPreference.BestFit for each file."
     },
