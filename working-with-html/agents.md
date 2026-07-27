@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-ensure-formulas-are-displayed-as-values-not-as-formula-strings.cs
 - export-excel-to-html-and-maintain-original-column-widths-using-css-width-properties.cs
 - export-excel-to-html-and-set-page-break-markers-as-html-comments-for-later-processing.cs
+- export-excel-to-html-and-include-a-navigation-pane-linking-to-each-worksheet-section.cs
