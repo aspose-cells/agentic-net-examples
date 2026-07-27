@@ -91,3 +91,4 @@ Examples may generate:
 - verify-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-older-excel-versions.cs
 - unprotect-a-workbook-structure-rename-several-sheets-and-reprotect-using-a-password-retrieved-from-azure-key-vault.cs
 - detect-whether-a-workbook-is-encrypted-with-a-password-meeting-organizational-complexity-requirements.cs
+- apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs
