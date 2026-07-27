@@ -11291,6 +11291,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-sheetname-in-htmlsaveoptions-to-export-a-specific-worksheet-identified-by-its-name.cs",
+      "title": "Set SheetName in HtmlSaveOptions to export a specific worksheet identified by its name."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-the-html-encoding-to-utf-8-and-apply-a-custom-tablecssid-for-consistent-table-class-naming.cs",
       "title": "Set the HTML encoding to UTF-8 and apply a custom TableCssId for consistent table class naming."
     },
