@@ -11,6 +11,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "add-a-signature-line-that-references-a-specific-certificate-thumbprint-stored-in-the-windows-certificate-store.cs",
+      "title": "Add a signature line that references a specific certificate thumbprint stored in the Windows certificate store."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "add-a-signature-line-to-a-chart-sheet-and-ensure-it-appears-correctly-when-rendered.cs",
       "title": "Add a signature line to a chart sheet and ensure it appears correctly when rendered."
     },
