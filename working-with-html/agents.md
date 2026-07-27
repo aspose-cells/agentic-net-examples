@@ -434,3 +434,4 @@ Output files are written to the working directory.
 - enable-gridlines-and-comments-together-in-htmlsaveoptions-for-comprehensive-html-export.cs
 - export-a-worksheet-to-html-with-both-gridlines-and-comments-enabled-simultaneously.cs
 - disable-external-css-generation-during-html-export-with-htmlsaveoptionsdisablecss-set-to-true.cs
+- activate-custom-css-properties-in-html-output-by-enabling-htmlsaveoptionsenablecsscustomproperties.cs
