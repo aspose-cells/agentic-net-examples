@@ -11076,6 +11076,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-that-htmlcrosstypecross-improves-performance-for-workbooks-containing-thousands-of-rows.cs",
+      "title": "Validate that HtmlCrossType.Cross improves performance for workbooks containing thousands of rows."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-that-htmlcrosstypecross-improves-performance-without-altering-visual-rendering-compared-to-default.cs",
       "title": "Validate that HtmlCrossType.Cross improves performance without altering visual rendering compared to Default."
     },
