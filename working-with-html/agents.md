@@ -293,3 +293,4 @@ Output files are written to the working directory.
 - confirm-that-htmlcrosstypefittocell-wraps-text-within-cell-boundaries-when-enabled.cs
 - measure-export-time-for-a-large-workbook-using-htmlcrosstypecross-versus-default.cs
 - validate-that-htmlcrosstypecross-improves-performance-without-altering-visual-rendering-compared-to-default.cs
+- save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs
