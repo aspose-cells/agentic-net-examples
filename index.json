@@ -9651,6 +9651,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "append-a-custom-css-class-to-the-html-body-element-after-conversion-for-additional-styling.cs",
+      "title": "Append a custom CSS class to the HTML body element after conversion for additional styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "apply-a-custom-style-to-a-range-enable-excludeunusedstyles-and-verify-only-used-styles-appear-in-html.cs",
       "title": "Apply a custom style to a range, enable ExcludeUnusedStyles, and verify only used styles appear in HTML."
     },
