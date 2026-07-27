@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
 - enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs
 - configure-htmlsaveoptionsexportchartimageformat-to-png-then-save-the-workbook-as-html-with-highresolution-charts.cs
+- limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs
