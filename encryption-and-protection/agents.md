@@ -117,3 +117,4 @@ Examples may generate:
 - add-a-signature-line-with-a-visible-image-placeholder-and-customize-its-appearance-using-picture-properties.cs
 - create-a-signature-line-then-digitally-sign-the-workbook-using-an-external-xades-signature-tool.cs
 - save-a-workbook-after-adding-a-signature-line-preserving-the-original-file-extension-and-format.cs
+- remove-password-protection-from-a-workbook-and-save-the-unprotected-version-to-a-new-location.cs
