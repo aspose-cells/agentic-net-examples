@@ -10646,6 +10646,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-hidden-worksheets-by-leaving-exporthiddenworksheet-set-to-true-during-html-export.cs",
+      "title": "Include hidden worksheets by leaving ExportHiddenWorksheet set to true during HTML export."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
       "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
     },
