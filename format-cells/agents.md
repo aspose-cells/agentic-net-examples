@@ -110,3 +110,4 @@ Output files are written to the working directory.
 - create-a-function-that-maps-numeric-risk-levels-to-specific-theme-accent-colors-for-heat-maps.cs
 - validate-that-after-theme-updates-pivot-table-styles-automatically-adopt-the-new-accent-colors.cs
 - replace-the-themes-light2-background-with-a-patterned-fill-while-preserving-theme-color-references.cs
+- programmatically-detect-workbooks-that-lack-a-theme-and-assign-a-default-theme-before-processing.cs
