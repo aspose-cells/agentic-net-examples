@@ -120,3 +120,4 @@ Examples may generate:
 - remove-password-protection-from-a-workbook-and-save-the-unprotected-version-to-a-new-location.cs
 - programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs
 - encrypt-a-workbook-with-aes256-encryption-strength-and-verify-that-the-file-size-increases-appropriately.cs
+- verify-that-a-workbook-saved-after-encryption-can-be-opened-with-the-same-password-on-another-machine.cs
