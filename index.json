@@ -10111,6 +10111,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-generate-a-separate-css-file-for-styling-instead-of-inline-styles.cs",
+      "title": "Export Excel to HTML and generate a separate CSS file for styling instead of inline styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs",
       "title": "Export Excel to HTML while preserving cell formatting such as font styles and colors."
     },
