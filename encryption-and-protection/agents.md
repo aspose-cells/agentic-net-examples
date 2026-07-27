@@ -170,3 +170,4 @@ Examples may generate:
 - implement-a-logging-mechanism-that-records-timestamp-file-name-and-encryption-action-performed-for-each-workbook.cs
 - validate-that-a-workbook-encrypted-with-one-password-cannot-be-opened-with-a-different-similar-password.cs
 - compare-performance-of-encrypting-workbooks-in-parallel-threads-versus-sequential-processing-for-large-datasets.cs
+- create-a-function-that-returns-the-encryption-status-of-a-workbook-as-an-enumeration-value-encrypted-unencrypted-unknown.cs
