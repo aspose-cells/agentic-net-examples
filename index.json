@@ -10451,6 +10451,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-html-and-include-fallback-solid-colors-for-older-browsers.cs",
+      "title": "Render WordArt gradient fills while converting to HTML and include fallback solid colors for older browsers."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-wordart-gradient-fills-while-converting-to-pdf-and-embed-the-gradient-as-a-pdf-shading-pattern.cs",
       "title": "Render WordArt gradient fills while converting to PDF and embed the gradient as a PDF shading pattern."
     },
