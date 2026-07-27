@@ -421,3 +421,4 @@ Output files are written to the working directory.
 - create-a-unit-test-that-verifies-link-target-attribute-equals-_blank-when-linktargettype-is-set-to-blank.cs
 - create-a-unit-test-that-verifies-link-target-attribute-equals-_parent-when-linktargettype-is-set-to-parent.cs
 - create-a-unit-test-that-ensures-html-does-not-contain-any-style-tags-when-disablecss-option-is-enabled.cs
+- create-a-unit-test-that-ensures-css-custom-properties-are-present-in-the-root-selector-when-enabled.cs
