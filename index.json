@@ -61,6 +61,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "decrypt-an-existing-passwordprotected-workbook-modify-a-cell-value-and-reencrypt-before-saving.cs",
+      "title": "Decrypt an existing password\u2011protected workbook, modify a cell value, and re\u2011encrypt before saving."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs",
       "title": "Detect if a workbook contains digitally signed worksheets and list their signer names."
     },
