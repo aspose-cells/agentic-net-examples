@@ -10456,6 +10456,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-and-support-custom-start-and-end-colors-defined-in-the-workbook.cs",
+      "title": "Render WordArt gradient fills while converting and support custom start and end colors defined in the workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-wordart-gradient-fills-while-converting-to-html-and-include-fallback-solid-colors-for-older-browsers.cs",
       "title": "Render WordArt gradient fills while converting to HTML and include fallback solid colors for older browsers."
     },
