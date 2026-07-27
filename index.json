@@ -511,6 +511,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-theme-to-a-workbook-and-then-generate-a-thumbnail-image-of-the-first-sheet.cs",
+      "title": "Apply a custom theme to a workbook and then generate a thumbnail image of the first sheet."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-data-bar-conditional-format-that-uses-the-themes-accent4-color-for-positive-values.cs",
       "title": "Apply a data bar conditional format that uses the theme\u2019s Accent4 color for positive values."
     },
