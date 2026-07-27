@@ -11186,6 +11186,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-exportconditionalformatting-false-and-verify-conditional-style-attributes-are-missing-in-html.cs",
+      "title": "Set ExportConditionalFormatting false and verify conditional style attributes are missing in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-exporthiddenworksheet-false-and-verify-hidden-sheets-are-omitted-from-resulting-html.cs",
       "title": "Set ExportHiddenWorksheet false and verify hidden sheets are omitted from resulting HTML."
     },
