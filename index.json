@@ -11291,6 +11291,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-worksheetindex-in-htmlsaveoptions-to-export-a-specific-worksheet-by-its-zerobased-position.cs",
+      "title": "Set WorksheetIndex in HtmlSaveOptions to export a specific worksheet by its zero\u2011based position."
+    },
+    {
+      "category": "working-with-html",
       "file": "store-exported-html-files-in-a-temporary-folder-via-ifilepathprovider-and-clean-up-after-processing.cs",
       "title": "Store exported HTML files in a temporary folder via IFilePathProvider and clean up after processing."
     },
