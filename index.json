@@ -10406,6 +10406,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-cell-comments-appear-in-html-output-when-exportcomments-option-is-enabled.cs",
+      "title": "Ensure cell comments appear in HTML output when ExportComments option is enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-cells-with-short-text-do-not-receive-tooltip-attributes-when-addtooltiptext-is-enabled.cs",
       "title": "Ensure cells with short text do not receive tooltip attributes when AddTooltipText is enabled."
     },
