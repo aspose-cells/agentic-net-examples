@@ -96,6 +96,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "apply-worksheet-protection-with-a-password-that-expires-after-a-specified-time-interval-then-test-expiration-behavior.cs",
+      "title": "Apply worksheet protection with a password that expires after a specified time interval, then test expiration behavior."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "attempt-to-edit-a-protected-worksheet-without-password-and-record-failure-outcome.cs",
       "title": "Attempt to edit a protected worksheet without password and record failure outcome."
     },
