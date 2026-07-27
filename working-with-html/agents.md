@@ -424,3 +424,4 @@ Output files are written to the working directory.
 - create-a-unit-test-that-ensures-css-custom-properties-are-present-in-the-root-selector-when-enabled.cs
 - create-a-unit-test-that-validates-html-includes-gridline-elements-only-when-exportgridlines-option-is-true.cs
 - create-a-workbook-assign-a-nonexistent-font-to-a-cell-and-verify-default-font-appears-in-html.cs
+- load-an-excel-file-modify-cell-b4-text-and-save-as-html-with-a-custom-default-font.cs
