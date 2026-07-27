@@ -10946,6 +10946,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-count-the-number-of-image-tags-present.cs",
+      "title": "Generate HTML and then use an HTML parser to count the number of image tags present."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-then-use-an-html-parser-to-extract-all-hyperlink-urls-for-link-analysis.cs",
       "title": "Generate HTML and then use an HTML parser to extract all hyperlink URLs for link analysis."
     },
