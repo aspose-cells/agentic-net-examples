@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - use-lightcells-api-to-copy-data-from-one-worksheet-to-another-without-creating-intermediate-workbook-objects.cs
 - save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs
 - apply-filterobjects-to-exclude-data-validation-rules-during-loading-reducing-memory-footprint-for-simple-data-extraction-tasks.cs
+- read-cell-comments-using-lightcells-api-and-write-them-to-a-separate-json-file-for-documentation-purposes.cs
