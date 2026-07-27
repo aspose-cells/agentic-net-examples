@@ -10416,6 +10416,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-that-validates-html-includes-gridline-elements-only-when-exportgridlines-option-is-true.cs",
+      "title": "Create a unit test that validates HTML includes gridline elements only when ExportGridLines option is true."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-unit-test-that-verifies-link-target-attribute-equals-_blank-when-linktargettype-is-set-to-blank.cs",
       "title": "Create a unit test that verifies link target attribute equals \"_blank\" when LinkTargetType is set to Blank."
     },
