@@ -10406,6 +10406,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-that-verifies-link-target-attribute-equals-_blank-when-linktargettype-is-set-to-blank.cs",
+      "title": "Create a unit test that verifies link target attribute equals \"_blank\" when LinkTargetType is set to Blank."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
