@@ -26,6 +26,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-using-a-password-stored-in-a-hardware-security-module-and-confirm-successful-decryption.cs",
+      "title": "Encrypt a workbook using a password stored in a hardware security module and confirm successful decryption."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs",
       "title": "Protect a worksheet, then attempt to copy it to a new workbook without providing the password."
     },
