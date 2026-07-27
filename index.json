@@ -196,6 +196,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "determine-if-a-workbook-requires-a-password-for-opening-versus-modifying-and-log-both-statuses.cs",
+      "title": "Determine if a workbook requires a password for opening versus modifying, and log both statuses."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-newly-created-workbook-using-a-userspecified-password-and-save-it-as-a-protected-file.cs",
       "title": "Encrypt a newly created workbook using a user\u2011specified password and save it as a protected file."
     },
