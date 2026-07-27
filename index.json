@@ -9681,6 +9681,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-handle-nested-tables-by-creating-separate-worksheets-for-each-level.cs",
+      "title": "Convert HTML to Excel and handle nested tables by creating separate worksheets for each level."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
       "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
     },
