@@ -256,3 +256,4 @@ Output files are written to the working directory.
 - convert-a-spreadsheet-containing-multiple-wordart-objects-to-pdf-and-verify-each-gradient-renders-independently.cs
 - load-a-workbook-from-an-excel-file-and-export-to-html-using-a-custom-tablecssid.cs
 - export-the-workbook-with-gridlines-enabled-while-applying-a-specified-tablecssid-for-table-styling.cs
+- include-worksheet-headings-in-the-html-output-and-prefix-table-styles-with-the-chosen-tablecssid.cs
