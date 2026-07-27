@@ -85,3 +85,4 @@ Examples may generate:
 - create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs
 - validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs
 - apply-workbook-protection-preventing-changes-to-default-file-properties-such-as-author-and-title.cs
+- encrypt-a-workbook-using-a-password-stored-in-a-hardware-security-module-and-confirm-successful-decryption.cs
