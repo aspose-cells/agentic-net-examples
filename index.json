@@ -3931,6 +3931,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-while-ignoring-all-external-links-by-setting-loadoptionsignoreexternallinks-to-true.cs",
+      "title": "Load a workbook while ignoring all external links by setting LoadOptions.IgnoreExternalLinks to true."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs",
       "title": "Load a workbook with a specific page setup configuration and verify that margin settings are retained after processing."
     },
