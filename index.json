@@ -9871,6 +9871,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-using-default-htmlsaveoptions.cs",
+      "title": "Convert an Excel workbook to HTML using default HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-containing-base64-images-to-pdf-ensuring-images-retain-original-resolution.cs",
       "title": "Convert HTML containing base64 images to PDF, ensuring images retain original resolution."
     },
