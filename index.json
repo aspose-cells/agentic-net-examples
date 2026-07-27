@@ -9736,6 +9736,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-while-disabling-css-generation-for-lightweight-files.cs",
+      "title": "Batch convert Excel workbooks to HTML while disabling CSS generation for lightweight files."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-excel-workbooks-to-html-with-presentationpreferencebestfit-for-each-file.cs",
       "title": "Batch convert Excel workbooks to HTML with PresentationPreference.BestFit for each file."
     },
