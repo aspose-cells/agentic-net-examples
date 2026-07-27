@@ -107,3 +107,4 @@ Output files are written to the working directory.
 - apply-a-data-bar-conditional-format-that-uses-the-themes-accent4-color-for-positive-values.cs
 - create-a-custom-theme-that-swaps-the-default-dark1-and-light1-colors-and-apply-it.cs
 - export-the-workbooks-theme-palette-to-an-excel-sheet-for-manual-review-by-designers.cs
+- create-a-function-that-maps-numeric-risk-levels-to-specific-theme-accent-colors-for-heat-maps.cs
