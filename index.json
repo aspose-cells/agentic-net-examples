@@ -161,6 +161,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "remove-password-protection-from-a-workbook-and-save-the-unprotected-version-to-a-new-location.cs",
+      "title": "Remove password protection from a workbook and save the unprotected version to a new location."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "save-a-workbook-after-adding-a-signature-line-preserving-the-original-file-extension-and-format.cs",
       "title": "Save a workbook after adding a signature line, preserving the original file extension and format."
     },
