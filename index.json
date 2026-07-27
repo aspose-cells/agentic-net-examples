@@ -9701,6 +9701,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-widthscalable-false-and-confirm-column-widths-render-as-fixed-pixel-values.cs",
+      "title": "Apply WidthScalable false and confirm column widths render as fixed pixel values."
+    },
+    {
+      "category": "working-with-html",
+      "file": "apply-widthscalable-true-and-confirm-column-widths-adapt-using-em-units.cs",
+      "title": "Apply WidthScalable true and confirm column widths adapt using em units."
+    },
+    {
+      "category": "working-with-html",
       "file": "assign-a-custom-ifilepathprovider-instance-to-htmlsaveoptionsfilepathprovider-to-fix-broken-worksheet-hyperlinks.cs",
       "title": "Assign a custom IFilePathProvider instance to HtmlSaveOptions.FilePathProvider to fix broken worksheet hyperlinks."
     },
@@ -9711,13 +9721,58 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-a-folder-of-excel-files-to-html-using-default-htmlsaveoptions-and-log-conversion-errors.cs",
+      "title": "Batch convert a folder of Excel files to HTML using default HtmlSaveOptions and log conversion errors."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-a-set-of-xls-files-to-html-applying-exportgridlines-only-to-worksheets-that-contain-tables.cs",
       "title": "Batch convert a set of XLS files to HTML, applying ExportGridLines only to worksheets that contain tables."
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-all-excel-files-in-a-folder-to-html-using-default-htmlsaveoptions.cs",
+      "title": "Batch convert all Excel files in a folder to HTML using default HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-all-xlsx-files-in-a-directory-to-html-using-default-conversion-settings.cs",
       "title": "Batch convert all XLSX files in a directory to HTML using default conversion settings."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-excel-files-to-html-enabling-css-custom-properties-to-deduplicate-images.cs",
+      "title": "Batch convert Excel files to HTML enabling CSS custom properties to deduplicate images."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-excel-files-to-html-with-exportcomments-enabled-to-include-all-cell-notes.cs",
+      "title": "Batch convert Excel files to HTML with ExportComments enabled to include all cell notes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-excel-files-to-html-with-exportgridlines-enabled-to-display-spreadsheet-grid-structure.cs",
+      "title": "Batch convert Excel files to HTML with ExportGridLines enabled to display spreadsheet grid structure."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-while-disabling-css-generation-for-lightweight-files.cs",
+      "title": "Batch convert Excel workbooks to HTML while disabling CSS generation for lightweight files."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-with-exportconditionalformatting-enabled-to-retain-visual-rules.cs",
+      "title": "Batch convert Excel workbooks to HTML with ExportConditionalFormatting enabled to retain visual rules."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-with-exporthiddenworksheet-enabled-to-include-hidden-sheet-data.cs",
+      "title": "Batch convert Excel workbooks to HTML with ExportHiddenWorksheet enabled to include hidden sheet data."
+    },
+    {
+      "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-with-presentationpreferencebestfit-for-each-file.cs",
+      "title": "Batch convert Excel workbooks to HTML with PresentationPreference.BestFit for each file."
     },
     {
       "category": "working-with-html",
@@ -9761,13 +9816,38 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-process-workbooks-applying-exporthiddenworksheet-false-only-to-those-containing-confidential-worksheets.cs",
+      "title": "Batch process workbooks, applying ExportHiddenWorksheet false only to those containing confidential worksheets."
+    },
+    {
+      "category": "working-with-html",
       "file": "combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs",
       "title": "Combine ExcludeUnusedStyles and IsExportComments options, then save workbook as HTML for compact output with comments."
     },
     {
       "category": "working-with-html",
+      "file": "combine-widthscalable-htmlcrosstypefittocell-and-addtooltiptext-to-produce-responsive-html-with-tooltips.cs",
+      "title": "Combine WidthScalable, HtmlCrossType.FitToCell, and AddTooltipText to produce responsive HTML with tooltips."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-exported-html-with-and-without-exponential-notation-suppression-for-accuracy.cs",
       "title": "Compare exported HTML with and without exponential notation suppression for accuracy."
+    },
+    {
+      "category": "working-with-html",
+      "file": "compare-html-file-size-when-disablecss-is-true-versus-false-to-assess-markup-reduction.cs",
+      "title": "Compare HTML file size when DisableCss is true versus false to assess markup reduction."
+    },
+    {
+      "category": "working-with-html",
+      "file": "compare-html-file-size-when-enablecsscustomproperties-is-true-versus-false-for-same-workbook.cs",
+      "title": "Compare HTML file size when EnableCssCustomProperties is true versus false for same workbook."
+    },
+    {
+      "category": "working-with-html",
+      "file": "compare-html-file-size-when-widthscalable-is-true-versus-false-for-the-same-workbook.cs",
+      "title": "Compare HTML file size when WidthScalable is true versus false for the same workbook."
     },
     {
       "category": "working-with-html",
@@ -9798,6 +9878,11 @@
       "category": "working-with-html",
       "file": "configure-workbooks-numberformat-to-display-full-integer-values-when-exporting-to-html.cs",
       "title": "Configure workbook's NumberFormat to display full integer values when exporting to HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "confirm-that-htmlcrosstypefittocell-wraps-text-within-cell-boundaries-when-enabled.cs",
+      "title": "Confirm that HtmlCrossType.FitToCell wraps text within cell boundaries when enabled."
     },
     {
       "category": "working-with-html",
@@ -9843,6 +9928,96 @@
       "category": "working-with-html",
       "file": "convert-a-workbook-with-wordart-to-pdf-and-set-output-to-pdfa2b-compliance-while-preserving-gradients.cs",
       "title": "Convert a workbook with WordArt to PDF and set output to PDF/A\u20112b compliance while preserving gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-using-default-htmlsaveoptions.cs",
+      "title": "Convert an Excel workbook to HTML using default HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-and-disable-css-generation-for-minimal-output.cs",
+      "title": "Convert an Excel workbook to HTML with default options and disable CSS generation for minimal output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-and-enable-css-custom-properties-for-image-reuse.cs",
+      "title": "Convert an Excel workbook to HTML with default options and enable CSS custom properties for image reuse."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-and-set-hyperlink-target-to-blank.cs",
+      "title": "Convert an Excel workbook to HTML with default options and set hyperlink target to blank."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-and-set-hyperlink-target-to-parent.cs",
+      "title": "Convert an Excel workbook to HTML with default options and set hyperlink target to parent."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-while-exporting-cell-comments.cs",
+      "title": "Convert an Excel workbook to HTML with default options while exporting cell comments."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-while-exporting-conditional-formatting.cs",
+      "title": "Convert an Excel workbook to HTML with default options while exporting conditional formatting."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-while-exporting-gridlines.cs",
+      "title": "Convert an Excel workbook to HTML with default options while exporting gridlines."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-while-exporting-hidden-worksheets.cs",
+      "title": "Convert an Excel workbook to HTML with default options while exporting hidden worksheets."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferenceautofit-for-compact-column-widths.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.AutoFit for compact column widths."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-enable-css-custom-properties-for-image-deduplication.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and enable CSS custom properties for image deduplication."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-export-hidden-worksheets.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and export hidden worksheets."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-render-gridlines.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and render gridlines."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-set-hyperlink-target-to-blank.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and set hyperlink target to blank."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-set-hyperlink-target-to-parent.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and set hyperlink target to parent."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-for-improved-layout.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit for improved layout."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-while-disabling-all-css-generation.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit while disabling all CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-while-exporting-cell-comments.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit while exporting cell comments."
     },
     {
       "category": "working-with-html",
@@ -10121,6 +10296,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-multiple-workbooks-in-a-loop-applying-different-htmlcrosstype-values-based-on-file-size.cs",
+      "title": "Convert multiple workbooks in a loop, applying different HtmlCrossType values based on file size."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
+      "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
       "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
     },
@@ -10133,6 +10318,11 @@
       "category": "working-with-html",
       "file": "create-external-css-files-per-worksheet-and-ensure-html-references-point-to-the-correct-stylesheet-locations.cs",
       "title": "Create external CSS files per worksheet and ensure HTML references point to the correct stylesheet locations."
+    },
+    {
+      "category": "working-with-html",
+      "file": "create-html-using-htmlcrosstypecross-for-highperformance-export-of-large-workbooks.cs",
+      "title": "Create HTML using HtmlCrossType.Cross for high\u2011performance export of large workbooks."
     },
     {
       "category": "working-with-html",
@@ -10226,6 +10416,36 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-cell-comments-appear-in-html-output-when-exportcomments-option-is-enabled.cs",
+      "title": "Ensure cell comments appear in HTML output when ExportComments option is enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-cells-with-short-text-do-not-receive-tooltip-attributes-when-addtooltiptext-is-enabled.cs",
+      "title": "Ensure cells with short text do not receive tooltip attributes when AddTooltipText is enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-conditional-formatting-colors-are-retained-in-html-when-exportconditionalformatting-is-true.cs",
+      "title": "Ensure conditional formatting colors are retained in HTML when ExportConditionalFormatting is true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-gridlines-are-visible-in-html-output-when-exportgridlines-option-is-enabled.cs",
+      "title": "Ensure gridlines are visible in HTML output when ExportGridLines option is enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-hidden-worksheet-content-appears-in-html-when-exporthiddenworksheet-option-is-true.cs",
+      "title": "Ensure hidden worksheet content appears in HTML when ExportHiddenWorksheet option is true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-that-combining-exporthiddenworksheet-false-with-htmlcrosstypefittocell-limits-overflow-and-hides-hidden-worksheets.cs",
+      "title": "Ensure that combining ExportHiddenWorksheet false with HtmlCrossType.FitToCell limits overflow and hides hidden worksheets."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-comment-visibility-settings-respect-user-privacy-requirements-strictly.cs",
       "title": "Ensure that comment visibility settings respect user privacy requirements strictly."
     },
@@ -10243,6 +10463,11 @@
       "category": "working-with-html",
       "file": "ensure-that-html-output-does-not-contain-unnecessary-blank-spaces-after-br-tags.cs",
       "title": "Ensure that HTML output does not contain unnecessary blank spaces after <br> tags."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-that-setting-exporthiddenworksheet-to-true-includes-hidden-worksheets-in-the-html-output.cs",
+      "title": "Ensure that setting ExportHiddenWorksheet to true includes hidden worksheets in the HTML output."
     },
     {
       "category": "working-with-html",
@@ -10298,6 +10523,16 @@
       "category": "working-with-html",
       "file": "export-a-workbook-to-html-with-custom-properties-enabled-while-preserving-default-css-generation.cs",
       "title": "Export a workbook to HTML with custom properties enabled while preserving default CSS generation."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-htmlcrosstypemsexport-to-replicate-excels-native-html-style.cs",
+      "title": "Export a workbook to HTML with HtmlCrossType.MSExport to replicate Excel\u2019s native HTML style."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-widthscalable-set-to-true-for-embased-column-sizing.cs",
+      "title": "Export a workbook to HTML with WidthScalable set to true for em\u2011based column sizing."
     },
     {
       "category": "working-with-html",
@@ -10486,6 +10721,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-html-with-exporthiddenworksheet-false-while-using-widthscalable-true-for-responsive-columns.cs",
+      "title": "Export HTML with ExportHiddenWorksheet false while using WidthScalable true for responsive columns."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-html-with-exporthiddenworksheet-true-and-htmlcrosstypecross-for-performance-on-large-workbooks.cs",
+      "title": "Export HTML with ExportHiddenWorksheet true and HtmlCrossType.Cross for performance on large workbooks."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-only-the-active-worksheet-to-html-while-applying-a-specific-tablecssid-to-style-its-tables.cs",
       "title": "Export only the active worksheet to HTML while applying a specific TableCssId to style its tables."
     },
@@ -10493,6 +10738,11 @@
       "category": "working-with-html",
       "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
       "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-only-visible-worksheets-by-setting-exporthiddenworksheet-to-false-before-saving.cs",
+      "title": "Export only visible worksheets by setting ExportHiddenWorksheet to false before saving."
     },
     {
       "category": "working-with-html",
@@ -10551,8 +10801,23 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-using-htmlcrosstypedefault-to-mimic-excel-overflow-for-long-strings.cs",
+      "title": "Generate HTML using HtmlCrossType.Default to mimic Excel overflow for long strings."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-a-custom-tablecssid-and-verify-that-no-css-class-name-collisions-occur-with-existing-styles.cs",
       "title": "Generate HTML with a custom TableCssId and verify that no CSS class name collisions occur with existing styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-with-addtooltiptext-disabled-to-improve-rendering-speed-significantly.cs",
+      "title": "Generate HTML with AddTooltipText disabled to improve rendering speed significantly."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-with-widthscalable-enabled-and-addtooltiptext-enabled-to-create-scalable-columns-with-hover-tooltips.cs",
+      "title": "Generate HTML with WidthScalable enabled and AddTooltipText enabled to create scalable columns with hover tooltips."
     },
     {
       "category": "working-with-html",
@@ -10571,6 +10836,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "implement-exception-handling-to-catch-invalid-tablecssid-values-and-provide-descriptive-error-messages-to-developers.cs",
+      "title": "Implement exception handling to catch invalid TableCssId values and provide descriptive error messages to developers."
+    },
+    {
+      "category": "working-with-html",
       "file": "implement-ifilepathprovider-that-converts-worksheet-names-to-lowercase-urls-for-consistent-linking.cs",
       "title": "Implement IFilePathProvider that converts worksheet names to lowercase URLs for consistent linking."
     },
@@ -10586,8 +10856,18 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-a-timestamp-in-the-html-filename-and-retain-the-tablecssid-prefix-to-track-export-versions-over-time.cs",
+      "title": "Include a timestamp in the HTML filename and retain the TableCssId prefix to track export versions over time."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-cell-comments-in-the-html-export-and-ensure-they-inherit-the-tablecssid-prefixed-styles.cs",
       "title": "Include cell comments in the HTML export and ensure they inherit the TableCssId prefixed styles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "include-hidden-worksheets-by-leaving-exporthiddenworksheet-set-to-true-during-html-export.cs",
+      "title": "Include hidden worksheets by leaving ExportHiddenWorksheet set to true during HTML export."
     },
     {
       "category": "working-with-html",
@@ -10613,6 +10893,11 @@
       "category": "working-with-html",
       "file": "load-a-workbook-enable-exportgridlines-and-produce-html-that-displays-worksheet-gridlines.cs",
       "title": "Load a workbook, enable ExportGridLines, and produce HTML that displays worksheet gridlines."
+    },
+    {
+      "category": "working-with-html",
+      "file": "load-a-workbook-enable-widthscalable-and-save-as-html-with-percentage-column-widths.cs",
+      "title": "Load a workbook, enable WidthScalable, and save as HTML with percentage column widths."
     },
     {
       "category": "working-with-html",
@@ -10711,6 +10996,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "log-each-export-operation-with-details-such-as-source-workbook-tablecssid-used-and-destination-path-for-audit-purposes.cs",
+      "title": "Log each export operation with details such as source workbook, TableCssId used, and destination path for audit purposes."
+    },
+    {
+      "category": "working-with-html",
+      "file": "measure-export-time-for-a-large-workbook-using-htmlcrosstypecross-versus-default.cs",
+      "title": "Measure export time for a large workbook using HtmlCrossType.Cross versus Default."
+    },
+    {
+      "category": "working-with-html",
       "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
       "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
     },
@@ -10733,6 +11028,11 @@
       "category": "working-with-html",
       "file": "process-multiple-xlsx-files-in-a-directory-applying-excludeunusedstyles-to-each-and-batch-save-reduced-size-html-files.cs",
       "title": "Process multiple XLSX files in a directory, applying ExcludeUnusedStyles to each, and batch save reduced-size HTML files."
+    },
+    {
+      "category": "working-with-html",
+      "file": "produce-html-with-htmlcrosstypefittocell-to-restrict-text-overflow-within-cell-bounds.cs",
+      "title": "Produce HTML with HtmlCrossType.FitToCell to restrict text overflow within cell bounds."
     },
     {
       "category": "working-with-html",
@@ -10793,6 +11093,11 @@
       "category": "working-with-html",
       "file": "save-a-workbook-to-html-with-exportgridlines-disabled-then-confirm-that-gridlines-are-absent-in-the-output.cs",
       "title": "Save a workbook to HTML with ExportGridLines disabled, then confirm that gridlines are absent in the output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs",
+      "title": "Save HTML with AddTooltipText enabled so full cell text appears as hover tooltip."
     },
     {
       "category": "working-with-html",
@@ -10861,8 +11166,23 @@
     },
     {
       "category": "working-with-html",
+      "file": "test-that-enabling-widthscalable-does-not-affect-nonhtml-export-formats.cs",
+      "title": "Test that enabling WidthScalable does not affect non\u2011HTML export formats."
+    },
+    {
+      "category": "working-with-html",
       "file": "use-a-sample-workbook-to-demonstrate-whitespace-cleanup-during-export.cs",
       "title": "Use a sample workbook to demonstrate whitespace cleanup during export."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlcrosstypedefault-with-addtooltiptext-enabled-to-show-full-cell-content-while-preserving-overflow-behavior.cs",
+      "title": "Use HtmlCrossType.Default with AddTooltipText enabled to show full cell content while preserving overflow behavior."
+    },
+    {
+      "category": "working-with-html",
+      "file": "use-htmlcrosstypefittocell-together-with-addtooltiptext-to-provide-full-content-on-hover-without-overflow.cs",
+      "title": "Use HtmlCrossType.FitToCell together with AddTooltipText to provide full content on hover without overflow."
     },
     {
       "category": "working-with-html",
@@ -10906,6 +11226,16 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-generated-html-contains-link-target-attribute-_blank-after-setting-linktargettype-to-blank.cs",
+      "title": "Validate generated HTML contains link target attribute \"_blank\" after setting LinkTargetType to Blank."
+    },
+    {
+      "category": "working-with-html",
+      "file": "validate-generated-html-contains-link-target-attribute-_parent-after-setting-linktargettype-to-parent.cs",
+      "title": "Validate generated HTML contains link target attribute \"_parent\" after setting LinkTargetType to Parent."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs",
       "title": "Validate that cell content with line breaks displays correctly without extra spacing."
     },
@@ -10926,13 +11256,38 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-that-htmlcrosstypecross-improves-performance-for-workbooks-containing-thousands-of-rows.cs",
+      "title": "Validate that HtmlCrossType.Cross improves performance for workbooks containing thousands of rows."
+    },
+    {
+      "category": "working-with-html",
+      "file": "validate-that-htmlcrosstypecross-improves-performance-without-altering-visual-rendering-compared-to-default.cs",
+      "title": "Validate that HtmlCrossType.Cross improves performance without altering visual rendering compared to Default."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-the-exported-html-using-an-html-validator-to-confirm-correct-tablecssid-prefixes-on-table-elements.cs",
       "title": "Validate the exported HTML using an HTML validator to confirm correct TableCssId prefixes on table elements."
     },
     {
       "category": "working-with-html",
+      "file": "verify-css-custom-properties-reduce-duplicate-base64-image-strings-compared-to-default-output.cs",
+      "title": "Verify CSS custom properties reduce duplicate base64 image strings compared to default output."
+    },
+    {
+      "category": "working-with-html",
+      "file": "verify-that-exporthiddenworksheet-false-correctly-hides-hidden-sheets-while-preserving-visible-content.cs",
+      "title": "Verify that ExportHiddenWorksheet false correctly hides hidden sheets while preserving visible content."
+    },
+    {
+      "category": "working-with-html",
       "file": "verify-that-generated-html-contains-heading-tags-matching-worksheet-titles.cs",
       "title": "Verify that generated HTML contains heading tags matching worksheet titles."
+    },
+    {
+      "category": "working-with-html",
+      "file": "verify-that-hidden-worksheets-are-absent-from-the-generated-html-when-exporthiddenworksheet-is-false.cs",
+      "title": "Verify that hidden worksheets are absent from the generated HTML when ExportHiddenWorksheet is false."
     },
     {
       "category": "working-with-html",
@@ -10948,6 +11303,11 @@
       "category": "working-with-html",
       "file": "verify-that-unused-named-styles-are-omitted-from-the-html-output-when-excludeunusedstyles-is-enabled.cs",
       "title": "Verify that unused named styles are omitted from the HTML output when ExcludeUnusedStyles is enabled."
+    },
+    {
+      "category": "working-with-html",
+      "file": "verify-tooltip-attributes-appear-only-for-cells-whose-displayed-text-is-truncated.cs",
+      "title": "Verify tooltip attributes appear only for cells whose displayed text is truncated."
     },
     {
       "category": "working-with-images",
