@@ -383,3 +383,4 @@ Output files are written to the working directory.
 - verify-duplicate-image-files-are-not-created-when-exportimagesasbase64-is-false-during-conversion.cs
 - create-a-script-that-extracts-excel-files-from-a-zip-archive-and-converts-each-to-html.cs
 - implement-error-handling-for-missing-worksheets-when-exporthiddenworksheet-option-is-enabled.cs
+- implement-logging-of-conversion-duration-for-each-workbook-during-batch-html-processing.cs
