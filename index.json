@@ -4051,6 +4051,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "read-cell-values-with-culturespecific-number-formatting-after-loading-a-workbook-to-ensure-correct-decimals.cs",
+      "title": "Read cell values with culture\u2011specific number formatting after loading a workbook to ensure correct decimals."
+    },
+    {
+      "category": "open-workbook",
       "file": "read-numeric-cell-values-with-lightcells-api-and-store-them-in-a-highperformance-inmemory-collection.cs",
       "title": "Read numeric cell values with LightCells API and store them in a high\u2011performance in\u2011memory collection."
     },
