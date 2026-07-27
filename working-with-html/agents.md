@@ -412,3 +412,4 @@ Output files are written to the working directory.
 - perform-a-performance-benchmark-converting-a-workbook-with-exportactiveworksheetonly-true-to-measure-singlesheet-processing-speed.cs
 - generate-html-and-then-use-an-html-parser-to-extract-all-hyperlink-urls-for-link-analysis.cs
 - generate-html-and-then-use-an-html-parser-to-count-the-number-of-image-tags-present.cs
+- generate-html-and-then-use-an-html-parser-to-verify-each-table-cell-has-a-datacell-attribute.cs
