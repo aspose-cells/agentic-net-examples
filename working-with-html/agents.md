@@ -246,3 +246,4 @@ Output files are written to the working directory.
 - convert-a-spreadsheet-with-wordart-to-pdf-and-embed-the-gradient-fill-as-an-iccprofileaware-color-space.cs
 - convert-a-spreadsheet-with-wordart-to-html-and-include-inline-svg-definitions-for-complex-gradients.cs
 - perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-pdf-reporting-progress-of-gradient-rendering.cs
+- perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs
