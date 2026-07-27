@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-locate-charts-and-set-each-charts-tick-label-direction-to-rotate90.cs
 - create-a-combined-column-and-line-chart-assigning-column-series-to-primary-axis-and-line-series-to-secondary.cs
 - validate-that-the-charts-secondary-axis-exists-before-assigning-series-to-avoid-runtime-exceptions.cs
+- use-charttextdirectiontype-enumeration-to-set-tick-labels-direction-to-stacked-for-vertical-orientation.cs
