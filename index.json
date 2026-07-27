@@ -10806,6 +10806,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-for-a-workbook-with-data-validation-dropdowns-and-verify-they-appear-as-select-elements.cs",
+      "title": "Generate HTML for a workbook with data validation dropdowns and verify they appear as select elements."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-for-a-workbook-with-frozen-panes-and-verify-pane-positions-are-reflected.cs",
       "title": "Generate HTML for a workbook with frozen panes and verify pane positions are reflected."
     },
