@@ -10141,6 +10141,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-set-the-output-encoding-to-utf8-for-international-character-support.cs",
+      "title": "Export Excel to HTML and set the output encoding to UTF\u20118 for international character support."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs",
       "title": "Export Excel to HTML while preserving cell formatting such as font styles and colors."
     },
