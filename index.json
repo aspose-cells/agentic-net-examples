@@ -96,6 +96,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-newly-created-workbook-using-a-userspecified-password-and-save-it-as-a-protected-file.cs",
+      "title": "Encrypt a newly created workbook using a user\u2011specified password and save it as a protected file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-compute-its-sha256-hash-for-integrity-verification.cs",
       "title": "Encrypt a workbook, then compute its SHA\u2011256 hash for integrity verification."
     },
