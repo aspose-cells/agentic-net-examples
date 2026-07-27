@@ -318,3 +318,4 @@ Output files are written to the working directory.
 - validate-that-htmlcrosstypecross-improves-performance-for-workbooks-containing-thousands-of-rows.cs
 - convert-an-excel-workbook-to-html-using-default-htmlsaveoptions.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-for-improved-layout.cs
+- convert-an-excel-workbook-to-html-with-presentationpreferenceautofit-for-compact-column-widths.cs
