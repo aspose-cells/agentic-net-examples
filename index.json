@@ -201,6 +201,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-using-a-strong-password-and-then-programmatically-verify-that-the-password-meets-complexity-rules.cs",
+      "title": "Encrypt a workbook using a strong password and then programmatically verify that the password meets complexity rules."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-with-aes256-encryption-strength-and-verify-that-the-file-size-increases-appropriately.cs",
       "title": "Encrypt a workbook with AES\u2011256 encryption strength and verify that the file size increases appropriately."
     },
