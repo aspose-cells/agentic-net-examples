@@ -446,3 +446,4 @@ Output files are written to the working directory.
 - export-worksheet-headings-as-separate-html-tables-by-enabling-htmlsaveoptionsexportheadings.cs
 - include-worksheet-names-as-headings-in-html-output-via-htmlsaveoptionsexportheadings.cs
 - export-a-workbook-to-html-with-headings-enabled-producing-separate-tables-for-each-worksheet.cs
+- save-a-workbook-to-html-while-preserving-original-cell-styles-falling-back-to-default-font-when-unavailable.cs
