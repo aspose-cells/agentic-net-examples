@@ -86,6 +86,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "attempt-to-open-an-encrypted-workbook-with-incorrect-password-and-capture-exception-details.cs",
+      "title": "Attempt to open an encrypted workbook with incorrect password and capture exception details."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "batch-process-all-excel-files-in-a-directory-adding-identical-signature-lines-to-each-workbook.cs",
       "title": "Batch process all Excel files in a directory, adding identical signature lines to each workbook."
     },
