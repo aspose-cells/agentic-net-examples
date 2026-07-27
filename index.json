@@ -576,6 +576,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-the-themes-light2-color-as-the-default-fill-for-newly-inserted-rows.cs",
+      "title": "Set the theme\u2019s Light2 color as the default fill for newly inserted rows."
+    },
+    {
+      "category": "format-cells",
       "file": "update-the-themes-accent4-color-based-on-user-input-and-refresh-all-dependent-cell-styles.cs",
       "title": "Update the theme\u2019s Accent4 color based on user input and refresh all dependent cell styles."
     },
