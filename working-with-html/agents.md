@@ -308,3 +308,4 @@ Output files are written to the working directory.
 - ensure-that-setting-exporthiddenworksheet-to-true-includes-hidden-worksheets-in-the-html-output.cs
 - generate-html-with-widthscalable-enabled-and-addtooltiptext-enabled-to-create-scalable-columns-with-hover-tooltips.cs
 - compare-html-file-size-when-widthscalable-is-true-versus-false-for-the-same-workbook.cs
+- test-that-enabling-widthscalable-does-not-affect-nonhtml-export-formats.cs
