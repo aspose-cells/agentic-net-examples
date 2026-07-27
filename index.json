@@ -10306,6 +10306,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-htmlcrosstypemsexport-to-replicate-excels-native-html-style.cs",
+      "title": "Export a workbook to HTML with HtmlCrossType.MSExport to replicate Excel\u2019s native HTML style."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-to-html-with-widthscalable-set-to-true-for-embased-column-sizing.cs",
       "title": "Export a workbook to HTML with WidthScalable set to true for em\u2011based column sizing."
     },
