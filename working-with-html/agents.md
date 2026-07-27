@@ -436,3 +436,4 @@ Output files are written to the working directory.
 - disable-external-css-generation-during-html-export-with-htmlsaveoptionsdisablecss-set-to-true.cs
 - activate-custom-css-properties-in-html-output-by-enabling-htmlsaveoptionsenablecsscustomproperties.cs
 - combine-disabling-external-css-and-enabling-custom-css-properties-for-embedded-styling-in-html.cs
+- generate-html-with-embedded-css-by-disabling-external-css-and-enabling-custom-css-properties.cs
