@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-from-a-file-and-export-it-to-html-using-a-custom-stream-provider.cs
 - export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs
 - export-excel-to-html-and-generate-a-separate-css-file-for-styling-instead-of-inline-styles.cs
+- export-excel-to-html-and-embed-images-as-base64-data-uris-within-the-html-output.cs
