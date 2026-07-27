@@ -3926,6 +3926,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "implement-a-custom-lightcellsdataprovider-that-reads-data-from-a-database-and-writes-directly-to-an-excel-worksheet.cs",
+      "title": "Implement a custom LightCellsDataProvider that reads data from a database and writes directly to an Excel worksheet."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs",
       "title": "Implement an InterruptMonitor that aborts workbook loading after ten seconds to prevent excessive processing time."
     },
