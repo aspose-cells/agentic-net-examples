@@ -11020,6 +11020,11 @@
       "title": "Verify that unused named styles are omitted from the HTML output when ExcludeUnusedStyles is enabled."
     },
     {
+      "category": "working-with-html",
+      "file": "verify-tooltip-attributes-appear-only-for-cells-whose-displayed-text-is-truncated.cs",
+      "title": "Verify tooltip attributes appear only for cells whose displayed text is truncated."
+    },
+    {
       "category": "working-with-images",
       "file": "apply-a-css-rotate-transform-to-the-svg-chart-element-to-display-it-at-a-45degree-angle.cs",
       "title": "Apply a CSS rotate transform to the SVG chart element to display it at a 45\u2011degree angle."
