@@ -16,6 +16,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "add-a-signature-line-then-lock-the-worksheet-to-prevent-further-edits-without-a-password.cs",
+      "title": "Add a signature line, then lock the worksheet to prevent further edits without a password."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "add-a-signature-line-to-a-chart-sheet-and-ensure-it-appears-correctly-when-rendered.cs",
       "title": "Add a signature line to a chart sheet and ensure it appears correctly when rendered."
     },
