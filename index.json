@@ -171,6 +171,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "create-a-function-that-returns-the-encryption-status-of-a-workbook-as-an-enumeration-value-encrypted-unencrypted-unknown.cs",
+      "title": "Create a function that returns the encryption status of a workbook as an enumeration value (Encrypted, Unencrypted, Unknown)."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "create-a-signature-line-then-digitally-sign-the-workbook-using-an-external-xades-signature-tool.cs",
       "title": "Create a signature line, then digitally sign the workbook using an external XAdES signature tool."
     },
