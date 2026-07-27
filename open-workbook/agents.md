@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - open-an-excel-95-file-by-setting-loadoptionsversion-to-excel95-before-constructing-the-workbook.cs
 - load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs
 - automatically-detect-the-workbook-format-by-passing-only-the-file-path-to-the-workbook-constructor.cs
+- open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs
