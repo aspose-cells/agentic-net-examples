@@ -536,6 +536,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-utility-that-reads-a-csv-of-color-values-and-builds-a-corresponding-theme-palette.cs",
+      "title": "Create a utility that reads a CSV of color values and builds a corresponding theme palette."
+    },
+    {
+      "category": "format-cells",
       "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
       "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
     },
