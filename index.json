@@ -208,6 +208,11 @@
       "category": "encryption-and-protection",
       "file": "verify-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-older-excel-versions.cs",
       "title": "Verify that a workbook encrypted with a password cannot be opened by older Excel versions."
+    },
+    {
+      "category": "encryption-and-protection",
+      "file": "verify-that-a-workbook-saved-after-encryption-can-be-opened-with-the-same-password-on-another-machine.cs",
+      "title": "Verify that a workbook saved after encryption can be opened with the same password on another machine."
     }
   ]
 }
