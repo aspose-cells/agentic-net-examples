@@ -429,3 +429,4 @@ Output files are written to the working directory.
 - configure-htmlsaveoptions-to-use-courier-new-as-fallback-font-when-original-font-missing.cs
 - specify-times-new-roman-as-default-font-for-html-rendering-via-htmlsaveoptions.cs
 - use-htmlsaveoptions-to-set-default-font-to-courier-new-and-verify-fallback-behavior.cs
+- enable-gridlines-in-html-output-by-setting-htmlsaveoptionsenablegridlines-to-true.cs
