@@ -6,6 +6,11 @@
   "examples": [
     {
       "category": "encryption-and-protection",
+      "file": "add-a-signature-line-to-a-specific-worksheet-setting-signer-name-and-title-properties.cs",
+      "title": "Add a signature line to a specific worksheet, setting signer name and title properties."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs",
       "title": "Apply workbook protection disabling changes to the default file format when saving."
     },
