@@ -376,3 +376,4 @@ Output files are written to the working directory.
 - set-exportconditionalformatting-false-and-verify-conditional-style-attributes-are-missing-in-html.cs
 - set-exportgridlines-false-and-verify-gridline-elements-are-not-rendered-in-html-output.cs
 - set-exporthiddenworksheet-false-and-verify-hidden-worksheets-are-excluded-from-html-conversion.cs
+- combine-exportcomments-false-exportconditionalformatting-false-and-exportgridlines-false-to-generate-minimal-html.cs
