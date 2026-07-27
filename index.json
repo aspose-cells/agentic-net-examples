@@ -631,6 +631,11 @@
     },
     {
       "category": "format-cells",
+      "file": "validate-that-after-removing-a-theme-cells-previously-using-theme-colors-retain-their-original-rgb-values.cs",
+      "title": "Validate that after removing a theme, cells previously using theme colors retain their original RGB values."
+    },
+    {
+      "category": "format-cells",
       "file": "validate-that-after-theme-updates-chart-series-colors-automatically-update-to-the-new-theme-accents.cs",
       "title": "Validate that after theme updates, chart series colors automatically update to the new theme accents."
     }
