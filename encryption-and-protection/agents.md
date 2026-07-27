@@ -83,3 +83,4 @@ Examples may generate:
 - detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs
 - protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs
 - create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs
+- validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs
