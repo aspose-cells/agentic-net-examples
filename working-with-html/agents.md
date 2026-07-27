@@ -365,3 +365,4 @@ Output files are written to the working directory.
 - create-a-unit-test-asserting-css-custom-property-definitions-appear-within-a-root-selector-when-enabled.cs
 - generate-html-for-a-workbook-containing-merged-cells-and-verify-merged-layout-is-preserved.cs
 - generate-html-for-a-workbook-with-frozen-panes-and-verify-pane-positions-are-reflected.cs
+- generate-html-for-a-workbook-with-data-validation-dropdowns-and-verify-they-appear-as-select-elements.cs
