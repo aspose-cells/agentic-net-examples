@@ -9721,6 +9721,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs",
+      "title": "Convert HTML to Excel and retain background images by inserting them as worksheet background."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-retain-embedded-svg-graphics-as-scalable-vector-shapes.cs",
       "title": "Convert HTML to Excel and retain embedded SVG graphics as scalable vector shapes."
     },
