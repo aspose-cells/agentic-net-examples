@@ -10231,6 +10231,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-containing-hidden-rows-and-columns-confirming-that-tablecssid-prefixes-only-appear-on-visible-tables.cs",
+      "title": "Export a workbook containing hidden rows and columns, confirming that TableCssId prefixes only appear on visible tables."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-workbook-to-html-while-omitting-document-and-worksheet-properties-together.cs",
       "title": "Export a workbook to HTML while omitting document and worksheet properties together."
     },
