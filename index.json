@@ -11111,6 +11111,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-embedded-css-by-disabling-external-css-and-enabling-custom-css-properties.cs",
+      "title": "Generate HTML with embedded CSS by disabling external CSS and enabling custom CSS properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-embedded-images-as-base64-strings-by-setting-exportimagesasbase64-true.cs",
       "title": "Generate HTML with embedded images as base64 strings by setting ExportImagesAsBase64 true."
     },
