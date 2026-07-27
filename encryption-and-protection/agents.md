@@ -82,3 +82,4 @@ Examples may generate:
 - encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs
 - detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs
 - protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs
+- create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs
