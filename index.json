@@ -9756,6 +9756,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-convert-excel-workbooks-to-html-with-exporthiddenworksheet-enabled-to-include-hidden-sheet-data.cs",
+      "title": "Batch convert Excel workbooks to HTML with ExportHiddenWorksheet enabled to include hidden sheet data."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-convert-excel-workbooks-to-html-with-presentationpreferencebestfit-for-each-file.cs",
       "title": "Batch convert Excel workbooks to HTML with PresentationPreference.BestFit for each file."
     },
