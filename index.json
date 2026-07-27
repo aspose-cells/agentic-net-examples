@@ -10441,6 +10441,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-during-html-export-and-apply-custom-css-classes-for-gradient-control.cs",
+      "title": "Render WordArt gradient fills during HTML export and apply custom CSS classes for gradient control."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-wordart-gradient-fills-during-pdf-conversion-and-enable-antialiasing-for-smoother-edges.cs",
       "title": "Render WordArt gradient fills during PDF conversion and enable anti\u2011aliasing for smoother edges."
     },
