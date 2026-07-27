@@ -341,3 +341,4 @@ Output files are written to the working directory.
 - batch-convert-excel-files-to-html-with-exportcomments-enabled-to-include-all-cell-notes.cs
 - batch-convert-excel-workbooks-to-html-with-exportconditionalformatting-enabled-to-retain-visual-rules.cs
 - batch-convert-excel-files-to-html-with-exportgridlines-enabled-to-display-spreadsheet-grid-structure.cs
+- batch-convert-excel-workbooks-to-html-with-exporthiddenworksheet-enabled-to-include-hidden-sheet-data.cs
