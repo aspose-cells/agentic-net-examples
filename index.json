@@ -10111,6 +10111,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs",
+      "title": "Export Excel to HTML while preserving cell formatting such as font styles and colors."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
       "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
     },
