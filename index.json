@@ -10126,6 +10126,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-inline-css-definitions-within-the-exported-html-and-prefix-them-using-tablecssid-for-immediate-preview.cs",
+      "title": "Create inline CSS definitions within the exported HTML and prefix them using TableCssId for immediate preview."
+    },
+    {
+      "category": "working-with-html",
       "file": "customize-gradient-angle-for-wordart-during-html-conversion-and-reflect-the-angle-in-css-gradient-syntax.cs",
       "title": "Customize gradient angle for WordArt during HTML conversion and reflect the angle in CSS gradient syntax."
     },
