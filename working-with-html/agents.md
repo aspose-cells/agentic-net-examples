@@ -369,3 +369,4 @@ Output files are written to the working directory.
 - generate-html-for-a-workbook-with-formulas-and-verify-calculated-results-are-displayed-correctly.cs
 - generate-html-for-a-workbook-with-hidden-rows-and-verify-they-are-omitted-unless-exporthiddenworksheet-is-true.cs
 - convert-a-workbook-to-html-then-reload-it-using-loadoptions-to-verify-roundtrip-fidelity.cs
+- compare-visual-fidelity-of-html-generated-with-presentationpreferencebestfit-versus-default-layout.cs
