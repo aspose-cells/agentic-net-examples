@@ -10616,6 +10616,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-a-workbook-enable-widthscalable-and-save-as-html-with-percentage-column-widths.cs",
+      "title": "Load a workbook, enable WidthScalable, and save as HTML with percentage column widths."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-workbook-featuring-iconset-rules-set-iconset-export-to-true-and-produce-html-showing-icons.cs",
       "title": "Load a workbook featuring IconSet rules, set IconSet export to true, and produce HTML showing icons."
     },
