@@ -9881,6 +9881,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-enable-css-custom-properties-for-image-deduplication.cs",
+      "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and enable CSS custom properties for image deduplication."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-export-hidden-worksheets.cs",
       "title": "Convert an Excel workbook to HTML with PresentationPreference.BestFit and export hidden worksheets."
     },
