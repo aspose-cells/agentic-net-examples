@@ -139,3 +139,4 @@ Examples may generate:
 - use-loadoptions-to-identify-the-file-format-of-an-excel-document-without-fully-loading-its-contents.cs
 - load-a-workbook-from-a-memory-stream-detect-its-encryption-status-and-output-format-to-console.cs
 - save-an-encrypted-workbook-to-a-memory-stream-then-read-stream-length-to-confirm-encryption-overhead.cs
+- detect-an-encrypted-office-open-xml-file-and-extract-its-encryption-algorithm-identifier-for-auditing.cs
