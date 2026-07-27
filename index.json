@@ -10161,6 +10161,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-maintain-original-column-widths-using-css-width-properties.cs",
+      "title": "Export Excel to HTML and maintain original column widths using CSS width properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
       "title": "Export Excel to HTML and preserve cell comments as HTML tooltip attributes."
     },
