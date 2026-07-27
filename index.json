@@ -4296,6 +4296,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-loadoptions-to-load-only-defined-names-that-start-with-report-and-generate-a-pdf-containing-those-ranges.cs",
+      "title": "Use LoadOptions to load only defined names that start with \"Report\" and generate a PDF containing those ranges."
+    },
+    {
+      "category": "open-workbook",
       "file": "validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs",
       "title": "Validate that required worksheets \"Invoice\" and \"Summary\" exist after loading, throwing an exception if missing."
     },
