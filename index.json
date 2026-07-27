@@ -506,6 +506,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-macrofree-template-workbook-with-predefined-theme-colors-for-downstream-processing.cs",
+      "title": "Create a macro\u2011free template workbook with predefined theme colors for downstream processing."
+    },
+    {
+      "category": "format-cells",
       "file": "iterate-over-all-worksheets-set-each-header-rows-font-color-to-the-themes-accent1.cs",
       "title": "Iterate over all worksheets, set each header row\u2019s font color to the theme\u2019s Accent1."
     }
