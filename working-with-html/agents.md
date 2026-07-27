@@ -285,3 +285,4 @@ Output files are written to the working directory.
 - load-a-workbook-enable-widthscalable-and-save-as-html-with-percentage-column-widths.cs
 - export-a-workbook-to-html-with-widthscalable-set-to-true-for-embased-column-sizing.cs
 - apply-widthscalable-false-and-confirm-column-widths-render-as-fixed-pixel-values.cs
+- apply-widthscalable-true-and-confirm-column-widths-adapt-using-em-units.cs
