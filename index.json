@@ -13,6 +13,11 @@
       "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs",
       "title": "Encrypt a workbook, then measure the time required to open it in a headless automation environment."
+    },
+    {
+      "category": "encryption-and-protection",
+      "file": "protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs",
+      "title": "Protect a worksheet, then attempt to copy it to a new workbook without providing the password."
     }
   ]
 }
