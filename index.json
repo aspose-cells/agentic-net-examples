@@ -10461,6 +10461,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-pdf-reporting-progress-of-gradient-rendering.cs",
+      "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to PDF, reporting progress of gradient rendering."
+    },
+    {
+      "category": "working-with-html",
       "file": "preserve-original-worksheet-name-capitalization-when-creating-html-heading-tags.cs",
       "title": "Preserve original worksheet name capitalization when creating HTML heading tags."
     },
