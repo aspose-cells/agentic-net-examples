@@ -216,3 +216,4 @@ Output files are written to the working directory.
 - export-excel-to-html-and-embed-hyperlinks-so-they-remain-functional-in-the-browser.cs
 - export-excel-to-html-and-include-custom-metadata-tags-extracted-from-workbook-properties.cs
 - export-excel-to-html-and-compress-the-output-html-using-gzip-stream-for-faster-transmission.cs
+- export-excel-to-html-and-apply-a-custom-stylesheet-that-overrides-default-cell-colors.cs
