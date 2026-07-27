@@ -9926,6 +9926,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-multiple-spreadsheets-with-wordart-to-html-in-a-batch-generating-separate-css-files-for-gradients.cs",
+      "title": "Convert multiple spreadsheets with WordArt to HTML in a batch, generating separate CSS files for gradients."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
       "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
     },
