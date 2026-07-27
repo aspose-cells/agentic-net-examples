@@ -10876,6 +10876,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-ensure-hyperlinks-retain-their-original-url-targets-after-conversion.cs",
+      "title": "Generate HTML and ensure hyperlinks retain their original URL targets after conversion."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-ensure-numeric-values-retain-their-original-formatting-as-displayed-in-excel.cs",
       "title": "Generate HTML and ensure numeric values retain their original formatting as displayed in Excel."
     },
