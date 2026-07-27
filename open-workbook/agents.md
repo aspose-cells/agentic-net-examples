@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - configure-interruptmonitor-to-abort-workbook-loading-after-five-seconds-then-handle-the-resulting-exception-gracefully.cs
 - read-numeric-cells-from-an-applegenerated-spreadsheet-calculate-their-average-and-output-the-result-to-the-console.cs
 - exclude-worksheets-named-temp-during-load-by-adding-their-names-to-loadoptionsloadfilterexcludedsheets-collection.cs
+- include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs
