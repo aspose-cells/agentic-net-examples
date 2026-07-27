@@ -84,3 +84,4 @@ Examples may generate:
 - protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs
 - create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs
 - validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs
+- apply-workbook-protection-preventing-changes-to-default-file-properties-such-as-author-and-title.cs
