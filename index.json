@@ -81,6 +81,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-then-use-a-checksum-to-ensure-the-encrypted-file-has-not-been-tampered-with.cs",
+      "title": "Encrypt a workbook, then use a checksum to ensure the encrypted file has not been tampered with."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-using-a-password-stored-in-a-hardware-security-module-and-confirm-successful-decryption.cs",
       "title": "Encrypt a workbook using a password stored in a hardware security module and confirm successful decryption."
     },
