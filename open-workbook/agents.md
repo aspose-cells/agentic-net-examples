@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs
 - use-interruptmonitor-to-abort-workbook-loading-if-processing-exceeds-a-predefined-time-limit.cs
 - retrieve-and-log-warning-messages-after-loading-a-workbook-with-filtered-objects-to-diagnose-data-loss.cs
+- load-only-the-first-three-worksheets-from-an-xlsx-file-using-lightcells-to-minimize-memory-consumption.cs
