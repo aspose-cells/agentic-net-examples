@@ -561,6 +561,11 @@
     },
     {
       "category": "format-cells",
+      "file": "update-the-themes-accent4-color-based-on-user-input-and-refresh-all-dependent-cell-styles.cs",
+      "title": "Update the theme\u2019s Accent4 color based on user input and refresh all dependent cell styles."
+    },
+    {
+      "category": "format-cells",
       "file": "validate-that-after-changing-the-theme-conditional-formatting-rules-still-reference-correct-color-indices.cs",
       "title": "Validate that after changing the theme, conditional formatting rules still reference correct color indices."
     }
