@@ -10796,6 +10796,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-using-utf-8-encoding-by-assigning-htmlsaveoptionsencoding-to-encodingutf8.cs",
+      "title": "Generate HTML using UTF-8 encoding by assigning HtmlSaveOptions.Encoding to Encoding.UTF8."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-a-custom-page-title-by-setting-htmlsaveoptionshtmltitle-property.cs",
       "title": "Generate HTML with a custom page title by setting HtmlSaveOptions.HtmlTitle property."
     },
