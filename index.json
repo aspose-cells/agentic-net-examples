@@ -151,6 +151,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-workbooks-using-randomly-generated-passwords-store-passwords-securely-and-log-encryption-timestamps.cs",
+      "title": "Encrypt workbooks using randomly generated passwords, store passwords securely, and log encryption timestamps."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs",
       "title": "Ensure a digitally signed workbook retains its signature after being encrypted and then decrypted."
     },
