@@ -111,3 +111,4 @@ Examples may generate:
 - check-whether-a-loaded-workbook-is-encrypted-and-display-a-warning-if-encryption-is-detected.cs
 - load-a-passwordprotected-workbook-prompt-the-user-for-the-password-and-open-it-for-reading.cs
 - decrypt-an-existing-passwordprotected-workbook-modify-a-cell-value-and-reencrypt-before-saving.cs
+- encrypt-a-newly-created-workbook-using-a-userspecified-password-and-save-it-as-a-protected-file.cs
