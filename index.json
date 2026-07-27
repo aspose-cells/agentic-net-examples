@@ -4186,6 +4186,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "use-lightcells-api-to-copy-data-from-one-worksheet-to-another-without-creating-intermediate-workbook-objects.cs",
+      "title": "Use LightCells API to copy data from one worksheet to another without creating intermediate Workbook objects."
+    },
+    {
+      "category": "open-workbook",
       "file": "use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs",
       "title": "Use LightCells API with LoadOptions to process a large dataset while minimizing memory consumption."
     },
