@@ -9701,6 +9701,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "activate-custom-css-properties-in-html-output-by-enabling-htmlsaveoptionsenablecsscustomproperties.cs",
+      "title": "Activate custom CSS properties in HTML output by enabling HtmlSaveOptions.EnableCssCustomProperties."
+    },
+    {
+      "category": "working-with-html",
       "file": "add-a-table-of-contents-linking-to-each-heading-generated-from-worksheet-names.cs",
       "title": "Add a table of contents linking to each heading generated from worksheet names."
     },
