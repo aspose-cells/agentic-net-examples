@@ -392,3 +392,4 @@ Output files are written to the working directory.
 - generate-html-and-embed-it-in-an-email-body-using-systemnetmail-for-newsletter-distribution.cs
 - generate-html-and-compare-its-dom-structure-against-an-expected-xml-document-to-validate-layout.cs
 - set-exportchartimageformat-to-png-and-verify-chart-images-in-html-are-png-files.cs
+- set-exportchartimageformat-to-jpeg-and-verify-chart-images-in-html-are-jpeg-files.cs
