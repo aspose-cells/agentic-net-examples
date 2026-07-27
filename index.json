@@ -10541,6 +10541,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "render-wordart-gradient-fills-while-converting-to-html-and-provide-a-javascript-fallback-that-draws-gradients-on-canvas.cs",
+      "title": "Render WordArt gradient fills while converting to HTML and provide a JavaScript fallback that draws gradients on canvas."
+    },
+    {
+      "category": "working-with-html",
       "file": "render-wordart-gradient-fills-while-converting-to-pdf-and-embed-the-gradient-as-a-pdf-shading-pattern.cs",
       "title": "Render WordArt gradient fills while converting to PDF and embed the gradient as a PDF shading pattern."
     },
