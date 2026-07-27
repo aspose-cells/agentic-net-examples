@@ -9821,6 +9821,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "combine-exportcomments-false-exportconditionalformatting-false-and-exportgridlines-false-to-generate-minimal-html.cs",
+      "title": "Combine ExportComments false, ExportConditionalFormatting false, and ExportGridLines false to generate minimal HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "combine-widthscalable-htmlcrosstypefittocell-and-addtooltiptext-to-produce-responsive-html-with-tooltips.cs",
       "title": "Combine WidthScalable, HtmlCrossType.FitToCell, and AddTooltipText to produce responsive HTML with tooltips."
     },
