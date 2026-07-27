@@ -9921,6 +9921,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-multiple-spreadsheets-containing-wordart-to-pdf-in-a-batch-ensuring-each-gradient-renders-correctly.cs",
+      "title": "Convert multiple spreadsheets containing WordArt to PDF in a batch, ensuring each gradient renders correctly."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-workbook-programmatically-add-a-comment-to-a-cell-enable-isexportcomments-and-verify-comment-appears-in-html.cs",
       "title": "Create a workbook programmatically, add a comment to a cell, enable IsExportComments, and verify comment appears in HTML."
     },
