@@ -10121,6 +10121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-embed-hyperlinks-so-they-remain-functional-in-the-browser.cs",
+      "title": "Export Excel to HTML and embed hyperlinks so they remain functional in the browser."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-embed-images-as-base64-data-uris-within-the-html-output.cs",
       "title": "Export Excel to HTML and embed images as base64 data URIs within the HTML output."
     },
