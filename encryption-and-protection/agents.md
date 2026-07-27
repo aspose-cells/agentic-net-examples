@@ -172,3 +172,4 @@ Examples may generate:
 - compare-performance-of-encrypting-workbooks-in-parallel-threads-versus-sequential-processing-for-large-datasets.cs
 - create-a-function-that-returns-the-encryption-status-of-a-workbook-as-an-enumeration-value-encrypted-unencrypted-unknown.cs
 - detect-whether-an-excel-file-uses-legacy-binary-format-xls-and-apply-appropriate-encryption-method-for-that-format.cs
+- encrypt-a-workbook-then-immediately-attempt-to-open-it-without-a-password-to-confirm-access-denial.cs
