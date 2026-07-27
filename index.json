@@ -11531,6 +11531,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "specify-times-new-roman-as-default-font-for-html-rendering-via-htmlsaveoptions.cs",
+      "title": "Specify \"Times New Roman\" as default font for HTML rendering via HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "store-exported-html-files-in-a-temporary-folder-via-ifilepathprovider-and-clean-up-after-processing.cs",
       "title": "Store exported HTML files in a temporary folder via IFilePathProvider and clean up after processing."
     },
