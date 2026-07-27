@@ -10851,6 +10851,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "save-html-with-addtooltiptext-enabled-so-full-cell-text-appears-as-hover-tooltip.cs",
+      "title": "Save HTML with AddTooltipText enabled so full cell text appears as hover tooltip."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
