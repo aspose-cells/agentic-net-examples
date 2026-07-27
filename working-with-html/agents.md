@@ -431,3 +431,4 @@ Output files are written to the working directory.
 - use-htmlsaveoptions-to-set-default-font-to-courier-new-and-verify-fallback-behavior.cs
 - enable-gridlines-in-html-output-by-setting-htmlsaveoptionsenablegridlines-to-true.cs
 - include-worksheet-comments-in-html-by-setting-htmlsaveoptionsincludecomments-to-true.cs
+- enable-gridlines-and-comments-together-in-htmlsaveoptions-for-comprehensive-html-export.cs
