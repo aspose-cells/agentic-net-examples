@@ -236,3 +236,4 @@ Output files are written to the working directory.
 - render-wordart-gradient-fills-while-converting-to-html-and-include-fallback-solid-colors-for-older-browsers.cs
 - render-wordart-gradient-fills-during-conversion-and-allow-configuration-of-gradient-direction-via-api.cs
 - render-wordart-gradient-fills-while-converting-and-support-custom-start-and-end-colors-defined-in-the-workbook.cs
+- convert-multiple-spreadsheets-containing-wordart-to-pdf-in-a-batch-ensuring-each-gradient-renders-correctly.cs
