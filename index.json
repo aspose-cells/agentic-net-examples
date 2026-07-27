@@ -231,6 +231,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-whether-an-excel-file-uses-legacy-binary-format-xls-and-apply-appropriate-encryption-method-for-that-format.cs",
+      "title": "Detect whether an Excel file uses legacy binary format (XLS) and apply appropriate encryption method for that format."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-workbook-file-format-and-encryption-status-given-a-file-path.cs",
       "title": "Detect workbook file format and encryption status given a file path."
     },
