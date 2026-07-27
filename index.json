@@ -511,6 +511,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-accent3-color-to-the-fill-of-merged-cells-spanning-multiple-rows.cs",
+      "title": "Apply the theme\u2019s Accent3 color to the fill of merged cells spanning multiple rows."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-themes-accent5-color-to-the-data-bars-of-a-conditional-formatting-rule.cs",
       "title": "Apply the theme\u2019s Accent5 color to the data bars of a conditional formatting rule."
     },
