@@ -10516,6 +10516,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-css-file-generation-and-embed-styles-directly-in-html-using-custom-css-properties.cs",
+      "title": "Disable CSS file generation and embed styles directly in HTML using custom CSS properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "disable-css-generation-during-html-export-by-setting-disablecss-to-true.cs",
       "title": "Disable CSS generation during HTML export by setting DisableCss to true."
     },
