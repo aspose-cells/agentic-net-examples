@@ -9726,6 +9726,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-in-a-batch-job-processing-a-directory-of-files-into-separate-workbooks.cs",
+      "title": "Convert HTML to Excel in a batch job processing a directory of files into separate workbooks."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs",
       "title": "Convert HTML to Excel using a memory stream to process large files without temporary files."
     },
