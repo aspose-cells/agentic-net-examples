@@ -309,3 +309,4 @@ Output files are written to the working directory.
 - generate-html-with-widthscalable-enabled-and-addtooltiptext-enabled-to-create-scalable-columns-with-hover-tooltips.cs
 - compare-html-file-size-when-widthscalable-is-true-versus-false-for-the-same-workbook.cs
 - test-that-enabling-widthscalable-does-not-affect-nonhtml-export-formats.cs
+- create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs
