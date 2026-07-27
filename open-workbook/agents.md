@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - configure-htmlsaveoptionsexportchartimageformat-to-png-then-save-the-workbook-as-html-with-highresolution-charts.cs
 - limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs
 - set-htmlsaveoptionspagetitle-to-the-workbooks-filename-ensuring-each-html-file-displays-a-meaningful-title.cs
+- load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs
