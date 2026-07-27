@@ -129,3 +129,4 @@ Output files are written to the working directory.
 - implement-a-custom-lightcellsdataprovider-that-reads-data-from-a-database-and-writes-directly-to-an-excel-worksheet.cs
 - apply-filterdatakind-to-load-only-numeric-and-date-cells-from-a-template-workbook-for-statistical-analysis.cs
 - configure-lightcells-to-process-cells-in-rowmajor-order-for-optimal-cache-utilization-during-large-file-reads.cs
+- load-a-workbook-without-charts-by-applying-filterobjects-then-verify-that-chart-collections-are-empty-after-loading.cs
