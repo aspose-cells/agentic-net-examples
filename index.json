@@ -10421,6 +10421,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-gridlines-are-visible-in-html-output-when-exportgridlines-option-is-enabled.cs",
+      "title": "Ensure gridlines are visible in HTML output when ExportGridLines option is enabled."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-that-combining-exporthiddenworksheet-false-with-htmlcrosstypefittocell-limits-overflow-and-hides-hidden-worksheets.cs",
       "title": "Ensure that combining ExportHiddenWorksheet false with HtmlCrossType.FitToCell limits overflow and hides hidden worksheets."
     },
