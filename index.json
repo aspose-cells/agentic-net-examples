@@ -296,6 +296,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "protect-a-worksheet-while-allowing-users-to-format-cells-then-verify-editing-cell-values-remains-blocked.cs",
+      "title": "Protect a worksheet while allowing users to format cells, then verify editing cell values remains blocked."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "protect-the-workbook-structure-then-attempt-to-rename-a-worksheet-and-confirm-that-the-operation-is-blocked.cs",
       "title": "Protect the workbook structure, then attempt to rename a worksheet and confirm that the operation is blocked."
     },
