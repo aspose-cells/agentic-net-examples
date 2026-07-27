@@ -286,6 +286,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "implement-error-handling-that-retries-decryption-with-an-alternate-password-when-the-first-attempt-fails.cs",
+      "title": "Implement error handling that retries decryption with an alternate password when the first attempt fails."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "load-a-passwordprotected-workbook-prompt-the-user-for-the-password-and-open-it-for-reading.cs",
       "title": "Load a password\u2011protected workbook, prompt the user for the password, and open it for reading."
     },
