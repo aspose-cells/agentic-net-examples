@@ -327,3 +327,4 @@ Output files are written to the working directory.
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-set-hyperlink-target-to-blank.cs
 - convert-an-excel-workbook-to-html-with-presentationpreferencebestfit-and-set-hyperlink-target-to-parent.cs
 - convert-an-excel-workbook-to-html-with-default-options-and-set-hyperlink-target-to-blank.cs
+- convert-an-excel-workbook-to-html-with-default-options-and-set-hyperlink-target-to-parent.cs
