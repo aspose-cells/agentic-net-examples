@@ -11121,6 +11121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-exporthiddenworksheet-false-and-verify-hidden-sheets-are-omitted-from-resulting-html.cs",
+      "title": "Set ExportHiddenWorksheet false and verify hidden sheets are omitted from resulting HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "set-htmlsaveoptions-to-disable-scientific-notation-for-numbers-exceeding-a-specified-threshold.cs",
       "title": "Set HtmlSaveOptions to disable scientific notation for numbers exceeding a specified threshold."
     },
