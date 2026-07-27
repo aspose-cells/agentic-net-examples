@@ -2175,6 +2175,126 @@
       "title": "Add a custom property containing an array of string tags to categorize workbook content."
     },
     {
+      "category": "comments-and-notes",
+      "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
+      "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs",
+      "title": "Apply a solid blue background to a comment using Shape.Fill.ForeColor with the appropriate color code."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "batch-process-a-folder-of-workbooks-adding-a-standard-disclaimer-comment-to-each-worksheets-top-left-cell.cs",
+      "title": "Batch process a folder of workbooks, adding a standard disclaimer comment to each worksheet's top-left cell."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of a comment by assigning a red value to Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of comments in column G to blue using Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "copy-a-threaded-comment-from-cell-e5-to-cell-f6-while-preserving-its-author-and-text.cs",
+      "title": "Copy a threaded comment from cell E5 to cell F6 while preserving its author and text."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "create-a-new-workbook-and-add-a-threaded-comment-to-cell-a1-with-author-john.cs",
+      "title": "Create a new workbook and add a threaded comment to cell A1 with author John."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs",
+      "title": "Create a workbook, add threaded comments to multiple cells, and save the file in XLSX format."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs",
+      "title": "Edit a specific threaded comment by setting its Text property to a new string value."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "embed-an-image-as-a-comment-background-by-setting-shapefillpicture-to-a-loaded-picture-object.cs",
+      "title": "Embed an image as a comment background by setting Shape.Fill.Picture to a loaded picture object."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs",
+      "title": "Iterate through a ThreadedCommentCollection to display each comment's text, author, and creation timestamp."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs",
+      "title": "Load a workbook, modify comment font colors based on author, and save changes to a new file."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs",
+      "title": "Load an existing workbook, retrieve all threaded comments from column B, and list their authors."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "read-all-threaded-comments-from-a-worksheet-and-count-the-number-of-comments-per-author.cs",
+      "title": "Read all threaded comments from a worksheet and count the number of comments per author."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs",
+      "title": "Read the author of each threaded comment in a worksheet and output the list."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs",
+      "title": "Remove a threaded comment from cell C3 using the Remove method on the comment object."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs",
+      "title": "Remove all comments older than thirty days from a workbook based on their CreatedTime values."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs",
+      "title": "Retrieve and display the total number of threaded comments present in a workbook."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs",
+      "title": "Retrieve the creation time of a threaded comment via the CreatedTime property and log it."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs",
+      "title": "Scan a workbook for empty comments and remove them to clean metadata."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs",
+      "title": "Set the text direction of a comment's shape to RightToLeft for bidirectional language support."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs",
+      "title": "Set the text direction of a comment's shape to TopToBottom for vertical annotation layout."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs",
+      "title": "Update the text direction of all comments in a worksheet to LeftToRight for standard layout."
+    },
+    {
+      "category": "document-properties",
+      "file": "add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs",
+      "title": "Add a custom property containing an array of string tags to categorize workbook content."
+    },
+    {
       "category": "document-properties",
       "file": "batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs",
       "title": "Batch process all workbooks in a folder, setting each file's Language property to \"en-GB\"."
@@ -9661,23 +9781,8 @@
     },
     {
       "category": "working-with-html",
-      "file": "convert-html-to-excel-and-apply-a-custom-theme-based-on-css-variables-defined-in-the-html.cs",
-      "title": "Convert HTML to Excel and apply a custom theme based on CSS variables defined in the HTML."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-apply-custom-number-formats-for-scientific-notation-values.cs",
-      "title": "Convert HTML to Excel and apply custom number formats for scientific notation values."
-    },
-    {
-      "category": "working-with-html",
       "file": "convert-html-to-excel-and-apply-date-format-detection-based-on-locale-settings.cs",
       "title": "Convert HTML to Excel and apply date format detection based on locale settings."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-embed-custom-document-properties-extracted-from-html-meta-tags.cs",
-      "title": "Convert HTML to Excel and embed custom document properties extracted from HTML meta tags."
     },
     {
       "category": "working-with-html",
@@ -9686,78 +9791,13 @@
     },
     {
       "category": "working-with-html",
-      "file": "convert-html-to-excel-and-handle-nested-tables-by-creating-separate-worksheets-for-each-level.cs",
-      "title": "Convert HTML to Excel and handle nested tables by creating separate worksheets for each level."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-maintain-original-html-page-breaks-as-worksheet-page-breaks.cs",
-      "title": "Convert HTML to Excel and maintain original HTML page breaks as worksheet page breaks."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-map-css-border-styles-to-excel-cell-border-line-styles.cs",
-      "title": "Convert HTML to Excel and map CSS border styles to Excel cell border line styles."
-    },
-    {
-      "category": "working-with-html",
       "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
       "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
     },
     {
       "category": "working-with-html",
-      "file": "convert-html-to-excel-and-preserve-cell-comments-as-html-tooltip-attributes.cs",
-      "title": "Convert HTML to Excel and preserve cell comments as HTML tooltip attributes."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-preserve-conditional-formatting-rules-defined-in-css-classes.cs",
-      "title": "Convert HTML to Excel and preserve conditional formatting rules defined in CSS classes."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-preserve-hidden-rows-and-columns-indicated-by-css-displaynone.cs",
-      "title": "Convert HTML to Excel and preserve hidden rows and columns indicated by CSS display:none."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-retain-background-images-by-inserting-them-as-worksheet-background.cs",
-      "title": "Convert HTML to Excel and retain background images by inserting them as worksheet background."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-retain-embedded-svg-graphics-as-scalable-vector-shapes.cs",
-      "title": "Convert HTML to Excel and retain embedded SVG graphics as scalable vector shapes."
-    },
-    {
-      "category": "working-with-html",
       "file": "convert-html-to-excel-and-retain-hyperlinks-making-them-clickable-within-the-workbook.cs",
       "title": "Convert HTML to Excel and retain hyperlinks, making them clickable within the workbook."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-set-workbook-calculation-mode-to-automatic-for-formula-evaluation.cs",
-      "title": "Convert HTML to Excel and set workbook calculation mode to automatic for formula evaluation."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-and-set-workbook-culture-to-french-for-proper-decimal-separators.cs",
-      "title": "Convert HTML to Excel and set workbook culture to French for proper decimal separators."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-asynchronously-and-provide-a-callback-when-conversion-completes.cs",
-      "title": "Convert HTML to Excel asynchronously and provide a callback when conversion completes."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-in-a-batch-job-processing-a-directory-of-files-into-separate-workbooks.cs",
-      "title": "Convert HTML to Excel in a batch job processing a directory of files into separate workbooks."
-    },
-    {
-      "category": "working-with-html",
-      "file": "convert-html-to-excel-using-a-memory-stream-to-process-large-files-without-temporary-files.cs",
-      "title": "Convert HTML to Excel using a memory stream to process large files without temporary files."
     },
     {
       "category": "working-with-html",
@@ -10111,61 +10151,6 @@
     },
     {
       "category": "working-with-html",
-      "file": "export-excel-to-html-and-add-a-footer-with-page-numbers-generated-by-javascript.cs",
-      "title": "Export Excel to HTML and add a footer with page numbers generated by JavaScript."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-apply-responsive-design-techniques-for-optimal-mobile-device-viewing.cs",
-      "title": "Export Excel to HTML and apply responsive design techniques for optimal mobile device viewing."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-embed-hyperlinks-so-they-remain-functional-in-the-browser.cs",
-      "title": "Export Excel to HTML and embed hyperlinks so they remain functional in the browser."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-embed-images-as-base64-data-uris-within-the-html-output.cs",
-      "title": "Export Excel to HTML and embed images as base64 data URIs within the HTML output."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-generate-a-separate-css-file-for-styling-instead-of-inline-styles.cs",
-      "title": "Export Excel to HTML and generate a separate CSS file for styling instead of inline styles."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-include-a-custom-html-header-containing-the-workbook-title.cs",
-      "title": "Export Excel to HTML and include a custom HTML header containing the workbook title."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-include-custom-metadata-tags-extracted-from-workbook-properties.cs",
-      "title": "Export Excel to HTML and include custom metadata tags extracted from workbook properties."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-preserve-worksheet-gridlines-as-css-border-definitions.cs",
-      "title": "Export Excel to HTML and preserve worksheet gridlines as CSS border definitions."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-retain-merged-cells-using-appropriate-colspan-and-rowspan-attributes.cs",
-      "title": "Export Excel to HTML and retain merged cells using appropriate colspan and rowspan attributes."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-and-set-the-output-encoding-to-utf8-for-international-character-support.cs",
-      "title": "Export Excel to HTML and set the output encoding to UTF\u20118 for international character support."
-    },
-    {
-      "category": "working-with-html",
-      "file": "export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs",
-      "title": "Export Excel to HTML while preserving cell formatting such as font styles and colors."
-    },
-    {
-      "category": "working-with-html",
       "file": "export-only-the-defined-print-area-to-html-by-setting-exportprintareaonly-to-true.cs",
       "title": "Export only the defined print area to HTML by setting ExportPrintAreaOnly to true."
     },
@@ -10278,11 +10263,6 @@
       "category": "working-with-html",
       "file": "load-a-workbook-with-hidden-rows-enable-exportgridlines-and-ensure-hidden-rows-do-not-affect-gridline-rendering.cs",
       "title": "Load a workbook with hidden rows, enable ExportGridLines, and ensure hidden rows do not affect gridline rendering."
-    },
-    {
-      "category": "working-with-html",
-      "file": "load-an-excel-workbook-from-a-file-and-export-it-to-html-using-a-custom-stream-provider.cs",
-      "title": "Load an Excel workbook from a file and export it to HTML using a custom stream provider."
     },
     {
       "category": "working-with-html",
