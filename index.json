@@ -10531,6 +10531,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "link-the-generated-html-to-an-external-stylesheet-that-targets-the-prefixed-tablecssid-classes-for-sitewide-styling.cs",
+      "title": "Link the generated HTML to an external stylesheet that targets the prefixed TableCssId classes for site\u2011wide styling."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-a-workbook-enable-exportgridlines-and-produce-html-that-displays-worksheet-gridlines.cs",
       "title": "Load a workbook, enable ExportGridLines, and produce HTML that displays worksheet gridlines."
     },
