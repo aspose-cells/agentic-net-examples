@@ -10581,6 +10581,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "load-an-html-file-into-a-workbook-then-reexport-it-to-html-with-a-different-tablecssid-applied.cs",
+      "title": "Load an HTML file into a workbook, then re\u2011export it to HTML with a different TableCssId applied."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-html-file-into-a-workbook-while-preserving-div-tag-layout-using-enabledivtaglayout.cs",
       "title": "Load an HTML file into a workbook while preserving DIV tag layout using EnableDivTagLayout."
     },
