@@ -281,3 +281,4 @@ Output files are written to the working directory.
 - export-a-workbook-with-hidden-worksheets-and-confirm-that-tablecssid-prefixed-styles-are-generated-only-for-visible-sheets.cs
 - include-a-timestamp-in-the-html-filename-and-retain-the-tablecssid-prefix-to-track-export-versions-over-time.cs
 - log-each-export-operation-with-details-such-as-source-workbook-tablecssid-used-and-destination-path-for-audit-purposes.cs
+- implement-exception-handling-to-catch-invalid-tablecssid-values-and-provide-descriptive-error-messages-to-developers.cs
