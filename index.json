@@ -581,6 +581,11 @@
     },
     {
       "category": "format-cells",
+      "file": "replace-the-themes-dark1-color-with-a-userspecified-hexadecimal-value-and-save-the-workbook.cs",
+      "title": "Replace the theme\u2019s Dark1 color with a user\u2011specified hexadecimal value and save the workbook."
+    },
+    {
+      "category": "format-cells",
       "file": "set-the-themes-light2-color-as-the-default-fill-for-newly-inserted-rows.cs",
       "title": "Set the theme\u2019s Light2 color as the default fill for newly inserted rows."
     },
