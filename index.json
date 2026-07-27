@@ -10996,6 +10996,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs",
+      "title": "Measure rendering performance of HTML with CSS disabled versus enabled using a stopwatch timer."
+    },
+    {
+      "category": "working-with-html",
       "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
       "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
     },
