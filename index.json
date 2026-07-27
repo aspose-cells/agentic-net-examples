@@ -10841,6 +10841,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-then-compress-it-using-gzipstream-for-efficient-web-transmission.cs",
+      "title": "Generate HTML and then compress it using GZipStream for efficient web transmission."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-for-a-workbook-containing-merged-cells-and-verify-merged-layout-is-preserved.cs",
       "title": "Generate HTML for a workbook containing merged cells and verify merged layout is preserved."
     },
