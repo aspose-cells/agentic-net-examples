@@ -10581,6 +10581,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-addtooltiptext-disabled-to-improve-rendering-speed-significantly.cs",
+      "title": "Generate HTML with AddTooltipText disabled to improve rendering speed significantly."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-iecompatible-mhtml-from-a-multisheet-workbook-and-verify-tab-switching-functionality-in-internet-explorer.cs",
       "title": "Generate IE\u2011compatible MHTML from a multi\u2011sheet workbook and verify tab switching functionality in Internet Explorer."
     },
