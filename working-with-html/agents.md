@@ -240,3 +240,4 @@ Output files are written to the working directory.
 - convert-multiple-spreadsheets-with-wordart-to-html-in-a-batch-generating-separate-css-files-for-gradients.cs
 - validate-that-gradient-fills-in-wordart-appear-identical-in-pdf-output-compared-to-the-original-spreadsheet.cs
 - apply-a-shadow-effect-to-wordart-during-pdf-conversion-while-preserving-the-underlying-gradient-fill.cs
+- apply-a-reflection-effect-to-wordart-during-html-export-and-ensure-gradient-fill-remains-visible.cs
