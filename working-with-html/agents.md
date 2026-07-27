@@ -396,3 +396,4 @@ Output files are written to the working directory.
 - generate-html-and-then-modify-the-output-to-add-a-custom-css-class-to-header-rows.cs
 - generate-html-and-ensure-numeric-values-retain-their-original-formatting-as-displayed-in-excel.cs
 - generate-html-and-ensure-date-values-are-formatted-according-to-the-workbooks-locale-settings.cs
+- generate-html-and-ensure-text-wrapping-is-preserved-in-cells-where-wrap-text-is-enabled.cs
