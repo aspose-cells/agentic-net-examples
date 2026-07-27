@@ -9701,6 +9701,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "batch-export-several-workbooks-to-html-assigning-each-a-distinct-tablecssid-to-differentiate-table-class-prefixes.cs",
+      "title": "Batch export several workbooks to HTML, assigning each a distinct TableCssId to differentiate table class prefixes."
+    },
+    {
+      "category": "working-with-html",
       "file": "batch-process-a-collection-of-workbooks-applying-exportgridlines-and-isexportcomments-simultaneously-to-each-html-output.cs",
       "title": "Batch process a collection of workbooks, applying ExportGridLines and IsExportComments simultaneously to each HTML output."
     },
