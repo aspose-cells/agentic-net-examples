@@ -606,6 +606,11 @@
     },
     {
       "category": "format-cells",
+      "file": "extract-the-themes-accent-colors-and-compare-them-against-a-corporate-style-guide-for-compliance.cs",
+      "title": "Extract the theme\u2019s accent colors and compare them against a corporate style guide for compliance."
+    },
+    {
+      "category": "format-cells",
       "file": "extract-the-themes-accent-colors-and-generate-a-css-file-for-web-styling.cs",
       "title": "Extract the theme\u2019s accent colors and generate a CSS file for web styling."
     },
