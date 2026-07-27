@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - load-multiple-workbooks-synchronize-their-theme-palettes-to-a-master-theme-and-save-changes.cs
 - create-a-custom-theme-that-uses-corporate-brand-colors-and-apply-it-to-existing-reports.cs
 - apply-a-custom-theme-to-a-workbook-and-then-export-the-workbook-as-an-xlsx-file.cs
+- validate-that-after-theme-updates-chart-series-colors-automatically-update-to-the-new-theme-accents.cs
