@@ -9676,6 +9676,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-workbook-with-wordart-to-pdf-and-add-a-security-restriction-preventing-editing-of-gradient-layers.cs",
+      "title": "Convert a workbook with WordArt to PDF and add a security restriction preventing editing of gradient layers."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-containing-base64-images-to-pdf-ensuring-images-retain-original-resolution.cs",
       "title": "Convert HTML containing base64 images to PDF, ensuring images retain original resolution."
     },
