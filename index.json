@@ -6780,6 +6780,126 @@
       "title": "Write a unit test verifying that adding a sparkline increases sparkline count by exactly one."
     },
     {
+      "category": "comments-and-notes",
+      "file": "add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs",
+      "title": "Add a threaded comment with multi-line text to cell H2 and preserve line breaks."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs",
+      "title": "Apply a solid blue background to a comment using Shape.Fill.ForeColor with the appropriate color code."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "batch-process-a-folder-of-workbooks-adding-a-standard-disclaimer-comment-to-each-worksheets-top-left-cell.cs",
+      "title": "Batch process a folder of workbooks, adding a standard disclaimer comment to each worksheet's top-left cell."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of a comment by assigning a red value to Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs",
+      "title": "Change the font color of comments in column G to blue using Shape.TextBody.Font.Color."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "copy-a-threaded-comment-from-cell-e5-to-cell-f6-while-preserving-its-author-and-text.cs",
+      "title": "Copy a threaded comment from cell E5 to cell F6 while preserving its author and text."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "create-a-new-workbook-and-add-a-threaded-comment-to-cell-a1-with-author-john.cs",
+      "title": "Create a new workbook and add a threaded comment to cell A1 with author John."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs",
+      "title": "Create a workbook, add threaded comments to multiple cells, and save the file in XLSX format."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs",
+      "title": "Edit a specific threaded comment by setting its Text property to a new string value."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "embed-an-image-as-a-comment-background-by-setting-shapefillpicture-to-a-loaded-picture-object.cs",
+      "title": "Embed an image as a comment background by setting Shape.Fill.Picture to a loaded picture object."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs",
+      "title": "Iterate through a ThreadedCommentCollection to display each comment's text, author, and creation timestamp."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs",
+      "title": "Load a workbook, modify comment font colors based on author, and save changes to a new file."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs",
+      "title": "Load an existing workbook, retrieve all threaded comments from column B, and list their authors."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "read-all-threaded-comments-from-a-worksheet-and-count-the-number-of-comments-per-author.cs",
+      "title": "Read all threaded comments from a worksheet and count the number of comments per author."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs",
+      "title": "Read the author of each threaded comment in a worksheet and output the list."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs",
+      "title": "Remove a threaded comment from cell C3 using the Remove method on the comment object."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs",
+      "title": "Remove all comments older than thirty days from a workbook based on their CreatedTime values."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs",
+      "title": "Retrieve and display the total number of threaded comments present in a workbook."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs",
+      "title": "Retrieve the creation time of a threaded comment via the CreatedTime property and log it."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs",
+      "title": "Scan a workbook for empty comments and remove them to clean metadata."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs",
+      "title": "Set the text direction of a comment's shape to RightToLeft for bidirectional language support."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs",
+      "title": "Set the text direction of a comment's shape to TopToBottom for vertical annotation layout."
+    },
+    {
+      "category": "comments-and-notes",
+      "file": "update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs",
+      "title": "Update the text direction of all comments in a worksheet to LeftToRight for standard layout."
+    },
+    {
+      "category": "save-workbook",
+      "file": "read-a-csv-file-filter-rows-by-date-and-export-the-result-to-an-html-file.cs",
+      "title": "Read a CSV file, filter rows by date, and export the result to an HTML file."
+    },
+    {
       "category": "timeline",
       "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
       "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
