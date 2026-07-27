@@ -9776,6 +9776,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-html-file-size-when-widthscalable-is-true-versus-false-for-the-same-workbook.cs",
+      "title": "Compare HTML file size when WidthScalable is true versus false for the same workbook."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-html-file-sizes-with-and-without-excludeunusedstyles-to-quantify-reduction-achieved-by-style-omission.cs",
       "title": "Compare HTML file sizes with and without ExcludeUnusedStyles to quantify reduction achieved by style omission."
     },
