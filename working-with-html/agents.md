@@ -258,3 +258,4 @@ Output files are written to the working directory.
 - export-the-workbook-with-gridlines-enabled-while-applying-a-specified-tablecssid-for-table-styling.cs
 - include-worksheet-headings-in-the-html-output-and-prefix-table-styles-with-the-chosen-tablecssid.cs
 - disable-default-css-generation-and-rely-solely-on-tablecssid-to-style-exported-html-tables.cs
+- enable-css-custom-properties-in-htmlsaveoptions-while-using-tablecssid-to-enhance-table-styling-flexibility.cs
