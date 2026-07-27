@@ -261,6 +261,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "encrypt-a-workbook-then-immediately-attempt-to-open-it-without-a-password-to-confirm-access-denial.cs",
+      "title": "Encrypt a workbook, then immediately attempt to open it without a password to confirm access denial."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs",
       "title": "Encrypt a workbook, then measure the time required to open it in a headless automation environment."
     },
