@@ -89,3 +89,4 @@ Examples may generate:
 - detect-if-a-workbooks-encryption-uses-a-deprecated-algorithm-and-flag-it-for-migration.cs
 - create-a-utility-extracting-encryption-metadata-from-an-excel-file-and-displaying-it-in-a-readable-format.cs
 - verify-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-older-excel-versions.cs
+- unprotect-a-workbook-structure-rename-several-sheets-and-reprotect-using-a-password-retrieved-from-azure-key-vault.cs
