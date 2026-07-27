@@ -2446,6 +2446,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs",
+      "title": "Detect if a workbook contains digitally signed worksheets and list their signer names."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs",
       "title": "Detect legacy encryption in a workbook and automatically upgrade it to the latest standard."
     },
