@@ -6421,6 +6421,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-custom-number-format-smart-marker-to-display-currency-values-with-localespecific-symbols-and-separators.cs",
+      "title": "Apply a custom number format smart marker to display currency values with locale\u2011specific symbols and separators."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-a-dateformatting-smart-marker-to-display-dates-in-mmmm-dd-yyyy-style-throughout-the-report.cs",
       "title": "Apply a date\u2011formatting smart marker to display dates in \"MMMM dd, yyyy\" style throughout the report."
     },
