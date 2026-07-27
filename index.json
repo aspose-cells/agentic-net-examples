@@ -231,6 +231,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "open-an-encrypted-workbook-with-correct-password-decrypt-contents-and-save-as-new-xlsx-file.cs",
+      "title": "Open an encrypted workbook with correct password, decrypt contents, and save as new XLSX file."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs",
       "title": "Programmatically verify that a workbook's password protection flag is set after saving the encrypted file."
     },
