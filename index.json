@@ -46,6 +46,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "batch-process-all-excel-files-in-a-directory-adding-identical-signature-lines-to-each-workbook.cs",
+      "title": "Batch process all Excel files in a directory, adding identical signature lines to each workbook."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "check-whether-a-loaded-workbook-is-encrypted-and-display-a-warning-if-encryption-is-detected.cs",
       "title": "Check whether a loaded workbook is encrypted and display a warning if encryption is detected."
     },
