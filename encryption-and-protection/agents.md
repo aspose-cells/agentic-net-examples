@@ -96,3 +96,4 @@ Examples may generate:
 - ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs
 - apply-workbook-protection-preventing-changes-to-default-view-settings-such-as-zoom-level.cs
 - unprotect-a-worksheet-insert-a-protected-range-then-reprotect-and-verify-the-range-remains-locked.cs
+- create-a-commandline-utility-that-accepts-a-directory-path-encrypts-all-excel-files-and-outputs-a-summary-report.cs
