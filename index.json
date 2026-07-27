@@ -76,6 +76,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "unprotect-a-worksheet-insert-a-protected-range-then-reprotect-and-verify-the-range-remains-locked.cs",
+      "title": "Unprotect a worksheet, insert a protected range, then re\u2011protect and verify the range remains locked."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs",
       "title": "Validate that changing a worksheet's protection password does not alter its cell formulas or values."
     },
