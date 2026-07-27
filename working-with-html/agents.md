@@ -386,3 +386,4 @@ Output files are written to the working directory.
 - implement-logging-of-conversion-duration-for-each-workbook-during-batch-html-processing.cs
 - set-exportactiveworksheetonly-true-to-generate-html-containing-only-the-currently-active-worksheet.cs
 - set-exportallworksheets-true-to-generate-a-single-html-file-that-includes-all-workbook-worksheets.cs
+- set-worksheetindex-in-htmlsaveoptions-to-export-a-specific-worksheet-by-its-zerobased-position.cs
