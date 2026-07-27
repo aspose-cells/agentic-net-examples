@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - read-numeric-cell-values-with-lightcells-api-and-store-them-in-a-highperformance-inmemory-collection.cs
 - write-formulas-to-cells-while-streaming-data-using-lightcellsdataprovider-to-preserve-calculation-logic.cs
 - save-a-workbook-as-xlsx-while-specifying-a-custom-temporary-folder-for-intermediate-files-to-reduce-disk-io.cs
+- load-a-passwordprotected-xlsx-file-using-lightcells-api-by-providing-the-decryption-password-in-load-options.cs
