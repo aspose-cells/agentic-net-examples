@@ -11186,6 +11186,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-generated-html-contains-link-target-attribute-_blank-after-setting-linktargettype-to-blank.cs",
+      "title": "Validate generated HTML contains link target attribute \"_blank\" after setting LinkTargetType to Blank."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-that-cell-content-with-line-breaks-displays-correctly-without-extra-spacing.cs",
       "title": "Validate that cell content with line breaks displays correctly without extra spacing."
     },
