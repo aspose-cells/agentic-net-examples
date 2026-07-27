@@ -576,6 +576,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-script-that-logs-the-beforeandafter-rgb-values-of-each-theme-color-change.cs",
+      "title": "Create a script that logs the before\u2011and\u2011after RGB values of each theme color change."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-utility-that-reads-a-csv-of-color-values-and-builds-a-corresponding-theme-palette.cs",
       "title": "Create a utility that reads a CSV of color values and builds a corresponding theme palette."
     },
