@@ -134,3 +134,4 @@ Examples may generate:
 - add-a-signature-line-with-a-custom-label-and-ensure-the-label-appears-in-the-document-properties-panel.cs
 - add-a-signature-line-then-lock-the-worksheet-to-prevent-further-edits-without-a-password.cs
 - detect-workbook-file-format-and-encryption-status-given-a-file-path.cs
+- scan-a-directory-and-report-encryption-status-for-each-xlsx-and-xls-file.cs
