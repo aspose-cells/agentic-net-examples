@@ -10981,6 +10981,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "validate-that-htmlcrosstypecross-improves-performance-without-altering-visual-rendering-compared-to-default.cs",
+      "title": "Validate that HtmlCrossType.Cross improves performance without altering visual rendering compared to Default."
+    },
+    {
+      "category": "working-with-html",
       "file": "validate-the-exported-html-using-an-html-validator-to-confirm-correct-tablecssid-prefixes-on-table-elements.cs",
       "title": "Validate the exported HTML using an HTML validator to confirm correct TableCssId prefixes on table elements."
     },
