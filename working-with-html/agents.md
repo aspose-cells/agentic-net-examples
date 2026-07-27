@@ -243,3 +243,4 @@ Output files are written to the working directory.
 - apply-a-reflection-effect-to-wordart-during-html-export-and-ensure-gradient-fill-remains-visible.cs
 - customize-gradient-angle-for-wordart-during-pdf-conversion-using-a-specific-rotation-parameter.cs
 - customize-gradient-angle-for-wordart-during-html-conversion-and-reflect-the-angle-in-css-gradient-syntax.cs
+- convert-a-spreadsheet-with-wordart-to-pdf-and-embed-the-gradient-fill-as-an-iccprofileaware-color-space.cs
