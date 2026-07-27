@@ -493,6 +493,11 @@
       "category": "encryption-and-protection",
       "file": "verify-that-a-workbook-saved-after-encryption-can-be-opened-with-the-same-password-on-another-machine.cs",
       "title": "Verify that a workbook saved after encryption can be opened with the same password on another machine."
+    },
+    {
+      "category": "encryption-and-protection",
+      "file": "verify-that-protecting-a-worksheet-does-not-affect-the-visibility-of-hidden-rows-or-columns-within-that-sheet.cs",
+      "title": "Verify that protecting a worksheet does not affect the visibility of hidden rows or columns within that sheet."
     }
   ]
 }
