@@ -9686,6 +9686,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-maintain-original-html-page-breaks-as-worksheet-page-breaks.cs",
+      "title": "Convert HTML to Excel and maintain original HTML page breaks as worksheet page breaks."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
       "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
     },
