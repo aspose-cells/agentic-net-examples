@@ -3931,6 +3931,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs",
+      "title": "Load an Excel 97\u20112003 workbook by assigning LoadOptions.Version to Excel97to2003 during initialization."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs",
       "title": "Load only chart objects by setting LoadOptions.LoadFilter to include charts exclusively."
     },
