@@ -4051,6 +4051,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "load-a-workbook-set-printer-paper-size-to-letter-via-loadoptions-and-verify-pdf-page-count-matches-expectations.cs",
+      "title": "Load a workbook, set printer paper size to Letter via LoadOptions, and verify PDF page count matches expectations."
+    },
+    {
+      "category": "open-workbook",
       "file": "load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs",
       "title": "Load a workbook while excluding chart objects, then verify that the resulting worksheets contain zero charts."
     },
