@@ -3886,6 +3886,11 @@
     },
     {
       "category": "open-workbook",
+      "file": "implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs",
+      "title": "Implement an InterruptMonitor that aborts workbook loading after ten seconds to prevent excessive processing time."
+    },
+    {
+      "category": "open-workbook",
       "file": "implement-lightcellsdatahandler-to-convert-all-text-cells-to-uppercase-while-reading-a-workbook-for-standardization.cs",
       "title": "Implement LightCellsDataHandler to convert all text cells to uppercase while reading a workbook for standardization."
     },
