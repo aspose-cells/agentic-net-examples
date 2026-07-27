@@ -10121,6 +10121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-retain-merged-cells-using-appropriate-colspan-and-rowspan-attributes.cs",
+      "title": "Export Excel to HTML and retain merged cells using appropriate colspan and rowspan attributes."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-while-preserving-cell-formatting-such-as-font-styles-and-colors.cs",
       "title": "Export Excel to HTML while preserving cell formatting such as font styles and colors."
     },
