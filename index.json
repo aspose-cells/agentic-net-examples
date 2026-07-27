@@ -9696,6 +9696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-html-to-excel-and-map-css-border-styles-to-excel-cell-border-line-styles.cs",
+      "title": "Convert HTML to Excel and map CSS border styles to Excel cell border line styles."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-to-excel-and-map-css-text-alignment-to-excel-cell-alignment-properties.cs",
       "title": "Convert HTML to Excel and map CSS text alignment to Excel cell alignment properties."
     },
