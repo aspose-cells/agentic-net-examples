@@ -10841,6 +10841,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-embed-it-in-an-email-body-using-systemnetmail-for-newsletter-distribution.cs",
+      "title": "Generate HTML and embed it in an email body using System.Net.Mail for newsletter distribution."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-and-then-compress-it-using-gzipstream-for-efficient-web-transmission.cs",
       "title": "Generate HTML and then compress it using GZipStream for efficient web transmission."
     },
