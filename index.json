@@ -9826,6 +9826,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "compare-html-file-size-when-disablecss-is-true-versus-false-to-assess-markup-reduction.cs",
+      "title": "Compare HTML file size when DisableCss is true versus false to assess markup reduction."
+    },
+    {
+      "category": "working-with-html",
       "file": "compare-html-file-size-when-enablecsscustomproperties-is-true-versus-false-for-same-workbook.cs",
       "title": "Compare HTML file size when EnableCssCustomProperties is true versus false for same workbook."
     },
