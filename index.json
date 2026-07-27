@@ -10411,6 +10411,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "create-a-unit-test-that-verifies-link-target-attribute-equals-_parent-when-linktargettype-is-set-to-parent.cs",
+      "title": "Create a unit test that verifies link target attribute equals \"_parent\" when LinkTargetType is set to Parent."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs",
       "title": "Create a utility method that loads a workbook, sets AddTooltipText true, and returns HTML string."
     },
