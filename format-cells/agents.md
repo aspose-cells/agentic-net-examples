@@ -95,3 +95,4 @@ Output files are written to the working directory.
 - programmatically-detect-if-a-workbooks-theme-includes-a-custom-color-scheme-and-log-its-details.cs
 - replace-the-themes-dark1-color-with-a-userspecified-hexadecimal-value-and-save-the-workbook.cs
 - apply-conditional-formatting-that-uses-the-themes-accent2-color-to-highlight-values-above-a-threshold.cs
+- generate-a-visual-preview-of-each-theme-color-by-creating-a-sample-cell-grid.cs
