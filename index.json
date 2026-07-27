@@ -541,6 +541,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-macrofree-report-that-lists-all-cells-using-the-hyperlink-theme-color.cs",
+      "title": "Create a macro\u2011free report that lists all cells using the Hyperlink theme color."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-macrofree-template-workbook-with-predefined-theme-colors-for-downstream-processing.cs",
       "title": "Create a macro\u2011free template workbook with predefined theme colors for downstream processing."
     },
