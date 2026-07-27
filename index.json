@@ -526,6 +526,11 @@
     },
     {
       "category": "format-cells",
+      "file": "generate-a-summary-sheet-listing-each-theme-color-name-and-its-hexadecimal-representation.cs",
+      "title": "Generate a summary sheet listing each theme color name and its hexadecimal representation."
+    },
+    {
+      "category": "format-cells",
       "file": "iterate-over-all-worksheets-set-each-header-rows-font-color-to-the-themes-accent1.cs",
       "title": "Iterate over all worksheets, set each header row\u2019s font color to the theme\u2019s Accent1."
     },
