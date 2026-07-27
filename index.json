@@ -10461,6 +10461,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-html-handling-gradient-generation-on-separate-threads.cs",
+      "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to HTML, handling gradient generation on separate threads."
+    },
+    {
+      "category": "working-with-html",
       "file": "perform-asynchronous-conversion-of-wordartrich-spreadsheets-to-pdf-reporting-progress-of-gradient-rendering.cs",
       "title": "Perform asynchronous conversion of WordArt\u2011rich spreadsheets to PDF, reporting progress of gradient rendering."
     },
