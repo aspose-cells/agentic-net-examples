@@ -178,3 +178,4 @@ Examples may generate:
 - create-a-batch-job-that-encrypts-every-newly-created-workbook-in-a-folder-with-a-timestamped-password.cs
 - develop-a-script-that-removes-passwords-from-all-workbooks-in-a-directory-and-archives-the-original-encrypted-files.cs
 - verify-that-protecting-a-worksheet-does-not-affect-the-visibility-of-hidden-rows-or-columns-within-that-sheet.cs
+- test-that-unprotecting-a-worksheet-restores-the-ability-to-insert-new-rows-while-maintaining-existing-data-integrity.cs
