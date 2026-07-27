@@ -361,6 +361,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "unprotect-a-worksheet-while-preserving-its-previously-set-formatting-permissions-and-then-update-a-cell-formula.cs",
+      "title": "Unprotect a worksheet while preserving its previously set formatting permissions and then update a cell formula."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "unprotect-the-workbook-structure-rename-a-worksheet-and-then-reapply-structure-protection-with-a-new-password.cs",
       "title": "Unprotect the workbook structure, rename a worksheet, and then re\u2011apply structure protection with a new password."
     },
