@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - update-the-themes-font-scheme-to-use-a-sansserif-primary-font-and-apply-globally.cs
 - extract-the-themes-accent-colors-and-generate-a-css-file-for-web-styling.cs
 - validate-that-after-removing-a-theme-cells-previously-using-theme-colors-retain-their-original-rgb-values.cs
+- create-a-batch-process-that-applies-a-corporate-theme-to-all-workbooks-in-a-network-share.cs
