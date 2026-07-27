@@ -404,3 +404,4 @@ Output files are written to the working directory.
 - generate-html-and-ensure-column-letters-are-displayed-when-exportcolumnheaders-option-is-enabled.cs
 - create-a-console-application-that-accepts-an-excel-file-path-and-outputs-html-using-bestfit-layout.cs
 - create-a-windows-service-that-monitors-a-directory-and-converts-new-excel-files-to-html-with-custom-options.cs
+- write-a-powershell-script-that-invokes-the-net-library-to-batch-convert-excel-files-to-html.cs
