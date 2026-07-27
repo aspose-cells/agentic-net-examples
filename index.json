@@ -10766,6 +10766,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "produce-html-with-htmlcrosstypefittocell-to-restrict-text-overflow-within-cell-bounds.cs",
+      "title": "Produce HTML with HtmlCrossType.FitToCell to restrict text overflow within cell bounds."
+    },
+    {
+      "category": "working-with-html",
       "file": "programmatically-change-the-tablecssid-after-initial-export-resave-the-html-and-verify-updated-class-names.cs",
       "title": "Programmatically change the TableCssId after initial export, re\u2011save the HTML, and verify updated class names."
     },
