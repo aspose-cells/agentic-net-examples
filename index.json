@@ -216,6 +216,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "load-an-unencrypted-workbook-verify-its-format-and-log-confirmation-to-console.cs",
+      "title": "Load an unencrypted workbook, verify its format, and log confirmation to console."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs",
       "title": "Programmatically verify that a workbook's password protection flag is set after saving the encrypted file."
     },
