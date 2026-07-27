@@ -129,3 +129,4 @@ Examples may generate:
 - add-a-signature-line-to-the-last-worksheet-in-a-workbook-using-the-worksheet-count-to-locate-it.cs
 - add-a-signature-line-with-a-mandatory-comment-field-requiring-the-signer-to-provide-additional-information.cs
 - add-a-signature-line-that-includes-a-hyperlink-to-the-signers-professional-profile-and-set-the-display-text.cs
+- add-a-signature-line-that-references-a-specific-certificate-thumbprint-stored-in-the-windows-certificate-store.cs
