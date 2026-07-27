@@ -56,6 +56,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs",
+      "title": "Ensure a digitally signed workbook retains its signature after being encrypted and then decrypted."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs",
       "title": "Protect a worksheet, then attempt to copy it to a new workbook without providing the password."
     },
