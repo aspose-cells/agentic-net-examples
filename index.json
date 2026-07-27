@@ -10946,6 +10946,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-and-then-use-an-html-parser-to-extract-all-hyperlink-urls-for-link-analysis.cs",
+      "title": "Generate HTML and then use an HTML parser to extract all hyperlink URLs for link analysis."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-for-a-workbook-containing-merged-cells-and-verify-merged-layout-is-preserved.cs",
       "title": "Generate HTML for a workbook containing merged cells and verify merged layout is preserved."
     },
