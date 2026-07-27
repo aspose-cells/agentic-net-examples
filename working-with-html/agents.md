@@ -312,3 +312,4 @@ Output files are written to the working directory.
 - create-a-utility-method-that-loads-a-workbook-sets-addtooltiptext-true-and-returns-html-string.cs
 - batch-convert-a-folder-of-excel-files-to-html-using-default-htmlsaveoptions-and-log-conversion-errors.cs
 - convert-multiple-workbooks-in-a-loop-applying-different-htmlcrosstype-values-based-on-file-size.cs
+- batch-process-workbooks-applying-exporthiddenworksheet-false-only-to-those-containing-confidential-worksheets.cs
