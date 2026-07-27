@@ -10586,6 +10586,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-all-hyperlinks-open-in-a-new-browser-tab-by-configuring-htmlsaveoptionshtmllinktargettype.cs",
+      "title": "Ensure all hyperlinks open in a new browser tab by configuring HtmlSaveOptions.HtmlLinkTargetType."
+    },
+    {
+      "category": "working-with-html",
       "file": "ensure-cell-comments-appear-in-html-output-when-exportcomments-option-is-enabled.cs",
       "title": "Ensure cell comments appear in HTML output when ExportComments option is enabled."
     },
