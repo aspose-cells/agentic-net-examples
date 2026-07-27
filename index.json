@@ -9911,6 +9911,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-workbook-to-html-with-default-options-while-exporting-hidden-worksheets.cs",
+      "title": "Convert an Excel workbook to HTML with default options while exporting hidden worksheets."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-an-excel-workbook-to-html-with-presentationpreferenceautofit-for-compact-column-widths.cs",
       "title": "Convert an Excel workbook to HTML with PresentationPreference.AutoFit for compact column widths."
     },
