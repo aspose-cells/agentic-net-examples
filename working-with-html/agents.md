@@ -265,3 +265,4 @@ Output files are written to the working directory.
 - batch-export-several-workbooks-to-html-assigning-each-a-distinct-tablecssid-to-differentiate-table-class-prefixes.cs
 - link-the-generated-html-to-an-external-stylesheet-that-targets-the-prefixed-tablecssid-classes-for-sitewide-styling.cs
 - validate-the-exported-html-using-an-html-validator-to-confirm-correct-tablecssid-prefixes-on-table-elements.cs
+- programmatically-change-the-tablecssid-after-initial-export-resave-the-html-and-verify-updated-class-names.cs
