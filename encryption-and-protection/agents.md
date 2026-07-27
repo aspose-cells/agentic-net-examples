@@ -55,3 +55,4 @@ Examples may generate:
 
 Output files are written to the working directory.
 - encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs
+- detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs
