@@ -10151,8 +10151,18 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-excel-to-html-and-handle-hidden-rows-by-omitting-them-from-the-generated-markup.cs",
+      "title": "Export Excel to HTML and handle hidden rows by omitting them from the generated markup."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-excel-to-html-and-include-a-custom-html-header-containing-the-workbook-title.cs",
       "title": "Export Excel to HTML and include a custom HTML header containing the workbook title."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-excel-to-html-and-include-a-navigation-pane-linking-to-each-worksheet-section.cs",
+      "title": "Export Excel to HTML and include a navigation pane linking to each worksheet section."
     },
     {
       "category": "working-with-html",
