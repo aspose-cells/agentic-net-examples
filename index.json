@@ -326,6 +326,11 @@
     },
     {
       "category": "encryption-and-protection",
+      "file": "unprotect-workbook-structure-by-providing-correct-password-and-confirm-sheet-modifications-are-allowed.cs",
+      "title": "Unprotect workbook structure by providing correct password and confirm sheet modifications are allowed."
+    },
+    {
+      "category": "encryption-and-protection",
       "file": "use-loadoptions-to-identify-the-file-format-of-an-excel-document-without-fully-loading-its-contents.cs",
       "title": "Use LoadOptions to identify the file format of an Excel document without fully loading its contents."
     },
