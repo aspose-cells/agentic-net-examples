@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - extract-the-themes-accent-colors-and-generate-a-css-file-for-web-styling.cs
 - validate-that-after-removing-a-theme-cells-previously-using-theme-colors-retain-their-original-rgb-values.cs
 - create-a-batch-process-that-applies-a-corporate-theme-to-all-workbooks-in-a-network-share.cs
+- set-the-themes-accent1-color-to-match-a-brands-primary-hex-code-and-update-cells.cs
