@@ -439,3 +439,4 @@ Output files are written to the working directory.
 - generate-html-with-embedded-css-by-disabling-external-css-and-enabling-custom-css-properties.cs
 - set-html-hyperlink-target-type-to-_blank-using-htmlsaveoptionshtmllinktargettype-for-all-links.cs
 - ensure-all-hyperlinks-open-in-a-new-browser-tab-by-configuring-htmlsaveoptionshtmllinktargettype.cs
+- convert-an-excel-file-to-html-and-ensure-hyperlinks-open-in-new-tabs-via-htmlsaveoptions.cs
