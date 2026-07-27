@@ -352,3 +352,4 @@ Output files are written to the working directory.
 - ensure-gridlines-are-visible-in-html-output-when-exportgridlines-option-is-enabled.cs
 - ensure-hidden-worksheet-content-appears-in-html-when-exporthiddenworksheet-option-is-true.cs
 - measure-rendering-performance-of-html-with-css-disabled-versus-enabled-using-a-stopwatch-timer.cs
+- generate-html-with-a-custom-page-title-by-setting-htmlsaveoptionshtmltitle-property.cs
