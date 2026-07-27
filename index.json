@@ -9696,6 +9696,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "apply-widthscalable-true-and-confirm-column-widths-adapt-using-em-units.cs",
+      "title": "Apply WidthScalable true and confirm column widths adapt using em units."
+    },
+    {
+      "category": "working-with-html",
       "file": "assign-a-custom-ifilepathprovider-instance-to-htmlsaveoptionsfilepathprovider-to-fix-broken-worksheet-hyperlinks.cs",
       "title": "Assign a custom IFilePathProvider instance to HtmlSaveOptions.FilePathProvider to fix broken worksheet hyperlinks."
     },
