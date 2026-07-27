@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - use-lightcells-api-to-read-merged-cell-ranges-and-output-their-start-and-end-coordinates-for-layout-analysis.cs
 - write-merged-cells-while-streaming-data-with-lightcellsdataprovider-to-preserve-complex-table-structures-in-large-excel-files.cs
 - load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs
+- save-a-workbook-using-lightcells-api-while-disabling-automatic-calculation-to-speed-up-writing-of-static-data-sheets.cs
