@@ -9726,8 +9726,18 @@
     },
     {
       "category": "working-with-html",
+      "file": "activate-custom-css-properties-in-html-output-by-enabling-htmlsaveoptionsenablecsscustomproperties.cs",
+      "title": "Activate custom CSS properties in HTML output by enabling HtmlSaveOptions.EnableCssCustomProperties."
+    },
+    {
+      "category": "working-with-html",
       "file": "add-a-table-of-contents-linking-to-each-heading-generated-from-worksheet-names.cs",
       "title": "Add a table of contents linking to each heading generated from worksheet names."
+    },
+    {
+      "category": "working-with-html",
+      "file": "adjust-htmlsaveoptions-to-export-numeric-cells-using-plain-text-format-rather-than-scientific-notation.cs",
+      "title": "Adjust HtmlSaveOptions to export numeric cells using plain text format rather than scientific notation."
     },
     {
       "category": "working-with-html",
@@ -9896,6 +9906,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "combine-disabling-external-css-and-enabling-custom-css-properties-for-embedded-styling-in-html.cs",
+      "title": "Combine disabling external CSS and enabling custom CSS properties for embedded styling in HTML."
+    },
+    {
+      "category": "working-with-html",
       "file": "combine-excludeunusedstyles-and-isexportcomments-options-then-save-workbook-as-html-for-compact-output-with-comments.cs",
       "title": "Combine ExcludeUnusedStyles and IsExportComments options, then save workbook as HTML for compact output with comments."
     },
@@ -10023,6 +10038,11 @@
       "category": "working-with-html",
       "file": "convert-a-workbook-with-wordart-to-pdf-and-set-output-to-pdfa2b-compliance-while-preserving-gradients.cs",
       "title": "Convert a workbook with WordArt to PDF and set output to PDF/A\u20112b compliance while preserving gradients."
+    },
+    {
+      "category": "working-with-html",
+      "file": "convert-an-excel-file-to-html-and-ensure-hyperlinks-open-in-new-tabs-via-htmlsaveoptions.cs",
+      "title": "Convert an Excel file to HTML and ensure hyperlinks open in new tabs via HtmlSaveOptions."
     },
     {
       "category": "working-with-html",
@@ -10536,6 +10556,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-external-css-generation-during-html-export-with-htmlsaveoptionsdisablecss-set-to-true.cs",
+      "title": "Disable external CSS generation during HTML export with HtmlSaveOptions.DisableCss set to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "document-the-configuration-required-to-turn-off-downlevel-revealed-comments.cs",
       "title": "Document the configuration required to turn off downlevel revealed comments."
     },
@@ -10558,6 +10583,11 @@
       "category": "working-with-html",
       "file": "enable-custom-css-properties-during-html-export-by-setting-enablecustomproperties-to-true.cs",
       "title": "Enable custom CSS properties during HTML export by setting EnableCustomProperties to true."
+    },
+    {
+      "category": "working-with-html",
+      "file": "enable-gridlines-and-comments-together-in-htmlsaveoptions-for-comprehensive-html-export.cs",
+      "title": "Enable gridlines and comments together in HtmlSaveOptions for comprehensive HTML export."
     },
     {
       "category": "working-with-html",
@@ -10588,6 +10618,11 @@
       "category": "working-with-html",
       "file": "enable-whitespace-trimming-option-to-eliminate-extra-spaces-following-line-break-characters.cs",
       "title": "Enable whitespace trimming option to eliminate extra spaces following line break characters."
+    },
+    {
+      "category": "working-with-html",
+      "file": "ensure-all-hyperlinks-open-in-a-new-browser-tab-by-configuring-htmlsaveoptionshtmllinktargettype.cs",
+      "title": "Ensure all hyperlinks open in a new browser tab by configuring HtmlSaveOptions.HtmlLinkTargetType."
     },
     {
       "category": "working-with-html",
@@ -10761,6 +10796,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-worksheet-to-html-with-both-gridlines-and-comments-enabled-simultaneously.cs",
+      "title": "Export a worksheet to HTML with both gridlines and comments enabled simultaneously."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-defined-print-area-while-disabling-css-generation-by-setting-exportprintareaonly-true-and-disablecss-true.cs",
       "title": "Export defined print area while disabling CSS generation by setting ExportPrintAreaOnly true and DisableCss true."
     },
@@ -10903,6 +10943,11 @@
       "category": "working-with-html",
       "file": "export-html-with-exporthiddenworksheet-true-and-htmlcrosstypecross-for-performance-on-large-workbooks.cs",
       "title": "Export HTML with ExportHiddenWorksheet true and HtmlCrossType.Cross for performance on large workbooks."
+    },
+    {
+      "category": "working-with-html",
+      "file": "export-numeric-cells-as-plain-text-instead-of-scientific-notation-using-htmlsaveoptions.cs",
+      "title": "Export numeric cells as plain text instead of scientific notation using HtmlSaveOptions."
     },
     {
       "category": "working-with-html",
@@ -11108,6 +11153,11 @@
       "category": "working-with-html",
       "file": "generate-html-with-addtooltiptext-disabled-to-improve-rendering-speed-significantly.cs",
       "title": "Generate HTML with AddTooltipText disabled to improve rendering speed significantly."
+    },
+    {
+      "category": "working-with-html",
+      "file": "generate-html-with-embedded-css-by-disabling-external-css-and-enabling-custom-css-properties.cs",
+      "title": "Generate HTML with embedded CSS by disabling external CSS and enabling custom CSS properties."
     },
     {
       "category": "working-with-html",
@@ -11386,6 +11436,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "prevent-exponential-notation-for-large-numbers-in-html-by-setting-htmlsaveoptionsexportnumericformat-to-plain-text.cs",
+      "title": "Prevent exponential notation for large numbers in HTML by setting HtmlSaveOptions.ExportNumericFormat to plain text."
+    },
+    {
+      "category": "working-with-html",
       "file": "prevent-exponential-notation-for-large-numeric-values-during-html-export-by-adjusting-number-format-options.cs",
       "title": "Prevent exponential notation for large numeric values during HTML export by adjusting number format options."
     },
@@ -11528,6 +11583,11 @@
       "category": "working-with-html",
       "file": "set-exporthiddenworksheet-true-and-verify-hidden-sheets-are-included-in-generated-html.cs",
       "title": "Set ExportHiddenWorksheet true and verify hidden sheets are included in generated HTML."
+    },
+    {
+      "category": "working-with-html",
+      "file": "set-html-hyperlink-target-type-to-_blank-using-htmlsaveoptionshtmllinktargettype-for-all-links.cs",
+      "title": "Set HTML hyperlink target type to \"_blank\" using HtmlSaveOptions.HtmlLinkTargetType for all links."
     },
     {
       "category": "working-with-html",
