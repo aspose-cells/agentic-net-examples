@@ -388,3 +388,4 @@ Output files are written to the working directory.
 - set-exportallworksheets-true-to-generate-a-single-html-file-that-includes-all-workbook-worksheets.cs
 - set-worksheetindex-in-htmlsaveoptions-to-export-a-specific-worksheet-by-its-zerobased-position.cs
 - set-sheetname-in-htmlsaveoptions-to-export-a-specific-worksheet-identified-by-its-name.cs
+- generate-html-and-then-compress-it-using-gzipstream-for-efficient-web-transmission.cs
