@@ -9646,6 +9646,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-a-spreadsheet-containing-wordart-to-pdf-and-render-gradient-fills-accurately-in-the-output.cs",
+      "title": "Convert a spreadsheet containing WordArt to PDF and render gradient fills accurately in the output."
+    },
+    {
+      "category": "working-with-html",
       "file": "convert-html-containing-base64-images-to-pdf-ensuring-images-retain-original-resolution.cs",
       "title": "Convert HTML containing base64 images to PDF, ensuring images retain original resolution."
     },
