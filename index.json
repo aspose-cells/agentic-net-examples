@@ -11161,6 +11161,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-worksheet-comments-in-html-by-setting-htmlsaveoptionsincludecomments-to-true.cs",
+      "title": "Include worksheet comments in HTML by setting HtmlSaveOptions.IncludeComments to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-headings-in-html-output-and-map-them-to-appropriate-h1-tags.cs",
       "title": "Include worksheet headings in HTML output and map them to appropriate <h1> tags."
     },
