@@ -2998,6 +2998,11 @@
       "category": "queries-and-connections",
       "file": "ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs",
       "title": "Ensure the custom ribbon UI loads correctly after changing external link paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs",
+      "title": "Test the custom ribbon button to confirm it successfully updates external link paths."
     }
   ]
 }
