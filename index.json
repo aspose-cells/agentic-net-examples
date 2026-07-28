@@ -511,6 +511,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-fill-pattern-of-small-dots-to-placeholder-text-cells.cs",
+      "title": "Apply a custom fill pattern of small dots to placeholder text cells."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-custom-fill-pattern-to-header-cells-using-a-dense-hatch-style.cs",
       "title": "Apply a custom fill pattern to header cells using a dense hatch style."
     },
