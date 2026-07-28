@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - use-a-named-range-to-define-the-print-area-of-a-worksheet-before-printing-to-pdf.cs
 - create-a-macrolike-routine-that-updates-a-named-range-based-on-the-current-date-each-day.cs
 - import-a-list-of-named-range-definitions-from-a-json-file-and-create-them-programmatically.cs
+- set-the-visibility-of-a-named-range-to-hidden-so-it-does-not-appear-in-the-name-manager.cs
