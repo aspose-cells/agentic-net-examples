@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - remove-a-named-range-only-if-it-references-cells-outside-the-used-range-of-the-worksheet.cs
 - copy-a-named-range-from-one-worksheet-to-another-preserving-its-name-and-reference.cs
 - replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs
+- perform-a-caseinsensitive-search-for-the-word-invoice-across-all-workbookscoped-named-ranges.cs
