@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - copy-a-named-range-from-one-worksheet-to-another-preserving-its-name-and-reference.cs
 - replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs
 - perform-a-caseinsensitive-search-for-the-word-invoice-across-all-workbookscoped-named-ranges.cs
+- create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs
