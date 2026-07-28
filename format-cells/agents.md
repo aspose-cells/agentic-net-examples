@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-that-displays-fractions-as-mixed-numbers.cs
 - apply-custom-number-format-that-displays-time-in-hhmmss-24-hour-format.cs
 - apply-custom-number-format-that-displays-negative-percentages-in-red-with-a-minus-sign.cs
+- apply-a-date-format-that-displays-full-month-name-and-day-compatible-with-the-1904-date-system.cs
