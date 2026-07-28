@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - replace-cells-containing-the-word-draft-with-final-inside-a-named-range-used-for-publishing.cs
 - validate-that-all-named-ranges-reference-existing-cells-and-report-any-invalid-references.cs
 - search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs
+- replace-formulas-that-return-text-na-with-blank-cells-within-a-specific-named-range.cs
