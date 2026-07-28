@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - apply-a-filter-to-a-table-using-a-named-range-as-the-criteria-range.cs
 - create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-right.cs
 - load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs
+- create-a-named-range-that-excludes-hidden-rows-by-using-a-filtered-address.cs
