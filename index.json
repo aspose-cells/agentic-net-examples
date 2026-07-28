@@ -961,6 +961,11 @@
     },
     {
       "category": "format-cells",
+      "file": "open-spreadsheet-merge-cells-z4aa4-enable-text-rotation-45-degrees-and-save-as-xlsx.cs",
+      "title": "Open spreadsheet, merge cells Z4:AA4, enable text rotation 45 degrees, and save as XLSX."
+    },
+    {
+      "category": "format-cells",
       "file": "open-workbook-apply-merge-to-cells-d2e2-add-data-validation-list-and-save-changes.cs",
       "title": "Open workbook, apply merge to cells D2:E2, add data validation list, and save changes."
     },
