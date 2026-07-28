@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - export-the-contents-of-named-range-employeelist-to-a-csv-file-for-external-analysis.cs
 - create-a-data-validation-rule-that-restricts-input-to-values-listed-in-named-range-validcodes.cs
 - reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs
+- refresh-a-pivot-table-after-expanding-the-underlying-named-range-to-include-new-rows.cs
