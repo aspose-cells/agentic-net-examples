@@ -646,6 +646,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-utility-that-reads-a-themes-accent-colors-and-generates-a-matching-powerpoint-slide-palette.cs",
+      "title": "Create a utility that reads a theme\u2019s accent colors and generates a matching PowerPoint slide palette."
+    },
+    {
+      "category": "format-cells",
       "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
       "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
     },
