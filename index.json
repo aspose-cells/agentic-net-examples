@@ -771,6 +771,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-new-workbook-merge-cells-h1h4-set-background-color-to-light-blue-and-save-as-ods.cs",
+      "title": "Create new workbook, merge cells H1:H4, set background color to light blue, and save as ODS."
+    },
+    {
+      "category": "format-cells",
       "file": "create-workbook-merge-cells-b1b3-protect-the-merged-region-with-password-and-save-as-xls.cs",
       "title": "Create workbook, merge cells B1:B3, protect the merged region with password, and save as XLS."
     },
