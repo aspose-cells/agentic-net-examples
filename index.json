@@ -1661,6 +1661,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs",
+      "title": "Create a new workbook, add a worksheet\u2011scoped named range, and save the file in XLSX format."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-workbookscoped-named-range-covering-cells-a1-to-d10-on-the-first-worksheet.cs",
       "title": "Create a workbook\u2011scoped named range covering cells A1 to D10 on the first worksheet."
     },
