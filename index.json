@@ -901,6 +901,11 @@
     },
     {
       "category": "format-cells",
+      "file": "read-an-excel-file-merge-cells-in-header-row-set-font-size-to-fourteen-and-export.cs",
+      "title": "Read an Excel file, merge cells in header row, set font size to fourteen, and export."
+    },
+    {
+      "category": "format-cells",
       "file": "replace-the-themes-dark1-color-with-a-userspecified-hexadecimal-value-and-save-the-workbook.cs",
       "title": "Replace the theme\u2019s Dark1 color with a user\u2011specified hexadecimal value and save the workbook."
     },
