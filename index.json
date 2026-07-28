@@ -841,6 +841,11 @@
     },
     {
       "category": "format-cells",
+      "file": "open-an-existing-spreadsheet-detect-merged-cells-in-row-10-unmerge-them-and-preserve-data.cs",
+      "title": "Open an existing spreadsheet, detect merged cells in row 10, unmerge them, and preserve data."
+    },
+    {
+      "category": "format-cells",
       "file": "populate-header-cells-with-bold-font-style.cs",
       "title": "Populate header cells with bold font style."
     },
