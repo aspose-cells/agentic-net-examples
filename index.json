@@ -1441,6 +1441,11 @@
     },
     {
       "category": "macro-project",
+      "file": "retrieve-the-list-of-com-library-references-from-the-vba-project-and-log-each-reference-name.cs",
+      "title": "Retrieve the list of COM library references from the VBA project and log each reference name."
+    },
+    {
+      "category": "macro-project",
       "file": "save-signed-workbook-under-new-filename-to-preserve-original-file-and-maintain-audit-trail.cs",
       "title": "Save signed workbook under new filename to preserve original file and maintain audit trail."
     },
