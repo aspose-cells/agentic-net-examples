@@ -2516,6 +2516,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-a-pivot-table-from-its-worksheet-and-confirm-no-remaining-pivot-objects.cs",
+      "title": "Delete a pivot table from its worksheet and confirm no remaining pivot objects."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs",
       "title": "Delete a specific pivot table from the worksheet by passing its PivotTable object to the Remove method."
     },
