@@ -2681,6 +2681,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-the-type-of-external-connection-used-by-the-pivot-table-oledb-or-odbc.cs",
+      "title": "Retrieve the type of external connection used by the pivot table (OLEDB or ODBC)."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs",
       "title": "Save the modified workbook to a specified file path after pivot operations."
     },
