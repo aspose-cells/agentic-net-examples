@@ -2326,6 +2326,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs",
+      "title": "Create a utility method that accepts a pivot table name and deletes it using RemoveAt after index lookup."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs",
       "title": "Delete a pivot table by its zero\u2011based index using Worksheet.PivotTables.RemoveAt."
     },
