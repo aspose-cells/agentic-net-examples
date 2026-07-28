@@ -141,3 +141,4 @@ Output files are written to the working directory.
 - create-a-utility-that-reads-a-themes-accent-colors-and-generates-a-matching-powerpoint-slide-palette.cs
 - create-a-new-workbook-and-add-a-worksheet.cs
 - set-the-workbooks-default-font-to-arial-size-10-and-apply-it-to-all-cells.cs
+- populate-header-cells-with-bold-font-style.cs
