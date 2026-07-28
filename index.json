@@ -616,6 +616,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-utility-that-merges-two-theme-palettes-giving-precedence-to-the-primary-workbooks-colors.cs",
+      "title": "Create a utility that merges two theme palettes, giving precedence to the primary workbook\u2019s colors."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-utility-that-reads-a-csv-of-color-values-and-builds-a-corresponding-theme-palette.cs",
       "title": "Create a utility that reads a CSV of color values and builds a corresponding theme palette."
     },
