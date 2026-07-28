@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - export-a-named-range-as-an-image-file-and-embed-it-into-a-word-document.cs
 - create-a-named-range-that-references-cells-on-multiple-worksheets-using-the-union-function.cs
 - search-for-the-string-na-within-a-named-range-and-replace-it-with-an-empty-string.cs
+- create-a-named-range-with-a-filtered-list-and-use-it-as-slicer-data-source.cs
