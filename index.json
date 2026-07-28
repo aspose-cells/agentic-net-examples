@@ -1253,6 +1253,11 @@
       "category": "macro-project",
       "file": "add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs",
       "title": "Add a custom reference to a VBA project that points to a COM library installed on the system."
+    },
+    {
+      "category": "macro-project",
+      "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
+      "title": "Programmatically rename a form control button while preserving its assigned macro reference."
     }
   ]
 }
