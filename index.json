@@ -1341,6 +1341,11 @@
     },
     {
       "category": "macro-project",
+      "file": "save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs",
+      "title": "Save the signed workbook to a new location, ensuring the digital signature remains intact."
+    },
+    {
+      "category": "macro-project",
       "file": "sign-the-vba-project-using-a-certificate-retrieved-from-windows-certificate-store-by-thumbprint.cs",
       "title": "Sign the VBA project using a certificate retrieved from Windows certificate store by thumbprint."
     },
