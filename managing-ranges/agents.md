@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs
 - apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs
 - unprotect-a-worksheet-modify-a-named-range-and-reapply-protection-with-a-password.cs
+- generate-a-pdf-of-the-workbook-that-includes-only-the-area-defined-by-a-named-range.cs
