@@ -901,6 +901,11 @@
     },
     {
       "category": "format-cells",
+      "file": "open-existing-spreadsheet-unmerge-cells-b2c2-copy-original-value-to-adjacent-cell-and-save.cs",
+      "title": "Open existing spreadsheet, unmerge cells B2:C2, copy original value to adjacent cell, and save."
+    },
+    {
+      "category": "format-cells",
       "file": "open-workbook-apply-merge-to-cells-d2e2-add-data-validation-list-and-save-changes.cs",
       "title": "Open workbook, apply merge to cells D2:E2, add data validation list, and save changes."
     },
