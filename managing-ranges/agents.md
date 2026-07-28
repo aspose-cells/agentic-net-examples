@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs
 - load-workbook-reportxlsx-modify-a-named-range-and-save-as-reportupdatedxlsx.cs
 - create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs
+- clone-a-workbook-containing-named-ranges-and-verify-that-all-named-ranges-are-preserved-in-the-clone.cs
