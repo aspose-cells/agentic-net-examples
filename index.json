@@ -2326,6 +2326,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-an-ascending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
+      "title": "Apply an ascending custom sort order to a PivotField using the AutoSort property."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-distinct-custom-globalization-settings-to-each-workbook-before-refreshing-to-generate-multilingual-pivot-labels.cs",
       "title": "Apply distinct custom globalization settings to each workbook before refreshing to generate multilingual pivot labels."
     },
