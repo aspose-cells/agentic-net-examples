@@ -2431,6 +2431,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "log-the-duration-required-to-refresh-a-pivot-table-after-loading-cache-records.cs",
+      "title": "Log the duration required to refresh a pivot table after loading cache records."
+    },
+    {
+      "category": "pivot-table",
       "file": "move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs",
       "title": "Move a pivot item from the column area to the row area by changing its parent field."
     },
