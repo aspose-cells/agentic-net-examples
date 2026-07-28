@@ -1711,6 +1711,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-right.cs",
+      "title": "Create a named range that automatically expands when new columns are added to the right."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-references-cells-on-multiple-worksheets-using-the-union-function.cs",
       "title": "Create a named range that references cells on multiple worksheets using the UNION function."
     },
