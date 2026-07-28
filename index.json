@@ -1736,6 +1736,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "unmerge-a-range-containing-formulas-and-ensure-each-resulting-cell-retains-its-original-formula.cs",
+      "title": "Unmerge a range containing formulas and ensure each resulting cell retains its original formula."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs",
       "title": "Use Range.EntireColumn to select columns D through F and set each column width to 20 characters."
     },
