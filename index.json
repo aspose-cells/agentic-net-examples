@@ -581,6 +581,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-custom-number-format-that-displays-scientific-notation-with-three-significant-digits.cs",
+      "title": "Apply custom number format that displays scientific notation with three significant digits."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-custom-number-format-that-displays-zero-values-as-a-dash.cs",
       "title": "Apply custom number format that displays zero values as a dash."
     },
