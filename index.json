@@ -1801,6 +1801,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "export-a-named-range-to-a-json-array-containing-cell-addresses-and-values.cs",
+      "title": "Export a named range to a JSON array containing cell addresses and values."
+    },
+    {
+      "category": "managing-ranges",
       "file": "export-the-contents-of-named-range-employeelist-to-a-csv-file-for-external-analysis.cs",
       "title": "Export the contents of named range \"EmployeeList\" to a CSV file for external analysis."
     },
