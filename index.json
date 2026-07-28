@@ -896,6 +896,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-workbook-merge-cells-ab6ac8-assign-number-format-for-phone-numbers-and-export.cs",
+      "title": "Load workbook, merge cells AB6:AC8, assign number format for phone numbers '(###) ###\u2011####', and export."
+    },
+    {
+      "category": "format-cells",
       "file": "load-workbook-merge-cells-d8e10-set-number-format-to-fraction-and-export-to-png-chart-image.cs",
       "title": "Load workbook, merge cells D8:E10, set number format to fraction, and export to PNG chart image."
     },
