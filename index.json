@@ -2491,6 +2491,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-pivot-chart-linked-to-the-pivot-table-and-export-both-to-an-ods-file.cs",
+      "title": "Create a pivot chart linked to the pivot table and export both to an ODS file."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs",
       "title": "Create a utility method that accepts a pivot table name and deletes it using RemoveAt after index lookup."
     },
