@@ -1281,6 +1281,11 @@
     },
     {
       "category": "macro-project",
+      "file": "compare-exported-certificate-thumbprint-with-original-certificate-thumbprint-to-ensure-integrity.cs",
+      "title": "Compare exported certificate thumbprint with original certificate thumbprint to ensure integrity."
+    },
+    {
+      "category": "macro-project",
       "file": "copy-multiple-userforms-from-source-template-into-a-new-workbook-to-reuse-ui-components.cs",
       "title": "Copy multiple UserForms from source template into a new workbook to reuse UI components."
     },
