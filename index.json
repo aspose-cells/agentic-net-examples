@@ -1701,6 +1701,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-references-cells-on-multiple-worksheets-using-the-union-function.cs",
+      "title": "Create a named range that references cells on multiple worksheets using the UNION function."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs",
       "title": "Create a named range that spans an entire column and use it to calculate the average."
     },
