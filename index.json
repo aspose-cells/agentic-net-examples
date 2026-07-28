@@ -1281,6 +1281,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-multiple-userforms-from-source-template-into-a-new-workbook-to-reuse-ui-components.cs",
+      "title": "Copy multiple UserForms from source template into a new workbook to reuse UI components."
+    },
+    {
+      "category": "macro-project",
       "file": "copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs",
       "title": "Copy UserForm DesignerStorage from a template workbook to a target workbook preserving layout."
     },
