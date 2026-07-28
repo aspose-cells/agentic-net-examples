@@ -1751,6 +1751,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-spans-the-result-of-a-formula-array-and-use-it-in-subsequent-calculations.cs",
+      "title": "Create a named range that spans the result of a formula array and use it in subsequent calculations."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-with-a-filtered-list-and-use-it-as-slicer-data-source.cs",
       "title": "Create a named range with a filtered list and use it as slicer data source."
     },
