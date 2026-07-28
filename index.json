@@ -1311,6 +1311,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-an-excel-workbook-and-read-the-issigned-property-to-determine-signature-status.cs",
+      "title": "Load an Excel workbook and read the IsSigned property to determine signature status."
+    },
+    {
+      "category": "macro-project",
       "file": "log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs",
       "title": "Log detailed information about each macro assignment, including worksheet name, control ID, and macro name."
     },
