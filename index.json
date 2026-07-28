@@ -2391,6 +2391,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-with-default-loadoptions-and-refresh-its-first-pivot-table.cs",
+      "title": "Load a workbook with default LoadOptions and refresh its first pivot table."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs",
       "title": "Load multiple XLSX files, refresh their pivot tables, and batch export each to separate PDF documents."
     },
