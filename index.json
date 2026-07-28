@@ -2331,6 +2331,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-top-5-filter-on-a-column-field-limiting-displayed-items-to-the-best-five.cs",
+      "title": "Add a Top 5 filter on a column field, limiting displayed items to the best five."
+    },
+    {
+      "category": "pivot-table",
       "file": "after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs",
       "title": "After applying custom globalization, refresh the pivot table and verify that all label texts are translated."
     },
