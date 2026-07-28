@@ -766,6 +766,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-workbook-merge-cells-g10h12-assign-custom-date-format-and-write-to-memory-stream.cs",
+      "title": "Create a workbook, merge cells G10:H12, assign custom date format, and write to memory stream."
+    },
+    {
+      "category": "format-cells",
       "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
       "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
     },
