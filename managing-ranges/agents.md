@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - add-a-comment-to-every-cell-within-named-range-reviewnotes-indicating-pending-review.cs
 - use-a-named-range-as-the-source-for-data-consolidation-across-multiple-worksheets.cs
 - detect-and-remove-any-named-ranges-that-reference-deleted-worksheets-to-prevent-errors.cs
+- implement-error-handling-for-attempts-to-access-a-nonexistent-named-range-and-log-the-exception.cs
