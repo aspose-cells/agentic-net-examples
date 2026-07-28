@@ -2111,6 +2111,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "search-for-cells-containing-the-word-confidential-within-a-named-range-and-mask-the-text.cs",
+      "title": "Search for cells containing the word \"confidential\" within a named range and mask the text."
+    },
+    {
+      "category": "managing-ranges",
       "file": "search-for-duplicate-values-within-a-named-range-and-highlight-the-duplicates.cs",
       "title": "Search for duplicate values within a named range and highlight the duplicates."
     },
