@@ -1266,6 +1266,11 @@
     },
     {
       "category": "macro-project",
+      "file": "implement-a-method-that-copies-a-macro-from-one-workbook-to-another-and-updates-control-references.cs",
+      "title": "Implement a method that copies a macro from one workbook to another and updates control references."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
       "title": "Programmatically rename a form control button while preserving its assigned macro reference."
     }
