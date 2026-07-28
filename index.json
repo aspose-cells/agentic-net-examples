@@ -2376,6 +2376,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-sort-to-pivot-items-based-on-aggregated-sales-totals-descending.cs",
+      "title": "Apply a custom sort to pivot items based on aggregated sales totals descending."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
       "title": "Apply a descending custom sort order to a PivotField using the AutoSort property."
     },
