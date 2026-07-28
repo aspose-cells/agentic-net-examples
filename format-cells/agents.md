@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - create-a-workbook-merge-cells-g10h12-assign-custom-date-format-and-write-to-memory-stream.cs
 - open-a-template-file-merge-cells-a5a8-for-a-label-apply-italic-style-and-save-copy.cs
 - load-workbook-unmerge-previously-merged-range-c6e7-then-recalculate-formulas-and-save.cs
+- read-an-excel-file-merge-cells-in-header-row-set-font-size-to-fourteen-and-export.cs
