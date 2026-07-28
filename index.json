@@ -2316,6 +2316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs",
+      "title": "Delete a pivot table by its zero\u2011based index using Worksheet.PivotTables.RemoveAt."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs",
       "title": "Delete a specific pivot table from the worksheet by passing its PivotTable object to the Remove method."
     },
