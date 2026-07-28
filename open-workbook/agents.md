@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs
 - configure-lightcells-to-use-a-custom-buffer-size-for-reading-cells-optimizing-performance-for-highthroughput-scenarios.cs
 - load-a-workbook-using-loadoptions-with-loadcharts-disabled-and-verify-loadwarnings-for-missing-chart-data.cs
+- implement-a-commandline-utility-that-accepts-a-folder-path-loads-each-excel-file-without-charts-and-converts-them-to-pdf.cs
