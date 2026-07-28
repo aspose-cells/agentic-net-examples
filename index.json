@@ -506,6 +506,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-fill-color-to-header-cells-using-rgb-values.cs",
+      "title": "Apply a custom fill color to header cells using RGB values."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-custom-theme-that-uses-grayscale-accents-and-verify-that-all-cells-display-correctly.cs",
       "title": "Apply a custom theme that uses grayscale accents and verify that all cells display correctly."
     },
