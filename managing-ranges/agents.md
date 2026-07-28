@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs
 - refresh-a-pivot-table-after-expanding-the-underlying-named-range-to-include-new-rows.cs
 - validate-that-all-named-ranges-in-a-workbook-have-unique-names-and-report-any-duplicates.cs
+- programmatically-enumerate-all-named-ranges-in-a-workbook-and-output-their-addresses-to-the-console.cs
