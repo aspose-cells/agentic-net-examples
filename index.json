@@ -2406,6 +2406,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-automatic-refresh-on-workbook-open-for-all-pivottables-to-improve-loading-performance.cs",
+      "title": "Disable automatic refresh on workbook open for all PivotTables to improve loading performance."
+    },
+    {
+      "category": "pivot-table",
       "file": "disable-pivot-table-ribbons-programmatically-before-saving-the-workbook-to-reduce-ui-clutter.cs",
       "title": "Disable pivot table ribbons programmatically before saving the workbook to reduce UI clutter."
     },
