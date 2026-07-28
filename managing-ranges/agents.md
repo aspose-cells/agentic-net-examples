@@ -195,3 +195,4 @@ Output files are written to the working directory.
 - export-the-workbooks-named-ranges-to-an-html-table-for-documentation-purposes.cs
 - replace-cells-containing-the-word-draft-with-final-inside-a-named-range-used-for-publishing.cs
 - validate-that-all-named-ranges-reference-existing-cells-and-report-any-invalid-references.cs
+- search-for-numeric-values-formatted-as-currency-within-a-named-range-and-convert-them-to-plain-numbers.cs
