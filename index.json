@@ -2326,6 +2326,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "calculate-pivot-formulas-after-repositioning-items-to-ensure-dependent-totals-update-correctly.cs",
+      "title": "Calculate pivot formulas after repositioning items to ensure dependent totals update correctly."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs",
       "title": "Create a utility method that accepts a pivot table name and deletes it using RemoveAt after index lookup."
     },
