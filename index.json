@@ -1766,6 +1766,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-serves-as-a-lookup-table-for-multiple-worksheets-across-the-workbook.cs",
+      "title": "Create a named range that serves as a lookup table for multiple worksheets across the workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-spans-a-dynamic-array-returned-by-a-formula.cs",
       "title": "Create a named range that spans a dynamic array returned by a formula."
     },
