@@ -1926,6 +1926,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "list-all-workbookscoped-named-ranges-and-output-their-names-to-the-console.cs",
+      "title": "List all workbook\u2011scoped named ranges and output their names to the console."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs",
       "title": "Load a workbook, delete all worksheet\u2011scoped named ranges, and save the cleaned file."
     },
