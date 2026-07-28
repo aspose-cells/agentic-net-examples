@@ -1376,6 +1376,11 @@
     },
     {
       "category": "macro-project",
+      "file": "embed-vba-code-that-disables-the-print-command-into-a-workbook-to-prevent-user-printing.cs",
+      "title": "Embed VBA code that disables the Print command into a workbook to prevent user printing."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-temporary-file-then-load-it-into-an-x509certificate-object-for-inspection.cs",
       "title": "Export a VBA certificate to a temporary file, then load it into an X509Certificate object for inspection."
     },
