@@ -876,6 +876,11 @@
     },
     {
       "category": "format-cells",
+      "file": "save-the-workbook-to-an-xlsx-file-ensuring-all-applied-formatting-is-retained.cs",
+      "title": "Save the workbook to an XLSX file ensuring all applied formatting is retained."
+    },
+    {
+      "category": "format-cells",
       "file": "set-a-cells-horizontal-alignment-to-center-and-vertical-alignment-to-middle.cs",
       "title": "Set a cell's horizontal alignment to center and vertical alignment to middle."
     },
