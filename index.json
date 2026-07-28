@@ -1811,6 +1811,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "generate-a-chart-series-that-pulls-data-from-a-named-range-and-updates-automatically.cs",
+      "title": "Generate a chart series that pulls data from a named range and updates automatically."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-pdf-of-the-workbook-that-includes-only-the-area-defined-by-a-named-range.cs",
       "title": "Generate a PDF of the workbook that includes only the area defined by a named range."
     },
