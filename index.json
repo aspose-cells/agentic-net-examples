@@ -2316,6 +2316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-calculated-field-that-concatenates-two-text-fields-with-a-hyphen-separator.cs",
+      "title": "Add a calculated field that concatenates two text fields with a hyphen separator."
+    },
+    {
+      "category": "pivot-table",
       "file": "after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs",
       "title": "After applying custom globalization, refresh the pivot table and verify that all label texts are translated."
     },
