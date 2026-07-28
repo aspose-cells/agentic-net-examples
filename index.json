@@ -1296,6 +1296,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-certificate-to-a-file-path-and-verify-the-file-exists.cs",
+      "title": "Export the VBA project's certificate to a file path and verify the file exists."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs",
       "title": "Generate a CSV file containing workbook names, macro assignment status, and signature verification results."
     },
