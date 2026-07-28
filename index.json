@@ -1811,6 +1811,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs",
+      "title": "Load a workbook, delete all worksheet\u2011scoped named ranges, and save the cleaned file."
+    },
+    {
+      "category": "managing-ranges",
       "file": "load-workbook-reportxlsx-modify-a-named-range-and-save-as-reportupdatedxlsx.cs",
       "title": "Load workbook \"Report.xlsx\", modify a named range, and save as \"ReportUpdated.xlsx\"."
     },
