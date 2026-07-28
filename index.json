@@ -2561,6 +2561,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "disable-the-pivot-table-ribbon-and-toolbar-in-the-ods-output-for-minimal-ui.cs",
+      "title": "Disable the pivot table ribbon and toolbar in the ODS output for minimal UI."
+    },
+    {
+      "category": "pivot-table",
       "file": "enable-auto-format-for-a-pivot-table-during-creation-to-apply-default-visual-styling.cs",
       "title": "Enable auto format for a pivot table during creation to apply default visual styling."
     },
