@@ -1281,6 +1281,11 @@
     },
     {
       "category": "macro-project",
+      "file": "copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs",
+      "title": "Copy UserForm DesignerStorage from a template workbook to a target workbook preserving layout."
+    },
+    {
+      "category": "macro-project",
       "file": "create-a-unit-test-that-verifies-macro-assignment-fails-when-the-macro-name-does-not-exist.cs",
       "title": "Create a unit test that verifies macro assignment fails when the macro name does not exist."
     },
