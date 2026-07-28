@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - use-lightcells-api-to-export-cell-values-from-a-workbook-into-a-csv-file-without-loading-the-model.cs
 - save-a-workbook-with-a-specific-printer-paper-size-setting-using-lightcells-api-to-ensure-correct-print-layout.cs
 - load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs
+- configure-lightcells-to-use-a-custom-buffer-size-for-reading-cells-optimizing-performance-for-highthroughput-scenarios.cs
