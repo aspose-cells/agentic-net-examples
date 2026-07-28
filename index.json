@@ -1433,6 +1433,11 @@
       "category": "macro-project",
       "file": "validate-the-vba-projects-digital-signature-using-workbookvbaprojectvalidatesignature-method-and-capture-result.cs",
       "title": "Validate the VBA project's digital signature using Workbook.VbaProject.ValidateSignature method and capture result."
+    },
+    {
+      "category": "macro-project",
+      "file": "wrap-signing-operation-in-trycatch-block-to-handle-exceptions-and-log-error-details.cs",
+      "title": "Wrap signing operation in try\u2011catch block to handle exceptions and log error details."
     }
   ]
 }
