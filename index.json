@@ -2431,6 +2431,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "define-a-custom-list-order-for-a-pivot-field-and-apply-it-to-control-item-sequence.cs",
+      "title": "Define a custom list order for a pivot field and apply it to control item sequence."
+    },
+    {
+      "category": "pivot-table",
       "file": "delete-a-pivot-table-by-its-zerobased-index-using-worksheetpivottablesremoveat.cs",
       "title": "Delete a pivot table by its zero\u2011based index using Worksheet.PivotTables.RemoveAt."
     },
