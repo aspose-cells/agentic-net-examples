@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-that-displays-scientific-notation-with-two-decimal-places.cs
 - apply-custom-number-format-that-displays-fractions-as-mixed-numbers.cs
 - apply-custom-number-format-that-displays-time-in-hhmmss-24-hour-format.cs
+- apply-custom-number-format-that-displays-negative-percentages-in-red-with-a-minus-sign.cs
