@@ -671,6 +671,11 @@
     },
     {
       "category": "format-cells",
+      "file": "change-the-workbooks-default-date-format-to-dd-mmm-yyyy.cs",
+      "title": "Change the workbook's default date format to \"dd-mmm-yyyy\"."
+    },
+    {
+      "category": "format-cells",
       "file": "configure-font-settings-for-a-column-including-size-color-and-underline.cs",
       "title": "Configure font settings for a column, including size, color, and underline."
     },
