@@ -1141,6 +1141,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "configure-chart-rendering-to-use-antialiasing-while-applying-custom-chartglobalizationsettings-for-improved-visual-quality.cs",
+      "title": "Configure chart rendering to use anti\u2011aliasing while applying custom ChartGlobalizationSettings for improved visual quality."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "configure-loadoptions-to-ignore-missing-fonts-while-loading-a-workbook-with-korean-cultureinfo-then-render-charts.cs",
       "title": "Configure LoadOptions to ignore missing fonts while loading a workbook with Korean CultureInfo, then render charts."
     },
