@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - list-all-workbookscoped-named-ranges-and-output-their-names-to-the-console.cs
 - retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs
 - create-an-offset-range-by-shifting-d4f10-three-rows-down-and-two-columns-right.cs
+- generate-a-range-representing-the-entire-column-of-g3h3-and-apply-bold-formatting.cs
