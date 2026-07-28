@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - load-workbook-merge-cells-m5n6-apply-number-format-for-accounting-and-export-to-pdf-with-margins.cs
 - create-workbook-merge-cells-p2p5-set-wrap-text-property-and-save-as-xlsx-with-auto-filter.cs
 - open-existing-spreadsheet-unmerge-cells-b2c2-copy-original-value-to-adjacent-cell-and-save.cs
+- load-workbook-merge-cells-d8e10-set-number-format-to-fraction-and-export-to-png-chart-image.cs
