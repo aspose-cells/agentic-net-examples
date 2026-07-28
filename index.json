@@ -2541,6 +2541,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-showreportfilterpages-to-true-to-generate-separate-worksheets-for-each-filter-selection.cs",
+      "title": "Set ShowReportFilterPages to true to generate separate worksheets for each filter selection."
+    },
+    {
+      "category": "pivot-table",
       "file": "use-a-logging-framework-to-capture-memory-usage-and-refresh-duration-metrics-during-pivot-processing.cs",
       "title": "Use a logging framework to capture memory usage and refresh duration metrics during pivot processing."
     },
