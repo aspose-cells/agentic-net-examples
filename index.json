@@ -1256,6 +1256,11 @@
     },
     {
       "category": "macro-project",
+      "file": "assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs",
+      "title": "Assign different macros to multiple form controls on the same worksheet and verify each executes correctly."
+    },
+    {
+      "category": "macro-project",
       "file": "check-the-issigned-property-after-adding-a-digital-signature-to-a-vba-project-programmatically.cs",
       "title": "Check the IsSigned property after adding a digital signature to a VBA project programmatically."
     },
