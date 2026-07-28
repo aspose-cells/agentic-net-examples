@@ -1806,6 +1806,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "refresh-a-pivot-table-after-expanding-the-underlying-named-range-to-include-new-rows.cs",
+      "title": "Refresh a pivot table after expanding the underlying named range to include new rows."
+    },
+    {
+      "category": "managing-ranges",
       "file": "replace-all-occurrences-of-pending-with-completed-inside-range-d5d25-using-findoptions.cs",
       "title": "Replace all occurrences of \"Pending\" with \"Completed\" inside range D5:D25 using FindOptions."
     },
