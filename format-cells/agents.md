@@ -127,3 +127,4 @@ Output files are written to the working directory.
 - update-the-themes-font-scheme-to-use-a-monospaced-font-for-code-snippets-throughout-the-workbook.cs
 - validate-that-after-theme-removal-cells-previously-using-theme-colors-retain-their-visual-appearance.cs
 - create-a-batch-process-that-applies-a-holiday-theme-to-all-calendars-in-a-set-of-workbooks.cs
+- apply-the-themes-accent4-color-to-the-fill-of-cells-that-contain-dates-within-the-current-month.cs
