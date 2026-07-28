@@ -1181,6 +1181,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-a-feature-that-automatically-selects-the-appropriate-japanese-era-based-on-year-when-converting-dates-in-bulk.cs",
+      "title": "Implement a feature that automatically selects the appropriate Japanese era based on year when converting dates in bulk."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "implement-a-method-that-switches-globalizationsettings-at-runtime-based-on-userselected-language-before-chart-creation.cs",
       "title": "Implement a method that switches GlobalizationSettings at runtime based on user\u2011selected language before chart creation."
     },
