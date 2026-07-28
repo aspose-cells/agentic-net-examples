@@ -1741,6 +1741,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-references-a-range-on-a-hidden-worksheet-for-internal-calculations.cs",
+      "title": "Create a named range that references a range on a hidden worksheet for internal calculations."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-references-cells-on-multiple-worksheets-using-the-union-function.cs",
       "title": "Create a named range that references cells on multiple worksheets using the UNION function."
     },
