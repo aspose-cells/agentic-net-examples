@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - set-cell-borders-to-a-double-line-style-on-the-outer-edges-of-a-summary-block.cs
 - save-the-workbook-to-an-xlsx-file-ensuring-all-applied-formatting-is-retained.cs
 - load-a-workbook-from-disk-merge-cells-c6e7-apply-bold-font-and-save-as-xlsx.cs
+- create-a-new-workbook-merge-range-a1d1-for-a-title-set-center-alignment-and-save.cs
