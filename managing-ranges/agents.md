@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-references-a-named-table-and-use-it-in-a-vlookup-formula.cs
 - search-for-duplicate-values-within-a-named-range-and-highlight-the-duplicates.cs
 - replace-duplicate-entries-in-a-named-range-with-a-single-instance-using-findoptions.cs
+- use-findoptions-to-locate-cells-with-error-types-like-div0-within-a-named-range.cs
