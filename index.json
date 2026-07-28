@@ -861,6 +861,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-spreadsheet-merge-cells-f4g5-insert-a-formula-referencing-merged-cell-and-export-to-csv.cs",
+      "title": "Load spreadsheet, merge cells F4:G5, insert a formula referencing merged cell, and export to CSV."
+    },
+    {
+      "category": "format-cells",
       "file": "load-workbook-unmerge-previously-merged-range-c6e7-then-recalculate-formulas-and-save.cs",
       "title": "Load workbook, unmerge previously merged range C6:E7, then recalculate formulas and save."
     },
