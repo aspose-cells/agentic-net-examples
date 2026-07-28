@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - validate-that-scalecrop-cannot-be-enabled-when-the-workbook-contains-chart-objects.cs
 - log-a-warning-whenever-code-attempts-to-modify-application-metadata-which-is-immutable.cs
 - create-a-unit-test-that-adds-a-custom-property-saves-the-workbook-reloads-it-and-verifies-persistence.cs
+- open-a-spreadsheet-and-filter-custom-properties-by-datetime-type-then-list-them.cs
