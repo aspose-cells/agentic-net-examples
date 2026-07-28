@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - load-only-the-first-three-worksheets-by-setting-loadoptionsstartsheetindex-to-0-and-loadoptionssheetcount-to-3.cs
 - filter-rows-where-column-c-equals-active-while-streaming-with-lightcells-writing-matching-rows-to-a-new-sheet.cs
 - use-lightcells-api-to-export-cell-values-from-a-workbook-into-a-csv-file-without-loading-the-model.cs
+- save-a-workbook-with-a-specific-printer-paper-size-setting-using-lightcells-api-to-ensure-correct-print-layout.cs
