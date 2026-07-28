@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - search-for-duplicate-values-within-a-named-range-and-highlight-the-duplicates.cs
 - replace-duplicate-entries-in-a-named-range-with-a-single-instance-using-findoptions.cs
 - use-findoptions-to-locate-cells-with-error-types-like-div0-within-a-named-range.cs
+- export-a-named-range-to-a-json-array-containing-cell-addresses-and-values.cs
