@@ -926,6 +926,11 @@
     },
     {
       "category": "format-cells",
+      "file": "open-existing-file-unmerge-cells-t5u5-recalculate-dependent-totals-and-write-changes-to-new-file.cs",
+      "title": "Open existing file, unmerge cells T5:U5, recalculate dependent totals, and write changes to new file."
+    },
+    {
+      "category": "format-cells",
       "file": "open-existing-file-unmerge-range-a1c1-copy-its-content-to-another-sheet-and-save.cs",
       "title": "Open existing file, unmerge range A1:C1, copy its content to another sheet, and save."
     },
