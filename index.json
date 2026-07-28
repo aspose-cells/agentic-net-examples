@@ -1401,6 +1401,11 @@
     },
     {
       "category": "macro-project",
+      "file": "sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs",
+      "title": "Sign workbook using certificate from Windows store selected by subject name for code signing."
+    },
+    {
+      "category": "macro-project",
       "file": "use-reflection-to-enumerate-all-vba-project-references-and-output-their-names-and-versions.cs",
       "title": "Use reflection to enumerate all VBA project references and output their names and versions."
     },
