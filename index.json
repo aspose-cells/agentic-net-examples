@@ -681,6 +681,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-the-themes-dark2-color-as-the-default-border-color-for-all-tables-in-the-workbook.cs",
+      "title": "Set the theme\u2019s Dark2 color as the default border color for all tables in the workbook."
+    },
+    {
+      "category": "format-cells",
       "file": "set-the-themes-light2-color-as-the-default-fill-for-newly-inserted-rows.cs",
       "title": "Set the theme\u2019s Light2 color as the default fill for newly inserted rows."
     },
