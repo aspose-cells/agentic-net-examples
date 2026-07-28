@@ -2556,6 +2556,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "insert-a-pivot-table-into-the-worksheet-using-a-defined-data-source-range.cs",
+      "title": "Insert a pivot table into the worksheet using a defined data source range."
+    },
+    {
+      "category": "pivot-table",
       "file": "iterate-over-all-pivot-fields-and-output-each-fields-display-name-to-the-console.cs",
       "title": "Iterate over all pivot fields and output each field\u2019s display name to the console."
     },
