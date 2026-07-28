@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - retrieve-the-address-of-a-dynamic-named-range-salesdata-and-log-the-result.cs
 - calculate-the-total-number-of-cells-in-the-merged-range-a1c3-after-performing-the-merge.cs
 - offset-a-range-by-negative-rows-to-select-cells-above-the-original-range-and-apply-italic-style.cs
+- move-a-range-containing-formulas-from-sheet1-to-sheet2-and-update-external-references-automatically.cs
