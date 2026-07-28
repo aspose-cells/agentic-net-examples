@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-to-a-range-displaying-values-as-currency-with-two-decimal-places.cs
 - apply-accounting-number-format-to-a-total-sales-cell.cs
 - apply-custom-number-format-to-display-negative-numbers-in-red-parentheses.cs
+- apply-custom-number-format-that-shows-percentages-with-one-decimal-place.cs
