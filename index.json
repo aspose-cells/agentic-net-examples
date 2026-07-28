@@ -751,6 +751,11 @@
     },
     {
       "category": "format-cells",
+      "file": "validate-that-after-theme-removal-cells-previously-using-theme-colors-retain-their-visual-appearance.cs",
+      "title": "Validate that after theme removal, cells previously using theme colors retain their visual appearance."
+    },
+    {
+      "category": "format-cells",
       "file": "validate-that-after-theme-updates-chart-series-colors-automatically-update-to-the-new-theme-accents.cs",
       "title": "Validate that after theme updates, chart series colors automatically update to the new theme accents."
     },
