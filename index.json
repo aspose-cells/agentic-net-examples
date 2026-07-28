@@ -1656,6 +1656,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "define-a-worksheetscoped-named-range-for-cells-b2b20-on-sheet2-including-the-sheet-name.cs",
+      "title": "Define a worksheet\u2011scoped named range for cells B2:B20 on Sheet2, including the sheet name."
+    },
+    {
+      "category": "managing-ranges",
       "file": "ensure-that-moving-a-range-does-not-shift-any-frozen-panes-in-the-destination-worksheet.cs",
       "title": "Ensure that moving a range does not shift any frozen panes in the destination worksheet."
     },
