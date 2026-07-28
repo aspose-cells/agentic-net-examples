@@ -1291,6 +1291,11 @@
     },
     {
       "category": "macro-project",
+      "file": "log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs",
+      "title": "Log detailed information about each macro assignment, including worksheet name, control ID, and macro name."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
       "title": "Programmatically rename a form control button while preserving its assigned macro reference."
     },
