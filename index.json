@@ -2381,6 +2381,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "enable-pivot-table-ribbons-programmatically-after-loading-the-workbook-to-restore-default-ui-elements.cs",
+      "title": "Enable pivot table ribbons programmatically after loading the workbook to restore default UI elements."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-a-workbook-containing-multiple-pivot-tables-to-a-single-pdf-preserving-each-tables-layout.cs",
       "title": "Export a workbook containing multiple pivot tables to a single PDF, preserving each table's layout."
     },
