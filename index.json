@@ -526,6 +526,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-data-validation-rule-that-uses-the-themes-accent5-color-for-the-input-background.cs",
+      "title": "Apply a data validation rule that uses the theme\u2019s Accent5 color for the input background."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-gradient-fill-to-a-range-using-the-themes-accent3-and-accent4-colors.cs",
       "title": "Apply a gradient fill to a range using the theme\u2019s Accent3 and Accent4 colors."
     },
