@@ -856,6 +856,11 @@
     },
     {
       "category": "format-cells",
+      "file": "open-a-template-file-merge-cells-a5a8-for-a-label-apply-italic-style-and-save-copy.cs",
+      "title": "Open a template file, merge cells A5:A8 for a label, apply italic style, and save copy."
+    },
+    {
+      "category": "format-cells",
       "file": "open-an-existing-spreadsheet-detect-merged-cells-in-row-10-unmerge-them-and-preserve-data.cs",
       "title": "Open an existing spreadsheet, detect merged cells in row 10, unmerge them, and preserve data."
     },
