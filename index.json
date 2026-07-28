@@ -1981,6 +1981,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "update-an-external-reference-named-range-to-point-to-a-new-file-path-after-relocation.cs",
+      "title": "Update an external reference named range to point to a new file path after relocation."
+    },
+    {
+      "category": "managing-ranges",
       "file": "update-the-reference-of-the-existing-named-range-reportperiod-to-span-cells-c5c15.cs",
       "title": "Update the reference of the existing named range \"ReportPeriod\" to span cells C5:C15."
     },
