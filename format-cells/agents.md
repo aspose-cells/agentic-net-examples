@@ -143,3 +143,4 @@ Output files are written to the working directory.
 - set-the-workbooks-default-font-to-arial-size-10-and-apply-it-to-all-cells.cs
 - populate-header-cells-with-bold-font-style.cs
 - configure-font-settings-for-a-column-including-size-color-and-underline.cs
+- set-column-width-automatically-based-on-content.cs
