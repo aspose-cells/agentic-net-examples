@@ -2406,6 +2406,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-through-all-pivot-fields-and-log-each-fields-display-name-to-a-text-file.cs",
+      "title": "Iterate through all pivot fields and log each field\u2019s display name to a text file."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs",
       "title": "Load a workbook, set PivotItem.Position for multiple items, then save changes back to XLSX."
     },
