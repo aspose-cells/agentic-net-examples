@@ -2476,6 +2476,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-formatting-header-cells-to-ensure-style-changes-persist.cs",
+      "title": "Refresh the pivot table after formatting header cells to ensure style changes persist."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs",
       "title": "Retrieve and format multiple pivot field header cells by their display names in a loop."
     },
