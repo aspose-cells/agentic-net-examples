@@ -561,6 +561,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-accounting-number-format-to-a-total-sales-cell.cs",
+      "title": "Apply accounting number format to a total sales cell."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-conditional-formatting-that-uses-the-themes-accent2-color-to-highlight-values-above-a-threshold.cs",
       "title": "Apply conditional formatting that uses the theme\u2019s Accent2 color to highlight values above a threshold."
     },
