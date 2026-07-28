@@ -267,3 +267,4 @@ Output files are written to the working directory.
 - update-a-richtext-data-label-to-include-italic-text-for-enhanced-emphasis.cs
 - set-the-z-axis-maximum-to-100-and-minimum-to-0-for-standardized-scaling.cs
 - set-the-z-axis-label-format-to-display-values-as-percentages-for-relative-comparison.cs
+- change-the-chart-type-to-cone3d-and-adjust-the-z-axis-depth-for-better-perspective.cs
