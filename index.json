@@ -3001,6 +3001,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "log-the-execution-result-of-the-ribbon-button-action-for-troubleshooting.cs",
+      "title": "Log the execution result of the ribbon button action for troubleshooting."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs",
       "title": "Test the custom ribbon button to confirm it successfully updates external link paths."
     }
