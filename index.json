@@ -771,6 +771,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-workbook-merge-cells-b1b3-protect-the-merged-region-with-password-and-save-as-xls.cs",
+      "title": "Create workbook, merge cells B1:B3, protect the merged region with password, and save as XLS."
+    },
+    {
+      "category": "format-cells",
       "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
       "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
     },
