@@ -726,6 +726,11 @@
     },
     {
       "category": "format-cells",
+      "file": "populate-header-cells-with-bold-font-style.cs",
+      "title": "Populate header cells with bold font style."
+    },
+    {
+      "category": "format-cells",
       "file": "programmatically-detect-if-a-workbooks-theme-includes-a-custom-color-scheme-and-log-its-details.cs",
       "title": "Programmatically detect if a workbook\u2019s theme includes a custom color scheme and log its details."
     },
