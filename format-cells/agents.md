@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - set-the-themes-dark2-color-as-the-default-border-color-for-all-tables-in-the-workbook.cs
 - load-a-workbook-change-the-themes-accent3-to-a-gradient-and-verify-cell-fills.cs
 - apply-the-themes-hyperlink-color-to-all-url-strings-inserted-via-code.cs
+- update-the-themes-dark2-color-based-on-a-configuration-file-and-refresh-all-dependent-styles.cs
