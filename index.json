@@ -1711,6 +1711,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-with-a-filtered-list-and-use-it-as-slicer-data-source.cs",
+      "title": "Create a named range with a filtered list and use it as slicer data source."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs",
       "title": "Create a new workbook, add a worksheet\u2011scoped named range, and save the file in XLSX format."
     },
