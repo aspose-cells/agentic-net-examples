@@ -2536,6 +2536,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs",
+      "title": "Remove a calculated field from a PivotTable without affecting other fields."
+    },
+    {
+      "category": "pivot-table",
       "file": "retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs",
       "title": "Retrieve and format multiple pivot field header cells by their display names in a loop."
     },
