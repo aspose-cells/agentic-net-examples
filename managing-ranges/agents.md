@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs
 - unprotect-a-worksheet-modify-a-named-range-and-reapply-protection-with-a-password.cs
 - generate-a-pdf-of-the-workbook-that-includes-only-the-area-defined-by-a-named-range.cs
+- export-a-named-range-as-an-image-file-and-embed-it-into-a-word-document.cs
