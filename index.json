@@ -1866,6 +1866,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "set-the-refersto-property-of-a-named-range-using-an-absolute-address-to-prevent-relative-shifts.cs",
+      "title": "Set the RefersTo property of a named range using an absolute address to prevent relative shifts."
+    },
+    {
+      "category": "managing-ranges",
       "file": "unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs",
       "title": "Unmerge a previously merged block covering D4:G4 and restore individual cell alignment to left."
     },
