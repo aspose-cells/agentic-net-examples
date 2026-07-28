@@ -2983,6 +2983,11 @@
       "category": "pivot-table",
       "file": "verify-that-cell-content-length-remains-unchanged-when-compatibility-is-disabled-after-refresh.cs",
       "title": "Verify that cell content length remains unchanged when compatibility is disabled after refresh."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "add-a-tooltip-to-the-custom-ribbon-button-describing-its-function-for-end-users.cs",
+      "title": "Add a tooltip to the custom ribbon button describing its function for end users."
     }
   ]
 }
