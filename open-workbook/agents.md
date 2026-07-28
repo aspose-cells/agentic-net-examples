@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - load-a-workbook-apply-printer-paper-size-a5-and-verify-that-the-generated-pdf-matches-the-specified-dimensions.cs
 - load-a-workbook-apply-printer-paper-size-letter-and-ensure-the-pdf-page-count-aligns-with-expectations.cs
 - load-a-workbook-filter-defined-names-containing-total-and-generate-a-pdf-that-includes-only-those-named-ranges.cs
+- retrieve-load-warnings-after-opening-a-workbook-by-iterating-through-the-workbookloadwarnings-collection.cs
