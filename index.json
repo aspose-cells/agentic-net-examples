@@ -1736,6 +1736,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-spans-a-dynamic-array-returned-by-a-formula.cs",
+      "title": "Create a named range that spans a dynamic array returned by a formula."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs",
       "title": "Create a named range that spans an entire column and use it to calculate the average."
     },
