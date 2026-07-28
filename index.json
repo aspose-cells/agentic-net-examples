@@ -1296,6 +1296,11 @@
     },
     {
       "category": "macro-project",
+      "file": "create-x509certificate2-from-pfx-file-with-password-and-use-it-to-sign-vba-project.cs",
+      "title": "Create X509Certificate2 from PFX file with password and use it to sign VBA project."
+    },
+    {
+      "category": "macro-project",
       "file": "detect-and-report-any-duplicate-macro-names-across-multiple-vba-modules-within-a-single-workbook.cs",
       "title": "Detect and report any duplicate macro names across multiple VBA modules within a single workbook."
     },
