@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - replace-all-occurrences-of-the-placeholder-name-with-actual-names-inside-a-template-named-range.cs
 - create-a-named-range-that-spans-the-result-of-a-formula-array-and-use-it-in-subsequent-calculations.cs
 - add-a-data-bar-to-cells-in-a-named-range-based-on-relative-position-within-the-range.cs
+- export-the-workbooks-named-ranges-to-an-html-table-for-documentation-purposes.cs
