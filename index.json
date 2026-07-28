@@ -2511,6 +2511,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-the-refreshbywho-property-to-identify-the-user-who-last-refreshed-the-pivottable.cs",
+      "title": "Retrieve the RefreshByWho property to identify the user who last refreshed the PivotTable."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs",
       "title": "Save the modified workbook to a specified file path after pivot operations."
     },
