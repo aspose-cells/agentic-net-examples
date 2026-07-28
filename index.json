@@ -2351,6 +2351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "export-a-workbook-containing-multiple-pivot-tables-to-a-single-pdf-preserving-each-tables-layout.cs",
+      "title": "Export a workbook containing multiple pivot tables to a single PDF, preserving each table's layout."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs",
       "title": "Export the refreshed pivot table to a PDF file preserving layout and calculated values."
     },
