@@ -801,6 +801,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-workbook-merge-cells-x1y3-set-number-format-to-custom-000-and-save-as-ods.cs",
+      "title": "Create workbook, merge cells X1:Y3, set number format to custom '#,##0.00 \u20ac', and save as ODS."
+    },
+    {
+      "category": "format-cells",
       "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
       "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
     },
