@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - delete-the-named-range-obsoleterange-from-the-workbook-and-verify-its-removal.cs
 - limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs
 - load-workbook-reportxlsx-modify-a-named-range-and-save-as-reportupdatedxlsx.cs
+- create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs
