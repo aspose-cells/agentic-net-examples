@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - create-workbook-merge-cells-b1b3-protect-the-merged-region-with-password-and-save-as-xls.cs
 - open-workbook-apply-merge-to-cells-d2e2-add-data-validation-list-and-save-changes.cs
 - load-spreadsheet-merge-cells-f4g5-insert-a-formula-referencing-merged-cell-and-export-to-csv.cs
+- create-new-workbook-merge-cells-h1h4-set-background-color-to-light-blue-and-save-as-ods.cs
