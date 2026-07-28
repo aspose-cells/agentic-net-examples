@@ -731,6 +731,11 @@
     },
     {
       "category": "format-cells",
+      "file": "update-the-themes-font-scheme-to-use-a-monospaced-font-for-code-snippets-throughout-the-workbook.cs",
+      "title": "Update the theme\u2019s font scheme to use a monospaced font for code snippets throughout the workbook."
+    },
+    {
+      "category": "format-cells",
       "file": "update-the-themes-font-scheme-to-use-a-sansserif-primary-font-and-apply-globally.cs",
       "title": "Update the theme\u2019s font scheme to use a sans\u2011serif primary font and apply globally."
     },
