@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - use-lightcells-to-iterate-rows-and-write-each-rows-data-to-a-csv-file-for-external-processing.cs
 - copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs
 - load-only-the-first-three-worksheets-by-setting-loadoptionsstartsheetindex-to-0-and-loadoptionssheetcount-to-3.cs
+- filter-rows-where-column-c-equals-active-while-streaming-with-lightcells-writing-matching-rows-to-a-new-sheet.cs
