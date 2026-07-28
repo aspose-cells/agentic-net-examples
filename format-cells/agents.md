@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - create-workbook-merge-cells-p2p5-set-wrap-text-property-and-save-as-xlsx-with-auto-filter.cs
 - open-existing-spreadsheet-unmerge-cells-b2c2-copy-original-value-to-adjacent-cell-and-save.cs
 - load-workbook-merge-cells-d8e10-set-number-format-to-fraction-and-export-to-png-chart-image.cs
+- create-workbook-merge-cells-f12g12-apply-style-with-thick-border-and-save-as-macro-enabled-xlsm.cs
