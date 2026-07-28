@@ -1841,6 +1841,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "export-the-workbooks-named-ranges-to-an-html-table-for-documentation-purposes.cs",
+      "title": "Export the workbook's named ranges to an HTML table for documentation purposes."
+    },
+    {
+      "category": "managing-ranges",
       "file": "generate-a-chart-series-that-pulls-data-from-a-named-range-and-updates-automatically.cs",
       "title": "Generate a chart series that pulls data from a named range and updates automatically."
     },
