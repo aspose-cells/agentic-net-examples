@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-right.cs
 - load-a-workbook-delete-all-worksheetscoped-named-ranges-and-save-the-cleaned-file.cs
 - create-a-named-range-that-excludes-hidden-rows-by-using-a-filtered-address.cs
+- use-a-named-range-to-define-the-print-area-of-a-worksheet-before-printing-to-pdf.cs
