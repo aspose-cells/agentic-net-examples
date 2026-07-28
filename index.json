@@ -2491,6 +2491,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-multiple-pivot-tables-in-a-single-worksheet-each-summarizing-different-metrics.cs",
+      "title": "Create multiple pivot tables in a single worksheet, each summarizing different metrics."
+    },
+    {
+      "category": "pivot-table",
       "file": "define-a-custom-list-order-for-a-pivot-field-and-apply-it-to-control-item-sequence.cs",
       "title": "Define a custom list order for a pivot field and apply it to control item sequence."
     },
