@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - detect-and-correct-named-ranges-that-have-become-corrupted-due-to-worksheet-renaming.cs
 - search-for-text-patterns-using-regular-expressions-within-named-range-logentries.cs
 - replace-all-occurrences-of-the-placeholder-name-with-actual-names-inside-a-template-named-range.cs
+- create-a-named-range-that-spans-the-result-of-a-formula-array-and-use-it-in-subsequent-calculations.cs
