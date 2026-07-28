@@ -1676,6 +1676,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-data-validation-rule-that-restricts-input-to-values-listed-in-named-range-validcodes.cs",
+      "title": "Create a data validation rule that restricts input to values listed in named range \"ValidCodes\"."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-new-workbook-add-a-worksheetscoped-named-range-and-save-the-file-in-xlsx-format.cs",
       "title": "Create a new workbook, add a worksheet\u2011scoped named range, and save the file in XLSX format."
     },
