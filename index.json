@@ -776,6 +776,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-new-workbook-merge-cells-l5m7-apply-custom-style-with-italic-and-gray-fill-then-export.cs",
+      "title": "Create new workbook, merge cells L5:M7, apply custom style with italic and gray fill, then export."
+    },
+    {
+      "category": "format-cells",
       "file": "create-workbook-merge-cells-b1b3-protect-the-merged-region-with-password-and-save-as-xls.cs",
       "title": "Create workbook, merge cells B1:B3, protect the merged region with password, and save as XLS."
     },
