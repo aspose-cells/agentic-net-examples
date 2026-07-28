@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-spans-the-result-of-a-formula-array-and-use-it-in-subsequent-calculations.cs
 - add-a-data-bar-to-cells-in-a-named-range-based-on-relative-position-within-the-range.cs
 - export-the-workbooks-named-ranges-to-an-html-table-for-documentation-purposes.cs
+- replace-cells-containing-the-word-draft-with-final-inside-a-named-range-used-for-publishing.cs
