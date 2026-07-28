@@ -1786,6 +1786,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "detect-and-correct-named-ranges-that-have-become-corrupted-due-to-worksheet-renaming.cs",
+      "title": "Detect and correct named ranges that have become corrupted due to worksheet renaming."
+    },
+    {
+      "category": "managing-ranges",
       "file": "detect-and-remove-any-named-ranges-that-reference-deleted-worksheets-to-prevent-errors.cs",
       "title": "Detect and remove any named ranges that reference deleted worksheets to prevent errors."
     },
