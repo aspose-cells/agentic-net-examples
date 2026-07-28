@@ -2626,6 +2626,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs",
+      "title": "Show the PivotTable ribbon to allow users to interact with built-in Excel pivot tools."
+    },
+    {
+      "category": "pivot-table",
       "file": "unhide-a-previously-hidden-pivotfield-by-setting-its-hidden-property-to-false.cs",
       "title": "Unhide a previously hidden PivotField by setting its Hidden property to false."
     },
