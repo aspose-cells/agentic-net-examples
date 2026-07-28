@@ -586,6 +586,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-custom-number-format-that-displays-scientific-notation-with-two-decimal-places.cs",
+      "title": "Apply custom number format that displays scientific notation with two decimal places."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-custom-number-format-that-displays-zero-values-as-a-dash.cs",
       "title": "Apply custom number format that displays zero values as a dash."
     },
