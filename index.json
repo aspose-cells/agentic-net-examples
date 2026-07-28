@@ -2476,6 +2476,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "retrieve-and-format-multiple-pivot-field-header-cells-by-their-display-names-in-a-loop.cs",
+      "title": "Retrieve and format multiple pivot field header cells by their display names in a loop."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-modified-workbook-to-a-specified-file-path-after-pivot-operations.cs",
       "title": "Save the modified workbook to a specified file path after pivot operations."
     },
