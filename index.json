@@ -2906,6 +2906,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivot-tables-page-field-to-enable-pagination-when-printing-the-ods-document.cs",
+      "title": "Set the pivot table's page field to enable pagination when printing the ODS document."
+    },
+    {
+      "category": "pivot-table",
       "file": "show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs",
       "title": "Show the PivotTable ribbon to allow users to interact with built-in Excel pivot tools."
     },
