@@ -2676,6 +2676,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-a-label-filter-on-a-data-field-to-include-only-entries-matching-specific-text.cs",
+      "title": "Set a label filter on a data field to include only entries matching specific text."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-pivottableisexcel2003compatible-to-false-before-refreshing-to-preserve-full-text-length.cs",
       "title": "Set PivotTable.IsExcel2003Compatible to false before refreshing to preserve full text length."
     },
