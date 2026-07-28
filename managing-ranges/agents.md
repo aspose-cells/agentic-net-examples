@@ -188,3 +188,4 @@ Output files are written to the working directory.
 - export-a-named-range-to-a-json-array-containing-cell-addresses-and-values.cs
 - create-a-named-range-that-includes-merged-cells-and-ensure-its-reference-remains-correct.cs
 - detect-and-correct-named-ranges-that-have-become-corrupted-due-to-worksheet-renaming.cs
+- search-for-text-patterns-using-regular-expressions-within-named-range-logentries.cs
