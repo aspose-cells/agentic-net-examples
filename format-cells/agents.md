@@ -176,3 +176,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-merge-cells-b2c3-on-each-sheet-apply-light-gray-background-then-save.cs
 - load-a-workbook-merge-cells-d5f5-set-number-format-to-currency-and-export-to-pdf.cs
 - create-a-workbook-merge-cells-g10h12-assign-custom-date-format-and-write-to-memory-stream.cs
+- open-a-template-file-merge-cells-a5a8-for-a-label-apply-italic-style-and-save-copy.cs
