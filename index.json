@@ -2351,6 +2351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs",
+      "title": "Programmatically change the label for grand total in all pivot tables by setting custom globalization property."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-nested-child-pivot-tables-of-a-parent-pivot-table-to-synchronize-data-hierarchy.cs",
       "title": "Refresh all nested child pivot tables of a parent pivot table to synchronize data hierarchy."
     },
