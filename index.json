@@ -2716,6 +2716,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-data-field-display-format-to-ranklargesttosmallest-for-descending-ranking.cs",
+      "title": "Set the data field display format to RankLargestToSmallest for descending ranking."
+    },
+    {
+      "category": "pivot-table",
       "file": "show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs",
       "title": "Show the PivotTable ribbon to allow users to interact with built-in Excel pivot tools."
     },
