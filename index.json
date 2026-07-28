@@ -781,6 +781,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-workbook-merge-cells-p2p5-set-wrap-text-property-and-save-as-xlsx-with-auto-filter.cs",
+      "title": "Create workbook, merge cells P2:P5, set wrap text property, and save as XLSX with auto filter."
+    },
+    {
+      "category": "format-cells",
       "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
       "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
     },
