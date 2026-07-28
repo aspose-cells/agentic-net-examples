@@ -2336,6 +2336,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-both-a-top-10-filter-and-a-label-filter-to-the-same-pivot-field-for-combined-criteria.cs",
+      "title": "Add both a Top 10 filter and a label filter to the same pivot field for combined criteria."
+    },
+    {
+      "category": "pivot-table",
       "file": "after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs",
       "title": "After applying custom globalization, refresh the pivot table and verify that all label texts are translated."
     },
