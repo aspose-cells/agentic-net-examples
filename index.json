@@ -2393,6 +2393,11 @@
       "category": "pivot-table",
       "file": "save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs",
       "title": "Save the workbook as PDF after removing unwanted pivot tables to produce a clean report."
+    },
+    {
+      "category": "pivot-table",
+      "file": "use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs",
+      "title": "Use PivotItem.Move with count -1 and isSameParent true to shift an item upward within its group."
     }
   ]
 }
