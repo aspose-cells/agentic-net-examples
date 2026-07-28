@@ -571,6 +571,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-custom-number-format-that-shows-percentages-with-one-decimal-place.cs",
+      "title": "Apply custom number format that shows percentages with one decimal place."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-custom-number-format-to-a-range-displaying-values-as-currency-with-two-decimal-places.cs",
       "title": "Apply custom number format to a range displaying values as currency with two decimal places."
     },
