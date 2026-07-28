@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - apply-a-custom-fill-pattern-of-small-dots-to-placeholder-text-cells.cs
 - apply-a-custom-fill-pattern-of-diagonal-crosshatch-to-placeholder-text-cells.cs
 - apply-a-custom-fill-color-gradient-from-green-to-yellow-for-progress-cells.cs
+- apply-custom-number-format-to-a-range-displaying-values-as-currency-with-two-decimal-places.cs
