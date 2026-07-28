@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-merge-range-a1d1-for-a-title-set-center-alignment-and-save.cs
 - open-an-existing-spreadsheet-detect-merged-cells-in-row-10-unmerge-them-and-preserve-data.cs
 - iterate-through-all-worksheets-merge-cells-b2c3-on-each-sheet-apply-light-gray-background-then-save.cs
+- load-a-workbook-merge-cells-d5f5-set-number-format-to-currency-and-export-to-pdf.cs
