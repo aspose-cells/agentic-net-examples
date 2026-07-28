@@ -1181,6 +1181,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "develop-a-component-allowing-users-to-select-a-culture-and-preview-how-subtotal-and-chart-labels-will-appear.cs",
+      "title": "Develop a component allowing users to select a culture and preview how subtotal and chart labels will appear."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "develop-a-sample-demonstrating-rendering-a-pie-chart-with-a-custom-other-label-to-a-highresolution-png-image.cs",
       "title": "Develop a sample demonstrating rendering a pie chart with a custom \u201cOther\u201d label to a high\u2011resolution PNG image."
     },
