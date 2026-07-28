@@ -130,3 +130,4 @@ Output files are written to the working directory.
 - apply-the-themes-accent4-color-to-the-fill-of-cells-that-contain-dates-within-the-current-month.cs
 - programmatically-list-all-theme-color-types-and-their-current-rgb-values-for-diagnostic-purposes.cs
 - replace-the-themes-light1-background-with-a-subtle-texture-while-keeping-accent-colors-unchanged.cs
+- create-a-utility-that-merges-two-theme-palettes-giving-precedence-to-the-primary-workbooks-colors.cs
