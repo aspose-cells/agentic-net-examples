@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - perform-a-caseinsensitive-search-for-the-word-invoice-across-all-workbookscoped-named-ranges.cs
 - create-a-named-range-that-spans-an-entire-column-and-use-it-to-calculate-the-average.cs
 - apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs
+- unprotect-a-worksheet-modify-a-named-range-and-reapply-protection-with-a-password.cs
