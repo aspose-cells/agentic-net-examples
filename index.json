@@ -886,6 +886,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-workbook-merge-cells-j3k3-assign-number-format-to-scientific-notation-with-three-decimals-and-save.cs",
+      "title": "Load workbook, merge cells J3:K3, assign number format to scientific notation with three decimals, and save."
+    },
+    {
+      "category": "format-cells",
       "file": "load-workbook-merge-cells-m5n6-apply-number-format-for-accounting-and-export-to-pdf-with-margins.cs",
       "title": "Load workbook, merge cells M5:N6, apply number format for accounting, and export to PDF with margins."
     },
