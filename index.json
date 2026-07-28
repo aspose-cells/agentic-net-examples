@@ -506,6 +506,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-fill-color-gradient-from-green-to-yellow-for-progress-cells.cs",
+      "title": "Apply a custom fill color gradient from green to yellow for progress cells."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-custom-fill-color-to-header-cells-using-rgb-values.cs",
       "title": "Apply a custom fill color to header cells using RGB values."
     },
