@@ -1196,6 +1196,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "validate-that-number-formatting-respects-the-loaded-cultureinfo-by-comparing-cell-values-before-and-after-workbook-load.cs",
+      "title": "Validate that number formatting respects the loaded CultureInfo by comparing cell values before and after workbook load."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "write-a-script-that-extracts-chart-images-applies-a-localized-other-label-and-saves-them-as-pdf-pages.cs",
       "title": "Write a script that extracts chart images, applies a localized \u201cOther\u201d label, and saves them as PDF pages."
     }
