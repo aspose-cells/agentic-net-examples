@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - create-a-data-validation-rule-that-restricts-input-to-values-listed-in-named-range-validcodes.cs
 - reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs
 - refresh-a-pivot-table-after-expanding-the-underlying-named-range-to-include-new-rows.cs
+- validate-that-all-named-ranges-in-a-workbook-have-unique-names-and-report-any-duplicates.cs
