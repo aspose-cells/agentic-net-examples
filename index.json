@@ -1663,6 +1663,11 @@
       "category": "managing-ranges",
       "file": "retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs",
       "title": "Retrieve the total cell count for range B2:E7 after populating it with sample data."
+    },
+    {
+      "category": "managing-ranges",
+      "file": "validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs",
+      "title": "Validate that moving range H1:H5 to I1:I5 does not overlap existing data in the destination worksheet."
     }
   ]
 }
