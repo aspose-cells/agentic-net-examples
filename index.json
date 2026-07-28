@@ -891,6 +891,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-cell-borders-to-a-double-line-style-on-the-outer-edges-of-a-summary-block.cs",
+      "title": "Set cell borders to a double line style on the outer edges of a summary block."
+    },
+    {
+      "category": "format-cells",
       "file": "set-column-width-automatically-based-on-content.cs",
       "title": "Set column width automatically based on content."
     },
