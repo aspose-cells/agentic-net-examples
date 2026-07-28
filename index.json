@@ -811,6 +811,11 @@
     },
     {
       "category": "format-cells",
+      "file": "iterate-through-all-worksheets-merge-cells-b2c3-on-each-sheet-apply-light-gray-background-then-save.cs",
+      "title": "Iterate through all worksheets, merge cells B2:C3 on each sheet, apply light gray background, then save."
+    },
+    {
+      "category": "format-cells",
       "file": "load-a-workbook-change-the-themes-accent3-to-a-gradient-and-verify-cell-fills.cs",
       "title": "Load a workbook, change the theme\u2019s Accent3 to a gradient, and verify cell fills."
     },
