@@ -1376,6 +1376,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-digital-certificate-to-a-pem-file-for-backup.cs",
+      "title": "Export the VBA project's digital certificate to a PEM file for backup."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs",
       "title": "Generate a CSV file containing workbook names, macro assignment status, and signature verification results."
     },
