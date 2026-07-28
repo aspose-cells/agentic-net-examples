@@ -596,6 +596,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-custom-number-format-that-displays-time-in-hhmmss-24-hour-format.cs",
+      "title": "Apply custom number format that displays time in \"hh:mm:ss\" 24-hour format."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-custom-number-format-that-displays-zero-values-as-a-dash.cs",
       "title": "Apply custom number format that displays zero values as a dash."
     },
