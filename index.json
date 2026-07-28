@@ -2021,6 +2021,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-findoptions-to-locate-cells-containing-formulas-that-reference-a-specific-named-range.cs",
+      "title": "Use FindOptions to locate cells containing formulas that reference a specific named range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs",
       "title": "Use Range.EntireColumn to select columns D through F and set each column width to 20 characters."
     },
