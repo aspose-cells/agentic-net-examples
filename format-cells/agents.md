@@ -126,3 +126,4 @@ Output files are written to the working directory.
 - extract-the-themes-accent-colors-convert-them-to-hsl-values-and-log-the-results.cs
 - update-the-themes-font-scheme-to-use-a-monospaced-font-for-code-snippets-throughout-the-workbook.cs
 - validate-that-after-theme-removal-cells-previously-using-theme-colors-retain-their-visual-appearance.cs
+- create-a-batch-process-that-applies-a-holiday-theme-to-all-calendars-in-a-set-of-workbooks.cs
