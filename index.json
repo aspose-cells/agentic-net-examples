@@ -2441,6 +2441,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-enabling-excel-2003-compatibility-to-apply-truncation.cs",
+      "title": "Refresh the pivot table after enabling Excel 2003 compatibility to apply truncation."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs",
       "title": "Save the workbook as PDF after removing unwanted pivot tables to produce a clean report."
     },
