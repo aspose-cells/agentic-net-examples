@@ -119,3 +119,4 @@ Output files are written to the working directory.
 - generate-a-range-representing-the-entire-column-of-g3h3-and-apply-bold-formatting.cs
 - produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs
 - validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs
+- use-the-entirecolumn-property-to-select-column-b-and-hide-it-from-view-in-the-workbook.cs
