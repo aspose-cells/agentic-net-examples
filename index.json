@@ -2306,6 +2306,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "access-the-first-worksheet-and-obtain-the-first-pivot-table-for-further-operations.cs",
+      "title": "Access the first worksheet and obtain the first pivot table for further operations."
+    },
+    {
+      "category": "pivot-table",
       "file": "after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs",
       "title": "After applying custom globalization, refresh the pivot table and verify that all label texts are translated."
     },
