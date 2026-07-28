@@ -1686,6 +1686,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs",
+      "title": "Unmerge a previously merged block covering D4:G4 and restore individual cell alignment to left."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-the-entirecolumn-property-to-select-column-b-and-hide-it-from-view-in-the-workbook.cs",
       "title": "Use the EntireColumn property to select column B and hide it from view in the workbook."
     },
