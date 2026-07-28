@@ -1986,6 +1986,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-all-occurrences-of-the-placeholder-name-with-actual-names-inside-a-template-named-range.cs",
+      "title": "Replace all occurrences of the placeholder \"{{Name}}\" with actual names inside a template named range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "replace-duplicate-entries-in-a-named-range-with-a-single-instance-using-findoptions.cs",
       "title": "Replace duplicate entries in a named range with a single instance using FindOptions."
     },
