@@ -2361,6 +2361,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-descending-alphabetical-sort-to-product-category-pivot-items.cs",
+      "title": "Apply a custom descending alphabetical sort to product category pivot items."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-custom-sort-order-using-a-predefined-list-of-strings-to-control-field-item-sequence.cs",
       "title": "Apply a custom sort order using a predefined list of strings to control field item sequence."
     },
