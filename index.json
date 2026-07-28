@@ -591,6 +591,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-script-that-assigns-the-themes-dark1-color-to-the-outline-of-all-chart-series.cs",
+      "title": "Create a script that assigns the theme\u2019s Dark1 color to the outline of all chart series."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-script-that-logs-the-beforeandafter-rgb-values-of-each-theme-color-change.cs",
       "title": "Create a script that logs the before\u2011and\u2011after RGB values of each theme color change."
     },
