@@ -168,3 +168,4 @@ Output files are written to the working directory.
 - set-a-cells-horizontal-alignment-to-justify-and-enable-text-wrapping.cs
 - apply-text-wrap-setting-to-a-cell-range.cs
 - set-cell-borders-on-all-sides-with-a-thin-black-line.cs
+- set-cell-borders-to-a-double-line-style-on-the-outer-edges-of-a-summary-block.cs
