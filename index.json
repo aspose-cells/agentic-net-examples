@@ -2993,6 +2993,11 @@
       "category": "queries-and-connections",
       "file": "assign-a-keyboard-shortcut-to-the-custom-ribbon-button-for-quick-access.cs",
       "title": "Assign a keyboard shortcut to the custom ribbon button for quick access."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs",
+      "title": "Ensure the custom ribbon UI loads correctly after changing external link paths."
     }
   ]
 }
