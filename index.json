@@ -1391,6 +1391,11 @@
     },
     {
       "category": "macro-project",
+      "file": "save-signed-workbook-under-new-filename-to-preserve-original-file-and-maintain-audit-trail.cs",
+      "title": "Save signed workbook under new filename to preserve original file and maintain audit trail."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs",
       "title": "Save the signed workbook to a new location, ensuring the digital signature remains intact."
     },
