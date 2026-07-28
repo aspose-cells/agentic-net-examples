@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-excludes-hidden-rows-by-using-a-filtered-address.cs
 - use-a-named-range-to-define-the-print-area-of-a-worksheet-before-printing-to-pdf.cs
 - create-a-macrolike-routine-that-updates-a-named-range-based-on-the-current-date-each-day.cs
+- import-a-list-of-named-range-definitions-from-a-json-file-and-create-them-programmatically.cs
