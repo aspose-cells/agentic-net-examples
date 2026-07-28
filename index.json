@@ -2488,6 +2488,11 @@
       "category": "pivot-table",
       "file": "use-pivotitemmove-with-count-1-and-issameparent-true-to-shift-an-item-upward-within-its-group.cs",
       "title": "Use PivotItem.Move with count -1 and isSameParent true to shift an item upward within its group."
+    },
+    {
+      "category": "pivot-table",
+      "file": "verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs",
+      "title": "Verify that cell content length does not exceed 255 characters when compatibility is enabled."
     }
   ]
 }
