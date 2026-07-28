@@ -796,6 +796,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-workbook-merge-cells-r2s2-protect-merged-region-with-readonly-permission-and-save-as-xlsx.cs",
+      "title": "Create workbook, merge cells R2:S2, protect merged region with read\u2011only permission, and save as XLSX."
+    },
+    {
+      "category": "format-cells",
       "file": "detect-cells-using-direct-rgb-colors-and-convert-them-to-equivalent-theme-colors-where-possible.cs",
       "title": "Detect cells using direct RGB colors and convert them to equivalent theme colors where possible."
     },
