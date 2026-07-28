@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - use-the-entirerow-property-to-select-rows-20-through-25-and-protect-them-with-a-password.cs
 - offset-a-range-by-zero-rows-and-columns-to-create-a-duplicate-reference-for-further-processing.cs
 - use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs
+- retrieve-the-address-of-a-range-after-moving-it-to-verify-the-new-address-reflects-the-target-location.cs
