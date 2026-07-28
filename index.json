@@ -576,6 +576,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-custom-number-format-that-displays-fractions-as-mixed-numbers.cs",
+      "title": "Apply custom number format that displays fractions as mixed numbers."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-custom-number-format-that-displays-percentages-with-a-leading-plus-sign-for-positive-values.cs",
       "title": "Apply custom number format that displays percentages with a leading plus sign for positive values."
     },
