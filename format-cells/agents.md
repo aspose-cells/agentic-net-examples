@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - apply-a-custom-fill-color-gradient-from-green-to-yellow-for-progress-cells.cs
 - apply-custom-number-format-to-a-range-displaying-values-as-currency-with-two-decimal-places.cs
 - apply-accounting-number-format-to-a-total-sales-cell.cs
+- apply-custom-number-format-to-display-negative-numbers-in-red-parentheses.cs
