@@ -1646,6 +1646,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "add-a-data-bar-to-cells-in-a-named-range-based-on-relative-position-within-the-range.cs",
+      "title": "Add a data bar to cells in a named range based on relative position within the range."
+    },
+    {
+      "category": "managing-ranges",
       "file": "apply-a-custom-number-format-to-all-cells-in-named-range-currencyvalues.cs",
       "title": "Apply a custom number format to all cells in named range \"CurrencyValues\"."
     },
