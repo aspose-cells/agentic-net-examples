@@ -1316,6 +1316,11 @@
     },
     {
       "category": "macro-project",
+      "file": "load-workbook-with-loadoptionsfiltervbaproject-to-exclude-unsigned-macros-during-import.cs",
+      "title": "Load workbook with LoadOptions.FilterVbaProject to exclude unsigned macros during import."
+    },
+    {
+      "category": "macro-project",
       "file": "log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs",
       "title": "Log detailed information about each macro assignment, including worksheet name, control ID, and macro name."
     },
