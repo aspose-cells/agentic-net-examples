@@ -2351,6 +2351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-custom-sort-order-using-a-predefined-list-of-strings-to-control-field-item-sequence.cs",
+      "title": "Apply a custom sort order using a predefined list of strings to control field item sequence."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
       "title": "Apply a descending custom sort order to a PivotField using the AutoSort property."
     },
