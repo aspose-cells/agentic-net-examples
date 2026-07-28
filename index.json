@@ -1376,6 +1376,11 @@
     },
     {
       "category": "macro-project",
+      "file": "resign-vba-project-after-code-changes-to-restore-a-valid-digital-signature-status.cs",
+      "title": "Re\u2011sign VBA project after code changes to restore a valid digital signature status."
+    },
+    {
+      "category": "macro-project",
       "file": "save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs",
       "title": "Save the signed workbook to a new location, ensuring the digital signature remains intact."
     },
