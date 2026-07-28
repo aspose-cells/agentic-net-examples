@@ -194,3 +194,4 @@ Output files are written to the working directory.
 - create-new-workbook-merge-cells-l5m7-apply-custom-style-with-italic-and-gray-fill-then-export.cs
 - open-spreadsheet-merge-cells-n10o10-for-subtotal-label-calculate-sum-of-adjacent-column-and-save.cs
 - load-workbook-merge-cells-p15q17-set-number-format-to-date-mm-dd-yyyy-and-export-to-pdf.cs
+- create-workbook-merge-cells-r2s2-protect-merged-region-with-readonly-permission-and-save-as-xlsx.cs
