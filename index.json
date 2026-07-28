@@ -1936,6 +1936,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "programmatically-lock-cells-outside-a-named-range-while-leaving-the-range-editable.cs",
+      "title": "Programmatically lock cells outside a named range while leaving the range editable."
+    },
+    {
+      "category": "managing-ranges",
       "file": "protect-a-worksheet-while-allowing-edits-only-within-named-range-editablesection.cs",
       "title": "Protect a worksheet while allowing edits only within named range \"EditableSection\"."
     },
