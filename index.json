@@ -2316,6 +2316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-calculated-field-that-computes-profit-margin-as-profit-divided-by-revenue.cs",
+      "title": "Add a calculated field that computes profit margin as profit divided by revenue."
+    },
+    {
+      "category": "pivot-table",
       "file": "add-a-calculated-field-that-computes-profit-margin-using-revenue-and-cost-values.cs",
       "title": "Add a calculated field that computes profit margin using Revenue and Cost values."
     },
