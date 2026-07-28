@@ -2461,6 +2461,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-new-workbook-instance-and-add-a-worksheet-for-pivot-table-insertion.cs",
+      "title": "Create a new Workbook instance and add a worksheet for pivot table insertion."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs",
       "title": "Create a utility method that accepts a pivot table name and deletes it using RemoveAt after index lookup."
     },
