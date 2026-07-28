@@ -871,6 +871,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-workbook-merge-cells-m5n6-apply-number-format-for-accounting-and-export-to-pdf-with-margins.cs",
+      "title": "Load workbook, merge cells M5:N6, apply number format for accounting, and export to PDF with margins."
+    },
+    {
+      "category": "format-cells",
       "file": "load-workbook-unmerge-previously-merged-range-c6e7-then-recalculate-formulas-and-save.cs",
       "title": "Load workbook, unmerge previously merged range C6:E7, then recalculate formulas and save."
     },
