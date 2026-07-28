@@ -1261,6 +1261,11 @@
     },
     {
       "category": "macro-project",
+      "file": "add-a-reference-to-the-microsoft-outlook-object-library-in-the-vba-project-to-enable-email-automation.cs",
+      "title": "Add a reference to the Microsoft Outlook Object Library in the VBA project to enable email automation."
+    },
+    {
+      "category": "macro-project",
       "file": "assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs",
       "title": "Assign different macros to multiple form controls on the same worksheet and verify each executes correctly."
     },
