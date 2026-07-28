@@ -2361,6 +2361,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "move-a-pivot-item-from-the-column-area-to-the-row-area-by-changing-its-parent-field.cs",
+      "title": "Move a pivot item from the column area to the row area by changing its parent field."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs",
       "title": "Programmatically change the label for grand total in all pivot tables by setting custom globalization property."
     },
