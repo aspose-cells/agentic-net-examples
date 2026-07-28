@@ -1136,6 +1136,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "configure-loadoptions-to-ignore-missing-fonts-while-loading-a-workbook-with-korean-cultureinfo-then-render-charts.cs",
+      "title": "Configure LoadOptions to ignore missing fonts while loading a workbook with Korean CultureInfo, then render charts."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-an-application-that-loads-a-workbook-with-italian-cultureinfo-adds-subtotals-and-saves-the-result-as-pdf.cs",
       "title": "Create an application that loads a workbook with Italian CultureInfo, adds subtotals, and saves the result as PDF."
     },
