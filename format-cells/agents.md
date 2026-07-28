@@ -191,3 +191,4 @@ Output files are written to the working directory.
 - create-workbook-merge-cells-f12g12-apply-style-with-thick-border-and-save-as-macro-enabled-xlsm.cs
 - open-file-merge-cells-h20i22-set-cell-comment-with-merge-instructions-and-write-back-to-same-file.cs
 - load-workbook-merge-cells-j3k3-assign-number-format-to-scientific-notation-with-three-decimals-and-save.cs
+- create-new-workbook-merge-cells-l5m7-apply-custom-style-with-italic-and-gray-fill-then-export.cs
