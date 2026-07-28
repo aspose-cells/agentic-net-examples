@@ -125,3 +125,4 @@ Output files are written to the working directory.
 - apply-a-custom-theme-that-uses-grayscale-accents-and-verify-that-all-cells-display-correctly.cs
 - extract-the-themes-accent-colors-convert-them-to-hsl-values-and-log-the-results.cs
 - update-the-themes-font-scheme-to-use-a-monospaced-font-for-code-snippets-throughout-the-workbook.cs
+- validate-that-after-theme-removal-cells-previously-using-theme-colors-retain-their-visual-appearance.cs
