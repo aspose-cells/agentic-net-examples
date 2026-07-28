@@ -227,3 +227,4 @@ Output files are written to the working directory.
 - apply-a-builtin-theme-to-the-chart-to-standardize-colors-and-fonts.cs
 - validate-that-the-charts-secondary-axis-exists-before-assigning-series-to-avoid-runtime-exceptions.cs
 - load-a-workbook-from-a-stream-modify-chart-axes-and-write-the-workbook-back-to-a-byte-array.cs
+- use-charttextdirectiontype-enumeration-to-set-tick-labels-direction-to-stacked-for-vertical-orientation.cs
