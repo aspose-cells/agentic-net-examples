@@ -911,6 +911,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-workbook-merge-cells-v8w9-apply-conditional-formatting-for-negative-values-and-export-to-html.cs",
+      "title": "Load workbook, merge cells V8:W9, apply conditional formatting for negative values, and export to HTML."
+    },
+    {
+      "category": "format-cells",
       "file": "load-workbook-unmerge-previously-merged-range-c6e7-then-recalculate-formulas-and-save.cs",
       "title": "Load workbook, unmerge previously merged range C6:E7, then recalculate formulas and save."
     },
