@@ -122,3 +122,4 @@ Output files are written to the working directory.
 - update-the-themes-dark2-color-based-on-a-configuration-file-and-refresh-all-dependent-styles.cs
 - load-a-workbook-disable-its-theme-convert-themed-cells-to-explicit-colors-then-reenable-theme.cs
 - create-a-script-that-assigns-the-themes-dark1-color-to-the-outline-of-all-chart-series.cs
+- apply-a-custom-theme-that-uses-grayscale-accents-and-verify-that-all-cells-display-correctly.cs
