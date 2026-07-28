@@ -1271,6 +1271,11 @@
     },
     {
       "category": "macro-project",
+      "file": "assign-a-macro-that-calculates-summary-statistics-to-a-shape-object-on-the-worksheet-programmatically.cs",
+      "title": "Assign a macro that calculates summary statistics to a shape object on the worksheet programmatically."
+    },
+    {
+      "category": "macro-project",
       "file": "assign-a-specific-macro-named-calculatetotals-to-a-button-form-control-on-a-worksheet-programmatically.cs",
       "title": "Assign a specific macro named \"CalculateTotals\" to a button form control on a worksheet programmatically."
     },
