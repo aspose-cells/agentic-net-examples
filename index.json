@@ -1151,6 +1151,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs",
+      "title": "Demonstrate preserving the original thread culture while loading a workbook with French CultureInfo using LoadOptions."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs",
       "title": "Generate a report listing all cells converted to Japanese dates, including original Gregorian values for reference."
     },
