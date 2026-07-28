@@ -124,3 +124,4 @@ Output files are written to the working directory.
 - create-a-script-that-assigns-the-themes-dark1-color-to-the-outline-of-all-chart-series.cs
 - apply-a-custom-theme-that-uses-grayscale-accents-and-verify-that-all-cells-display-correctly.cs
 - extract-the-themes-accent-colors-convert-them-to-hsl-values-and-log-the-results.cs
+- update-the-themes-font-scheme-to-use-a-monospaced-font-for-code-snippets-throughout-the-workbook.cs
