@@ -771,6 +771,11 @@
     },
     {
       "category": "format-cells",
+      "file": "update-the-themes-font-scheme-to-use-a-corporate-typeface-for-headings-and-body-text.cs",
+      "title": "Update the theme\u2019s font scheme to use a corporate typeface for headings and body text."
+    },
+    {
+      "category": "format-cells",
       "file": "update-the-themes-font-scheme-to-use-a-monospaced-font-for-code-snippets-throughout-the-workbook.cs",
       "title": "Update the theme\u2019s font scheme to use a monospaced font for code snippets throughout the workbook."
     },
