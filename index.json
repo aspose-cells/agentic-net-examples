@@ -1283,6 +1283,11 @@
       "category": "macro-project",
       "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
       "title": "Programmatically rename a form control button while preserving its assigned macro reference."
+    },
+    {
+      "category": "macro-project",
+      "file": "validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs",
+      "title": "Validate that adding a library reference throws an exception when the library is not registered on the host."
     }
   ]
 }
