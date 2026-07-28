@@ -581,6 +581,11 @@
     },
     {
       "category": "format-cells",
+      "file": "configure-font-settings-for-a-column-including-size-color-and-underline.cs",
+      "title": "Configure font settings for a column, including size, color, and underline."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-batch-process-that-applies-a-corporate-theme-to-all-workbooks-in-a-network-share.cs",
       "title": "Create a batch process that applies a corporate theme to all workbooks in a network share."
     },
