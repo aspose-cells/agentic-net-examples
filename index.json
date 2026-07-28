@@ -716,6 +716,11 @@
     },
     {
       "category": "format-cells",
+      "file": "replace-the-themes-light1-background-with-a-subtle-texture-while-keeping-accent-colors-unchanged.cs",
+      "title": "Replace the theme\u2019s Light1 background with a subtle texture while keeping accent colors unchanged."
+    },
+    {
+      "category": "format-cells",
       "file": "replace-the-themes-light2-background-with-a-patterned-fill-while-preserving-theme-color-references.cs",
       "title": "Replace the theme\u2019s Light2 background with a patterned fill while preserving theme color references."
     },
