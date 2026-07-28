@@ -132,3 +132,4 @@ Output files are written to the working directory.
 - replace-the-themes-light1-background-with-a-subtle-texture-while-keeping-accent-colors-unchanged.cs
 - create-a-utility-that-merges-two-theme-palettes-giving-precedence-to-the-primary-workbooks-colors.cs
 - apply-the-themes-accent2-color-to-the-fill-of-cells-generated-by-a-pivot-table-summary.cs
+- validate-that-after-updating-the-themes-dark2-color-all-chart-legends-reflect-the-new-shade.cs
