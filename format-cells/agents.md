@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-to-display-negative-numbers-in-red-parentheses.cs
 - apply-custom-number-format-that-shows-percentages-with-one-decimal-place.cs
 - apply-custom-number-format-that-displays-percentages-with-a-leading-plus-sign-for-positive-values.cs
+- apply-custom-number-format-that-displays-zero-values-as-a-dash.cs
