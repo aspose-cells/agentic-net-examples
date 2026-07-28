@@ -781,6 +781,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-the-workbooks-default-font-to-arial-size-10-and-apply-it-to-all-cells.cs",
+      "title": "Set the workbook's default font to Arial, size 10, and apply it to all cells."
+    },
+    {
+      "category": "format-cells",
       "file": "update-the-themes-accent4-color-based-on-user-input-and-refresh-all-dependent-cell-styles.cs",
       "title": "Update the theme\u2019s Accent4 color based on user input and refresh all dependent cell styles."
     },
