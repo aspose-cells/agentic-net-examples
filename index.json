@@ -2361,6 +2361,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-a-workbook-set-pivotitemposition-for-multiple-items-then-save-changes-back-to-xlsx.cs",
+      "title": "Load a workbook, set PivotItem.Position for multiple items, then save changes back to XLSX."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs",
       "title": "Load multiple XLSX files, refresh their pivot tables, and batch export each to separate PDF documents."
     },
