@@ -219,3 +219,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-locate-charts-and-set-each-charts-tick-label-direction-to-rotate90.cs
 - create-a-combined-column-and-line-chart-assigning-column-series-to-primary-axis-and-line-series-to-secondary.cs
 - set-the-chart-legend-to-appear-at-the-bottom-and-enable-its-border-visibility.cs
+- insert-a-new-row-into-the-listobject-with-q4-data-chart-automatically-extends.cs
