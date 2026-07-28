@@ -1406,6 +1406,11 @@
     },
     {
       "category": "macro-project",
+      "file": "remove-digital-signature-from-vba-project-by-clearing-certificate-and-verify-issigned-becomes-false.cs",
+      "title": "Remove digital signature from VBA project by clearing certificate and verify IsSigned becomes false."
+    },
+    {
+      "category": "macro-project",
       "file": "resign-vba-project-after-code-changes-to-restore-a-valid-digital-signature-status.cs",
       "title": "Re\u2011sign VBA project after code changes to restore a valid digital signature status."
     },
