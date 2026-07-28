@@ -556,6 +556,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-date-format-that-displays-full-month-name-and-day-compatible-with-the-1904-date-system.cs",
+      "title": "Apply a date format that displays full month name and day, compatible with the 1904 date system."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-gradient-fill-to-a-range-using-the-themes-accent3-and-accent4-colors.cs",
       "title": "Apply a gradient fill to a range using the theme\u2019s Accent3 and Accent4 colors."
     },
