@@ -876,6 +876,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-workbook-merge-cells-d8e10-set-number-format-to-fraction-and-export-to-png-chart-image.cs",
+      "title": "Load workbook, merge cells D8:E10, set number format to fraction, and export to PNG chart image."
+    },
+    {
+      "category": "format-cells",
       "file": "load-workbook-merge-cells-m5n6-apply-number-format-for-accounting-and-export-to-pdf-with-margins.cs",
       "title": "Load workbook, merge cells M5:N6, apply number format for accounting, and export to PDF with margins."
     },
