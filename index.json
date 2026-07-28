@@ -2951,6 +2951,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "use-pivottablecalculatedata-after-adding-calculated-fields-to-update-results-accurately.cs",
+      "title": "Use PivotTable.CalculateData() after adding calculated fields to update results accurately."
+    },
+    {
+      "category": "pivot-table",
       "file": "validate-that-attempting-to-retrieve-a-cell-with-an-invalid-display-name-throws-the-expected-exception.cs",
       "title": "Validate that attempting to retrieve a cell with an invalid display name throws the expected exception."
     },
