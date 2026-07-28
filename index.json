@@ -1213,6 +1213,11 @@
       "category": "globalization-and-localization",
       "file": "write-a-script-that-extracts-chart-images-applies-a-localized-other-label-and-saves-them-as-pdf-pages.cs",
       "title": "Write a script that extracts chart images, applies a localized \u201cOther\u201d label, and saves them as PDF pages."
+    },
+    {
+      "category": "globalization-and-localization",
+      "file": "write-code-to-export-a-workbooks-chart-objects-to-separate-pdf-files-each-preserving-custom-globalization-settings.cs",
+      "title": "Write code to export a workbook\u2019s chart objects to separate PDF files, each preserving custom globalization settings."
     }
   ]
 }
