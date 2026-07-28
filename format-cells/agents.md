@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - create-a-new-workbook-and-add-a-worksheet.cs
 - set-the-workbooks-default-font-to-arial-size-10-and-apply-it-to-all-cells.cs
 - populate-header-cells-with-bold-font-style.cs
+- configure-font-settings-for-a-column-including-size-color-and-underline.cs
