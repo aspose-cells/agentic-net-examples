@@ -636,6 +636,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-a-workbook-change-the-themes-accent3-to-a-gradient-and-verify-cell-fills.cs",
+      "title": "Load a workbook, change the theme\u2019s Accent3 to a gradient, and verify cell fills."
+    },
+    {
+      "category": "format-cells",
       "file": "load-a-workbook-disable-theme-usage-convert-all-themed-cells-to-explicit-colors-and-save.cs",
       "title": "Load a workbook, disable theme usage, convert all themed cells to explicit colors, and save."
     },
