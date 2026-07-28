@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - search-for-the-string-na-within-a-named-range-and-replace-it-with-an-empty-string.cs
 - create-a-named-range-with-a-filtered-list-and-use-it-as-slicer-data-source.cs
 - add-a-comment-to-every-cell-within-named-range-reviewnotes-indicating-pending-review.cs
+- use-a-named-range-as-the-source-for-data-consolidation-across-multiple-worksheets.cs
