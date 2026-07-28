@@ -506,6 +506,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-theme-that-uses-grayscale-accents-and-verify-that-all-cells-display-correctly.cs",
+      "title": "Apply a custom theme that uses grayscale accents and verify that all cells display correctly."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-custom-theme-to-a-workbook-and-then-export-the-workbook-as-an-xlsx-file.cs",
       "title": "Apply a custom theme to a workbook and then export the workbook as an XLSX file."
     },
