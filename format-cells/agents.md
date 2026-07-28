@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - set-column-width-automatically-based-on-content.cs
 - apply-a-custom-fill-color-to-header-cells-using-rgb-values.cs
 - apply-a-custom-fill-pattern-to-header-cells-using-a-dense-hatch-style.cs
+- apply-a-custom-fill-pattern-of-small-dots-to-placeholder-text-cells.cs
