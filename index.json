@@ -2651,6 +2651,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-an-existing-workbook-locate-its-pivot-table-and-change-the-data-source-range.cs",
+      "title": "Load an existing workbook, locate its pivot table, and change the data source range."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs",
       "title": "Load multiple XLSX files, refresh their pivot tables, and batch export each to separate PDF documents."
     },
