@@ -1356,6 +1356,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-report-listing-signed-versus-unsigned-workbooks-in-specified-directory-for-compliance-review.cs",
+      "title": "Generate report listing signed versus unsigned workbooks in specified directory for compliance review."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-a-function-that-checks-whether-a-workbook-contains-any-form-controls-before-assigning-macros.cs",
       "title": "Implement a function that checks whether a workbook contains any form controls before assigning macros."
     },
