@@ -2391,6 +2391,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-nested-pivot-tables-recursively-to-ensure-all-child-tables-reflect-updated-source-data.cs",
+      "title": "Refresh nested pivot tables recursively to ensure all child tables reflect updated source data."
+    },
+    {
+      "category": "pivot-table",
       "file": "save-the-workbook-as-pdf-after-removing-unwanted-pivot-tables-to-produce-a-clean-report.cs",
       "title": "Save the workbook as PDF after removing unwanted pivot tables to produce a clean report."
     },
