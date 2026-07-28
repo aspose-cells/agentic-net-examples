@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - apply-custom-number-format-that-displays-percentages-with-a-leading-plus-sign-for-positive-values.cs
 - apply-custom-number-format-that-displays-zero-values-as-a-dash.cs
 - apply-custom-number-format-that-adds-thousand-separator-and-parentheses-for-negative-numbers.cs
+- apply-custom-number-format-that-displays-scientific-notation-with-three-significant-digits.cs
