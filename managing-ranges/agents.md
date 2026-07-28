@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - use-findoptions-to-perform-a-caseinsensitive-search-for-the-abbreviation-fy-within-a-range.cs
 - log-the-creation-modification-and-deletion-events-of-named-ranges-to-a-centralized-audit-file.cs
 - list-all-workbookscoped-named-ranges-and-output-their-names-to-the-console.cs
+- retrieve-the-total-cell-count-for-range-b2e7-after-populating-it-with-sample-data.cs
