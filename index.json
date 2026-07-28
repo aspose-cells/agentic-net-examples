@@ -2381,6 +2381,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-custom-numeric-grouping-for-a-sales-amount-field-with-defined-ranges.cs",
+      "title": "Create a custom numeric grouping for a sales amount field with defined ranges."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs",
       "title": "Create a function that accepts a pivot table index, removes it, and returns the updated count of tables."
     },
