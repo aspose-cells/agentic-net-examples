@@ -2421,6 +2421,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "configure-the-data-field-display-format-to-ranksmallesttolargest-for-ascending-ranking.cs",
+      "title": "Configure the data field display format to RankSmallestToLargest for ascending ranking."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs",
       "title": "Create a batch script that removes all pivot tables from every worksheet in a workbook."
     },
