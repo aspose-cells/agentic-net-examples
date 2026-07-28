@@ -546,6 +546,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-accent3-color-to-the-background-of-cells-that-contain-error-values.cs",
+      "title": "Apply the theme\u2019s Accent3 color to the background of cells that contain error values."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-themes-accent3-color-to-the-fill-of-merged-cells-spanning-multiple-rows.cs",
       "title": "Apply the theme\u2019s Accent3 color to the fill of merged cells spanning multiple rows."
     },
