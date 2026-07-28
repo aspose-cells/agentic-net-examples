@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - populate-header-cells-with-bold-font-style.cs
 - configure-font-settings-for-a-column-including-size-color-and-underline.cs
 - set-column-width-automatically-based-on-content.cs
+- apply-a-custom-fill-color-to-header-cells-using-rgb-values.cs
