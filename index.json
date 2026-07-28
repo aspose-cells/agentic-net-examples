@@ -2326,6 +2326,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "add-a-top-10-filter-to-a-row-field-to-display-only-the-highest-values.cs",
+      "title": "Add a Top 10 filter to a row field to display only the highest values."
+    },
+    {
+      "category": "pivot-table",
       "file": "after-applying-custom-globalization-refresh-the-pivot-table-and-verify-that-all-label-texts-are-translated.cs",
       "title": "After applying custom globalization, refresh the pivot table and verify that all label texts are translated."
     },
