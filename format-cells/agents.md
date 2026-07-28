@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - validate-that-after-theme-removal-cells-previously-using-theme-colors-retain-their-visual-appearance.cs
 - create-a-batch-process-that-applies-a-holiday-theme-to-all-calendars-in-a-set-of-workbooks.cs
 - apply-the-themes-accent4-color-to-the-fill-of-cells-that-contain-dates-within-the-current-month.cs
+- programmatically-list-all-theme-color-types-and-their-current-rgb-values-for-diagnostic-purposes.cs
