@@ -1771,6 +1771,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "search-for-the-text-total-within-range-a1c30-using-findoptions.cs",
+      "title": "Search for the text \"Total\" within range A1:C30 using FindOptions."
+    },
+    {
+      "category": "managing-ranges",
       "file": "unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs",
       "title": "Unmerge a previously merged block covering D4:G4 and restore individual cell alignment to left."
     },
