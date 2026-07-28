@@ -2016,6 +2016,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-cells-containing-the-word-draft-with-final-inside-a-named-range-used-for-publishing.cs",
+      "title": "Replace cells containing the word \"Draft\" with \"Final\" inside a named range used for publishing."
+    },
+    {
+      "category": "managing-ranges",
       "file": "replace-duplicate-entries-in-a-named-range-with-a-single-instance-using-findoptions.cs",
       "title": "Replace duplicate entries in a named range with a single instance using FindOptions."
     },
