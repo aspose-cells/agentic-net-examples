@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - delete-a-row-from-the-listobject-and-verify-the-chart-series-contracts-accordingly.cs
 - create-a-formuladriven-range-using-vlookup-to-retrieve-quarterly-targets-for-the-chart.cs
 - set-the-charts-topleft-corner-to-row-5-column-3-using-the-position-property.cs
+- export-the-chart-to-png-with-transparent-background-by-setting-chartbackgroundcolor-to-transparent-before-export.cs
