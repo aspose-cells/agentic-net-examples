@@ -120,3 +120,4 @@ Output files are written to the working directory.
 - load-a-workbook-change-the-themes-accent3-to-a-gradient-and-verify-cell-fills.cs
 - apply-the-themes-hyperlink-color-to-all-url-strings-inserted-via-code.cs
 - update-the-themes-dark2-color-based-on-a-configuration-file-and-refresh-all-dependent-styles.cs
+- load-a-workbook-disable-its-theme-convert-themed-cells-to-explicit-colors-then-reenable-theme.cs
