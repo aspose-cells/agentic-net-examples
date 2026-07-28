@@ -1301,6 +1301,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-the-vba-projects-certificate-to-a-memorystream-and-write-stream-contents-to-disk.cs",
+      "title": "Export the VBA project's certificate to a MemoryStream and write stream contents to disk."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs",
       "title": "Generate a CSV file containing workbook names, macro assignment status, and signature verification results."
     },
