@@ -2351,6 +2351,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-over-each-pivotfield-list-all-pivotitems-and-log-their-absolute-positions-for-debugging.cs",
+      "title": "Iterate over each PivotField, list all PivotItems, and log their absolute positions for debugging."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs",
       "title": "Load multiple XLSX files, refresh their pivot tables, and batch export each to separate PDF documents."
     },
