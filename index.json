@@ -1956,6 +1956,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "replace-duplicate-entries-in-a-named-range-with-a-single-instance-using-findoptions.cs",
+      "title": "Replace duplicate entries in a named range with a single instance using FindOptions."
+    },
+    {
+      "category": "managing-ranges",
       "file": "replace-formulas-that-reference-oldrange-with-references-to-newrange-across-the-workbook.cs",
       "title": "Replace formulas that reference \"OldRange\" with references to \"NewRange\" across the workbook."
     },
