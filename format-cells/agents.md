@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - change-the-workbooks-default-date-format-to-dd-mmm-yyyy.cs
 - set-the-workbooks-date-system-to-1904-and-verify-date-calculations-using-sample-dates.cs
 - set-a-cells-horizontal-alignment-to-center-and-vertical-alignment-to-middle.cs
+- set-a-cells-horizontal-alignment-to-justify-and-enable-text-wrapping.cs
