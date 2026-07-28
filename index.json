@@ -1171,6 +1171,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "implement-logging-to-capture-which-culturespecific-label-methods-are-called-during-chart-rendering-for-debugging.cs",
+      "title": "Implement logging to capture which culture\u2011specific label methods are called during chart rendering for debugging."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "measure-performance-impact-of-applying-custom-globalization-settings-versus-default-settings-when-generating-large-pivot-tables.cs",
       "title": "Measure performance impact of applying custom globalization settings versus default settings when generating large pivot tables."
     },
