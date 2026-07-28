@@ -2591,6 +2591,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-autosort-property-of-a-pivotfield-to-sort-items-based-on-a-related-value-field.cs",
+      "title": "Set the AutoSort property of a PivotField to sort items based on a related value field."
+    },
+    {
+      "category": "pivot-table",
       "file": "unhide-a-previously-hidden-pivotfield-by-setting-its-hidden-property-to-false.cs",
       "title": "Unhide a previously hidden PivotField by setting its Hidden property to false."
     },
