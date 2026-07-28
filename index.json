@@ -1171,6 +1171,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "develop-a-sample-demonstrating-rendering-a-pie-chart-with-a-custom-other-label-to-a-highresolution-png-image.cs",
+      "title": "Develop a sample demonstrating rendering a pie chart with a custom \u201cOther\u201d label to a high\u2011resolution PNG image."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs",
       "title": "Generate a report listing all cells converted to Japanese dates, including original Gregorian values for reference."
     },
