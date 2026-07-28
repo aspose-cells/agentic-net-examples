@@ -2316,6 +2316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-distinct-custom-globalization-settings-to-each-workbook-before-refreshing-to-generate-multilingual-pivot-labels.cs",
+      "title": "Apply distinct custom globalization settings to each workbook before refreshing to generate multilingual pivot labels."
+    },
+    {
+      "category": "pivot-table",
       "file": "calculate-data-for-each-child-pivot-table-after-refreshing-the-parent-to-ensure-accurate-totals.cs",
       "title": "Calculate data for each child pivot table after refreshing the parent to ensure accurate totals."
     },
