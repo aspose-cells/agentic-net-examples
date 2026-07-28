@@ -2451,6 +2451,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "hide-the-pivottable-ribbon-interface-to-provide-a-cleaner-view-during-runtime.cs",
+      "title": "Hide the PivotTable ribbon interface to provide a cleaner view during runtime."
+    },
+    {
+      "category": "pivot-table",
       "file": "implement-trycatch-handling-when-retrieving-a-cell-by-a-nonexistent-display-name-to-prevent-crashes.cs",
       "title": "Implement try\u2011catch handling when retrieving a cell by a non\u2011existent display name to prevent crashes."
     },
