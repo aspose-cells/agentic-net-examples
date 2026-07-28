@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - set-the-refersto-property-of-a-named-range-using-an-absolute-address-to-prevent-relative-shifts.cs
 - remove-a-named-range-only-if-it-references-cells-outside-the-used-range-of-the-worksheet.cs
 - copy-a-named-range-from-one-worksheet-to-another-preserving-its-name-and-reference.cs
+- replace-numeric-values-less-than-zero-with-zero-inside-named-range-profitmargins.cs
