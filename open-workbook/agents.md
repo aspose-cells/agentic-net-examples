@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - filter-rows-where-column-c-equals-active-while-streaming-with-lightcells-writing-matching-rows-to-a-new-sheet.cs
 - use-lightcells-api-to-export-cell-values-from-a-workbook-into-a-csv-file-without-loading-the-model.cs
 - save-a-workbook-with-a-specific-printer-paper-size-setting-using-lightcells-api-to-ensure-correct-print-layout.cs
+- load-a-workbook-with-specific-print-area-defined-then-extract-only-the-cells-within-that-area-using-lightcells.cs
