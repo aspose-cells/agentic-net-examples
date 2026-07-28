@@ -1136,6 +1136,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "apply-custom-number-format-strings-to-percentage-cells-after-loading-the-workbook-with-brazilian-portuguese-cultureinfo.cs",
+      "title": "Apply custom number format strings to percentage cells after loading the workbook with Brazilian Portuguese CultureInfo."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "configure-loadoptions-to-ignore-missing-fonts-while-loading-a-workbook-with-korean-cultureinfo-then-render-charts.cs",
       "title": "Configure LoadOptions to ignore missing fonts while loading a workbook with Korean CultureInfo, then render charts."
     },
