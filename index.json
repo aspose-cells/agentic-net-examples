@@ -1271,6 +1271,11 @@
     },
     {
       "category": "macro-project",
+      "file": "assign-a-specific-macro-named-calculatetotals-to-a-button-form-control-on-a-worksheet-programmatically.cs",
+      "title": "Assign a specific macro named \"CalculateTotals\" to a button form control on a worksheet programmatically."
+    },
+    {
+      "category": "macro-project",
       "file": "assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs",
       "title": "Assign different macros to multiple form controls on the same worksheet and verify each executes correctly."
     },
