@@ -251,3 +251,4 @@ Output files are written to the working directory.
 - change-the-category-axis-type-to-dateaxis-to-correctly-display-timebased-data.cs
 - configure-the-z-axis-interval-so-that-every-second-depth-level-is-displayed-on-the-3d-chart.cs
 - set-a-custom-numeric-format-for-z-axis-labels-showing-values-with-two-decimal-places.cs
+- enable-data-labels-for-the-first-series-of-the-chart-to-display-point-values.cs
