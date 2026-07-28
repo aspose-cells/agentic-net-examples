@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - load-a-workbook-filter-defined-names-containing-total-and-generate-a-pdf-that-includes-only-those-named-ranges.cs
 - retrieve-load-warnings-after-opening-a-workbook-by-iterating-through-the-workbookloadwarnings-collection.cs
 - use-lightcells-to-iterate-rows-and-write-each-rows-data-to-a-csv-file-for-external-processing.cs
+- copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs
