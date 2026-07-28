@@ -271,3 +271,4 @@ Output files are written to the working directory.
 - load-an-existing-workbook-duplicate-its-chart-and-assign-a-new-category-axis-range.cs
 - batch-process-multiple-worksheets-inserting-identical-charts-with-distinct-data-ranges-on-each-sheet.cs
 - save-the-modified-workbook-to-a-new-file-named-chartreportxlsx-after-completing-chart-updates.cs
+- link-each-series-data-label-number-format-to-its-corresponding-source-column-for-consistency.cs
