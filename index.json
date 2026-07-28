@@ -546,6 +546,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-hyperlink-color-to-all-url-strings-inserted-via-code.cs",
+      "title": "Apply the theme\u2019s Hyperlink color to all URL strings inserted via code."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-themes-light1-background-to-alternate-rows-for-improved-readability-in-a-table.cs",
       "title": "Apply the theme\u2019s Light1 background to alternate rows for improved readability in a table."
     },
