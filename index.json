@@ -1248,6 +1248,11 @@
       "category": "globalization-and-localization",
       "file": "write-code-to-export-a-workbooks-chart-objects-to-separate-pdf-files-each-preserving-custom-globalization-settings.cs",
       "title": "Write code to export a workbook\u2019s chart objects to separate PDF files, each preserving custom globalization settings."
+    },
+    {
+      "category": "macro-project",
+      "file": "add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs",
+      "title": "Add a custom reference to a VBA project that points to a COM library installed on the system."
     }
   ]
 }
