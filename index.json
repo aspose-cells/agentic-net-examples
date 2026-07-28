@@ -1716,6 +1716,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "create-a-named-range-that-excludes-hidden-rows-by-using-a-filtered-address.cs",
+      "title": "Create a named range that excludes hidden rows by using a filtered address."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-named-range-that-references-cells-on-multiple-worksheets-using-the-union-function.cs",
       "title": "Create a named range that references cells on multiple worksheets using the UNION function."
     },
