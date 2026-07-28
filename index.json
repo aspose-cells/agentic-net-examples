@@ -2631,6 +2631,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-pivot-table-data-programmatically-after-modifying-the-underlying-source-worksheet-range.cs",
+      "title": "Refresh pivot table data programmatically after modifying the underlying source worksheet range."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-the-pivot-table-after-disabling-excel-2003-compatibility-to-keep-original-content.cs",
       "title": "Refresh the pivot table after disabling Excel 2003 compatibility to keep original content."
     },
