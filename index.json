@@ -2361,6 +2361,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "batch-update-the-showreportfilterpages-option-for-every-pivottable-across-multiple-workbooks.cs",
+      "title": "Batch update the ShowReportFilterPages option for every PivotTable across multiple workbooks."
+    },
+    {
+      "category": "pivot-table",
       "file": "calculate-data-for-each-child-pivot-table-after-refreshing-the-parent-to-ensure-accurate-totals.cs",
       "title": "Calculate data for each child pivot table after refreshing the parent to ensure accurate totals."
     },
