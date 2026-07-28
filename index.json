@@ -1676,6 +1676,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "copy-a-named-range-from-one-worksheet-to-another-preserving-its-name-and-reference.cs",
+      "title": "Copy a named range from one worksheet to another, preserving its name and reference."
+    },
+    {
+      "category": "managing-ranges",
       "file": "create-a-data-validation-rule-that-restricts-input-to-values-listed-in-named-range-validcodes.cs",
       "title": "Create a data validation rule that restricts input to values listed in named range \"ValidCodes\"."
     },
