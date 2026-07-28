@@ -2556,6 +2556,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "unhide-a-previously-hidden-pivotfield-by-setting-its-hidden-property-to-false.cs",
+      "title": "Unhide a previously hidden PivotField by setting its Hidden property to false."
+    },
+    {
+      "category": "pivot-table",
       "file": "use-a-logging-framework-to-capture-memory-usage-and-refresh-duration-metrics-during-pivot-processing.cs",
       "title": "Use a logging framework to capture memory usage and refresh duration metrics during pivot processing."
     },
