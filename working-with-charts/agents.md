@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - set-the-chart-legend-to-appear-at-the-bottom-and-enable-its-border-visibility.cs
 - insert-a-new-row-into-the-listobject-with-q4-data-chart-automatically-extends.cs
 - delete-a-row-from-the-listobject-and-verify-the-chart-series-contracts-accordingly.cs
+- create-a-formuladriven-range-using-vlookup-to-retrieve-quarterly-targets-for-the-chart.cs
