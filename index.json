@@ -1541,6 +1541,11 @@
     },
     {
       "category": "macro-project",
+      "file": "validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs",
+      "title": "Validate the VBA project's signature against a trusted root authority and output validation status."
+    },
+    {
+      "category": "macro-project",
       "file": "verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs",
       "title": "Verify whether the VBA project in the loaded workbook is password protected."
     },
