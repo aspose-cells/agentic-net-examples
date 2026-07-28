@@ -2426,6 +2426,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "call-pivottablecalculatedata-before-saving-to-ensure-rendered-pivot-data-accurately.cs",
+      "title": "Call PivotTable.CalculateData() before saving to ensure rendered pivot data accurately."
+    },
+    {
+      "category": "pivot-table",
       "file": "clear-the-filter-applied-to-a-specific-row-field-restoring-its-full-item-list.cs",
       "title": "Clear the filter applied to a specific row field, restoring its full item list."
     },
