@@ -886,6 +886,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-cell-borders-on-all-sides-with-a-thin-black-line.cs",
+      "title": "Set cell borders on all sides with a thin black line."
+    },
+    {
+      "category": "format-cells",
       "file": "set-column-width-automatically-based-on-content.cs",
       "title": "Set column width automatically based on content."
     },
