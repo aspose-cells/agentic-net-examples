@@ -2331,6 +2331,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-batch-script-that-removes-all-pivot-tables-from-every-worksheet-in-a-workbook.cs",
+      "title": "Create a batch script that removes all pivot tables from every worksheet in a workbook."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs",
       "title": "Create a utility method that accepts a pivot table name and deletes it using RemoveAt after index lookup."
     },
