@@ -876,6 +876,11 @@
     },
     {
       "category": "format-cells",
+      "file": "set-a-cells-horizontal-alignment-to-justify-and-enable-text-wrapping.cs",
+      "title": "Set a cell's horizontal alignment to justify and enable text wrapping."
+    },
+    {
+      "category": "format-cells",
       "file": "set-column-width-automatically-based-on-content.cs",
       "title": "Set column width automatically based on content."
     },
