@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - load-workbook-merge-cells-v8w9-apply-conditional-formatting-for-negative-values-and-export-to-html.cs
 - create-workbook-merge-cells-x1y3-set-number-format-to-custom-000-and-save-as-ods.cs
 - open-spreadsheet-merge-cells-z4aa4-enable-text-rotation-45-degrees-and-save-as-xlsx.cs
+- load-workbook-merge-cells-ab6ac8-assign-number-format-for-phone-numbers-and-export.cs
