@@ -1491,6 +1491,11 @@
     },
     {
       "category": "macro-project",
+      "file": "programmatically-inject-a-printing-prevention-macro-into-multiple-workbooks-within-a-specified-directory.cs",
+      "title": "Programmatically inject a printing-prevention macro into multiple workbooks within a specified directory."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
       "title": "Programmatically rename a form control button while preserving its assigned macro reference."
     },
