@@ -706,6 +706,11 @@
     },
     {
       "category": "format-cells",
+      "file": "update-the-themes-dark2-color-based-on-a-configuration-file-and-refresh-all-dependent-styles.cs",
+      "title": "Update the theme\u2019s Dark2 color based on a configuration file and refresh all dependent styles."
+    },
+    {
+      "category": "format-cells",
       "file": "update-the-themes-font-scheme-to-use-a-sansserif-primary-font-and-apply-globally.cs",
       "title": "Update the theme\u2019s font scheme to use a sans\u2011serif primary font and apply globally."
     },
