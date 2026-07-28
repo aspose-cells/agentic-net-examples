@@ -1876,6 +1876,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "import-named-range-definitions-from-an-xml-file-and-add-them-to-an-existing-workbook.cs",
+      "title": "Import named range definitions from an XML file and add them to an existing workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "limit-a-search-operation-to-noncontiguous-ranges-g1g10-and-h1h10-using-setrange.cs",
       "title": "Limit a search operation to non\u2011contiguous ranges G1:G10 and H1:H10 using SetRange."
     },
