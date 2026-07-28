@@ -1141,6 +1141,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs",
+      "title": "Generate a report listing all cells converted to Japanese dates, including original Gregorian values for reference."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "implement-a-method-that-switches-globalizationsettings-at-runtime-based-on-userselected-language-before-chart-creation.cs",
       "title": "Implement a method that switches GlobalizationSettings at runtime based on user\u2011selected language before chart creation."
     },
