@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-excludes-rows-hidden-by-a-filter-and-use-it-for-statistical-analysis.cs
 - search-for-cells-containing-the-word-confidential-within-a-named-range-and-mask-the-text.cs
 - replace-all-instances-of-the-character-with-an-empty-string-inside-a-named-range.cs
+- generate-a-pdf-that-includes-only-the-area-defined-by-a-worksheetscoped-named-range.cs
