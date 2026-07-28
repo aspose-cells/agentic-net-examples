@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - load-workbook-merge-cells-j3k3-assign-number-format-to-scientific-notation-with-three-decimals-and-save.cs
 - create-new-workbook-merge-cells-l5m7-apply-custom-style-with-italic-and-gray-fill-then-export.cs
 - open-spreadsheet-merge-cells-n10o10-for-subtotal-label-calculate-sum-of-adjacent-column-and-save.cs
+- load-workbook-merge-cells-p15q17-set-number-format-to-date-mm-dd-yyyy-and-export-to-pdf.cs
