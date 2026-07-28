@@ -1281,6 +1281,11 @@
     },
     {
       "category": "macro-project",
+      "file": "develop-a-console-application-that-accepts-a-folder-path-processes-each-xlsm-and-reports-macro-status.cs",
+      "title": "Develop a console application that accepts a folder path, processes each XLSM, and reports macro status."
+    },
+    {
+      "category": "macro-project",
       "file": "export-a-vba-certificate-to-a-temporary-file-then-load-it-into-an-x509certificate-object-for-inspection.cs",
       "title": "Export a VBA certificate to a temporary file, then load it into an X509Certificate object for inspection."
     },
