@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - update-the-themes-font-scheme-to-use-a-corporate-typeface-for-headings-and-body-text.cs
 - apply-the-themes-accent3-color-to-the-background-of-cells-that-contain-error-values.cs
 - programmatically-detect-workbooks-with-mismatched-theme-colors-and-automatically-synchronize-them-across-the-project.cs
+- create-a-utility-that-reads-a-themes-accent-colors-and-generates-a-matching-powerpoint-slide-palette.cs
