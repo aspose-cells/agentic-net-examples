@@ -1718,6 +1718,11 @@
       "category": "managing-ranges",
       "file": "validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs",
       "title": "Validate that moving range H1:H5 to I1:I5 does not overlap existing data in the destination worksheet."
+    },
+    {
+      "category": "managing-ranges",
+      "file": "validate-that-the-address-returned-by-rangeaddress-matches-the-expected-a1d4-format-after-modifications.cs",
+      "title": "Validate that the address returned by Range.Address matches the expected A1:D4 format after modifications."
     }
   ]
 }
