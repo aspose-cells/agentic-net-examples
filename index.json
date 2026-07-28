@@ -856,6 +856,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-workbook-unmerge-previously-merged-range-c6e7-then-recalculate-formulas-and-save.cs",
+      "title": "Load workbook, unmerge previously merged range C6:E7, then recalculate formulas and save."
+    },
+    {
+      "category": "format-cells",
       "file": "open-a-template-file-merge-cells-a5a8-for-a-label-apply-italic-style-and-save-copy.cs",
       "title": "Open a template file, merge cells A5:A8 for a label, apply italic style, and save copy."
     },
