@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - retrieve-load-warnings-after-opening-a-workbook-by-iterating-through-the-workbookloadwarnings-collection.cs
 - use-lightcells-to-iterate-rows-and-write-each-rows-data-to-a-csv-file-for-external-processing.cs
 - copy-selected-rows-from-a-source-worksheet-to-a-new-workbook-using-lightcells-to-minimize-memory-consumption.cs
+- load-only-the-first-three-worksheets-by-setting-loadoptionsstartsheetindex-to-0-and-loadoptionssheetcount-to-3.cs
