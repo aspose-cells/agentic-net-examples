@@ -2493,6 +2493,11 @@
       "category": "pivot-table",
       "file": "verify-that-cell-content-length-does-not-exceed-255-characters-when-compatibility-is-enabled.cs",
       "title": "Verify that cell content length does not exceed 255 characters when compatibility is enabled."
+    },
+    {
+      "category": "pivot-table",
+      "file": "verify-that-cell-content-length-remains-unchanged-when-compatibility-is-disabled-after-refresh.cs",
+      "title": "Verify that cell content length remains unchanged when compatibility is disabled after refresh."
     }
   ]
 }
