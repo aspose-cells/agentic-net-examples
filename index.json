@@ -1161,6 +1161,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "design-a-workflow-that-loads-a-workbook-with-arabic-cultureinfo-adds-righttoleft-subtotals-and-saves-as-pdf.cs",
+      "title": "Design a workflow that loads a workbook with Arabic CultureInfo, adds right\u2011to\u2011left subtotals, and saves as PDF."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs",
       "title": "Generate a report listing all cells converted to Japanese dates, including original Gregorian values for reference."
     },
