@@ -1361,6 +1361,11 @@
     },
     {
       "category": "macro-project",
+      "file": "preserve-existing-macros-while-copying-userform-storage-to-ensure-functionality-remains-unchanged.cs",
+      "title": "Preserve existing macros while copying UserForm storage to ensure functionality remains unchanged."
+    },
+    {
+      "category": "macro-project",
       "file": "programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs",
       "title": "Programmatically rename a form control button while preserving its assigned macro reference."
     },
