@@ -2471,6 +2471,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "iterate-through-all-worksheets-locate-each-pivottable-and-log-its-refreshdate-to-a-file.cs",
+      "title": "Iterate through all worksheets, locate each PivotTable, and log its RefreshDate to a file."
+    },
+    {
+      "category": "pivot-table",
       "file": "load-a-workbook-from-a-network-share-modify-compatibility-and-save-locally-for-distribution.cs",
       "title": "Load a workbook from a network share, modify compatibility, and save locally for distribution."
     },
