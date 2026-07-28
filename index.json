@@ -2721,6 +2721,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "refresh-the-pivot-table-after-modifying-source-worksheet-data-to-update-calculations.cs",
+      "title": "Refresh the pivot table after modifying source worksheet data to update calculations."
+    },
+    {
+      "category": "pivot-table",
       "file": "remove-a-calculated-field-from-a-pivottable-without-affecting-other-fields.cs",
       "title": "Remove a calculated field from a PivotTable without affecting other fields."
     },
