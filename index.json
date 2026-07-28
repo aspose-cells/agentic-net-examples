@@ -2346,6 +2346,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "create-a-function-that-accepts-a-pivot-table-index-removes-it-and-returns-the-updated-count-of-tables.cs",
+      "title": "Create a function that accepts a pivot table index, removes it, and returns the updated count of tables."
+    },
+    {
+      "category": "pivot-table",
       "file": "create-a-utility-method-that-accepts-a-pivot-table-name-and-deletes-it-using-removeat-after-index-lookup.cs",
       "title": "Create a utility method that accepts a pivot table name and deletes it using RemoveAt after index lookup."
     },
