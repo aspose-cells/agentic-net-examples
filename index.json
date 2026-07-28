@@ -1338,6 +1338,11 @@
       "category": "macro-project",
       "file": "validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs",
       "title": "Validate that adding a library reference throws an exception when the library is not registered on the host."
+    },
+    {
+      "category": "macro-project",
+      "file": "validate-the-vba-projects-digital-signature-using-workbookvbaprojectvalidatesignature-method-and-capture-result.cs",
+      "title": "Validate the VBA project's digital signature using Workbook.VbaProject.ValidateSignature method and capture result."
     }
   ]
 }
