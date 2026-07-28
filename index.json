@@ -541,6 +541,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-the-themes-accent4-color-to-the-fill-of-cells-that-contain-dates-within-the-current-month.cs",
+      "title": "Apply the theme\u2019s Accent4 color to the fill of cells that contain dates within the current month."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-the-themes-accent5-color-to-the-data-bars-of-a-conditional-formatting-rule.cs",
       "title": "Apply the theme\u2019s Accent5 color to the data bars of a conditional formatting rule."
     },
