@@ -646,6 +646,11 @@
     },
     {
       "category": "format-cells",
+      "file": "load-a-workbook-disable-its-theme-convert-themed-cells-to-explicit-colors-then-reenable-theme.cs",
+      "title": "Load a workbook, disable its theme, convert themed cells to explicit colors, then re\u2011enable theme."
+    },
+    {
+      "category": "format-cells",
       "file": "load-a-workbook-disable-theme-usage-convert-all-themed-cells-to-explicit-colors-and-save.cs",
       "title": "Load a workbook, disable theme usage, convert all themed cells to explicit colors, and save."
     },
