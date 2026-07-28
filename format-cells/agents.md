@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - apply-the-themes-accent2-color-to-the-fill-of-cells-generated-by-a-pivot-table-summary.cs
 - validate-that-after-updating-the-themes-dark2-color-all-chart-legends-reflect-the-new-shade.cs
 - apply-a-data-validation-rule-that-uses-the-themes-accent5-color-for-the-input-background.cs
+- create-a-script-that-logs-any-cells-that-fail-to-update-after-a-theme-change.cs
