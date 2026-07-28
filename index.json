@@ -621,6 +621,11 @@
     },
     {
       "category": "format-cells",
+      "file": "create-a-script-that-logs-any-cells-that-fail-to-update-after-a-theme-change.cs",
+      "title": "Create a script that logs any cells that fail to update after a theme change."
+    },
+    {
+      "category": "format-cells",
       "file": "create-a-script-that-logs-the-beforeandafter-rgb-values-of-each-theme-color-change.cs",
       "title": "Create a script that logs the before\u2011and\u2011after RGB values of each theme color change."
     },
