@@ -149,3 +149,4 @@ Output files are written to the working directory.
 - clone-a-workbook-containing-named-ranges-and-verify-that-all-named-ranges-are-preserved-in-the-clone.cs
 - export-the-contents-of-named-range-employeelist-to-a-csv-file-for-external-analysis.cs
 - create-a-data-validation-rule-that-restricts-input-to-values-listed-in-named-range-validcodes.cs
+- reference-a-workbookscoped-named-range-in-a-formula-to-calculate-the-sum-of-its-cells.cs
