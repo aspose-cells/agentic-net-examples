@@ -1438,6 +1438,11 @@
       "category": "macro-project",
       "file": "wrap-signing-operation-in-trycatch-block-to-handle-exceptions-and-log-error-details.cs",
       "title": "Wrap signing operation in try\u2011catch block to handle exceptions and log error details."
+    },
+    {
+      "category": "macro-project",
+      "file": "write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs",
+      "title": "Write validation errors to a text file for later analysis and compliance reporting."
     }
   ]
 }
