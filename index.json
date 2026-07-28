@@ -2106,6 +2106,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-a-named-range-to-define-the-data-validation-list-for-a-dropdown-in-another-cell.cs",
+      "title": "Use a named range to define the data validation list for a drop\u2011down in another cell."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-a-named-range-to-define-the-print-area-of-a-worksheet-before-printing-to-pdf.cs",
       "title": "Use a named range to define the print area of a worksheet before printing to PDF."
     },
