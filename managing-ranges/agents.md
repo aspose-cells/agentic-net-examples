@@ -203,3 +203,4 @@ Output files are written to the working directory.
 - use-findoptions-to-locate-cells-containing-dates-older-than-one-year-within-a-named-range.cs
 - replace-outdated-urls-in-named-range-links-with-new-domain-addresses-using-batch-replace.cs
 - create-a-named-range-that-serves-as-a-lookup-table-for-multiple-worksheets-across-the-workbook.cs
+- import-values-from-another-workbook-into-a-named-range-overwriting-existing-data-safely.cs
