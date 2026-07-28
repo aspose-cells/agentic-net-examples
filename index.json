@@ -2401,6 +2401,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "generate-a-summary-report-listing-each-processed-workbook-its-compatibility-setting-and-ribbon-status.cs",
+      "title": "Generate a summary report listing each processed workbook, its compatibility setting, and ribbon status."
+    },
+    {
+      "category": "pivot-table",
       "file": "implement-trycatch-handling-when-retrieving-a-cell-by-a-nonexistent-display-name-to-prevent-crashes.cs",
       "title": "Implement try\u2011catch handling when retrieving a cell by a non\u2011existent display name to prevent crashes."
     },
