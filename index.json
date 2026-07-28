@@ -1286,6 +1286,11 @@
     },
     {
       "category": "macro-project",
+      "file": "export-certificates-from-workbooks-using-asynchronous-tasks-to-improve-performance-on-large-file-sets.cs",
+      "title": "Export certificates from workbooks using asynchronous tasks to improve performance on large file sets."
+    },
+    {
+      "category": "macro-project",
       "file": "generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs",
       "title": "Generate a CSV file containing workbook names, macro assignment status, and signature verification results."
     },
