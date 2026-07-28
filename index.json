@@ -1146,6 +1146,11 @@
     },
     {
       "category": "globalization-and-localization",
+      "file": "create-a-function-that-returns-a-formatted-japanese-era-date-string-given-a-gregorian-datetime-input.cs",
+      "title": "Create a function that returns a formatted Japanese era date string given a Gregorian DateTime input."
+    },
+    {
+      "category": "globalization-and-localization",
       "file": "create-a-utility-that-converts-date-columns-in-multiple-xls-files-to-japanese-era-format-and-outputs-pdfs.cs",
       "title": "Create a utility that converts date columns in multiple XLS files to Japanese era format and outputs PDFs."
     },
