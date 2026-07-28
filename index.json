@@ -1666,6 +1666,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-the-entirecolumn-property-to-select-column-b-and-hide-it-from-view-in-the-workbook.cs",
+      "title": "Use the EntireColumn property to select column B and hide it from view in the workbook."
+    },
+    {
+      "category": "managing-ranges",
       "file": "validate-that-moving-range-h1h5-to-i1i5-does-not-overlap-existing-data-in-the-destination-worksheet.cs",
       "title": "Validate that moving range H1:H5 to I1:I5 does not overlap existing data in the destination worksheet."
     }
