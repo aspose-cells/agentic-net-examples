@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - create-a-formuladriven-range-using-vlookup-to-retrieve-quarterly-targets-for-the-chart.cs
 - set-the-charts-topleft-corner-to-row-5-column-3-using-the-position-property.cs
 - export-the-chart-to-png-with-transparent-background-by-setting-chartbackgroundcolor-to-transparent-before-export.cs
+- apply-a-builtin-theme-to-the-chart-to-standardize-colors-and-fonts.cs
