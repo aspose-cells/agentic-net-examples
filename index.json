@@ -1811,6 +1811,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "perform-a-caseinsensitive-search-for-the-word-invoice-across-all-workbookscoped-named-ranges.cs",
+      "title": "Perform a case\u2011insensitive search for the word \"invoice\" across all workbook\u2011scoped named ranges."
+    },
+    {
+      "category": "managing-ranges",
       "file": "produce-a-range-covering-the-entire-rows-of-c5c9-and-set-background-color-to-light-gray.cs",
       "title": "Produce a range covering the entire rows of C5:C9 and set background color to light gray."
     },
