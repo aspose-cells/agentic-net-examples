@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - load-workbook-merge-cells-d8e10-set-number-format-to-fraction-and-export-to-png-chart-image.cs
 - create-workbook-merge-cells-f12g12-apply-style-with-thick-border-and-save-as-macro-enabled-xlsm.cs
 - open-file-merge-cells-h20i22-set-cell-comment-with-merge-instructions-and-write-back-to-same-file.cs
+- load-workbook-merge-cells-j3k3-assign-number-format-to-scientific-notation-with-three-decimals-and-save.cs
