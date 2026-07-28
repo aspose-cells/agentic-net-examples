@@ -2316,6 +2316,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "delete-a-specific-pivot-table-from-the-worksheet-by-passing-its-pivottable-object-to-the-remove-method.cs",
+      "title": "Delete a specific pivot table from the worksheet by passing its PivotTable object to the Remove method."
+    },
+    {
+      "category": "pivot-table",
       "file": "export-the-refreshed-pivot-table-to-a-pdf-file-preserving-layout-and-calculated-values.cs",
       "title": "Export the refreshed pivot table to a PDF file preserving layout and calculated values."
     },
