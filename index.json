@@ -2996,6 +2996,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "configure-the-ribbon-button-to-prompt-the-user-for-a-new-external-link-file-location.cs",
+      "title": "Configure the ribbon button to prompt the user for a new external link file location."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs",
       "title": "Ensure the custom ribbon UI loads correctly after changing external link paths."
     },
