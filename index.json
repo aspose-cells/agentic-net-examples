@@ -2016,6 +2016,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "set-the-visibility-of-a-named-range-to-hidden-so-it-does-not-appear-in-the-name-manager.cs",
+      "title": "Set the visibility of a named range to hidden so it does not appear in the Name Manager."
+    },
+    {
+      "category": "managing-ranges",
       "file": "unmerge-a-previously-merged-block-covering-d4g4-and-restore-individual-cell-alignment-to-left.cs",
       "title": "Unmerge a previously merged block covering D4:G4 and restore individual cell alignment to left."
     },
