@@ -1981,6 +1981,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "use-a-named-range-as-the-source-for-data-consolidation-across-multiple-worksheets.cs",
+      "title": "Use a named range as the source for data consolidation across multiple worksheets."
+    },
+    {
+      "category": "managing-ranges",
       "file": "use-rangeentirecolumn-to-select-columns-d-through-f-and-set-each-column-width-to-20-characters.cs",
       "title": "Use Range.EntireColumn to select columns D through F and set each column width to 20 characters."
     },
