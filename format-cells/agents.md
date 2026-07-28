@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - apply-text-wrap-setting-to-a-cell-range.cs
 - set-cell-borders-on-all-sides-with-a-thin-black-line.cs
 - set-cell-borders-to-a-double-line-style-on-the-outer-edges-of-a-summary-block.cs
+- save-the-workbook-to-an-xlsx-file-ensuring-all-applied-formatting-is-retained.cs
