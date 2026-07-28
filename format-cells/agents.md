@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - apply-a-custom-theme-to-a-workbook-and-then-generate-a-thumbnail-image-of-the-first-sheet.cs
 - extract-the-themes-accent-colors-and-compare-them-against-a-corporate-style-guide-for-compliance.cs
 - apply-a-gradient-fill-to-a-range-using-the-themes-accent3-and-accent4-colors.cs
+- set-the-themes-dark2-color-as-the-default-border-color-for-all-tables-in-the-workbook.cs
