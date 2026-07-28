@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - open-a-template-file-merge-cells-a5a8-for-a-label-apply-italic-style-and-save-copy.cs
 - load-workbook-unmerge-previously-merged-range-c6e7-then-recalculate-formulas-and-save.cs
 - read-an-excel-file-merge-cells-in-header-row-set-font-size-to-fourteen-and-export.cs
+- create-workbook-merge-cells-b1b3-protect-the-merged-region-with-password-and-save-as-xls.cs
