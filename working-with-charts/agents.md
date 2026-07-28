@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - export-the-chart-to-png-with-transparent-background-by-setting-chartbackgroundcolor-to-transparent-before-export.cs
 - apply-a-builtin-theme-to-the-chart-to-standardize-colors-and-fonts.cs
 - validate-that-the-charts-secondary-axis-exists-before-assigning-series-to-avoid-runtime-exceptions.cs
+- load-a-workbook-from-a-stream-modify-chart-axes-and-write-the-workbook-back-to-a-byte-array.cs
