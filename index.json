@@ -2541,6 +2541,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-showreportfilterpages-to-false-to-consolidate-all-filters-onto-a-single-worksheet.cs",
+      "title": "Set ShowReportFilterPages to false to consolidate all filters onto a single worksheet."
+    },
+    {
+      "category": "pivot-table",
       "file": "set-showreportfilterpages-to-true-to-generate-separate-worksheets-for-each-filter-selection.cs",
       "title": "Set ShowReportFilterPages to true to generate separate worksheets for each filter selection."
     },
