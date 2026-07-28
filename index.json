@@ -2826,6 +2826,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "set-the-pivot-table-option-to-display-zero-values-for-empty-cells.cs",
+      "title": "Set the pivot table option to display zero values for empty cells."
+    },
+    {
+      "category": "pivot-table",
       "file": "show-the-pivottable-ribbon-to-allow-users-to-interact-with-built-in-excel-pivot-tools.cs",
       "title": "Show the PivotTable ribbon to allow users to interact with built-in Excel pivot tools."
     },
