@@ -192,3 +192,4 @@ Output files are written to the working directory.
 - open-file-merge-cells-h20i22-set-cell-comment-with-merge-instructions-and-write-back-to-same-file.cs
 - load-workbook-merge-cells-j3k3-assign-number-format-to-scientific-notation-with-three-decimals-and-save.cs
 - create-new-workbook-merge-cells-l5m7-apply-custom-style-with-italic-and-gray-fill-then-export.cs
+- open-spreadsheet-merge-cells-n10o10-for-subtotal-label-calculate-sum-of-adjacent-column-and-save.cs
