@@ -1646,6 +1646,11 @@
     },
     {
       "category": "managing-ranges",
+      "file": "apply-a-regular-expression-search-for-dates-formatted-as-ddmmyyyy-within-range-j1j30.cs",
+      "title": "Apply a regular expression search for dates formatted as \"dd/MM/yyyy\" within range J1:J30."
+    },
+    {
+      "category": "managing-ranges",
       "file": "calculate-the-total-number-of-cells-in-the-merged-range-a1c3-after-performing-the-merge.cs",
       "title": "Calculate the total number of cells in the merged range A1:C3 after performing the merge."
     },
