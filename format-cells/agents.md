@@ -185,3 +185,4 @@ Output files are written to the working directory.
 - create-new-workbook-merge-cells-h1h4-set-background-color-to-light-blue-and-save-as-ods.cs
 - open-existing-file-unmerge-range-a1c1-copy-its-content-to-another-sheet-and-save.cs
 - load-workbook-merge-cells-m5n6-apply-number-format-for-accounting-and-export-to-pdf-with-margins.cs
+- create-workbook-merge-cells-p2p5-set-wrap-text-property-and-save-as-xlsx-with-auto-filter.cs
