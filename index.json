@@ -511,6 +511,11 @@
     },
     {
       "category": "format-cells",
+      "file": "apply-a-custom-fill-pattern-to-header-cells-using-a-dense-hatch-style.cs",
+      "title": "Apply a custom fill pattern to header cells using a dense hatch style."
+    },
+    {
+      "category": "format-cells",
       "file": "apply-a-custom-theme-that-uses-grayscale-accents-and-verify-that-all-cells-display-correctly.cs",
       "title": "Apply a custom theme that uses grayscale accents and verify that all cells display correctly."
     },
