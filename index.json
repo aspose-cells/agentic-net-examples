@@ -726,6 +726,11 @@
     },
     {
       "category": "format-cells",
+      "file": "programmatically-detect-workbooks-with-mismatched-theme-colors-and-automatically-synchronize-them-across-the-project.cs",
+      "title": "Programmatically detect workbooks with mismatched theme colors and automatically synchronize them across the project."
+    },
+    {
+      "category": "format-cells",
       "file": "programmatically-list-all-theme-color-types-and-their-current-rgb-values-for-diagnostic-purposes.cs",
       "title": "Programmatically list all theme color types and their current RGB values for diagnostic purposes."
     },
