@@ -2336,6 +2336,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "load-multiple-xlsx-files-refresh-their-pivot-tables-and-batch-export-each-to-separate-pdf-documents.cs",
+      "title": "Load multiple XLSX files, refresh their pivot tables, and batch export each to separate PDF documents."
+    },
+    {
+      "category": "pivot-table",
       "file": "refresh-all-nested-child-pivot-tables-of-a-parent-pivot-table-to-synchronize-data-hierarchy.cs",
       "title": "Refresh all nested child pivot tables of a parent pivot table to synchronize data hierarchy."
     },
