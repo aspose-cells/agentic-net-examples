@@ -2551,6 +2551,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "open-a-workbook-from-a-memory-stream-for-programmatic-manipulation-of-its-pivot-tables.cs",
+      "title": "Open a workbook from a memory stream for programmatic manipulation of its pivot tables."
+    },
+    {
+      "category": "pivot-table",
       "file": "programmatically-change-the-label-for-grand-total-in-all-pivot-tables-by-setting-custom-globalization-property.cs",
       "title": "Programmatically change the label for grand total in all pivot tables by setting custom globalization property."
     },
