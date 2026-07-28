@@ -2326,6 +2326,11 @@
     },
     {
       "category": "pivot-table",
+      "file": "apply-a-descending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
+      "title": "Apply a descending custom sort order to a PivotField using the AutoSort property."
+    },
+    {
+      "category": "pivot-table",
       "file": "apply-an-ascending-custom-sort-order-to-a-pivotfield-using-the-autosort-property.cs",
       "title": "Apply an ascending custom sort order to a PivotField using the AutoSort property."
     },
