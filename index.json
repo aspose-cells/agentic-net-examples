@@ -1271,6 +1271,11 @@
     },
     {
       "category": "macro-project",
+      "file": "generate-a-csv-file-containing-workbook-names-macro-assignment-status-and-signature-verification-results.cs",
+      "title": "Generate a CSV file containing workbook names, macro assignment status, and signature verification results."
+    },
+    {
+      "category": "macro-project",
       "file": "implement-a-method-that-copies-a-macro-from-one-workbook-to-another-and-updates-control-references.cs",
       "title": "Implement a method that copies a macro from one workbook to another and updates control references."
     },
