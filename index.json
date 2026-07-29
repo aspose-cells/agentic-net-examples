@@ -4546,6 +4546,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-text-file-attachment-to-the-generated-pdf-via-pdfsaveoptionsattachments-collection.cs",
+      "title": "Add a text file attachment to the generated PDF via PdfSaveOptions.Attachments collection."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-header-and-footer-with-page-numbers-to-each-pdf-page-derived-from-excel.cs",
       "title": "Add header and footer with page numbers to each PDF page derived from Excel."
     },
