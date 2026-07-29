@@ -4521,6 +4521,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-header-containing-the-workbook-name-on-each-pdf-page-via-pdfsaveoptions.cs",
+      "title": "Add a header containing the workbook name on each PDF page via PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-semitransparent-watermark-text-across-each-pdf-page-using-pdfsaveoptionswatermarktext.cs",
       "title": "Add a semi\u2011transparent watermark text across each PDF page using PdfSaveOptions.WatermarkText."
     },
