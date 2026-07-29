@@ -4183,6 +4183,11 @@
       "category": "working-with-images",
       "file": "validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs",
       "title": "Validate the SVG worksheet file against the SVG schema to ensure structural correctness."
+    },
+    {
+      "category": "working-with-images",
+      "file": "write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs",
+      "title": "Write the PNG chart image to a temporary file and schedule automatic deletion after processing."
     }
   ]
 }
