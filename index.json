@@ -4526,6 +4526,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-pdfsaveoptionsimageresample-to-150-dpi-to-reduce-pdf-size-while-maintaining-image-clarity.cs",
+      "title": "Configure PdfSaveOptions.ImageResample to 150 DPI to reduce PDF size while maintaining image clarity."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs",
       "title": "Enable PdfSaveOptions.RenderSolidGridlines to preserve original Excel cell borders in the PDF output."
     },
