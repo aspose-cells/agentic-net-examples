@@ -3071,6 +3071,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs",
+      "title": "Configure WorkbookDesigner to ignore empty smart markers, preventing unnecessary row creation when source collections are empty."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-use-a-custom-datatable-as-the-data-source-before-processing.cs",
       "title": "Configure WorkbookDesigner to use a custom DataTable as the data source before processing."
     },
