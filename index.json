@@ -5226,6 +5226,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "retrieve-connection-points-of-a-shape-filter-points-with-x-coordinate-greater-than-100-and-log-them.cs",
+      "title": "Retrieve connection points of a shape, filter points with X coordinate greater than 100, and log them."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "save-the-workbook-after-geometry-changes-to-an-xlsx-file-preserving-original-data.cs",
       "title": "Save the workbook after geometry changes to an XLSX file preserving original data."
     },
