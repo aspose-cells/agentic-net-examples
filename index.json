@@ -4156,6 +4156,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "embed-javascript-code-within-the-svg-worksheet-file-to-enable-interactive-tooltips-on-hover.cs",
+      "title": "Embed JavaScript code within the SVG worksheet file to enable interactive tooltips on hover."
+    },
+    {
+      "category": "working-with-images",
       "file": "embed-the-tiff-thumbnail-as-a-base64-string-within-json-metadata-for-api-responses.cs",
       "title": "Embed the TIFF thumbnail as a base64 string within JSON metadata for API responses."
     },
