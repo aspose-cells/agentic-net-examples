@@ -4526,6 +4526,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs",
+      "title": "Enable PdfSaveOptions.RenderSolidGridlines to preserve original Excel cell borders in the PDF output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs",
       "title": "Loop through each worksheet, set SheetSet individually, and save each as separate PDF files."
     },
