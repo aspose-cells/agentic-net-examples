@@ -282,3 +282,4 @@ Output files are written to the working directory.
 - modify-individual-theme-colors-of-the-chart-by-accessing-the-themecolorscheme-collection.cs
 - offset-data-labels-outward-by-ten-points-to-make-leader-lines-visible.cs
 - implement-error-handling-to-catch-exceptions-when-setting-leader-lines-on-unsupported-chart-types.cs
+- export-chart-as-svg-vector-graphic-to-preserve-scalability-when-embedding-in-web-pages.cs
