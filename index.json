@@ -4131,6 +4131,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "combine-a-chart-png-image-with-a-data-table-overlay-to-produce-a-composite-visualization.cs",
+      "title": "Combine a chart PNG image with a data table overlay to produce a composite visualization."
+    },
+    {
+      "category": "working-with-images",
       "file": "compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs",
       "title": "Compress the SVG worksheet file using GZip before transmitting it over the network for efficiency."
     },
