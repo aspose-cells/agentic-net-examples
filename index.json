@@ -3751,6 +3751,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-dynamic-dropdown-lists-populated-from-a-reference-data-table-using-smart-marker-syntax.cs",
+      "title": "Create dynamic dropdown lists populated from a reference data table using smart marker syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs",
       "title": "Define a custom data source reading JSON files and mapping properties to smart marker fields for reports."
     },
