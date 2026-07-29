@@ -4751,6 +4751,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "export-document-structure-with-bookmarks-and-confirm-they-appear-in-pdf-outline-viewer.cs",
+      "title": "Export document structure with bookmarks and confirm they appear in PDF outline viewer."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs",
       "title": "Export pivot tables as static images in the PDF to capture their current state."
     },
