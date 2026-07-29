@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - import-a-specific-array-element-by-index-using-syntax-like-orders2itemname.cs
 - import-a-subset-of-an-array-using-slicer-syntax-such-as-orders13quantity.cs
 - process-multiple-worksheets-in-a-single-workbook-each-containing-distinct-smart-markers-to-generate-a-multisheet-report.cs
+- apply-smart-marker-parameters-to-control-row-insertion-when-merging-a-large-dataset-with-related-tables.cs
