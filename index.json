@@ -4176,6 +4176,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "embed-the-png-worksheet-image-in-a-markdown-document-using-the-standard-altpath-syntax.cs",
+      "title": "Embed the PNG worksheet image in a Markdown document using the standard ![alt](path) syntax."
+    },
+    {
+      "category": "working-with-images",
       "file": "embed-the-svg-chart-file-into-a-react-component-as-jsx-for-seamless-integration-in-web-apps.cs",
       "title": "Embed the SVG chart file into a React component as JSX for seamless integration in web apps."
     },
