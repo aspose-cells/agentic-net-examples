@@ -4141,6 +4141,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "embed-the-tiff-thumbnail-as-a-base64-string-within-json-metadata-for-api-responses.cs",
+      "title": "Embed the TIFF thumbnail as a base64 string within JSON metadata for API responses."
+    },
+    {
+      "category": "working-with-images",
       "file": "encrypt-the-final-tiff-file-with-aes-encryption-before-storing-it-in-a-secure-location.cs",
       "title": "Encrypt the final TIFF file with AES encryption before storing it in a secure location."
     },
