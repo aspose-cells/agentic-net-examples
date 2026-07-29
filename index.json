@@ -4626,6 +4626,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "encrypt-the-generated-pdf-with-a-user-password-and-restrict-printing-permissions.cs",
+      "title": "Encrypt the generated PDF with a user password and restrict printing permissions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs",
       "title": "Export pivot tables as static images in the PDF to capture their current state."
     },
