@@ -3691,6 +3691,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs",
+      "title": "Configure WorkbookDesigner to use an IEnumerable collection as data source for populating smart markers across worksheets."
+    },
+    {
+      "category": "smart-markers",
       "file": "create-a-custom-class-implementing-icustomtypeprovider-to-expose-additional-properties-for-smart-marker-binding.cs",
       "title": "Create a custom class implementing ICustomTypeProvider to expose additional properties for smart marker binding."
     },
