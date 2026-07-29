@@ -4105,6 +4105,11 @@
       "title": "Render a timeline with data labels showing percentages, adjust label font size, and save as PNG."
     },
     {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-passes-when-exporthiddenworksheet-true-includes-hidden-sheet-titles-in-the-html-output.cs",
+      "title": "Create a unit test that passes when ExportHiddenWorksheet true includes hidden sheet titles in the HTML output."
+    },
+    {
       "category": "working-with-images",
       "file": "add-a-drop-shadow-effect-to-the-png-worksheet-rendering-to-enhance-visual-depth.cs",
       "title": "Add a drop shadow effect to the PNG worksheet rendering to enhance visual depth."
