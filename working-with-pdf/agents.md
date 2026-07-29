@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - embed-a-video-file-as-an-attachment-in-the-pdf-and-reference-it-in-the-document.cs
 - embed-an-excel-macro-file-as-an-attachment-within-the-pdf-for-reference-purposes.cs
 - include-a-json-configuration-file-as-a-pdf-attachment-using-pdfsaveoptions.cs
+- add-a-custom-pdf-attachment-containing-a-summary-report-generated-from-workbook-data.cs
