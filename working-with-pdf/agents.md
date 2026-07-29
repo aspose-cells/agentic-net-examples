@@ -213,3 +213,4 @@ Output files are written to the working directory.
 - enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs
 - add-a-digital-signature-to-the-pdf-generated-from-an-excel-workbook-for-authenticity.cs
 - load-an-xlsm-file-apply-standardsize-optimization-and-export-to-pdf.cs
+- disable-solid-gridlines-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-gridfree-pdf.cs
