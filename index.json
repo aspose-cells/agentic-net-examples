@@ -4571,6 +4571,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs",
+      "title": "Set PDF metadata such as title, author, and subject before saving the workbook."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs",
       "title": "Set PdfSaveOptions.FitAllColumnsInOnePage to true to fit all columns on a single PDF page."
     },
