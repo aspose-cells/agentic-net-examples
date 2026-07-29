@@ -4121,6 +4121,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "convert-an-excel-file-to-html-and-ensure-hyperlinks-open-in-new-tabs-via-htmlsaveoptions.cs",
+      "title": "Convert an Excel file to HTML and ensure hyperlinks open in new tabs via HtmlSaveOptions."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-unit-test-that-ensures-css-custom-properties-are-present-in-the-root-selector-when-enabled.cs",
       "title": "Create a unit test that ensures CSS custom properties are present in the :root selector when enabled."
     },
