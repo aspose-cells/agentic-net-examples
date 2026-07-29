@@ -4586,6 +4586,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "configure-fontsettings-with-a-unicode-font-to-correctly-render-supplementary-characters-in-pdf.cs",
+      "title": "Configure FontSettings with a Unicode font to correctly render supplementary characters in PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "configure-highresolution-image-quality-for-charts-when-converting-excel-worksheets-to-pdf.cs",
       "title": "Configure high\u2011resolution image quality for charts when converting Excel worksheets to PDF."
     },
