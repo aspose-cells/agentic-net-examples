@@ -5316,6 +5316,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "set-a-shapes-absolute-position-using-pixel-values-derived-from-dpi-scaling-and-test-accuracy.cs",
+      "title": "Set a shape's absolute position using pixel values derived from DPI scaling, and test accuracy."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "update-a-cell-range-linked-to-a-picture-shape-and-then-refresh-the-picture.cs",
       "title": "Update a cell range linked to a picture shape and then refresh the picture."
     },
