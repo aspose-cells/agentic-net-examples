@@ -5021,6 +5021,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "measure-file-size-differences-between-workbooks-before-and-after-shape-modifications.cs",
+      "title": "Measure file size differences between workbooks before and after shape modifications."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "measure-performance-of-updateselectedvalue-on-a-large-workbook-containing-many-linked-shapes.cs",
       "title": "Measure performance of UpdateSelectedValue on a large workbook containing many linked shapes."
     },
