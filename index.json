@@ -4221,6 +4221,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "log-memory-consumption-before-and-after-tiff-conversion-to-assess-resource-usage-impact-on-the-application.cs",
+      "title": "Log memory consumption before and after TIFF conversion to assess resource usage impact on the application."
+    },
+    {
+      "category": "working-with-images",
       "file": "minify-the-svg-worksheet-content-by-removing-whitespace-and-comments-to-reduce-file-size.cs",
       "title": "Minify the SVG worksheet content by removing whitespace and comments to reduce file size."
     },
