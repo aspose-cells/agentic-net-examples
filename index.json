@@ -4886,6 +4886,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "verify-that-exportdocumentstructure-generates-a-pdf-outline-reflecting-nested-worksheet-groups.cs",
+      "title": "Verify that ExportDocumentStructure generates a PDF outline reflecting nested worksheet groups."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "verify-that-unicode-supplementary-characters-such-as-emojis-render-correctly-in-the-pdf-output.cs",
       "title": "Verify that Unicode supplementary characters, such as emojis, render correctly in the PDF output."
     }
