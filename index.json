@@ -4651,6 +4651,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdf-page-breaks-based-on-excel-page-breaks-to-maintain-original-pagination.cs",
+      "title": "Set PDF page breaks based on Excel page breaks to maintain original pagination."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs",
       "title": "Set PdfSaveOptions.FitAllColumnsInOnePage to true to fit all columns on a single PDF page."
     },
