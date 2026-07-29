@@ -204,3 +204,4 @@ Output files are written to the working directory.
 - configure-highresolution-image-quality-for-charts-when-converting-excel-worksheets-to-pdf.cs
 - split-the-output-pdf-into-separate-files-per-worksheet-using-custom-naming-conventions.cs
 - merge-multiple-excel-worksheets-into-a-single-pdf-while-preserving-original-sheet-order.cs
+- decrypt-a-passwordprotected-pdf-generated-from-excel-and-programmatically-extract-its-text.cs
