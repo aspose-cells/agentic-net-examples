@@ -498,3 +498,4 @@ Output files are written to the working directory.
 - programmatically-retrieve-all-shapes-sort-them-by-z-order-and-output-sorted-list-to-console.cs
 - export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs
 - add-a-shape-link-it-to-a-cell-with-a-validation-list-and-ensure-shape-text-reflects-selection.cs
+- create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs
