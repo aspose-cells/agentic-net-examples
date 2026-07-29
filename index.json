@@ -4165,6 +4165,11 @@
       "title": "Specify \"Times New Roman\" as default font for HTML rendering via HtmlSaveOptions."
     },
     {
+      "category": "working-with-html",
+      "file": "use-htmlsaveoptions-to-set-default-font-to-courier-new-and-verify-fallback-behavior.cs",
+      "title": "Use HtmlSaveOptions to set default font to \"Courier New\" and verify fallback behavior."
+    },
+    {
       "category": "working-with-images",
       "file": "add-a-drop-shadow-effect-to-the-png-worksheet-rendering-to-enhance-visual-depth.cs",
       "title": "Add a drop shadow effect to the PNG worksheet rendering to enhance visual depth."
