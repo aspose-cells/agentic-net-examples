@@ -4106,6 +4106,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "configure-htmlsaveoptions-to-use-courier-new-as-fallback-font-when-original-font-missing.cs",
+      "title": "Configure HtmlSaveOptions to use \"Courier New\" as fallback font when original font missing."
+    },
+    {
+      "category": "working-with-html",
       "file": "create-a-unit-test-that-ensures-css-custom-properties-are-present-in-the-root-selector-when-enabled.cs",
       "title": "Create a unit test that ensures CSS custom properties are present in the :root selector when enabled."
     },
