@@ -165,3 +165,4 @@ Output files are written to the working directory.
 - insert-detail-smart-markers-and-set-the-detailsheet-parameter-to-target-a-separate-worksheet.cs
 - configure-the-detailtable-parameter-to-map-detail-data-into-a-predefined-table-on-the-target-sheet.cs
 - set-workbookdesignerlinebyline-to-false-when-merging-nested-objects-to-process-them-as-grouped-records.cs
+- set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs
