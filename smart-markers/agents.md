@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - load-json-from-a-web-service-map-to-an-object-and-merge-with-smart-markers-in-the-template.cs
 - enable-multithreaded-processing-by-creating-separate-workbookdesigner-instances-for-each-template-then-merging-data-concurrently.cs
 - validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs
+- load-an-excel-template-workbook-from-file-or-stream-before-configuring-smart-markers.cs
