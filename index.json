@@ -3841,6 +3841,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-a-smart-marker-with-the-html-property-to-render-a-colored-span-element-inside-a-cell.cs",
+      "title": "Use a smart marker with the HTML property to render a colored span element inside a cell."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs",
       "title": "Use a variable array marker across a range to fill a table with a one\u2011dimensional collection."
     },
