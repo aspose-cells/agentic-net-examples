@@ -189,3 +189,4 @@ Output files are written to the working directory.
 - add-a-header-containing-the-workbook-name-on-each-pdf-page-via-pdfsaveoptions.cs
 - preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs
 - export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs
+- maintain-conditional-formatting-colors-in-the-pdf-by-enabling-appropriate-rendering-options.cs
