@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsoptimizationtype-to-minimumsize-while-preserving-original-column-widths-in-pdf.cs
 - enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs
 - create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs
+- enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs
