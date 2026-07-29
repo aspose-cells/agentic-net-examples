@@ -105,3 +105,4 @@ Output files are written to the working directory.
 - copy-rows-while-preserving-embedded-images-and-drawing-objects-using-default-copy-behavior.cs
 - transfer-rows-containing-comments-and-verify-comments-appear-correctly-in-the-destination-worksheet.cs
 - create-a-template-row-with-formulas-copy-it-to-several-sheets-and-validate-calculated-results.cs
+- group-a-range-of-rows-programmatically-then-autofit-grouped-rows-to-ensure-proper-display.cs
