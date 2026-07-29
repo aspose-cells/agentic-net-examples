@@ -3096,6 +3096,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "calculate-all-formulas-in-the-workbook-after-the-second-deletion-operation.cs",
+      "title": "Calculate all formulas in the workbook after the second deletion operation."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "compare-row-heights-before-and-after-autofitrows-to-confirm-height-adjustments-were-applied.cs",
       "title": "Compare row heights before and after AutoFitRows to confirm height adjustments were applied."
     },
