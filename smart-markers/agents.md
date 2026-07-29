@@ -174,3 +174,4 @@ Output files are written to the working directory.
 - apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs
 - use-the-html-property-to-embed-an-image-tag-within-a-cell-rendering-the-picture-after-merge.cs
 - use-a-smart-marker-with-the-html-property-to-render-a-colored-span-element-inside-a-cell.cs
+- use-a-foreach-smart-marker-to-generate-a-variablelength-list-of-project-milestones-on-a-timeline-sheet.cs
