@@ -3846,6 +3846,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-html-property-to-embed-an-image-tag-within-a-cell-rendering-the-picture-after-merge.cs",
+      "title": "Use the HTML property to embed an image tag within a cell, rendering the picture after merge."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs",
       "title": "Use the notify parameter together with a custom logger to record each successful smart marker merge event."
     },
