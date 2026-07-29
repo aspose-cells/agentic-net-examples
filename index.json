@@ -4068,6 +4068,11 @@
       "category": "smart-markers",
       "file": "validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs",
       "title": "Validate that each generated detail worksheet contains the expected number of rows matching the source collection count."
+    },
+    {
+      "category": "timeline",
+      "file": "render-a-timeline-with-data-labels-showing-percentages-adjust-label-font-size-and-save-as-png.cs",
+      "title": "Render a timeline with data labels showing percentages, adjust label font size, and save as PNG."
     }
   ]
 }
