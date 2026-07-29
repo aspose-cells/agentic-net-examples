@@ -5046,6 +5046,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "update-a-linked-shape-after-changing-a-formula-in-the-source-cell.cs",
+      "title": "Update a linked shape after changing a formula in the source cell."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "use-specific-adjustment-indices-to-modify-the-tip-angle-of-a-callout-shape.cs",
       "title": "Use specific adjustment indices to modify the tip angle of a callout shape."
     },
