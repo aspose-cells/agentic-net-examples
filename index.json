@@ -4606,6 +4606,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "batch-convert-a-folder-of-xlsm-files-to-pdfs-applying-minimumsize-optimization-to-each-file.cs",
+      "title": "Batch convert a folder of XLSM files to PDFs applying MinimumSize optimization to each file."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "compress-pdf-content-using-flate-compression-to-reduce-file-size-while-preserving-quality.cs",
       "title": "Compress PDF content using Flate compression to reduce file size while preserving quality."
     },
