@@ -4081,6 +4081,11 @@
     },
     {
       "category": "timeline",
+      "file": "create-a-timeline-with-a-logarithmic-scale-for-dates-customize-tick-intervals-and-render-to-png.cs",
+      "title": "Create a timeline with a logarithmic scale for dates, customize tick intervals, and render to PNG."
+    },
+    {
+      "category": "timeline",
       "file": "render-a-timeline-with-data-labels-showing-percentages-adjust-label-font-size-and-save-as-png.cs",
       "title": "Render a timeline with data labels showing percentages, adjust label font size, and save as PNG."
     }
