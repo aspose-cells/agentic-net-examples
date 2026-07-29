@@ -3061,6 +3061,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs",
+      "title": "Place a variable marker in a cell to populate it with a scalar value from the data source."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs",
       "title": "Process multiple template files in a batch, assigning distinct data sources to each WorkbookDesigner instance."
     },
