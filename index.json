@@ -4651,6 +4651,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-a-pdf-document-as-an-attachment-inside-the-generated-exceltopdf-conversion.cs",
+      "title": "Embed a PDF document as an attachment inside the generated Excel\u2011to\u2011PDF conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs",
       "title": "Embed all fonts used in the workbook into the PDF to ensure consistent rendering on any device."
     },
