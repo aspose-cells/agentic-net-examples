@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - configure-smart-marker-options-to-ignore-empty-rows-when-processing-a-detail-list-that-contains-gaps.cs
 - create-a-custom-class-implementing-icustomtypeprovider-to-expose-additional-properties-for-smart-marker-binding.cs
 - set-workbookdesignerlinebyline-to-true-for-simple-list-merging-while-keeping-master-markers-linebyline.cs
+- apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs
