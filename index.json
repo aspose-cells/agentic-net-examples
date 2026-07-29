@@ -4743,6 +4743,11 @@
       "category": "working-with-pdf",
       "file": "set-pdfsaveoptionspdfacompliance-to-pdfacompliancepdfa1a-to-generate-pdfa1a-compliant-files-output.cs",
       "title": "Set PdfSaveOptions.PdfACompliance to PdfACompliance.PdfA1a to generate PDF/A\u20111a compliant files output."
+    },
+    {
+      "category": "working-with-pdf",
+      "file": "split-the-output-pdf-into-separate-files-per-worksheet-using-custom-naming-conventions.cs",
+      "title": "Split the output PDF into separate files per worksheet using custom naming conventions."
     }
   ]
 }
