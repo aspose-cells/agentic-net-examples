@@ -3156,6 +3156,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs",
+      "title": "Use the notify parameter together with a custom logger to record each successful smart marker merge event."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs",
       "title": "Use the skip parameter to omit every other row while populating a template with alternating entries."
     }
