@@ -219,3 +219,4 @@ Output files are written to the working directory.
 - add-a-text-file-attachment-to-the-generated-pdf-via-pdfsaveoptionsattachments-collection.cs
 - embed-a-pdf-document-as-an-attachment-inside-the-generated-exceltopdf-conversion.cs
 - embed-a-video-file-as-an-attachment-in-the-pdf-and-reference-it-in-the-document.cs
+- embed-an-excel-macro-file-as-an-attachment-within-the-pdf-for-reference-purposes.cs
