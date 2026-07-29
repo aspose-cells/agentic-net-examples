@@ -3106,6 +3106,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-multithreaded-processing-by-creating-separate-workbookdesigner-instances-for-each-template-then-merging-data-concurrently.cs",
+      "title": "Enable multi\u2011threaded processing by creating separate WorkbookDesigner instances for each template, then merging data concurrently."
+    },
+    {
+      "category": "smart-markers",
       "file": "enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs",
       "title": "Enable the notify parameter on a smart marker to receive callbacks for each row insertion."
     },
