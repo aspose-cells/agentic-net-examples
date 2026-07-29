@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - enable-multithreaded-processing-by-creating-separate-workbookdesigner-instances-for-each-template-then-merging-data-concurrently.cs
 - validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs
 - load-an-excel-template-workbook-from-file-or-stream-before-configuring-smart-markers.cs
+- place-a-master-smart-marker-in-the-template-to-repeat-rows-for-each-master-record.cs
