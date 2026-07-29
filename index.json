@@ -3796,6 +3796,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs",
+      "title": "Load an Excel template and assign a DataTable as the custom data source for smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-an-excel-template-workbook-from-file-or-stream-before-configuring-smart-markers.cs",
       "title": "Load an Excel template workbook from file or stream before configuring smart markers."
     },
