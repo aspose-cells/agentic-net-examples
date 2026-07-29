@@ -281,3 +281,4 @@ Output files are written to the working directory.
 - assign-custom-label-to-the-first-data-point-of-each-series-within-a-loop.cs
 - modify-individual-theme-colors-of-the-chart-by-accessing-the-themecolorscheme-collection.cs
 - offset-data-labels-outward-by-ten-points-to-make-leader-lines-visible.cs
+- implement-error-handling-to-catch-exceptions-when-setting-leader-lines-on-unsupported-chart-types.cs
