@@ -4216,6 +4216,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "rasterize-the-svg-worksheet-image-to-png-for-compatibility-with-legacy-systems-lacking-svg-support.cs",
+      "title": "Rasterize the SVG worksheet image to PNG for compatibility with legacy systems lacking SVG support."
+    },
+    {
+      "category": "working-with-images",
       "file": "record-conversion-details-such-as-source-file-output-path-and-duration-in-a-sqlite-database.cs",
       "title": "Record conversion details such as source file, output path, and duration in a SQLite database."
     },
