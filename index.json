@@ -3721,6 +3721,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs",
+      "title": "Iterate over multiple template files, applying identical master\u2011detail smart markers to generate batch reports."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs",
       "title": "Load a workbook from a memory stream, process smart markers, and save the result to a byte array."
     },
