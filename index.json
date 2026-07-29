@@ -4311,6 +4311,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "use-the-png-worksheet-image-as-a-texture-in-a-3d-rendering-engine-for-visual-effects.cs",
+      "title": "Use the PNG worksheet image as a texture in a 3D rendering engine for visual effects."
+    },
+    {
+      "category": "working-with-images",
       "file": "use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs",
       "title": "Use the SVG worksheet graphic as a vector element when generating a PDF document with iTextSharp."
     },
