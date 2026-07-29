@@ -4666,6 +4666,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdf-version-to-17-for-compatibility-with-modern-pdf-readers-ensuring-proper-rendering.cs",
+      "title": "Set PDF version to 1.7 for compatibility with modern PDF readers, ensuring proper rendering."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs",
       "title": "Set PdfSaveOptions.FitAllColumnsInOnePage to true to fit all columns on a single PDF page."
     },
