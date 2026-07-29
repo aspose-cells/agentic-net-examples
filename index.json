@@ -4140,6 +4140,11 @@
       "title": "Create a unit test that verifies link target attribute equals \"_parent\" when LinkTargetType is set to Parent."
     },
     {
+      "category": "working-with-html",
+      "file": "create-a-workbook-assign-a-nonexistent-font-to-a-cell-and-verify-default-font-appears-in-html.cs",
+      "title": "Create a workbook, assign a non\u2011existent font to a cell, and verify default font appears in HTML."
+    },
+    {
       "category": "working-with-images",
       "file": "add-a-drop-shadow-effect-to-the-png-worksheet-rendering-to-enhance-visual-depth.cs",
       "title": "Add a drop shadow effect to the PNG worksheet rendering to enhance visual depth."
