@@ -4256,6 +4256,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "verify-the-integrity-of-the-png-worksheet-file-by-computing-and-comparing-its-sha256-checksum.cs",
+      "title": "Verify the integrity of the PNG worksheet file by computing and comparing its SHA\u2011256 checksum."
+    },
+    {
+      "category": "working-with-images",
       "file": "write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs",
       "title": "Write the PNG chart image to a temporary file and schedule automatic deletion after processing."
     }
