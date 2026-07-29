@@ -4126,6 +4126,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-the-svg-worksheet-image-in-a-wpf-image-control-for-display-within-a-desktop-application.cs",
+      "title": "Render the SVG worksheet image in a WPF Image control for display within a desktop application."
+    },
+    {
+      "category": "working-with-images",
       "file": "save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs",
       "title": "Save the SVG worksheet image to a .svg file with UTF\u20118 encoding to preserve character data."
     },
