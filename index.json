@@ -4676,6 +4676,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "retrieve-and-log-font-substitution-warnings-after-rendering-excel-to-pdf.cs",
+      "title": "Retrieve and log font substitution warnings after rendering Excel to PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-custom-pdf-margins-of-05-inches-on-all-sides-using-pdfsaveoptions.cs",
       "title": "Set custom PDF margins of 0.5 inches on all sides using PdfSaveOptions."
     },
