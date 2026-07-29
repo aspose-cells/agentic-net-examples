@@ -3601,6 +3601,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs",
+      "title": "Apply a custom number format to cells populated via smart markers to display currency values consistently."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs",
       "title": "Apply data validation rules to cells filled by smart markers to restrict user input after generation."
     },
