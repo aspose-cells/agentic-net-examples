@@ -102,3 +102,4 @@ Output files are written to the working directory.
 - retrieve-source-row-height-with-getrowheight-and-explicitly-set-destination-height-using-setrowheight.cs
 - duplicate-adjacent-columns-with-copycolumns-and-ensure-merged-cells-remain-intact-after-copying.cs
 - apply-pasteoptions-to-copy-only-values-from-source-rows-ignoring-formulas-and-formatting.cs
+- copy-rows-while-preserving-embedded-images-and-drawing-objects-using-default-copy-behavior.cs
