@@ -3101,6 +3101,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-error-handling-around-workbookdesignerprocess-to-catch-and-log-exceptions-caused-by-malformed-smart-marker-syntax.cs",
+      "title": "Implement error handling around WorkbookDesigner.Process to catch and log exceptions caused by malformed smart marker syntax."
+    },
+    {
+      "category": "smart-markers",
       "file": "import-a-specific-array-element-by-index-using-syntax-like-orders2itemname.cs",
       "title": "Import a specific array element by index using syntax like &=Orders[2].ItemName."
     },
