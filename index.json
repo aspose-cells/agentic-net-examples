@@ -5031,6 +5031,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "use-specific-adjustment-indices-to-modify-the-tip-angle-of-a-callout-shape.cs",
+      "title": "Use specific adjustment indices to modify the tip angle of a callout shape."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs",
       "title": "Write a unit test verifying SmartArt text replacement works correctly."
     },
