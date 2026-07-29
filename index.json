@@ -3023,6 +3023,11 @@
       "category": "queries-and-connections",
       "file": "test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs",
       "title": "Test the custom ribbon button to confirm it successfully updates external link paths."
+    },
+    {
+      "category": "queries-and-connections",
+      "file": "verify-that-the-workbook-opens-without-errors-after-applying-custom-ribbon-and-path-changes.cs",
+      "title": "Verify that the workbook opens without errors after applying custom ribbon and path changes."
     }
   ]
 }
