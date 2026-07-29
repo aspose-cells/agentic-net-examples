@@ -3616,6 +3616,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs",
+      "title": "Apply conditional smart markers that display \u201cPass\u201d or \u201cFail\u201d based on a numeric score property."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs",
       "title": "Apply data validation rules to cells filled by smart markers to restrict user input after generation."
     },
