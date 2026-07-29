@@ -3041,6 +3041,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs",
+      "title": "Enable auto\u2011populate to additional worksheets when data exceeds a single sheet\u2019s row limit, ensuring seamless continuation."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs",
       "title": "Process multiple template files in a batch, assigning distinct data sources to each WorkbookDesigner instance."
     }
