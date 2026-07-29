@@ -4071,6 +4071,11 @@
     },
     {
       "category": "timeline",
+      "file": "batch-convert-excel-files-add-a-timeline-to-each-and-save-pdfs-to-an-output-directory.cs",
+      "title": "Batch convert Excel files, add a timeline to each, and save PDFs to an output directory."
+    },
+    {
+      "category": "timeline",
       "file": "render-a-timeline-with-data-labels-showing-percentages-adjust-label-font-size-and-save-as-png.cs",
       "title": "Render a timeline with data labels showing percentages, adjust label font size, and save as PNG."
     }
