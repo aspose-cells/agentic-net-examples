@@ -4108,6 +4108,11 @@
       "category": "working-with-images",
       "file": "convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs",
       "title": "Convert a worksheet to SVG with the viewBox attribute enabled for scalable rendering."
+    },
+    {
+      "category": "working-with-images",
+      "file": "export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs",
+      "title": "Export a worksheet to SVG without the viewBox attribute to produce fixed\u2011size vector output."
     }
   ]
 }
