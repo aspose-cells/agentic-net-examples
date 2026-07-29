@@ -4886,6 +4886,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-solid-gridlines-in-a-pdf-generated-from-an-xlsx-workbook.cs",
+      "title": "Render solid gridlines in a PDF generated from an XLSX workbook."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-solid-gridlines-true-verification-ensure-gridlines-appear-as-continuous-lines-in-pdf.cs",
       "title": "Render solid gridlines true verification: ensure gridlines appear as continuous lines in PDF."
     },
