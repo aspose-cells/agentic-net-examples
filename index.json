@@ -4211,6 +4211,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "validate-that-the-size-of-the-generated-tiff-file-does-not-exceed-a-predefined-maximum-limit.cs",
+      "title": "Validate that the size of the generated TIFF file does not exceed a predefined maximum limit."
+    },
+    {
+      "category": "working-with-images",
       "file": "validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs",
       "title": "Validate the SVG worksheet file against the SVG schema to ensure structural correctness."
     },
