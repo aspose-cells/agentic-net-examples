@@ -5056,6 +5056,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "verify-that-pdf-output-reflects-updated-linked-shape-image-after-refresh-operation.cs",
+      "title": "Verify that PDF output reflects updated linked shape image after refresh operation."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs",
       "title": "Write a unit test verifying SmartArt text replacement works correctly."
     },
