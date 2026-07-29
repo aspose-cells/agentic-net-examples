@@ -3061,6 +3061,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "combine-variable-markers-with-conditional-formatting-rules-to-highlight-cells-meeting-specific-thresholds-after-merging.cs",
+      "title": "Combine variable markers with conditional formatting rules to highlight cells meeting specific thresholds after merging."
+    },
+    {
+      "category": "smart-markers",
       "file": "configure-workbookdesigner-to-use-a-custom-datatable-as-the-data-source-before-processing.cs",
       "title": "Configure WorkbookDesigner to use a custom DataTable as the data source before processing."
     },
