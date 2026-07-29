@@ -3055,6 +3055,11 @@
       "title": "Verify that the workbook opens without errors after applying custom ribbon and path changes."
     },
     {
+      "category": "rows-and-columns",
+      "file": "duplicate-adjacent-columns-with-copycolumns-and-ensure-merged-cells-remain-intact-after-copying.cs",
+      "title": "Duplicate adjacent columns with CopyColumns and ensure merged cells remain intact after copying."
+    },
+    {
       "category": "smart-markers",
       "file": "add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs",
       "title": "Add a noadd parameter to the first template row to keep header static during merging."
