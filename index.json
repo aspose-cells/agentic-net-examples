@@ -3181,6 +3181,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "invoke-deleteblankrowsandcolumns-on-the-first-worksheet-with-updatereference-disabled-to-preserve-formulas.cs",
+      "title": "Invoke DeleteBlankRowsAndColumns on the first worksheet with UpdateReference disabled to preserve formulas."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "load-a-file-insert-a-column-at-position-two-copy-cell-styles-and-save-the-result-as-pdf.cs",
       "title": "Load a file, insert a column at position two, copy cell styles, and save the result as PDF."
     },
