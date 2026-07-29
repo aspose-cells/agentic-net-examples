@@ -3828,6 +3828,11 @@
       "category": "smart-markers",
       "file": "validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs",
       "title": "Validate that all required smart markers are present in the template before processing to avoid runtime merge errors."
+    },
+    {
+      "category": "smart-markers",
+      "file": "validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs",
+      "title": "Validate that each generated detail worksheet contains the expected number of rows matching the source collection count."
     }
   ]
 }
