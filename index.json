@@ -4518,6 +4518,11 @@
       "category": "working-with-images",
       "file": "write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs",
       "title": "Write the PNG chart image to a temporary file and schedule automatic deletion after processing."
+    },
+    {
+      "category": "working-with-pdf",
+      "file": "recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs",
+      "title": "Recalculate all formulas in the workbook by calling Workbook.CalculateFormula before conversion."
     }
   ]
 }
