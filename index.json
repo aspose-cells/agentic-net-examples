@@ -3048,6 +3048,11 @@
       "category": "smart-markers",
       "file": "process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs",
       "title": "Process multiple template files in a batch, assigning distinct data sources to each WorkbookDesigner instance."
+    },
+    {
+      "category": "smart-markers",
+      "file": "save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs",
+      "title": "Save the processed workbook as an XLSX file to preserve all smart marker generated content and formatting."
     }
   ]
 }
