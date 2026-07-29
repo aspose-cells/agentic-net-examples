@@ -4166,6 +4166,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "insert-the-png-worksheet-image-into-a-word-document-using-openxml-sdk-for-automated-reporting.cs",
+      "title": "Insert the PNG worksheet image into a Word document using OpenXML SDK for automated reporting."
+    },
+    {
+      "category": "working-with-images",
       "file": "iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs",
       "title": "Iterate through each worksheet in a workbook and save each as a separate PNG file."
     },
