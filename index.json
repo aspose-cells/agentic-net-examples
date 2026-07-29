@@ -4996,6 +4996,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs",
+      "title": "Compare geometry before and after XML import to ensure consistency."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs",
       "title": "Export non\u2011primitive shape geometry to an XML file for external analysis."
     },
