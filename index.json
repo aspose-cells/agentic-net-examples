@@ -4181,6 +4181,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "generate-html-with-embedded-css-by-disabling-external-css-and-enabling-custom-css-properties.cs",
+      "title": "Generate HTML with embedded CSS by disabling external CSS and enabling custom CSS properties."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-comments-in-html-by-setting-htmlsaveoptionsincludecomments-to-true.cs",
       "title": "Include worksheet comments in HTML by setting HtmlSaveOptions.IncludeComments to true."
     },
