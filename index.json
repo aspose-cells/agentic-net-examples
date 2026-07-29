@@ -4176,6 +4176,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "ensure-all-hyperlinks-open-in-a-new-browser-tab-by-configuring-htmlsaveoptionshtmllinktargettype.cs",
+      "title": "Ensure all hyperlinks open in a new browser tab by configuring HtmlSaveOptions.HtmlLinkTargetType."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-worksheet-to-html-with-both-gridlines-and-comments-enabled-simultaneously.cs",
       "title": "Export a worksheet to HTML with both gridlines and comments enabled simultaneously."
     },
