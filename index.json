@@ -4671,6 +4671,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-an-excel-macro-file-as-an-attachment-within-the-pdf-for-reference-purposes.cs",
+      "title": "Embed an Excel macro file as an attachment within the PDF for reference purposes."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "embed-javascript-in-the-pdf-to-open-a-specific-url-when-the-document-loads.cs",
       "title": "Embed JavaScript in the PDF to open a specific URL when the document loads."
     },
