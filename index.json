@@ -3891,6 +3891,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs",
+      "title": "Populate merged cells using smart markers and ensure merged ranges expand correctly when data rows increase."
+    },
+    {
+      "category": "smart-markers",
       "file": "process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs",
       "title": "Process multiple template files in a batch, assigning distinct data sources to each WorkbookDesigner instance."
     },
