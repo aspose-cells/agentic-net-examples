@@ -3213,6 +3213,11 @@
       "category": "smart-markers",
       "file": "use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs",
       "title": "Use the skip parameter to omit every other row while populating a template with alternating entries."
+    },
+    {
+      "category": "smart-markers",
+      "file": "validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs",
+      "title": "Validate that all required smart markers are present in the template before processing to avoid runtime merge errors."
     }
   ]
 }
