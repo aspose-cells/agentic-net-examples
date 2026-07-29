@@ -4226,6 +4226,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "schedule-automatic-deletion-of-the-png-worksheet-image-after-twentyfour-hours-using-a-background-job-scheduler.cs",
+      "title": "Schedule automatic deletion of the PNG worksheet image after twenty\u2011four hours using a background job scheduler."
+    },
+    {
+      "category": "working-with-images",
       "file": "set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs",
       "title": "Set chart image resolution to 300 DPI during PNG conversion to achieve high\u2011definition output."
     },
