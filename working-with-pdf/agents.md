@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs
 - set-pdf-document-language-property-based-on-excel-workbook-locale-for-accessibility-tools.cs
 - generate-a-pdf-with-a-table-of-contents-derived-from-worksheet-names-and-page-numbers.cs
+- include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
