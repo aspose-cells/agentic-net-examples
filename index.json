@@ -4586,6 +4586,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs",
+      "title": "Hide rows and columns marked as hidden in Excel when generating the PDF output."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "include-data-validation-dropdowns-as-static-text-in-the-pdf-to-reflect-cell-constraints.cs",
       "title": "Include data validation dropdowns as static text in the PDF to reflect cell constraints."
     },
