@@ -5196,6 +5196,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "obtain-the-absolute-pixel-position-of-a-grouped-shape-and-convert-it-to-inches-for-reporting.cs",
+      "title": "Obtain the absolute pixel position of a grouped shape and convert it to inches for reporting."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "programmatically-adjust-a-shapes-z-order-by-adding-five-to-its-current-value-and-observe-layer-change.cs",
       "title": "Programmatically adjust a shape's Z-order by adding five to its current value and observe layer change."
     },
