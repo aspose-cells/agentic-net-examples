@@ -4156,6 +4156,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-worksheet-comments-in-html-by-setting-htmlsaveoptionsincludecomments-to-true.cs",
+      "title": "Include worksheet comments in HTML by setting HtmlSaveOptions.IncludeComments to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-excel-file-modify-cell-b4-text-and-save-as-html-with-a-custom-default-font.cs",
       "title": "Load an Excel file, modify cell B4 text, and save as HTML with a custom default font."
     },
