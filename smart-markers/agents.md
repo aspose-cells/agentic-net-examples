@@ -172,3 +172,4 @@ Output files are written to the working directory.
 - create-a-custom-class-implementing-icustomtypeprovider-to-expose-additional-properties-for-smart-marker-binding.cs
 - set-workbookdesignerlinebyline-to-true-for-simple-list-merging-while-keeping-master-markers-linebyline.cs
 - apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs
+- use-the-html-property-to-embed-an-image-tag-within-a-cell-rendering-the-picture-after-merge.cs
