@@ -4596,6 +4596,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-only-selected-ranges-of-an-excel-worksheet-to-pdf-excluding-hidden-rows-and-columns.cs",
+      "title": "Convert only selected ranges of an Excel worksheet to PDF, excluding hidden rows and columns."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs",
       "title": "Create hierarchical PDF bookmarks for each worksheet by populating PdfSaveOptions.Bookmarks collection."
     },
