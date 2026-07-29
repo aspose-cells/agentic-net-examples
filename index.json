@@ -4161,6 +4161,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-worksheet-to-html-with-both-gridlines-and-comments-enabled-simultaneously.cs",
+      "title": "Export a worksheet to HTML with both gridlines and comments enabled simultaneously."
+    },
+    {
+      "category": "working-with-html",
       "file": "include-worksheet-comments-in-html-by-setting-htmlsaveoptionsincludecomments-to-true.cs",
       "title": "Include worksheet comments in HTML by setting HtmlSaveOptions.IncludeComments to true."
     },
