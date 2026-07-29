@@ -4311,6 +4311,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "validate-that-the-viewbox-dimensions-in-the-svg-chart-match-the-original-worksheet-size-for-accuracy.cs",
+      "title": "Validate that the viewBox dimensions in the SVG chart match the original worksheet size for accuracy."
+    },
+    {
+      "category": "working-with-images",
       "file": "validate-the-svg-worksheet-file-against-the-svg-schema-to-ensure-structural-correctness.cs",
       "title": "Validate the SVG worksheet file against the SVG schema to ensure structural correctness."
     },
