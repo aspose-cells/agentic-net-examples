@@ -3826,6 +3826,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-workbookdesignersetdatasource-with-a-datatable-to-populate-smart-markers-from-relational-database-results.cs",
+      "title": "Use WorkbookDesigner.SetDataSource with a DataTable to populate smart markers from relational database results."
+    },
+    {
+      "category": "smart-markers",
       "file": "validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs",
       "title": "Validate that all required smart markers are present in the template before processing to avoid runtime merge errors."
     },
