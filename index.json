@@ -3073,6 +3073,11 @@
       "category": "smart-markers",
       "file": "save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs",
       "title": "Save the processed workbook as an XLSX file to preserve all smart marker generated content and formatting."
+    },
+    {
+      "category": "smart-markers",
+      "file": "use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs",
+      "title": "Use a variable array marker across a range to fill a table with a one\u2011dimensional collection."
     }
   ]
 }
