@@ -3046,6 +3046,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs",
+      "title": "Apply the formula parameter to a smart marker so Excel formulas adjust for each inserted row."
+    },
+    {
+      "category": "smart-markers",
       "file": "combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs",
       "title": "Combine noadd and skip parameters on alternating rows to create staggered data layout."
     },
