@@ -3460,6 +3460,11 @@
       "title": "Verify that the formula now references the first worksheet cell A1."
     },
     {
+      "category": "rows-and-columns",
+      "file": "write-the-updated-formula-and-its-calculated-value-of-cell-e3-to-the-console.cs",
+      "title": "Write the updated formula and its calculated value of cell E3 to the console."
+    },
+    {
       "category": "smart-markers",
       "file": "add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs",
       "title": "Add a noadd parameter to the first template row to keep header static during merging."
