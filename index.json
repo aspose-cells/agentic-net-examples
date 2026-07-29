@@ -4071,6 +4071,11 @@
     },
     {
       "category": "timeline",
+      "file": "add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs",
+      "title": "Add interactive hyperlinks to timeline markers that open related worksheets when the PDF is viewed."
+    },
+    {
+      "category": "timeline",
       "file": "apply-a-watermark-text-over-a-rendered-timeline-image-and-export-the-final-picture-as-a-pdf.cs",
       "title": "Apply a watermark text over a rendered timeline image and export the final picture as a PDF."
     },
