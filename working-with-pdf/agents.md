@@ -181,3 +181,4 @@ Output files are written to the working directory.
 - enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs
 - create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs
 - enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs
+- set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs
