@@ -3016,6 +3016,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "ensure-the-solution-complies-with-security-best-practices-when-handling-external-file-paths.cs",
+      "title": "Ensure the solution complies with security best practices when handling external file paths."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "implement-error-handling-for-failures-during-external-link-path-updates-invoked-from-the-ribbon.cs",
       "title": "Implement error handling for failures during external link path updates invoked from the ribbon."
     },
