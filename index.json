@@ -4151,6 +4151,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "disable-external-css-generation-during-html-export-with-htmlsaveoptionsdisablecss-set-to-true.cs",
+      "title": "Disable external CSS generation during HTML export with HtmlSaveOptions.DisableCss set to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "enable-gridlines-and-comments-together-in-htmlsaveoptions-for-comprehensive-html-export.cs",
       "title": "Enable gridlines and comments together in HtmlSaveOptions for comprehensive HTML export."
     },
