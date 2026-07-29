@@ -4266,6 +4266,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "store-chart-metadata-such-as-series-names-and-axis-labels-in-a-json-file-alongside-the-png.cs",
+      "title": "Store chart metadata such as series names and axis labels in a JSON file alongside the PNG."
+    },
+    {
+      "category": "working-with-images",
       "file": "track-charttopng-conversion-progress-using-iprogress-interface-and-report-percentage-to-console.cs",
       "title": "Track chart\u2011to\u2011PNG conversion progress using IProgress interface and report percentage to console."
     },
