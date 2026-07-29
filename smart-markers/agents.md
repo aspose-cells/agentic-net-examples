@@ -167,3 +167,4 @@ Output files are written to the working directory.
 - set-workbookdesignerlinebyline-to-false-when-merging-nested-objects-to-process-them-as-grouped-records.cs
 - set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs
 - save-the-merged-workbook-as-xlsx-and-optionally-export-a-pdf-copy-for-reporting-purposes.cs
+- use-workbookdesignersetdatasource-with-a-datatable-to-populate-smart-markers-from-relational-database-results.cs
