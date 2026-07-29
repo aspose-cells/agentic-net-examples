@@ -4546,6 +4546,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs",
+      "title": "Set PdfSaveOptions.FitAllColumnsInOnePage to true to fit all columns on a single PDF page."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionspdfacompliance-to-pdfacompliancepdfa1a-to-generate-pdfa1a-compliant-files-output.cs",
       "title": "Set PdfSaveOptions.PdfACompliance to PdfACompliance.PdfA1a to generate PDF/A\u20111a compliant files output."
     }
