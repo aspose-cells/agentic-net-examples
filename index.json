@@ -5181,6 +5181,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-set-a-shapes-z-order-to-zero-and-verify-it-appears-at-the-default-layer-position.cs",
+      "title": "Programmatically set a shape's Z-order to zero and verify it appears at the default layer position."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-linked-shapes-after-updating-their-source-cell-values-to-display-new-data.cs",
       "title": "Refresh linked shapes after updating their source cell values to display new data."
     },
