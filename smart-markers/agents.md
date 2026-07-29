@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs
 - combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs
 - use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs
+- insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs
