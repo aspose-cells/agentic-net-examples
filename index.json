@@ -3076,6 +3076,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "import-a-specific-array-element-by-index-using-syntax-like-orders2itemname.cs",
+      "title": "Import a specific array element by index using syntax like &=Orders[2].ItemName."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs",
       "title": "Insert an image smart marker with the image parameter to embed pictures from file paths."
     },
