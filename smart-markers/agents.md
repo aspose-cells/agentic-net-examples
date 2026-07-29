@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - load-an-excel-template-workbook-from-file-or-stream-before-configuring-smart-markers.cs
 - place-a-master-smart-marker-in-the-template-to-repeat-rows-for-each-master-record.cs
 - insert-detail-smart-markers-and-set-the-detailsheet-parameter-to-target-a-separate-worksheet.cs
+- configure-the-detailtable-parameter-to-map-detail-data-into-a-predefined-table-on-the-target-sheet.cs
