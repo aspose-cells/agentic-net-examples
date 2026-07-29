@@ -3081,6 +3081,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "import-a-subset-of-an-array-using-slicer-syntax-such-as-orders13quantity.cs",
+      "title": "Import a subset of an array using slicer syntax such as &=Orders[1..3].Quantity."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs",
       "title": "Insert an image smart marker with the image parameter to embed pictures from file paths."
     },
