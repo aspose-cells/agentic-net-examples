@@ -4106,6 +4106,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "activate-custom-css-properties-in-html-output-by-enabling-htmlsaveoptionsenablecsscustomproperties.cs",
+      "title": "Activate custom CSS properties in HTML output by enabling HtmlSaveOptions.EnableCssCustomProperties."
+    },
+    {
+      "category": "working-with-html",
       "file": "configure-htmlsaveoptions-to-use-courier-new-as-fallback-font-when-original-font-missing.cs",
       "title": "Configure HtmlSaveOptions to use \"Courier New\" as fallback font when original font missing."
     },
