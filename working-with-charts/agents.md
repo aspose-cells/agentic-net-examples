@@ -279,3 +279,4 @@ Output files are written to the working directory.
 - store-retrieved-axis-label-strings-into-a-separate-worksheet-column.cs
 - assign-custom-text-to-each-data-point-in-a-series-using-datapointlabeltext-property.cs
 - assign-custom-label-to-the-first-data-point-of-each-series-within-a-loop.cs
+- modify-individual-theme-colors-of-the-chart-by-accessing-the-themecolorscheme-collection.cs
