@@ -75,3 +75,4 @@ Output files are written to the working directory.
 - export-a-timeline-directly-to-a-memory-stream-in-pdf-format-for-further-processing-without-disk-io.cs
 - add-interactive-hyperlinks-to-timeline-markers-that-open-related-worksheets-when-the-pdf-is-viewed.cs
 - render-a-timeline-with-a-3d-perspective-effect-adjust-depth-and-output-as-a-png-image.cs
+- render-a-timeline-with-data-labels-showing-percentages-adjust-label-font-size-and-save-as-png.cs
