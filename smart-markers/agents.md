@@ -175,3 +175,4 @@ Output files are written to the working directory.
 - use-the-html-property-to-embed-an-image-tag-within-a-cell-rendering-the-picture-after-merge.cs
 - use-a-smart-marker-with-the-html-property-to-render-a-colored-span-element-inside-a-cell.cs
 - use-a-foreach-smart-marker-to-generate-a-variablelength-list-of-project-milestones-on-a-timeline-sheet.cs
+- add-a-smart-marker-that-inserts-the-current-date-using-the-formula-parameter-with-today-function.cs
