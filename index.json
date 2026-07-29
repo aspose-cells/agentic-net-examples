@@ -3181,6 +3181,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs",
+      "title": "Use LINQ to filter a collection before assigning it to WorkbookDesigner, ensuring rows appear via smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs",
       "title": "Use the notify parameter together with a custom logger to record each successful smart marker merge event."
     },
