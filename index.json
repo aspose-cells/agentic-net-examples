@@ -4596,6 +4596,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs",
+      "title": "Enable PDF/A compliance to ensure long\u2011term archival compatibility of converted documents."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs",
       "title": "Enable PdfSaveOptions.EmbedAttachments and add file paths to embed multiple external files into the PDF."
     },
