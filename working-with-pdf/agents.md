@@ -193,3 +193,4 @@ Output files are written to the working directory.
 - include-data-validation-dropdowns-as-static-text-in-the-pdf-to-reflect-cell-constraints.cs
 - hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs
 - apply-print-titles-to-repeat-header-rows-on-each-pdf-page-for-better-readability.cs
+- set-pdf-page-breaks-based-on-excel-page-breaks-to-maintain-original-pagination.cs
