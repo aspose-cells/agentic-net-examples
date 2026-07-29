@@ -3611,6 +3611,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs",
+      "title": "Apply the Formula parameter to calculate total price by multiplying quantity and unit price during merge."
+    },
+    {
+      "category": "smart-markers",
       "file": "batch-process-a-folder-of-template-files-applying-the-same-data-source-to-each-workbook-using-smart-markers.cs",
       "title": "Batch process a folder of template files, applying the same data source to each workbook using smart markers."
     },
