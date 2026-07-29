@@ -4561,6 +4561,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs",
+      "title": "Embed all fonts used in the workbook into the PDF to ensure consistent rendering on any device."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs",
       "title": "Enable PdfSaveOptions.EmbedAttachments and add file paths to embed multiple external files into the PDF."
     },
