@@ -4936,6 +4936,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsoptimizationtype-to-minimumsize-for-an-xlsx-workbook-and-save-as-pdf.cs",
+      "title": "Set PdfSaveOptions.OptimizationType to MinimumSize for an XLSX workbook and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionsoptimizationtype-to-standardsize-for-an-xls-workbook-and-save-as-pdf.cs",
       "title": "Set PdfSaveOptions.OptimizationType to StandardSize for an XLS workbook and save as PDF."
     },
