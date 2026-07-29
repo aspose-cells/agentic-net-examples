@@ -3791,6 +3791,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-table-of-contents-sheet-using-smart-markers-that-lists-all-populated-worksheets-with-hyperlinks.cs",
+      "title": "Generate a table of contents sheet using smart markers that lists all populated worksheets with hyperlinks."
+    },
+    {
+      "category": "smart-markers",
       "file": "group-masterdetail-data-by-placing-a-parent-smart-marker-above-a-child-marker-range.cs",
       "title": "Group master\u2011detail data by placing a parent smart marker above a child marker range."
     },
