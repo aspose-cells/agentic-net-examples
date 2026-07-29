@@ -4151,6 +4151,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "enable-gridlines-in-html-output-by-setting-htmlsaveoptionsenablegridlines-to-true.cs",
+      "title": "Enable gridlines in HTML output by setting HtmlSaveOptions.EnableGridlines to true."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-excel-file-modify-cell-b4-text-and-save-as-html-with-a-custom-default-font.cs",
       "title": "Load an Excel file, modify cell B4 text, and save as HTML with a custom default font."
     },
