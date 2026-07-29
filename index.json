@@ -3435,6 +3435,11 @@
       "title": "Validate that comments attached to original rows are correctly transferred to copied rows."
     },
     {
+      "category": "rows-and-columns",
+      "file": "verify-that-the-deleteoptionsupdatereference-property-is-set-to-true-before-deletion.cs",
+      "title": "Verify that the DeleteOptions.UpdateReference property is set to true before deletion."
+    },
+    {
       "category": "smart-markers",
       "file": "add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs",
       "title": "Add a noadd parameter to the first template row to keep header static during merging."
