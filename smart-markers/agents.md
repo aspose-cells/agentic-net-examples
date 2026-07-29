@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - configure-the-workbook-designer-to-treat-empty-strings-as-blanks-when-merging-string-properties-from-data-source.cs
 - use-a-smart-marker-with-index-syntax-to-fill-a-matrix-of-attendance-records-for-each-day.cs
 - configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs
+- apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs
