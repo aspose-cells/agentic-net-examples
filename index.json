@@ -3036,6 +3036,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "review-and-update-the-custom-ribbon-xml-to-maintain-compatibility-with-future-office-versions.cs",
+      "title": "Review and update the custom ribbon XML to maintain compatibility with future Office versions."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "save-the-workbook-with-updated-external-links-and-custom-ribbon-after-user-confirmation.cs",
       "title": "Save the workbook with updated external links and custom ribbon after user confirmation."
     },
