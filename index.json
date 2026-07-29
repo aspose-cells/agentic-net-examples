@@ -4736,6 +4736,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsm-file-apply-standardsize-optimization-and-export-to-pdf.cs",
+      "title": "Load an XLSM file, apply StandardSize optimization, and export to PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs",
       "title": "Loop through each worksheet, set SheetSet individually, and save each as separate PDF files."
     },
