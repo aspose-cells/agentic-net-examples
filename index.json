@@ -5141,6 +5141,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-change-a-shapes-linked-cell-from-a1-to-b2-and-verify-the-shape-updates-accordingly.cs",
+      "title": "Programmatically change a shape's linked cell from A1 to B2 and verify the shape updates accordingly."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-linked-shapes-after-updating-their-source-cell-values-to-display-new-data.cs",
       "title": "Refresh linked shapes after updating their source cell values to display new data."
     },
