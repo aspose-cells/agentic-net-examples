@@ -4201,6 +4201,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-worksheet-headings-as-separate-html-tables-by-enabling-htmlsaveoptionsexportheadings.cs",
+      "title": "Export worksheet headings as separate HTML tables by enabling HtmlSaveOptions.ExportHeadings."
+    },
+    {
+      "category": "working-with-html",
       "file": "generate-html-with-embedded-css-by-disabling-external-css-and-enabling-custom-css-properties.cs",
       "title": "Generate HTML with embedded CSS by disabling external CSS and enabling custom CSS properties."
     },
