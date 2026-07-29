@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs
 - enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs
 - set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs
+- convert-a-batch-of-xlsx-files-in-a-directory-to-pdfa1a-format-using-parallel-processing.cs
