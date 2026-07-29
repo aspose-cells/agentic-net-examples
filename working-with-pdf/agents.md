@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - add-a-custom-pdf-attachment-containing-a-summary-report-generated-from-workbook-data.cs
 - embed-multiple-attachments-such-as-images-and-csv-files-into-the-pdf-using-pdfsaveoptions.cs
 - batch-convert-a-folder-of-xlsm-files-to-pdfs-applying-minimumsize-optimization-to-each-file.cs
+- export-document-structure-with-bookmarks-and-confirm-they-appear-in-pdf-outline-viewer.cs
