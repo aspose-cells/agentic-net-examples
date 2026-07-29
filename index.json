@@ -4581,6 +4581,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs",
+      "title": "Export pivot tables as static images in the PDF to capture their current state."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs",
       "title": "Increase image resampling quality to 300 DPI for sharper images in the generated PDF."
     },
