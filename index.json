@@ -3061,6 +3061,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "batch-process-a-folder-of-template-files-applying-the-same-data-source-to-each-workbook-using-smart-markers.cs",
+      "title": "Batch process a folder of template files, applying the same data source to each workbook using smart markers."
+    },
+    {
+      "category": "smart-markers",
       "file": "combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs",
       "title": "Combine noadd and skip parameters on alternating rows to create staggered data layout."
     },
