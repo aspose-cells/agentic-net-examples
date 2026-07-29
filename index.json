@@ -4131,6 +4131,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs",
+      "title": "Render a chart object from the workbook to a PNG image using the ChartRender API."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-the-svg-worksheet-image-in-a-wpf-image-control-for-display-within-a-desktop-application.cs",
       "title": "Render the SVG worksheet image in a WPF Image control for display within a desktop application."
     },
