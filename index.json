@@ -4546,6 +4546,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-a-custom-pdf-compression-level-to-reduce-file-size-while-maintaining-image-quality.cs",
+      "title": "Apply a custom PDF compression level to reduce file size while maintaining image quality."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs",
       "title": "Apply conditional formatting during conversion to reflect cell color changes in the PDF."
     },
