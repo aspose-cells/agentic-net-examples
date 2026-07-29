@@ -3571,6 +3571,11 @@
     },
     {
       "category": "slicer",
+      "file": "render-slicer-as-a-static-image-in-pdf-to-prevent-interactivity-while-preserving-its-appearance.cs",
+      "title": "Render slicer as a static image in PDF to prevent interactivity while preserving its appearance."
+    },
+    {
+      "category": "slicer",
       "file": "render-the-workbook-to-pdf-while-preserving-slicer-visual-properties-and-layout.cs",
       "title": "Render the workbook to PDF while preserving slicer visual properties and layout."
     },
