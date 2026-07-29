@@ -3176,6 +3176,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "document-the-sequence-of-steps-and-code-snippets-in-a-developer-guide.cs",
+      "title": "Document the sequence of steps and code snippets in a developer guide."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "duplicate-adjacent-columns-with-copycolumns-and-ensure-merged-cells-remain-intact-after-copying.cs",
       "title": "Duplicate adjacent columns with CopyColumns and ensure merged cells remain intact after copying."
     },
