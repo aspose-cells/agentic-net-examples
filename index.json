@@ -4521,6 +4521,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-custom-pdf-attachment-containing-a-summary-report-generated-from-workbook-data.cs",
+      "title": "Add a custom PDF attachment containing a summary report generated from workbook data."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "add-a-digital-signature-to-the-pdf-generated-from-an-excel-workbook-for-authenticity.cs",
       "title": "Add a digital signature to the PDF generated from an Excel workbook for authenticity."
     },
