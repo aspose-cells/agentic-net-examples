@@ -4671,6 +4671,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "generate-a-pdf-with-a-table-of-contents-derived-from-worksheet-names-and-page-numbers.cs",
+      "title": "Generate a PDF with a table of contents derived from worksheet names and page numbers."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs",
       "title": "Hide rows and columns marked as hidden in Excel when generating the PDF output."
     },
