@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - batch-process-a-folder-of-template-files-applying-the-same-data-source-to-each-workbook-using-smart-markers.cs
 - create-a-function-that-accepts-a-data-object-and-a-template-path-then-returns-a-populated-workbook-stream.cs
 - load-json-from-a-web-service-map-to-an-object-and-merge-with-smart-markers-in-the-template.cs
+- enable-multithreaded-processing-by-creating-separate-workbookdesigner-instances-for-each-template-then-merging-data-concurrently.cs
