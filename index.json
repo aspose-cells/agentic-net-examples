@@ -4166,6 +4166,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "embed-the-svg-chart-file-into-a-react-component-as-jsx-for-seamless-integration-in-web-apps.cs",
+      "title": "Embed the SVG chart file into a React component as JSX for seamless integration in web apps."
+    },
+    {
+      "category": "working-with-images",
       "file": "embed-the-tiff-thumbnail-as-a-base64-string-within-json-metadata-for-api-responses.cs",
       "title": "Embed the TIFF thumbnail as a base64 string within JSON metadata for API responses."
     },
