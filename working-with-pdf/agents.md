@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsoptimizationtype-to-standardsize-for-an-xls-workbook-and-save-as-pdf.cs
 - render-solid-gridlines-in-a-pdf-generated-from-an-xlsx-workbook.cs
 - embed-a-text-document-as-a-pdf-attachment-using-pdfsaveoptions.cs
+- use-fontsettings-to-load-a-font-that-supports-unicode-supplementary-characters-before-pdf-conversion.cs
