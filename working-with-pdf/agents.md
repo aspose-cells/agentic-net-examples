@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
 - preserve-excel-cell-borders-and-gridlines-in-the-pdf-output-for-exact-visual-replication.cs
 - enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs
+- add-a-digital-signature-to-the-pdf-generated-from-an-excel-workbook-for-authenticity.cs
