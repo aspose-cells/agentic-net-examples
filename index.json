@@ -3851,6 +3851,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-a-foreach-smart-marker-to-generate-a-variablelength-list-of-project-milestones-on-a-timeline-sheet.cs",
+      "title": "Use a foreach smart marker to generate a variable\u2011length list of project milestones on a timeline sheet."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-a-smart-marker-with-the-html-property-to-render-a-colored-span-element-inside-a-cell.cs",
       "title": "Use a smart marker with the HTML property to render a colored span element inside a cell."
     },
