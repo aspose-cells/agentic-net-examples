@@ -4936,6 +4936,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-pdfsaveoptionsoptimizationtype-to-standardsize-for-an-xls-workbook-and-save-as-pdf.cs",
+      "title": "Set PdfSaveOptions.OptimizationType to StandardSize for an XLS workbook and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdfsaveoptionspdfacompliance-to-pdfacompliancepdfa1a-to-generate-pdfa1a-compliant-files-output.cs",
       "title": "Set PdfSaveOptions.PdfACompliance to PdfACompliance.PdfA1a to generate PDF/A\u20111a compliant files output."
     },
