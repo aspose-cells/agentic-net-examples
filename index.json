@@ -4881,6 +4881,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "verify-that-exportdocumentstructure-creates-a-pdf-outline-matching-excel-sheet-hierarchy.cs",
+      "title": "Verify that ExportDocumentStructure creates a PDF outline matching Excel sheet hierarchy."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "verify-that-unicode-supplementary-characters-such-as-emojis-render-correctly-in-the-pdf-output.cs",
       "title": "Verify that Unicode supplementary characters, such as emojis, render correctly in the PDF output."
     }
