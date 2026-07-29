@@ -3111,6 +3111,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "process-multiple-worksheets-in-a-single-workbook-each-containing-distinct-smart-markers-to-generate-a-multisheet-report.cs",
+      "title": "Process multiple worksheets in a single workbook, each containing distinct smart markers, to generate a multi\u2011sheet report."
+    },
+    {
+      "category": "smart-markers",
       "file": "save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs",
       "title": "Save the processed workbook as an XLSX file to preserve all smart marker generated content and formatting."
     },
