@@ -229,3 +229,4 @@ Output files are written to the working directory.
 - render-solid-gridlines-in-a-pdf-generated-from-an-xlsx-workbook.cs
 - embed-a-text-document-as-a-pdf-attachment-using-pdfsaveoptions.cs
 - use-fontsettings-to-load-a-font-that-supports-unicode-supplementary-characters-before-pdf-conversion.cs
+- apply-standardsize-optimization-while-preserving-original-column-widths-in-pdf.cs
