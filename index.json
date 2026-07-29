@@ -3570,6 +3570,11 @@
       "title": "Render the workbook to PDF while preserving slicer visual properties and layout."
     },
     {
+      "category": "slicer",
+      "file": "save-the-workbook-with-slicers-and-compare-file-sizes-with-a-version-saved-without-slicers.cs",
+      "title": "Save the workbook with slicers and compare file sizes with a version saved without slicers."
+    },
+    {
       "category": "smart-markers",
       "file": "add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs",
       "title": "Add a noadd parameter to the first template row to keep header static during merging."
