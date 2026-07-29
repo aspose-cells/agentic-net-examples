@@ -4536,6 +4536,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs",
+      "title": "Limit PDF output to ten pages by setting PdfSaveOptions.MaxPageCount to 10."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs",
       "title": "Loop through each worksheet, set SheetSet individually, and save each as separate PDF files."
     },
