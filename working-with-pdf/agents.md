@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs
 - convert-a-batch-of-xlsx-files-in-a-directory-to-pdfa1a-format-using-parallel-processing.cs
 - set-custom-pdf-margins-of-05-inches-on-all-sides-using-pdfsaveoptions.cs
+- compress-pdf-content-using-flate-compression-to-reduce-file-size-while-preserving-quality.cs
