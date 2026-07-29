@@ -4741,6 +4741,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "include-a-json-configuration-file-as-a-pdf-attachment-using-pdfsaveoptions.cs",
+      "title": "Include a JSON configuration file as a PDF attachment using PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "include-data-validation-dropdowns-as-static-text-in-the-pdf-to-reflect-cell-constraints.cs",
       "title": "Include data validation dropdowns as static text in the PDF to reflect cell constraints."
     },
