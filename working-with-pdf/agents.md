@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - generate-a-pdf-with-a-table-of-contents-derived-from-worksheet-names-and-page-numbers.cs
 - include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
 - preserve-excel-cell-borders-and-gridlines-in-the-pdf-output-for-exact-visual-replication.cs
+- enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs
