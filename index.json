@@ -3771,6 +3771,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "generate-a-pivot-table-programmatically-after-smart-marker-population-to-summarize-imported-financial-data.cs",
+      "title": "Generate a pivot table programmatically after smart marker population to summarize imported financial data."
+    },
+    {
+      "category": "smart-markers",
       "file": "group-masterdetail-data-by-placing-a-parent-smart-marker-above-a-child-marker-range.cs",
       "title": "Group master\u2011detail data by placing a parent smart marker above a child marker range."
     },
