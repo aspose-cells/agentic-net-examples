@@ -3771,6 +3771,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs",
+      "title": "Set the HTML property on a smart marker to render bold text inside the resulting cell."
+    },
+    {
+      "category": "smart-markers",
       "file": "set-workbookdesignerlinebyline-to-false-when-merging-nested-objects-to-process-them-as-grouped-records.cs",
       "title": "Set WorkbookDesigner.LineByLine to false when merging nested objects to process them as grouped records."
     },
