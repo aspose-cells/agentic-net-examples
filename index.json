@@ -4596,6 +4596,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs",
+      "title": "Preserve cell comments in the PDF output by enabling the option to retain comments."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs",
       "title": "Recalculate all formulas in the workbook by calling Workbook.CalculateFormula before conversion."
     },
