@@ -4261,6 +4261,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "save-the-svg-chart-with-a-timestamped-filename-to-avoid-overwriting-previous-exports.cs",
+      "title": "Save the SVG chart with a timestamped filename to avoid overwriting previous exports."
+    },
+    {
+      "category": "working-with-images",
       "file": "save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs",
       "title": "Save the SVG worksheet image to a .svg file with UTF\u20118 encoding to preserve character data."
     },
