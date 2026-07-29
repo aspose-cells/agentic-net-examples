@@ -3128,6 +3128,11 @@
       "category": "smart-markers",
       "file": "use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs",
       "title": "Use a variable array marker across a range to fill a table with a one\u2011dimensional collection."
+    },
+    {
+      "category": "smart-markers",
+      "file": "use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs",
+      "title": "Use the skip parameter to omit every other row while populating a template with alternating entries."
     }
   ]
 }
