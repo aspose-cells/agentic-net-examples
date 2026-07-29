@@ -5161,6 +5161,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "programmatically-duplicate-a-shape-link-the-duplicate-to-a-different-cell-and-compare-their-displayed-contents.cs",
+      "title": "Programmatically duplicate a shape, link the duplicate to a different cell, and compare their displayed contents."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "refresh-linked-shapes-after-updating-their-source-cell-values-to-display-new-data.cs",
       "title": "Refresh linked shapes after updating their source cell values to display new data."
     },
