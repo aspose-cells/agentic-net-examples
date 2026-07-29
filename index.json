@@ -4626,6 +4626,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs",
+      "title": "Render merged cells correctly in the PDF by preserving their spanning across rows and columns."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-custom-pdf-margins-of-05-inches-on-all-sides-using-pdfsaveoptions.cs",
       "title": "Set custom PDF margins of 0.5 inches on all sides using PdfSaveOptions."
     },
