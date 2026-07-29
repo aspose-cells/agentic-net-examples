@@ -3721,6 +3721,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs",
+      "title": "Define a custom data source reading JSON files and mapping properties to smart marker fields for reports."
+    },
+    {
+      "category": "smart-markers",
       "file": "enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs",
       "title": "Enable auto\u2011populate feature to spill excess data into a secondary worksheet when primary sheet reaches row limit."
     },
