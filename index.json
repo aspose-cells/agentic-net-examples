@@ -4191,6 +4191,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "export-a-workbook-to-html-with-headings-enabled-producing-separate-tables-for-each-worksheet.cs",
+      "title": "Export a workbook to HTML with headings enabled, producing separate tables for each worksheet."
+    },
+    {
+      "category": "working-with-html",
       "file": "export-a-worksheet-to-html-with-both-gridlines-and-comments-enabled-simultaneously.cs",
       "title": "Export a worksheet to HTML with both gridlines and comments enabled simultaneously."
     },
