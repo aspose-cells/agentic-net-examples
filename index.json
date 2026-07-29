@@ -4106,6 +4106,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "apply-css-styling-to-paths-within-the-exported-svg-worksheet-to-customize-visual-appearance.cs",
+      "title": "Apply CSS styling to paths within the exported SVG worksheet to customize visual appearance."
+    },
+    {
+      "category": "working-with-images",
       "file": "compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs",
       "title": "Compress the SVG worksheet file using GZip before transmitting it over the network for efficiency."
     },
