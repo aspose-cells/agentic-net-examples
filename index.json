@@ -5018,6 +5018,11 @@
       "category": "working-with-shapes",
       "file": "update-a-cell-range-linked-to-a-picture-shape-and-then-refresh-the-picture.cs",
       "title": "Update a cell range linked to a picture shape and then refresh the picture."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs",
+      "title": "Write a unit test verifying SmartArt text replacement works correctly."
     }
   ]
 }
