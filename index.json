@@ -3081,6 +3081,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "batch-copy-a-template-row-to-multiple-target-rows-across-several-worksheets-using-a-loop.cs",
+      "title": "Batch copy a template row to multiple target rows across several worksheets using a loop."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "compare-row-heights-before-and-after-autofitrows-to-confirm-height-adjustments-were-applied.cs",
       "title": "Compare row heights before and after AutoFitRows to confirm height adjustments were applied."
     },
