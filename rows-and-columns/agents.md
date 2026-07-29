@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - validate-that-comments-attached-to-original-rows-are-correctly-transferred-to-copied-rows.cs
 - preserve-cell-styles-when-copying-rows-by-enabling-style-preservation-in-pasteoptions.cs
 - transfer-rows-containing-data-validation-lists-and-verify-validation-rules-remain-functional-after-copy.cs
+- copy-rows-that-include-hyperlinks-and-confirm-hyperlinks-point-to-correct-targets-in-new-location.cs
