@@ -4111,6 +4111,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "animate-svg-path-elements-in-the-exported-worksheet-svg-using-smil-to-create-dynamic-visual-effects.cs",
+      "title": "Animate SVG path elements in the exported worksheet SVG using SMIL to create dynamic visual effects."
+    },
+    {
+      "category": "working-with-images",
       "file": "apply-css-styling-to-paths-within-the-exported-svg-worksheet-to-customize-visual-appearance.cs",
       "title": "Apply CSS styling to paths within the exported SVG worksheet to customize visual appearance."
     },
