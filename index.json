@@ -4681,6 +4681,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "merge-multiple-excel-worksheets-into-a-single-pdf-while-preserving-original-sheet-order.cs",
+      "title": "Merge multiple Excel worksheets into a single PDF while preserving original sheet order."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs",
       "title": "Preserve cell comments in the PDF output by enabling the option to retain comments."
     },
