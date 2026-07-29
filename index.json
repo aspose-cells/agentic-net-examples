@@ -3066,6 +3066,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs",
+      "title": "Enable the notify parameter on a smart marker to receive callbacks for each row insertion."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs",
       "title": "Insert an image smart marker with the image parameter to embed pictures from file paths."
     },
