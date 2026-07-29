@@ -4261,6 +4261,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "set-htmlsaveoptionshtmllinktargettype-to-_blank-to-make-all-links-open-in-new-windows.cs",
+      "title": "Set HtmlSaveOptions.HtmlLinkTargetType to \"_blank\" to make all links open in new windows."
+    },
+    {
+      "category": "working-with-html",
       "file": "specify-times-new-roman-as-default-font-for-html-rendering-via-htmlsaveoptions.cs",
       "title": "Specify \"Times New Roman\" as default font for HTML rendering via HtmlSaveOptions."
     },
