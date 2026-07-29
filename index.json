@@ -3616,6 +3616,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs",
+      "title": "Apply a smart marker filter to exclude records with null values before rendering them into the Excel output."
+    },
+    {
+      "category": "smart-markers",
       "file": "apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs",
       "title": "Apply conditional smart marker syntax to display rows only when numeric column values exceed a defined threshold."
     },
