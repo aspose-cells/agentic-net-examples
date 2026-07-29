@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - merge-multiple-excel-worksheets-into-a-single-pdf-while-preserving-original-sheet-order.cs
 - decrypt-a-passwordprotected-pdf-generated-from-excel-and-programmatically-extract-its-text.cs
 - apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs
+- set-pdf-document-language-property-based-on-excel-workbook-locale-for-accessibility-tools.cs
