@@ -3986,6 +3986,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "validate-that-all-smart-marker-placeholders-have-been-replaced-by-checking-for-remaining-marker-patterns-after-processing.cs",
+      "title": "Validate that all smart marker placeholders have been replaced by checking for remaining marker patterns after processing."
+    },
+    {
+      "category": "smart-markers",
       "file": "validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs",
       "title": "Validate that each generated detail worksheet contains the expected number of rows matching the source collection count."
     }
