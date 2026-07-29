@@ -4261,6 +4261,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "use-the-svg-worksheet-graphic-as-an-application-icon-by-converting-it-to-appropriate-icon-format.cs",
+      "title": "Use the SVG worksheet graphic as an application icon by converting it to appropriate icon format."
+    },
+    {
+      "category": "working-with-images",
       "file": "validate-that-the-size-of-the-generated-tiff-file-does-not-exceed-a-predefined-maximum-limit.cs",
       "title": "Validate that the size of the generated TIFF file does not exceed a predefined maximum limit."
     },
