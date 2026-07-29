@@ -4106,6 +4106,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "add-a-drop-shadow-effect-to-the-png-worksheet-rendering-to-enhance-visual-depth.cs",
+      "title": "Add a drop shadow effect to the PNG worksheet rendering to enhance visual depth."
+    },
+    {
+      "category": "working-with-images",
       "file": "apply-css-styling-to-paths-within-the-exported-svg-worksheet-to-customize-visual-appearance.cs",
       "title": "Apply CSS styling to paths within the exported SVG worksheet to customize visual appearance."
     },
