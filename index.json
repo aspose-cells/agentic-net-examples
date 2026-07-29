@@ -4656,6 +4656,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-a-video-file-as-an-attachment-in-the-pdf-and-reference-it-in-the-document.cs",
+      "title": "Embed a video file as an attachment in the PDF and reference it in the document."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs",
       "title": "Embed all fonts used in the workbook into the PDF to ensure consistent rendering on any device."
     },
