@@ -3001,6 +3001,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs",
+      "title": "Document the steps to customize the ribbon XML and change external link paths in a developer guide."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs",
       "title": "Ensure the custom ribbon UI loads correctly after changing external link paths."
     },
