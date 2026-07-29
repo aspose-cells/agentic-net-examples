@@ -3821,6 +3821,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "implement-a-progress-callback-that-reports-percentage-completion-during-largescale-smart-marker-population.cs",
+      "title": "Implement a progress callback that reports percentage completion during large\u2011scale smart marker population."
+    },
+    {
+      "category": "smart-markers",
       "file": "implement-a-retry-mechanism-for-smart-marker-population-when-networkbased-data-sources-experience-transient-failures.cs",
       "title": "Implement a retry mechanism for smart marker population when network\u2011based data sources experience transient failures."
     },
