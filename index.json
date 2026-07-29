@@ -4606,6 +4606,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "export-worksheets-with-slicers-rendering-slicer-controls-as-static-images-in-the-pdf.cs",
+      "title": "Export worksheets with slicers, rendering slicer controls as static images in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs",
       "title": "Hide rows and columns marked as hidden in Excel when generating the PDF output."
     },
