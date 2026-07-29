@@ -207,3 +207,4 @@ Output files are written to the working directory.
 - decrypt-a-passwordprotected-pdf-generated-from-excel-and-programmatically-extract-its-text.cs
 - apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs
 - set-pdf-document-language-property-based-on-excel-workbook-locale-for-accessibility-tools.cs
+- generate-a-pdf-with-a-table-of-contents-derived-from-worksheet-names-and-page-numbers.cs
