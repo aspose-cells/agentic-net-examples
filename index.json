@@ -3001,6 +3001,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "create-a-unit-test-that-validates-external-link-path-changes-and-custom-ribbon-integration.cs",
+      "title": "Create a unit test that validates external link path changes and custom ribbon integration."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs",
       "title": "Document the steps to customize the ribbon XML and change external link paths in a developer guide."
     },
