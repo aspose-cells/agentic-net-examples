@@ -4521,6 +4521,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs",
+      "title": "Assign specific worksheet indices to PdfSaveOptions.SheetSet to export selected sheets as a single PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs",
       "title": "Recalculate all formulas in the workbook by calling Workbook.CalculateFormula before conversion."
     },
