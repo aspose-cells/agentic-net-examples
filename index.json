@@ -4731,6 +4731,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xls-file-set-optimizationtype-to-minimumsize-and-save-as-pdf.cs",
+      "title": "Load an XLS file, set OptimizationType to MinimumSize, and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs",
       "title": "Loop through each worksheet, set SheetSet individually, and save each as separate PDF files."
     },
