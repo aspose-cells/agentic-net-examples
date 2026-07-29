@@ -4541,6 +4541,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-batch-of-xlsx-files-in-a-directory-to-pdfa1a-format-using-parallel-processing.cs",
+      "title": "Convert a batch of XLSX files in a directory to PDF/A\u20111a format using parallel processing."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs",
       "title": "Create hierarchical PDF bookmarks for each worksheet by populating PdfSaveOptions.Bookmarks collection."
     },
