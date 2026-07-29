@@ -4115,6 +4115,11 @@
       "title": "Create a unit test that passes when ExportHiddenWorksheet true includes hidden sheet titles in the HTML output."
     },
     {
+      "category": "working-with-html",
+      "file": "create-a-unit-test-that-verifies-link-target-attribute-equals-_blank-when-linktargettype-is-set-to-blank.cs",
+      "title": "Create a unit test that verifies link target attribute equals \"_blank\" when LinkTargetType is set to Blank."
+    },
+    {
       "category": "working-with-images",
       "file": "add-a-drop-shadow-effect-to-the-png-worksheet-rendering-to-enhance-visual-depth.cs",
       "title": "Add a drop shadow effect to the PNG worksheet rendering to enhance visual depth."
