@@ -4166,6 +4166,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs",
+      "title": "Set chart image resolution to 300 DPI during PNG conversion to achieve high\u2011definition output."
+    },
+    {
+      "category": "working-with-images",
       "file": "use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs",
       "title": "Use the SVG worksheet graphic as a vector element when generating a PDF document with iTextSharp."
     },
