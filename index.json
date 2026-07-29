@@ -3038,6 +3038,11 @@
       "category": "queries-and-connections",
       "file": "verify-that-the-workbook-opens-without-errors-after-applying-custom-ribbon-and-path-changes.cs",
       "title": "Verify that the workbook opens without errors after applying custom ribbon and path changes."
+    },
+    {
+      "category": "smart-markers",
+      "file": "process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs",
+      "title": "Process multiple template files in a batch, assigning distinct data sources to each WorkbookDesigner instance."
     }
   ]
 }
