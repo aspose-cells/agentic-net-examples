@@ -4113,6 +4113,11 @@
       "category": "working-with-images",
       "file": "export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs",
       "title": "Export a worksheet to SVG without the viewBox attribute to produce fixed\u2011size vector output."
+    },
+    {
+      "category": "working-with-images",
+      "file": "save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs",
+      "title": "Save the SVG worksheet image to a .svg file with UTF\u20118 encoding to preserve character data."
     }
   ]
 }
