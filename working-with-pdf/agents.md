@@ -226,3 +226,4 @@ Output files are written to the working directory.
 - batch-convert-a-folder-of-xlsm-files-to-pdfs-applying-minimumsize-optimization-to-each-file.cs
 - export-document-structure-with-bookmarks-and-confirm-they-appear-in-pdf-outline-viewer.cs
 - set-pdfsaveoptionsoptimizationtype-to-standardsize-for-an-xls-workbook-and-save-as-pdf.cs
+- render-solid-gridlines-in-a-pdf-generated-from-an-xlsx-workbook.cs
