@@ -4631,6 +4631,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "disable-solid-gridlines-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-gridfree-pdf.cs",
+      "title": "Disable solid gridlines by setting PdfSaveOptions.RenderSolidGridlines to false for a grid\u2011free PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs",
       "title": "Embed all fonts used in the workbook into the PDF to ensure consistent rendering on any device."
     },
