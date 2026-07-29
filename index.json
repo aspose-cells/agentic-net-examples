@@ -4571,6 +4571,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-a-workbook-containing-sparklines-ensuring-they-appear-as-inline-graphics-in-the-pdf.cs",
+      "title": "Convert a workbook containing sparklines, ensuring they appear as inline graphics in the PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs",
       "title": "Create hierarchical PDF bookmarks for each worksheet by populating PdfSaveOptions.Bookmarks collection."
     },
