@@ -3086,6 +3086,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "create-a-function-that-accepts-a-data-object-and-a-template-path-then-returns-a-populated-workbook-stream.cs",
+      "title": "Create a function that accepts a data object and a template path, then returns a populated workbook stream."
+    },
+    {
+      "category": "smart-markers",
       "file": "enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs",
       "title": "Enable auto\u2011populate to additional worksheets when data exceeds a single sheet\u2019s row limit, ensuring seamless continuation."
     },
