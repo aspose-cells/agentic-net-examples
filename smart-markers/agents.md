@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs
 - use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs
 - insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs
+- configure-workbookdesigner-to-use-a-custom-datatable-as-the-data-source-before-processing.cs
