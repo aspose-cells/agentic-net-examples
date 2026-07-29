@@ -4601,6 +4601,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "apply-standardsize-optimization-while-preserving-original-column-widths-in-pdf.cs",
+      "title": "Apply StandardSize optimization while preserving original column widths in PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs",
       "title": "Assign specific worksheet indices to PdfSaveOptions.SheetSet to export selected sheets as a single PDF."
     },
