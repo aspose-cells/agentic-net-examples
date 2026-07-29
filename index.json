@@ -3081,6 +3081,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "copy-rows-while-preserving-hidden-row-states-ensuring-hidden-rows-remain-hidden-after-duplication.cs",
+      "title": "Copy rows while preserving hidden row states, ensuring hidden rows remain hidden after duplication."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "create-a-template-row-with-formulas-copy-it-to-several-sheets-and-validate-calculated-results.cs",
       "title": "Create a template row with formulas, copy it to several sheets, and validate calculated results."
     },
