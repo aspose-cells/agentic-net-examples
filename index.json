@@ -3061,6 +3061,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs",
+      "title": "Insert an image smart marker with the image parameter to embed pictures from file paths."
+    },
+    {
+      "category": "smart-markers",
       "file": "place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs",
       "title": "Place a variable marker in a cell to populate it with a scalar value from the data source."
     },
