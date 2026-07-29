@@ -223,3 +223,4 @@ Output files are written to the working directory.
 - include-a-json-configuration-file-as-a-pdf-attachment-using-pdfsaveoptions.cs
 - add-a-custom-pdf-attachment-containing-a-summary-report-generated-from-workbook-data.cs
 - embed-multiple-attachments-such-as-images-and-csv-files-into-the-pdf-using-pdfsaveoptions.cs
+- batch-convert-a-folder-of-xlsm-files-to-pdfs-applying-minimumsize-optimization-to-each-file.cs
