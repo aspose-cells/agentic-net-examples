@@ -179,3 +179,4 @@ Output files are written to the working directory.
 - set-pdfsaveoptionsoptimizationtype-to-minimumsize-for-an-xlsx-workbook-and-save-as-pdf.cs
 - set-pdfsaveoptionsoptimizationtype-to-minimumsize-while-preserving-original-column-widths-in-pdf.cs
 - enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs
+- create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs
