@@ -4966,6 +4966,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "use-fontsettings-to-load-a-font-that-supports-unicode-supplementary-characters-before-pdf-conversion.cs",
+      "title": "Use FontSettings to load a font that supports Unicode supplementary characters before PDF conversion."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "verify-that-exportdocumentstructure-creates-a-pdf-outline-matching-excel-sheet-hierarchy.cs",
       "title": "Verify that ExportDocumentStructure creates a PDF outline matching Excel sheet hierarchy."
     },
