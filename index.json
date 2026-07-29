@@ -4863,6 +4863,11 @@
       "category": "working-with-pdf",
       "file": "split-the-output-pdf-into-separate-files-per-worksheet-using-custom-naming-conventions.cs",
       "title": "Split the output PDF into separate files per worksheet using custom naming conventions."
+    },
+    {
+      "category": "working-with-pdf",
+      "file": "verify-that-unicode-supplementary-characters-such-as-emojis-render-correctly-in-the-pdf-output.cs",
+      "title": "Verify that Unicode supplementary characters, such as emojis, render correctly in the PDF output."
     }
   ]
 }
