@@ -3871,6 +3871,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "use-a-smart-marker-with-index-syntax-to-fill-a-matrix-of-attendance-records-for-each-day.cs",
+      "title": "Use a smart marker with index syntax to fill a matrix of attendance records for each day."
+    },
+    {
+      "category": "smart-markers",
       "file": "use-a-smart-marker-with-the-html-property-to-render-a-colored-span-element-inside-a-cell.cs",
       "title": "Use a smart marker with the HTML property to render a colored span element inside a cell."
     },
