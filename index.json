@@ -4181,6 +4181,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "record-conversion-details-such-as-source-file-output-path-and-duration-in-a-sqlite-database.cs",
+      "title": "Record conversion details such as source file, output path, and duration in a SQLite database."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs",
       "title": "Render a chart object from the workbook to a PNG image using the ChartRender API."
     },
