@@ -3026,6 +3026,11 @@
     },
     {
       "category": "queries-and-connections",
+      "file": "provide-sample-code-demonstrating-how-to-programmatically-change-external-link-paths-and-customize-the-ribbon.cs",
+      "title": "Provide sample code demonstrating how to programmatically change external link paths and customize the ribbon."
+    },
+    {
+      "category": "queries-and-connections",
       "file": "save-the-workbook-with-updated-external-links-and-custom-ribbon-after-user-confirmation.cs",
       "title": "Save the workbook with updated external links and custom ribbon after user confirmation."
     },
