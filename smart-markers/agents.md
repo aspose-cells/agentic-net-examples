@@ -178,3 +178,4 @@ Output files are written to the working directory.
 - add-a-smart-marker-that-inserts-the-current-date-using-the-formula-parameter-with-today-function.cs
 - configure-the-workbook-designer-to-treat-empty-strings-as-blanks-when-merging-string-properties-from-data-source.cs
 - use-a-smart-marker-with-index-syntax-to-fill-a-matrix-of-attendance-records-for-each-day.cs
+- configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs
