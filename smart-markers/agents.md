@@ -153,3 +153,4 @@ Output files are written to the working directory.
 - process-multiple-worksheets-in-a-single-workbook-each-containing-distinct-smart-markers-to-generate-a-multisheet-report.cs
 - apply-smart-marker-parameters-to-control-row-insertion-when-merging-a-large-dataset-with-related-tables.cs
 - generate-a-pivot-table-by-placing-smart-markers-in-source-range-then-refresh-the-pivot-after-data-merge.cs
+- configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs
