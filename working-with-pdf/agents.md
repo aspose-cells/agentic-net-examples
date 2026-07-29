@@ -201,3 +201,4 @@ Output files are written to the working directory.
 - export-worksheets-with-slicers-rendering-slicer-controls-as-static-images-in-the-pdf.cs
 - apply-custom-pdf-page-margins-to-control-content-positioning-during-excel-conversion.cs
 - embed-all-used-fonts-in-the-generated-pdf-to-prevent-missing-glyphs.cs
+- configure-highresolution-image-quality-for-charts-when-converting-excel-worksheets-to-pdf.cs
