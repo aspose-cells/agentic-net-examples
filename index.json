@@ -3141,6 +3141,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs",
+      "title": "Protect the worksheet after processing smart markers, allowing only unlocked cells to be edited by end users."
+    },
+    {
+      "category": "smart-markers",
       "file": "save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs",
       "title": "Save the processed workbook as an XLSX file to preserve all smart marker generated content and formatting."
     },
