@@ -4561,6 +4561,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs",
+      "title": "Increase image resampling quality to 300 DPI for sharper images in the generated PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs",
       "title": "Limit PDF output to ten pages by setting PdfSaveOptions.MaxPageCount to 10."
     },
