@@ -217,3 +217,4 @@ Output files are written to the working directory.
 - disable-solid-gridlines-when-converting-an-xlsm-workbook-to-pdf.cs
 - render-solid-gridlines-true-verification-ensure-gridlines-appear-as-continuous-lines-in-pdf.cs
 - add-a-text-file-attachment-to-the-generated-pdf-via-pdfsaveoptionsattachments-collection.cs
+- embed-a-pdf-document-as-an-attachment-inside-the-generated-exceltopdf-conversion.cs
