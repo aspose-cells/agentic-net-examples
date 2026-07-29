@@ -4171,6 +4171,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "track-charttopng-conversion-progress-using-iprogress-interface-and-report-percentage-to-console.cs",
+      "title": "Track chart\u2011to\u2011PNG conversion progress using IProgress interface and report percentage to console."
+    },
+    {
+      "category": "working-with-images",
       "file": "use-the-svg-worksheet-graphic-as-a-vector-element-when-generating-a-pdf-document-with-itextsharp.cs",
       "title": "Use the SVG worksheet graphic as a vector element when generating a PDF document with iTextSharp."
     },
