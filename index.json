@@ -4141,6 +4141,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "compress-the-svg-chart-file-using-deflate-algorithm-before-uploading-to-reduce-network-bandwidth-usage.cs",
+      "title": "Compress the SVG chart file using Deflate algorithm before uploading to reduce network bandwidth usage."
+    },
+    {
+      "category": "working-with-images",
       "file": "compress-the-svg-worksheet-file-using-gzip-before-transmitting-it-over-the-network-for-efficiency.cs",
       "title": "Compress the SVG worksheet file using GZip before transmitting it over the network for efficiency."
     },
