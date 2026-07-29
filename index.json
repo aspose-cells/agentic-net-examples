@@ -5026,6 +5026,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "add-a-shape-link-it-to-a-cell-with-a-validation-list-and-ensure-shape-text-reflects-selection.cs",
+      "title": "Add a shape, link it to a cell with a validation list, and ensure shape text reflects selection."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "add-a-shape-set-its-linked-cell-to-a-cell-using-the-mid-function-and-display-extracted-substring.cs",
       "title": "Add a shape, set its linked cell to a cell using the MID function, and display extracted substring."
     },
