@@ -4586,6 +4586,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-custom-pdf-margins-of-05-inches-on-all-sides-using-pdfsaveoptions.cs",
+      "title": "Set custom PDF margins of 0.5 inches on all sides using PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs",
       "title": "Set PDF metadata such as title, author, and subject before saving the workbook."
     },
