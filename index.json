@@ -4136,6 +4136,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "include-the-svg-chart-file-in-a-web-page-to-allow-interactive-zoom-and-pan-features.cs",
+      "title": "Include the SVG chart file in a web page to allow interactive zoom and pan features."
+    },
+    {
+      "category": "working-with-images",
       "file": "perform-hittesting-on-svg-worksheet-elements-to-enable-interactive-selection-within-a-web-viewer.cs",
       "title": "Perform hit\u2011testing on SVG worksheet elements to enable interactive selection within a web viewer."
     },
