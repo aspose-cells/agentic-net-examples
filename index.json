@@ -4116,6 +4116,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "convert-a-workbook-chart-to-jpeg-with-a-custom-background-color-to-match-branding-guidelines.cs",
+      "title": "Convert a workbook chart to JPEG with a custom background color to match branding guidelines."
+    },
+    {
+      "category": "working-with-images",
       "file": "convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs",
       "title": "Convert a worksheet to SVG with the viewBox attribute enabled for scalable rendering."
     },
