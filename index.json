@@ -4581,6 +4581,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs",
+      "title": "Enable hyperlink preservation so that clickable links remain functional in the generated PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs",
       "title": "Enable PdfSaveOptions.EmbedAttachments and add file paths to embed multiple external files into the PDF."
     },
