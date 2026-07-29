@@ -4141,6 +4141,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "encrypt-the-final-tiff-file-with-aes-encryption-before-storing-it-in-a-secure-location.cs",
+      "title": "Encrypt the final TIFF file with AES encryption before storing it in a secure location."
+    },
+    {
+      "category": "working-with-images",
       "file": "export-a-worksheet-to-svg-without-the-viewbox-attribute-to-produce-fixedsize-vector-output.cs",
       "title": "Export a worksheet to SVG without the viewBox attribute to produce fixed\u2011size vector output."
     },
