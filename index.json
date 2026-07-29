@@ -4536,6 +4536,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-a-semitransparent-watermark-text-to-each-page-of-the-resulting-pdf.cs",
+      "title": "Add a semi\u2011transparent watermark text to each page of the resulting PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-custom-pdf-page-margins-to-control-content-positioning-during-excel-conversion.cs",
       "title": "Apply custom PDF page margins to control content positioning during Excel conversion."
     },
