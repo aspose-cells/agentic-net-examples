@@ -5023,6 +5023,11 @@
       "category": "working-with-shapes",
       "file": "write-a-unit-test-verifying-smartart-text-replacement-works-correctly.cs",
       "title": "Write a unit test verifying SmartArt text replacement works correctly."
+    },
+    {
+      "category": "working-with-shapes",
+      "file": "write-an-integration-test-confirming-linked-shape-refresh-updates-picture-after-cell-change.cs",
+      "title": "Write an integration test confirming linked shape refresh updates picture after cell change."
     }
   ]
 }
