@@ -4126,6 +4126,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "perform-hittesting-on-svg-worksheet-elements-to-enable-interactive-selection-within-a-web-viewer.cs",
+      "title": "Perform hit\u2011testing on SVG worksheet elements to enable interactive selection within a web viewer."
+    },
+    {
+      "category": "working-with-images",
       "file": "render-the-svg-worksheet-image-in-a-wpf-image-control-for-display-within-a-desktop-application.cs",
       "title": "Render the SVG worksheet image in a WPF Image control for display within a desktop application."
     },
