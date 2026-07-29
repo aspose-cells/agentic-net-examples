@@ -4681,6 +4681,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "embed-a-text-document-as-a-pdf-attachment-using-pdfsaveoptions.cs",
+      "title": "Embed a text document as a PDF attachment using PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "embed-a-video-file-as-an-attachment-in-the-pdf-and-reference-it-in-the-document.cs",
       "title": "Embed a video file as an attachment in the PDF and reference it in the document."
     },
