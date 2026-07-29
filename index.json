@@ -3560,6 +3560,11 @@
       "title": "Write the updated formula and its calculated value of cell E3 to the console."
     },
     {
+      "category": "slicer",
+      "file": "export-the-workbook-containing-slicers-to-pdf-and-compare-slicer-positions-with-the-original-excel-file.cs",
+      "title": "Export the workbook containing slicers to PDF and compare slicer positions with the original Excel file."
+    },
+    {
       "category": "smart-markers",
       "file": "add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs",
       "title": "Add a noadd parameter to the first template row to keep header static during merging."
