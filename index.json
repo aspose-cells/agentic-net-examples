@@ -4161,6 +4161,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-an-html-img-tag-referencing-the-saved-png-worksheet-file-for-inclusion-in-web-pages.cs",
+      "title": "Generate an HTML img tag referencing the saved PNG worksheet file for inclusion in web pages."
+    },
+    {
+      "category": "working-with-images",
       "file": "include-the-svg-chart-file-in-a-web-page-to-allow-interactive-zoom-and-pan-features.cs",
       "title": "Include the SVG chart file in a web page to allow interactive zoom and pan features."
     },
