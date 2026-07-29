@@ -4166,6 +4166,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "notify-an-external-webhook-with-conversion-results-after-successfully-creating-the-tiff-workbook-image.cs",
+      "title": "Notify an external webhook with conversion results after successfully creating the TIFF workbook image."
+    },
+    {
+      "category": "working-with-images",
       "file": "perform-hittesting-on-svg-worksheet-elements-to-enable-interactive-selection-within-a-web-viewer.cs",
       "title": "Perform hit\u2011testing on SVG worksheet elements to enable interactive selection within a web viewer."
     },
