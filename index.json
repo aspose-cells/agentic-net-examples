@@ -4176,6 +4176,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "run-ocr-on-each-page-of-the-tiff-workbook-using-tesseract-to-extract-embedded-text-content.cs",
+      "title": "Run OCR on each page of the TIFF workbook using Tesseract to extract embedded text content."
+    },
+    {
+      "category": "working-with-images",
       "file": "save-the-svg-worksheet-image-to-a-svg-file-with-utf8-encoding-to-preserve-character-data.cs",
       "title": "Save the SVG worksheet image to a .svg file with UTF\u20118 encoding to preserve character data."
     },
