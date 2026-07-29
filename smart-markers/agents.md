@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - set-smart-marker-option-to-preserve-original-cell-formatting-while-inserting-data-from-a-custom-object-list.cs
 - define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs
 - insert-images-stored-as-byte-arrays-into-designated-cells-using-smart-markers-while-maintaining-aspect-ratio.cs
+- generate-a-pivot-table-programmatically-after-smart-marker-population-to-summarize-imported-financial-data.cs
