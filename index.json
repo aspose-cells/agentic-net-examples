@@ -3056,6 +3056,11 @@
     },
     {
       "category": "rows-and-columns",
+      "file": "after-copying-rows-recalculate-the-worksheet-to-update-any-dependent-formulas-automatically.cs",
+      "title": "After copying rows, recalculate the worksheet to update any dependent formulas automatically."
+    },
+    {
+      "category": "rows-and-columns",
       "file": "apply-autofitrows-after-inserting-new-data-rows-to-maintain-uniform-row-height-throughout-sheet.cs",
       "title": "Apply AutoFitRows after inserting new data rows to maintain uniform row height throughout sheet."
     },
