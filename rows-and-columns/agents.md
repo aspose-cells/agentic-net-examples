@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - transfer-rows-containing-comments-and-verify-comments-appear-correctly-in-the-destination-worksheet.cs
 - create-a-template-row-with-formulas-copy-it-to-several-sheets-and-validate-calculated-results.cs
 - group-a-range-of-rows-programmatically-then-autofit-grouped-rows-to-ensure-proper-display.cs
+- ungroup-previously-grouped-rows-and-verify-that-individual-row-heights-revert-to-original-values.cs
