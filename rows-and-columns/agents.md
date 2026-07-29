@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - duplicate-adjacent-columns-with-copycolumns-and-ensure-merged-cells-remain-intact-after-copying.cs
 - apply-pasteoptions-to-copy-only-values-from-source-rows-ignoring-formulas-and-formatting.cs
 - copy-rows-while-preserving-embedded-images-and-drawing-objects-using-default-copy-behavior.cs
+- transfer-rows-containing-comments-and-verify-comments-appear-correctly-in-the-destination-worksheet.cs
