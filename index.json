@@ -3096,6 +3096,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-a-dynamic-excel-formula-that-references-the-previous-row-using-the-formula-parameter-to-calculate-running-totals.cs",
+      "title": "Insert a dynamic Excel formula that references the previous row using the formula parameter to calculate running totals."
+    },
+    {
+      "category": "smart-markers",
       "file": "insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs",
       "title": "Insert an image smart marker with the image parameter to embed pictures from file paths."
     },
