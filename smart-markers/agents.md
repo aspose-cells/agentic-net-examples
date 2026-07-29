@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs
 - group-smart-markers-to-aggregate-sales-data-by-region-and-insert-subtotal-rows-within-the-worksheet.cs
 - set-smart-marker-option-to-preserve-original-cell-formatting-while-inserting-data-from-a-custom-object-list.cs
+- define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs
