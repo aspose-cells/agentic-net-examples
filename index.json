@@ -4160,6 +4160,11 @@
       "title": "Set default font to Arial for HTML export using HtmlSaveOptions.DefaultFontName."
     },
     {
+      "category": "working-with-html",
+      "file": "specify-times-new-roman-as-default-font-for-html-rendering-via-htmlsaveoptions.cs",
+      "title": "Specify \"Times New Roman\" as default font for HTML rendering via HtmlSaveOptions."
+    },
+    {
       "category": "working-with-images",
       "file": "add-a-drop-shadow-effect-to-the-png-worksheet-rendering-to-enhance-visual-depth.cs",
       "title": "Add a drop shadow effect to the PNG worksheet rendering to enhance visual depth."
