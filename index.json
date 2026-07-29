@@ -4171,6 +4171,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "create-a-pdf-page-containing-the-png-worksheet-image-using-itextsharp-for-document-generation.cs",
+      "title": "Create a PDF page containing the PNG worksheet image using iTextSharp for document generation."
+    },
+    {
+      "category": "working-with-images",
       "file": "embed-javascript-code-within-the-svg-worksheet-file-to-enable-interactive-tooltips-on-hover.cs",
       "title": "Embed JavaScript code within the SVG worksheet file to enable interactive tooltips on hover."
     },
