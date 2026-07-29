@@ -4186,6 +4186,11 @@
     },
     {
       "category": "working-with-images",
+      "file": "generate-multiple-resolution-png-versions-of-the-chart-for-responsive-web-design-across-devices.cs",
+      "title": "Generate multiple resolution PNG versions of the chart for responsive web design across devices."
+    },
+    {
+      "category": "working-with-images",
       "file": "include-the-svg-chart-file-in-a-web-page-to-allow-interactive-zoom-and-pan-features.cs",
       "title": "Include the SVG chart file in a web page to allow interactive zoom and pan features."
     },
