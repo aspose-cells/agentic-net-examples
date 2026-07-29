@@ -3696,6 +3696,11 @@
     },
     {
       "category": "smart-markers",
+      "file": "insert-detail-smart-markers-and-set-the-detailsheet-parameter-to-target-a-separate-worksheet.cs",
+      "title": "Insert detail smart markers and set the DetailSheet parameter to target a separate worksheet."
+    },
+    {
+      "category": "smart-markers",
       "file": "load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs",
       "title": "Load a workbook from a memory stream, process smart markers, and save the result to a byte array."
     },
