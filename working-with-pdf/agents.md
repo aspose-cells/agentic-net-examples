@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - preserve-excel-cell-borders-and-gridlines-in-the-pdf-output-for-exact-visual-replication.cs
 - enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs
 - add-a-digital-signature-to-the-pdf-generated-from-an-excel-workbook-for-authenticity.cs
+- load-an-xlsm-file-apply-standardsize-optimization-and-export-to-pdf.cs
