@@ -4216,6 +4216,11 @@
     },
     {
       "category": "working-with-html",
+      "file": "include-worksheet-names-as-headings-in-html-output-via-htmlsaveoptionsexportheadings.cs",
+      "title": "Include worksheet names as headings in HTML output via HtmlSaveOptions.ExportHeadings."
+    },
+    {
+      "category": "working-with-html",
       "file": "load-an-excel-file-modify-cell-b4-text-and-save-as-html-with-a-custom-default-font.cs",
       "title": "Load an Excel file, modify cell B4 text, and save as HTML with a custom default font."
     },
