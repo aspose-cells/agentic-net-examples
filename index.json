@@ -5671,6 +5671,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "programmatically-retrieve-the-address-range-of-a-table-and-use-it-as-a-named-range-for-formulas.cs",
+      "title": "Programmatically retrieve the address range of a table and use it as a named range for formulas."
+    },
+    {
+      "category": "working-with-tables",
       "file": "refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs",
       "title": "Refresh all pivot tables that reference a specific worksheet table after updating its underlying data."
     },
