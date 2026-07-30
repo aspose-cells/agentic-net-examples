@@ -182,3 +182,4 @@ Output files are written to the working directory.
 - apply-a-row-freeze-to-header-rows-then-save-the-modified-workbook-to-a-new-xlsx-file.cs
 - apply-a-column-freeze-to-header-columns-then-export-the-workbook-to-an-xlsm-file.cs
 - apply-both-row-and-column-freezes-then-write-the-workbook-to-a-memory-stream.cs
+- after-freezing-panes-convert-the-workbook-to-pdf-while-retaining-the-frozen-view.cs
