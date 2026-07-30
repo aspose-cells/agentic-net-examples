@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - remove-a-tables-totals-row-and-then-readd-it-with-custom-formulas-for-each-numeric-column.cs
 - create-a-table-then-generate-a-named-range-that-references-only-the-header-row-for-use-in-formulas.cs
 - apply-a-table-style-that-uses-alternating-row-colors-to-improve-readability-of-large-data-sets.cs
+- set-the-query-tables-connection-string-to-use-integrated-security-for-secure-access-to-the-database.cs
