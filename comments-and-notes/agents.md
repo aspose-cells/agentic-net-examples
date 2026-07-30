@@ -79,3 +79,4 @@ Output files are written to the working directory.
 - copy-formatting-of-a-comments-shape-including-background-color-and-font-color-to-another-comment.cs
 - add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
 - update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs
+- add-a-threaded-comment-to-merged-cell-range-a1b2-ensuring-the-comment-appears-centered.cs
