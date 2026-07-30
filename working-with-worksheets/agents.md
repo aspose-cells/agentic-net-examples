@@ -313,3 +313,4 @@ Output files are written to the working directory.
 - iterate-through-all-worksheets-logging-each-name-and-corresponding-tabid-for-audit-purposes.cs
 - validate-that-no-two-worksheets-share-the-same-tabid-after-any-modifications-are-applied.cs
 - detect-empty-worksheets-by-checking-that-cellsmaxdatarow-and-cellsmaxdatacolumn-both-equal-1.cs
+- generate-a-csv-report-listing-worksheet-names-tabids-and-a-flag-indicating-whether-each-sheet-is-empty.cs
