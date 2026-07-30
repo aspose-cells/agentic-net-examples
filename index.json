@@ -6236,6 +6236,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-named-range-that-dynamically-expands-as-new-rows-are-added-to-column-o.cs",
+      "title": "Create a named range that dynamically expands as new rows are added to column O."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-named-range-that-refers-to-the-entire-column-z-for-dynamic-chart-data-source.cs",
       "title": "Create a named range that refers to the entire column Z for dynamic chart data source."
     },
