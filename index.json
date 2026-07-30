@@ -6256,6 +6256,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "autofit-all-rows-before-freezing-to-maintain-row-height-consistency-while-scrolling.cs",
+      "title": "Auto\u2011fit all rows before freezing to maintain row height consistency while scrolling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "batch-process-excel-files-to-set-fittopageswide-1-fittopagestall-1-then-export-to-pdf.cs",
       "title": "Batch process Excel files to set FitToPagesWide = 1, FitToPagesTall = 1, then export to PDF."
     },
