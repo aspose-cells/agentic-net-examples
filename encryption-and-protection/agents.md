@@ -206,3 +206,4 @@ Examples may generate:
 - export-the-workbook-to-xlsb-format-while-retaining-structure-protection.cs
 - convert-the-protected-workbook-to-pdf-while-preserving-protection-metadata.cs
 - detect-whether-a-workbook-loaded-from-a-memory-stream-is-encrypted-and-report-the-status.cs
+- identify-the-encryption-algorithm-used-in-a-workbook-and-log-whether-it-is-strong-or-weak.cs
