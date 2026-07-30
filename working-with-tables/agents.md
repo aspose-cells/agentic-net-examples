@@ -136,3 +136,4 @@ Output files are written to the working directory.
 - set-a-tables-column-to-use-a-custom-date-format-ddmmmyyyy-for-standardized-display-across-reports.cs
 - enable-the-tables-autofilter-and-apply-a-custom-filter-showing-rows-where-the-amount-is-between-two-values.cs
 - create-a-table-then-attach-a-comment-that-includes-the-creation-timestamp-and-author-information-for-audit.cs
+- apply-conditional-formatting-to-highlight-duplicate-values-within-a-specific-table-column-for-data-quality-checks.cs
