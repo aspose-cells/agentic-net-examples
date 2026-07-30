@@ -439,3 +439,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-add-a-stacked-bar-chart-and-configure-it-as-a-gantt-chart.cs
 - set-the-chart-title-and-axis-labels-for-a-gantt-chart-using-localized-strings.cs
 - export-the-workbook-containing-the-gantt-chart-to-a-pdf-file-preserving-chart-layout.cs
+- save-the-workbook-with-the-gantt-chart-as-a-new-xlsx-file-in-a-specified-output-folder.cs
