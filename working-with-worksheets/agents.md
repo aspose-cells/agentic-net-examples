@@ -196,3 +196,4 @@ Output files are written to the working directory.
 - save-a-workbook-with-frozen-columns-to-an-xls-file-for-legacy-compatibility.cs
 - log-the-frozen-state-of-each-processed-worksheet-to-the-console-for-diagnostics.cs
 - serialize-the-frozen-state-information-of-worksheets-into-a-json-file-for-auditing.cs
+- apply-a-conditional-freeze-only-when-the-worksheet-name-starts-with-report.cs
