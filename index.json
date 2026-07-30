@@ -6171,6 +6171,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-hyperlink-to-cell-h2-pointing-to-the-external-website-httpsexamplecom-for-reference.cs",
+      "title": "Add a hyperlink to cell H2 pointing to the external website https://example.com for reference."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-legend-to-the-chart-then-freeze-the-rows-containing-the-legend-to-keep-it-in-view.cs",
       "title": "Add a legend to the chart, then freeze the rows containing the legend to keep it in view."
     },
