@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - apply-freezepanes-after-calling-worksheetautofitcolumns-to-lock-column-widths-in-place.cs
 - apply-freezepanes-after-calling-worksheetautofitrows-to-lock-row-heights-during-scrolling.cs
 - set-a-custom-view-with-a-specific-zoom-level-then-freeze-rows-to-maintain-visual-context.cs
+- hide-gridlines-then-freeze-the-header-row-to-keep-it-prominent-without-visual-clutter.cs
