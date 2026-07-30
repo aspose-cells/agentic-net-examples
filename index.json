@@ -6486,6 +6486,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheets-default-column-width-to-twelve-characters-for-consistent-layout-across-sheets.cs",
+      "title": "Set the worksheet's default column width to twelve characters for consistent layout across sheets."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-worksheets-default-row-height-to-automatically-adjust-based-on-cell-content.cs",
       "title": "Set the worksheet's default row height to automatically adjust based on cell content."
     },
