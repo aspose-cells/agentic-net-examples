@@ -208,3 +208,4 @@ Output files are written to the working directory.
 - retrieve-the-maximum-data-column-count-and-freeze-all-columns-to-its-left.cs
 - autofit-all-columns-before-freezing-to-preserve-column-widths-after-view-changes.cs
 - autofit-all-rows-before-freezing-to-maintain-row-height-consistency-while-scrolling.cs
+- set-specific-column-widths-then-freeze-the-first-three-columns-to-preserve-custom-sizing.cs
