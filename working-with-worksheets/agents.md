@@ -164,3 +164,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-dynamically-expands-as-new-rows-are-added-to-column-o.cs
 - add-a-data-validation-rule-that-restricts-entry-in-cell-u2-to-a-list-of-predefined-options.cs
 - set-the-worksheets-default-print-resolution-to-600-dpi-for-highdefinition-output.cs
+- insert-a-chart-title-with-custom-font-size-and-color-to-improve-chart-readability.cs
