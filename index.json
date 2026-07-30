@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "access-a-worksheet-by-its-name-and-store-the-reference-for-further-operations.cs",
+      "title": "Access a worksheet by its name and store the reference for further operations."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-conditional-formatting-rule-that-highlights-duplicate-values-in-column-n-with-a-light-orange-fill.cs",
       "title": "Add a conditional formatting rule that highlights duplicate values in column N with a light orange fill."
     },
