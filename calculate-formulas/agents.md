@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - generate-a-csv-file-containing-all-formulas-in-the-workbook-along-with-their-cell-addresses.cs
 - filter-formulas-that-contain-specific-functions-such-as-vlookup-or-sumifs-for-targeted-review.cs
 - count-the-number-of-array-formulas-present-in-a-worksheet-and-report-the-total.cs
+- load-a-previously-saved-watch-window-configuration-and-apply-it-to-the-active-workbook.cs
