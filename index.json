@@ -6576,6 +6576,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-new-rows-before-the-header-then-recalculate-the-freeze-row-index-and-apply-freezepanes-again.cs",
+      "title": "Insert new rows before the header, then recalculate the freeze row index and apply FreezePanes again."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
