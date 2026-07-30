@@ -277,3 +277,4 @@ Output files are written to the working directory.
 - apply-a-print-title-range-that-includes-frozen-rows-then-verify-that-titles-stay-visible-when-printing.cs
 - use-the-worksheetresetpanes-method-to-clear-all-splits-and-freezes-before-applying-a-new-configuration.cs
 - combine-splitpanes-and-freezepanes-to-create-a-split-view-with-frozen-top-rows-for-complex-navigation.cs
+- after-unfreezing-panes-immediately-reapply-freezepanes-with-updated-indices-to-reflect-recent-row-insertions.cs
