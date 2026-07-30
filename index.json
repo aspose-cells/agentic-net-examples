@@ -6391,6 +6391,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "turn-off-numbersastext-and-inconsistentformula-error-checks-on-all-worksheets-using-errorchecktype-enumeration.cs",
+      "title": "Turn off NumbersAsText and InconsistentFormula error checks on all worksheets using ErrorCheckType enumeration."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "unhide-a-previously-hidden-worksheet-adjust-its-tab-color-and-write-the-workbook-back.cs",
       "title": "Unhide a previously hidden worksheet, adjust its tab color, and write the workbook back."
     },
