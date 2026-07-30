@@ -6231,6 +6231,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-bold-centered-style-to-the-header-row-spanning-columns-a-to-g.cs",
+      "title": "Apply a bold, centered style to the header row spanning columns A to G."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-border-style-around-the-header-range-then-freeze-those-rows-to-maintain-border-visibility.cs",
       "title": "Apply a border style around the header range, then freeze those rows to maintain border visibility."
     },
