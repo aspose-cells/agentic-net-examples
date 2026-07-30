@@ -6741,6 +6741,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-a-configuration-file-to-specify-the-number-of-rows-to-freeze-then-apply-at-runtime.cs",
+      "title": "Use a configuration file to specify the number of rows to freeze, then apply at runtime."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs",
       "title": "Use WorksheetCollection to hide zero values on every sheet whose name starts with \u201cQ\u201d."
     },
