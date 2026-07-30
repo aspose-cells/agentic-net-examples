@@ -370,3 +370,4 @@ Output files are written to the working directory.
 - enable-data-labels-to-show-both-cell-value-and-percentage-for-a-stacked-bar-chart-and-resize-shapes.cs
 - set-legend-background-to-transparent-while-keeping-entry-fill-none-to-achieve-a-fully-clear-legend.cs
 - resize-data-label-shapes-after-applying-bold-italic-font-combination-to-test-text-fitting.cs
+- enable-data-labels-for-scatter-plot-link-each-label-to-a-cell-containing-a-descriptive-note.cs
