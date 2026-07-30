@@ -241,3 +241,4 @@ Examples may generate:
 - batch-process-a-folder-of-excel-files-encrypt-each-with-a-unique-password-derived-from-the-file-name.cs
 - load-an-encrypted-workbook-upgrade-its-encryption-algorithm-to-a-higher-security-level-and-resave.cs
 - detect-the-file-format-of-an-encrypted-ooxml-file-and-ensure-compatibility-after-decryption.cs
+- assign-a-digital-signature-to-a-protected-worksheet-and-verify-its-authenticity.cs
