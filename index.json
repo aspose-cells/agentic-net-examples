@@ -6706,6 +6706,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-five-new-rows-at-position-ten-shifting-existing-rows-downward-accordingly.cs",
+      "title": "Insert five new rows at position ten, shifting existing rows downward accordingly."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-manual-page-breaks-below-the-frozen-rows-then-verify-that-page-breaks-respect-the-frozen-view.cs",
       "title": "Insert manual page breaks below the frozen rows, then verify that page breaks respect the frozen view."
     },
