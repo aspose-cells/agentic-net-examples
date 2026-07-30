@@ -6901,6 +6901,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-a-chart-title-then-freeze-the-rows-that-hold-the-title-text-to-ensure-it-remains-visible.cs",
+      "title": "Set a chart title, then freeze the rows that hold the title text to ensure it remains visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-a-charts-data-source-range-then-freeze-the-rows-that-feed-the-chart-to-keep-source-visible.cs",
       "title": "Set a chart\u2019s data source range, then freeze the rows that feed the chart to keep source visible."
     },
