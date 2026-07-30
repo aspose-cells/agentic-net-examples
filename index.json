@@ -6451,6 +6451,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-new-scenario-named-baseline-capturing-current-values-of-cells-b2-through-b10.cs",
+      "title": "Create a new scenario named Baseline capturing current values of cells B2 through B10."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-new-workbook-add-a-data-matrix-and-freeze-the-topleft-5-5-area.cs",
       "title": "Create a new workbook, add a data matrix, and freeze the top\u2011left 5\u202f\u00d7\u202f5 area."
     },
