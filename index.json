@@ -6641,6 +6641,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "generate-a-csv-report-listing-worksheet-names-tabids-and-a-flag-indicating-whether-each-sheet-is-empty.cs",
+      "title": "Generate a CSV report listing worksheet names, TabIds, and a flag indicating whether each sheet is empty."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs",
       "title": "Hide a range of rows from 20 to 30, then save the workbook with those rows concealed."
     },
