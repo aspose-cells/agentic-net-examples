@@ -177,3 +177,4 @@ Output files are written to the working directory.
 - freeze-the-leftmost-two-columns-by-calling-freezepanes-with-row-zero-and-column-two.cs
 - freeze-the-first-row-and-first-column-simultaneously-using-freezepanes-with-row-one-and-column-one.cs
 - unfreeze-all-panes-by-invoking-freezepanes-with-both-row-and-column-parameters-set-to-zero.cs
+- verify-whether-a-worksheet-currently-has-frozen-panes-by-checking-the-isfreezepanes-property.cs
