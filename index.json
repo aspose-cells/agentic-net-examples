@@ -6146,6 +6146,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-the-workbook-to-hide-both-horizontal-and-vertical-scroll-bars-and-export-the-result.cs",
+      "title": "Configure the workbook to hide both horizontal and vertical scroll bars, and export the result."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
