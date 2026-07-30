@@ -191,3 +191,4 @@ Examples may generate:
 - write-a-script-that-monitors-a-folder-for-new-excel-files-automatically-encrypts-them-and-logs-each-operation.cs
 - implement-error-handling-for-unsupported-encryption-types-when-attempting-to-encrypt-a-workbook-with-an-invalid-algorithm.cs
 - apply-strong-encryption-to-a-workbook-and-programmatically-compare-file-size-before-and-after-encryption.cs
+- encrypt-an-excel-file-then-attempt-to-open-it-with-a-thirdparty-library-to-test-compatibility.cs
