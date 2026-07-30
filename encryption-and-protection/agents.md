@@ -251,3 +251,4 @@ Examples may generate:
 - measure-performance-impact-of-encrypting-large-workbooks-by-timing-the-save-operation.cs
 - compare-aes128-and-aes256-encryption-strengths-by-encrypting-the-same-file-with-each-algorithm.cs
 - generate-a-report-listing-all-worksheets-currently-password-protected-within-a-given-workbook.cs
+- attempt-to-open-an-encrypted-workbook-without-a-password-and-capture-the-specific-error-code.cs
