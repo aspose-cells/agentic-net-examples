@@ -6621,6 +6621,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "save-a-workbook-with-frozen-columns-to-an-xls-file-for-legacy-compatibility.cs",
+      "title": "Save a workbook with frozen columns to an XLS file for legacy compatibility."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "save-a-workbook-with-frozen-rows-to-an-xlsb-file-for-binary-compression.cs",
       "title": "Save a workbook with frozen rows to an XLSB file for binary compression."
     },
