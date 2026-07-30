@@ -6666,6 +6666,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "move-a-worksheet-to-a-new-position-then-freeze-its-first-column-to-keep-key-identifiers-accessible.cs",
+      "title": "Move a worksheet to a new position, then freeze its first column to keep key identifiers accessible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs",
       "title": "Open a spreadsheet, set the first worksheet tab to invisible, then export to a new file."
     },
