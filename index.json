@@ -6661,6 +6661,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "protect-the-worksheet-after-freezing-rows-to-prevent-accidental-changes-to-the-header-area.cs",
+      "title": "Protect the worksheet after freezing rows to prevent accidental changes to the header area."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "protect-the-worksheet-with-a-password-and-allow-users-to-edit-only-unlocked-cells.cs",
       "title": "Protect the worksheet with a password and allow users to edit only unlocked cells."
     },
