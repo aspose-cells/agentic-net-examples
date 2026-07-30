@@ -4611,6 +4611,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "attach-a-pdfa1a-compliant-report-as-a-pdf-attachment-within-the-main-pdf-document.cs",
+      "title": "Attach a PDF/A\u20111a compliant report as a PDF attachment within the main PDF document."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "batch-convert-a-folder-of-xlsm-files-to-pdfs-applying-minimumsize-optimization-to-each-file.cs",
       "title": "Batch convert a folder of XLSM files to PDFs applying MinimumSize optimization to each file."
     },
