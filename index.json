@@ -6126,6 +6126,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "programmatically-disable-automatic-xml-map-refresh-during-bulk-cell-updates-to-improve-processing-speed.cs",
+      "title": "Programmatically disable automatic XML map refresh during bulk cell updates to improve processing speed."
+    },
+    {
+      "category": "xml-maps",
       "file": "set-the-xmlmaps-preservewhitespace-property-to-true-to-keep-formatting-spaces-from-the-source-xml.cs",
       "title": "Set the XmlMap's PreserveWhitespace property to true to keep formatting spaces from the source XML."
     },
