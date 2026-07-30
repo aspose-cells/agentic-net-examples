@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - create-a-table-then-attach-a-comment-that-includes-the-creation-timestamp-and-author-information-for-audit.cs
 - apply-conditional-formatting-to-highlight-duplicate-values-within-a-specific-table-column-for-data-quality-checks.cs
 - set-the-tables-show-header-row-option-to-true-and-apply-a-bold-font-style-to-header-cells.cs
+- programmatically-detect-tables-lacking-a-header-row-and-add-a-default-header-with-generic-column-names.cs
