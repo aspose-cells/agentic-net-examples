@@ -302,3 +302,4 @@ Output files are written to the working directory.
 - define-a-print-area-covering-cells-a1-through-m50-to-limit-printed-content.cs
 - set-print-titles-to-repeat-row-1-on-each-printed-page-for-column-headings.cs
 - insert-a-manual-page-break-after-row-30-to-control-pagination-in-the-printed-document.cs
+- remove-all-existing-page-breaks-from-the-worksheet-to-allow-automatic-pagination.cs
