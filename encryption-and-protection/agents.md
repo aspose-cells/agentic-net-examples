@@ -208,3 +208,4 @@ Examples may generate:
 - detect-whether-a-workbook-loaded-from-a-memory-stream-is-encrypted-and-report-the-status.cs
 - identify-the-encryption-algorithm-used-in-a-workbook-and-log-whether-it-is-strong-or-weak.cs
 - upgrade-a-workbook-using-legacy-encryption-to-aes256-strong-encryption.cs
+- set-workbook-encryption-password-then-save-to-a-network-share-ensuring-encryption-is-preserved.cs
