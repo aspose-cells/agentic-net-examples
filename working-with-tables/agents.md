@@ -114,3 +114,4 @@ Output files are written to the working directory.
 - programmatically-detect-tables-that-lack-a-totals-row-and-add-one-with-default-sum-calculations.cs
 - export-a-specific-table-to-an-xml-file-using-the-excel-xml-schema-for-data-interchange.cs
 - import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs
+- apply-a-filter-that-excludes-rows-where-the-date-column-falls-outside-the-current-quarter.cs
