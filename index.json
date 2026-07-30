@@ -6825,6 +6825,11 @@
       "title": "Verify whether a worksheet currently has frozen panes by checking the IsFreezePanes property."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "wrap-workbook-usage-in-a-using-statement-to-guarantee-proper-disposal-after-freezing.cs",
+      "title": "Wrap workbook usage in a using statement to guarantee proper disposal after freezing."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
