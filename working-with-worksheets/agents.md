@@ -214,3 +214,4 @@ Output files are written to the working directory.
 - insert-a-structured-table-then-freeze-the-table-header-row-for-constant-reference.cs
 - add-a-chart-then-freeze-the-rows-containing-chart-data-to-avoid-losing-context.cs
 - insert-an-image-then-freeze-the-rows-above-the-image-to-keep-it-anchored-visually.cs
+- merge-cells-across-the-top-row-then-freeze-the-merged-header-to-keep-it-visible.cs
