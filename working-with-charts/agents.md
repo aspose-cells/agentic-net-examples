@@ -376,3 +376,4 @@ Output files are written to the working directory.
 - set-legend-entry-fill-to-none-for-all-charts-in-a-template-workbook-before-user-customization.cs
 - hide-legend-for-charts-with-a-single-series-to-avoid-redundant-information.cs
 - create-chart-set-legend-to-fixed-size-then-programmatically-adjust-size-based-on-content.cs
+- resize-data-label-shapes-after-adding-hyperlink-to-each-label-that-points-to-an-external-resource.cs
