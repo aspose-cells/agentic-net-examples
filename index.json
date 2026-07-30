@@ -7071,6 +7071,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-all-shapes-from-worksheets-identified-as-empty-based-on-cell-data-checks-to-simplify-the-workbook.cs",
+      "title": "Remove all shapes from worksheets identified as empty based on cell data checks to simplify the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "rename-a-worksheet-after-freezing-then-verify-that-the-frozen-state-remains-unchanged.cs",
       "title": "Rename a worksheet after freezing, then verify that the frozen state remains unchanged."
     },
