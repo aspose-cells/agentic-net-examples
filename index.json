@@ -6286,6 +6286,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-the-worksheets-filter-arrows-on-the-header-row-to-allow-userdriven-sorting.cs",
+      "title": "Enable the worksheet's filter arrows on the header row to allow user\u2011driven sorting."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-the-worksheets-page-break-preview-mode-to-visualize-where-pages-will-split.cs",
       "title": "Enable the worksheet's page break preview mode to visualize where pages will split."
     },
