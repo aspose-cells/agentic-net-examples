@@ -6801,6 +6801,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "recalculate-all-formulas-after-freezing-panes-to-ensure-dependent-cells-reflect-the-frozen-view.cs",
+      "title": "Recalculate all formulas after freezing panes to ensure dependent cells reflect the frozen view."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "record-the-duration-of-each-freezepanes-call-using-a-stopwatch-and-log-the-elapsed-time.cs",
       "title": "Record the duration of each FreezePanes call using a stopwatch and log the elapsed time."
     },
