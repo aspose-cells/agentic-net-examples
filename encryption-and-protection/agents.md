@@ -205,3 +205,4 @@ Examples may generate:
 - protect-each-worksheet-individually-with-unique-passwords-derived-from-file-names.cs
 - export-the-workbook-to-xlsb-format-while-retaining-structure-protection.cs
 - convert-the-protected-workbook-to-pdf-while-preserving-protection-metadata.cs
+- detect-whether-a-workbook-loaded-from-a-memory-stream-is-encrypted-and-report-the-status.cs
