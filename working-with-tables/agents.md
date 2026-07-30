@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - move-a-table-to-a-different-position-within-the-same-worksheet-updating-all-structured-references-automatically.cs
 - delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs
 - export-a-worksheet-table-to-a-json-string-preserving-column-names-as-json-object-keys.cs
+- calculate-a-running-total-column-within-a-table-using-a-formula-that-references-previous-rows.cs
