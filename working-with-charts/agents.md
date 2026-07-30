@@ -349,3 +349,4 @@ Output files are written to the working directory.
 - hide-legend-for-a-3d-pie-chart-and-observe-impact-on-chart-readability.cs
 - create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs
 - read-legend-current-position-programmatically-switch-to-opposite-corner-and-save-changes.cs
+- resize-data-label-shapes-for-a-stacked-area-chart-after-applying-semitransparent-fill-to-the-series.cs
