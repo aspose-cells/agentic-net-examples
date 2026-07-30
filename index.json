@@ -6136,6 +6136,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs",
+      "title": "Implement a UI dialog that lets users select an XML schema file to create a new map."
+    },
+    {
+      "category": "xml-maps",
       "file": "programmatically-disable-automatic-xml-map-refresh-during-bulk-cell-updates-to-improve-processing-speed.cs",
       "title": "Programmatically disable automatic XML map refresh during bulk cell updates to improve processing speed."
     },
