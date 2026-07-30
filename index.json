@@ -6281,6 +6281,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "benchmark-the-time-required-to-freeze-panes-on-a-worksheet-containing-fifty-thousand-rows.cs",
+      "title": "Benchmark the time required to freeze panes on a worksheet containing fifty thousand rows."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs",
       "title": "Calculate appropriate zoom level based on column width and assign it to the worksheet."
     },
