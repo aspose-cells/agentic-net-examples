@@ -6841,6 +6841,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "merge-cells-d4-through-f4-into-a-single-cell-and-center-its-content-horizontally.cs",
+      "title": "Merge cells D4 through F4 into a single cell and center its content horizontally."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "move-a-worksheet-to-a-new-position-then-freeze-its-first-column-to-keep-key-identifiers-accessible.cs",
       "title": "Move a worksheet to a new position, then freeze its first column to keep key identifiers accessible."
     },
