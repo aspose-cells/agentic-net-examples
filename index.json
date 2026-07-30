@@ -6126,6 +6126,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "access-a-worksheet-by-its-zerobased-index-and-assign-it-to-a-variable.cs",
+      "title": "Access a worksheet by its zero\u2011based index and assign it to a variable."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-conditional-formatting-rule-that-highlights-duplicate-values-in-column-n-with-a-light-orange-fill.cs",
       "title": "Add a conditional formatting rule that highlights duplicate values in column N with a light orange fill."
     },
