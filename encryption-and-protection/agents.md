@@ -265,3 +265,4 @@ Examples may generate:
 - validate-that-a-decrypted-workbook-retains-all-original-cell-comments-and-data-validation-rules.cs
 - apply-workbook-protection-preventing-addition-of-new-worksheets-while-allowing-existing-sheets-to-be-renamed.cs
 - write-a-script-that-logs-the-time-taken-to-encrypt-each-file-in-a-large-dataset.cs
+- test-opening-an-encrypted-workbook-with-an-incorrect-password-and-ensure-no-data-is-exposed.cs
