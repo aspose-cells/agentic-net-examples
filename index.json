@@ -6601,6 +6601,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-sparklines-then-freeze-the-rows-containing-sparklines-to-keep-visual-trends-visible.cs",
+      "title": "Insert sparklines, then freeze the rows containing sparklines to keep visual trends visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
