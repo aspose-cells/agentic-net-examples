@@ -6921,6 +6921,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-worksheetcellsmaxdatacolumn-to-calculate-dynamic-freeze-columns-based-on-actual-data.cs",
+      "title": "Use Worksheet.Cells.MaxDataColumn to calculate dynamic freeze columns based on actual data."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcellsmaxdatarow-to-calculate-dynamic-freeze-rows-based-on-actual-data.cs",
       "title": "Use Worksheet.Cells.MaxDataRow to calculate dynamic freeze rows based on actual data."
     },
