@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs
 - test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs
 - in-the-overridden-calculate-method-fallback-to-basecalculate-for-any-unsupported-functions.cs
+- implement-a-custom-engine-that-caches-intermediate-results-to-avoid-redundant-calculations-for-identical-subexpressions.cs
