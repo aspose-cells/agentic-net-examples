@@ -6456,6 +6456,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-an-excel-workbook-from-a-memory-stream-for-processing.cs",
+      "title": "Load an Excel workbook from a memory stream for processing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-an-existing-excel-file-from-disk-into-a-workbook-instance.cs",
       "title": "Load an existing Excel file from disk into a Workbook instance."
     },
