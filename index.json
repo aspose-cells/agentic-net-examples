@@ -6336,6 +6336,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-hyperlink-that-triggers-a-macro-when-clicked-in-cell-s5-for-custom-actions.cs",
+      "title": "Insert a hyperlink that triggers a macro when clicked in cell S5 for custom actions."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-picture-from-a-url-into-the-worksheet-and-position-it-at-cell-r2.cs",
       "title": "Insert a picture from a URL into the worksheet and position it at cell R2."
     },
