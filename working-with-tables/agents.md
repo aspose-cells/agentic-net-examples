@@ -98,3 +98,4 @@ Output files are written to the working directory.
 - update-the-named-range-that-references-a-table-after-expanding-the-table-to-include-new-rows.cs
 - enable-the-tables-show-header-row-option-and-customize-the-header-font-color-for-emphasis.cs
 - add-a-new-column-to-an-existing-table-and-set-its-default-value-using-a-constant-expression.cs
+- remove-an-unwanted-column-from-a-table-while-preserving-the-data-in-other-columns.cs
