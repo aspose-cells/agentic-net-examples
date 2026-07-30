@@ -223,3 +223,4 @@ Examples may generate:
 - upload-an-encrypted-workbook-to-azure-blob-storage-while-preserving-encryption.cs
 - load-an-encrypted-workbook-extract-its-metadata-and-save-the-metadata-to-a-json-file.cs
 - convert-an-encrypted-workbook-to-html-representation-after-verifying-the-password.cs
+- export-a-workbook-to-csv-format-after-confirming-it-is-not-encrypted.cs
