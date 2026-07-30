@@ -5601,6 +5601,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "calculate-a-running-total-column-within-a-table-using-a-formula-that-references-previous-rows.cs",
+      "title": "Calculate a running total column within a table using a formula that references previous rows."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs",
       "title": "Create a duplicate of an existing table on another worksheet while preserving its style and formulas."
     },
