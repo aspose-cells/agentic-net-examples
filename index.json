@@ -5871,6 +5871,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "load-a-workbook-retrieve-a-table-via-cellgettable-and-read-its-display-name-property.cs",
+      "title": "Load a workbook, retrieve a table via Cell.GetTable, and read its display name property."
+    },
+    {
+      "category": "working-with-tables",
       "file": "load-an-xlsm-workbook-extract-all-tables-and-save-each-table-as-an-individual-xlsx-file.cs",
       "title": "Load an XLSM workbook, extract all tables, and save each table as an individual XLSX file."
     },
