@@ -214,3 +214,4 @@ Examples may generate:
 - compute-the-sha256-hash-of-an-encrypted-workbook-to-verify-integrity-after-encryption.cs
 - measure-the-time-taken-to-open-an-encrypted-workbook-and-log-performance-metrics.cs
 - use-a-background-thread-to-decrypt-an-encrypted-workbook-and-confirm-thread-safety.cs
+- encrypt-multiple-workbooks-in-a-directory-using-a-shared-password-and-save-them.cs
