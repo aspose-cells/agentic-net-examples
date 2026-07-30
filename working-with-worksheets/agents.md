@@ -206,3 +206,4 @@ Output files are written to the working directory.
 - read-freeze-row-and-column-values-from-an-xml-configuration-file-and-apply-them.cs
 - retrieve-the-maximum-data-row-count-and-freeze-all-rows-above-it.cs
 - retrieve-the-maximum-data-column-count-and-freeze-all-columns-to-its-left.cs
+- autofit-all-columns-before-freezing-to-preserve-column-widths-after-view-changes.cs
