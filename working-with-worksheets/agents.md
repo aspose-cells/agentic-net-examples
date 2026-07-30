@@ -184,3 +184,4 @@ Output files are written to the working directory.
 - apply-both-row-and-column-freezes-then-write-the-workbook-to-a-memory-stream.cs
 - after-freezing-panes-convert-the-workbook-to-pdf-while-retaining-the-frozen-view.cs
 - after-freezing-panes-export-the-worksheet-to-html-to-display-frozen-headers.cs
+- process-a-batch-of-ten-workbooks-applying-the-same-row-freeze-configuration-to-each.cs
