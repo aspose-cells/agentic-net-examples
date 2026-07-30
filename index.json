@@ -6376,6 +6376,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "delete-rows-above-the-intended-freeze-point-then-adjust-freezepanes-parameters-to-reflect-the-new-layout.cs",
+      "title": "Delete rows above the intended freeze point, then adjust FreezePanes parameters to reflect the new layout."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "determine-the-number-of-header-columns-to-freeze-and-store-the-count.cs",
       "title": "Determine the number of header columns to freeze and store the count."
     },
