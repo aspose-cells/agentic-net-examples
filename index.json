@@ -5161,6 +5161,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "create-multiple-shapes-assign-each-a-different-z-order-value-and-confirm-rendering-order-matches-expectations.cs",
+      "title": "Create multiple shapes, assign each a different Z-order value, and confirm rendering order matches expectations."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs",
       "title": "Export non\u2011primitive shape geometry to an XML file for external analysis."
     },
