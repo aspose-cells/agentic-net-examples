@@ -6711,6 +6711,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-a-function-that-renames-a-worksheet-based-on-its-tabid-value-for-easier-identification.cs",
+      "title": "Implement a function that renames a worksheet based on its TabId value for easier identification."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs",
       "title": "Implement freeze panes using user\u2011provided row and column indices for customizable header locking."
     },
