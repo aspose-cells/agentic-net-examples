@@ -6871,6 +6871,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "unprotect-a-worksheet-before-unfreezing-panes-to-ensure-the-operation-succeeds.cs",
+      "title": "Unprotect a worksheet before unfreezing panes to ensure the operation succeeds."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-a-configuration-file-to-specify-the-number-of-rows-to-freeze-then-apply-at-runtime.cs",
       "title": "Use a configuration file to specify the number of rows to freeze, then apply at runtime."
     },
