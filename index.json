@@ -6976,6 +6976,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "remove-all-existing-page-breaks-from-the-worksheet-to-allow-automatic-pagination.cs",
+      "title": "Remove all existing page breaks from the worksheet to allow automatic pagination."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "rename-a-worksheet-after-freezing-then-verify-that-the-frozen-state-remains-unchanged.cs",
       "title": "Rename a worksheet after freezing, then verify that the frozen state remains unchanged."
     },
