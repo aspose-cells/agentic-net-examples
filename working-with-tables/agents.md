@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - create-a-table-then-generate-a-named-range-that-references-only-the-data-body-range-excluding-headers.cs
 - add-a-calculated-column-that-uses-the-if-function-to-categorize-rows-based-on-a-numeric-threshold.cs
 - remove-duplicate-rows-from-a-table-based-on-a-composite-key-of-two-columns-using-builtin-method.cs
+- create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-external-documentation-for-reference.cs
