@@ -324,3 +324,4 @@ Output files are written to the working directory.
 - iterate-through-all-charts-in-a-workbook-and-set-each-legends-visibility-based-on-chart-type.cs
 - create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs
 - change-the-chart-type-from-column-to-area-while-preserving-existing-data-label-configurations.cs
+- validate-that-data-labels-display-correct-cell-values-after-modifying-the-source-cell-range-programmatically.cs
