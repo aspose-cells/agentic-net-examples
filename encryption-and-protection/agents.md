@@ -210,3 +210,4 @@ Examples may generate:
 - upgrade-a-workbook-using-legacy-encryption-to-aes256-strong-encryption.cs
 - set-workbook-encryption-password-then-save-to-a-network-share-ensuring-encryption-is-preserved.cs
 - implement-a-function-that-returns-true-if-a-given-excel-file-is-password-protected.cs
+- save-a-protected-workbook-to-a-memory-stream-and-verify-that-the-stream-length-reflects-encryption-overhead.cs
