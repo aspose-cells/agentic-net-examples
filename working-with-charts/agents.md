@@ -296,3 +296,4 @@ Output files are written to the working directory.
 - apply-a-light-gray-fill-to-data-label-background-for-a-clean-appearance.cs
 - disable-data-label-autofit-feature-to-maintain-consistent-label-width.cs
 - set-data-label-text-alignment-to-rightjustify-for-a-horizontal-bar-chart.cs
+- position-data-labels-inside-end-for-a-column-chart-to-avoid-overlapping-bars.cs
