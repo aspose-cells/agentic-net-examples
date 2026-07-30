@@ -7231,6 +7231,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "unprotect-the-worksheet-using-the-correct-password-and-verify-that-editing-is-now-permitted.cs",
+      "title": "Unprotect the worksheet using the correct password and verify that editing is now permitted."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "update-workbook-properties-such-as-author-and-title-then-freeze-the-first-row-to-keep-metadata-visible.cs",
       "title": "Update workbook properties such as author and title, then freeze the first row to keep metadata visible."
     },
