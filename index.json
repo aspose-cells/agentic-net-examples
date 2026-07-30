@@ -5716,6 +5716,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs",
+      "title": "Import data from an XML file into a new table, mapping XML elements to table columns automatically."
+    },
+    {
+      "category": "working-with-tables",
       "file": "insert-a-new-row-into-a-table-and-automatically-copy-the-formatting-from-the-previous-row.cs",
       "title": "Insert a new row into a table and automatically copy the formatting from the previous row."
     },
