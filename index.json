@@ -6226,6 +6226,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-an-autofilter-to-a-header-row-then-freeze-that-row-to-keep-filter-controls-accessible.cs",
+      "title": "Apply an AutoFilter to a header row, then freeze that row to keep filter controls accessible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-both-row-and-column-freezes-then-write-the-workbook-to-a-memory-stream.cs",
       "title": "Apply both row and column freezes, then write the workbook to a memory stream."
     },
