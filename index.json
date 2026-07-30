@@ -6136,6 +6136,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-chart-then-freeze-the-rows-containing-chart-data-to-avoid-losing-context.cs",
+      "title": "Add a chart, then freeze the rows containing chart data to avoid losing context."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-conditional-formatting-rule-that-highlights-duplicate-values-in-column-n-with-a-light-orange-fill.cs",
       "title": "Add a conditional formatting rule that highlights duplicate values in column N with a light orange fill."
     },
