@@ -209,3 +209,4 @@ Examples may generate:
 - identify-the-encryption-algorithm-used-in-a-workbook-and-log-whether-it-is-strong-or-weak.cs
 - upgrade-a-workbook-using-legacy-encryption-to-aes256-strong-encryption.cs
 - set-workbook-encryption-password-then-save-to-a-network-share-ensuring-encryption-is-preserved.cs
+- implement-a-function-that-returns-true-if-a-given-excel-file-is-password-protected.cs
