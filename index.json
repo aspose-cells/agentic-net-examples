@@ -6186,6 +6186,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-multiple-series-to-the-chart-then-freeze-the-rows-that-hold-each-series-data-for-reference.cs",
+      "title": "Add multiple series to the chart, then freeze the rows that hold each series\u2019 data for reference."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "adjust-the-chart-layout-then-freeze-the-rows-that-define-the-charts-axis-labels-for-consistent-display.cs",
       "title": "Adjust the chart layout, then freeze the rows that define the chart\u2019s axis labels for consistent display."
     },
