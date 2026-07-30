@@ -229,3 +229,4 @@ Examples may generate:
 - load-an-excel-workbook-apply-password-protection-to-a-specific-worksheet-and-save-it.cs
 - verify-whether-a-worksheet-is-password-protected-before-performing-any-data-modifications.cs
 - attempt-to-unprotect-a-worksheet-using-an-incorrect-password-and-capture-the-resulting-exception.cs
+- protect-the-entire-workbook-structure-with-a-strong-password-disabling-sheet-editing.cs
