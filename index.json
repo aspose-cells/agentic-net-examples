@@ -7126,6 +7126,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheet-zoom-level-to-150-percent-for-detailed-onscreen-inspection.cs",
+      "title": "Set the worksheet zoom level to 150 percent for detailed on\u2011screen inspection."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-worksheets-background-color-to-light-gray-to-improve-visual-contrast-for-printed-pages.cs",
       "title": "Set the worksheet's background color to light gray to improve visual contrast for printed pages."
     },
