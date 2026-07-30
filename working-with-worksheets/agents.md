@@ -220,3 +220,4 @@ Output files are written to the working directory.
 - encapsulate-freezepanes-logic-inside-a-reusable-method-that-accepts-row-and-column-parameters.cs
 - write-a-unit-test-that-verifies-freezepanes-correctly-freezes-the-specified-number-of-rows.cs
 - write-an-integration-test-that-confirms-column-freezing-persists-after-saving-and-reloading.cs
+- benchmark-the-time-required-to-freeze-panes-on-a-worksheet-containing-fifty-thousand-rows.cs
