@@ -6861,6 +6861,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "make-the-worksheet-very-hidden-so-it-cannot-be-displayed-via-the-excel-ui.cs",
+      "title": "Make the worksheet very hidden so it cannot be displayed via the Excel UI."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "merge-cells-across-the-top-row-then-freeze-the-merged-header-to-keep-it-visible.cs",
       "title": "Merge cells across the top row, then freeze the merged header to keep it visible."
     },
