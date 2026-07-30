@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - hide-gridlines-then-freeze-the-header-row-to-keep-it-prominent-without-visual-clutter.cs
 - change-the-worksheet-tab-color-then-freeze-the-first-column-to-keep-the-colored-tab-identifiable.cs
 - set-the-worksheet-visibility-to-very-hidden-then-freeze-panes-before-making-it-visible-again.cs
+- reorder-worksheets-then-freeze-the-top-row-of-each-moved-sheet-to-preserve-headers.cs
