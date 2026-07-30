@@ -249,3 +249,4 @@ Output files are written to the working directory.
 - export-cells-with-richtext-content-to-csv-while-encoding-apostrophes-as-literal-characters.cs
 - write-unit-tests-asserting-that-styleflagquoteprefix-false-does-not-alter-existing-quoteprefix-values.cs
 - create-a-utility-that-scans-a-workbook-for-cells-where-quoteprefix-is-unintentionally-set-to-true.cs
+- preserve-quote-prefixes-while-applying-a-data-validation-rule-to-a-range-of-cells-using-styleflag.cs
