@@ -282,3 +282,4 @@ Output files are written to the working directory.
 - set-the-active-worksheet-to-the-third-sheet-using-its-zerobased-index-position.cs
 - rename-the-active-worksheet-to-quarterlyreport-while-preserving-all-existing-cell-data.cs
 - insert-five-new-rows-at-position-ten-shifting-existing-rows-downward-accordingly.cs
+- delete-columns-b-through-d-and-adjust-remaining-column-references-to-maintain-integrity.cs
