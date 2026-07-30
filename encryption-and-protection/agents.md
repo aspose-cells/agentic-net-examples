@@ -295,3 +295,4 @@ Examples may generate:
 - detect-whether-a-workbook-uses-the-default-encryption-algorithm-and-log-a-recommendation-to-upgrade.cs
 - protect-a-worksheet-then-export-its-data-to-csv-ensuring-protection-does-not-affect-exported-values.cs
 - unprotect-a-workbook-structure-add-a-new-hidden-worksheet-and-reprotect-with-a-different-password.cs
+- implement-automatic-reencryption-of-a-workbook-after-any-modification-to-maintain-security.cs
