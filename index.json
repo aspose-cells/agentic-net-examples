@@ -6566,6 +6566,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "log-the-frozen-state-of-each-processed-worksheet-to-the-console-for-diagnostics.cs",
+      "title": "Log the frozen state of each processed worksheet to the console for diagnostics."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs",
       "title": "Open a spreadsheet, set the first worksheet tab to invisible, then export to a new file."
     },
