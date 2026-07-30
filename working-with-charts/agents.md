@@ -535,3 +535,4 @@ Output files are written to the working directory.
 - open-an-xls-file-retrieve-polynomial-trendline-equation-from-a-chart-and-display-it-in-a-message-box.cs
 - retrieve-the-worksheet-that-contains-a-specific-chart-using-the-chartworksheet-property.cs
 - verify-the-retrieved-worksheet-name-matches-the-expected-chart-parent-worksheet.cs
+- create-a-new-column-chart-and-assign-its-data-source-using-setchartdatarange-method.cs
