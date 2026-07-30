@@ -243,3 +243,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-from-a-specified-file-path-into-memory-for-processing.cs
 - use-cellgetcharactersstartindex-length-to-retrieve-a-richtextportion-from-the-cell.cs
 - iterate-through-all-richtextportion-objects-in-a-cell-and-modify-each-portions-font-name.cs
+- merge-adjacent-richtextportion-objects-that-share-identical-formatting-into-a-single-portion.cs
