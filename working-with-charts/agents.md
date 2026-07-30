@@ -346,3 +346,4 @@ Output files are written to the working directory.
 - set-legend-entry-fill-to-none-for-all-charts-in-a-workbook-using-a-loop-construct.cs
 - create-a-waterfall-chart-link-its-data-labels-to-a-summary-range-and-adjust-label-shapes-to-fit.cs
 - enable-data-labels-for-a-stock-chart-and-source-label-values-from-a-dateformatted-cell-range.cs
+- hide-legend-for-a-3d-pie-chart-and-observe-impact-on-chart-readability.cs
