@@ -4971,6 +4971,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "set-print-area-to-a-named-range-before-conversion-to-limit-pdf-content-to-specific-cells.cs",
+      "title": "Set print area to a named range before conversion to limit PDF content to specific cells."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "split-the-output-pdf-into-separate-files-per-worksheet-using-custom-naming-conventions.cs",
       "title": "Split the output PDF into separate files per worksheet using custom naming conventions."
     },
