@@ -323,3 +323,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-for-a-stacked-column-chart-after-increasing-the-label-text-length.cs
 - iterate-through-all-charts-in-a-workbook-and-set-each-legends-visibility-based-on-chart-type.cs
 - create-a-chart-template-that-includes-predefined-legend-position-and-data-label-settings.cs
+- change-the-chart-type-from-column-to-area-while-preserving-existing-data-label-configurations.cs
