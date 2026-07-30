@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs",
+      "title": "Apply page break preview to every worksheet in the workbook to prepare for printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs",
       "title": "Enable page break preview mode for a worksheet to visualize printed page divisions."
     },
