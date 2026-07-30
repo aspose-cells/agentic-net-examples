@@ -246,3 +246,4 @@ Output files are written to the working directory.
 - create-a-pivot-table-then-freeze-the-pivot-tables-row-labels-for-constant-reference.cs
 - add-a-slicer-linked-to-a-pivot-table-then-freeze-the-slicers-row-area-to-maintain-filter-accessibility.cs
 - insert-sparklines-then-freeze-the-rows-containing-sparklines-to-keep-visual-trends-visible.cs
+- add-a-hyperlink-to-an-external-document-then-freeze-the-row-containing-the-link-for-quick-access.cs
