@@ -6511,6 +6511,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-structured-table-then-freeze-the-table-header-row-for-constant-reference.cs",
+      "title": "Insert a structured table, then freeze the table header row for constant reference."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
