@@ -260,3 +260,4 @@ Output files are written to the working directory.
 - update-workbook-properties-such-as-author-and-title-then-freeze-the-first-row-to-keep-metadata-visible.cs
 - add-custom-xml-parts-then-freeze-the-rows-that-reference-those-parts-for-easy-navigation.cs
 - insert-an-ole-object-then-freeze-the-rows-surrounding-the-object-for-stable-layout.cs
+- refresh-all-data-connections-then-freeze-the-rows-that-show-refreshed-results-to-maintain-view-stability.cs
