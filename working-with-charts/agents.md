@@ -483,3 +483,4 @@ Output files are written to the working directory.
 - add-a-dropdown-list-control-to-the-worksheet-and-bind-it-to-the-chart-data-source-for-updates.cs
 - implement-a-rolling-chart-by-shifting-the-data-window-each-minute-using-a-timer-event.cs
 - validate-that-chart-data-range-does-not-contain-empty-cells-before-generating-the-chart.cs
+- hide-the-second-series-in-a-line-chart-by-setting-its-isvisible-property-to-false.cs
