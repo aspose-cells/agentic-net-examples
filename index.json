@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-data-validation-list-that-pulls-allowed-values-from-a-range-on-a-hidden-worksheet.cs",
+      "title": "Add a data validation list that pulls allowed values from a range on a hidden worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-data-validation-rule-that-limits-numeric-input-in-column-k-to-values-between-0-and-500.cs",
       "title": "Add a data validation rule that limits numeric input in column K to values between 0 and 500."
     },
