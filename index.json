@@ -6156,6 +6156,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs",
+      "title": "Implement freeze panes using user\u2011provided row and column indices for customizable header locking."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "place-a-worksheet-immediately-after-a-specified-sheet-name-to-control-sheet-sequencing.cs",
       "title": "Place a worksheet immediately after a specified sheet name to control sheet sequencing."
     },
