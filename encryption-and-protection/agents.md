@@ -292,3 +292,4 @@ Examples may generate:
 - generate-a-log-entry-each-time-a-workbooks-encryption-status-is-toggled-during-automated-processing.cs
 - apply-worksheet-protection-permitting-hyperlink-insertion-but-blocking-editing-of-existing-hyperlink-addresses.cs
 - create-a-unit-test-confirming-an-encrypted-workbook-throws-the-expected-exception-when-opened-without-a-password.cs
+- detect-whether-a-workbook-uses-the-default-encryption-algorithm-and-log-a-recommendation-to-upgrade.cs
