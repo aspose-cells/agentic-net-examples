@@ -6201,6 +6201,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-conditional-freeze-only-when-the-worksheet-name-starts-with-report.cs",
+      "title": "Apply a conditional freeze only when the worksheet name starts with \u201cReport\u201d."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-row-freeze-to-header-rows-then-save-the-modified-workbook-to-a-new-xlsx-file.cs",
       "title": "Apply a row freeze to header rows, then save the modified workbook to a new XLSX file."
     },
