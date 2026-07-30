@@ -6356,6 +6356,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-chart-axes-then-freeze-the-rows-that-contain-axis-labels-to-maintain-context-while-scrolling.cs",
+      "title": "Configure chart axes, then freeze the rows that contain axis labels to maintain context while scrolling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-header-and-footer-text-then-freeze-the-rows-that-contain-header-information-for-consistency.cs",
       "title": "Configure header and footer text, then freeze the rows that contain header information for consistency."
     },
