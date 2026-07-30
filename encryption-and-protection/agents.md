@@ -233,3 +233,4 @@ Examples may generate:
 - detect-if-an-excel-file-is-encrypted-and-log-its-encryption-status-for-auditing.cs
 - decrypt-an-encrypted-xlsx-file-using-the-known-password-and-verify-formula-recalculation.cs
 - encrypt-a-newly-created-workbook-with-aes256-encryption-and-a-custom-password.cs
+- iterate-through-all-worksheets-protecting-each-with-the-same-password-while-preserving-formatting.cs
