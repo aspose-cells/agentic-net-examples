@@ -277,3 +277,4 @@ Examples may generate:
 - test-the-effect-of-encrypting-a-workbook-on-its-file-size-by-comparing-before-and-after-sizes.cs
 - apply-workbook-protection-disabling-printing-while-allowing-users-to-view-the-document-on-screen.cs
 - protect-a-worksheet-then-attempt-to-copy-its-contents-to-an-unprotected-sheet-and-verify-restrictions.cs
+- encrypt-a-workbook-with-a-password-containing-unicode-characters-and-confirm-successful-decryption.cs
