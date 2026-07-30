@@ -144,3 +144,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-refers-to-the-entire-column-z-for-dynamic-chart-data-source.cs
 - apply-a-conditional-formatting-rule-that-adds-a-red-font-color-to-cells-containing-the-word-error.cs
 - set-the-worksheets-default-row-height-to-automatically-adjust-based-on-cell-content.cs
+- insert-a-picture-from-a-url-into-the-worksheet-and-position-it-at-cell-r2.cs
