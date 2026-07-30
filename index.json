@@ -6336,6 +6336,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "freeze-the-top-three-rows-by-calling-freezepanes-with-row-index-three-and-column-zero.cs",
+      "title": "Freeze the top three rows by calling FreezePanes with row index three and column zero."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-the-top-three-rows-of-a-worksheet-to-maintain-summary-information-during-navigation.cs",
       "title": "Freeze the top three rows of a worksheet to maintain summary information during navigation."
     },
