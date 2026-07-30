@@ -128,3 +128,4 @@ Output files are written to the working directory.
 - import-a-json-array-into-a-table-automatically-creating-rows-and-mapping-json-fields-to-columns.cs
 - apply-a-custom-cell-style-to-a-tables-totals-row-to-differentiate-it-visually-from-data-rows.cs
 - create-a-table-with-a-dynamic-named-range-that-expands-automatically-when-new-rows-are-added.cs
+- set-the-tables-show-totals-row-option-and-configure-a-custom-formula-that-calculates-median-value.cs
