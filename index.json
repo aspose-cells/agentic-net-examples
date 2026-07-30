@@ -6576,6 +6576,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-new-columns-before-the-header-then-recalculate-the-freeze-column-index-and-apply-freezepanes-again.cs",
+      "title": "Insert new columns before the header, then recalculate the freeze column index and apply FreezePanes again."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-new-rows-before-the-header-then-recalculate-the-freeze-row-index-and-apply-freezepanes-again.cs",
       "title": "Insert new rows before the header, then recalculate the freeze row index and apply FreezePanes again."
     },
