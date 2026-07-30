@@ -248,3 +248,4 @@ Output files are written to the working directory.
 - apply-a-styleflag-that-updates-only-the-quoteprefix-property-while-leaving-other-style-attributes-unchanged.cs
 - export-cells-with-richtext-content-to-csv-while-encoding-apostrophes-as-literal-characters.cs
 - write-unit-tests-asserting-that-styleflagquoteprefix-false-does-not-alter-existing-quoteprefix-values.cs
+- create-a-utility-that-scans-a-workbook-for-cells-where-quoteprefix-is-unintentionally-set-to-true.cs
