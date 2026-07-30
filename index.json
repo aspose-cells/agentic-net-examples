@@ -6536,6 +6536,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "design-a-feature-that-prevents-assigning-duplicate-tabids-by-checking-existing-identifiers-before-applying-changes.cs",
+      "title": "Design a feature that prevents assigning duplicate TabIds by checking existing identifiers before applying changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "detect-empty-worksheets-by-checking-that-cellsmaxdatarow-and-cellsmaxdatacolumn-both-equal-1.cs",
       "title": "Detect empty worksheets by checking that Cells.MaxDataRow and Cells.MaxDataColumn both equal -1."
     },
