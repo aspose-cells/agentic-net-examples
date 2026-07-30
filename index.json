@@ -5686,6 +5686,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-generate-a-pivot-chart-from-its-data-and-place-it-on-a-dashboard-sheet.cs",
+      "title": "Create a table, then generate a pivot chart from its data and place it on a dashboard sheet."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs",
       "title": "Create a table with a header row that uses merged cells to span multiple columns for a title."
     },
