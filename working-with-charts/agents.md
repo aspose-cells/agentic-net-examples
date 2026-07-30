@@ -387,3 +387,4 @@ Output files are written to the working directory.
 - override-getlegendentry-in-chartchinesesettings-to-supply-chinese-legend-text-based-on-series-index.cs
 - assign-an-instance-of-chartchinesesettings-to-the-charts-globalizationsettings-property-before-exporting.cs
 - save-the-generated-png-image-to-a-specified-output-directory-with-a-timestamped-filename.cs
+- verify-that-the-chart-title-appears-in-chinese-characters-within-the-exported-png-image.cs
