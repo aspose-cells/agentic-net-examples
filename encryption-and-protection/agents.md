@@ -228,3 +228,4 @@ Examples may generate:
 - verify-that-opening-an-encrypted-workbook-with-an-incorrect-password-throws-an-exception.cs
 - load-an-excel-workbook-apply-password-protection-to-a-specific-worksheet-and-save-it.cs
 - verify-whether-a-worksheet-is-password-protected-before-performing-any-data-modifications.cs
+- attempt-to-unprotect-a-worksheet-using-an-incorrect-password-and-capture-the-resulting-exception.cs
