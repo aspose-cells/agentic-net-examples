@@ -6441,6 +6441,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "protect-the-worksheet-with-a-password-and-allow-users-to-edit-only-unlocked-cells.cs",
+      "title": "Protect the worksheet with a password and allow users to edit only unlocked cells."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs",
       "title": "Retrieve a worksheet by name, display its formulas instead of values, and save the changes."
     },
