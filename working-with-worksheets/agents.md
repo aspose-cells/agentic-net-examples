@@ -299,3 +299,4 @@ Output files are written to the working directory.
 - set-the-worksheet-tab-color-to-teal-to-visually-differentiate-it-among-other-sheets.cs
 - make-the-worksheet-very-hidden-so-it-cannot-be-displayed-via-the-excel-ui.cs
 - set-the-page-orientation-of-the-worksheet-to-landscape-for-better-wide-data-presentation.cs
+- define-a-print-area-covering-cells-a1-through-m50-to-limit-printed-content.cs
