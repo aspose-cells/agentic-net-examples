@@ -253,3 +253,4 @@ Output files are written to the working directory.
 - apply-a-border-style-around-the-header-range-then-freeze-those-rows-to-maintain-border-visibility.cs
 - define-a-number-format-for-monetary-values-then-freeze-the-rows-containing-totals-for-constant-visibility.cs
 - insert-a-formula-that-calculates-subtotals-then-freeze-the-rows-with-those-formulas-to-keep-calculations-accessible.cs
+- recalculate-all-formulas-after-freezing-panes-to-ensure-dependent-cells-reflect-the-frozen-view.cs
