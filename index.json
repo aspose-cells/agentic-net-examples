@@ -6561,6 +6561,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "process-a-collection-of-workbooks-in-parallel-freezing-the-first-two-columns-of-each-worksheet-concurrently.cs",
+      "title": "Process a collection of workbooks in parallel, freezing the first two columns of each worksheet concurrently."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs",
       "title": "Programmatically disable NumbersAsText warning, then verify that the cell comment indicating the issue is removed."
     },
