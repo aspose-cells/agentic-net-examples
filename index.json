@@ -6291,6 +6291,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-new-workbook-add-sample-data-and-freeze-the-first-header-column.cs",
+      "title": "Create a new workbook, add sample data, and freeze the first header column."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-new-workbook-populate-it-with-sample-data-and-freeze-the-first-header-row.cs",
       "title": "Create a new workbook, populate it with sample data, and freeze the first header row."
     },
