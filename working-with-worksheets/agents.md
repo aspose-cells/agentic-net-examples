@@ -280,3 +280,4 @@ Output files are written to the working directory.
 - after-unfreezing-panes-immediately-reapply-freezepanes-with-updated-indices-to-reflect-recent-row-insertions.cs
 - document-the-entire-freezepane-workflow-in-code-comments-including-loading-freezing-saving-and-validation-steps.cs
 - set-the-active-worksheet-to-the-third-sheet-using-its-zerobased-index-position.cs
+- rename-the-active-worksheet-to-quarterlyreport-while-preserving-all-existing-cell-data.cs
