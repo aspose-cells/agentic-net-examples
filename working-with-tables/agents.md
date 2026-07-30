@@ -100,3 +100,4 @@ Output files are written to the working directory.
 - add-a-new-column-to-an-existing-table-and-set-its-default-value-using-a-constant-expression.cs
 - remove-an-unwanted-column-from-a-table-while-preserving-the-data-in-other-columns.cs
 - reorder-columns-in-a-table-to-match-a-predefined-layout-required-by-downstream-processing-scripts.cs
+- apply-a-filter-that-selects-rows-where-the-status-column-equals-completed-and-hide-the-rest.cs
