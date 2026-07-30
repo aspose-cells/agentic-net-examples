@@ -442,3 +442,4 @@ Output files are written to the working directory.
 - save-the-workbook-with-the-gantt-chart-as-a-new-xlsx-file-in-a-specified-output-folder.cs
 - retrieve-the-worksheet-that-hosts-the-gantt-chart-and-log-its-name-for-debugging-purposes.cs
 - update-the-data-range-of-the-gantt-chart-after-inserting-additional-task-rows-in-the-worksheet.cs
+- create-a-waterfall-chart-and-designate-a-specific-data-point-as-the-total-segment.cs
