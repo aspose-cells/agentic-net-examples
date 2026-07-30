@@ -6476,6 +6476,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "delete-columns-b-through-d-and-adjust-remaining-column-references-to-maintain-integrity.cs",
+      "title": "Delete columns B through D and adjust remaining column references to maintain integrity."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-columns-to-the-left-of-the-desired-freeze-area-then-call-freezepanes-with-updated-column-index.cs",
       "title": "Delete columns to the left of the desired freeze area, then call FreezePanes with updated column index."
     },
