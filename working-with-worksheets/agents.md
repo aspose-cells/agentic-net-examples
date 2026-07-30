@@ -273,3 +273,4 @@ Output files are written to the working directory.
 - insert-a-picture-of-a-logo-then-freeze-rows-above-it-to-keep-branding-visible.cs
 - add-a-watermark-to-the-worksheet-then-freeze-the-rows-containing-the-watermark-to-prevent-scrolling-away.cs
 - set-a-custom-page-orientation-then-freeze-the-header-rows-to-align-with-the-new-page-layout.cs
+- define-a-custom-margin-setting-then-freeze-the-top-rows-to-ensure-they-remain-within-printable-area.cs
