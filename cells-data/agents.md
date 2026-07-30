@@ -231,3 +231,4 @@ Output files are written to the working directory.
 - programmatically-insert-an-apostrophe-prefix-into-numeric-cells-to-force-text-interpretation.cs
 - remove-the-leading-apostrophe-from-a-cell-by-setting-stylequoteprefix-to-false-via-styleflag.cs
 - generate-an-audit-log-detailing-each-modification-to-quoteprefix-properties-across-multiple-workbook-versions.cs
+- map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs
