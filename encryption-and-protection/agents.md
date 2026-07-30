@@ -262,3 +262,4 @@ Examples may generate:
 - remove-password-protection-from-a-worksheet-then-reapply-it-with-a-casesensitive-password.cs
 - detect-whether-a-workbooks-structure-is-protected-and-output-the-protection-status-to-the-console.cs
 - encrypt-multiple-workbooks-in-parallel-threads-each-using-a-distinct-password-derived-from-a-hash-function.cs
+- validate-that-a-decrypted-workbook-retains-all-original-cell-comments-and-data-validation-rules.cs
