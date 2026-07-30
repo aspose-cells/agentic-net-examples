@@ -101,3 +101,4 @@ Output files are written to the working directory.
 - remove-an-unwanted-column-from-a-table-while-preserving-the-data-in-other-columns.cs
 - reorder-columns-in-a-table-to-match-a-predefined-layout-required-by-downstream-processing-scripts.cs
 - apply-a-filter-that-selects-rows-where-the-status-column-equals-completed-and-hide-the-rest.cs
+- clear-all-filters-applied-to-a-table-restoring-the-full-dataset-visibility-for-analysis.cs
