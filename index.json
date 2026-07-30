@@ -6716,6 +6716,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-manual-page-break-after-row-30-to-control-pagination-in-the-printed-document.cs",
+      "title": "Insert a manual page break after row 30 to control pagination in the printed document."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-picture-from-a-url-into-the-worksheet-and-position-it-at-cell-r2.cs",
       "title": "Insert a picture from a URL into the worksheet and position it at cell R2."
     },
