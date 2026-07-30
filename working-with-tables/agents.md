@@ -93,3 +93,4 @@ Output files are written to the working directory.
 - calculate-a-running-total-column-within-a-table-using-a-formula-that-references-previous-rows.cs
 - set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs
 - disable-autoexpand-for-a-table-to-keep-its-range-fixed-despite-additional-rows-being-entered.cs
+- change-the-table-style-to-a-custom-xmldefined-style-to-meet-corporate-branding-guidelines.cs
