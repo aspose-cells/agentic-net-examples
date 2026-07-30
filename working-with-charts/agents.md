@@ -434,3 +434,4 @@ Output files are written to the working directory.
 - apply-a-gradient-fill-to-the-chart-plot-area-transitioning-from-white-at-the-top-to-gray-bottom.cs
 - remove-any-existing-trendlines-from-a-chart-before-adding-new-analytical-lines.cs
 - configure-chart-axes-to-use-automatic-scaling-ensuring-all-data-points-are-fully-visible.cs
+- lock-the-charts-aspect-ratio-to-prevent-distortion-when-resizing-the-plot-area.cs
