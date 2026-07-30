@@ -6676,6 +6676,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "unfreeze-all-panes-by-invoking-freezepanes-with-both-row-and-column-parameters-set-to-zero.cs",
+      "title": "Unfreeze all panes by invoking FreezePanes with both row and column parameters set to zero."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "unhide-a-previously-hidden-worksheet-adjust-its-tab-color-and-write-the-workbook-back.cs",
       "title": "Unhide a previously hidden worksheet, adjust its tab color, and write the workbook back."
     },
