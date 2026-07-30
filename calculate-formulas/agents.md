@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs
 - write-unit-tests-verifying-oncircular-receives-correct-cell-enumeration-for-a-known-circular-loop.cs
 - use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs
+- configure-calculationoptionsignoreerror-to-true-when-evaluating-formulas-that-may-cause-divisionbyzero.cs
