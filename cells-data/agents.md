@@ -247,3 +247,4 @@ Output files are written to the working directory.
 - copy-richtext-formatting-from-one-cell-to-another-across-different-worksheets.cs
 - apply-a-styleflag-that-updates-only-the-quoteprefix-property-while-leaving-other-style-attributes-unchanged.cs
 - export-cells-with-richtext-content-to-csv-while-encoding-apostrophes-as-literal-characters.cs
+- write-unit-tests-asserting-that-styleflagquoteprefix-false-does-not-alter-existing-quoteprefix-values.cs
