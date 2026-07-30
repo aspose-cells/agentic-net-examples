@@ -6230,6 +6230,11 @@
       "title": "Toggle worksheet view between normal and page break preview based on a user\u2011defined flag."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs",
+      "title": "Validate that each worksheet retains a unique SheetId after performing copy operations."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
