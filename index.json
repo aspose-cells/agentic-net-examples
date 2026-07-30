@@ -5971,6 +5971,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-tabletorangeoptionslastrow-to-zero-to-remove-all-formatting-during-the-table-to-range-conversion.cs",
+      "title": "Set TableToRangeOptions.LastRow to zero to remove all formatting during the table-to-range conversion."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-query-tables-connection-string-to-use-integrated-security-for-secure-access-to-the-database.cs",
       "title": "Set the query table's connection string to use integrated security for secure access to the database."
     },
