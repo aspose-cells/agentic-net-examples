@@ -6471,6 +6471,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "hide-gridlines-then-freeze-the-header-row-to-keep-it-prominent-without-visual-clutter.cs",
+      "title": "Hide gridlines, then freeze the header row to keep it prominent without visual clutter."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-multiple-columns-from-index-5-to-9-then-export-the-workbook-preserving-hidden-columns.cs",
       "title": "Hide multiple columns from index 5 to 9, then export the workbook preserving hidden columns."
     },
