@@ -6196,6 +6196,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-both-row-and-column-freezes-then-write-the-workbook-to-a-memory-stream.cs",
+      "title": "Apply both row and column freezes, then write the workbook to a memory stream."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs",
       "title": "Apply custom margin of 0.5 inches on all sides before scaling worksheet to fit one page."
     },
