@@ -286,3 +286,4 @@ Output files are written to the working directory.
 - apply-a-bold-centered-style-to-the-header-row-spanning-columns-a-to-g.cs
 - set-column-c-width-to-twenty-points-to-accommodate-longer-text-entries.cs
 - merge-cells-d4-through-f4-into-a-single-cell-and-center-its-content-horizontally.cs
+- unmerge-the-previously-merged-range-d4f4-and-restore-original-cell-boundaries.cs
