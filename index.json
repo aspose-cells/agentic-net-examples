@@ -6941,6 +6941,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-a-custom-page-orientation-then-freeze-the-header-rows-to-align-with-the-new-page-layout.cs",
+      "title": "Set a custom page orientation, then freeze the header rows to align with the new page layout."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-a-custom-view-with-a-specific-zoom-level-then-freeze-rows-to-maintain-visual-context.cs",
       "title": "Set a custom view with a specific zoom level, then freeze rows to maintain visual context."
     },
