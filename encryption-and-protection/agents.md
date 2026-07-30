@@ -252,3 +252,4 @@ Examples may generate:
 - compare-aes128-and-aes256-encryption-strengths-by-encrypting-the-same-file-with-each-algorithm.cs
 - generate-a-report-listing-all-worksheets-currently-password-protected-within-a-given-workbook.cs
 - attempt-to-open-an-encrypted-workbook-without-a-password-and-capture-the-specific-error-code.cs
+- change-the-password-of-a-protected-worksheet-while-preserving-its-existing-protection-options.cs
