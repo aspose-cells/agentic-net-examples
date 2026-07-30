@@ -5631,6 +5631,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "clear-all-filters-applied-to-a-table-restoring-the-full-dataset-visibility-for-analysis.cs",
+      "title": "Clear all filters applied to a table, restoring the full dataset visibility for analysis."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-data-validation-list-that-pulls-its-items-directly-from-a-column-in-a-worksheet-table.cs",
       "title": "Create a data validation list that pulls its items directly from a column in a worksheet table."
     },
