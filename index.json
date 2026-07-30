@@ -6796,6 +6796,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheet-visibility-to-very-hidden-then-freeze-panes-before-making-it-visible-again.cs",
+      "title": "Set the worksheet visibility to very hidden, then freeze panes before making it visible again."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-worksheets-background-color-to-light-gray-to-improve-visual-contrast-for-printed-pages.cs",
       "title": "Set the worksheet's background color to light gray to improve visual contrast for printed pages."
     },
