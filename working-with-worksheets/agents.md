@@ -275,3 +275,4 @@ Output files are written to the working directory.
 - set-a-custom-page-orientation-then-freeze-the-header-rows-to-align-with-the-new-page-layout.cs
 - define-a-custom-margin-setting-then-freeze-the-top-rows-to-ensure-they-remain-within-printable-area.cs
 - apply-a-print-title-range-that-includes-frozen-rows-then-verify-that-titles-stay-visible-when-printing.cs
+- use-the-worksheetresetpanes-method-to-clear-all-splits-and-freezes-before-applying-a-new-configuration.cs
