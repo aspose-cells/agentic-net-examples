@@ -6806,6 +6806,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-a-trycatch-block-around-freezepanes-calls-to-handle-invalid-indices-gracefully.cs",
+      "title": "Use a try\u2011catch block around FreezePanes calls to handle invalid indices gracefully."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs",
       "title": "Use WorksheetCollection to hide zero values on every sheet whose name starts with \u201cQ\u201d."
     },
