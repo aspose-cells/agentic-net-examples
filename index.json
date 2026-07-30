@@ -6296,6 +6296,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-multiple-workbooks-from-a-folder-hide-zero-values-on-each-sheet-and-save-changes.cs",
+      "title": "Load multiple workbooks from a folder, hide zero values on each sheet, and save changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs",
       "title": "Open a spreadsheet, set the first worksheet tab to invisible, then export to a new file."
     },
