@@ -371,3 +371,4 @@ Output files are written to the working directory.
 - set-legend-background-to-transparent-while-keeping-entry-fill-none-to-achieve-a-fully-clear-legend.cs
 - resize-data-label-shapes-after-applying-bold-italic-font-combination-to-test-text-fitting.cs
 - enable-data-labels-for-scatter-plot-link-each-label-to-a-cell-containing-a-descriptive-note.cs
+- resize-data-label-shapes-after-increasing-chart-overall-width-to-maintain-proportional-label-size.cs
