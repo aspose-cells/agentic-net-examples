@@ -292,3 +292,4 @@ Output files are written to the working directory.
 - set-data-validation-on-column-e-to-allow-only-dates-between-january-1-and-december-31.cs
 - apply-conditional-formatting-to-highlight-cells-in-column-f-exceeding-the-value-one-thousand.cs
 - add-a-hyperlink-to-cell-h2-pointing-to-the-external-website-httpsexamplecom-for-reference.cs
+- insert-a-comment-on-cell-a1-stating-review-required-before-final-submission-with-author.cs
