@@ -5601,6 +5601,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs",
+      "title": "Delete a specific row from a table using its primary key value to locate the target."
+    },
+    {
+      "category": "working-with-tables",
       "file": "generate-a-pivot-table-based-on-an-existing-worksheet-table-and-place-it-on-a-new-worksheet.cs",
       "title": "Generate a pivot table based on an existing worksheet table and place it on a new worksheet."
     },
