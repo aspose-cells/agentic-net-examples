@@ -7051,6 +7051,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "update-workbook-properties-such-as-author-and-title-then-freeze-the-first-row-to-keep-metadata-visible.cs",
+      "title": "Update workbook properties such as author and title, then freeze the first row to keep metadata visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-a-configuration-file-to-specify-the-number-of-rows-to-freeze-then-apply-at-runtime.cs",
       "title": "Use a configuration file to specify the number of rows to freeze, then apply at runtime."
     },
