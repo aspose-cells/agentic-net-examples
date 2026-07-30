@@ -6406,6 +6406,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "encapsulate-freezepanes-logic-inside-a-reusable-method-that-accepts-row-and-column-parameters.cs",
+      "title": "Encapsulate FreezePanes logic inside a reusable method that accepts row and column parameters."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs",
       "title": "Freeze panes at row one and column one to keep headers visible while scrolling."
     },
