@@ -6496,6 +6496,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "implement-logic-to-skip-freezing-if-the-worksheet-already-has-the-desired-frozen-state.cs",
+      "title": "Implement logic to skip freezing if the worksheet already has the desired frozen state."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-chart-title-with-custom-font-size-and-color-to-improve-chart-readability.cs",
       "title": "Insert a chart title with custom font size and color to improve chart readability."
     },
