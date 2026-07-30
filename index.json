@@ -6591,6 +6591,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-formula-that-calculates-subtotals-then-freeze-the-rows-with-those-formulas-to-keep-calculations-accessible.cs",
+      "title": "Insert a formula that calculates subtotals, then freeze the rows with those formulas to keep calculations accessible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-hyperlink-that-triggers-a-macro-when-clicked-in-cell-s5-for-custom-actions.cs",
       "title": "Insert a hyperlink that triggers a macro when clicked in cell S5 for custom actions."
     },
