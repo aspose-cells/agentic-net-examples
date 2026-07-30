@@ -6696,6 +6696,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "identify-worksheets-containing-only-shapes-by-confirming-maxdatarow-is-1-and-shapecollectioncount-is-greater-than-zero.cs",
+      "title": "Identify worksheets containing only shapes by confirming MaxDataRow is -1 and ShapeCollection.Count is greater than zero."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "implement-freeze-panes-using-userprovided-row-and-column-indices-for-customizable-header-locking.cs",
       "title": "Implement freeze panes using user\u2011provided row and column indices for customizable header locking."
     },
