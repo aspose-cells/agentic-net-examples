@@ -271,3 +271,4 @@ Examples may generate:
 - encrypt-a-workbook-using-a-password-stored-securely-in-azure-key-vault-and-retrieve-it-at-runtime.cs
 - validate-that-a-digitally-signed-workbook-fails-verification-after-its-protection-password-is-changed.cs
 - create-a-batch-job-that-decrypts-all-files-in-a-folder-then-reencrypts-them-with-a-new-policy.cs
+- implement-error-handling-distinguishing-between-incorrect-password-and-corrupted-encrypted-file-scenarios.cs
