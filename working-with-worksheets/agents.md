@@ -195,3 +195,4 @@ Output files are written to the working directory.
 - save-a-workbook-with-frozen-rows-to-an-xlsb-file-for-binary-compression.cs
 - save-a-workbook-with-frozen-columns-to-an-xls-file-for-legacy-compatibility.cs
 - log-the-frozen-state-of-each-processed-worksheet-to-the-console-for-diagnostics.cs
+- serialize-the-frozen-state-information-of-worksheets-into-a-json-file-for-auditing.cs
