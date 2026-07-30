@@ -6506,6 +6506,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "document-the-entire-freezepane-workflow-in-code-comments-including-loading-freezing-saving-and-validation-steps.cs",
+      "title": "Document the entire freeze\u2011pane workflow in code comments, including loading, freezing, saving, and validation steps."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-data-labels-on-the-chart-then-freeze-the-rows-with-those-labels-to-keep-them-displayed.cs",
       "title": "Enable data labels on the chart, then freeze the rows with those labels to keep them displayed."
     },
