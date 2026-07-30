@@ -7021,6 +7021,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "retrieve-each-worksheets-tabid-by-accessing-the-worksheettabid-property-of-the-loaded-workbook.cs",
+      "title": "Retrieve each worksheet's TabId by accessing the Worksheet.TabId property of the loaded workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-the-maximum-data-column-count-and-freeze-all-columns-to-its-left.cs",
       "title": "Retrieve the maximum data column count and freeze all columns to its left."
     },
