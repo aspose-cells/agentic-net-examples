@@ -239,3 +239,4 @@ Output files are written to the working directory.
 - benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs
 - test-impact-of-maxdatarow-and-maxdatacolumn-limits-on-iteration-time-by-measuring-duration-with-and-without-constraints.cs
 - backup-worksheet-data-to-a-json-file-by-enumerating-cells-and-serializing-addressvalue-pairs.cs
+- calculate-total-number-of-merged-cells-by-counting-each-merged-regions-cell-count-during-enumeration.cs
