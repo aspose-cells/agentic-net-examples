@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - write-unit-tests-verifying-oncircular-receives-correct-cell-enumeration-for-a-known-circular-loop.cs
 - use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs
 - configure-calculationoptionsignoreerror-to-true-when-evaluating-formulas-that-may-cause-divisionbyzero.cs
+- enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs
