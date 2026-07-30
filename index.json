@@ -6921,6 +6921,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-worksheetcellsmaxdatarow-to-calculate-dynamic-freeze-rows-based-on-actual-data.cs",
+      "title": "Use Worksheet.Cells.MaxDataRow to calculate dynamic freeze rows based on actual data."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs",
       "title": "Use WorksheetCollection to hide zero values on every sheet whose name starts with \u201cQ\u201d."
     },
