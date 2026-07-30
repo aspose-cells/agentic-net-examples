@@ -248,3 +248,4 @@ Output files are written to the working directory.
 - insert-sparklines-then-freeze-the-rows-containing-sparklines-to-keep-visual-trends-visible.cs
 - add-a-hyperlink-to-an-external-document-then-freeze-the-row-containing-the-link-for-quick-access.cs
 - insert-a-cell-comment-on-a-header-cell-then-freeze-the-comments-row-to-keep-contextual-notes-visible.cs
+- apply-a-cell-style-to-the-header-row-then-freeze-that-row-to-preserve-styling-while-scrolling.cs
