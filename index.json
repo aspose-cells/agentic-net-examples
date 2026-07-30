@@ -5768,6 +5768,11 @@
       "category": "working-with-tables",
       "file": "validate-that-a-table-contains-no-duplicate-rows-based-on-a-combination-of-key-columns.cs",
       "title": "Validate that a table contains no duplicate rows based on a combination of key columns."
+    },
+    {
+      "category": "working-with-tables",
+      "file": "validate-that-a-tables-column-data-types-match-expected-net-types-before-importing-into-a-database.cs",
+      "title": "Validate that a table's column data types match expected .NET types before importing into a database."
     }
   ]
 }
