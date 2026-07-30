@@ -6951,6 +6951,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "log-a-warning-when-a-worksheets-maxdatarow-is-zero-but-maxdatacolumn-is-greater-than-zero.cs",
+      "title": "Log a warning when a worksheet's MaxDataRow is zero but MaxDataColumn is greater than zero."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "log-the-frozen-state-of-each-processed-worksheet-to-the-console-for-diagnostics.cs",
       "title": "Log the frozen state of each processed worksheet to the console for diagnostics."
     },
