@@ -6531,6 +6531,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheets-default-print-resolution-to-600-dpi-for-highdefinition-output.cs",
+      "title": "Set the worksheet's default print resolution to 600 DPI for high\u2011definition output."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-worksheets-default-row-height-to-automatically-adjust-based-on-cell-content.cs",
       "title": "Set the worksheet's default row height to automatically adjust based on cell content."
     },
