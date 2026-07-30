@@ -288,3 +288,4 @@ Output files are written to the working directory.
 - merge-cells-d4-through-f4-into-a-single-cell-and-center-its-content-horizontally.cs
 - unmerge-the-previously-merged-range-d4f4-and-restore-original-cell-boundaries.cs
 - insert-a-formula-in-cell-g10-that-calculates-the-sum-of-range-b2b9.cs
+- evaluate-all-formulas-in-the-worksheet-and-retrieve-the-calculated-value-of-cell-g10.cs
