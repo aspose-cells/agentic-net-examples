@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - iterate-through-each-worksheet-apply-95-percent-zoom-to-those-with-over-500-rows-and-export-pdf.cs
 - create-a-macrofree-workbook-hide-zero-values-set-custom-top-margin-and-save-as-csv.cs
 - protect-individual-cells-with-a-password-while-leaving-other-cells-editable-for-users.cs
+- insert-a-sparkline-chart-in-cell-p5-that-reflects-the-trend-of-data-in-range-b2b10.cs
