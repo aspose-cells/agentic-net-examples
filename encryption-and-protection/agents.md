@@ -227,3 +227,4 @@ Examples may generate:
 - create-a-macroenabled-workbook-apply-strong-encryption-and-ensure-macros-remain-functional-after-saving.cs
 - verify-that-opening-an-encrypted-workbook-with-an-incorrect-password-throws-an-exception.cs
 - load-an-excel-workbook-apply-password-protection-to-a-specific-worksheet-and-save-it.cs
+- verify-whether-a-worksheet-is-password-protected-before-performing-any-data-modifications.cs
