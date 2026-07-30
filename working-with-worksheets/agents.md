@@ -244,3 +244,4 @@ Output files are written to the working directory.
 - rename-a-worksheet-after-freezing-then-verify-that-the-frozen-state-remains-unchanged.cs
 - apply-data-validation-to-a-column-then-freeze-that-column-to-keep-validation-rules-visible.cs
 - create-a-pivot-table-then-freeze-the-pivot-tables-row-labels-for-constant-reference.cs
+- add-a-slicer-linked-to-a-pivot-table-then-freeze-the-slicers-row-area-to-maintain-filter-accessibility.cs
