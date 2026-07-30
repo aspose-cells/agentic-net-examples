@@ -5611,6 +5611,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "change-the-table-style-to-a-custom-xmldefined-style-to-meet-corporate-branding-guidelines.cs",
+      "title": "Change the table style to a custom XML\u2011defined style to meet corporate branding guidelines."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs",
       "title": "Create a duplicate of an existing table on another worksheet while preserving its style and formulas."
     },
