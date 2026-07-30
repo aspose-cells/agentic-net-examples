@@ -210,3 +210,4 @@ Output files are written to the working directory.
 - autofit-all-rows-before-freezing-to-maintain-row-height-consistency-while-scrolling.cs
 - set-specific-column-widths-then-freeze-the-first-three-columns-to-preserve-custom-sizing.cs
 - set-specific-row-heights-then-freeze-the-first-two-rows-to-keep-custom-height-formatting.cs
+- apply-an-autofilter-to-a-header-row-then-freeze-that-row-to-keep-filter-controls-accessible.cs
