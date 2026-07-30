@@ -6636,6 +6636,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "read-freeze-row-and-column-values-from-an-xml-configuration-file-and-apply-them.cs",
+      "title": "Read freeze row and column values from an XML configuration file and apply them."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs",
       "title": "Retrieve a worksheet by name, display its formulas instead of values, and save the changes."
     },
