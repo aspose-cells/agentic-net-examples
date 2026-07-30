@@ -6231,6 +6231,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-pivot-chart-based-on-an-existing-pivot-table-to-visualize-aggregated-sales-data.cs",
+      "title": "Create a pivot chart based on an existing pivot table to visualize aggregated sales data."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
