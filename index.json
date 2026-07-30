@@ -6166,6 +6166,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-slicer-linked-to-a-pivot-table-then-freeze-the-slicers-row-area-to-maintain-filter-accessibility.cs",
+      "title": "Add a slicer linked to a pivot table, then freeze the slicer\u2019s row area to maintain filter accessibility."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "adjust-the-zoom-factor-of-a-worksheet-to-150-percent-for-detailed-visual-inspection.cs",
       "title": "Adjust the zoom factor of a worksheet to 150 percent for detailed visual inspection."
     },
