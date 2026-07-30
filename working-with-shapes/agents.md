@@ -503,3 +503,4 @@ Output files are written to the working directory.
 - add-a-shape-retrieve-its-connection-points-and-compare-them-with-expected-points-stored-in-a-database.cs
 - add-a-shape-set-its-linked-cell-to-a-cell-with-custom-text-format-and-verify-formatted-text-appears.cs
 - add-a-shape-set-its-linked-cell-to-a-cell-with-a-custom-array-constant-and-display-values.cs
+- link-a-shape-to-a-cell-containing-a-dynamic-array-formula-and-ensure-shape-updates-with-array-changes.cs
