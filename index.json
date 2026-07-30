@@ -6631,6 +6631,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-an-ole-object-then-freeze-the-rows-surrounding-the-object-for-stable-layout.cs",
+      "title": "Insert an OLE object, then freeze the rows surrounding the object for stable layout."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-manual-page-breaks-below-the-frozen-rows-then-verify-that-page-breaks-respect-the-frozen-view.cs",
       "title": "Insert manual page breaks below the frozen rows, then verify that page breaks respect the frozen view."
     },
