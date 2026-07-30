@@ -286,3 +286,4 @@ Output files are written to the working directory.
 - use-conditional-formatting-to-change-tick-label-color-based-on-axis-value-thresholds-for-emphasis.cs
 - clone-the-existing-chart-object-and-modify-its-data-source-to-reference-a-different-worksheet.cs
 - set-the-shape-type-of-data-labels-to-rounded-rectangle-for-a-line-chart.cs
+- set-the-shape-type-of-data-labels-to-ellipse-for-a-bubble-chart.cs
