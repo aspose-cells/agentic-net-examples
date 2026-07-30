@@ -6331,6 +6331,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "freeze-the-first-row-and-first-column-simultaneously-using-freezepanes-with-row-one-and-column-one.cs",
+      "title": "Freeze the first row and first column simultaneously using FreezePanes with row one and column one."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-the-first-two-columns-to-keep-identifier-fields-static-while-scrolling-horizontally.cs",
       "title": "Freeze the first two columns to keep identifier fields static while scrolling horizontally."
     },
