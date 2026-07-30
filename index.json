@@ -6166,6 +6166,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-hyperlink-to-an-external-document-then-freeze-the-row-containing-the-link-for-quick-access.cs",
+      "title": "Add a hyperlink to an external document, then freeze the row containing the link for quick access."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-slicer-linked-to-a-pivot-table-then-freeze-the-slicers-row-area-to-maintain-filter-accessibility.cs",
       "title": "Add a slicer linked to a pivot table, then freeze the slicer\u2019s row area to maintain filter accessibility."
     },
