@@ -151,3 +151,4 @@ Output files are written to the working directory.
 - set-the-worksheets-print-title-rows-to-repeat-rows-1-through-2-on-each-printed-page.cs
 - apply-a-threeicon-set-conditional-format-to-column-m-to-indicate-low-medium-and-high-performance.cs
 - insert-a-hyperlink-that-triggers-a-macro-when-clicked-in-cell-s5-for-custom-actions.cs
+- protect-the-worksheet-with-a-password-and-allow-users-to-edit-only-unlocked-cells.cs
