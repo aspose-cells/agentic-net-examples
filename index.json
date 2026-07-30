@@ -6261,6 +6261,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-predefined-chart-style-then-freeze-the-rows-that-influence-the-charts-appearance-for-consistency.cs",
+      "title": "Apply a predefined chart style, then freeze the rows that influence the chart\u2019s appearance for consistency."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-row-freeze-to-header-rows-then-save-the-modified-workbook-to-a-new-xlsx-file.cs",
       "title": "Apply a row freeze to header rows, then save the modified workbook to a new XLSX file."
     },
