@@ -246,3 +246,4 @@ Examples may generate:
 - add-a-second-digital-signature-to-an-already-signed-excel-file-and-confirm-both-persist.cs
 - implement-a-routine-that-attempts-to-unprotect-a-worksheet-using-a-list-of-common-passwords.cs
 - create-a-custom-password-validator-enforcing-minimum-length-and-character-diversity-before-protecting-worksheets.cs
+- export-protection-settings-of-each-worksheet-to-a-json-file-for-external-auditing.cs
