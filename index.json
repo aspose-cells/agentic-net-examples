@@ -6656,6 +6656,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "profile-memory-usage-while-freezing-panes-across-a-hundred-worksheets-to-detect-leaks.cs",
+      "title": "Profile memory usage while freezing panes across a hundred worksheets to detect leaks."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "programmatically-disable-numbersastext-warning-then-verify-that-the-cell-comment-indicating-the-issue-is-removed.cs",
       "title": "Programmatically disable NumbersAsText warning, then verify that the cell comment indicating the issue is removed."
     },
