@@ -212,3 +212,4 @@ Examples may generate:
 - implement-a-function-that-returns-true-if-a-given-excel-file-is-password-protected.cs
 - save-a-protected-workbook-to-a-memory-stream-and-verify-that-the-stream-length-reflects-encryption-overhead.cs
 - compute-the-sha256-hash-of-an-encrypted-workbook-to-verify-integrity-after-encryption.cs
+- measure-the-time-taken-to-open-an-encrypted-workbook-and-log-performance-metrics.cs
