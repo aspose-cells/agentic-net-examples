@@ -6120,6 +6120,11 @@
       "title": "Verify that after conversion the table no longer supports sorting by checking ListObject.IsTable property."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "shift-a-worksheet-to-the-last-index-of-the-workbook-to-place-it-at-the-end.cs",
+      "title": "Shift a worksheet to the last index of the workbook to place it at the end."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
