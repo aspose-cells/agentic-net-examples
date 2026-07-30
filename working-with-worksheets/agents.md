@@ -262,3 +262,4 @@ Output files are written to the working directory.
 - insert-an-ole-object-then-freeze-the-rows-surrounding-the-object-for-stable-layout.cs
 - refresh-all-data-connections-then-freeze-the-rows-that-show-refreshed-results-to-maintain-view-stability.cs
 - set-a-charts-data-source-range-then-freeze-the-rows-that-feed-the-chart-to-keep-source-visible.cs
+- change-the-chart-type-to-a-line-chart-then-freeze-the-rows-containing-the-charts-data-series.cs
