@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - enable-the-display-of-formulas-in-the-worksheet-view-for-debugging-complex-calculations.cs
 - add-a-data-validation-rule-that-limits-numeric-input-in-column-k-to-values-between-0-and-500.cs
 - create-a-chart-legend-positioned-at-the-bottom-of-the-chart-for-better-readability.cs
+- set-the-worksheets-print-title-rows-to-repeat-rows-1-through-2-on-each-printed-page.cs
