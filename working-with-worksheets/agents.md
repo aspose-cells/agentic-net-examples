@@ -190,3 +190,4 @@ Output files are written to the working directory.
 - read-environment-variables-to-determine-dynamic-column-freeze-count-and-apply-it.cs
 - accept-commandline-arguments-for-row-and-column-freeze-values-then-execute-freezepanes.cs
 - create-a-new-workbook-populate-it-with-sample-data-and-freeze-the-first-header-row.cs
+- create-a-new-workbook-add-sample-data-and-freeze-the-first-header-column.cs
