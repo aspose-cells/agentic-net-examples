@@ -152,3 +152,4 @@ Output files are written to the working directory.
 - apply-a-threeicon-set-conditional-format-to-column-m-to-indicate-low-medium-and-high-performance.cs
 - insert-a-hyperlink-that-triggers-a-macro-when-clicked-in-cell-s5-for-custom-actions.cs
 - protect-the-worksheet-with-a-password-and-allow-users-to-edit-only-unlocked-cells.cs
+- add-a-data-validation-list-that-pulls-allowed-values-from-a-range-on-a-hidden-worksheet.cs
