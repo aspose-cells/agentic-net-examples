@@ -320,3 +320,4 @@ Output files are written to the working directory.
 - write-a-batch-process-that-removes-empty-worksheets-from-each-workbook-and-saves-the-cleaned-file.cs
 - implement-a-function-that-renames-a-worksheet-based-on-its-tabid-value-for-easier-identification.cs
 - build-a-logging-mechanism-that-records-original-and-new-tabid-values-whenever-they-are-changed.cs
+- design-a-feature-that-prevents-assigning-duplicate-tabids-by-checking-existing-identifiers-before-applying-changes.cs
