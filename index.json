@@ -6121,6 +6121,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "apply-a-custom-style-to-cells-mapped-to-the-customername-element-to-highlight-customer-names.cs",
+      "title": "Apply a custom style to cells mapped to the /Customer/Name element to highlight customer names."
+    },
+    {
+      "category": "xml-maps",
       "file": "use-the-worksheetxmlmapquery-method-with-a-wildcard-path-to-retrieve-all-cells-under-a-parent-node.cs",
       "title": "Use the Worksheet.XmlMapQuery method with a wildcard path to retrieve all cells under a parent node."
     }
