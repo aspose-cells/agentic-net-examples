@@ -154,3 +154,4 @@ Output files are written to the working directory.
 - protect-the-worksheet-with-a-password-and-allow-users-to-edit-only-unlocked-cells.cs
 - add-a-data-validation-list-that-pulls-allowed-values-from-a-range-on-a-hidden-worksheet.cs
 - set-the-worksheets-default-column-width-to-twelve-characters-for-consistent-layout-across-sheets.cs
+- create-a-pivot-chart-based-on-an-existing-pivot-table-to-visualize-aggregated-sales-data.cs
