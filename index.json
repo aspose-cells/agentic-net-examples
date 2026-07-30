@@ -6201,6 +6201,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-named-range-that-refers-to-the-entire-column-z-for-dynamic-chart-data-source.cs",
+      "title": "Create a named range that refers to the entire column Z for dynamic chart data source."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
