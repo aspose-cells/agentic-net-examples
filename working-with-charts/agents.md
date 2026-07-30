@@ -345,3 +345,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-after-applying-text-wrap-setting-to-accommodate-multiline-labels.cs
 - set-legend-entry-fill-to-none-for-all-charts-in-a-workbook-using-a-loop-construct.cs
 - create-a-waterfall-chart-link-its-data-labels-to-a-summary-range-and-adjust-label-shapes-to-fit.cs
+- enable-data-labels-for-a-stock-chart-and-source-label-values-from-a-dateformatted-cell-range.cs
