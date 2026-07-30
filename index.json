@@ -7086,6 +7086,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheet-tab-color-to-teal-to-visually-differentiate-it-among-other-sheets.cs",
+      "title": "Set the worksheet tab color to teal to visually differentiate it among other sheets."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-worksheet-visibility-to-very-hidden-then-freeze-panes-before-making-it-visible-again.cs",
       "title": "Set the worksheet visibility to very hidden, then freeze panes before making it visible again."
     },
