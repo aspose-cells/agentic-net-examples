@@ -322,3 +322,4 @@ Output files are written to the working directory.
 - build-a-logging-mechanism-that-records-original-and-new-tabid-values-whenever-they-are-changed.cs
 - design-a-feature-that-prevents-assigning-duplicate-tabids-by-checking-existing-identifiers-before-applying-changes.cs
 - clone-a-worksheet-preserve-its-original-tabid-then-assign-a-distinct-tabid-to-the-cloned-sheet.cs
+- generate-an-xml-summary-file-listing-each-worksheets-name-tabid-maxdatarow-maxdatacolumn-and-shape-count.cs
