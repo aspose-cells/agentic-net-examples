@@ -6196,6 +6196,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-chart-legend-positioned-at-the-bottom-of-the-chart-for-better-readability.cs",
+      "title": "Create a chart legend positioned at the bottom of the chart for better readability."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-macro-that-automatically-updates-a-summary-table-whenever-source-data-changes.cs",
       "title": "Create a macro that automatically updates a summary table whenever source data changes."
     },
