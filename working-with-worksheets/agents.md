@@ -281,3 +281,4 @@ Output files are written to the working directory.
 - document-the-entire-freezepane-workflow-in-code-comments-including-loading-freezing-saving-and-validation-steps.cs
 - set-the-active-worksheet-to-the-third-sheet-using-its-zerobased-index-position.cs
 - rename-the-active-worksheet-to-quarterlyreport-while-preserving-all-existing-cell-data.cs
+- insert-five-new-rows-at-position-ten-shifting-existing-rows-downward-accordingly.cs
