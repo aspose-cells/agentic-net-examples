@@ -6926,6 +6926,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "protect-the-worksheet-with-password-secure123-allowing-users-to-select-locked-cells-only.cs",
+      "title": "Protect the worksheet with password Secure123, allowing users to select locked cells only."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "read-all-comments-from-the-worksheet-and-export-them-to-a-json-file-for-analysis.cs",
       "title": "Read all comments from the worksheet and export them to a JSON file for analysis."
     },
