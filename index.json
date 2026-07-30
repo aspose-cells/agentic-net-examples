@@ -6501,6 +6501,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-scheduled-task-that-scans-a-folder-for-new-excel-files-and-updates-worksheet-tabids.cs",
+      "title": "Create a scheduled task that scans a folder for new Excel files and updates worksheet TabIds."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-utility-method-returning-true-when-a-worksheet-has-formattingonly-initialized-cells-without-values.cs",
       "title": "Create a utility method returning true when a worksheet has formatting\u2011only initialized cells without values."
     },
