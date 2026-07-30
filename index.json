@@ -6546,6 +6546,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-gridlines-visibility-when-printing-the-worksheet-to-aid-data-alignment-verification.cs",
+      "title": "Enable gridlines visibility when printing the worksheet to aid data alignment verification."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs",
       "title": "Enable page break preview mode for a worksheet to visualize printed page divisions."
     },
