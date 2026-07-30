@@ -284,3 +284,4 @@ Output files are written to the working directory.
 - insert-five-new-rows-at-position-ten-shifting-existing-rows-downward-accordingly.cs
 - delete-columns-b-through-d-and-adjust-remaining-column-references-to-maintain-integrity.cs
 - apply-a-bold-centered-style-to-the-header-row-spanning-columns-a-to-g.cs
+- set-column-c-width-to-twenty-points-to-accommodate-longer-text-entries.cs
