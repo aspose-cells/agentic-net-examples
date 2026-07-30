@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - set-the-tables-show-header-row-option-to-true-and-apply-a-bold-font-style-to-header-cells.cs
 - programmatically-detect-tables-lacking-a-header-row-and-add-a-default-header-with-generic-column-names.cs
 - remove-a-tables-totals-row-and-then-readd-it-with-custom-formulas-for-each-numeric-column.cs
+- create-a-table-then-generate-a-named-range-that-references-only-the-header-row-for-use-in-formulas.cs
