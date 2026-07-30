@@ -6566,6 +6566,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "evaluate-all-formulas-in-the-worksheet-and-retrieve-the-calculated-value-of-cell-g10.cs",
+      "title": "Evaluate all formulas in the worksheet and retrieve the calculated value of cell G10."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs",
       "title": "Freeze panes at row one and column one to keep headers visible while scrolling."
     },
