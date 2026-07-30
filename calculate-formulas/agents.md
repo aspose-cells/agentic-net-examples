@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - write-a-utility-that-enumerates-all-worksheets-sets-calculationmode-to-manual-and-logs-the-previous-mode-for-each.cs
 - demonstrate-worksheetcalculateformula-with-a-formula-referencing-external-workbook-cells-by-providing-appropriate-options.cs
 - implement-a-cancellation-token-that-stops-formula-calculation-when-the-user-requests-an-abort-operation.cs
+- handle-calculationexception-during-formula-recalculation-to-detect-circular-reference-errors.cs
