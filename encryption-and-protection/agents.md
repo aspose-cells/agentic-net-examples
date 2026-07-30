@@ -290,3 +290,4 @@ Examples may generate:
 - test-protecting-a-worksheet-with-an-empty-password-string-and-observe-the-api-response.cs
 - encrypt-a-workbook-then-programmatically-change-its-password-without-decrypting-the-file-content.cs
 - generate-a-log-entry-each-time-a-workbooks-encryption-status-is-toggled-during-automated-processing.cs
+- apply-worksheet-protection-permitting-hyperlink-insertion-but-blocking-editing-of-existing-hyperlink-addresses.cs
