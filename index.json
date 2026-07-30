@@ -6316,6 +6316,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-picture-from-a-url-into-the-worksheet-and-position-it-at-cell-r2.cs",
+      "title": "Insert a picture from a URL into the worksheet and position it at cell R2."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-sparkline-chart-in-cell-p5-that-reflects-the-trend-of-data-in-range-b2b10.cs",
       "title": "Insert a sparkline chart in cell P5 that reflects the trend of data in range B2:B10."
     },
