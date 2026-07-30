@@ -236,3 +236,4 @@ Output files are written to the working directory.
 - set-the-worksheet-visibility-to-very-hidden-then-freeze-panes-before-making-it-visible-again.cs
 - reorder-worksheets-then-freeze-the-top-row-of-each-moved-sheet-to-preserve-headers.cs
 - copy-a-worksheet-from-another-workbook-then-apply-freezepanes-to-the-imported-sheets-header-row.cs
+- move-a-worksheet-to-a-new-position-then-freeze-its-first-column-to-keep-key-identifiers-accessible.cs
