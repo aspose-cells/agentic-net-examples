@@ -7001,6 +7001,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-active-worksheet-to-the-third-sheet-using-its-zerobased-index-position.cs",
+      "title": "Set the active worksheet to the third sheet using its zero\u2011based index position."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs",
       "title": "Set the tab bar width, hide the fourth worksheet, and save the workbook with these settings."
     },
