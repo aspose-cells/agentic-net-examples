@@ -6651,6 +6651,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "flag-worksheets-where-maxdatarow-is-1-but-shapecollectioncount-exceeds-zero-indicating-shapeonly-content.cs",
+      "title": "Flag worksheets where MaxDataRow is -1 but ShapeCollection.Count exceeds zero, indicating shape\u2011only content."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-panes-at-row-one-and-column-one-to-keep-headers-visible-while-scrolling.cs",
       "title": "Freeze panes at row one and column one to keep headers visible while scrolling."
     },
