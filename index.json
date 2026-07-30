@@ -5603,6 +5603,11 @@
       "category": "working-with-tables",
       "file": "refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs",
       "title": "Refresh all pivot tables that reference a specific worksheet table after updating its underlying data."
+    },
+    {
+      "category": "working-with-tables",
+      "file": "use-structured-references-in-formulas-that-refer-to-table-columns-ensuring-automatic-range-adjustments.cs",
+      "title": "Use structured references in formulas that refer to table columns, ensuring automatic range adjustments."
     }
   ]
 }
