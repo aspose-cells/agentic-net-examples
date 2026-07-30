@@ -6621,6 +6621,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-manual-page-breaks-below-the-frozen-rows-then-verify-that-page-breaks-respect-the-frozen-view.cs",
+      "title": "Insert manual page breaks below the frozen rows, then verify that page breaks respect the frozen view."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-new-columns-before-the-header-then-recalculate-the-freeze-column-index-and-apply-freezepanes-again.cs",
       "title": "Insert new columns before the header, then recalculate the freeze column index and apply FreezePanes again."
     },
