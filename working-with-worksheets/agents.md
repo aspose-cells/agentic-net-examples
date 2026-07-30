@@ -180,3 +180,4 @@ Output files are written to the working directory.
 - verify-whether-a-worksheet-currently-has-frozen-panes-by-checking-the-isfreezepanes-property.cs
 - split-the-worksheet-view-vertically-at-column-five-using-the-splitpanes-method.cs
 - apply-a-row-freeze-to-header-rows-then-save-the-modified-workbook-to-a-new-xlsx-file.cs
+- apply-a-column-freeze-to-header-columns-then-export-the-workbook-to-an-xlsm-file.cs
