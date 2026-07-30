@@ -7081,6 +7081,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-page-orientation-of-the-worksheet-to-landscape-for-better-wide-data-presentation.cs",
+      "title": "Set the page orientation of the worksheet to landscape for better wide data presentation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs",
       "title": "Set the tab bar width, hide the fourth worksheet, and save the workbook with these settings."
     },
