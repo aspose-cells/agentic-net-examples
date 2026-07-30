@@ -254,3 +254,4 @@ Output files are written to the working directory.
 - define-a-number-format-for-monetary-values-then-freeze-the-rows-containing-totals-for-constant-visibility.cs
 - insert-a-formula-that-calculates-subtotals-then-freeze-the-rows-with-those-formulas-to-keep-calculations-accessible.cs
 - recalculate-all-formulas-after-freezing-panes-to-ensure-dependent-cells-reflect-the-frozen-view.cs
+- set-a-print-area-that-includes-frozen-header-rows-then-freeze-rows-to-align-printed-output-with-view.cs
