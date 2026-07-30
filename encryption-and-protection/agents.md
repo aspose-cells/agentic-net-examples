@@ -181,3 +181,4 @@ Examples may generate:
 - test-that-unprotecting-a-worksheet-restores-the-ability-to-insert-new-rows-while-maintaining-existing-data-integrity.cs
 - change-the-password-of-an-encrypted-excel-workbook-from-an-old-value-to-a-new-stronger-password.cs
 - remove-the-password-to-modify-from-a-workbook-while-retaining-the-opening-password.cs
+- change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs
