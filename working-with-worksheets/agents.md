@@ -166,3 +166,4 @@ Output files are written to the working directory.
 - set-the-worksheets-default-print-resolution-to-600-dpi-for-highdefinition-output.cs
 - insert-a-chart-title-with-custom-font-size-and-color-to-improve-chart-readability.cs
 - load-an-existing-excel-file-from-disk-into-a-workbook-instance.cs
+- load-an-excel-workbook-from-a-memory-stream-for-processing.cs
