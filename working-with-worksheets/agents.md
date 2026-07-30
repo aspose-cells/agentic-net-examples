@@ -173,3 +173,4 @@ Output files are written to the working directory.
 - access-a-worksheet-by-its-zerobased-index-and-assign-it-to-a-variable.cs
 - determine-the-number-of-header-rows-to-freeze-and-store-the-count.cs
 - determine-the-number-of-header-columns-to-freeze-and-store-the-count.cs
+- freeze-the-top-three-rows-by-calling-freezepanes-with-row-index-three-and-column-zero.cs
