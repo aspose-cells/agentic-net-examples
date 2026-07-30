@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - implement-a-custom-engine-that-caches-intermediate-results-to-avoid-redundant-calculations-for-identical-subexpressions.cs
 - provide-a-public-method-to-clear-the-custom-engines-cache-ensuring-fresh-computation-after-data-changes.cs
 - verify-workbooksettingscustomengine-is-null-after-resetting-settings-to-default-confirming-no-residual-custom-logic.cs
+- programmatically-disable-automatic-calculation-import-a-csv-file-then-enable-calculation-mode-to-recompute-dependent-cells.cs
