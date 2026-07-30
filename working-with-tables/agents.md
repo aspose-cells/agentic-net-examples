@@ -103,3 +103,4 @@ Output files are written to the working directory.
 - apply-a-filter-that-selects-rows-where-the-status-column-equals-completed-and-hide-the-rest.cs
 - clear-all-filters-applied-to-a-table-restoring-the-full-dataset-visibility-for-analysis.cs
 - create-a-table-from-an-external-csv-file-using-a-query-table-data-source-and-map-columns-automatically.cs
+- export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs
