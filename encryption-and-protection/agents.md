@@ -270,3 +270,4 @@ Examples may generate:
 - unprotect-a-workbook-structure-modify-worksheet-order-then-reprotect-with-the-original-password.cs
 - encrypt-a-workbook-using-a-password-stored-securely-in-azure-key-vault-and-retrieve-it-at-runtime.cs
 - validate-that-a-digitally-signed-workbook-fails-verification-after-its-protection-password-is-changed.cs
+- create-a-batch-job-that-decrypts-all-files-in-a-folder-then-reencrypts-them-with-a-new-policy.cs
