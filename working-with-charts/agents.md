@@ -351,3 +351,4 @@ Output files are written to the working directory.
 - read-legend-current-position-programmatically-switch-to-opposite-corner-and-save-changes.cs
 - resize-data-label-shapes-for-a-stacked-area-chart-after-applying-semitransparent-fill-to-the-series.cs
 - enable-data-labels-to-show-percentages-from-cells-for-a-pie-chart-and-adjust-shape-size-accordingly.cs
+- add-data-labels-to-a-histogram-source-values-from-a-calculation-range-and-ensure-shapes-fit-text.cs
