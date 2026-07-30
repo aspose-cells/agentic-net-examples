@@ -255,3 +255,4 @@ Output files are written to the working directory.
 - insert-a-formula-that-calculates-subtotals-then-freeze-the-rows-with-those-formulas-to-keep-calculations-accessible.cs
 - recalculate-all-formulas-after-freezing-panes-to-ensure-dependent-cells-reflect-the-frozen-view.cs
 - set-a-print-area-that-includes-frozen-header-rows-then-freeze-rows-to-align-printed-output-with-view.cs
+- insert-manual-page-breaks-below-the-frozen-rows-then-verify-that-page-breaks-respect-the-frozen-view.cs
