@@ -242,3 +242,4 @@ Examples may generate:
 - load-an-encrypted-workbook-upgrade-its-encryption-algorithm-to-a-higher-security-level-and-resave.cs
 - detect-the-file-format-of-an-encrypted-ooxml-file-and-ensure-compatibility-after-decryption.cs
 - assign-a-digital-signature-to-a-protected-worksheet-and-verify-its-authenticity.cs
+- validate-an-existing-digital-signature-on-an-encrypted-workbook-without-decrypting-the-file-first.cs
