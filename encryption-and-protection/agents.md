@@ -204,3 +204,4 @@ Examples may generate:
 - remove-write-protection-from-a-shared-workbook-and-save-without-any-password-protection.cs
 - protect-each-worksheet-individually-with-unique-passwords-derived-from-file-names.cs
 - export-the-workbook-to-xlsb-format-while-retaining-structure-protection.cs
+- convert-the-protected-workbook-to-pdf-while-preserving-protection-metadata.cs
