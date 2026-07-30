@@ -5586,6 +5586,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "add-a-new-column-to-an-existing-table-and-set-its-default-value-using-a-constant-expression.cs",
+      "title": "Add a new column to an existing table and set its default value using a constant expression."
+    },
+    {
+      "category": "working-with-tables",
       "file": "add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs",
       "title": "Add a slicer linked to a table column to provide interactive filtering in the worksheet."
     },
