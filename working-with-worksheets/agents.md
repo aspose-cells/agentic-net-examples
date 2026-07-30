@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - split-panes-at-row-ten-and-column-five-to-create-separate-scrolling-regions-within-the-sheet.cs
 - create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs
 - divide-a-worksheet-into-four-quadrants-by-splitting-panes-both-horizontally-and-vertically.cs
+- apply-split-panes-and-then-freeze-panes-on-the-same-sheet-to-create-a-fixed-header-area.cs
