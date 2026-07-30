@@ -6271,6 +6271,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "determine-the-number-of-header-columns-to-freeze-and-store-the-count.cs",
+      "title": "Determine the number of header columns to freeze and store the count."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "determine-the-number-of-header-rows-to-freeze-and-store-the-count.cs",
       "title": "Determine the number of header rows to freeze and store the count."
     },
