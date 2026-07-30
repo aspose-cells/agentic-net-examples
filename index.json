@@ -5696,6 +5696,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "delete-all-rows-from-a-table-that-have-a-null-value-in-a-required-column-using-a-loop.cs",
+      "title": "Delete all rows from a table that have a null value in a required column using a loop."
+    },
+    {
+      "category": "working-with-tables",
       "file": "disable-autoexpand-for-a-table-to-keep-its-range-fixed-despite-additional-rows-being-entered.cs",
       "title": "Disable auto\u2011expand for a table to keep its range fixed despite additional rows being entered."
     },
