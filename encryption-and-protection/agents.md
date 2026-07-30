@@ -200,3 +200,4 @@ Examples may generate:
 - decrypt-the-workbook-using-the-correct-password-and-confirm-data-integrity-after-decryption.cs
 - protect-the-workbook-structure-with-a-custom-password-and-save-the-protected-file.cs
 - add-a-new-worksheet-to-the-protected-workbook-and-attempt-to-unprotect-using-an-incorrect-password.cs
+- change-the-write-protection-author-to-the-current-windows-user-name-and-resave-the-workbook.cs
