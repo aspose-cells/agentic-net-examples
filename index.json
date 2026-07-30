@@ -6136,6 +6136,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-data-validation-rule-that-restricts-entry-in-cell-u2-to-a-list-of-predefined-options.cs",
+      "title": "Add a data validation rule that restricts entry in cell U2 to a list of predefined options."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-hyperlink-that-links-to-an-external-pdf-document-stored-on-a-network-share.cs",
       "title": "Add a hyperlink that links to an external PDF document stored on a network share."
     },
