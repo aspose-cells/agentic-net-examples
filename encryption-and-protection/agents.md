@@ -193,3 +193,4 @@ Examples may generate:
 - apply-strong-encryption-to-a-workbook-and-programmatically-compare-file-size-before-and-after-encryption.cs
 - encrypt-an-excel-file-then-attempt-to-open-it-with-a-thirdparty-library-to-test-compatibility.cs
 - create-a-new-workbook-set-write-protection-author-and-protect-with-a-password.cs
+- apply-strong-encryption-using-microsoft-strong-cryptographic-provider-and-assign-a-256bit-password-before-saving.cs
