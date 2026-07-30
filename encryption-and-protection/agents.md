@@ -259,3 +259,4 @@ Examples may generate:
 - detect-if-an-excel-file-uses-legacy-encryption-and-upgrade-to-modern-encryption-standards.cs
 - create-a-function-that-returns-the-encryption-algorithm-name-used-for-a-given-excel-file.cs
 - protect-a-worksheet-with-a-password-and-enable-the-option-to-allow-users-to-format-cells.cs
+- remove-password-protection-from-a-worksheet-then-reapply-it-with-a-casesensitive-password.cs
