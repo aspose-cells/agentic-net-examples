@@ -192,3 +192,4 @@ Examples may generate:
 - implement-error-handling-for-unsupported-encryption-types-when-attempting-to-encrypt-a-workbook-with-an-invalid-algorithm.cs
 - apply-strong-encryption-to-a-workbook-and-programmatically-compare-file-size-before-and-after-encryption.cs
 - encrypt-an-excel-file-then-attempt-to-open-it-with-a-thirdparty-library-to-test-compatibility.cs
+- create-a-new-workbook-set-write-protection-author-and-protect-with-a-password.cs
