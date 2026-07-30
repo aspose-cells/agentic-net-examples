@@ -285,3 +285,4 @@ Examples may generate:
 - detect-if-a-worksheets-protection-allows-editing-objects-and-log-the-result-for-compliance.cs
 - encrypt-a-workbook-then-use-a-thirdparty-library-to-attempt-decryption-and-verify-failure.cs
 - create-a-function-that-returns-true-if-a-workbook-is-both-encrypted-and-password-protected.cs
+- apply-workbook-protection-disabling-saving-changes-while-allowing-users-to-view-the-file-contents.cs
