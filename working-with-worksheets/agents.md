@@ -289,3 +289,4 @@ Output files are written to the working directory.
 - unmerge-the-previously-merged-range-d4f4-and-restore-original-cell-boundaries.cs
 - insert-a-formula-in-cell-g10-that-calculates-the-sum-of-range-b2b9.cs
 - evaluate-all-formulas-in-the-worksheet-and-retrieve-the-calculated-value-of-cell-g10.cs
+- set-data-validation-on-column-e-to-allow-only-dates-between-january-1-and-december-31.cs
