@@ -484,3 +484,4 @@ Output files are written to the working directory.
 - implement-a-rolling-chart-by-shifting-the-data-window-each-minute-using-a-timer-event.cs
 - validate-that-chart-data-range-does-not-contain-empty-cells-before-generating-the-chart.cs
 - hide-the-second-series-in-a-line-chart-by-setting-its-isvisible-property-to-false.cs
+- apply-a-predefined-theme-to-a-column-chart-and-customize-individual-series-colors.cs
