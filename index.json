@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-data-validation-rule-that-limits-numeric-input-in-column-k-to-values-between-0-and-500.cs",
+      "title": "Add a data validation rule that limits numeric input in column K to values between 0 and 500."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-hyperlink-that-links-to-an-external-pdf-document-stored-on-a-network-share.cs",
       "title": "Add a hyperlink that links to an external PDF document stored on a network share."
     },
