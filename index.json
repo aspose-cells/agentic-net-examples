@@ -6676,6 +6676,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-formula-in-cell-g10-that-calculates-the-sum-of-range-b2b9.cs",
+      "title": "Insert a formula in cell G10 that calculates the sum of range B2:B9."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-formula-that-calculates-subtotals-then-freeze-the-rows-with-those-formulas-to-keep-calculations-accessible.cs",
       "title": "Insert a formula that calculates subtotals, then freeze the rows with those formulas to keep calculations accessible."
     },
