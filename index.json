@@ -5701,6 +5701,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "load-an-xlsm-workbook-extract-all-tables-and-save-each-table-as-an-individual-xlsx-file.cs",
+      "title": "Load an XLSM workbook, extract all tables, and save each table as an individual XLSX file."
+    },
+    {
+      "category": "working-with-tables",
       "file": "move-a-table-to-a-different-position-within-the-same-worksheet-updating-all-structured-references-automatically.cs",
       "title": "Move a table to a different position within the same worksheet, updating all structured references automatically."
     },
