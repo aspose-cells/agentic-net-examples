@@ -216,3 +216,4 @@ Examples may generate:
 - use-a-background-thread-to-decrypt-an-encrypted-workbook-and-confirm-thread-safety.cs
 - encrypt-multiple-workbooks-in-a-directory-using-a-shared-password-and-save-them.cs
 - decrypt-a-batch-of-encrypted-excel-files-by-providing-the-correct-password-for-each-file.cs
+- apply-write-protection-with-a-password-then-programmatically-remove-protection-using-the-same-password.cs
