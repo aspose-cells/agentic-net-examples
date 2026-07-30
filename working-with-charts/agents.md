@@ -354,3 +354,4 @@ Output files are written to the working directory.
 - add-data-labels-to-a-histogram-source-values-from-a-calculation-range-and-ensure-shapes-fit-text.cs
 - resize-data-label-shapes-after-applying-superscript-style-to-part-of-the-label-text.cs
 - create-chart-with-secondary-y-axis-enable-cellbased-labels-for-secondary-series-and-position-legend-centrally.cs
+- apply-custom-color-to-legend-font-based-on-series-index-and-maintain-transparent-entry-fill.cs
