@@ -6646,6 +6646,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "retrieve-the-maximum-data-column-count-and-freeze-all-columns-to-its-left.cs",
+      "title": "Retrieve the maximum data column count and freeze all columns to its left."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-the-maximum-data-row-count-and-freeze-all-rows-above-it.cs",
       "title": "Retrieve the maximum data row count and freeze all rows above it."
     },
