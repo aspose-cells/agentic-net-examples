@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - set-the-worksheets-default-column-width-to-twelve-characters-for-consistent-layout-across-sheets.cs
 - create-a-pivot-chart-based-on-an-existing-pivot-table-to-visualize-aggregated-sales-data.cs
 - enable-the-worksheets-automatic-calculation-mode-and-force-a-full-recalculation-after-data-changes.cs
+- insert-a-comment-with-rich-text-formatting-including-bold-and-italic-segments-into-cell-t8.cs
