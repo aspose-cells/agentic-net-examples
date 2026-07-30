@@ -296,3 +296,4 @@ Output files are written to the working directory.
 - read-all-comments-from-the-worksheet-and-export-them-to-a-json-file-for-analysis.cs
 - protect-the-worksheet-with-password-secure123-allowing-users-to-select-locked-cells-only.cs
 - unprotect-the-worksheet-using-the-correct-password-and-verify-that-editing-is-now-permitted.cs
+- set-the-worksheet-tab-color-to-teal-to-visually-differentiate-it-among-other-sheets.cs
