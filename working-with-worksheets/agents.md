@@ -290,3 +290,4 @@ Output files are written to the working directory.
 - insert-a-formula-in-cell-g10-that-calculates-the-sum-of-range-b2b9.cs
 - evaluate-all-formulas-in-the-worksheet-and-retrieve-the-calculated-value-of-cell-g10.cs
 - set-data-validation-on-column-e-to-allow-only-dates-between-january-1-and-december-31.cs
+- apply-conditional-formatting-to-highlight-cells-in-column-f-exceeding-the-value-one-thousand.cs
