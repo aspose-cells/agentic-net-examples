@@ -6446,6 +6446,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "count-how-many-initialized-cells-contain-only-formatting-applied-and-log-the-result-for-each-worksheet.cs",
+      "title": "Count how many initialized cells contain only formatting applied and log the result for each worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-chart-legend-positioned-at-the-bottom-of-the-chart-for-better-readability.cs",
       "title": "Create a chart legend positioned at the bottom of the chart for better readability."
     },
