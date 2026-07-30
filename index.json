@@ -5331,6 +5331,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "reset-all-shape-adjustment-values-to-their-default-settings-programmatically.cs",
+      "title": "Reset all shape adjustment values to their default settings programmatically."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "retrieve-a-shapes-absolute-position-add-a-margin-offset-and-reposition-the-shape-accordingly.cs",
       "title": "Retrieve a shape's absolute position, add a margin offset, and reposition the shape accordingly."
     },
