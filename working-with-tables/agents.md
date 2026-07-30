@@ -88,3 +88,4 @@ Output files are written to the working directory.
 - hide-a-table-column-programmatically-and-later-unhide-it-based-on-user-interaction-criteria.cs
 - create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs
 - move-a-table-to-a-different-position-within-the-same-worksheet-updating-all-structured-references-automatically.cs
+- delete-a-specific-row-from-a-table-using-its-primary-key-value-to-locate-the-target.cs
