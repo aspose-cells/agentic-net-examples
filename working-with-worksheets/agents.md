@@ -224,3 +224,4 @@ Output files are written to the working directory.
 - profile-memory-usage-while-freezing-panes-across-a-hundred-worksheets-to-detect-leaks.cs
 - record-the-duration-of-each-freezepanes-call-using-a-stopwatch-and-log-the-elapsed-time.cs
 - throw-a-custom-exception-when-a-requested-freeze-row-index-exceeds-the-worksheets-maximum-row-count.cs
+- validate-that-the-freeze-column-index-is-within-the-worksheets-column-range-before-invoking-freezepanes.cs
