@@ -247,3 +247,4 @@ Examples may generate:
 - implement-a-routine-that-attempts-to-unprotect-a-worksheet-using-a-list-of-common-passwords.cs
 - create-a-custom-password-validator-enforcing-minimum-length-and-character-diversity-before-protecting-worksheets.cs
 - export-protection-settings-of-each-worksheet-to-a-json-file-for-external-auditing.cs
+- import-protection-configurations-from-a-json-file-and-apply-them-to-corresponding-worksheets.cs
