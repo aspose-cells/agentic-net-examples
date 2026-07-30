@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-conditional-formatting-rule-that-highlights-duplicate-values-in-column-n-with-a-light-orange-fill.cs",
+      "title": "Add a conditional formatting rule that highlights duplicate values in column N with a light orange fill."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-data-validation-list-that-pulls-allowed-values-from-a-range-on-a-hidden-worksheet.cs",
       "title": "Add a data validation list that pulls allowed values from a range on a hidden worksheet."
     },
