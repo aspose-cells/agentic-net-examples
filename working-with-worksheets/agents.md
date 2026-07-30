@@ -318,3 +318,4 @@ Output files are written to the working directory.
 - create-a-utility-method-returning-true-when-a-worksheet-has-formattingonly-initialized-cells-without-values.cs
 - combine-shape-detection-and-cell-data-checks-to-classify-worksheets-as-dataonly-shapeonly-or-mixed-content.cs
 - write-a-batch-process-that-removes-empty-worksheets-from-each-workbook-and-saves-the-cleaned-file.cs
+- implement-a-function-that-renames-a-worksheet-based-on-its-tabid-value-for-easier-identification.cs
