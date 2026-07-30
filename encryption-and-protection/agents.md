@@ -293,3 +293,4 @@ Examples may generate:
 - apply-worksheet-protection-permitting-hyperlink-insertion-but-blocking-editing-of-existing-hyperlink-addresses.cs
 - create-a-unit-test-confirming-an-encrypted-workbook-throws-the-expected-exception-when-opened-without-a-password.cs
 - detect-whether-a-workbook-uses-the-default-encryption-algorithm-and-log-a-recommendation-to-upgrade.cs
+- protect-a-worksheet-then-export-its-data-to-csv-ensuring-protection-does-not-affect-exported-values.cs
