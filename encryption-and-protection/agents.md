@@ -221,3 +221,4 @@ Examples may generate:
 - add-a-password-hint-comment-to-the-workbooks-custom-properties-after-protecting-its-structure.cs
 - generate-a-qr-code-containing-the-protection-password-for-secure-sharing-of-the-workbook.cs
 - upload-an-encrypted-workbook-to-azure-blob-storage-while-preserving-encryption.cs
+- load-an-encrypted-workbook-extract-its-metadata-and-save-the-metadata-to-a-json-file.cs
