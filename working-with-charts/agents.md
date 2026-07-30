@@ -355,3 +355,4 @@ Output files are written to the working directory.
 - resize-data-label-shapes-after-applying-superscript-style-to-part-of-the-label-text.cs
 - create-chart-with-secondary-y-axis-enable-cellbased-labels-for-secondary-series-and-position-legend-centrally.cs
 - apply-custom-color-to-legend-font-based-on-series-index-and-maintain-transparent-entry-fill.cs
+- resize-data-label-shapes-for-line-chart-after-enabling-markers-with-large-size-values.cs
