@@ -6436,6 +6436,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs",
+      "title": "Use WorksheetCollection to hide zero values on every sheet whose name starts with \u201cQ\u201d."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs",
       "title": "Validate that each worksheet retains a unique SheetId after performing copy operations."
     },
