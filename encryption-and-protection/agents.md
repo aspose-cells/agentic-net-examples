@@ -287,3 +287,4 @@ Examples may generate:
 - create-a-function-that-returns-true-if-a-workbook-is-both-encrypted-and-password-protected.cs
 - apply-workbook-protection-disabling-saving-changes-while-allowing-users-to-view-the-file-contents.cs
 - unprotect-a-worksheet-using-a-password-retrieved-from-an-environment-variable-for-secure-handling.cs
+- test-protecting-a-worksheet-with-an-empty-password-string-and-observe-the-api-response.cs
