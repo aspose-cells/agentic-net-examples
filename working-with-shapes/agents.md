@@ -500,3 +500,4 @@ Output files are written to the working directory.
 - add-a-shape-link-it-to-a-cell-with-a-validation-list-and-ensure-shape-text-reflects-selection.cs
 - create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs
 - retrieve-a-shapes-absolute-position-then-align-another-shape-to-the-same-coordinates.cs
+- add-a-shape-retrieve-its-connection-points-and-compare-them-with-expected-points-stored-in-a-database.cs
