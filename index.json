@@ -6121,6 +6121,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "accept-commandline-arguments-for-row-and-column-freeze-values-then-execute-freezepanes.cs",
+      "title": "Accept command\u2011line arguments for row and column freeze values, then execute FreezePanes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "access-a-worksheet-by-its-name-and-store-the-reference-for-further-operations.cs",
       "title": "Access a worksheet by its name and store the reference for further operations."
     },
