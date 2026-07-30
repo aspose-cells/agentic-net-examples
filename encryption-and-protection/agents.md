@@ -255,3 +255,4 @@ Examples may generate:
 - change-the-password-of-a-protected-worksheet-while-preserving-its-existing-protection-options.cs
 - scan-a-directory-for-encrypted-excel-files-and-log-their-file-names-and-detected-encryption-status.cs
 - apply-worksheet-protection-allowing-cell-selection-but-preventing-cell-editing.cs
+- unprotect-a-workbook-structure-then-reapply-protection-using-a-different-password-and-verify-the-change.cs
