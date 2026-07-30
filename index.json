@@ -6156,6 +6156,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-cell-style-that-includes-a-thick-left-border-and-a-light-blue-background-fill.cs",
+      "title": "Apply a cell style that includes a thick left border and a light blue background fill."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-conditional-formatting-rule-that-adds-a-red-font-color-to-cells-containing-the-word-error.cs",
       "title": "Apply a conditional formatting rule that adds a red font color to cells containing the word Error."
     },
