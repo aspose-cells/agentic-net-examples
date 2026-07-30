@@ -244,3 +244,4 @@ Output files are written to the working directory.
 - use-cellgetcharactersstartindex-length-to-retrieve-a-richtextportion-from-the-cell.cs
 - iterate-through-all-richtextportion-objects-in-a-cell-and-modify-each-portions-font-name.cs
 - merge-adjacent-richtextportion-objects-that-share-identical-formatting-into-a-single-portion.cs
+- copy-richtext-formatting-from-one-cell-to-another-across-different-worksheets.cs
