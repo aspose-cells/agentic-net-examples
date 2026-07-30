@@ -253,3 +253,4 @@ Examples may generate:
 - generate-a-report-listing-all-worksheets-currently-password-protected-within-a-given-workbook.cs
 - attempt-to-open-an-encrypted-workbook-without-a-password-and-capture-the-specific-error-code.cs
 - change-the-password-of-a-protected-worksheet-while-preserving-its-existing-protection-options.cs
+- scan-a-directory-for-encrypted-excel-files-and-log-their-file-names-and-detected-encryption-status.cs
