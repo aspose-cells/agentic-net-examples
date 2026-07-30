@@ -6710,6 +6710,11 @@
       "title": "Validate that each worksheet retains a unique SheetId after performing copy operations."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "verify-whether-a-worksheet-currently-has-frozen-panes-by-checking-the-isfreezepanes-property.cs",
+      "title": "Verify whether a worksheet currently has frozen panes by checking the IsFreezePanes property."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
