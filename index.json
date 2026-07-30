@@ -6411,6 +6411,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheets-background-color-to-light-gray-to-improve-visual-contrast-for-printed-pages.cs",
+      "title": "Set the worksheet's background color to light gray to improve visual contrast for printed pages."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-workbook-settings-to-hide-the-horizontal-scroll-bar-keep-vertical-bar-visible-and-save.cs",
       "title": "Set workbook settings to hide the horizontal scroll bar, keep vertical bar visible, and save."
     },
