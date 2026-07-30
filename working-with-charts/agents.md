@@ -475,3 +475,4 @@ Output files are written to the working directory.
 - export-a-chart-to-pdf-with-a-transparent-background-for-overlaying-on-other-documents.cs
 - export-a-chart-to-svg-format-for-scalable-web-display-ensuring-all-text-remains-selectable.cs
 - enable-antialiasing-for-chart-rendering-when-exporting-to-highresolution-png-files-for-sharper-output.cs
+- set-the-charts-dpi-to-300-when-exporting-to-png-for-highquality-print-production.cs
