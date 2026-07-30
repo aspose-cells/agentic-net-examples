@@ -6371,6 +6371,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "protect-individual-cells-with-a-password-while-leaving-other-cells-editable-for-users.cs",
+      "title": "Protect individual cells with a password while leaving other cells editable for users."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs",
       "title": "Retrieve a worksheet by name, display its formulas instead of values, and save the changes."
     },
