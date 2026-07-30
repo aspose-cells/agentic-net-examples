@@ -430,3 +430,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-memory-stream-modify-chart-subtitles-and-save-back-to-a-new-stream.cs
 - clone-an-existing-chart-change-its-title-and-insert-the-clone-into-a-different-worksheet.cs
 - copy-a-chart-from-one-chart-sheet-to-another-preserving-all-attached-controls-and-formatting.cs
+- set-the-background-color-of-a-charts-plot-area-to-light-yellow-for-improved-readability.cs
