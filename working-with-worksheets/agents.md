@@ -279,3 +279,4 @@ Output files are written to the working directory.
 - combine-splitpanes-and-freezepanes-to-create-a-split-view-with-frozen-top-rows-for-complex-navigation.cs
 - after-unfreezing-panes-immediately-reapply-freezepanes-with-updated-indices-to-reflect-recent-row-insertions.cs
 - document-the-entire-freezepane-workflow-in-code-comments-including-loading-freezing-saving-and-validation-steps.cs
+- set-the-active-worksheet-to-the-third-sheet-using-its-zerobased-index-position.cs
