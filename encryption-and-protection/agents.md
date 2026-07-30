@@ -199,3 +199,4 @@ Examples may generate:
 - verify-the-encryption-password-of-the-loaded-workbook-and-log-the-verification-result.cs
 - decrypt-the-workbook-using-the-correct-password-and-confirm-data-integrity-after-decryption.cs
 - protect-the-workbook-structure-with-a-custom-password-and-save-the-protected-file.cs
+- add-a-new-worksheet-to-the-protected-workbook-and-attempt-to-unprotect-using-an-incorrect-password.cs
