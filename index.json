@@ -6181,6 +6181,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "adjust-the-chart-layout-then-freeze-the-rows-that-define-the-charts-axis-labels-for-consistent-display.cs",
+      "title": "Adjust the chart layout, then freeze the rows that define the chart\u2019s axis labels for consistent display."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "adjust-the-zoom-factor-of-a-worksheet-to-150-percent-for-detailed-visual-inspection.cs",
       "title": "Adjust the zoom factor of a worksheet to 150 percent for detailed visual inspection."
     },
