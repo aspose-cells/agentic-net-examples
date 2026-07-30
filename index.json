@@ -6866,6 +6866,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-a-print-area-that-includes-frozen-header-rows-then-freeze-rows-to-align-printed-output-with-view.cs",
+      "title": "Set a print area that includes frozen header rows, then freeze rows to align printed output with view."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-all-worksheets-to-normal-view-mode-to-ensure-consistent-onscreen-display-across-the-workbook.cs",
       "title": "Set all worksheets to normal view mode to ensure consistent on\u2011screen display across the workbook."
     },
