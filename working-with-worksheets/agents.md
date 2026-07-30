@@ -324,3 +324,4 @@ Output files are written to the working directory.
 - clone-a-worksheet-preserve-its-original-tabid-then-assign-a-distinct-tabid-to-the-cloned-sheet.cs
 - generate-an-xml-summary-file-listing-each-worksheets-name-tabid-maxdatarow-maxdatacolumn-and-shape-count.cs
 - create-a-scheduled-task-that-scans-a-folder-for-new-excel-files-and-updates-worksheet-tabids.cs
+- log-a-warning-when-a-worksheets-maxdatarow-is-zero-but-maxdatacolumn-is-greater-than-zero.cs
