@@ -142,3 +142,4 @@ Output files are written to the working directory.
 - insert-a-comment-in-cell-q3-that-includes-a-hyperlink-to-an-online-documentation-page.cs
 - enable-the-worksheets-page-break-preview-mode-to-visualize-where-pages-will-split.cs
 - create-a-named-range-that-refers-to-the-entire-column-z-for-dynamic-chart-data-source.cs
+- apply-a-conditional-formatting-rule-that-adds-a-red-font-color-to-cells-containing-the-word-error.cs
