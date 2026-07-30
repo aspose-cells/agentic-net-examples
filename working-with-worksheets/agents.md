@@ -317,3 +317,4 @@ Output files are written to the working directory.
 - identify-worksheets-containing-only-shapes-by-confirming-maxdatarow-is-1-and-shapecollectioncount-is-greater-than-zero.cs
 - create-a-utility-method-returning-true-when-a-worksheet-has-formattingonly-initialized-cells-without-values.cs
 - combine-shape-detection-and-cell-data-checks-to-classify-worksheets-as-dataonly-shapeonly-or-mixed-content.cs
+- write-a-batch-process-that-removes-empty-worksheets-from-each-workbook-and-saves-the-cleaned-file.cs
