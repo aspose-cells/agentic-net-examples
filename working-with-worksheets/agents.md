@@ -250,3 +250,4 @@ Output files are written to the working directory.
 - insert-a-cell-comment-on-a-header-cell-then-freeze-the-comments-row-to-keep-contextual-notes-visible.cs
 - apply-a-cell-style-to-the-header-row-then-freeze-that-row-to-preserve-styling-while-scrolling.cs
 - set-a-background-color-for-the-header-area-then-freeze-rows-to-keep-the-colored-background-visible.cs
+- apply-a-border-style-around-the-header-range-then-freeze-those-rows-to-maintain-border-visibility.cs
