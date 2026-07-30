@@ -6336,6 +6336,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "freeze-the-leftmost-two-columns-by-calling-freezepanes-with-row-zero-and-column-two.cs",
+      "title": "Freeze the leftmost two columns by calling FreezePanes with row zero and column two."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "freeze-the-top-three-rows-by-calling-freezepanes-with-row-index-three-and-column-zero.cs",
       "title": "Freeze the top three rows by calling FreezePanes with row index three and column zero."
     },
