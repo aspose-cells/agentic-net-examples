@@ -5866,6 +5866,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-a-tables-column-to-use-a-custom-date-format-ddmmmyyyy-for-standardized-display-across-reports.cs",
+      "title": "Set a table's column to use a custom date format 'dd\u2011MMM\u2011yyyy' for standardized display across reports."
+    },
+    {
+      "category": "working-with-tables",
       "file": "set-the-tables-show-header-row-option-to-false-for-a-compact-layout-in-a-dashboard-view.cs",
       "title": "Set the table's show header row option to false for a compact layout in a dashboard view."
     },
