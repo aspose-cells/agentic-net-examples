@@ -6926,6 +6926,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "validate-that-the-freeze-column-index-is-within-the-worksheets-column-range-before-invoking-freezepanes.cs",
+      "title": "Validate that the freeze column index is within the worksheet\u2019s column range before invoking FreezePanes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "verify-whether-a-worksheet-currently-has-frozen-panes-by-checking-the-isfreezepanes-property.cs",
       "title": "Verify whether a worksheet currently has frozen panes by checking the IsFreezePanes property."
     },
