@@ -270,3 +270,4 @@ Output files are written to the working directory.
 - add-multiple-series-to-the-chart-then-freeze-the-rows-that-hold-each-series-data-for-reference.cs
 - enable-data-labels-on-the-chart-then-freeze-the-rows-with-those-labels-to-keep-them-displayed.cs
 - apply-a-predefined-chart-style-then-freeze-the-rows-that-influence-the-charts-appearance-for-consistency.cs
+- insert-a-picture-of-a-logo-then-freeze-rows-above-it-to-keep-branding-visible.cs
