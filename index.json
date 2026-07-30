@@ -6621,6 +6621,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "merge-cells-across-the-top-row-then-freeze-the-merged-header-to-keep-it-visible.cs",
+      "title": "Merge cells across the top row, then freeze the merged header to keep it visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs",
       "title": "Open a spreadsheet, set the first worksheet tab to invisible, then export to a new file."
     },
