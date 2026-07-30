@@ -297,3 +297,4 @@ Output files are written to the working directory.
 - protect-the-worksheet-with-password-secure123-allowing-users-to-select-locked-cells-only.cs
 - unprotect-the-worksheet-using-the-correct-password-and-verify-that-editing-is-now-permitted.cs
 - set-the-worksheet-tab-color-to-teal-to-visually-differentiate-it-among-other-sheets.cs
+- make-the-worksheet-very-hidden-so-it-cannot-be-displayed-via-the-excel-ui.cs
