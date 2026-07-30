@@ -348,3 +348,4 @@ Output files are written to the working directory.
 - enable-data-labels-for-a-stock-chart-and-source-label-values-from-a-dateformatted-cell-range.cs
 - hide-legend-for-a-3d-pie-chart-and-observe-impact-on-chart-readability.cs
 - create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs
+- read-legend-current-position-programmatically-switch-to-opposite-corner-and-save-changes.cs
