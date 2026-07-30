@@ -6286,6 +6286,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-sparkline-chart-in-cell-p5-that-reflects-the-trend-of-data-in-range-b2b10.cs",
+      "title": "Insert a sparkline chart in cell P5 that reflects the trend of data in range B2:B10."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
