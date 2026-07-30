@@ -6271,6 +6271,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-print-title-range-that-includes-frozen-rows-then-verify-that-titles-stay-visible-when-printing.cs",
+      "title": "Apply a print title range that includes frozen rows, then verify that titles stay visible when printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-row-freeze-to-header-rows-then-save-the-modified-workbook-to-a-new-xlsx-file.cs",
       "title": "Apply a row freeze to header rows, then save the modified workbook to a new XLSX file."
     },
