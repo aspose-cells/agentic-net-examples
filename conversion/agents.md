@@ -211,3 +211,4 @@ Output files are written to the working directory.
 - perform-batch-conversion-of-excel-files-to-csv-with-progress-reporting.cs
 - convert-a-workbook-to-pdf-and-apply-a-grayscale-color-profile-for-printing-consistency.cs
 - convert-a-workbook-to-pdf-and-add-a-custom-javascript-alert-on-document-open.cs
+- save-a-workbook-as-csv-using-custom-save-options-to-keep-separators-for-blank-rows-intact.cs
