@@ -225,3 +225,4 @@ Examples may generate:
 - convert-an-encrypted-workbook-to-html-representation-after-verifying-the-password.cs
 - export-a-workbook-to-csv-format-after-confirming-it-is-not-encrypted.cs
 - create-a-macroenabled-workbook-apply-strong-encryption-and-ensure-macros-remain-functional-after-saving.cs
+- verify-that-opening-an-encrypted-workbook-with-an-incorrect-password-throws-an-exception.cs
