@@ -239,3 +239,4 @@ Examples may generate:
 - check-whether-a-worksheet-is-protected-with-readonly-permissions-and-report-the-protection-type.cs
 - apply-advanced-worksheet-protection-allowing-formatting-but-disallowing-row-insertion.cs
 - batch-process-a-folder-of-excel-files-encrypt-each-with-a-unique-password-derived-from-the-file-name.cs
+- load-an-encrypted-workbook-upgrade-its-encryption-algorithm-to-a-higher-security-level-and-resave.cs
