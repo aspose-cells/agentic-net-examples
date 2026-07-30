@@ -215,3 +215,4 @@ Output files are written to the working directory.
 - add-a-chart-then-freeze-the-rows-containing-chart-data-to-avoid-losing-context.cs
 - insert-an-image-then-freeze-the-rows-above-the-image-to-keep-it-anchored-visually.cs
 - merge-cells-across-the-top-row-then-freeze-the-merged-header-to-keep-it-visible.cs
+- protect-the-worksheet-after-freezing-rows-to-prevent-accidental-changes-to-the-header-area.cs
