@@ -123,3 +123,4 @@ Output files are written to the working directory.
 - write-a-utility-that-iterates-through-all-worksheets-sets-each-to-manual-mode-and-saves-changes.cs
 - develop-a-plugin-that-replaces-the-default-calculation-engine-with-a-parallelized-version-to-accelerate-large-workbooks.cs
 - implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs
+- pause-calculation-after-a-predefined-time-threshold-and-resume-it-later-without-data-loss.cs
