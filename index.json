@@ -6911,6 +6911,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "rename-the-active-worksheet-to-quarterlyreport-while-preserving-all-existing-cell-data.cs",
+      "title": "Rename the active worksheet to QuarterlyReport while preserving all existing cell data."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "reorder-worksheets-then-freeze-the-top-row-of-each-moved-sheet-to-preserve-headers.cs",
       "title": "Reorder worksheets, then freeze the top row of each moved sheet to preserve headers."
     },
