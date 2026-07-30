@@ -5656,6 +5656,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs",
+      "title": "Set the table's show totals row option to false, removing the totals row from the display."
+    },
+    {
+      "category": "working-with-tables",
       "file": "use-structured-references-in-formulas-that-refer-to-table-columns-ensuring-automatic-range-adjustments.cs",
       "title": "Use structured references in formulas that refer to table columns, ensuring automatic range adjustments."
     },
