@@ -6406,6 +6406,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-number-format-for-monetary-values-then-freeze-the-rows-containing-totals-for-constant-visibility.cs",
+      "title": "Define a number format for monetary values, then freeze the rows containing totals for constant visibility."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-columns-to-the-left-of-the-desired-freeze-area-then-call-freezepanes-with-updated-column-index.cs",
       "title": "Delete columns to the left of the desired freeze area, then call FreezePanes with updated column index."
     },
