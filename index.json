@@ -6831,6 +6831,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "refresh-all-data-connections-then-freeze-the-rows-that-show-refreshed-results-to-maintain-view-stability.cs",
+      "title": "Refresh all data connections, then freeze the rows that show refreshed results to maintain view stability."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "rename-a-worksheet-after-freezing-then-verify-that-the-frozen-state-remains-unchanged.cs",
       "title": "Rename a worksheet after freezing, then verify that the frozen state remains unchanged."
     },
