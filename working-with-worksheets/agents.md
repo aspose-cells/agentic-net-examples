@@ -202,3 +202,4 @@ Output files are written to the working directory.
 - use-a-trycatch-block-around-freezepanes-calls-to-handle-invalid-indices-gracefully.cs
 - wrap-workbook-usage-in-a-using-statement-to-guarantee-proper-disposal-after-freezing.cs
 - load-a-workbook-asynchronously-then-apply-freezepanes-once-loading-completes.cs
+- use-parallelforeach-to-iterate-over-file-paths-freezing-panes-in-each-workbook-concurrently.cs
