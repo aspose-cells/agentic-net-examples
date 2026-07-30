@@ -197,3 +197,4 @@ Examples may generate:
 - save-the-workbook-to-a-file-in-xlsx-format-after-applying-protection-and-encryption.cs
 - load-an-existing-workbook-from-disk-and-check-if-it-is-encrypted.cs
 - verify-the-encryption-password-of-the-loaded-workbook-and-log-the-verification-result.cs
+- decrypt-the-workbook-using-the-correct-password-and-confirm-data-integrity-after-decryption.cs
