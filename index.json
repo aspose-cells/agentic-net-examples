@@ -6246,6 +6246,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-data-validation-to-a-column-then-freeze-that-column-to-keep-validation-rules-visible.cs",
+      "title": "Apply data validation to a column, then freeze that column to keep validation rules visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-fittopageswide-1-and-fittopagestall-1-to-a-worksheet-for-single-page-printing.cs",
       "title": "Apply FitToPagesWide = 1 and FitToPagesTall = 1 to a worksheet for single-page printing."
     },
