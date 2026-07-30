@@ -294,3 +294,4 @@ Examples may generate:
 - create-a-unit-test-confirming-an-encrypted-workbook-throws-the-expected-exception-when-opened-without-a-password.cs
 - detect-whether-a-workbook-uses-the-default-encryption-algorithm-and-log-a-recommendation-to-upgrade.cs
 - protect-a-worksheet-then-export-its-data-to-csv-ensuring-protection-does-not-affect-exported-values.cs
+- unprotect-a-workbook-structure-add-a-new-hidden-worksheet-and-reprotect-with-a-different-password.cs
