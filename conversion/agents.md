@@ -212,3 +212,4 @@ Output files are written to the working directory.
 - convert-a-workbook-to-pdf-and-apply-a-grayscale-color-profile-for-printing-consistency.cs
 - convert-a-workbook-to-pdf-and-add-a-custom-javascript-alert-on-document-open.cs
 - save-a-workbook-as-csv-using-custom-save-options-to-keep-separators-for-blank-rows-intact.cs
+- convert-a-workbook-to-pdf-and-set-document-to-open-in-full-screen-mode.cs
