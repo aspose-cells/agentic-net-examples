@@ -6481,6 +6481,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-only-the-first-worksheet-of-a-large-workbook-by-excluding-other-sheets.cs",
+      "title": "Load only the first worksheet of a large workbook by excluding other sheets."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs",
       "title": "Open a spreadsheet, set the first worksheet tab to invisible, then export to a new file."
     },
