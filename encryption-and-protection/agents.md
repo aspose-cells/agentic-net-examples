@@ -207,3 +207,4 @@ Examples may generate:
 - convert-the-protected-workbook-to-pdf-while-preserving-protection-metadata.cs
 - detect-whether-a-workbook-loaded-from-a-memory-stream-is-encrypted-and-report-the-status.cs
 - identify-the-encryption-algorithm-used-in-a-workbook-and-log-whether-it-is-strong-or-weak.cs
+- upgrade-a-workbook-using-legacy-encryption-to-aes256-strong-encryption.cs
