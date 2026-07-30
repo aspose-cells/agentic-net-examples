@@ -5646,6 +5646,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-macroenabled-workbook-add-a-table-and-assign-a-vba-macro-to-run-when-the-table-changes.cs",
+      "title": "Create a macro\u2011enabled workbook, add a table, and assign a VBA macro to run when the table changes."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-from-an-external-csv-file-using-a-query-table-data-source-and-map-columns-automatically.cs",
       "title": "Create a table from an external CSV file using a query table data source and map columns automatically."
     },
