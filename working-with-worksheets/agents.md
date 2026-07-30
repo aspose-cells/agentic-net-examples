@@ -186,3 +186,4 @@ Output files are written to the working directory.
 - after-freezing-panes-export-the-worksheet-to-html-to-display-frozen-headers.cs
 - process-a-batch-of-ten-workbooks-applying-the-same-row-freeze-configuration-to-each.cs
 - process-a-collection-of-workbooks-in-parallel-freezing-the-first-two-columns-of-each-worksheet-concurrently.cs
+- use-a-configuration-file-to-specify-the-number-of-rows-to-freeze-then-apply-at-runtime.cs
