@@ -235,3 +235,4 @@ Output files are written to the working directory.
 - change-the-worksheet-tab-color-then-freeze-the-first-column-to-keep-the-colored-tab-identifiable.cs
 - set-the-worksheet-visibility-to-very-hidden-then-freeze-panes-before-making-it-visible-again.cs
 - reorder-worksheets-then-freeze-the-top-row-of-each-moved-sheet-to-preserve-headers.cs
+- copy-a-worksheet-from-another-workbook-then-apply-freezepanes-to-the-imported-sheets-header-row.cs
