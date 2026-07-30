@@ -230,3 +230,4 @@ Output files are written to the working directory.
 - use-worksheetcellsmaxdatacolumn-to-calculate-dynamic-freeze-columns-based-on-actual-data.cs
 - apply-freezepanes-after-calling-worksheetautofitcolumns-to-lock-column-widths-in-place.cs
 - apply-freezepanes-after-calling-worksheetautofitrows-to-lock-row-heights-during-scrolling.cs
+- set-a-custom-view-with-a-specific-zoom-level-then-freeze-rows-to-maintain-visual-context.cs
