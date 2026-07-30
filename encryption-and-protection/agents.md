@@ -272,3 +272,4 @@ Examples may generate:
 - validate-that-a-digitally-signed-workbook-fails-verification-after-its-protection-password-is-changed.cs
 - create-a-batch-job-that-decrypts-all-files-in-a-folder-then-reencrypts-them-with-a-new-policy.cs
 - implement-error-handling-distinguishing-between-incorrect-password-and-corrupted-encrypted-file-scenarios.cs
+- apply-worksheet-protection-permitting-sorting-data-but-blocking-filtering-to-maintain-data-integrity.cs
