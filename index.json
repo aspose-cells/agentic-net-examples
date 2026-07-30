@@ -6401,6 +6401,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "clone-a-worksheet-preserve-its-original-tabid-then-assign-a-distinct-tabid-to-the-cloned-sheet.cs",
+      "title": "Clone a worksheet, preserve its original TabId, then assign a distinct TabId to the cloned sheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "combine-shape-detection-and-cell-data-checks-to-classify-worksheets-as-dataonly-shapeonly-or-mixed-content.cs",
       "title": "Combine shape detection and cell data checks to classify worksheets as data\u2011only, shape\u2011only, or mixed content."
     },
