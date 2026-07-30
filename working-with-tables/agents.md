@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - set-the-query-tables-connection-string-to-use-integrated-security-for-secure-access-to-the-database.cs
 - export-a-table-to-an-html-file-preserving-table-structure-and-applying-inline-css-for-styling.cs
 - import-an-html-table-into-a-worksheet-converting-it-into-a-structured-table-with-proper-column-headers.cs
+- create-a-table-then-attach-a-comment-that-includes-a-hyperlink-to-a-sharepoint-document-for-reference.cs
