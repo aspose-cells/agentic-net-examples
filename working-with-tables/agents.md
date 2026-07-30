@@ -116,3 +116,4 @@ Output files are written to the working directory.
 - import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs
 - apply-a-filter-that-excludes-rows-where-the-date-column-falls-outside-the-current-quarter.cs
 - create-a-table-then-generate-a-named-range-that-references-only-the-data-body-range-excluding-headers.cs
+- add-a-calculated-column-that-uses-the-if-function-to-categorize-rows-based-on-a-numeric-threshold.cs
