@@ -6351,6 +6351,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "assign-a-new-integer-tabid-to-a-specific-worksheet-and-save-the-workbook.cs",
+      "title": "Assign a new integer TabId to a specific worksheet and save the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "autofit-all-columns-before-freezing-to-preserve-column-widths-after-view-changes.cs",
       "title": "Auto\u2011fit all columns before freezing to preserve column widths after view changes."
     },
