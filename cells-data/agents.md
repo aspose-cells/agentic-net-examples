@@ -241,3 +241,4 @@ Output files are written to the working directory.
 - backup-worksheet-data-to-a-json-file-by-enumerating-cells-and-serializing-addressvalue-pairs.cs
 - calculate-total-number-of-merged-cells-by-counting-each-merged-regions-cell-count-during-enumeration.cs
 - load-an-excel-workbook-from-a-specified-file-path-into-memory-for-processing.cs
+- use-cellgetcharactersstartindex-length-to-retrieve-a-richtextportion-from-the-cell.cs
