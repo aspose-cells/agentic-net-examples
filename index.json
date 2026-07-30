@@ -6371,6 +6371,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-chart-title-with-custom-font-size-and-color-to-improve-chart-readability.cs",
+      "title": "Insert a chart title with custom font size and color to improve chart readability."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-comment-in-cell-q3-that-includes-a-hyperlink-to-an-online-documentation-page.cs",
       "title": "Insert a comment in cell Q3 that includes a hyperlink to an online documentation page."
     },
