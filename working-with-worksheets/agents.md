@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - protect-individual-cells-with-a-password-while-leaving-other-cells-editable-for-users.cs
 - insert-a-sparkline-chart-in-cell-p5-that-reflects-the-trend-of-data-in-range-b2b10.cs
 - set-the-worksheets-background-color-to-light-gray-to-improve-visual-contrast-for-printed-pages.cs
+- create-a-macro-that-automatically-updates-a-summary-table-whenever-source-data-changes.cs
