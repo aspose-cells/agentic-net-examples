@@ -5696,6 +5696,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "update-the-named-range-that-references-a-table-after-expanding-the-table-to-include-new-rows.cs",
+      "title": "Update the named range that references a table after expanding the table to include new rows."
+    },
+    {
+      "category": "working-with-tables",
       "file": "use-structured-references-in-formulas-that-refer-to-table-columns-ensuring-automatic-range-adjustments.cs",
       "title": "Use structured references in formulas that refer to table columns, ensuring automatic range adjustments."
     },
