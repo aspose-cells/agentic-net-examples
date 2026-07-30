@@ -204,3 +204,4 @@ Output files are written to the working directory.
 - load-a-workbook-asynchronously-then-apply-freezepanes-once-loading-completes.cs
 - use-parallelforeach-to-iterate-over-file-paths-freezing-panes-in-each-workbook-concurrently.cs
 - read-freeze-row-and-column-values-from-an-xml-configuration-file-and-apply-them.cs
+- retrieve-the-maximum-data-row-count-and-freeze-all-rows-above-it.cs
