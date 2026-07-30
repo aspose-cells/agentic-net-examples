@@ -6371,6 +6371,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "combine-splitpanes-and-freezepanes-to-create-a-split-view-with-frozen-top-rows-for-complex-navigation.cs",
+      "title": "Combine SplitPanes and FreezePanes to create a split view with frozen top rows for complex navigation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "compare-sheetid-values-between-two-workbooks-to-detect-potential-duplication-after-copying.cs",
       "title": "Compare SheetId values between two workbooks to detect potential duplication after copying."
     },
