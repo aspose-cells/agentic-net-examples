@@ -268,3 +268,4 @@ Examples may generate:
 - test-opening-an-encrypted-workbook-with-an-incorrect-password-and-ensure-no-data-is-exposed.cs
 - apply-worksheet-protection-disabling-column-insertion-but-allowing-column-resizing-for-end-users.cs
 - unprotect-a-workbook-structure-modify-worksheet-order-then-reprotect-with-the-original-password.cs
+- encrypt-a-workbook-using-a-password-stored-securely-in-azure-key-vault-and-retrieve-it-at-runtime.cs
