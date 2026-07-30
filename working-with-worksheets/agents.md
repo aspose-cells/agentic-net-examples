@@ -309,3 +309,4 @@ Output files are written to the working directory.
 - create-a-new-scenario-named-baseline-capturing-current-values-of-cells-b2-through-b10.cs
 - load-a-workbook-from-a-file-path-and-access-its-worksheets-collection.cs
 - retrieve-each-worksheets-tabid-by-accessing-the-worksheettabid-property-of-the-loaded-workbook.cs
+- assign-a-new-integer-tabid-to-a-specific-worksheet-and-save-the-workbook.cs
