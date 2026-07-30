@@ -6118,6 +6118,11 @@
       "category": "working-with-tables",
       "file": "verify-that-after-conversion-the-table-no-longer-supports-sorting-by-checking-listobjectistable-property.cs",
       "title": "Verify that after conversion the table no longer supports sorting by checking ListObject.IsTable property."
+    },
+    {
+      "category": "xml-maps",
+      "file": "use-the-worksheetxmlmapquery-method-with-a-wildcard-path-to-retrieve-all-cells-under-a-parent-node.cs",
+      "title": "Use the Worksheet.XmlMapQuery method with a wildcard path to retrieve all cells under a parent node."
     }
   ]
 }
