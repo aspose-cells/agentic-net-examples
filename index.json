@@ -6151,6 +6151,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-threeicon-set-conditional-format-to-column-m-to-indicate-low-medium-and-high-performance.cs",
+      "title": "Apply a three\u2011icon set conditional format to column M to indicate low, medium, and high performance."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs",
       "title": "Apply custom margin of 0.5 inches on all sides before scaling worksheet to fit one page."
     },
