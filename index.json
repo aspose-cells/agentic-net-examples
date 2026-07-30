@@ -6206,6 +6206,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-cell-style-to-the-header-row-then-freeze-that-row-to-preserve-styling-while-scrolling.cs",
+      "title": "Apply a cell style to the header row, then freeze that row to preserve styling while scrolling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-column-freeze-to-header-columns-then-export-the-workbook-to-an-xlsm-file.cs",
       "title": "Apply a column freeze to header columns, then export the workbook to an XLSM file."
     },
