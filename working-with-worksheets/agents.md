@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - set-the-worksheets-background-color-to-light-gray-to-improve-visual-contrast-for-printed-pages.cs
 - create-a-macro-that-automatically-updates-a-summary-table-whenever-source-data-changes.cs
 - add-a-hyperlink-that-links-to-an-external-pdf-document-stored-on-a-network-share.cs
+- insert-a-comment-in-cell-q3-that-includes-a-hyperlink-to-an-online-documentation-page.cs
