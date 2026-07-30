@@ -6141,6 +6141,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-conditional-formatting-rule-that-adds-a-red-font-color-to-cells-containing-the-word-error.cs",
+      "title": "Apply a conditional formatting rule that adds a red font color to cells containing the word Error."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs",
       "title": "Apply custom margin of 0.5 inches on all sides before scaling worksheet to fit one page."
     },
