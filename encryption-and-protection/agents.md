@@ -236,3 +236,4 @@ Examples may generate:
 - iterate-through-all-worksheets-protecting-each-with-the-same-password-while-preserving-formatting.cs
 - validate-a-supplied-password-against-a-worksheets-protection-password-and-return-a-boolean-result.cs
 - load-a-shared-workbook-apply-password-protection-to-its-shared-mode-and-save-it.cs
+- check-whether-a-worksheet-is-protected-with-readonly-permissions-and-report-the-protection-type.cs
