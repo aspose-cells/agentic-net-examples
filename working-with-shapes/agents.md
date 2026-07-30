@@ -501,3 +501,4 @@ Output files are written to the working directory.
 - create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs
 - retrieve-a-shapes-absolute-position-then-align-another-shape-to-the-same-coordinates.cs
 - add-a-shape-retrieve-its-connection-points-and-compare-them-with-expected-points-stored-in-a-database.cs
+- add-a-shape-set-its-linked-cell-to-a-cell-with-custom-text-format-and-verify-formatted-text-appears.cs
