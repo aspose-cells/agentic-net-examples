@@ -243,3 +243,4 @@ Output files are written to the working directory.
 - insert-new-columns-before-the-header-then-recalculate-the-freeze-column-index-and-apply-freezepanes-again.cs
 - rename-a-worksheet-after-freezing-then-verify-that-the-frozen-state-remains-unchanged.cs
 - apply-data-validation-to-a-column-then-freeze-that-column-to-keep-validation-rules-visible.cs
+- create-a-pivot-table-then-freeze-the-pivot-tables-row-labels-for-constant-reference.cs
