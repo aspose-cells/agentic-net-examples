@@ -6176,6 +6176,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-column-freeze-to-header-columns-then-export-the-workbook-to-an-xlsm-file.cs",
+      "title": "Apply a column freeze to header columns, then export the workbook to an XLSM file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-conditional-formatting-rule-that-adds-a-red-font-color-to-cells-containing-the-word-error.cs",
       "title": "Apply a conditional formatting rule that adds a red font color to cells containing the word Error."
     },
