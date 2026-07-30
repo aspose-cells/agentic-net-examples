@@ -225,3 +225,4 @@ Output files are written to the working directory.
 - record-the-duration-of-each-freezepanes-call-using-a-stopwatch-and-log-the-elapsed-time.cs
 - throw-a-custom-exception-when-a-requested-freeze-row-index-exceeds-the-worksheets-maximum-row-count.cs
 - validate-that-the-freeze-column-index-is-within-the-worksheets-column-range-before-invoking-freezepanes.cs
+- implement-logic-to-skip-freezing-if-the-worksheet-already-has-the-desired-frozen-state.cs
