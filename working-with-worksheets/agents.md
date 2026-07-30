@@ -305,3 +305,4 @@ Output files are written to the working directory.
 - remove-all-existing-page-breaks-from-the-worksheet-to-allow-automatic-pagination.cs
 - set-the-worksheet-zoom-level-to-150-percent-for-detailed-onscreen-inspection.cs
 - enable-gridlines-visibility-when-printing-the-worksheet-to-aid-data-alignment-verification.cs
+- disable-the-display-of-row-and-column-headings-in-the-worksheet-view-for-a-cleaner-layout.cs
