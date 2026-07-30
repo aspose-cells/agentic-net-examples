@@ -145,3 +145,4 @@ Output files are written to the working directory.
 - apply-a-conditional-formatting-rule-that-adds-a-red-font-color-to-cells-containing-the-word-error.cs
 - set-the-worksheets-default-row-height-to-automatically-adjust-based-on-cell-content.cs
 - insert-a-picture-from-a-url-into-the-worksheet-and-position-it-at-cell-r2.cs
+- enable-the-display-of-formulas-in-the-worksheet-view-for-debugging-complex-calculations.cs
