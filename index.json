@@ -6526,6 +6526,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-asynchronously-then-apply-freezepanes-once-loading-completes.cs",
+      "title": "Load a workbook asynchronously, then apply FreezePanes once loading completes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-display-formulas-on-all-sheets-hide-the-second-column-and-save.cs",
       "title": "Load a workbook, display formulas on all sheets, hide the second column, and save."
     },
