@@ -94,3 +94,4 @@ Output files are written to the working directory.
 - set-the-tables-show-totals-row-option-to-false-removing-the-totals-row-from-the-display.cs
 - disable-autoexpand-for-a-table-to-keep-its-range-fixed-despite-additional-rows-being-entered.cs
 - change-the-table-style-to-a-custom-xmldefined-style-to-meet-corporate-branding-guidelines.cs
+- programmatically-retrieve-the-address-range-of-a-table-and-use-it-as-a-named-range-for-formulas.cs
