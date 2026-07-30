@@ -6886,6 +6886,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-a-charts-data-source-range-then-freeze-the-rows-that-feed-the-chart-to-keep-source-visible.cs",
+      "title": "Set a chart\u2019s data source range, then freeze the rows that feed the chart to keep source visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-a-custom-view-with-a-specific-zoom-level-then-freeze-rows-to-maintain-visual-context.cs",
       "title": "Set a custom view with a specific zoom level, then freeze rows to maintain visual context."
     },
