@@ -6351,6 +6351,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-comment-with-rich-text-formatting-including-bold-and-italic-segments-into-cell-t8.cs",
+      "title": "Insert a comment with rich text formatting, including bold and italic segments, into cell T8."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-hyperlink-that-triggers-a-macro-when-clicked-in-cell-s5-for-custom-actions.cs",
       "title": "Insert a hyperlink that triggers a macro when clicked in cell S5 for custom actions."
     },
