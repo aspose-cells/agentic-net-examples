@@ -234,3 +234,4 @@ Examples may generate:
 - decrypt-an-encrypted-xlsx-file-using-the-known-password-and-verify-formula-recalculation.cs
 - encrypt-a-newly-created-workbook-with-aes256-encryption-and-a-custom-password.cs
 - iterate-through-all-worksheets-protecting-each-with-the-same-password-while-preserving-formatting.cs
+- validate-a-supplied-password-against-a-worksheets-protection-password-and-return-a-boolean-result.cs
