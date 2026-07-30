@@ -188,3 +188,4 @@ Examples may generate:
 - batch-decrypt-a-collection-of-encrypted-excel-files-using-a-shared-password-and-save-them-unprotected.cs
 - batch-decrypt-excel-files-apply-data-sanitization-and-reencrypt-them-with-updated-passwords-for-compliance.cs
 - batch-decrypt-excel-files-apply-data-masking-to-sensitive-columns-and-reencrypt-with-new-passwords.cs
+- write-a-script-that-monitors-a-folder-for-new-excel-files-automatically-encrypts-them-and-logs-each-operation.cs
