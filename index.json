@@ -6521,6 +6521,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-an-image-then-freeze-the-rows-above-the-image-to-keep-it-anchored-visually.cs",
+      "title": "Insert an image, then freeze the rows above the image to keep it anchored visually."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-over-a-collection-of-worksheets-hide-those-without-data-and-write-each-workbook-back.cs",
       "title": "Iterate over a collection of worksheets, hide those without data, and write each workbook back."
     },
