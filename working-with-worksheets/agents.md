@@ -257,3 +257,4 @@ Output files are written to the working directory.
 - set-a-print-area-that-includes-frozen-header-rows-then-freeze-rows-to-align-printed-output-with-view.cs
 - insert-manual-page-breaks-below-the-frozen-rows-then-verify-that-page-breaks-respect-the-frozen-view.cs
 - configure-header-and-footer-text-then-freeze-the-rows-that-contain-header-information-for-consistency.cs
+- update-workbook-properties-such-as-author-and-title-then-freeze-the-first-row-to-keep-metadata-visible.cs
