@@ -438,3 +438,4 @@ Output files are written to the working directory.
 - add-a-hyperlink-to-a-label-control-that-opens-a-web-page-when-the-chart-is-viewed.cs
 - load-an-xlsx-workbook-add-a-stacked-bar-chart-and-configure-it-as-a-gantt-chart.cs
 - set-the-chart-title-and-axis-labels-for-a-gantt-chart-using-localized-strings.cs
+- export-the-workbook-containing-the-gantt-chart-to-a-pdf-file-preserving-chart-layout.cs
