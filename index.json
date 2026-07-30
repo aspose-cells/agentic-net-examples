@@ -6201,6 +6201,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-border-style-around-the-header-range-then-freeze-those-rows-to-maintain-border-visibility.cs",
+      "title": "Apply a border style around the header range, then freeze those rows to maintain border visibility."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-cell-style-that-includes-a-thick-left-border-and-a-light-blue-background-fill.cs",
       "title": "Apply a cell style that includes a thick left border and a light blue background fill."
     },
