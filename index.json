@@ -5666,6 +5666,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "create-a-table-then-generate-a-named-range-that-references-only-the-data-body-range-excluding-headers.cs",
+      "title": "Create a table, then generate a named range that references only the data body range excluding headers."
+    },
+    {
+      "category": "working-with-tables",
       "file": "create-a-table-with-a-header-row-that-uses-merged-cells-to-span-multiple-columns-for-a-title.cs",
       "title": "Create a table with a header row that uses merged cells to span multiple columns for a title."
     },
