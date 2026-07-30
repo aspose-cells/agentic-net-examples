@@ -6256,6 +6256,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-freezepanes-after-calling-worksheetautofitrows-to-lock-row-heights-during-scrolling.cs",
+      "title": "Apply FreezePanes after calling Worksheet.AutoFitRows to lock row heights during scrolling."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs",
       "title": "Apply page break preview to every worksheet in the workbook to prepare for printing."
     },
