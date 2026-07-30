@@ -314,3 +314,4 @@ Output files are written to the working directory.
 - validate-that-no-two-worksheets-share-the-same-tabid-after-any-modifications-are-applied.cs
 - detect-empty-worksheets-by-checking-that-cellsmaxdatarow-and-cellsmaxdatacolumn-both-equal-1.cs
 - generate-a-csv-report-listing-worksheet-names-tabids-and-a-flag-indicating-whether-each-sheet-is-empty.cs
+- identify-worksheets-containing-only-shapes-by-confirming-maxdatarow-is-1-and-shapecollectioncount-is-greater-than-zero.cs
