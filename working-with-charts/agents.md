@@ -287,3 +287,4 @@ Output files are written to the working directory.
 - clone-the-existing-chart-object-and-modify-its-data-source-to-reference-a-different-worksheet.cs
 - set-the-shape-type-of-data-labels-to-rounded-rectangle-for-a-line-chart.cs
 - set-the-shape-type-of-data-labels-to-ellipse-for-a-bubble-chart.cs
+- set-the-shape-type-of-data-labels-to-triangle-for-a-custom-chart-type.cs
