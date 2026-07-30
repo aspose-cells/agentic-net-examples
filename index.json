@@ -5686,6 +5686,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "export-a-specific-table-to-an-xml-file-using-the-excel-xml-schema-for-data-interchange.cs",
+      "title": "Export a specific table to an XML file using the Excel XML schema for data interchange."
+    },
+    {
+      "category": "working-with-tables",
       "file": "export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs",
       "title": "Export a worksheet containing multiple tables to a single PDF file, preserving each table's layout."
     },
