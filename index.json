@@ -6296,6 +6296,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-comment-in-cell-q3-that-includes-a-hyperlink-to-an-online-documentation-page.cs",
+      "title": "Insert a comment in cell Q3 that includes a hyperlink to an online documentation page."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-sparkline-chart-in-cell-p5-that-reflects-the-trend-of-data-in-range-b2b10.cs",
       "title": "Insert a sparkline chart in cell P5 that reflects the trend of data in range B2:B10."
     },
