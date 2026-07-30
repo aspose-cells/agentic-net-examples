@@ -534,3 +534,4 @@ Output files are written to the working directory.
 - load-a-workbook-add-a-polynomial-order-three-trendline-to-a-scatter-chart-series-and-capture-its-equation.cs
 - open-an-xls-file-retrieve-polynomial-trendline-equation-from-a-chart-and-display-it-in-a-message-box.cs
 - retrieve-the-worksheet-that-contains-a-specific-chart-using-the-chartworksheet-property.cs
+- verify-the-retrieved-worksheet-name-matches-the-expected-chart-parent-worksheet.cs
