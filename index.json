@@ -7356,6 +7356,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "validate-that-no-two-worksheets-share-the-same-tabid-after-any-modifications-are-applied.cs",
+      "title": "Validate that no two worksheets share the same TabId after any modifications are applied."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "validate-that-the-freeze-column-index-is-within-the-worksheets-column-range-before-invoking-freezepanes.cs",
       "title": "Validate that the freeze column index is within the worksheet\u2019s column range before invoking FreezePanes."
     },
