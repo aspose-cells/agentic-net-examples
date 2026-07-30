@@ -6701,6 +6701,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-specific-row-heights-then-freeze-the-first-two-rows-to-keep-custom-height-formatting.cs",
+      "title": "Set specific row heights, then freeze the first two rows to keep custom height formatting."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs",
       "title": "Set the tab bar width, hide the fourth worksheet, and save the workbook with these settings."
     },
