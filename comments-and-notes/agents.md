@@ -78,3 +78,4 @@ Output files are written to the working directory.
 - replace-the-background-picture-of-a-comment-with-a-semi-transparent-overlay-image.cs
 - copy-formatting-of-a-comments-shape-including-background-color-and-font-color-to-another-comment.cs
 - add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
+- update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs
