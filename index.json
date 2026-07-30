@@ -6146,6 +6146,11 @@
     },
     {
       "category": "xml-maps",
+      "file": "export-the-workbook-to-an-ods-file-while-ensuring-that-xml-map-definitions-are-retained-in-the-output.cs",
+      "title": "Export the workbook to an ODS file while ensuring that XML map definitions are retained in the output."
+    },
+    {
+      "category": "xml-maps",
       "file": "implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs",
       "title": "Implement a UI dialog that lets users select an XML schema file to create a new map."
     },
