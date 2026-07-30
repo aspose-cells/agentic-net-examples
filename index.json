@@ -5593,6 +5593,11 @@
       "category": "working-with-tables",
       "file": "load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs",
       "title": "Load a workbook, locate a table by name, and export its contents to an HTML fragment."
+    },
+    {
+      "category": "working-with-tables",
+      "file": "refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs",
+      "title": "Refresh all pivot tables that reference a specific worksheet table after updating its underlying data."
     }
   ]
 }
