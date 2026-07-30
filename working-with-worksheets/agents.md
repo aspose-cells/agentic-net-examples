@@ -306,3 +306,4 @@ Output files are written to the working directory.
 - set-the-worksheet-zoom-level-to-150-percent-for-detailed-onscreen-inspection.cs
 - enable-gridlines-visibility-when-printing-the-worksheet-to-aid-data-alignment-verification.cs
 - disable-the-display-of-row-and-column-headings-in-the-worksheet-view-for-a-cleaner-layout.cs
+- create-a-new-scenario-named-baseline-capturing-current-values-of-cells-b2-through-b10.cs
