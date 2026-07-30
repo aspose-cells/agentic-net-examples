@@ -245,3 +245,4 @@ Output files are written to the working directory.
 - iterate-through-all-richtextportion-objects-in-a-cell-and-modify-each-portions-font-name.cs
 - merge-adjacent-richtextportion-objects-that-share-identical-formatting-into-a-single-portion.cs
 - copy-richtext-formatting-from-one-cell-to-another-across-different-worksheets.cs
+- apply-a-styleflag-that-updates-only-the-quoteprefix-property-while-leaving-other-style-attributes-unchanged.cs
