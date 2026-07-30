@@ -7006,6 +7006,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-column-c-width-to-twenty-points-to-accommodate-longer-text-entries.cs",
+      "title": "Set column C width to twenty points to accommodate longer text entries."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-pagesetupzoom-to-80-percent-for-a-worksheet-and-export-the-result-as-pdf.cs",
       "title": "Set PageSetup.Zoom to 80 percent for a worksheet and export the result as PDF."
     },
