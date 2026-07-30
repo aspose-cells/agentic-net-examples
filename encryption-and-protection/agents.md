@@ -231,3 +231,4 @@ Examples may generate:
 - attempt-to-unprotect-a-worksheet-using-an-incorrect-password-and-capture-the-resulting-exception.cs
 - protect-the-entire-workbook-structure-with-a-strong-password-disabling-sheet-editing.cs
 - detect-if-an-excel-file-is-encrypted-and-log-its-encryption-status-for-auditing.cs
+- decrypt-an-encrypted-xlsx-file-using-the-known-password-and-verify-formula-recalculation.cs
