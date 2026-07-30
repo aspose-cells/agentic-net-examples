@@ -217,3 +217,4 @@ Output files are written to the working directory.
 - merge-cells-across-the-top-row-then-freeze-the-merged-header-to-keep-it-visible.cs
 - protect-the-worksheet-after-freezing-rows-to-prevent-accidental-changes-to-the-header-area.cs
 - unprotect-a-worksheet-before-unfreezing-panes-to-ensure-the-operation-succeeds.cs
+- encapsulate-freezepanes-logic-inside-a-reusable-method-that-accepts-row-and-column-parameters.cs
