@@ -6816,6 +6816,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-parallelforeach-to-iterate-over-file-paths-freezing-panes-in-each-workbook-concurrently.cs",
+      "title": "Use Parallel.ForEach to iterate over file paths, freezing panes in each workbook concurrently."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcollection-to-hide-zero-values-on-every-sheet-whose-name-starts-with-q.cs",
       "title": "Use WorksheetCollection to hide zero values on every sheet whose name starts with \u201cQ\u201d."
     },
