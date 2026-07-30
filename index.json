@@ -6236,6 +6236,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-the-display-of-formulas-in-the-worksheet-view-for-debugging-complex-calculations.cs",
+      "title": "Enable the display of formulas in the worksheet view for debugging complex calculations."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-the-emptycellreferences-error-check-for-a-specific-worksheet-by-creating-an-errorcheckoption-instance.cs",
       "title": "Enable the EmptyCellReferences error check for a specific worksheet by creating an ErrorCheckOption instance."
     },
