@@ -199,3 +199,4 @@ Output files are written to the working directory.
 - apply-a-conditional-freeze-only-when-the-worksheet-name-starts-with-report.cs
 - apply-a-freeze-to-worksheets-that-contain-more-than-one-hundred-rows.cs
 - apply-a-freeze-to-worksheets-that-have-more-than-ten-columns.cs
+- use-a-trycatch-block-around-freezepanes-calls-to-handle-invalid-indices-gracefully.cs
