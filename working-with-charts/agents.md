@@ -368,3 +368,4 @@ Output files are written to the working directory.
 - create-chart-set-legend-position-to-bottom-then-shift-it-upward-by-a-fixed-offset.cs
 - apply-custom-locale-to-chart-legend-to-display-month-names-in-spanish-and-verify-formatting.cs
 - enable-data-labels-to-show-both-cell-value-and-percentage-for-a-stacked-bar-chart-and-resize-shapes.cs
+- set-legend-background-to-transparent-while-keeping-entry-fill-none-to-achieve-a-fully-clear-legend.cs
