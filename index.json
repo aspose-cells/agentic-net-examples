@@ -6140,6 +6140,11 @@
       "title": "Switch a worksheet back to normal view mode to display cells without page break outlines."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "toggle-worksheet-view-between-normal-and-page-break-preview-based-on-a-userdefined-flag.cs",
+      "title": "Toggle worksheet view between normal and page break preview based on a user\u2011defined flag."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
