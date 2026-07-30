@@ -325,3 +325,4 @@ Output files are written to the working directory.
 - generate-an-xml-summary-file-listing-each-worksheets-name-tabid-maxdatarow-maxdatacolumn-and-shape-count.cs
 - create-a-scheduled-task-that-scans-a-folder-for-new-excel-files-and-updates-worksheet-tabids.cs
 - log-a-warning-when-a-worksheets-maxdatarow-is-zero-but-maxdatacolumn-is-greater-than-zero.cs
+- remove-all-shapes-from-worksheets-identified-as-empty-based-on-cell-data-checks-to-simplify-the-workbook.cs
