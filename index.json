@@ -6756,6 +6756,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "rename-a-worksheet-after-freezing-then-verify-that-the-frozen-state-remains-unchanged.cs",
+      "title": "Rename a worksheet after freezing, then verify that the frozen state remains unchanged."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "reorder-worksheets-then-freeze-the-top-row-of-each-moved-sheet-to-preserve-headers.cs",
       "title": "Reorder worksheets, then freeze the top row of each moved sheet to preserve headers."
     },
