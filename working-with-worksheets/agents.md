@@ -291,3 +291,4 @@ Output files are written to the working directory.
 - evaluate-all-formulas-in-the-worksheet-and-retrieve-the-calculated-value-of-cell-g10.cs
 - set-data-validation-on-column-e-to-allow-only-dates-between-january-1-and-december-31.cs
 - apply-conditional-formatting-to-highlight-cells-in-column-f-exceeding-the-value-one-thousand.cs
+- add-a-hyperlink-to-cell-h2-pointing-to-the-external-website-httpsexamplecom-for-reference.cs
