@@ -6456,6 +6456,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-an-existing-excel-file-from-disk-into-a-workbook-instance.cs",
+      "title": "Load an existing Excel file from disk into a Workbook instance."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs",
       "title": "Load an existing workbook, hide the second worksheet, and save the file."
     },
