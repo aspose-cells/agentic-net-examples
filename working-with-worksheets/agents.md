@@ -312,3 +312,4 @@ Output files are written to the working directory.
 - assign-a-new-integer-tabid-to-a-specific-worksheet-and-save-the-workbook.cs
 - iterate-through-all-worksheets-logging-each-name-and-corresponding-tabid-for-audit-purposes.cs
 - validate-that-no-two-worksheets-share-the-same-tabid-after-any-modifications-are-applied.cs
+- detect-empty-worksheets-by-checking-that-cellsmaxdatarow-and-cellsmaxdatacolumn-both-equal-1.cs
