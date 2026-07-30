@@ -506,3 +506,4 @@ Output files are written to the working directory.
 - link-a-shape-to-a-cell-containing-a-dynamic-array-formula-and-ensure-shape-updates-with-array-changes.cs
 - add-a-shape-link-it-to-a-cell-with-a-volatile-function-and-test-automatic-updates.cs
 - add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-scientific-notation-and-verify.cs
+- add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-custom-date-and-verify.cs
