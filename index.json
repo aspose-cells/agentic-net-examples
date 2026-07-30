@@ -6381,6 +6381,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "build-a-logging-mechanism-that-records-original-and-new-tabid-values-whenever-they-are-changed.cs",
+      "title": "Build a logging mechanism that records original and new TabId values whenever they are changed."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "calculate-appropriate-zoom-level-based-on-column-width-and-assign-it-to-the-worksheet.cs",
       "title": "Calculate appropriate zoom level based on column width and assign it to the worksheet."
     },
