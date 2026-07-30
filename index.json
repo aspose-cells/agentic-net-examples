@@ -6526,6 +6526,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "disable-the-display-of-row-and-column-headings-in-the-worksheet-view-for-a-cleaner-layout.cs",
+      "title": "Disable the display of row and column headings in the worksheet view for a cleaner layout."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "divide-a-worksheet-into-four-quadrants-by-splitting-panes-both-horizontally-and-vertically.cs",
       "title": "Divide a worksheet into four quadrants by splitting panes both horizontally and vertically."
     },
