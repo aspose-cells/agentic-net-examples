@@ -6251,6 +6251,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-freezepanes-after-calling-worksheetautofitcolumns-to-lock-column-widths-in-place.cs",
+      "title": "Apply FreezePanes after calling Worksheet.AutoFitColumns to lock column widths in place."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs",
       "title": "Apply page break preview to every worksheet in the workbook to prepare for printing."
     },
