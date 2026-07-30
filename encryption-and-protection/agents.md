@@ -256,3 +256,4 @@ Examples may generate:
 - scan-a-directory-for-encrypted-excel-files-and-log-their-file-names-and-detected-encryption-status.cs
 - apply-worksheet-protection-allowing-cell-selection-but-preventing-cell-editing.cs
 - unprotect-a-workbook-structure-then-reapply-protection-using-a-different-password-and-verify-the-change.cs
+- detect-if-an-excel-file-uses-legacy-encryption-and-upgrade-to-modern-encryption-standards.cs
