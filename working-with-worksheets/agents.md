@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - apply-page-break-preview-to-every-worksheet-in-the-workbook-to-prepare-for-printing.cs
 - set-all-worksheets-to-normal-view-mode-to-ensure-consistent-onscreen-display-across-the-workbook.cs
 - toggle-worksheet-view-between-normal-and-page-break-preview-based-on-a-userdefined-flag.cs
+- adjust-the-zoom-factor-of-a-worksheet-to-150-percent-for-detailed-visual-inspection.cs
