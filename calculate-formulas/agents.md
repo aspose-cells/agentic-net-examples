@@ -137,3 +137,4 @@ Output files are written to the working directory.
 - assign-the-custom-monitor-to-workbooksettingscalculationmonitor-before-loading-the-workbook.cs
 - trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs
 - write-unit-tests-verifying-oncircular-receives-correct-cell-enumeration-for-a-known-circular-loop.cs
+- use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs
