@@ -6491,6 +6491,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-print-area-covering-cells-a1-through-m50-to-limit-printed-content.cs",
+      "title": "Define a print area covering cells A1 through M50 to limit printed content."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "delete-columns-b-through-d-and-adjust-remaining-column-references-to-maintain-integrity.cs",
       "title": "Delete columns B through D and adjust remaining column references to maintain integrity."
     },
