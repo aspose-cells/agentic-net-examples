@@ -267,3 +267,4 @@ Output files are written to the working directory.
 - add-a-legend-to-the-chart-then-freeze-the-rows-containing-the-legend-to-keep-it-in-view.cs
 - set-a-chart-title-then-freeze-the-rows-that-hold-the-title-text-to-ensure-it-remains-visible.cs
 - configure-chart-axes-then-freeze-the-rows-that-contain-axis-labels-to-maintain-context-while-scrolling.cs
+- add-multiple-series-to-the-chart-then-freeze-the-rows-that-hold-each-series-data-for-reference.cs
