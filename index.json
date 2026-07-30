@@ -6271,6 +6271,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enable-the-worksheets-automatic-calculation-mode-and-force-a-full-recalculation-after-data-changes.cs",
+      "title": "Enable the worksheet's automatic calculation mode and force a full recalculation after data changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-the-worksheets-page-break-preview-mode-to-visualize-where-pages-will-split.cs",
       "title": "Enable the worksheet's page break preview mode to visualize where pages will split."
     },
