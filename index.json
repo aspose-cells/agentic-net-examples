@@ -6426,6 +6426,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-passwordprotected-excel-file-using-loadoptions-with-the-correct-password.cs",
+      "title": "Load a password\u2011protected Excel file using LoadOptions with the correct password."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-display-formulas-on-all-sheets-hide-the-second-column-and-save.cs",
       "title": "Load a workbook, display formulas on all sheets, hide the second column, and save."
     },
