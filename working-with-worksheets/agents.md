@@ -264,3 +264,4 @@ Output files are written to the working directory.
 - set-a-charts-data-source-range-then-freeze-the-rows-that-feed-the-chart-to-keep-source-visible.cs
 - change-the-chart-type-to-a-line-chart-then-freeze-the-rows-containing-the-charts-data-series.cs
 - adjust-the-chart-layout-then-freeze-the-rows-that-define-the-charts-axis-labels-for-consistent-display.cs
+- add-a-legend-to-the-chart-then-freeze-the-rows-containing-the-legend-to-keep-it-in-view.cs
