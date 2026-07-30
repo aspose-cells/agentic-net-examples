@@ -169,3 +169,4 @@ Output files are written to the working directory.
 - load-an-excel-workbook-from-a-memory-stream-for-processing.cs
 - load-a-passwordprotected-excel-file-using-loadoptions-with-the-correct-password.cs
 - load-only-the-first-worksheet-of-a-large-workbook-by-excluding-other-sheets.cs
+- access-a-worksheet-by-its-name-and-store-the-reference-for-further-operations.cs
