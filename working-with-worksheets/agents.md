@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - add-a-conditional-formatting-rule-that-highlights-duplicate-values-in-column-n-with-a-light-orange-fill.cs
 - apply-a-cell-style-that-includes-a-thick-left-border-and-a-light-blue-background-fill.cs
 - enable-the-worksheets-filter-arrows-on-the-header-row-to-allow-userdriven-sorting.cs
+- create-a-named-range-that-dynamically-expands-as-new-rows-are-added-to-column-o.cs
