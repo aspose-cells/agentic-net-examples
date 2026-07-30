@@ -290,3 +290,4 @@ Output files are written to the working directory.
 - set-the-shape-type-of-data-labels-to-triangle-for-a-custom-chart-type.cs
 - change-data-label-font-size-to-twelve-points-and-color-to-blue-for-a-radar-chart.cs
 - apply-bold-font-style-and-centered-alignment-to-data-labels.cs
+- programmatically-toggle-data-label-visibility-based-on-a-configuration-flag.cs
