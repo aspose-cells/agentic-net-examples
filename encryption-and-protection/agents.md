@@ -249,3 +249,4 @@ Examples may generate:
 - export-protection-settings-of-each-worksheet-to-a-json-file-for-external-auditing.cs
 - import-protection-configurations-from-a-json-file-and-apply-them-to-corresponding-worksheets.cs
 - measure-performance-impact-of-encrypting-large-workbooks-by-timing-the-save-operation.cs
+- compare-aes128-and-aes256-encryption-strengths-by-encrypting-the-same-file-with-each-algorithm.cs
