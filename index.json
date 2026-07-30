@@ -6396,6 +6396,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "combine-shape-detection-and-cell-data-checks-to-classify-worksheets-as-dataonly-shapeonly-or-mixed-content.cs",
+      "title": "Combine shape detection and cell data checks to classify worksheets as data\u2011only, shape\u2011only, or mixed content."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "combine-splitpanes-and-freezepanes-to-create-a-split-view-with-frozen-top-rows-for-complex-navigation.cs",
       "title": "Combine SplitPanes and FreezePanes to create a split view with frozen top rows for complex navigation."
     },
