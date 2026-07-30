@@ -6726,6 +6726,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "reorder-worksheets-then-freeze-the-top-row-of-each-moved-sheet-to-preserve-headers.cs",
+      "title": "Reorder worksheets, then freeze the top row of each moved sheet to preserve headers."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs",
       "title": "Retrieve a worksheet by name, display its formulas instead of values, and save the changes."
     },
