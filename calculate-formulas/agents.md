@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - extract-and-log-the-formula-dependency-graph-after-calling-workbookcalculateformula-for-debugging.cs
 - implement-a-logger-that-records-the-order-of-formula-evaluations-during-workbookcalculateformula-for-debugging.cs
 - compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs
+- test-that-automaticexcepttables-mode-does-not-recalculate-formulas-inside-structured-tables.cs
