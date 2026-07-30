@@ -155,3 +155,4 @@ Output files are written to the working directory.
 - add-a-data-validation-list-that-pulls-allowed-values-from-a-range-on-a-hidden-worksheet.cs
 - set-the-worksheets-default-column-width-to-twelve-characters-for-consistent-layout-across-sheets.cs
 - create-a-pivot-chart-based-on-an-existing-pivot-table-to-visualize-aggregated-sales-data.cs
+- enable-the-worksheets-automatic-calculation-mode-and-force-a-full-recalculation-after-data-changes.cs
