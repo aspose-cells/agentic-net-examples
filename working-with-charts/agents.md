@@ -350,3 +350,4 @@ Output files are written to the working directory.
 - create-chart-set-legend-to-auto-position-then-override-to-a-fixed-top-left-location.cs
 - read-legend-current-position-programmatically-switch-to-opposite-corner-and-save-changes.cs
 - resize-data-label-shapes-for-a-stacked-area-chart-after-applying-semitransparent-fill-to-the-series.cs
+- enable-data-labels-to-show-percentages-from-cells-for-a-pie-chart-and-adjust-shape-size-accordingly.cs
