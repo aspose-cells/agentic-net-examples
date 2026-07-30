@@ -233,3 +233,4 @@ Output files are written to the working directory.
 - set-print-area-to-a-named-range-before-conversion-to-limit-pdf-content-to-specific-cells.cs
 - load-an-xlsx-workbook-set-pdfsaveoptionsoptimizationtype-to-standardsize-and-save-as-pdf.cs
 - embed-a-csv-file-as-an-attachment-in-the-pdf-using-pdfsaveoptions.cs
+- attach-a-pdfa1a-compliant-report-as-a-pdf-attachment-within-the-main-pdf-document.cs
