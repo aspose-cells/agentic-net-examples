@@ -6856,6 +6856,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "throw-a-custom-exception-when-a-requested-freeze-row-index-exceeds-the-worksheets-maximum-row-count.cs",
+      "title": "Throw a custom exception when a requested freeze row index exceeds the worksheet\u2019s maximum row count."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "toggle-worksheet-view-between-normal-and-page-break-preview-based-on-a-userdefined-flag.cs",
       "title": "Toggle worksheet view between normal and page break preview based on a user\u2011defined flag."
     },
