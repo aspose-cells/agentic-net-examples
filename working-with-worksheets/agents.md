@@ -171,3 +171,4 @@ Output files are written to the working directory.
 - load-only-the-first-worksheet-of-a-large-workbook-by-excluding-other-sheets.cs
 - access-a-worksheet-by-its-name-and-store-the-reference-for-further-operations.cs
 - access-a-worksheet-by-its-zerobased-index-and-assign-it-to-a-variable.cs
+- determine-the-number-of-header-rows-to-freeze-and-store-the-count.cs
