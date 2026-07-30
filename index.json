@@ -6206,6 +6206,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-freeze-to-worksheets-that-contain-more-than-one-hundred-rows.cs",
+      "title": "Apply a freeze to worksheets that contain more than one hundred rows."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-row-freeze-to-header-rows-then-save-the-modified-workbook-to-a-new-xlsx-file.cs",
       "title": "Apply a row freeze to header rows, then save the modified workbook to a new XLSX file."
     },
