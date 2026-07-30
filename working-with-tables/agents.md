@@ -106,3 +106,4 @@ Output files are written to the working directory.
 - export-a-worksheet-containing-multiple-tables-to-a-single-pdf-file-preserving-each-tables-layout.cs
 - load-an-xlsm-workbook-extract-all-tables-and-save-each-table-as-an-individual-xlsx-file.cs
 - create-a-macroenabled-workbook-add-a-table-and-assign-a-vba-macro-to-run-when-the-table-changes.cs
+- validate-that-a-tables-column-data-types-match-expected-net-types-before-importing-into-a-database.cs
