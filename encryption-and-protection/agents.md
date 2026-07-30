@@ -202,3 +202,4 @@ Examples may generate:
 - add-a-new-worksheet-to-the-protected-workbook-and-attempt-to-unprotect-using-an-incorrect-password.cs
 - change-the-write-protection-author-to-the-current-windows-user-name-and-resave-the-workbook.cs
 - remove-write-protection-from-a-shared-workbook-and-save-without-any-password-protection.cs
+- protect-each-worksheet-individually-with-unique-passwords-derived-from-file-names.cs
