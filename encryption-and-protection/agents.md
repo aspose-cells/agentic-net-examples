@@ -284,3 +284,4 @@ Examples may generate:
 - validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-in-excel-without-providing-that-password.cs
 - detect-if-a-worksheets-protection-allows-editing-objects-and-log-the-result-for-compliance.cs
 - encrypt-a-workbook-then-use-a-thirdparty-library-to-attempt-decryption-and-verify-failure.cs
+- create-a-function-that-returns-true-if-a-workbook-is-both-encrypted-and-password-protected.cs
