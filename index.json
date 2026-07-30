@@ -7071,6 +7071,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-print-titles-to-repeat-row-1-on-each-printed-page-for-column-headings.cs",
+      "title": "Set print titles to repeat row 1 on each printed page for column headings."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-specific-column-widths-then-freeze-the-first-three-columns-to-preserve-custom-sizing.cs",
       "title": "Set specific column widths, then freeze the first three columns to preserve custom sizing."
     },
