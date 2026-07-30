@@ -196,3 +196,4 @@ Examples may generate:
 - apply-strong-encryption-using-microsoft-strong-cryptographic-provider-and-assign-a-256bit-password-before-saving.cs
 - save-the-workbook-to-a-file-in-xlsx-format-after-applying-protection-and-encryption.cs
 - load-an-existing-workbook-from-disk-and-check-if-it-is-encrypted.cs
+- verify-the-encryption-password-of-the-loaded-workbook-and-log-the-verification-result.cs
