@@ -5586,6 +5586,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "add-a-slicer-linked-to-a-table-column-to-provide-interactive-filtering-in-the-worksheet.cs",
+      "title": "Add a slicer linked to a table column to provide interactive filtering in the worksheet."
+    },
+    {
+      "category": "working-with-tables",
       "file": "apply-a-builtin-table-style-that-matches-the-workbooks-theme-for-consistent-visual-appearance.cs",
       "title": "Apply a built\u2011in table style that matches the workbook's theme for consistent visual appearance."
     },
