@@ -5601,6 +5601,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "hide-a-table-column-programmatically-and-later-unhide-it-based-on-user-interaction-criteria.cs",
+      "title": "Hide a table column programmatically and later unhide it based on user interaction criteria."
+    },
+    {
+      "category": "working-with-tables",
       "file": "load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs",
       "title": "Load a workbook, locate a table by name, and export its contents to an HTML fragment."
     },
