@@ -195,3 +195,4 @@ Examples may generate:
 - create-a-new-workbook-set-write-protection-author-and-protect-with-a-password.cs
 - apply-strong-encryption-using-microsoft-strong-cryptographic-provider-and-assign-a-256bit-password-before-saving.cs
 - save-the-workbook-to-a-file-in-xlsx-format-after-applying-protection-and-encryption.cs
+- load-an-existing-workbook-from-disk-and-check-if-it-is-encrypted.cs
