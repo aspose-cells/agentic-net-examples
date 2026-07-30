@@ -83,3 +83,4 @@ Output files are written to the working directory.
 - compare-sheetid-values-between-two-workbooks-to-detect-potential-duplication-after-copying.cs
 - validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs
 - load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs
+- open-a-spreadsheet-set-the-first-worksheet-tab-to-invisible-then-export-to-a-new-file.cs
