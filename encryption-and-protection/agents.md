@@ -237,3 +237,4 @@ Examples may generate:
 - validate-a-supplied-password-against-a-worksheets-protection-password-and-return-a-boolean-result.cs
 - load-a-shared-workbook-apply-password-protection-to-its-shared-mode-and-save-it.cs
 - check-whether-a-worksheet-is-protected-with-readonly-permissions-and-report-the-protection-type.cs
+- apply-advanced-worksheet-protection-allowing-formatting-but-disallowing-row-insertion.cs
