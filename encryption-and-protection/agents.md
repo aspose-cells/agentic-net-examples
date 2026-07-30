@@ -260,3 +260,4 @@ Examples may generate:
 - create-a-function-that-returns-the-encryption-algorithm-name-used-for-a-given-excel-file.cs
 - protect-a-worksheet-with-a-password-and-enable-the-option-to-allow-users-to-format-cells.cs
 - remove-password-protection-from-a-worksheet-then-reapply-it-with-a-casesensitive-password.cs
+- detect-whether-a-workbooks-structure-is-protected-and-output-the-protection-status-to-the-console.cs
