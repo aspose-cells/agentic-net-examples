@@ -133,3 +133,4 @@ Output files are written to the working directory.
 - count-the-number-of-array-formulas-present-in-a-worksheet-and-report-the-total.cs
 - load-a-previously-saved-watch-window-configuration-and-apply-it-to-the-active-workbook.cs
 - use-a-custom-function-to-perform-a-lookup-across-multiple-worksheets-and-return-matching-range.cs
+- implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs
