@@ -6306,6 +6306,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-conditional-formatting-to-highlight-cells-in-column-f-exceeding-the-value-one-thousand.cs",
+      "title": "Apply conditional formatting to highlight cells in column F exceeding the value one thousand."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-custom-margin-of-05-inches-on-all-sides-before-scaling-worksheet-to-fit-one-page.cs",
       "title": "Apply custom margin of 0.5 inches on all sides before scaling worksheet to fit one page."
     },
