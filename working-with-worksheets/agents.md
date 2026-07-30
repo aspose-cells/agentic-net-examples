@@ -134,3 +134,4 @@ Output files are written to the working directory.
 - load-a-workbook-set-page-orientation-to-landscape-fit-to-one-page-wide-and-save-as-xps.cs
 - iterate-through-each-worksheet-apply-95-percent-zoom-to-those-with-over-500-rows-and-export-pdf.cs
 - create-a-macrofree-workbook-hide-zero-values-set-custom-top-margin-and-save-as-csv.cs
+- protect-individual-cells-with-a-password-while-leaving-other-cells-editable-for-users.cs
