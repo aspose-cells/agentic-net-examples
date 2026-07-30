@@ -6556,6 +6556,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-cell-comment-on-a-header-cell-then-freeze-the-comments-row-to-keep-contextual-notes-visible.cs",
+      "title": "Insert a cell comment on a header cell, then freeze the comment\u2019s row to keep contextual notes visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-chart-title-with-custom-font-size-and-color-to-improve-chart-readability.cs",
       "title": "Insert a chart title with custom font size and color to improve chart readability."
     },
