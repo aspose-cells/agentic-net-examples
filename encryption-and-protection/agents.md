@@ -243,3 +243,4 @@ Examples may generate:
 - detect-the-file-format-of-an-encrypted-ooxml-file-and-ensure-compatibility-after-decryption.cs
 - assign-a-digital-signature-to-a-protected-worksheet-and-verify-its-authenticity.cs
 - validate-an-existing-digital-signature-on-an-encrypted-workbook-without-decrypting-the-file-first.cs
+- add-a-second-digital-signature-to-an-already-signed-excel-file-and-confirm-both-persist.cs
