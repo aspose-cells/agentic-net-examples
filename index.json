@@ -6521,6 +6521,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "detect-empty-worksheets-by-checking-that-cellsmaxdatarow-and-cellsmaxdatacolumn-both-equal-1.cs",
+      "title": "Detect empty worksheets by checking that Cells.MaxDataRow and Cells.MaxDataColumn both equal -1."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "determine-the-number-of-header-columns-to-freeze-and-store-the-count.cs",
       "title": "Determine the number of header columns to freeze and store the count."
     },
