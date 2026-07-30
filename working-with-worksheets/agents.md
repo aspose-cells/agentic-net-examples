@@ -150,3 +150,4 @@ Output files are written to the working directory.
 - create-a-chart-legend-positioned-at-the-bottom-of-the-chart-for-better-readability.cs
 - set-the-worksheets-print-title-rows-to-repeat-rows-1-through-2-on-each-printed-page.cs
 - apply-a-threeicon-set-conditional-format-to-column-m-to-indicate-low-medium-and-high-performance.cs
+- insert-a-hyperlink-that-triggers-a-macro-when-clicked-in-cell-s5-for-custom-actions.cs
