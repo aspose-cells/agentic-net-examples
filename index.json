@@ -6831,6 +6831,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "load-a-workbook-from-a-file-path-and-access-its-worksheets-collection.cs",
+      "title": "Load a workbook from a file path and access its worksheets collection."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-workbook-from-file-and-hide-zero-values-on-the-first-worksheet.cs",
       "title": "Load a workbook from file and hide zero values on the first worksheet."
     },
