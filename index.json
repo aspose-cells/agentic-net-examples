@@ -6651,6 +6651,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "insert-a-picture-of-a-logo-then-freeze-rows-above-it-to-keep-branding-visible.cs",
+      "title": "Insert a picture of a logo, then freeze rows above it to keep branding visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "insert-a-sparkline-chart-in-cell-p5-that-reflects-the-trend-of-data-in-range-b2b10.cs",
       "title": "Insert a sparkline chart in cell P5 that reflects the trend of data in range B2:B10."
     },
