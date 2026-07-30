@@ -4561,6 +4561,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "add-multiple-attachments-pdf-image-csv-to-a-single-pdf-document-using-pdfsaveoptions.cs",
+      "title": "Add multiple attachments (PDF, image, CSV) to a single PDF document using PdfSaveOptions."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "apply-a-custom-pdf-compression-level-to-reduce-file-size-while-maintaining-image-quality.cs",
       "title": "Apply a custom PDF compression level to reduce file size while maintaining image quality."
     },
