@@ -140,3 +140,4 @@ Output files are written to the working directory.
 - use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs
 - configure-calculationoptionsignoreerror-to-true-when-evaluating-formulas-that-may-cause-divisionbyzero.cs
 - enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs
+- test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs
