@@ -234,3 +234,4 @@ Output files are written to the working directory.
 - map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs
 - synchronize-changes-from-a-source-worksheet-to-a-target-worksheet-by-iterating-cells-and-copying-modified-values.cs
 - create-a-backup-copy-of-worksheet-data-by-enumerating-all-cells-and-writing-values-to-a-new-sheet.cs
+- detect-merged-cells-by-checking-merge-status-during-enumeration-and-process-only-the-topleft-cell.cs
