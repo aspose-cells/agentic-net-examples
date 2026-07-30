@@ -5616,6 +5616,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "move-a-table-to-a-different-position-within-the-same-worksheet-updating-all-structured-references-automatically.cs",
+      "title": "Move a table to a different position within the same worksheet, updating all structured references automatically."
+    },
+    {
+      "category": "working-with-tables",
       "file": "refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs",
       "title": "Refresh all pivot tables that reference a specific worksheet table after updating its underlying data."
     },
