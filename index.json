@@ -6291,6 +6291,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-new-workbook-populate-it-with-sample-data-and-freeze-the-first-header-row.cs",
+      "title": "Create a new workbook, populate it with sample data, and freeze the first header row."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-a-pivot-chart-based-on-an-existing-pivot-table-to-visualize-aggregated-sales-data.cs",
       "title": "Create a pivot chart based on an existing pivot table to visualize aggregated sales data."
     },
