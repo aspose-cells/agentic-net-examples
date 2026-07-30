@@ -5121,6 +5121,11 @@
     },
     {
       "category": "working-with-shapes",
+      "file": "calculate-the-pixel-offset-between-two-shapes-using-their-absolute-positions-and-store-the-result-in-a-cell.cs",
+      "title": "Calculate the pixel offset between two shapes using their absolute positions and store the result in a cell."
+    },
+    {
+      "category": "working-with-shapes",
       "file": "compare-geometry-before-and-after-xml-import-to-ensure-consistency.cs",
       "title": "Compare geometry before and after XML import to ensure consistency."
     },
