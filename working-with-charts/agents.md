@@ -525,3 +525,4 @@ Output files are written to the working directory.
 - load-an-xlsx-workbook-add-a-trendline-to-the-first-chart-series-retrieve-its-equation-and-log.cs
 - open-an-xls-file-retrieve-a-chart-trendline-equation-text-and-store-it-in-a-worksheet-cell.cs
 - open-an-xlsx-workbook-retrieve-polynomial-trendline-equation-from-a-scatter-chart-and-display-in-a-message-box.cs
+- load-a-workbook-add-trendlines-to-each-bar-chart-series-collect-equations-and-write-to-a-log-file.cs
