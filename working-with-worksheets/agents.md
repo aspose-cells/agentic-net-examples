@@ -251,3 +251,4 @@ Output files are written to the working directory.
 - apply-a-cell-style-to-the-header-row-then-freeze-that-row-to-preserve-styling-while-scrolling.cs
 - set-a-background-color-for-the-header-area-then-freeze-rows-to-keep-the-colored-background-visible.cs
 - apply-a-border-style-around-the-header-range-then-freeze-those-rows-to-maintain-border-visibility.cs
+- define-a-number-format-for-monetary-values-then-freeze-the-rows-containing-totals-for-constant-visibility.cs
