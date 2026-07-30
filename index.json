@@ -6915,6 +6915,11 @@
       "title": "Wrap workbook usage in a using statement to guarantee proper disposal after freezing."
     },
     {
+      "category": "working-with-worksheets",
+      "file": "write-a-unit-test-that-verifies-freezepanes-correctly-freezes-the-specified-number-of-rows.cs",
+      "title": "Write a unit test that verifies FreezePanes correctly freezes the specified number of rows."
+    },
+    {
       "category": "xml-maps",
       "file": "after-importing-xml-recalculate-all-formulas-to-ensure-dependent-calculations-reflect-the-new-data.cs",
       "title": "After importing XML, recalculate all formulas to ensure dependent calculations reflect the new data."
