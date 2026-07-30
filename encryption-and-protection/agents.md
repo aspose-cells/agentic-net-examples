@@ -276,3 +276,4 @@ Examples may generate:
 - generate-a-checksum-of-an-encrypted-workbook-before-and-after-decryption-to-ensure-data-consistency.cs
 - test-the-effect-of-encrypting-a-workbook-on-its-file-size-by-comparing-before-and-after-sizes.cs
 - apply-workbook-protection-disabling-printing-while-allowing-users-to-view-the-document-on-screen.cs
+- protect-a-worksheet-then-attempt-to-copy-its-contents-to-an-unprotected-sheet-and-verify-restrictions.cs
