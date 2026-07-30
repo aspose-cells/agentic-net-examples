@@ -162,3 +162,4 @@ Output files are written to the working directory.
 - apply-a-cell-style-that-includes-a-thick-left-border-and-a-light-blue-background-fill.cs
 - enable-the-worksheets-filter-arrows-on-the-header-row-to-allow-userdriven-sorting.cs
 - create-a-named-range-that-dynamically-expands-as-new-rows-are-added-to-column-o.cs
+- add-a-data-validation-rule-that-restricts-entry-in-cell-u2-to-a-list-of-predefined-options.cs
