@@ -5616,6 +5616,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "disable-autoexpand-for-a-table-to-keep-its-range-fixed-despite-additional-rows-being-entered.cs",
+      "title": "Disable auto\u2011expand for a table to keep its range fixed despite additional rows being entered."
+    },
+    {
+      "category": "working-with-tables",
       "file": "enable-the-tables-autoexpand-feature-so-that-adding-data-below-expands-the-table-range-automatically.cs",
       "title": "Enable the table's auto\u2011expand feature so that adding data below expands the table range automatically."
     },
