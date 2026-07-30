@@ -218,3 +218,4 @@ Output files are written to the working directory.
 - protect-the-worksheet-after-freezing-rows-to-prevent-accidental-changes-to-the-header-area.cs
 - unprotect-a-worksheet-before-unfreezing-panes-to-ensure-the-operation-succeeds.cs
 - encapsulate-freezepanes-logic-inside-a-reusable-method-that-accepts-row-and-column-parameters.cs
+- write-a-unit-test-that-verifies-freezepanes-correctly-freezes-the-specified-number-of-rows.cs
