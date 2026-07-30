@@ -240,3 +240,4 @@ Examples may generate:
 - apply-advanced-worksheet-protection-allowing-formatting-but-disallowing-row-insertion.cs
 - batch-process-a-folder-of-excel-files-encrypt-each-with-a-unique-password-derived-from-the-file-name.cs
 - load-an-encrypted-workbook-upgrade-its-encryption-algorithm-to-a-higher-security-level-and-resave.cs
+- detect-the-file-format-of-an-encrypted-ooxml-file-and-ensure-compatibility-after-decryption.cs
