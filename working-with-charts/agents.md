@@ -444,3 +444,4 @@ Output files are written to the working directory.
 - update-the-data-range-of-the-gantt-chart-after-inserting-additional-task-rows-in-the-worksheet.cs
 - create-a-waterfall-chart-and-designate-a-specific-data-point-as-the-total-segment.cs
 - apply-a-predefined-theme-to-the-waterfall-chart-to-match-corporate-branding-guidelines.cs
+- convert-the-workbook-containing-the-waterfall-chart-to-pdf-while-embedding-the-chart-image.cs
