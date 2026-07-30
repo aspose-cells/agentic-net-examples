@@ -5966,6 +5966,11 @@
     },
     {
       "category": "working-with-tables",
+      "file": "use-listobjectputcellvalue-with-row-and-column-offsets-to-populate-a-header-cell-in-the-table.cs",
+      "title": "Use ListObject.PutCellValue with row and column offsets to populate a header cell in the table."
+    },
+    {
+      "category": "working-with-tables",
       "file": "use-structured-references-in-formulas-that-refer-to-table-columns-ensuring-automatic-range-adjustments.cs",
       "title": "Use structured references in formulas that refer to table columns, ensuring automatic range adjustments."
     },
