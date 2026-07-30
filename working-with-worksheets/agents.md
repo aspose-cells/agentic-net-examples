@@ -221,3 +221,4 @@ Output files are written to the working directory.
 - write-a-unit-test-that-verifies-freezepanes-correctly-freezes-the-specified-number-of-rows.cs
 - write-an-integration-test-that-confirms-column-freezing-persists-after-saving-and-reloading.cs
 - benchmark-the-time-required-to-freeze-panes-on-a-worksheet-containing-fifty-thousand-rows.cs
+- profile-memory-usage-while-freezing-panes-across-a-hundred-worksheets-to-detect-leaks.cs
