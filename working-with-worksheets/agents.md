@@ -240,3 +240,4 @@ Output files are written to the working directory.
 - delete-rows-above-the-intended-freeze-point-then-adjust-freezepanes-parameters-to-reflect-the-new-layout.cs
 - delete-columns-to-the-left-of-the-desired-freeze-area-then-call-freezepanes-with-updated-column-index.cs
 - insert-new-rows-before-the-header-then-recalculate-the-freeze-row-index-and-apply-freezepanes-again.cs
+- insert-new-columns-before-the-header-then-recalculate-the-freeze-column-index-and-apply-freezepanes-again.cs
