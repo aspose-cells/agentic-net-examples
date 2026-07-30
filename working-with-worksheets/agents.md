@@ -138,3 +138,4 @@ Output files are written to the working directory.
 - insert-a-sparkline-chart-in-cell-p5-that-reflects-the-trend-of-data-in-range-b2b10.cs
 - set-the-worksheets-background-color-to-light-gray-to-improve-visual-contrast-for-printed-pages.cs
 - create-a-macro-that-automatically-updates-a-summary-table-whenever-source-data-changes.cs
+- add-a-hyperlink-that-links-to-an-external-pdf-document-stored-on-a-network-share.cs
