@@ -6141,6 +6141,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "divide-a-worksheet-into-four-quadrants-by-splitting-panes-both-horizontally-and-vertically.cs",
+      "title": "Divide a worksheet into four quadrants by splitting panes both horizontally and vertically."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-page-break-preview-mode-for-a-worksheet-to-visualize-printed-page-divisions.cs",
       "title": "Enable page break preview mode for a worksheet to visualize printed page divisions."
     },
