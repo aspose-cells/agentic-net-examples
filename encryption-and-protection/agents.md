@@ -288,3 +288,4 @@ Examples may generate:
 - apply-workbook-protection-disabling-saving-changes-while-allowing-users-to-view-the-file-contents.cs
 - unprotect-a-worksheet-using-a-password-retrieved-from-an-environment-variable-for-secure-handling.cs
 - test-protecting-a-worksheet-with-an-empty-password-string-and-observe-the-api-response.cs
+- encrypt-a-workbook-then-programmatically-change-its-password-without-decrypting-the-file-content.cs
