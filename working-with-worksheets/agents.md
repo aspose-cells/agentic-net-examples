@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - log-the-frozen-state-of-each-processed-worksheet-to-the-console-for-diagnostics.cs
 - serialize-the-frozen-state-information-of-worksheets-into-a-json-file-for-auditing.cs
 - apply-a-conditional-freeze-only-when-the-worksheet-name-starts-with-report.cs
+- apply-a-freeze-to-worksheets-that-contain-more-than-one-hundred-rows.cs
