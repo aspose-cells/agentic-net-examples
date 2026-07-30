@@ -263,3 +263,4 @@ Examples may generate:
 - detect-whether-a-workbooks-structure-is-protected-and-output-the-protection-status-to-the-console.cs
 - encrypt-multiple-workbooks-in-parallel-threads-each-using-a-distinct-password-derived-from-a-hash-function.cs
 - validate-that-a-decrypted-workbook-retains-all-original-cell-comments-and-data-validation-rules.cs
+- apply-workbook-protection-preventing-addition-of-new-worksheets-while-allowing-existing-sheets-to-be-renamed.cs
