@@ -300,3 +300,4 @@ Output files are written to the working directory.
 - make-the-worksheet-very-hidden-so-it-cannot-be-displayed-via-the-excel-ui.cs
 - set-the-page-orientation-of-the-worksheet-to-landscape-for-better-wide-data-presentation.cs
 - define-a-print-area-covering-cells-a1-through-m50-to-limit-printed-content.cs
+- set-print-titles-to-repeat-row-1-on-each-printed-page-for-column-headings.cs
