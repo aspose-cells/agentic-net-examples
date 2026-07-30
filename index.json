@@ -6176,6 +6176,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-custom-xml-parts-then-freeze-the-rows-that-reference-those-parts-for-easy-navigation.cs",
+      "title": "Add custom XML parts, then freeze the rows that reference those parts for easy navigation."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "adjust-the-zoom-factor-of-a-worksheet-to-150-percent-for-detailed-visual-inspection.cs",
       "title": "Adjust the zoom factor of a worksheet to 150 percent for detailed visual inspection."
     },
