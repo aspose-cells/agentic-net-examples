@@ -236,3 +236,4 @@ Output files are written to the working directory.
 - create-a-backup-copy-of-worksheet-data-by-enumerating-all-cells-and-writing-values-to-a-new-sheet.cs
 - detect-merged-cells-by-checking-merge-status-during-enumeration-and-process-only-the-topleft-cell.cs
 - detect-and-log-cells-containing-null-values-during-enumeration-to-assist-in-data-completeness-analysis.cs
+- benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs
