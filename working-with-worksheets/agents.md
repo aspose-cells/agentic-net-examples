@@ -228,3 +228,4 @@ Output files are written to the working directory.
 - implement-logic-to-skip-freezing-if-the-worksheet-already-has-the-desired-frozen-state.cs
 - use-worksheetcellsmaxdatarow-to-calculate-dynamic-freeze-rows-based-on-actual-data.cs
 - use-worksheetcellsmaxdatacolumn-to-calculate-dynamic-freeze-columns-based-on-actual-data.cs
+- apply-freezepanes-after-calling-worksheetautofitcolumns-to-lock-column-widths-in-place.cs
