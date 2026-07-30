@@ -238,3 +238,4 @@ Examples may generate:
 - load-a-shared-workbook-apply-password-protection-to-its-shared-mode-and-save-it.cs
 - check-whether-a-worksheet-is-protected-with-readonly-permissions-and-report-the-protection-type.cs
 - apply-advanced-worksheet-protection-allowing-formatting-but-disallowing-row-insertion.cs
+- batch-process-a-folder-of-excel-files-encrypt-each-with-a-unique-password-derived-from-the-file-name.cs
