@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs
 - test-that-automaticexcepttables-mode-does-not-recalculate-formulas-inside-structured-tables.cs
 - create-a-batch-process-that-loads-workbooks-applies-a-custom-function-recalculates-and-saves-results.cs
+- implement-a-routine-that-clears-all-cached-calculation-results-before-invoking-a-fresh-workbookcalculateformula-run.cs
