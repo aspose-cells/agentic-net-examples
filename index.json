@@ -7201,6 +7201,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-tabid-to-a-hash-of-the-worksheet-name-for-deterministic-identifier-generation-across-multiple-workbooks.cs",
+      "title": "Set TabId to a hash of the worksheet name for deterministic identifier generation across multiple workbooks."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-active-worksheet-to-the-third-sheet-using-its-zerobased-index-position.cs",
       "title": "Set the active worksheet to the third sheet using its zero\u2011based index position."
     },
