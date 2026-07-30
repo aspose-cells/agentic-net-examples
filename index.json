@@ -6511,6 +6511,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheets-print-area-to-a-named-range-called-reportarea-for-dynamic-printing.cs",
+      "title": "Set the worksheet's print area to a named range called ReportArea for dynamic printing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-worksheets-print-title-rows-to-repeat-rows-1-through-2-on-each-printed-page.cs",
       "title": "Set the worksheet's print title rows to repeat rows 1 through 2 on each printed page."
     },
