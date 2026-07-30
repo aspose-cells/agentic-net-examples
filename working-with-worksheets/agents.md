@@ -239,3 +239,4 @@ Output files are written to the working directory.
 - move-a-worksheet-to-a-new-position-then-freeze-its-first-column-to-keep-key-identifiers-accessible.cs
 - delete-rows-above-the-intended-freeze-point-then-adjust-freezepanes-parameters-to-reflect-the-new-layout.cs
 - delete-columns-to-the-left-of-the-desired-freeze-area-then-call-freezepanes-with-updated-column-index.cs
+- insert-new-rows-before-the-header-then-recalculate-the-freeze-row-index-and-apply-freezepanes-again.cs
