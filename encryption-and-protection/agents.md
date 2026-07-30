@@ -182,3 +182,4 @@ Examples may generate:
 - change-the-password-of-an-encrypted-excel-workbook-from-an-old-value-to-a-new-stronger-password.cs
 - remove-the-password-to-modify-from-a-workbook-while-retaining-the-opening-password.cs
 - change-an-encrypted-workbooks-password-using-a-secure-key-vault-and-save-the-updated-file.cs
+- decrypt-an-ods-file-encrypted-with-a-legacy-algorithm-and-upgrade-it-to-aes256-encryption.cs
