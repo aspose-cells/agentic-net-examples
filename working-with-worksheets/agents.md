@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - set-the-worksheets-print-area-to-a-named-range-called-reportarea-for-dynamic-printing.cs
 - add-a-conditional-formatting-rule-that-highlights-duplicate-values-in-column-n-with-a-light-orange-fill.cs
 - apply-a-cell-style-that-includes-a-thick-left-border-and-a-light-blue-background-fill.cs
+- enable-the-worksheets-filter-arrows-on-the-header-row-to-allow-userdriven-sorting.cs
