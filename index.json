@@ -6696,6 +6696,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "record-the-duration-of-each-freezepanes-call-using-a-stopwatch-and-log-the-elapsed-time.cs",
+      "title": "Record the duration of each FreezePanes call using a stopwatch and log the elapsed time."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs",
       "title": "Retrieve a worksheet by name, display its formulas instead of values, and save the changes."
     },
