@@ -310,3 +310,4 @@ Output files are written to the working directory.
 - load-a-workbook-from-a-file-path-and-access-its-worksheets-collection.cs
 - retrieve-each-worksheets-tabid-by-accessing-the-worksheettabid-property-of-the-loaded-workbook.cs
 - assign-a-new-integer-tabid-to-a-specific-worksheet-and-save-the-workbook.cs
+- iterate-through-all-worksheets-logging-each-name-and-corresponding-tabid-for-audit-purposes.cs
