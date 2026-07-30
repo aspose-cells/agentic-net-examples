@@ -218,3 +218,4 @@ Examples may generate:
 - decrypt-a-batch-of-encrypted-excel-files-by-providing-the-correct-password-for-each-file.cs
 - apply-write-protection-with-a-password-then-programmatically-remove-protection-using-the-same-password.cs
 - embed-a-custom-xml-part-describing-the-protection-policy-into-a-protected-workbook.cs
+- add-a-password-hint-comment-to-the-workbooks-custom-properties-after-protecting-its-structure.cs
