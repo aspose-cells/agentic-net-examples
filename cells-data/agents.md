@@ -232,3 +232,4 @@ Output files are written to the working directory.
 - remove-the-leading-apostrophe-from-a-cell-by-setting-stylequoteprefix-to-false-via-styleflag.cs
 - generate-an-audit-log-detailing-each-modification-to-quoteprefix-properties-across-multiple-workbook-versions.cs
 - map-column-headers-to-their-indices-by-iterating-the-header-row-and-creating-a-lookup-dictionary.cs
+- synchronize-changes-from-a-source-worksheet-to-a-target-worksheet-by-iterating-cells-and-copying-modified-values.cs
