@@ -524,3 +524,4 @@ Output files are written to the working directory.
 - open-an-xls-file-create-a-pivotchart-with-multiple-value-fields-and-assign-individual-colors-then-save.cs
 - load-an-xlsx-workbook-add-a-trendline-to-the-first-chart-series-retrieve-its-equation-and-log.cs
 - open-an-xls-file-retrieve-a-chart-trendline-equation-text-and-store-it-in-a-worksheet-cell.cs
+- open-an-xlsx-workbook-retrieve-polynomial-trendline-equation-from-a-scatter-chart-and-display-in-a-message-box.cs
