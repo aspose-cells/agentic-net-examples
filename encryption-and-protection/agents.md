@@ -282,3 +282,4 @@ Examples may generate:
 - unprotect-a-worksheet-modify-cell-values-then-reprotect-using-the-original-password-and-options.cs
 - create-a-commandline-tool-that-accepts-a-file-path-encrypts-the-workbook-and-outputs-the-new-location.cs
 - validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-in-excel-without-providing-that-password.cs
+- detect-if-a-worksheets-protection-allows-editing-objects-and-log-the-result-for-compliance.cs
