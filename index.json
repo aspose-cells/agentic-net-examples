@@ -4841,6 +4841,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "load-an-xlsx-workbook-set-pdfsaveoptionsoptimizationtype-to-standardsize-and-save-as-pdf.cs",
+      "title": "Load an XLSX workbook, set PdfSaveOptions.OptimizationType to StandardSize, and save as PDF."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs",
       "title": "Loop through each worksheet, set SheetSet individually, and save each as separate PDF files."
     },
