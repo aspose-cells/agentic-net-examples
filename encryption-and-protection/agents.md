@@ -248,3 +248,4 @@ Examples may generate:
 - create-a-custom-password-validator-enforcing-minimum-length-and-character-diversity-before-protecting-worksheets.cs
 - export-protection-settings-of-each-worksheet-to-a-json-file-for-external-auditing.cs
 - import-protection-configurations-from-a-json-file-and-apply-them-to-corresponding-worksheets.cs
+- measure-performance-impact-of-encrypting-large-workbooks-by-timing-the-save-operation.cs
