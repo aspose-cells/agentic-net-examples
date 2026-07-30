@@ -158,3 +158,4 @@ Output files are written to the working directory.
 - enable-the-worksheets-automatic-calculation-mode-and-force-a-full-recalculation-after-data-changes.cs
 - insert-a-comment-with-rich-text-formatting-including-bold-and-italic-segments-into-cell-t8.cs
 - set-the-worksheets-print-area-to-a-named-range-called-reportarea-for-dynamic-printing.cs
+- add-a-conditional-formatting-rule-that-highlights-duplicate-values-in-column-n-with-a-light-orange-fill.cs
