@@ -5583,6 +5583,11 @@
       "category": "working-with-shapes",
       "file": "write-an-integration-test-confirming-linked-shape-refresh-updates-picture-after-cell-change.cs",
       "title": "Write an integration test confirming linked shape refresh updates picture after cell change."
+    },
+    {
+      "category": "working-with-tables",
+      "file": "load-a-workbook-locate-a-table-by-name-and-export-its-contents-to-an-html-fragment.cs",
+      "title": "Load a workbook, locate a table by name, and export its contents to an HTML fragment."
     }
   ]
 }
