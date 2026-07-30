@@ -6671,6 +6671,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "generate-an-xml-summary-file-listing-each-worksheets-name-tabid-maxdatarow-maxdatacolumn-and-shape-count.cs",
+      "title": "Generate an XML summary file listing each worksheet's name, TabId, MaxDataRow, MaxDataColumn, and shape count."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "hide-a-range-of-rows-from-20-to-30-then-save-the-workbook-with-those-rows-concealed.cs",
       "title": "Hide a range of rows from 20 to 30, then save the workbook with those rows concealed."
     },
