@@ -4651,6 +4651,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "convert-an-xls-workbook-to-pdf-using-minimumsize-optimization-while-preserving-worksheet-colors.cs",
+      "title": "Convert an XLS workbook to PDF using MinimumSize optimization while preserving worksheet colors."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs",
       "title": "Convert Excel formulas to their calculated values in the PDF to display static results."
     },
