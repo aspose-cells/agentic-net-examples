@@ -267,3 +267,4 @@ Examples may generate:
 - write-a-script-that-logs-the-time-taken-to-encrypt-each-file-in-a-large-dataset.cs
 - test-opening-an-encrypted-workbook-with-an-incorrect-password-and-ensure-no-data-is-exposed.cs
 - apply-worksheet-protection-disabling-column-insertion-but-allowing-column-resizing-for-end-users.cs
+- unprotect-a-workbook-structure-modify-worksheet-order-then-reprotect-with-the-original-password.cs
