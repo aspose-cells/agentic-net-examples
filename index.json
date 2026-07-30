@@ -6331,6 +6331,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "change-the-chart-type-to-a-line-chart-then-freeze-the-rows-containing-the-charts-data-series.cs",
+      "title": "Change the chart type to a line chart, then freeze the rows containing the chart\u2019s data series."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "change-the-worksheet-tab-color-then-freeze-the-first-column-to-keep-the-colored-tab-identifiable.cs",
       "title": "Change the worksheet tab color, then freeze the first column to keep the colored tab identifiable."
     },
