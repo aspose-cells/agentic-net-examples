@@ -6451,6 +6451,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "define-a-custom-margin-setting-then-freeze-the-top-rows-to-ensure-they-remain-within-printable-area.cs",
+      "title": "Define a custom margin setting, then freeze the top rows to ensure they remain within printable area."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "define-a-number-format-for-monetary-values-then-freeze-the-rows-containing-totals-for-constant-visibility.cs",
       "title": "Define a number format for monetary values, then freeze the rows containing totals for constant visibility."
     },
