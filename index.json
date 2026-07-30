@@ -6181,6 +6181,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "apply-a-row-freeze-to-header-rows-then-save-the-modified-workbook-to-a-new-xlsx-file.cs",
+      "title": "Apply a row freeze to header rows, then save the modified workbook to a new XLSX file."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "apply-a-threeicon-set-conditional-format-to-column-m-to-indicate-low-medium-and-high-performance.cs",
       "title": "Apply a three\u2011icon set conditional format to column M to indicate low, medium, and high performance."
     },
