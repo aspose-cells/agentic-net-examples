@@ -160,3 +160,4 @@ Output files are written to the working directory.
 - implement-a-logger-that-records-the-order-of-formula-evaluations-during-workbookcalculateformula-for-debugging.cs
 - compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs
 - test-that-automaticexcepttables-mode-does-not-recalculate-formulas-inside-structured-tables.cs
+- create-a-batch-process-that-loads-workbooks-applies-a-custom-function-recalculates-and-saves-results.cs
