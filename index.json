@@ -7181,6 +7181,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "unmerge-the-previously-merged-range-d4f4-and-restore-original-cell-boundaries.cs",
+      "title": "Unmerge the previously merged range D4:F4 and restore original cell boundaries."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "unprotect-a-worksheet-before-unfreezing-panes-to-ensure-the-operation-succeeds.cs",
       "title": "Unprotect a worksheet before unfreezing panes to ensure the operation succeeds."
     },
