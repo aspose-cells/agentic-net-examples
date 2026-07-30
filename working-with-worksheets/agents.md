@@ -118,3 +118,4 @@ Output files are written to the working directory.
 - set-pagesetupzoom-to-80-percent-for-a-worksheet-and-export-the-result-as-pdf.cs
 - apply-a-120-percent-zoom-level-to-every-worksheet-and-save-each-as-separate-xls-file.cs
 - enable-the-emptycellreferences-error-check-for-a-specific-worksheet-by-creating-an-errorcheckoption-instance.cs
+- turn-off-numbersastext-and-inconsistentformula-error-checks-on-all-worksheets-using-errorchecktype-enumeration.cs
