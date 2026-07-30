@@ -224,3 +224,4 @@ Examples may generate:
 - load-an-encrypted-workbook-extract-its-metadata-and-save-the-metadata-to-a-json-file.cs
 - convert-an-encrypted-workbook-to-html-representation-after-verifying-the-password.cs
 - export-a-workbook-to-csv-format-after-confirming-it-is-not-encrypted.cs
+- create-a-macroenabled-workbook-apply-strong-encryption-and-ensure-macros-remain-functional-after-saving.cs
