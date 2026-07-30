@@ -82,3 +82,4 @@ Output files are written to the working directory.
 - store-worksheet-sheetid-values-in-a-dictionary-keyed-by-worksheet-name-for-quick-lookup.cs
 - compare-sheetid-values-between-two-workbooks-to-detect-potential-duplication-after-copying.cs
 - validate-that-each-worksheet-retains-a-unique-sheetid-after-performing-copy-operations.cs
+- load-an-existing-workbook-hide-the-second-worksheet-and-save-the-file.cs
