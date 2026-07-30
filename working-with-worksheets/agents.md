@@ -328,3 +328,4 @@ Output files are written to the working directory.
 - remove-all-shapes-from-worksheets-identified-as-empty-based-on-cell-data-checks-to-simplify-the-workbook.cs
 - compare-tabid-values-before-and-after-workbook-serialization-to-ensure-they-remain-consistent.cs
 - set-tabid-to-a-hash-of-the-worksheet-name-for-deterministic-identifier-generation-across-multiple-workbooks.cs
+- count-how-many-initialized-cells-contain-only-formatting-applied-and-log-the-result-for-each-worksheet.cs
