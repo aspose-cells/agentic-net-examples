@@ -6811,6 +6811,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "iterate-through-all-worksheets-logging-each-name-and-corresponding-tabid-for-audit-purposes.cs",
+      "title": "Iterate through all worksheets, logging each name and corresponding TabId for audit purposes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "iterate-through-all-worksheets-set-showzerovalues-to-false-and-save-the-workbook-as-pdf.cs",
       "title": "Iterate through all worksheets, set ShowZeroValues to false, and save the workbook as PDF."
     },
