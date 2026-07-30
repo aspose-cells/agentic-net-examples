@@ -187,3 +187,4 @@ Examples may generate:
 - batch-process-ods-files-encrypt-each-with-a-unique-password-derived-from-its-filename-hash.cs
 - batch-decrypt-a-collection-of-encrypted-excel-files-using-a-shared-password-and-save-them-unprotected.cs
 - batch-decrypt-excel-files-apply-data-sanitization-and-reencrypt-them-with-updated-passwords-for-compliance.cs
+- batch-decrypt-excel-files-apply-data-masking-to-sensitive-columns-and-reencrypt-with-new-passwords.cs
