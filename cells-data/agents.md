@@ -237,3 +237,4 @@ Output files are written to the working directory.
 - detect-merged-cells-by-checking-merge-status-during-enumeration-and-process-only-the-topleft-cell.cs
 - detect-and-log-cells-containing-null-values-during-enumeration-to-assist-in-data-completeness-analysis.cs
 - benchmark-enumeration-speed-when-using-displayrange-versus-full-sheet-traversal-to-evaluate-performance-gains.cs
+- test-impact-of-maxdatarow-and-maxdatacolumn-limits-on-iteration-time-by-measuring-duration-with-and-without-constraints.cs
