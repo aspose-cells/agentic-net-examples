@@ -296,3 +296,4 @@ Examples may generate:
 - protect-a-worksheet-then-export-its-data-to-csv-ensuring-protection-does-not-affect-exported-values.cs
 - unprotect-a-workbook-structure-add-a-new-hidden-worksheet-and-reprotect-with-a-different-password.cs
 - implement-automatic-reencryption-of-a-workbook-after-any-modification-to-maintain-security.cs
+- validate-that-a-workbook-encrypted-with-a-strong-password-still-opens-quickly-in-modern-excel-versions.cs
