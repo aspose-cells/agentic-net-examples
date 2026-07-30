@@ -187,3 +187,4 @@ Output files are written to the working directory.
 - process-a-batch-of-ten-workbooks-applying-the-same-row-freeze-configuration-to-each.cs
 - process-a-collection-of-workbooks-in-parallel-freezing-the-first-two-columns-of-each-worksheet-concurrently.cs
 - use-a-configuration-file-to-specify-the-number-of-rows-to-freeze-then-apply-at-runtime.cs
+- read-environment-variables-to-determine-dynamic-column-freeze-count-and-apply-it.cs
