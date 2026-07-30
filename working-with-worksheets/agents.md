@@ -272,3 +272,4 @@ Output files are written to the working directory.
 - apply-a-predefined-chart-style-then-freeze-the-rows-that-influence-the-charts-appearance-for-consistency.cs
 - insert-a-picture-of-a-logo-then-freeze-rows-above-it-to-keep-branding-visible.cs
 - add-a-watermark-to-the-worksheet-then-freeze-the-rows-containing-the-watermark-to-prevent-scrolling-away.cs
+- set-a-custom-page-orientation-then-freeze-the-header-rows-to-align-with-the-new-page-layout.cs
