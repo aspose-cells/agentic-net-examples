@@ -6181,6 +6181,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-watermark-to-the-worksheet-then-freeze-the-rows-containing-the-watermark-to-prevent-scrolling-away.cs",
+      "title": "Add a watermark to the worksheet, then freeze the rows containing the watermark to prevent scrolling away."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-custom-xml-parts-then-freeze-the-rows-that-reference-those-parts-for-easy-navigation.cs",
       "title": "Add custom XML parts, then freeze the rows that reference those parts for easy navigation."
     },
