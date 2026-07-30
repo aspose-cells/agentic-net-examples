@@ -307,3 +307,4 @@ Output files are written to the working directory.
 - enable-gridlines-visibility-when-printing-the-worksheet-to-aid-data-alignment-verification.cs
 - disable-the-display-of-row-and-column-headings-in-the-worksheet-view-for-a-cleaner-layout.cs
 - create-a-new-scenario-named-baseline-capturing-current-values-of-cells-b2-through-b10.cs
+- load-a-workbook-from-a-file-path-and-access-its-worksheets-collection.cs
