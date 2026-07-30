@@ -6836,6 +6836,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-a-background-color-for-the-header-area-then-freeze-rows-to-keep-the-colored-background-visible.cs",
+      "title": "Set a background color for the header area, then freeze rows to keep the colored background visible."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-a-custom-view-with-a-specific-zoom-level-then-freeze-rows-to-maintain-visual-context.cs",
       "title": "Set a custom view with a specific zoom level, then freeze rows to maintain visual context."
     },
