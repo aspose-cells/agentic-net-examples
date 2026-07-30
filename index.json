@@ -6171,6 +6171,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "add-a-legend-to-the-chart-then-freeze-the-rows-containing-the-legend-to-keep-it-in-view.cs",
+      "title": "Add a legend to the chart, then freeze the rows containing the legend to keep it in view."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "add-a-slicer-linked-to-a-pivot-table-then-freeze-the-slicers-row-area-to-maintain-filter-accessibility.cs",
       "title": "Add a slicer linked to a pivot table, then freeze the slicer\u2019s row area to maintain filter accessibility."
     },
