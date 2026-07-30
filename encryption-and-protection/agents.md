@@ -220,3 +220,4 @@ Examples may generate:
 - embed-a-custom-xml-part-describing-the-protection-policy-into-a-protected-workbook.cs
 - add-a-password-hint-comment-to-the-workbooks-custom-properties-after-protecting-its-structure.cs
 - generate-a-qr-code-containing-the-protection-password-for-secure-sharing-of-the-workbook.cs
+- upload-an-encrypted-workbook-to-azure-blob-storage-while-preserving-encryption.cs
