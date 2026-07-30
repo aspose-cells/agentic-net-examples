@@ -6141,6 +6141,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "compare-sheetid-values-between-two-workbooks-to-detect-potential-duplication-after-copying.cs",
+      "title": "Compare SheetId values between two workbooks to detect potential duplication after copying."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
