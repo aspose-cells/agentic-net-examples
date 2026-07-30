@@ -6336,6 +6336,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "configure-header-and-footer-text-then-freeze-the-rows-that-contain-header-information-for-consistency.cs",
+      "title": "Configure header and footer text, then freeze the rows that contain header information for consistency."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-the-workbook-to-hide-both-horizontal-and-vertical-scroll-bars-and-export-the-result.cs",
       "title": "Configure the workbook to hide both horizontal and vertical scroll bars, and export the result."
     },
