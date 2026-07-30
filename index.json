@@ -6656,6 +6656,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "split-the-worksheet-view-vertically-at-column-five-using-the-splitpanes-method.cs",
+      "title": "Split the worksheet view vertically at column five using the SplitPanes method."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "store-worksheet-sheetid-values-in-a-dictionary-keyed-by-worksheet-name-for-quick-lookup.cs",
       "title": "Store worksheet SheetId values in a dictionary keyed by worksheet name for quick lookup."
     },
