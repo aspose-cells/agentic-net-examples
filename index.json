@@ -6301,6 +6301,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "change-the-worksheet-tab-color-then-freeze-the-first-column-to-keep-the-colored-tab-identifiable.cs",
+      "title": "Change the worksheet tab color, then freeze the first column to keep the colored tab identifiable."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "compare-sheetid-values-between-two-workbooks-to-detect-potential-duplication-after-copying.cs",
       "title": "Compare SheetId values between two workbooks to detect potential duplication after copying."
     },
