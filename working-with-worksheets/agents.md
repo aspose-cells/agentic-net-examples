@@ -303,3 +303,4 @@ Output files are written to the working directory.
 - set-print-titles-to-repeat-row-1-on-each-printed-page-for-column-headings.cs
 - insert-a-manual-page-break-after-row-30-to-control-pagination-in-the-printed-document.cs
 - remove-all-existing-page-breaks-from-the-worksheet-to-allow-automatic-pagination.cs
+- set-the-worksheet-zoom-level-to-150-percent-for-detailed-onscreen-inspection.cs
