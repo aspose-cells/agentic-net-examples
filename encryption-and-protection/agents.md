@@ -201,3 +201,4 @@ Examples may generate:
 - protect-the-workbook-structure-with-a-custom-password-and-save-the-protected-file.cs
 - add-a-new-worksheet-to-the-protected-workbook-and-attempt-to-unprotect-using-an-incorrect-password.cs
 - change-the-write-protection-author-to-the-current-windows-user-name-and-resave-the-workbook.cs
+- remove-write-protection-from-a-shared-workbook-and-save-without-any-password-protection.cs
