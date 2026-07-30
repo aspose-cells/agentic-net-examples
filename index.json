@@ -6696,6 +6696,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-specific-column-widths-then-freeze-the-first-three-columns-to-preserve-custom-sizing.cs",
+      "title": "Set specific column widths, then freeze the first three columns to preserve custom sizing."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-tab-bar-width-hide-the-fourth-worksheet-and-save-the-workbook-with-these-settings.cs",
       "title": "Set the tab bar width, hide the fourth worksheet, and save the workbook with these settings."
     },
