@@ -115,3 +115,4 @@ Output files are written to the working directory.
 - export-a-specific-table-to-an-xml-file-using-the-excel-xml-schema-for-data-interchange.cs
 - import-data-from-an-xml-file-into-a-new-table-mapping-xml-elements-to-table-columns-automatically.cs
 - apply-a-filter-that-excludes-rows-where-the-date-column-falls-outside-the-current-quarter.cs
+- create-a-table-then-generate-a-named-range-that-references-only-the-data-body-range-excluding-headers.cs
