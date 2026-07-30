@@ -200,3 +200,4 @@ Output files are written to the working directory.
 - apply-a-freeze-to-worksheets-that-contain-more-than-one-hundred-rows.cs
 - apply-a-freeze-to-worksheets-that-have-more-than-ten-columns.cs
 - use-a-trycatch-block-around-freezepanes-calls-to-handle-invalid-indices-gracefully.cs
+- wrap-workbook-usage-in-a-using-statement-to-guarantee-proper-disposal-after-freezing.cs
