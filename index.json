@@ -6471,6 +6471,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-the-worksheets-print-title-rows-to-repeat-rows-1-through-2-on-each-printed-page.cs",
+      "title": "Set the worksheet's print title rows to repeat rows 1 through 2 on each printed page."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-workbook-settings-to-hide-the-horizontal-scroll-bar-keep-vertical-bar-visible-and-save.cs",
       "title": "Set workbook settings to hide the horizontal scroll bar, keep vertical bar visible, and save."
     },
