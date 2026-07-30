@@ -6376,6 +6376,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "create-a-pivot-table-then-freeze-the-pivot-tables-row-labels-for-constant-reference.cs",
+      "title": "Create a pivot table, then freeze the pivot table\u2019s row labels for constant reference."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "create-split-panes-with-left-column-three-and-top-row-four-for-focused-data-analysis.cs",
       "title": "Create split panes with left column three and top row four for focused data analysis."
     },
