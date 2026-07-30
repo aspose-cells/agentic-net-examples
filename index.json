@@ -4911,6 +4911,11 @@
     },
     {
       "category": "working-with-pdf",
+      "file": "render-solid-gridlines-in-the-pdf-output-by-setting-pdfsaveoptionsrendersolidgridlines-to-true.cs",
+      "title": "Render solid gridlines in the PDF output by setting PdfSaveOptions.RenderSolidGridlines to true."
+    },
+    {
+      "category": "working-with-pdf",
       "file": "render-solid-gridlines-true-verification-ensure-gridlines-appear-as-continuous-lines-in-pdf.cs",
       "title": "Render solid gridlines true verification: ensure gridlines appear as continuous lines in PDF."
     },
