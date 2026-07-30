@@ -146,3 +146,4 @@ Output files are written to the working directory.
 - set-the-worksheets-default-row-height-to-automatically-adjust-based-on-cell-content.cs
 - insert-a-picture-from-a-url-into-the-worksheet-and-position-it-at-cell-r2.cs
 - enable-the-display-of-formulas-in-the-worksheet-view-for-debugging-complex-calculations.cs
+- add-a-data-validation-rule-that-limits-numeric-input-in-column-k-to-values-between-0-and-500.cs
