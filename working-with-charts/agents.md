@@ -292,3 +292,4 @@ Output files are written to the working directory.
 - apply-bold-font-style-and-centered-alignment-to-data-labels.cs
 - programmatically-toggle-data-label-visibility-based-on-a-configuration-flag.cs
 - disable-data-label-background-fill-for-a-doughnut-chart-to-improve-clarity.cs
+- set-data-label-border-thickness-to-two-points-for-a-stacked-bar-chart.cs
