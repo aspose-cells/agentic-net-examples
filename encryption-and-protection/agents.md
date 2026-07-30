@@ -273,3 +273,4 @@ Examples may generate:
 - create-a-batch-job-that-decrypts-all-files-in-a-folder-then-reencrypts-them-with-a-new-policy.cs
 - implement-error-handling-distinguishing-between-incorrect-password-and-corrupted-encrypted-file-scenarios.cs
 - apply-worksheet-protection-permitting-sorting-data-but-blocking-filtering-to-maintain-data-integrity.cs
+- generate-a-checksum-of-an-encrypted-workbook-before-and-after-decryption-to-ensure-data-consistency.cs
