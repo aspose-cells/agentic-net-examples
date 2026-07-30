@@ -6421,6 +6421,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "compare-tabid-values-before-and-after-workbook-serialization-to-ensure-they-remain-consistent.cs",
+      "title": "Compare TabId values before and after workbook serialization to ensure they remain consistent."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-chart-axes-then-freeze-the-rows-that-contain-axis-labels-to-maintain-context-while-scrolling.cs",
       "title": "Configure chart axes, then freeze the rows that contain axis labels to maintain context while scrolling."
     },
