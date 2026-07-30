@@ -264,3 +264,4 @@ Examples may generate:
 - encrypt-multiple-workbooks-in-parallel-threads-each-using-a-distinct-password-derived-from-a-hash-function.cs
 - validate-that-a-decrypted-workbook-retains-all-original-cell-comments-and-data-validation-rules.cs
 - apply-workbook-protection-preventing-addition-of-new-worksheets-while-allowing-existing-sheets-to-be-renamed.cs
+- write-a-script-that-logs-the-time-taken-to-encrypt-each-file-in-a-large-dataset.cs
