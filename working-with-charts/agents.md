@@ -433,3 +433,4 @@ Output files are written to the working directory.
 - set-the-background-color-of-a-charts-plot-area-to-light-yellow-for-improved-readability.cs
 - apply-a-gradient-fill-to-the-chart-plot-area-transitioning-from-white-at-the-top-to-gray-bottom.cs
 - remove-any-existing-trendlines-from-a-chart-before-adding-new-analytical-lines.cs
+- configure-chart-axes-to-use-automatic-scaling-ensuring-all-data-points-are-fully-visible.cs
