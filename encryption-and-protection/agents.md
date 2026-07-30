@@ -279,3 +279,4 @@ Examples may generate:
 - protect-a-worksheet-then-attempt-to-copy-its-contents-to-an-unprotected-sheet-and-verify-restrictions.cs
 - encrypt-a-workbook-with-a-password-containing-unicode-characters-and-confirm-successful-decryption.cs
 - apply-worksheet-protection-allowing-row-insertion-but-preventing-row-deletion.cs
+- unprotect-a-worksheet-modify-cell-values-then-reprotect-using-the-original-password-and-options.cs
