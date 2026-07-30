@@ -281,3 +281,4 @@ Examples may generate:
 - apply-worksheet-protection-allowing-row-insertion-but-preventing-row-deletion.cs
 - unprotect-a-worksheet-modify-cell-values-then-reprotect-using-the-original-password-and-options.cs
 - create-a-commandline-tool-that-accepts-a-file-path-encrypts-the-workbook-and-outputs-the-new-location.cs
+- validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-in-excel-without-providing-that-password.cs
