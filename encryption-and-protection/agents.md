@@ -213,3 +213,4 @@ Examples may generate:
 - save-a-protected-workbook-to-a-memory-stream-and-verify-that-the-stream-length-reflects-encryption-overhead.cs
 - compute-the-sha256-hash-of-an-encrypted-workbook-to-verify-integrity-after-encryption.cs
 - measure-the-time-taken-to-open-an-encrypted-workbook-and-log-performance-metrics.cs
+- use-a-background-thread-to-decrypt-an-encrypted-workbook-and-confirm-thread-safety.cs
