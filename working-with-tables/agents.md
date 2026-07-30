@@ -86,3 +86,4 @@ Output files are written to the working directory.
 - refresh-all-pivot-tables-that-reference-a-specific-worksheet-table-after-updating-its-underlying-data.cs
 - use-structured-references-in-formulas-that-refer-to-table-columns-ensuring-automatic-range-adjustments.cs
 - hide-a-table-column-programmatically-and-later-unhide-it-based-on-user-interaction-criteria.cs
+- create-a-duplicate-of-an-existing-table-on-another-worksheet-while-preserving-its-style-and-formulas.cs
