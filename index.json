@@ -7156,6 +7156,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "use-the-worksheetresetpanes-method-to-clear-all-splits-and-freezes-before-applying-a-new-configuration.cs",
+      "title": "Use the Worksheet.ResetPanes method to clear all splits and freezes before applying a new configuration."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "use-worksheetcellsmaxdatacolumn-to-calculate-dynamic-freeze-columns-based-on-actual-data.cs",
       "title": "Use Worksheet.Cells.MaxDataColumn to calculate dynamic freeze columns based on actual data."
     },
