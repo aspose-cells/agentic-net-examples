@@ -7166,6 +7166,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "return-true-if-a-worksheet-contains-both-data-rows-and-at-least-one-shape-for-mixedcontent-detection.cs",
+      "title": "Return true if a worksheet contains both data rows and at least one shape for mixed\u2011content detection."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "save-a-workbook-with-frozen-columns-to-an-xls-file-for-legacy-compatibility.cs",
       "title": "Save a workbook with frozen columns to an XLS file for legacy compatibility."
     },
