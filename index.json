@@ -6996,6 +6996,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "log-the-time-taken-to-enumerate-all-initialized-cells-across-all-worksheets-in-a-large-workbook.cs",
+      "title": "Log the time taken to enumerate all initialized cells across all worksheets in a large workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "make-the-worksheet-very-hidden-so-it-cannot-be-displayed-via-the-excel-ui.cs",
       "title": "Make the worksheet very hidden so it cannot be displayed via the Excel UI."
     },
