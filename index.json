@@ -6596,6 +6596,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "duplicate-a-worksheet-assign-a-new-tabid-and-clear-all-cell-values-while-preserving-formatting.cs",
+      "title": "Duplicate a worksheet, assign a new TabId, and clear all cell values while preserving formatting."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "enable-data-labels-on-the-chart-then-freeze-the-rows-with-those-labels-to-keep-them-displayed.cs",
       "title": "Enable data labels on the chart, then freeze the rows with those labels to keep them displayed."
     },
