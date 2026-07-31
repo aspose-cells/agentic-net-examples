@@ -7311,6 +7311,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-tabid-to-zero-for-all-worksheets-catch-the-expected-exception-and-log-the-result.cs",
+      "title": "Set TabId to zero for all worksheets, catch the expected exception, and log the result."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-the-active-worksheet-to-the-third-sheet-using-its-zerobased-index-position.cs",
       "title": "Set the active worksheet to the third sheet using its zero\u2011based index position."
     },
