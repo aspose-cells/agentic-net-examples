@@ -1876,6 +1876,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-lock-cells-that-contain-formulas-to-prevent-accidental-overwriting-by-end-users.cs",
+      "title": "Programmatically lock cells that contain formulas to prevent accidental overwriting by end users."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs",
       "title": "Programmatically rename all named ranges containing 'Old' to replace with 'New' and recalculate dependent formulas."
     },
