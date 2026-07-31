@@ -2096,6 +2096,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-instances-of-the-power-function-with-the-exponentiation-operator-for-simpler-syntax.cs",
+      "title": "Replace all instances of the POWER function with the exponentiation operator (^) for simpler syntax."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-all-occurrences-of-the-deprecated-choose-function-with-nested-if-statements-for-compatibility.cs",
       "title": "Replace all occurrences of the deprecated CHOOSE function with nested IF statements for compatibility."
     },
