@@ -1746,6 +1746,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "convert-all-formula-cells-to-their-calculated-values-before-exporting-the-workbook-to-csv-format.cs",
+      "title": "Convert all formula cells to their calculated values before exporting the workbook to CSV format."
+    },
+    {
+      "category": "manage-formulas",
       "file": "copy-a-named-range-from-one-worksheet-to-another-while-preserving-its-absolute-cell-references.cs",
       "title": "Copy a named range from one worksheet to another while preserving its absolute cell references."
     },
