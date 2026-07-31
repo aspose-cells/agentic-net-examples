@@ -1671,6 +1671,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs",
+      "title": "Remove a column from a ListObject and ensure its associated formula no longer appears in subsequent rows."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs",
       "title": "Retrieve the spilled range address of a dynamic array formula located in cell C3 programmatically."
     },
