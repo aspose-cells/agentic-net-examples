@@ -58,3 +58,4 @@ Output files are written to the working directory.
 - retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs
 - programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs
 - create-a-dynamic-array-formula-that-spills-into-empty-rows-then-insert-data-to-shift-the-spill-range.cs
+- create-a-dynamic-array-formula-that-references-a-table-column-then-delete-the-table-and-observe-formula-error.cs
