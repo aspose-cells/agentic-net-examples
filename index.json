@@ -1746,6 +1746,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs",
+      "title": "Evaluate formulas within a defined range A1:D20 without recalculating the entire workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs",
       "title": "Identify overlapping cells between Range A5:B15 and Range B10:C20 using Intersect method."
     },
