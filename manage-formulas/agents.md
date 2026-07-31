@@ -163,3 +163,4 @@ Output files are written to the working directory.
 - validate-that-formulas-do-not-exceed-a-specified-length-using-a-data-validation-rule.cs
 - replace-all-instances-of-the-deprecated-sumif-function-with-sumifs-across-the-workbook.cs
 - replace-all-vlookup-formulas-with-indexmatch-combinations-to-enhance-lookup-performance.cs
+- replace-all-vlookup-formulas-that-perform-exact-matches-with-xlookup-for-improved-performance.cs
