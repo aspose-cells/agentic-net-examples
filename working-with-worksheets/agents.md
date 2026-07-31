@@ -348,3 +348,4 @@ Output files are written to the working directory.
 - rename-worksheets-based-on-the-sum-of-their-maxdatarow-and-maxdatacolumn-values-for-quick-reference.cs
 - update-tabids-to-sequential-numbers-verify-uniqueness-across-all-worksheets-then-save-the-workbook.cs
 - return-the-percentage-of-initialized-cells-that-contain-formulas-for-a-given-worksheet-to-assess-complexity.cs
+- clone-a-workbook-assign-new-tabids-remove-empty-worksheets-and-save-the-optimized-copy.cs
