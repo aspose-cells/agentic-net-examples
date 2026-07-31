@@ -2031,6 +2031,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "generate-a-dependency-graph-of-formulas-across-worksheets-and-export-it-as-a-dot-file.cs",
+      "title": "Generate a dependency graph of formulas across worksheets and export it as a DOT file."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-and-list-all-formulas-that-use-the-offset-function-noting-their-potential-volatility.cs",
       "title": "Identify and list all formulas that use the OFFSET function, noting their potential volatility."
     },
