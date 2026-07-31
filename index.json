@@ -1956,6 +1956,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-list-of-named-ranges-along-with-their-associated-formulas-to-an-excel-summary-worksheet.cs",
+      "title": "Export a list of named ranges along with their associated formulas to an Excel summary worksheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "extract-formula-text-from-array-formulas-and-save-them-to-a-json-array.cs",
       "title": "Extract formula text from array formulas and save them to a JSON array."
     },
