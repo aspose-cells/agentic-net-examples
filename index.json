@@ -1641,6 +1641,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-dynamic-array-formula-that-spills-into-empty-rows-then-insert-data-to-shift-the-spill-range.cs",
+      "title": "Create a dynamic array formula that spills into empty rows, then insert data to shift the spill range."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs",
       "title": "Programmatically clear the spilled range of a dynamic array formula without deleting the original formula cell."
     },
