@@ -1636,6 +1636,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-a-calculated-column-to-a-listobject-using-the-xlookup-function-and-verify-automatic-propagation.cs",
+      "title": "Add a calculated column to a ListObject using the XLOOKUP function and verify automatic propagation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "change-source-data-for-a-filter-dynamic-array-formula-then-recalculate-workbook-to-update-results.cs",
       "title": "Change source data for a FILTER dynamic array formula, then recalculate workbook to update results."
     },
