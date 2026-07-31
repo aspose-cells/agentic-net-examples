@@ -1961,6 +1961,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-workbooks-formula-audit-trail-including-timestamps-of-each-calculation-to-an-xml-report.cs",
+      "title": "Export a workbook's formula audit trail, including timestamps of each calculation, to an XML report."
+    },
+    {
+      "category": "manage-formulas",
       "file": "extract-formula-text-from-array-formulas-and-save-them-to-a-json-array.cs",
       "title": "Extract formula text from array formulas and save them to a JSON array."
     },
