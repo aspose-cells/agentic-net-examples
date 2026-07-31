@@ -1691,6 +1691,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-an-existing-named-range-with-a-larger-area-using-the-namerefersto-property-and-recalculate-formulas.cs",
+      "title": "Replace an existing named range with a larger area using the Name.RefersTo property and recalculate formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs",
       "title": "Retrieve the spilled range address of a dynamic array formula located in cell C3 programmatically."
     },
