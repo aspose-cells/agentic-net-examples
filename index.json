@@ -1731,6 +1731,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "remove-the-named-range-summarydata-from-the-workbook-and-verify-it-no-longer-appears-in-the-collection.cs",
+      "title": "Remove the named range SummaryData from the workbook and verify it no longer appears in the collection."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-an-existing-named-range-with-a-larger-area-using-the-namerefersto-property-and-recalculate-formulas.cs",
       "title": "Replace an existing named range with a larger area using the Name.RefersTo property and recalculate formulas."
     },
