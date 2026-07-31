@@ -115,3 +115,6 @@ Output files are written to the working directory.
 - implement-a-ui-dialog-that-lets-users-select-an-xml-schema-file-to-create-a-new-map.cs
 - create-a-scheduled-task-that-refreshes-all-xml-maps-in-a-set-of-workbooks-every-night-at-midnight.cs
 - export-the-workbook-to-an-ods-file-while-ensuring-that-xml-map-definitions-are-retained-in-the-output.cs
+- use-the-worksheetxmlmapquery-method-with-a-wildcard-path-to-retrieve-all-cells-under-a-parent-node.cs
+- use-the-worksheetcellsclear-method-on-a-mapped-range-to-reset-values-while-preserving-the-map-linkage.cs
+- compare-two-xml-maps-within-the-same-workbook-to-identify-overlapping-cell-assignments-and-resolve-conflicts.cs
