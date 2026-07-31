@@ -1671,6 +1671,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs",
+      "title": "Define a named range called DataSet covering A1:C10, then rename it to ReportData using Name.Text."
+    },
+    {
+      "category": "manage-formulas",
       "file": "insert-a-new-row-into-salestable-and-confirm-the-column-formula-automatically-calculates-for-the-new-entry.cs",
       "title": "Insert a new row into SalesTable and confirm the column formula automatically calculates for the new entry."
     },
