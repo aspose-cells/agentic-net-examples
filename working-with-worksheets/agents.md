@@ -345,3 +345,4 @@ Output files are written to the working directory.
 - return-a-dictionary-mapping-worksheet-names-to-a-boolean-indicating-whether-each-sheet-is-empty.cs
 - print-the-count-of-worksheets-containing-shapes-for-a-given-workbook-to-assist-reporting.cs
 - automatically-remove-all-formattingonly-initialized-cells-from-a-worksheet-to-reduce-file-size.cs
+- rename-worksheets-based-on-the-sum-of-their-maxdatarow-and-maxdatacolumn-values-for-quick-reference.cs
