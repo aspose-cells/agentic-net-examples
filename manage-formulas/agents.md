@@ -112,3 +112,4 @@ Output files are written to the working directory.
 - configure-calculation-options-to-ignore-errors-in-formulas-referencing-empty-cells-during-evaluation.cs
 - configure-calculation-options-to-treat-division-by-zero-as-a-blank-cell-instead-of-an-error.cs
 - configure-workbook-to-treat-empty-strings-as-zero-when-evaluating-numeric-formulas.cs
+- configure-formula-parsing-to-use-us-english-function-names-regardless-of-system-locale-settings.cs
