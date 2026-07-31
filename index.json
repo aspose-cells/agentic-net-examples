@@ -1756,6 +1756,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-a-workbook-replace-all-occurrences-of-a-specific-named-range-with-a-new-range-and-recalc.cs",
+      "title": "Load a workbook, replace all occurrences of a specific named range with a new range, and recalc."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs",
       "title": "Programmatically clear the spilled range of a dynamic array formula without deleting the original formula cell."
     },
