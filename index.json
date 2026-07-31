@@ -7156,6 +7156,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "rename-worksheets-based-on-the-sum-of-their-maxdatarow-and-maxdatacolumn-values-for-quick-reference.cs",
+      "title": "Rename worksheets based on the sum of their MaxDataRow and MaxDataColumn values for quick reference."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "reorder-worksheets-then-freeze-the-top-row-of-each-moved-sheet-to-preserve-headers.cs",
       "title": "Reorder worksheets, then freeze the top row of each moved sheet to preserve headers."
     },
