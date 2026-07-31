@@ -7246,6 +7246,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "set-each-worksheets-tabid-to-its-index-plus-one-and-save-the-workbook-to-apply-ordering.cs",
+      "title": "Set each worksheet's TabId to its index plus one and save the workbook to apply ordering."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "set-pagesetupzoom-to-80-percent-for-a-worksheet-and-export-the-result-as-pdf.cs",
       "title": "Set PageSetup.Zoom to 80 percent for a worksheet and export the result as PDF."
     },
