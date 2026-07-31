@@ -1721,6 +1721,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-spans-multiple-worksheets-and-verify-that-formulas-can-reference-it-across-sheets.cs",
+      "title": "Create a named range that spans multiple worksheets and verify that formulas can reference it across sheets."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-style-object-set-solid-fill-to-light-blue-bold-font-and-apply-to-dataset-range.cs",
       "title": "Create a Style object, set solid fill to light blue, bold font, and apply to DataSet range."
     },
