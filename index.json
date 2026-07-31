@@ -7046,6 +7046,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "process-all-excel-files-in-a-directory-update-tabids-and-generate-a-summary-csv-of-changes.cs",
+      "title": "Process all Excel files in a directory, update TabIds, and generate a summary CSV of changes."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "profile-memory-usage-while-freezing-panes-across-a-hundred-worksheets-to-detect-leaks.cs",
       "title": "Profile memory usage while freezing panes across a hundred worksheets to detect leaks."
     },
