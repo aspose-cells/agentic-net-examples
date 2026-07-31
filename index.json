@@ -6696,6 +6696,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "export-tabid-data-of-each-worksheet-to-a-json-configuration-file-for-external-integration.cs",
+      "title": "Export TabId data of each worksheet to a JSON configuration file for external integration."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "extract-tabid-information-from-an-openxml-package-without-loading-the-full-workbook-into-memory.cs",
       "title": "Extract TabId information from an OpenXml package without loading the full workbook into memory."
     },
