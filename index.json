@@ -6911,6 +6911,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "list-worksheets-with-shape-count-greater-than-ten-indicating-complex-graphical-content-that-may-need-review.cs",
+      "title": "List worksheets with shape count greater than ten, indicating complex graphical content that may need review."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "load-a-passwordprotected-excel-file-using-loadoptions-with-the-correct-password.cs",
       "title": "Load a password\u2011protected Excel file using LoadOptions with the correct password."
     },
