@@ -1886,6 +1886,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "detect-formulas-that-reference-cells-on-worksheets-with-very-large-data-sets-and-suggest-optimization-strategies.cs",
+      "title": "Detect formulas that reference cells on worksheets with very large data sets and suggest optimization strategies."
+    },
+    {
+      "category": "manage-formulas",
       "file": "detect-intersecting-area-between-two-named-ranges-then-highlight-the-intersected-cells-with-yellow-fill.cs",
       "title": "Detect intersecting area between two named ranges, then highlight the intersected cells with yellow fill."
     },
