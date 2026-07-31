@@ -6476,6 +6476,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "copy-all-shapes-from-one-worksheet-to-another-while-preserving-their-positions-and-properties.cs",
+      "title": "Copy all shapes from one worksheet to another while preserving their positions and properties."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "count-how-many-initialized-cells-contain-only-formatting-applied-and-log-the-result-for-each-worksheet.cs",
       "title": "Count how many initialized cells contain only formatting applied and log the result for each worksheet."
     },
