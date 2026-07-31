@@ -6661,6 +6661,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "extract-tabid-information-from-an-openxml-package-without-loading-the-full-workbook-into-memory.cs",
+      "title": "Extract TabId information from an OpenXml package without loading the full workbook into memory."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "flag-worksheets-where-maxdatarow-is-1-but-shapecollectioncount-exceeds-zero-indicating-shapeonly-content.cs",
       "title": "Flag worksheets where MaxDataRow is -1 but ShapeCollection.Count exceeds zero, indicating shape\u2011only content."
     },
