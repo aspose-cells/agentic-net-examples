@@ -56,3 +56,4 @@ Examples may generate:
 Output files are written to the working directory.
 - change-source-data-for-a-filter-dynamic-array-formula-then-recalculate-workbook-to-update-results.cs
 - retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs
+- programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs
