@@ -197,3 +197,4 @@ Output files are written to the working directory.
 - export-a-detailed-audit-of-all-named-ranges-including-their-scope-address-and-any-associated-formulas.cs
 - export-a-summary-worksheet-that-aggregates-the-count-of-formulas-per-worksheet-categorized-by-function-type.cs
 - export-the-workbooks-formula-evaluation-order-to-a-text-file-for-debugging-complex-dependency-chains.cs
+- generate-a-dependency-graph-of-formulas-across-worksheets-and-export-it-as-a-dot-file.cs
