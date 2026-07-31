@@ -68,3 +68,4 @@ Output files are written to the working directory.
 - add-a-calculated-column-to-a-listobject-using-the-xlookup-function-and-verify-automatic-propagation.cs
 - define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs
 - replace-an-existing-named-range-with-a-larger-area-using-the-namerefersto-property-and-recalculate-formulas.cs
+- create-a-named-range-that-references-a-dynamic-array-spill-and-use-it-in-subsequent-formulas.cs
