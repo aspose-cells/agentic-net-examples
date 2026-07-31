@@ -2091,6 +2091,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-instances-of-the-deprecated-sumif-function-with-sumifs-across-the-workbook.cs",
+      "title": "Replace all instances of the deprecated SUMIF function with SUMIFS across the workbook."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-an-existing-named-range-with-a-larger-area-using-the-namerefersto-property-and-recalculate-formulas.cs",
       "title": "Replace an existing named range with a larger area using the Name.RefersTo property and recalculate formulas."
     },
