@@ -2026,6 +2026,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "retrieve-external-links-from-a-workbook-and-list-their-source-file-paths-for-audit-purposes.cs",
+      "title": "Retrieve external links from a workbook and list their source file paths for audit purposes."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-the-spilled-range-address-of-a-dynamic-array-formula-located-in-cell-c3-programmatically.cs",
       "title": "Retrieve the spilled range address of a dynamic array formula located in cell C3 programmatically."
     },
