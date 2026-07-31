@@ -342,3 +342,4 @@ Output files are written to the working directory.
 - detect-worksheets-with-only-column-headers-by-checking-maxdatarow-equals-1-and-maxdatacolumn-greater-than-zero.cs
 - flag-worksheets-where-maxdatarow-is-greater-than-zero-but-all-cells-lack-values-indicating-formattingonly-content.cs
 - set-each-worksheets-tabid-to-its-index-plus-one-and-save-the-workbook-to-apply-ordering.cs
+- return-a-dictionary-mapping-worksheet-names-to-a-boolean-indicating-whether-each-sheet-is-empty.cs
