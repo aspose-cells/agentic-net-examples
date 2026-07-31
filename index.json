@@ -1676,6 +1676,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-calculation-options-to-ignore-errors-in-formulas-referencing-empty-cells-during-evaluation.cs",
+      "title": "Configure calculation options to ignore errors in formulas referencing empty cells during evaluation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs",
       "title": "Convert a ListObject back to a regular range, preserving existing formulas within the cells."
     },
