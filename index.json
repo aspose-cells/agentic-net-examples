@@ -1671,6 +1671,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-named-range-that-references-a-dynamic-array-spill-and-use-it-in-subsequent-formulas.cs",
+      "title": "Create a named range that references a dynamic array spill and use it in subsequent formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs",
       "title": "Define a named range called DataSet covering A1:C10, then rename it to ReportData using Name.Text."
     },
