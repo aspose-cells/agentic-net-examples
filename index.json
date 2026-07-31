@@ -1741,6 +1741,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "iterate-through-all-worksheets-in-a-workbook-applying-a-dynamic-array-formula-to-column-e-on-each-sheet.cs",
+      "title": "Iterate through all worksheets in a workbook, applying a dynamic array formula to column E on each sheet."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs",
       "title": "Programmatically clear the spilled range of a dynamic array formula without deleting the original formula cell."
     },
