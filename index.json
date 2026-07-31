@@ -6416,6 +6416,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "check-if-a-worksheet-has-any-merged-cells-by-inspecting-the-cells-collection-for-merge-ranges.cs",
+      "title": "Check if a worksheet has any merged cells by inspecting the Cells collection for merge ranges."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "clone-a-workbook-assign-new-tabids-remove-empty-worksheets-and-save-the-optimized-copy.cs",
       "title": "Clone a workbook, assign new TabIds, remove empty worksheets, and save the optimized copy."
     },
