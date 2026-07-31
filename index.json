@@ -1681,6 +1681,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-style-object-set-solid-fill-to-light-blue-bold-font-and-apply-to-dataset-range.cs",
+      "title": "Create a Style object, set solid fill to light blue, bold font, and apply to DataSet range."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-two-separate-range-objects-perform-union-operation-and-iterate-through-the-resulting-collection.cs",
       "title": "Create two separate Range objects, perform Union operation, and iterate through the resulting collection."
     },
