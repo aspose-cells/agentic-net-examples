@@ -7516,6 +7516,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "update-tabids-based-on-worksheet-creation-date-extracted-from-workbook-metadata-for-chronological-ordering.cs",
+      "title": "Update TabIds based on worksheet creation date extracted from workbook metadata for chronological ordering."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "update-tabids-to-sequential-numbers-verify-uniqueness-across-all-worksheets-then-save-the-workbook.cs",
       "title": "Update TabIds to sequential numbers, verify uniqueness across all worksheets, then save the workbook."
     },
