@@ -333,3 +333,4 @@ Output files are written to the working directory.
 - duplicate-a-worksheet-assign-a-new-tabid-and-clear-all-cell-values-while-preserving-formatting.cs
 - automatically-assign-incremental-tabids-to-newly-added-worksheets-based-on-the-highest-existing-identifier.cs
 - extract-tabid-information-from-an-openxml-package-without-loading-the-full-workbook-into-memory.cs
+- prevent-saving-a-workbook-if-any-worksheet-has-a-duplicate-tabid-after-modifications-are-applied.cs
