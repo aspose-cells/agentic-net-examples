@@ -148,3 +148,4 @@ Output files are written to the working directory.
 - identify-formulas-that-reference-external-workbooks-located-on-network-drives-and-generate-a-migration-checklist.cs
 - detect-formulas-that-reference-cells-on-hidden-worksheets-for-security-auditing.cs
 - detect-formulas-that-reference-cells-on-worksheets-with-very-large-data-sets-and-suggest-optimization-strategies.cs
+- detect-formulas-that-reference-cells-outside-the-used-range-indicating-potential-data-errors.cs
