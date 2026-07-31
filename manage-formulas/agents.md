@@ -72,3 +72,4 @@ Output files are written to the working directory.
 - create-a-composite-named-range-by-unioning-three-separate-ranges-and-assign-a-custom-style-to-the-result.cs
 - create-two-separate-range-objects-perform-union-operation-and-iterate-through-the-resulting-collection.cs
 - identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs
+- detect-intersecting-area-between-two-named-ranges-then-highlight-the-intersected-cells-with-yellow-fill.cs
