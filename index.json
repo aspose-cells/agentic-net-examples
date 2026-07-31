@@ -1736,6 +1736,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs",
+      "title": "Programmatically rename all named ranges containing 'Old' to replace with 'New' and recalculate dependent formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs",
       "title": "Remove a column from a ListObject and ensure its associated formula no longer appears in subsequent rows."
     },
