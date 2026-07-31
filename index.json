@@ -1766,6 +1766,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-disable-calculation-perform-bulk-rename-of-named-ranges-using-a-prefix-then-enable-calculation-and-recalc.cs",
+      "title": "Programmatically disable calculation, perform bulk rename of named ranges using a prefix, then enable calculation and recalc."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs",
       "title": "Programmatically rename all named ranges containing 'Old' to replace with 'New' and recalculate dependent formulas."
     },
