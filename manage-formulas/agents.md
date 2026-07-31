@@ -66,3 +66,4 @@ Output files are written to the working directory.
 - remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs
 - convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs
 - add-a-calculated-column-to-a-listobject-using-the-xlookup-function-and-verify-automatic-propagation.cs
+- define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs
