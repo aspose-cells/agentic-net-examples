@@ -1871,6 +1871,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "protect-a-worksheet-while-allowing-users-to-edit-cells-that-contain-formulas-only.cs",
+      "title": "Protect a worksheet while allowing users to edit cells that contain formulas only."
+    },
+    {
+      "category": "manage-formulas",
       "file": "remove-a-column-from-a-listobject-and-ensure-its-associated-formula-no-longer-appears-in-subsequent-rows.cs",
       "title": "Remove a column from a ListObject and ensure its associated formula no longer appears in subsequent rows."
     },
