@@ -1781,6 +1781,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-a-workbook-disable-automatic-calculation-perform-bulk-data-import-then-enable-calculation-and-recalc.cs",
+      "title": "Load a workbook, disable automatic calculation, perform bulk data import, then enable calculation and recalc."
+    },
+    {
+      "category": "manage-formulas",
       "file": "load-a-workbook-replace-all-occurrences-of-a-specific-named-range-with-a-new-range-and-recalc.cs",
       "title": "Load a workbook, replace all occurrences of a specific named range with a new range, and recalc."
     },
