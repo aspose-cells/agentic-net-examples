@@ -7046,6 +7046,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "print-the-count-of-worksheets-containing-shapes-for-a-given-workbook-to-assist-reporting.cs",
+      "title": "Print the count of worksheets containing shapes for a given workbook to assist reporting."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "process-a-batch-of-ten-workbooks-applying-the-same-row-freeze-configuration-to-each.cs",
       "title": "Process a batch of ten workbooks, applying the same row freeze configuration to each."
     },
