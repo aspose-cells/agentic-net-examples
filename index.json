@@ -1881,6 +1881,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "detect-formulas-that-reference-cells-on-hidden-worksheets-for-security-auditing.cs",
+      "title": "Detect formulas that reference cells on hidden worksheets for security auditing."
+    },
+    {
+      "category": "manage-formulas",
       "file": "detect-intersecting-area-between-two-named-ranges-then-highlight-the-intersected-cells-with-yellow-fill.cs",
       "title": "Detect intersecting area between two named ranges, then highlight the intersected cells with yellow fill."
     },
