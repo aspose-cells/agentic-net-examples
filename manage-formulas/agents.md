@@ -139,3 +139,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-aggregates-data-from-multiple-sheets-using-the-sum-function-for-dashboard-use.cs
 - create-a-named-range-that-dynamically-adjusts-based-on-the-number-of-rows-in-a-table-using-offset.cs
 - create-a-named-range-that-aggregates-monthly-sales-data-using-sumifs-for-dynamic-reporting.cs
+- delete-all-named-ranges-that-start-with-the-prefix-temp_-across-every-worksheet-in-the-workbook.cs
