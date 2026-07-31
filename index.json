@@ -2201,6 +2201,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-recalculate-formulas-after-bulk-inserting-rows-to-ensure-dependent-calculations-remain-accurate.cs",
+      "title": "Programmatically recalculate formulas after bulk inserting rows to ensure dependent calculations remain accurate."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-rename-all-named-ranges-containing-old-to-replace-with-new-and-recalculate-dependent-formulas.cs",
       "title": "Programmatically rename all named ranges containing 'Old' to replace with 'New' and recalculate dependent formulas."
     },
