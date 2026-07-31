@@ -343,3 +343,4 @@ Output files are written to the working directory.
 - flag-worksheets-where-maxdatarow-is-greater-than-zero-but-all-cells-lack-values-indicating-formattingonly-content.cs
 - set-each-worksheets-tabid-to-its-index-plus-one-and-save-the-workbook-to-apply-ordering.cs
 - return-a-dictionary-mapping-worksheet-names-to-a-boolean-indicating-whether-each-sheet-is-empty.cs
+- print-the-count-of-worksheets-containing-shapes-for-a-given-workbook-to-assist-reporting.cs
