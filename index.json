@@ -1786,6 +1786,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "merge-cells-across-columns-a-to-d-in-a-range-then-set-the-merged-cells-formula-to-calculate-total.cs",
+      "title": "Merge cells across columns A to D in a range, then set the merged cell\u2019s formula to calculate total."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs",
       "title": "Programmatically clear the spilled range of a dynamic array formula without deleting the original formula cell."
     },
