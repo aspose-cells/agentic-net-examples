@@ -1641,6 +1641,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-dynamic-array-formula-that-references-a-table-column-then-delete-the-table-and-observe-formula-error.cs",
+      "title": "Create a dynamic array formula that references a table column, then delete the table and observe formula error."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-dynamic-array-formula-that-spills-into-empty-rows-then-insert-data-to-shift-the-spill-range.cs",
       "title": "Create a dynamic array formula that spills into empty rows, then insert data to shift the spill range."
     },
