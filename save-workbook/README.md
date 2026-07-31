@@ -4,7 +4,7 @@ description: C# examples for saving workbooks to files and streams, selecting fo
 product: Aspose.Cells for .NET
 category: save-workbook
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-07-30
 ---
 
 # Save Excel Workbooks in C# with Aspose.Cells for .NET

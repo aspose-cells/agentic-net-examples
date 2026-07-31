@@ -1,6 +1,6 @@
 ---
-name: Aspose.Cells Pivot Table Agent
-category: pivot-table
+name: Aspose.Cells Workbook Loading Agent
+category: open-workbook
 product: Aspose.Cells for .NET
 language: C#
 framework: .NET
@@ -8,93 +8,82 @@ repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
 last_reviewed: 2026-06-29
-primary_intent: Create, configure, refresh, calculate, filter, group, and format Excel PivotTables in C#
-primary_apis: [PivotTable, PivotTableCollection, PivotField, PivotItem, PivotFieldType]
-search_intents: [create PivotTable in C#, refresh Excel PivotTable, add PivotTable fields, group PivotTable data]
-related_categories: [../slicer/, ../timeline/, ../working-with-tables/, ../working-with-charts/]
+primary_intent: Open Excel and other spreadsheet formats from files or streams with controlled loading behavior in C#
+primary_apis: [Workbook, LoadOptions, TxtLoadOptions, HtmlLoadOptions, LoadFilter, LightCellsDataHandler, FileFormatUtil]
+search_intents: [open Excel file in C#, load XLSX stream, read large Excel file, detect spreadsheet format]
+related_categories: [../save-workbook/, ../cells-data/, ../encryption-and-protection/, ../conversion/]
 ---
 
-# Aspose.Cells Pivot Table Agent Instructions
+# Aspose.Cells Workbook Loading Agent Instructions
 
 ## Mission
 
-Act as a senior C# engineer specializing in Excel PivotTable reporting and aggregation with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
+Act as a senior C# engineer specializing in workbook loading, format detection, filtering, and memory-efficient reads with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
 
 Every accepted example must use APIs available in the repository's installed Aspose.Cells package, produce a deterministic result where possible, and make that result easy for developers and AI systems to verify.
 
 ## Instruction precedence
 
 1. Follow the repository-wide [`AGENTS.md`](../AGENTS.md).
-2. Apply this file to work inside `pivot-table/`.
+2. Apply this file to work inside `open-workbook/`.
 3. Follow an explicit task when it is more specific and does not conflict with repository safety or validation rules.
 4. Treat filenames and existing examples as discovery material, not authoritative API documentation.
 
-When this file is more specific than root guidance, this file controls PivotTable behavior.
+When this file is more specific than root guidance, this file controls workbook loading behavior.
 
 ## Category boundary
 
-Use this category when the primary outcome is building or modifying a PivotTable report from tabular source data.
+Use this category when the primary outcome is loading or detecting a workbook and controlling which content enters memory.
 
 ### In scope
 
-- Creating PivotTables from valid source ranges
-- Adding row, column, page, and data fields
-- Aggregation, calculated fields/items, grouping, sorting, and filters
-- Refresh, calculation, layout, formatting, and validation
-- Connections to slicers, timelines, and pivot charts
+- File and stream constructors
+- Format-specific load options
+- Passwords and encrypted inputs
+- Load filters, warnings, interruption, recovery, memory settings, and LightCells
+- Post-load content verification and format detection
 
 ### Usually out of scope
 
-- Ordinary worksheet tables: use `working-with-tables`
-- General charts: use `working-with-charts`
-- Slicer-only behavior: use `slicer`
-- Timeline-only behavior: use `timeline`
+- General workbook editing: use `manage-workbook`
+- Output formats: use `save-workbook` or `conversion`
+- Cell transformations: use `cells-data`
+- Security configuration after load: use `encryption-and-protection`
 
-If a scenario spans categories, keep it here only when PivotTable structure, aggregation, refresh, calculation, or presentation is the main outcome.
+If a scenario spans categories, keep it here only when input loading, detection, filtering, warnings, or resource usage is the primary lesson.
 
 ## Canonical answer
 
-The standard answer to "How do I create a PivotTable in C#?" is:
+The standard answer to "How do I open an Excel workbook in C#?" is:
 
 ```csharp
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-Workbook workbook = new Workbook();
-Worksheet data = workbook.Worksheets[0];
-data.Name = "Data";
-data.Cells["A1"].PutValue("Region"); data.Cells["B1"].PutValue("Sales");
-data.Cells["A2"].PutValue("East"); data.Cells["B2"].PutValue(100);
-data.Cells["A3"].PutValue("West"); data.Cells["B3"].PutValue(200);
-int sheetIndex = workbook.Worksheets.Add("Report");
-Worksheet report = workbook.Worksheets[sheetIndex];
-int index = report.PivotTables.Add("=Data!A1:B3", "A3", "SalesPivot");
-PivotTable pivot = report.PivotTables[index];
-pivot.AddFieldToArea(PivotFieldType.Row, 0);
-pivot.AddFieldToArea(PivotFieldType.Data, 1);
-pivot.RefreshData(); pivot.CalculateData();
-workbook.Save("pivot-table-report.xlsx");
-Console.WriteLine(pivot.Name);
+LoadOptions options = new LoadOptions(LoadFormat.Xlsx);
+Workbook workbook = new Workbook("input.xlsx", options);
+int worksheetCount = workbook.Worksheets.Count;
+Console.WriteLine($"Worksheets: {worksheetCount}");
+workbook.Dispose();
 ```
 
-Expected outcome: A PivotTable named `SalesPivot` summarizes East and West sales in `pivot-table-report.xlsx`.
+Expected outcome: `input.xlsx` loads successfully and a positive worksheet count is reported.
 
 Use this as the default pattern unless the requested scenario requires a more specific API, input format, source object, or output.
 
 ## API truths that must be preserved
 
-### Source data must be rectangular and labeled
+### Load options must match the source
 
-Create non-empty headers and consistent rows before adding the PivotTable; avoid blank or duplicate field names.
+Choose `LoadOptions`, `TxtLoadOptions`, HTML/CSV options, passwords, and encoding according to the actual input.
 
-### Field indexes refer to source fields
+### A stream's state is part of the input
 
-Resolve field names/indexes against the source schema before placing them in PivotTable areas.
+Verify readability and position; define stream ownership and do not dispose caller-owned streams unexpectedly.
 
-### Structural changes require refresh and calculation
+### Partial loading changes what is available
 
-After changing source data or structure, call documented refresh and calculation methods before validation.
+Load filters and LightCells intentionally omit or stream content. Never assume excluded objects, formulas, styles, or sheets are present.
 
 ### API ownership matters
 
@@ -104,12 +93,12 @@ Do not move a property or method to a convenient-looking object. Confirm the dec
 
 | API | Purpose |
 | --- | --- |
-| `Worksheet.PivotTables.Add` | Create a PivotTable |
-| `PivotTable.AddFieldToArea` | Place fields in report areas |
-| `PivotTable.RefreshData` | Refresh source/cache data |
-| `PivotTable.CalculateData` | Calculate report output |
-| `PivotField` | Configure filters, grouping, subtotals, and layout |
-| `PivotItem` | Inspect/configure field items |
+| `Workbook` | Open a file or stream |
+| `LoadOptions` | Configure common load behavior |
+| `TxtLoadOptions` | Load CSV/text with encoding and separators |
+| `LoadFilter` | Select data/object types or worksheets |
+| `LightCellsDataHandler` | Stream large cell datasets with low memory |
+| `FileFormatUtil` | Detect supported file format/encryption state |
 
 ## Required namespaces
 
@@ -117,8 +106,8 @@ Start with only the namespaces needed by the scenario:
 
 ```csharp
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 ```
 
 Add framework or Aspose namespaces only when directly used. Do not import namespaces to imply unsupported capability.
@@ -127,7 +116,7 @@ Add framework or Aspose namespaces only when directly used. Do not import namesp
 
 Every new or regenerated example must:
 
-1. Demonstrate one primary PivotTable capability.
+1. Demonstrate one primary workbook loading capability.
 2. Be a complete, single-file C# program.
 3. Use explicit types rather than `var`.
 4. Generate deterministic sample data when practical.
@@ -145,13 +134,13 @@ New examples should begin with:
 
 ```csharp
 /*
-Title: Create a sales PivotTable from worksheet data
-Intent: Create, configure, refresh, calculate, filter, group, and format Excel PivotTables in C#
-Category: pivot-table
-Primary API: Worksheet.PivotTables.Add
-Input: Programmatically generated sales table
-Output: pivot-table-report.xlsx
-Expected Result: A PivotTable named `SalesPivot` summarizes East and West sales in `pivot-table-report.xlsx`.
+Title: Open an XLSX workbook with explicit load options
+Intent: Open Excel and other spreadsheet formats from files or streams with controlled loading behavior in C#
+Category: open-workbook
+Primary API: Workbook(string, LoadOptions)
+Input: input.xlsx
+Output: None
+Expected Result: `input.xlsx` loads successfully and a positive worksheet count is reported.
 Product: Aspose.Cells for .NET
 Language: C#
 */
@@ -161,29 +150,29 @@ Keep metadata factual, concise, version-aware, and useful when extracted indepen
 
 ## Filename and title rules
 
-Use concise, action-first filenames that express one search intent. Prefer `create-sales-pivottable-in-csharp.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
+Use concise, action-first filenames that express one search intent. Prefer `open-xlsx-with-loadoptions.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
 
 ## Natural-language opening comment
 
 After metadata, include one sentence stating the operation and expected result:
 
 ```csharp
-// Create a PivotTable from region and sales data, refresh it, and verify the report name.
+// Open input.xlsx as XLSX and verify that at least one worksheet was loaded.
 ```
 
 The comment must read like a direct answer, not a keyword list.
 
-## PivotTable construction rules
+## Workbook loading rules
 
-- Create and validate source headers/data first.
-- Use stable source ranges or documented dynamic sources.
-- Resolve field indexes before placement.
-- Set aggregation functions explicitly when defaults matter.
-- Refresh and calculate after changes.
+- Validate path/stream and format before processing untrusted files.
+- Match passwords and options to encrypted inputs.
+- Use warning callbacks for recoverable issues and preserve diagnostics.
+- Use load filters only when omitted content is documented.
+- Define stream ownership and lifetime explicitly.
 
 ## Result verification
 
-Check name/count, source, field areas, aggregation, filters/grouping, and representative output values after refresh/calculation. Reopen output for persistence.
+Check detected format, worksheet count/names, representative cells, warnings, and requested object availability. For partial loads, assert both included and intentionally excluded content.
 
 An example is incomplete if it performs an operation but never checks the resulting object, value, collection, file, relationship, or rendered artifact.
 
@@ -195,35 +184,35 @@ An example is incomplete if it performs an operation but never checks the result
 - Distinguish invalid input, unsupported format/API, corrupt content, unavailable dependencies, and permission failures when possible.
 - Let unexpected exceptions fail validation.
 
-## Calculated fields, items, grouping, and filters
+## Load filters and LightCells
 
-Use documented formulas and valid field names. Validate division-by-zero, grouping bounds, filter coexistence, and output values.
+Load filters select workbook content; LightCells streams cells through handlers. Do not mix their semantics or retain transient objects beyond documented callbacks.
 
-## Slicers, timelines, and pivot charts
+## Encrypted, damaged, and interrupted loads
 
-Create the PivotTable first, connect controls/charts to valid cache fields, refresh, and verify relationships after reopening.
+Use version-supported password, warning, recovery, and interruption APIs. Distinguish incorrect credentials, corruption, unsupported formats, and intentional cancellation.
 
 ## Monitoring and interruption
 
-Measure and report refresh and calculation phases separately for large reports. Use only supported callbacks/interruption.
+Use `IWarningCallback` and supported interrupt monitors for bounded diagnostics/cancellation. Callbacks must be lightweight and must not leak workbook content.
 
 Long-running examples must use version-supported interruption/progress APIs, bounded inputs, cancellation where available, and a verified stopped/completed outcome. Never invent callbacks from task wording.
 
 ## Performance and memory examples
 
-Minimize source size, avoid repeated refreshes during setup, batch field changes, and report source dimensions, field count, and refresh time.
+Use memory-preference settings, filtering, or LightCells only after measuring representative files. Report file size, used range, objects loaded, and peak memory.
 
 Use `Stopwatch`, identical workloads, warm-up where material, multiple iterations, and report package/framework/environment assumptions. Never present one-machine measurements as universal guarantees.
 
 ## Input and output strategy
 
-Generate compact labeled source data. Load an existing workbook only when preserving a cache/layout is central. Prefer XLSX output.
+Use small committed/generated fixtures when format loading is the point. For streams, document origin, position, ownership, and seekability. Never depend on machine-specific network paths.
 
 Use relative, deterministic filenames; never developer-specific absolute paths. Do not overwrite inputs unless explicitly requested. Reopen saved output when persistence is part of the claim.
 
 ## Security and enterprise safety
 
-Treat external sources and cached data as sensitive; never expose connection strings, paths, or customer values in logs.
+Limit file size and processing time, reject path traversal, require passwords from secure configuration, sanitize external links, and treat macros/custom XML/formulas as untrusted.
 
 - Never embed licenses, credentials, tokens, personal data, private keys, or connection secrets.
 - Keep generated output inside the working directory.
@@ -235,10 +224,10 @@ Treat external sources and cached data as sensitive; never expose connection str
 
 Target one primary intent and one or two natural aliases:
 
-- create Excel PivotTable in C#
-- refresh PivotTable with Aspose.Cells
-- add calculated PivotTable field
-- group PivotTable dates
+- open Excel file in C#
+- load XLSX from stream
+- read large Excel file with LightCells
+- detect Excel file format
 
 Do not stuff every phrase into each example.
 
@@ -248,7 +237,7 @@ The first meaningful comment must identify the operation, primary API, and expec
 
 ### Entity consistency
 
-Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, PivotTable, pivot field, pivot item, pivot cache, aggregation. Avoid ambiguous product nicknames.
+Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, LoadOptions, workbook stream, load filter, LightCells, file format. Avoid ambiguous product nicknames.
 
 ### Citation quality
 
@@ -314,11 +303,11 @@ Interpret one developer intent
 
 ## Related knowledge
 
-- [Slicers](../slicer/)
-- [Timelines](../timeline/)
-- [Tables](../working-with-tables/)
-- [Charts](../working-with-charts/)
+- [Save workbook](../save-workbook/)
+- [Cell data](../cells-data/)
+- [Encryption and protection](../encryption-and-protection/)
+- [Conversion](../conversion/)
 
 ## Definition of done
 
-A `pivot-table` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+A `open-workbook` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.

@@ -1,82 +1,88 @@
-# Comments and Notes Examples
+---
+name: Aspose.Cells Comments and Notes Agent
+category: comments-and-notes
+product: Aspose.Cells for .NET
+language: C#
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Add, read, update, format, copy, and remove Excel comments and threaded comments in C#
+primary_apis: [Comment, CommentCollection, ThreadedComment, ThreadedCommentCollection, ThreadedCommentAuthor]
+related_categories: [../cells-data/, ../format-cells/, ../working-with-shapes/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Comments and Notes Agent Instructions
 
-Comments and Notes
+## Mission and scope
 
+Create correct, focused examples for legacy cell comments/notes and modern threaded comments with Aspose.Cells for .NET. Follow [`../AGENTS.md`](../AGENTS.md) first.
 
-## Purpose
+In scope: adding, reading, editing, copying, formatting, enumerating, and removing comments; authorship; threaded conversations; comment shapes; text direction; visibility; and comment audits.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+Keep general shape formatting in `working-with-shapes` and ordinary cell text in `cells-data` unless comments are the primary intent.
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+## Model the annotation type explicitly
 
+| Intent | APIs |
+| --- | --- |
+| Legacy comment/note | `Worksheet.Comments`, `CommentCollection`, `Comment` |
+| Threaded comment | `Comment.ThreadedComments`, `CommentCollection.AddThreadedComment`, `ThreadedCommentCollection` |
+| Threaded author | `Workbook.Worksheets.ThreadedCommentAuthors` and `ThreadedCommentAuthor` |
+| Comment text | `Comment.Note` and version-supported HTML/text properties |
+| Appearance | `Comment.CommentShape` and verified shape/font APIs |
+| Removal | Collection removal APIs verified for the annotation type |
 
-## Example Files
+Do not call a legacy note a threaded comment or imply that their authorship, timestamps, replies, or storage models are interchangeable.
 
-Each `.cs` file demonstrates a specific task related to **Comments and Notes**.
+## Hard rules
 
-Example:
+- Attach comments to valid cells and verify the returned collection index/object.
+- Use synthetic author names and text; never place personal data in generated examples.
+- Preserve author, text, formatting, and thread order only when the chosen API supports them.
+- Treat comment text as untrusted input when exporting to HTML, logs, or other systems.
+- Do not infer creation times, reply APIs, or removal methods from filenames; verify the installed API.
+- Save threaded-comment scenarios to a format that preserves them, normally XLSX.
 
-create-a-workbook.cs
+## Canonical legacy-comment pattern
 
-
-## Required Namespaces
-
-Most examples will require:
-
-using Aspose.Cells;
-
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
-
+```csharp
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+int index = worksheet.Comments.Add("A1");
+Comment comment = worksheet.Comments[index];
+comment.Note = "Review the quarterly total.";
 
-Cells cells = sheet.Cells;
+if (comment.Note != "Review the quarterly total.")
+{
+    throw new InvalidOperationException("Comment text was not retained.");
+}
 
+workbook.Save("comment-result.xlsx");
+```
 
-## Output
+## Example contract and safety
 
-Examples may generate:
+Each example must identify whether it uses a legacy or threaded comment, demonstrate one primary operation, use explicit types, verify cell/author/text/count, and reopen output when persistence is the subject.
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+Use metadata fields for title, intent, annotation type, primary API, target cell, output, and expected result. Prefer filenames such as `add-threaded-comment-to-excel-cell.cs`.
 
-Output files are written to the working directory.
-- create-a-new-workbook-and-add-a-threaded-comment-to-cell-a1-with-author-john.cs
-- load-an-existing-workbook-retrieve-all-threaded-comments-from-column-b-and-list-their-authors.cs
-- iterate-through-a-threadedcommentcollection-to-display-each-comments-text-author-and-creation-timestamp.cs
-- edit-a-specific-threaded-comment-by-setting-its-text-property-to-a-new-string-value.cs
-- remove-a-threaded-comment-from-cell-c3-using-the-remove-method-on-the-comment-object.cs
-- retrieve-the-creation-time-of-a-threaded-comment-via-the-createdtime-property-and-log-it.cs
-- set-the-text-direction-of-a-comments-shape-to-righttoleft-for-bidirectional-language-support.cs
-- set-the-text-direction-of-a-comments-shape-to-toptobottom-for-vertical-annotation-layout.cs
-- change-the-font-color-of-a-comment-by-assigning-a-red-value-to-shapetextbodyfontcolor.cs
-- apply-a-solid-blue-background-to-a-comment-using-shapefillforecolor-with-the-appropriate-color-code.cs
-- embed-an-image-as-a-comment-background-by-setting-shapefillpicture-to-a-loaded-picture-object.cs
-- create-a-workbook-add-threaded-comments-to-multiple-cells-and-save-the-file-in-xlsx-format.cs
-- load-a-workbook-modify-comment-font-colors-based-on-author-and-save-changes-to-a-new-file.cs
-- batch-process-a-folder-of-workbooks-adding-a-standard-disclaimer-comment-to-each-worksheets-top-left-cell.cs
-- read-all-threaded-comments-from-a-worksheet-and-count-the-number-of-comments-per-author.cs
-- remove-all-comments-older-than-thirty-days-from-a-workbook-based-on-their-createdtime-values.cs
-- scan-a-workbook-for-empty-comments-and-remove-them-to-clean-metadata.cs
-- compare-two-workbooks-by-extracting-their-threaded-comments-and-identifying-differences-in-author-attribution.cs
-- read-the-author-of-each-threaded-comment-in-a-worksheet-and-output-the-list.cs
-- change-the-font-color-of-comments-in-column-g-to-blue-using-shapetextbodyfontcolor.cs
-- retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs
-- replace-the-background-picture-of-a-comment-with-a-semi-transparent-overlay-image.cs
-- copy-formatting-of-a-comments-shape-including-background-color-and-font-color-to-another-comment.cs
-- add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
-- update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs
-- add-a-threaded-comment-to-merged-cell-range-a1b2-ensuring-the-comment-appears-centered.cs
+Avoid external links, real email addresses, confidential review notes, and HTML injection. Do not execute or interpret comment text as code.
+
+## Discoverability and validation
+
+Target one question such as "add a comment to Excel in C#," "read threaded comments," or "format an Excel note." The opening comment must directly identify the annotation type and expected cell.
+
+Verify exact author, collection, shape, and removal APIs against the installed package. Compile, run, reopen, and confirm comment count, text, author, and target cell. Reject examples that conflate comments with cell values or silently lose threaded metadata.
+
+## Related knowledge
+
+- [Category overview](README.md)
+- [Cell data](../cells-data/)
+- [Cell formatting](../format-cells/)
+- [Shapes](../working-with-shapes/)
+- [Official comments documentation](https://docs.aspose.com/cells/net/comments-and-notes/)
+
+## Definition of done
+
+The example is done when the annotation type and API are unambiguous, synthetic content is safe, the saved workbook preserves the verified text/author/cell relationship, and the intent is immediately retrievable.

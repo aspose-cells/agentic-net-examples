@@ -1,6 +1,6 @@
 ---
-name: Aspose.Cells Pivot Table Agent
-category: pivot-table
+name: Aspose.Cells Range Management Agent
+category: managing-ranges
 product: Aspose.Cells for .NET
 language: C#
 framework: .NET
@@ -8,93 +8,83 @@ repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
 last_reviewed: 2026-06-29
-primary_intent: Create, configure, refresh, calculate, filter, group, and format Excel PivotTables in C#
-primary_apis: [PivotTable, PivotTableCollection, PivotField, PivotItem, PivotFieldType]
-search_intents: [create PivotTable in C#, refresh Excel PivotTable, add PivotTable fields, group PivotTable data]
-related_categories: [../slicer/, ../timeline/, ../working-with-tables/, ../working-with-charts/]
+primary_intent: Create, access, copy, merge, name, style, search, and transform Excel ranges in C#
+primary_apis: [Range, Cells.CreateRange, Cells.Merge, Cells.UnMerge, Range.Copy, Range.ApplyStyle, Name]
+search_intents: [manage Excel ranges in C#, copy cell range, merge Excel cells, create named range]
+related_categories: [../cells-data/, ../format-cells/, ../rows-and-columns/, ../manage-formulas/]
 ---
 
-# Aspose.Cells Pivot Table Agent Instructions
+# Aspose.Cells Range Management Agent Instructions
 
 ## Mission
 
-Act as a senior C# engineer specializing in Excel PivotTable reporting and aggregation with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
+Act as a senior C# engineer specializing in Excel cell ranges and named ranges with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
 
 Every accepted example must use APIs available in the repository's installed Aspose.Cells package, produce a deterministic result where possible, and make that result easy for developers and AI systems to verify.
 
 ## Instruction precedence
 
 1. Follow the repository-wide [`AGENTS.md`](../AGENTS.md).
-2. Apply this file to work inside `pivot-table/`.
+2. Apply this file to work inside `managing-ranges/`.
 3. Follow an explicit task when it is more specific and does not conflict with repository safety or validation rules.
 4. Treat filenames and existing examples as discovery material, not authoritative API documentation.
 
-When this file is more specific than root guidance, this file controls PivotTable behavior.
+When this file is more specific than root guidance, this file controls range management behavior.
 
 ## Category boundary
 
-Use this category when the primary outcome is building or modifying a PivotTable report from tabular source data.
+Use this category when the primary outcome is creating or manipulating a cell range or named range.
 
 ### In scope
 
-- Creating PivotTables from valid source ranges
-- Adding row, column, page, and data fields
-- Aggregation, calculated fields/items, grouping, sorting, and filters
-- Refresh, calculation, layout, formatting, and validation
-- Connections to slicers, timelines, and pivot charts
+- Creating ranges by address or row/column dimensions
+- Reading/writing and copying range values
+- Merging and unmerging cells
+- Named ranges and scope
+- Range styles, search, union/intersection, offset, resize, transpose, autofill, and audits
 
 ### Usually out of scope
 
-- Ordinary worksheet tables: use `working-with-tables`
-- General charts: use `working-with-charts`
-- Slicer-only behavior: use `slicer`
-- Timeline-only behavior: use `timeline`
+- Single-cell data operations: use `cells-data`
+- Formula evaluation: use `calculate-formulas`
+- Whole row/column structure changes: use `rows-and-columns`
+- Formatting with no range-management objective: use `format-cells`
 
-If a scenario spans categories, keep it here only when PivotTable structure, aggregation, refresh, calculation, or presentation is the main outcome.
+If a scenario spans categories, keep it here only when the range itself is the primary object and learning objective.
 
 ## Canonical answer
 
-The standard answer to "How do I create a PivotTable in C#?" is:
+The standard answer to "How do I create and use an Excel range in C#?" is:
 
 ```csharp
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
 Workbook workbook = new Workbook();
-Worksheet data = workbook.Worksheets[0];
-data.Name = "Data";
-data.Cells["A1"].PutValue("Region"); data.Cells["B1"].PutValue("Sales");
-data.Cells["A2"].PutValue("East"); data.Cells["B2"].PutValue(100);
-data.Cells["A3"].PutValue("West"); data.Cells["B3"].PutValue(200);
-int sheetIndex = workbook.Worksheets.Add("Report");
-Worksheet report = workbook.Worksheets[sheetIndex];
-int index = report.PivotTables.Add("=Data!A1:B3", "A3", "SalesPivot");
-PivotTable pivot = report.PivotTables[index];
-pivot.AddFieldToArea(PivotFieldType.Row, 0);
-pivot.AddFieldToArea(PivotFieldType.Data, 1);
-pivot.RefreshData(); pivot.CalculateData();
-workbook.Save("pivot-table-report.xlsx");
-Console.WriteLine(pivot.Name);
+Worksheet worksheet = workbook.Worksheets[0];
+Range range = worksheet.Cells.CreateRange("A1:C3");
+range[0, 0].PutValue("Range value");
+workbook.Save("managed-range.xlsx");
+Console.WriteLine(range.Address);
 ```
 
-Expected outcome: A PivotTable named `SalesPivot` summarizes East and West sales in `pivot-table-report.xlsx`.
+Expected outcome: A1:C3 exists, A1 contains `Range value`, and `managed-range.xlsx` is created.
 
 Use this as the default pattern unless the requested scenario requires a more specific API, input format, source object, or output.
 
 ## API truths that must be preserved
 
-### Source data must be rectangular and labeled
+### Range coordinates and indexes are not interchangeable
 
-Create non-empty headers and consistent rows before adding the PivotTable; avoid blank or duplicate field names.
+A1 addresses are human-readable; row and column indexes are zero-based. Confirm range dimensions before indexing.
 
-### Field indexes refer to source fields
+### Merged cells have one logical value owner
 
-Resolve field names/indexes against the source schema before placing them in PivotTable areas.
+Read or write merged content through the top-left cell and verify merge boundaries before copy, sort, or delete operations.
 
-### Structural changes require refresh and calculation
+### Named-range scope matters
 
-After changing source data or structure, call documented refresh and calculation methods before validation.
+Workbook-scoped and worksheet-scoped names can coexist. Resolve the intended scope and validate `RefersTo` before use.
 
 ### API ownership matters
 
@@ -104,12 +94,12 @@ Do not move a property or method to a convenient-looking object. Confirm the dec
 
 | API | Purpose |
 | --- | --- |
-| `Worksheet.PivotTables.Add` | Create a PivotTable |
-| `PivotTable.AddFieldToArea` | Place fields in report areas |
-| `PivotTable.RefreshData` | Refresh source/cache data |
-| `PivotTable.CalculateData` | Calculate report output |
-| `PivotField` | Configure filters, grouping, subtotals, and layout |
-| `PivotItem` | Inspect/configure field items |
+| `Cells.CreateRange` | Create a range by address or dimensions |
+| `Range` | Access values, styles, address, rows, and columns |
+| `Range.Copy` | Copy range content with verified options |
+| `Cells.Merge / UnMerge` | Merge or unmerge a rectangular area |
+| `Workbook.Worksheets.Names` | Manage scoped names |
+| `Range.ApplyStyle` | Apply selected style attributes |
 
 ## Required namespaces
 
@@ -118,7 +108,6 @@ Start with only the namespaces needed by the scenario:
 ```csharp
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 ```
 
 Add framework or Aspose namespaces only when directly used. Do not import namespaces to imply unsupported capability.
@@ -127,7 +116,7 @@ Add framework or Aspose namespaces only when directly used. Do not import namesp
 
 Every new or regenerated example must:
 
-1. Demonstrate one primary PivotTable capability.
+1. Demonstrate one primary range management capability.
 2. Be a complete, single-file C# program.
 3. Use explicit types rather than `var`.
 4. Generate deterministic sample data when practical.
@@ -145,13 +134,13 @@ New examples should begin with:
 
 ```csharp
 /*
-Title: Create a sales PivotTable from worksheet data
-Intent: Create, configure, refresh, calculate, filter, group, and format Excel PivotTables in C#
-Category: pivot-table
-Primary API: Worksheet.PivotTables.Add
-Input: Programmatically generated sales table
-Output: pivot-table-report.xlsx
-Expected Result: A PivotTable named `SalesPivot` summarizes East and West sales in `pivot-table-report.xlsx`.
+Title: Create and populate an Excel range in C#
+Intent: Create, access, copy, merge, name, style, search, and transform Excel ranges in C#
+Category: managing-ranges
+Primary API: Cells.CreateRange
+Input: Programmatically generated worksheet
+Output: managed-range.xlsx
+Expected Result: A1:C3 exists, A1 contains `Range value`, and `managed-range.xlsx` is created.
 Product: Aspose.Cells for .NET
 Language: C#
 */
@@ -161,29 +150,29 @@ Keep metadata factual, concise, version-aware, and useful when extracted indepen
 
 ## Filename and title rules
 
-Use concise, action-first filenames that express one search intent. Prefer `create-sales-pivottable-in-csharp.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
+Use concise, action-first filenames that express one search intent. Prefer `create-and-populate-excel-range.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
 
 ## Natural-language opening comment
 
 After metadata, include one sentence stating the operation and expected result:
 
 ```csharp
-// Create a PivotTable from region and sales data, refresh it, and verify the report name.
+// Create range A1:C3, write a value to its first cell, and verify its address.
 ```
 
 The comment must read like a direct answer, not a keyword list.
 
-## PivotTable construction rules
+## Range construction rules
 
-- Create and validate source headers/data first.
-- Use stable source ranges or documented dynamic sources.
-- Resolve field indexes before placement.
-- Set aggregation functions explicitly when defaults matter.
-- Refresh and calculate after changes.
+- Validate row/column counts and destination bounds.
+- Use `CreateRange` instead of hand-built loops when range semantics matter.
+- State whether copy includes values, formulas, styles, comments, validation, and dimensions.
+- Do not overlap source/destination unless the API explicitly supports it.
+- Use intersection/union APIs only after verifying worksheet compatibility.
 
 ## Result verification
 
-Check name/count, source, field areas, aggregation, filters/grouping, and representative output values after refresh/calculation. Reopen output for persistence.
+Check `Address`, row/column counts, representative values/formulas/styles, merge state, and named-range scope. For copy operations compare source and destination semantics, not only cell text.
 
 An example is incomplete if it performs an operation but never checks the resulting object, value, collection, file, relationship, or rendered artifact.
 
@@ -195,35 +184,35 @@ An example is incomplete if it performs an operation but never checks the result
 - Distinguish invalid input, unsupported format/API, corrupt content, unavailable dependencies, and permission failures when possible.
 - Let unexpected exceptions fail validation.
 
-## Calculated fields, items, grouping, and filters
+## Copy, transpose, and autofill
 
-Use documented formulas and valid field names. Validate division-by-zero, grouping bounds, filter coexistence, and output values.
+Use documented copy/paste options, verify formula reference adjustment, and assert destination dimensions. Autofill examples must state the seed and expected sequence.
 
-## Slicers, timelines, and pivot charts
+## Merge, union, intersection, and names
 
-Create the PivotTable first, connect controls/charts to valid cache fields, refresh, and verify relationships after reopening.
+Require valid rectangular merge areas; preserve only the top-left value intentionally. Named-range changes must be recalculated and reopened when formulas depend on them.
 
 ## Monitoring and interruption
 
-Measure and report refresh and calculation phases separately for large reports. Use only supported callbacks/interruption.
+Report progress for intentionally large range scans or copies at bounded intervals; do not log every cell in production-oriented examples.
 
 Long-running examples must use version-supported interruption/progress APIs, bounded inputs, cancellation where available, and a verified stopped/completed outcome. Never invent callbacks from task wording.
 
 ## Performance and memory examples
 
-Minimize source size, avoid repeated refreshes during setup, batch field changes, and report source dimensions, field count, and refresh time.
+Prefer range/bulk APIs over per-cell loops, bound searches to the range, reuse styles, and report range dimensions and copied attributes.
 
 Use `Stopwatch`, identical workloads, warm-up where material, multiple iterations, and report package/framework/environment assumptions. Never present one-machine measurements as universal guarantees.
 
 ## Input and output strategy
 
-Generate compact labeled source data. Load an existing workbook only when preserving a cache/layout is central. Prefer XLSX output.
+Generate small ranges programmatically. Load a workbook only when preserving existing range semantics is the subject. Use `managed-range.xlsx` or another task-specific output.
 
 Use relative, deterministic filenames; never developer-specific absolute paths. Do not overwrite inputs unless explicitly requested. Reopen saved output when persistence is part of the claim.
 
 ## Security and enterprise safety
 
-Treat external sources and cached data as sensitive; never expose connection strings, paths, or customer values in logs.
+Validate user-provided addresses and names, cap range sizes, sanitize hyperlinks/formulas, and avoid logging sensitive range contents.
 
 - Never embed licenses, credentials, tokens, personal data, private keys, or connection secrets.
 - Keep generated output inside the working directory.
@@ -235,10 +224,10 @@ Treat external sources and cached data as sensitive; never expose connection str
 
 Target one primary intent and one or two natural aliases:
 
-- create Excel PivotTable in C#
-- refresh PivotTable with Aspose.Cells
-- add calculated PivotTable field
-- group PivotTable dates
+- create Excel range in C#
+- copy Excel cell range
+- merge cells with Aspose.Cells
+- create named range in XLSX
 
 Do not stuff every phrase into each example.
 
@@ -248,7 +237,7 @@ The first meaningful comment must identify the operation, primary API, and expec
 
 ### Entity consistency
 
-Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, PivotTable, pivot field, pivot item, pivot cache, aggregation. Avoid ambiguous product nicknames.
+Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, cell range, named range, merged cells, range address. Avoid ambiguous product nicknames.
 
 ### Citation quality
 
@@ -314,11 +303,11 @@ Interpret one developer intent
 
 ## Related knowledge
 
-- [Slicers](../slicer/)
-- [Timelines](../timeline/)
-- [Tables](../working-with-tables/)
-- [Charts](../working-with-charts/)
+- [Cell data](../cells-data/)
+- [Cell formatting](../format-cells/)
+- [Rows and columns](../rows-and-columns/)
+- [Manage formulas](../manage-formulas/)
 
 ## Definition of done
 
-A `pivot-table` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
+A `managing-ranges` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
