@@ -1651,6 +1651,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-a-data-validation-rule-that-restricts-formula-entry-to-cells-within-a-predefined-named-range.cs",
+      "title": "Add a data validation rule that restricts formula entry to cells within a predefined named range."
+    },
+    {
+      "category": "manage-formulas",
       "file": "add-a-new-worksheet-copy-a-table-with-formulas-and-ensure-calculation-mode-remains-consistent-across-sheets.cs",
       "title": "Add a new worksheet, copy a table with formulas, and ensure calculation mode remains consistent across sheets."
     },
