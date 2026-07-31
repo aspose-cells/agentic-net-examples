@@ -1641,6 +1641,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs",
+      "title": "Convert a ListObject back to a regular range, preserving existing formulas within the cells."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-dynamic-array-formula-that-references-a-spill-then-use-it-in-a-sum-formula-on-another-sheet.cs",
       "title": "Create a dynamic array formula that references a spill, then use it in a SUM formula on another sheet."
     },
