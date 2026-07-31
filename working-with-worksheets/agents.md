@@ -331,3 +331,4 @@ Output files are written to the working directory.
 - count-how-many-initialized-cells-contain-only-formatting-applied-and-log-the-result-for-each-worksheet.cs
 - flag-worksheets-where-maxdatarow-is-1-but-shapecollectioncount-exceeds-zero-indicating-shapeonly-content.cs
 - duplicate-a-worksheet-assign-a-new-tabid-and-clear-all-cell-values-while-preserving-formatting.cs
+- automatically-assign-incremental-tabids-to-newly-added-worksheets-based-on-the-highest-existing-identifier.cs
