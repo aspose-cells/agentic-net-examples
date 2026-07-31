@@ -91,3 +91,4 @@ Output files are written to the working directory.
 - programmatically-disable-calculation-perform-bulk-rename-of-named-ranges-using-a-prefix-then-enable-calculation-and-recalc.cs
 - create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs
 - set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs
+- calculate-formulas-only-for-the-worksheet-named-summary-using-workbookcalculateformula-with-a-specific-sheet-parameter.cs
