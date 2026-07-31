@@ -1681,6 +1681,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "configure-calculation-options-to-treat-division-by-zero-as-a-blank-cell-instead-of-an-error.cs",
+      "title": "Configure calculation options to treat division by zero as a blank cell instead of an error."
+    },
+    {
+      "category": "manage-formulas",
       "file": "convert-a-listobject-back-to-a-regular-range-preserving-existing-formulas-within-the-cells.cs",
       "title": "Convert a ListObject back to a regular range, preserving existing formulas within the cells."
     },
