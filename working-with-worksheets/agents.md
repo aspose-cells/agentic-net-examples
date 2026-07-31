@@ -336,3 +336,4 @@ Output files are written to the working directory.
 - prevent-saving-a-workbook-if-any-worksheet-has-a-duplicate-tabid-after-modifications-are-applied.cs
 - list-worksheets-with-shape-count-greater-than-ten-indicating-complex-graphical-content-that-may-need-review.cs
 - reset-all-worksheet-tabids-to-sequential-numbers-starting-from-one-for-standardized-ordering-across-the-workbook.cs
+- log-the-time-taken-to-enumerate-all-initialized-cells-across-all-worksheets-in-a-large-workbook.cs
