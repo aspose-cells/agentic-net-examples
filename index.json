@@ -1706,6 +1706,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs",
+      "title": "Create a macro\u2011like routine that toggles calculation mode between Automatic and Manual based on file size."
+    },
+    {
+      "category": "manage-formulas",
       "file": "create-a-named-range-that-references-a-dynamic-array-spill-and-use-it-in-subsequent-formulas.cs",
       "title": "Create a named range that references a dynamic array spill and use it in subsequent formulas."
     },
