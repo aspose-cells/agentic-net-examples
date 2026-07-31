@@ -344,3 +344,4 @@ Output files are written to the working directory.
 - set-each-worksheets-tabid-to-its-index-plus-one-and-save-the-workbook-to-apply-ordering.cs
 - return-a-dictionary-mapping-worksheet-names-to-a-boolean-indicating-whether-each-sheet-is-empty.cs
 - print-the-count-of-worksheets-containing-shapes-for-a-given-workbook-to-assist-reporting.cs
+- automatically-remove-all-formattingonly-initialized-cells-from-a-worksheet-to-reduce-file-size.cs
