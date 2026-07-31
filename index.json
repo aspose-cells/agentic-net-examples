@@ -7591,6 +7591,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "validate-that-tabid-values-are-within-1-to-65535-to-maintain-compatibility-with-older-excel-versions.cs",
+      "title": "Validate that TabId values are within 1 to 65535 to maintain compatibility with older Excel versions."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "validate-that-the-freeze-column-index-is-within-the-worksheets-column-range-before-invoking-freezepanes.cs",
       "title": "Validate that the freeze column index is within the worksheet\u2019s column range before invoking FreezePanes."
     },
