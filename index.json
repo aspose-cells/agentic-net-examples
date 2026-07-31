@@ -1746,6 +1746,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "rename-every-named-range-that-starts-with-temp-by-prefixing-archive_-using-a-loop-and-nametext.cs",
+      "title": "Rename every named range that starts with 'Temp' by prefixing 'Archive_' using a loop and Name.Text."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-an-existing-named-range-with-a-larger-area-using-the-namerefersto-property-and-recalculate-formulas.cs",
       "title": "Replace an existing named range with a larger area using the Name.RefersTo property and recalculate formulas."
     },
