@@ -346,3 +346,4 @@ Output files are written to the working directory.
 - print-the-count-of-worksheets-containing-shapes-for-a-given-workbook-to-assist-reporting.cs
 - automatically-remove-all-formattingonly-initialized-cells-from-a-worksheet-to-reduce-file-size.cs
 - rename-worksheets-based-on-the-sum-of-their-maxdatarow-and-maxdatacolumn-values-for-quick-reference.cs
+- update-tabids-to-sequential-numbers-verify-uniqueness-across-all-worksheets-then-save-the-workbook.cs
