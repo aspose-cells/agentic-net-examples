@@ -1656,6 +1656,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-a-listobject-named-salestable-add-a-column-with-a-sum-formula-and-test-propagation.cs",
+      "title": "Create a ListObject named SalesTable, add a column with a SUM formula, and test propagation."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs",
       "title": "Programmatically clear the spilled range of a dynamic array formula without deleting the original formula cell."
     },
