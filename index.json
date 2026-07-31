@@ -1635,6 +1635,11 @@
       "title": "Write validation errors to a text file for later analysis and compliance reporting."
     },
     {
+      "category": "manage-formulas",
+      "file": "change-source-data-for-a-filter-dynamic-array-formula-then-recalculate-workbook-to-update-results.cs",
+      "title": "Change source data for a FILTER dynamic array formula, then recalculate workbook to update results."
+    },
+    {
       "category": "managing-ranges",
       "file": "access-a-global-named-range-from-sheet3-and-read-its-address-using-the-workbook-names-collection.cs",
       "title": "Access a global named range from Sheet3 and read its address using the workbook Names collection."
