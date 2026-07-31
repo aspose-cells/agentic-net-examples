@@ -1,106 +1,89 @@
-# Globalization and Localization Examples
+---
+name: Aspose.Cells Globalization and Localization Agent
+category: globalization-and-localization
+product: Aspose.Cells for .NET
+language: C#
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Process localized Excel dates, numbers, formulas, labels, and regional settings in C#
+primary_apis: [GlobalizationSettings, CultureInfo, WorkbookSettings, LoadOptions, Cell.FormulaLocal]
+related_categories: [../format-cells/, ../manage-formulas/, ../conversion/, ../cells-data/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Globalization and Localization Agent Instructions
 
-Globalization and Localization
+## Mission and scope
 
+Create deterministic, culture-aware Aspose.Cells for .NET examples for localized numbers, dates, calendars, formulas, Boolean/error labels, subtotal/pivot labels, chart text, and regional workbook behavior. Follow [`../AGENTS.md`](../AGENTS.md).
 
-## Purpose
+Use `format-cells` when only a format string changes, and `manage-formulas` when formula structure rather than language/culture is primary.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+## Canonical model
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+| Concern | Preferred mechanism |
+| --- | --- |
+| Parse/load with a culture | Version-supported `LoadOptions` culture/region settings |
+| Workbook region | `Workbook.Settings.Region` or package-supported culture setting |
+| Custom labels/function names | Derive from `GlobalizationSettings` and override documented members |
+| Localized formula text | `Cell.FormulaLocal` when appropriate and supported |
+| Culture-specific display | Typed values plus `Style.Custom`/number formats |
+| Japanese era/calendar | Explicit `CultureInfo`/calendar APIs and verified Aspose helpers |
 
+## Hard rules
 
-## Example Files
+- Set culture explicitly; never rely on the developer machine's current culture.
+- Store dates and numbers as typed values, not preformatted localized strings, unless parsing text is the objective.
+- Keep invariant formula syntax and localized formula syntax distinct.
+- Save and restore thread culture if an example changes it.
+- Use valid BCP 47/.NET culture identifiers and deterministic dates away from ambiguous boundaries unless testing boundaries.
+- Explain whether localization affects stored values, display formats, formula names, or rendered labels.
+- Do not claim that changing culture translates arbitrary workbook text.
 
-Each `.cs` file demonstrates a specific task related to **Globalization and Localization**.
+## Canonical culture-safe pattern
 
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
-using Aspose.Cells;
-
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
-
+```csharp
+CultureInfo culture = CultureInfo.GetCultureInfo("fr-FR");
 Workbook workbook = new Workbook();
+workbook.Settings.CultureInfo = culture;
+Worksheet worksheet = workbook.Worksheets[0];
 
-Worksheet sheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue(new DateTime(2026, 6, 29));
+Style style = worksheet.Cells["A1"].GetStyle();
+style.Custom = "dd mmmm yyyy";
+worksheet.Cells["A1"].SetStyle(style);
 
-Cells cells = sheet.Cells;
+workbook.Save("localized-workbook.xlsx");
+Console.WriteLine(culture.Name);
+```
 
+When culture must influence workbook parsing or rendering, configure the documented workbook/load setting rather than creating an unused `CultureInfo` object.
 
-## Output
+## Custom globalization settings
 
-Examples may generate:
+- Override only documented methods needed by the scenario.
+- Provide a deterministic fallback for unknown labels or functions.
+- Keep mappings case-aware according to Excel semantics.
+- Never perform network calls or workbook mutation inside localization callbacks.
+- Unit-test each locale mapping and fallback.
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+## Example contract
 
-Output files are written to the working directory.
-- create-a-custom-globalizationsettings-class-overriding-getlocalfunctionname-for-target-language-functions.cs
-- override-geterrorstring-in-the-custom-class-to-provide-localized-error-messages-for-excel-errors.cs
-- override-getbooleanstring-to-return-localized-truefalse-strings-for-the-selected-locale.cs
-- assign-the-custom-globalizationsettings-instance-to-workbooksettingsglobalizationsettings-before-loading-any-worksheets.cs
-- load-the-excel-workbook-using-workbookload-after-configuring-the-custom-globalization-settings.cs
-- set-cell-formulas-with-cellformulalocal-to-apply-localized-function-names-during-workbook-processing.cs
-- verify-that-localized-function-names-are-correctly-recognized-by-excel-when-the-workbook-is-opened.cs
-- localize-subtotal-and-grand-total-labels-by-overriding-appropriate-methods-in-the-custom-globalizationsettings.cs
-- test-subtotal-label-translation-for-a-specific-language-to-ensure-correct-appearance-in-the-worksheet.cs
-- save-the-localized-workbook-as-xlsx-preserving-original-formatting-comments-and-cell-styles.cs
-- generate-a-report-listing-processed-workbooks-applied-locales-and-any-localization-errors-encountered.cs
-- implement-fallback-to-english-function-names-when-a-requested-locale-lacks-a-defined-mapping.cs
-- log-each-overridden-method-call-to-a-debug-file-for-troubleshooting-localization-behavior-at-runtime.cs
-- create-a-batch-process-that-applies-the-custom-globalization-settings-to-all-workbooks-in-a-folder.cs
-- validate-that-boolean-values-display-localized-truefalse-strings-in-cells-containing-logical-formulas.cs
-- write-unit-tests-asserting-getlocalfunctionname-returns-expected-localized-equivalents-for-common-functions.cs
-- write-unit-tests-for-geterrorstring-covering-standard-excel-error-codes-across-multiple-locales.cs
-- write-unit-tests-for-getbooleanstring-covering-true-false-and-null-values-in-different-locales.cs
-- ensure-that-cell-comments-retain-their-original-language-while-function-names-are-localized-according-to-settings.cs
-- use-workbooksettings-to-enable-automatic-recalculation-after-applying-localized-formulas-to-ensure-correct-results.cs
-- configure-workbook-to-use-a-specific-cultureinfo-object-for-date-and-number-formats-during-localization.cs
-- test-that-excels-autofilter-works-correctly-with-localized-column-headers-after-applying-globalization.cs
-- ensure-that-pivot-tables-reflect-localized-subtotal-labels-when-the-workbook-is-opened-in-the-target-language.cs
-- verify-that-chart-titles-and-axis-labels-display-localized-text-when-source-cells-contain-localized-strings.cs
-- implement-a-method-to-reset-globalizationsettings-to-default-english-behavior-for-specific-worksheets.cs
-- create-a-configuration-file-mapping-locale-identifiers-to-corresponding-custom-globalizationsettings-classes.cs
-- develop-a-console-application-that-prompts-users-to-select-a-target-language-and-applies-localization-to-a-workbook.cs
-- implement-a-feature-that-switches-localization-at-runtime-based-on-user-selection-without-reloading-the-workbook.cs
-- measure-performance-differences-when-loading-workbooks-with-and-without-custom-globalizationsettings-applied.cs
-- log-performance-metrics-for-each-localization-step-during-batch-processing-to-identify-bottlenecks.cs
-- load-an-xlsx-workbook-using-loadoptions-with-cultureinfo-set-to-french-preserving-thread-culture.cs
-- create-a-subclass-of-globalizationsettings-that-overrides-gettotalname-to-provide-a-localized-subtotal-label.cs
-- create-a-subclass-of-globalizationsettings-overriding-getgrandtotalname-to-supply-a-culturespecific-grand-total-label.cs
-- assign-the-custom-globalizationsettings-to-the-workbook-before-adding-subtotals-to-ensure-localized-labels.cs
-- add-subtotal-rows-to-the-worksheet-after-assigning-custom-globalizationsettings-verifying-localized-total-labels.cs
-- convert-gregorian-date-cells-to-japanese-calendar-dates-with-cellshelper-preserving-era-information-for-each-cell.cs
-- save-the-workbook-containing-japanese-era-dates-as-pdf-confirming-era-symbols-appear-correctly-in-the-output.cs
-- compare-pdf-output-of-a-workbook-loaded-with-invariant-culture-versus-french-culture-to-assess-number-format-differences.cs
-- programmatically-set-worksheet-cell-styles-to-display-dates-in-japanese-era-format-after-conversion-then-export-to-pdf.cs
-- measure-performance-impact-of-applying-custom-globalization-settings-versus-default-settings-when-generating-large-pivot-tables.cs
-- create-an-application-that-loads-a-workbook-with-italian-cultureinfo-adds-subtotals-and-saves-the-result-as-pdf.cs
-- implement-a-method-that-switches-globalizationsettings-at-runtime-based-on-userselected-language-before-chart-creation.cs
-- generate-a-report-listing-all-cells-converted-to-japanese-dates-including-original-gregorian-values-for-reference.cs
-- demonstrate-preserving-the-original-thread-culture-while-loading-a-workbook-with-french-cultureinfo-using-loadoptions.cs
-- implement-logging-to-capture-which-culturespecific-label-methods-are-called-during-chart-rendering-for-debugging.cs
-- design-a-workflow-that-loads-a-workbook-with-arabic-cultureinfo-adds-righttoleft-subtotals-and-saves-as-pdf.cs
-- implement-a-feature-that-automatically-selects-the-appropriate-japanese-era-based-on-year-when-converting-dates-in-bulk.cs
-- write-code-to-export-a-workbooks-chart-objects-to-separate-pdf-files-each-preserving-custom-globalization-settings.cs
-- create-a-test-suite-that-loads-workbooks-with-various-cultureinfo-values-and-verifies-date-parsing-accuracy.cs
-- implement-a-fallback-mechanism-that-reverts-to-default-globalization-settings-if-custom-label-methods-throw-exceptions.cs
+Each example must identify locale, input representation, stored type, display/formula behavior, output, and expected localized result. Metadata and opening comments must use canonical locale identifiers. Prefer filenames such as `load-excel-with-french-culture.cs`.
+
+## Validation and discoverability
+
+Test under an explicitly configured culture, compare typed values separately from display text, save/reopen, and render when visual labels are claimed. Restore global/thread state in `finally`.
+
+Target one intent such as "format Excel dates for French culture" or "localize Excel formula names in C#." Reject examples that depend silently on installed Excel language packs, compare culture-sensitive strings without a declared culture, or alter process-wide culture without cleanup.
+
+## Related knowledge
+
+- [Category overview](README.md)
+- [Cell formatting](../format-cells/)
+- [Formula management](../manage-formulas/)
+- [Official globalization documentation](https://docs.aspose.com/cells/net/globalization-and-localization/)
+
+## Definition of done
+
+The example is done when locale, stored value, display/formula effect, fallback behavior, process-state cleanup, and expected output are explicit and verified.

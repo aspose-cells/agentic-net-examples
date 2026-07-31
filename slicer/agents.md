@@ -1,141 +1,325 @@
-# Slicer Examples
+---
+name: Aspose.Cells Slicers Agent
+category: slicer
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: C# examples for creating table and PivotTable slicers, connecting caches, selecting items, formatting, positioning, removing, and rendering slicers
+primary_apis: [Worksheet.Slicers, SlicerCollection.Add, Slicer, SlicerCache, ListObject, PivotTable]
+search_intents: [create Excel slicer in C#, add slicer to PivotTable, select slicer items, remove Excel slicer]
+related_categories: [../pivot-table/, ../working-with-tables/, ../timeline/, ../working-with-pdf/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells Slicers Agent Instructions
 
-Slicer
+## Mission
 
+Act as a senior C# engineer specializing in Excel slicers and interactive filtering with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
 
-## Purpose
+Every accepted example must use APIs available in the repository's installed Aspose.Cells package, produce a deterministic result where possible, and make that result easy for developers and AI systems to verify.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+## Instruction precedence
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+1. Follow the repository-wide [`AGENTS.md`](../AGENTS.md).
+2. Apply this file to work inside `slicer/`.
+3. Follow an explicit task when it is more specific and does not conflict with repository safety or validation rules.
+4. Treat filenames and existing examples as discovery material, not authoritative API documentation.
 
+When this file is more specific than root guidance, this file controls slicers behavior.
 
-## Example Files
+## Category boundary
 
-Each `.cs` file demonstrates a specific task related to **Slicer**.
+Use this category when the primary outcome is creating or manipulating an Excel slicer linked to a supported table or PivotTable field.
 
-Example:
+### In scope
 
-create-a-workbook.cs
+- creating table and PivotTable slicers
+- connecting caches
+- selecting items
+- formatting
+- positioning
+- removing
+- and rendering slicers
 
+### Usually out of scope
 
-## Required Namespaces
+- Adjacent features where this category is incidental
+- Microsoft Excel UI automation or Interop
+- Undocumented APIs inferred from filenames
+- Unrelated multi-feature applications
 
-Most examples will require:
+If a scenario spans categories, keep it here only when slicers is the primary learning objective.
 
+## Canonical answer
+
+The standard answer to "How do I add a slicer to Excel in C#?" is:
+
+```csharp
+using System;
 using Aspose.Cells;
-
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
+using Aspose.Cells.Slicers;
+using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;
+using Aspose.Cells.Slicers;
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue("Category");
+worksheet.Cells["A2"].PutValue("A");
+worksheet.Cells["A3"].PutValue("B");
+int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 0, true);
+ListObject table = worksheet.ListObjects[tableIndex];
+SlicerCollection slicers = worksheet.Slicers;
+int index = slicers.Add(table, table.ListColumns[0], 1, 4);
+Slicer slicer = slicers[index];
+workbook.Save("workbook-with-slicer.xlsx");
+Console.WriteLine(slicer.Name);
+```
 
-Worksheet sheet = workbook.Worksheets[0];
+Expected outcome: A slicer linked to the first table column is saved and its name is reported.
 
-Cells cells = sheet.Cells;
+Use this as the default pattern unless the requested scenario requires a more specific API, input format, source object, or output.
 
+## API truths that must be preserved
 
-## Output
+### A slicer requires a supported source
 
-Examples may generate:
+Create or load the table/PivotTable and resolve the field before adding a slicer.
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+### Slicer state may be shared through a cache
 
-Output files are written to the working directory.
-- load-a-workbook-from-an-excel-file-into-memory-for-further-manipulation.cs
-- create-a-slicer-linked-to-a-pivot-table-within-the-loaded-workbook.cs
-- set-the-slicer-caption-to-a-custom-string-to-improve-user-understanding.cs
-- position-the-slicer-by-specifying-precise-top-and-left-coordinates-programmatically.cs
-- resize-the-slicer-by-assigning-specific-height-and-width-values-for-layout-consistency.cs
-- apply-a-builtin-slicer-style-such-as-light-1-for-quick-visual-formatting.cs
-- modify-the-slicer-font-family-size-and-color-to-enhance-label-readability.cs
-- enable-multiselect-on-the-slicer-to-allow-users-to-choose-several-items-simultaneously.cs
-- hide-the-slicer-header-row-to-create-a-compact-filtering-control-without-a-title.cs
-- configure-the-slicer-to-display-items-with-no-data-by-toggling-the-showzeroitems-option.cs
-- apply-a-custom-border-style-with-dashed-lines-and-a-defined-thickness-to-the-slicer.cs
-- arrange-slicer-items-in-multiple-columns-by-setting-the-column-count-property.cs
-- change-the-slicer-layout-direction-to-righttoleft-for-languages-that-read-rtl.cs
-- add-a-slicer-to-a-worksheet-that-contains-a-chart-to-filter-chart-data-dynamically.cs
-- clone-an-existing-slicer-and-place-the-copy-on-another-worksheet-for-parallel-filtering.cs
-- delete-a-slicer-by-name-from-the-workbook-to-clean-up-unused-controls.cs
-- retrieve-the-collection-of-slicers-from-a-worksheet-and-iterate-to-log-each-name.cs
-- programmatically-select-specific-slicer-items-based-on-a-predefined-list-of-values.cs
-- clear-all-selected-items-in-a-slicer-to-reset-the-filter-to-its-default-state.cs
-- set-the-slicer-to-be-printable-so-it-appears-when-the-worksheet-is-printed-to-paper.cs
-- export-the-slicer-as-an-image-and-embed-it-in-a-pdf-report-generated-from-the-workbook.cs
-- save-the-workbook-containing-slicers-to-excel-2016-format-to-preserve-advanced-features.cs
-- save-the-workbook-containing-slicers-to-macroenabled-excel-format-while-retaining-vba-code.cs
-- batch-create-slicers-for-each-pivot-table-in-a-workbook-using-a-loop-over-all-tables.cs
-- update-slicer-properties-across-all-worksheets-in-a-workbook-to-enforce-a-corporate-style.cs
-- synchronize-two-slicers-so-that-selecting-an-item-in-one-updates-the-other-automatically.cs
-- load-an-xlsx-workbook-remove-a-named-slicer-and-save-the-workbook-as-xlsx.cs
-- iterate-all-worksheets-delete-every-slicer-and-export-the-modified-workbook-to-pdf.cs
-- identify-slicers-starting-with-region-remove-them-and-save-the-workbook-in-xlsx-format.cs
-- retrieve-a-slicer-programmatically-select-multiple-items-refresh-it-and-save-changes-to-xlsx.cs
-- unselect-all-items-in-a-slicer-call-refresh-and-export-the-workbook-to-pdf-preserving-slicer-appearance.cs
-- load-a-workbook-from-a-memory-stream-update-slicer-selections-refresh-pivot-tables-and-write-pdf-to-stream.cs
-- set-the-worksheet-print-area-to-slicer-bounds-then-render-the-slicer-as-an-image-file.cs
-- after-updating-slicer-items-verify-the-associated-pivot-table-reflects-the-new-filter-criteria.cs
-- create-a-batch-process-that-removes-a-named-slicer-from-multiple-xlsx-workbooks-and-saves-each-as-pdf.cs
-- use-slicercacheitems-to-select-items-based-on-external-csv-data-then-refresh-the-slicer.cs
-- export-a-workbook-containing-slicers-to-pdf-ensuring-all-slicers-appear-on-the-same-page.cs
-- compare-slicer-selection-states-before-and-after-calling-refresh-to-ensure-changes-are-applied-correctly.cs
-- use-worksheetslicersremoveall-to-clear-every-slicer-from-a-sheet-then-save-the-workbook-as-xlsx.cs
-- before-exporting-to-pdf-set-pdf-conversion-options-to-embed-fonts-and-retain-slicer-formatting.cs
-- iterate-over-slicercacheitems-to-deselect-items-matching-a-specific-keyword.cs
-- save-the-workbook-after-each-slicer-modification-to-create-incremental-versioned-files-for-change-tracking.cs
-- remove-slicers-only-if-they-are-linked-to-a-pivot-table-exceeding-one-hundred-rows.cs
-- list-all-slicer-names-on-a-worksheet-and-write-them-to-a-text-file.cs
-- load-workbooks-in-parallel-threads-remove-a-designated-slicer-from-each-and-save-results-as-pdfs.cs
-- iterate-each-slicer-log-its-selected-items-then-deselect-all-items-and-refresh.cs
-- generate-a-pdf-report-that-includes-only-the-slicer-region-by-setting-the-worksheets-print-area.cs
-- write-a-unit-test-verifying-that-slicerrefresh-updates-the-linked-pivot-tables-row-count-as-expected.cs
-- save-the-workbook-with-pdf-options-to-embed-the-slicers-visual-style-in-the-output-file.cs
-- after-adding-new-items-to-a-slicers-cache-call-refresh-and-confirm-the-pivot-table-reflects-the-additions.cs
-- remove-slicers-from-all-worksheets-in-a-workbook-and-save-a-consolidated-pdf.cs
-- create-a-function-returning-true-if-a-slicer-contains-any-selected-items-otherwise-false.cs
-- process-a-list-of-slicer-names-removing-each-one-and-logging-the-operation-result.cs
-- toggle-slicer-item-selection-based-on-values-read-from-a-database-query.cs
-- load-multiple-workbooks-remove-all-slicers-and-archive-the-resulting-pdfs-in-a-zip-file.cs
-- before-saving-automatically-select-the-first-item-if-a-slicer-has-no-selected-items.cs
-- use-the-workbooks-calculate-method-after-slicer-refresh-to-ensure-formulas-reflect-the-new-filter.cs
-- load-an-xlsx-workbook-create-a-slicer-for-a-table-column-and-save-the-file.cs
-- load-a-workbook-create-slicers-for-multiple-table-columns-and-align-them-vertically-with-equal-spacing.cs
-- create-a-slicer-linked-to-a-table-column-then-set-its-placement-to-the-topright-corner.cs
-- adjust-slicer-row-height-to-30-points-after-linking-it-to-the-second-table-column.cs
-- set-slicer-row-height-dynamically-based-on-the-number-of-unique-items-in-the-linked-column.cs
-- set-slicer-width-to-150-pixels-and-verify-its-appearance-on-the-worksheet.cs
-- batch-process-multiple-workbooks-adding-slicers-to-each-and-adjusting-their-widths-uniformly.cs
-- change-the-slicer-title-to-region-filter-and-update-the-workbook-accordingly.cs
-- apply-a-custom-color-scheme-to-the-slicer-style-and-verify-visual-consistency-across-sheets.cs
-- apply-the-slicerstylelight1-formatting-style-to-the-slicer-and-save-changes-in-the-workbook.cs
-- update-slicer-style-based-on-datadriven-criteria-using-the-api.cs
-- mark-the-slicer-as-nonprintable-and-ensure-it-does-not-appear-in-printed-output.cs
-- iterate-through-all-slicers-in-the-workbook-and-set-each-printable-flag-to-false.cs
-- validate-that-the-slicer-printable-flag-is-true-before-exporting-the-workbook-to-pdf.cs
-- add-a-pivot-table-connection-to-the-slicer-for-dynamic-data-filtering.cs
-- remove-an-existing-pivot-connection-from-the-slicer-to-stop-automatic-updates.cs
-- programmatically-retrieve-slicer-properties-log-them-and-modify-row-height-based-on-logged-values.cs
-- create-a-slicer-and-retrieve-its-identifier-for-use-in-subsequent-api-calls.cs
-- create-a-slicer-then-copy-its-properties-to-a-new-slicer-on-another-worksheet.cs
-- set-slicer-placement-and-ensure-it-remains-unchanged-after-saving-and-reloading-the-workbook.cs
-- validate-that-slicer-placement-coordinates-remain-consistent-after-saving-and-reloading-the-workbook.cs
-- export-the-workbook-containing-slicers-to-pdf-and-compare-slicer-positions-with-the-original-excel-file.cs
-- render-the-workbook-to-pdf-while-preserving-slicer-visual-properties-and-layout.cs
-- convert-the-workbook-with-slicers-to-pdf-while-preserving-slicer-appearance-and-metadata.cs
-- implement-error-handling-when-adding-a-slicer-to-a-nonexistent-table-column-in-the-worksheet.cs
-- save-the-workbook-with-slicers-and-compare-file-sizes-with-a-version-saved-without-slicers.cs
-- generate-a-report-listing-each-slicers-title-size-and-linked-table-column-for-auditing-purposes.cs
-- render-slicer-as-a-static-image-in-pdf-to-prevent-interactivity-while-preserving-its-appearance.cs
+Selections and connections can affect multiple controls/reports; verify cache relationships.
+
+### Rendering is not interactivity
+
+PDF/image output can show slicer appearance but cannot preserve Excel's interactive filtering behavior.
+
+### API ownership matters
+
+Do not move a property or method to a convenient-looking object. Confirm the declaring type, overload, enum, and package version before generating code.
+
+## Canonical API map
+
+| API | Purpose |
+| --- | --- |
+| `Worksheet.Slicers` | Access slicers |
+| `SlicerCollection.Add` | Create a slicer |
+| `Slicer` | Configure control properties |
+| `SlicerCache` | Manage shared filter state |
+| `ListObject` | Provide a table source |
+| `PivotTable` | Provide a pivot source |
+
+## Required namespaces
+
+Start with only the namespaces needed by the scenario:
+
+```csharp
+using System;
+using Aspose.Cells;
+```
+
+Add framework or Aspose namespaces only when directly used. Do not import namespaces to imply unsupported capability.
+
+## Example contract
+
+Every new or regenerated example must:
+
+1. Demonstrate one primary slicers capability.
+2. Be a complete, single-file C# program.
+3. Use explicit types rather than `var`.
+4. Generate deterministic sample data when practical.
+5. Use the smallest appropriate API surface.
+6. Verify at least one concrete result or postcondition.
+7. Print a deterministic success/result message.
+8. Save a task-specific output when persistence matters.
+9. Avoid unrelated dependencies and abstractions.
+10. Compile and execute with the configured package and target framework.
+11. Match filename, metadata, comments, code, output, and expected result.
+
+## Machine-readable example metadata
+
+New examples should begin with:
+
+```csharp
+/*
+Title: How do I add a slicer to Excel in C#
+Intent: C# examples for creating table and PivotTable slicers, connecting caches, selecting items, formatting, positioning, removing, and rendering slicers
+Category: slicer
+Primary API: Worksheet.Slicers
+Input: A worksheet containing a valid table or PivotTable source
+Output: workbook-with-slicer.xlsx
+Expected Result: A slicer linked to the first table column is saved and its name is reported.
+Product: Aspose.Cells for .NET
+Language: C#
+*/
+```
+
+Keep metadata factual, concise, version-aware, and useful when extracted independently by a RAG system.
+
+## Filename and title rules
+
+Use concise, action-first filenames that express one search intent. Prefer `add-slicer-to-excel-table.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
+
+## Natural-language opening comment
+
+After metadata, include one sentence stating the operation and expected result:
+
+```csharp
+// Add a slicer to the first table column and verify its source and name.
+```
+
+The comment must read like a direct answer, not a keyword list.
+
+## Slicers construction and operation rules
+
+- Validate source object and field index/name.
+- Create data and table/PivotTable before the slicer.
+- Refresh PivotTables after selection changes when required.
+- Use documented style/placement properties.
+- Verify source, cache, selection, and position after reopening.
+
+## Result verification
+
+Verify the resulting slicers object state, relationships, representative values, and artifact. Reopen when persistence is claimed.
+
+An example is incomplete if it performs an operation but never checks the resulting object, value, collection, file, relationship, or rendered artifact.
+
+## Error-handling policy
+
+- Catch only exceptions the scenario can handle meaningfully.
+- Include operation and synthetic input context without leaking credentials or workbook data.
+- Never suppress failures merely to create an output file.
+- Distinguish invalid input, unsupported format/API, corrupt content, unavailable dependencies, and permission failures when possible.
+- Let unexpected exceptions fail validation.
+
+## Selections, caches, and multiple connections
+
+Change items through documented cache/item APIs and verify every connected PivotTable or table.
+
+## Styling, layout, and rendering
+
+Use supported styles and coordinates; distinguish workbook interactivity from static rendered appearance.
+
+## Monitoring and interruption
+
+Use documented progress, warning, or interruption APIs only. Keep callbacks lightweight and verify completion or cancellation.
+
+Long-running examples must use version-supported interruption/progress APIs, bounded inputs, cancellation where available, and a verified stopped/completed outcome. Never invent callbacks from task wording.
+
+## Performance and memory examples
+
+Use representative slicers data, batch compatible changes, and report object counts, dimensions, elapsed time, and memory assumptions.
+
+Use `Stopwatch`, identical workloads, warm-up where material, multiple iterations, and report package/framework/environment assumptions. Never present one-machine measurements as universal guarantees.
+
+## Input and output strategy
+
+Prefer generated fixtures. Load existing workbooks only when preserving slicers state is essential. Save to `workbook-with-slicer.xlsx` and reopen when relevant.
+
+Use relative, deterministic filenames; never developer-specific absolute paths. Do not overwrite inputs unless explicitly requested. Reopen saved output when persistence is part of the claim.
+
+## Security and enterprise safety
+
+Validate untrusted content and identifiers before slicers operations. Bound sizes and avoid logging sensitive values or metadata.
+
+- Never embed licenses, credentials, tokens, personal data, private keys, or connection secrets.
+- Keep generated output inside the working directory.
+- Treat workbook content and external references as untrusted.
+
+## SEO, GEO, and AEO requirements
+
+### Search intent
+
+Target one primary intent and one or two natural aliases:
+
+- create Excel slicer in C#
+- add slicer to PivotTable
+- select slicer items
+- remove Excel slicer
+
+Do not stuff every phrase into each example.
+
+### Answer-first structure
+
+The first meaningful comment must identify the operation, primary API, and expected result. An extracted example must reveal what problem is solved, required input, output, and verification without external context.
+
+### Entity consistency
+
+Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, Slicer, slicer cache, table, PivotTable, filter selection. Avoid ambiguous product nicknames.
+
+### Citation quality
+
+Use official Aspose.Cells documentation and API reference as technical authorities. Keep claims specific and verifiable. Never fabricate support, compatibility, benchmark, or fidelity claims.
+
+## API verification and anti-hallucination gate
+
+Before accepting code:
+
+1. Inspect the installed Aspose.Cells package version.
+2. Search existing examples for the exact symbol.
+3. Confirm it in official API documentation or through compilation.
+4. Confirm its declaring type and overload parameters.
+5. Compile the complete example.
+6. Run it and validate the expected result.
+
+Reject code that derives an API from a filename, invents option properties, confuses adjacent feature models, or reports success without checking the outcome.
+
+## Validation workflow
+
+```text
+Interpret one developer intent
+  -> select the correct object model and smallest API scope
+  -> verify symbols and package compatibility
+  -> create controlled input
+  -> perform one primary operation
+  -> assert the expected result
+  -> save and reopen when relevant
+  -> compile and run
+  -> inspect diagnostics and artifacts
+  -> update retrieval metadata
+```
+
+## Review checklist
+
+### Correctness
+
+- [ ] The API exists and belongs to the expected type.
+- [ ] Indexes, ranges, names, fields, formats, and relationships are valid.
+- [ ] Required source objects/data exist before the operation.
+- [ ] The result is explicitly verified.
+
+### Code quality
+
+- [ ] The program is complete, focused, deterministic, and runnable.
+- [ ] Explicit C# types and minimal namespaces are used.
+- [ ] Resource ownership and errors are handled safely.
+- [ ] No credentials, absolute paths, or unrelated dependencies are present.
+
+### Discoverability
+
+- [ ] Filename and title express one natural intent.
+- [ ] Metadata identifies the primary API and expected result.
+- [ ] Opening comment provides a direct answer.
+- [ ] Canonical product and domain entities are used.
+
+### Validation
+
+- [ ] `dotnet build` succeeds.
+- [ ] `dotnet run` succeeds.
+- [ ] Expected object state or output is confirmed.
+- [ ] Saved output is reopened/inspected when applicable.
+
+## Related knowledge
+
+- [Pivot tables](../pivot-table/)
+- [Tables](../working-with-tables/)
+- [Timelines](../timeline/)
+- [PDF](../working-with-pdf/)
+
+## Definition of done
+
+A `slicer` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.

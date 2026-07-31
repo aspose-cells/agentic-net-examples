@@ -1,180 +1,313 @@
-# Open Workbook Examples
+---
+name: Aspose.Cells Workbook Loading Agent
+category: open-workbook
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Open Excel and other spreadsheet formats from files or streams with controlled loading behavior in C#
+primary_apis: [Workbook, LoadOptions, TxtLoadOptions, HtmlLoadOptions, LoadFilter, LightCellsDataHandler, FileFormatUtil]
+search_intents: [open Excel file in C#, load XLSX stream, read large Excel file, detect spreadsheet format]
+related_categories: [../save-workbook/, ../cells-data/, ../encryption-and-protection/, ../conversion/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells Workbook Loading Agent Instructions
 
-Open Workbook
+## Mission
 
+Act as a senior C# engineer specializing in workbook loading, format detection, filtering, and memory-efficient reads with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
 
-## Purpose
+Every accepted example must use APIs available in the repository's installed Aspose.Cells package, produce a deterministic result where possible, and make that result easy for developers and AI systems to verify.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+## Instruction precedence
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+1. Follow the repository-wide [`AGENTS.md`](../AGENTS.md).
+2. Apply this file to work inside `open-workbook/`.
+3. Follow an explicit task when it is more specific and does not conflict with repository safety or validation rules.
+4. Treat filenames and existing examples as discovery material, not authoritative API documentation.
 
+When this file is more specific than root guidance, this file controls workbook loading behavior.
 
-## Example Files
+## Category boundary
 
-Each `.cs` file demonstrates a specific task related to **Open Workbook**.
+Use this category when the primary outcome is loading or detecting a workbook and controlling which content enters memory.
 
-Example:
+### In scope
 
-create-a-workbook.cs
+- File and stream constructors
+- Format-specific load options
+- Passwords and encrypted inputs
+- Load filters, warnings, interruption, recovery, memory settings, and LightCells
+- Post-load content verification and format detection
 
+### Usually out of scope
 
-## Required Namespaces
+- General workbook editing: use `manage-workbook`
+- Output formats: use `save-workbook` or `conversion`
+- Cell transformations: use `cells-data`
+- Security configuration after load: use `encryption-and-protection`
 
-Most examples will require:
+If a scenario spans categories, keep it here only when input loading, detection, filtering, warnings, or resource usage is the primary lesson.
 
+## Canonical answer
+
+The standard answer to "How do I open an Excel workbook in C#?" is:
+
+```csharp
+using System;
 using Aspose.Cells;
 
+LoadOptions options = new LoadOptions(LoadFormat.Xlsx);
+Workbook workbook = new Workbook("input.xlsx", options);
+int worksheetCount = workbook.Worksheets.Count;
+Console.WriteLine($"Worksheets: {worksheetCount}");
+workbook.Dispose();
+```
 
-## Common Pattern
+Expected outcome: `input.xlsx` loads successfully and a positive worksheet count is reported.
 
-Typical Aspose.Cells workflow:
+Use this as the default pattern unless the requested scenario requires a more specific API, input format, source object, or output.
 
-Workbook workbook = new Workbook();
+## API truths that must be preserved
 
-Worksheet sheet = workbook.Worksheets[0];
+### Load options must match the source
 
-Cells cells = sheet.Cells;
+Choose `LoadOptions`, `TxtLoadOptions`, HTML/CSV options, passwords, and encoding according to the actual input.
 
+### A stream's state is part of the input
 
-## Output
+Verify readability and position; define stream ownership and do not dispose caller-owned streams unexpectedly.
 
-Examples may generate:
+### Partial loading changes what is available
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+Load filters and LightCells intentionally omit or stream content. Never assume excluded objects, formulas, styles, or sheets are present.
 
-Output files are written to the working directory.
-- open-an-xlsx-workbook-from-a-local-file-path-using-the-default-workbook-constructor.cs
-- load-a-legacy-xls-file-from-a-stream-object-to-process-its-data-in-memory.cs
-- instantiate-loadoptions-with-loaddataonly-set-true-to-import-only-cell-values-without-formatting.cs
-- create-a-custom-loadfilter-that-skips-invisible-worksheets-and-assign-it-to-loadoptions-before-opening.cs
-- open-an-encrypted-excel-workbook-by-providing-the-password-in-loadoptionspassword-property.cs
-- enable-memorypreferences-in-loadoptions-to-prevent-outofmemoryexception-when-loading-a-massive-workbook.cs
-- use-lightcells-api-with-loadoptions-to-process-a-large-dataset-while-minimizing-memory-consumption.cs
-- interrupt-a-longrunning-workbook-load-operation-by-configuring-an-interruptmonitor-and-calling-its-cancel-method.cs
-- calculate-all-formulas-in-the-loaded-workbook-by-invoking-workbookcalculateformula-after-the-file-is-opened.cs
-- open-an-excel-95-file-by-setting-loadoptionsversion-to-excel95-before-constructing-the-workbook.cs
-- load-an-excel-972003-workbook-by-assigning-loadoptionsversion-to-excel97to2003-during-initialization.cs
-- automatically-detect-the-workbook-format-by-passing-only-the-file-path-to-the-workbook-constructor.cs
-- open-a-workbook-from-a-byte-array-by-wrapping-it-in-a-memorystream-and-using-the-stream-constructor.cs
-- load-a-workbook-from-an-http-response-stream-to-process-a-remotely-hosted-excel-file-without-saving-locally.cs
-- load-only-defined-names-from-a-workbook-by-setting-loadoptionsloadfilter-to-a-predefined-definednamesfilter.cs
-- open-a-workbook-with-formulas-preserved-but-not-calculated-by-disabling-automatic-calculation-in-loadoptions.cs
-- read-numeric-cells-as-text-in-load-by-enabling-the-loadoptionsconvertnumerictotext-feature.cs
-- open-a-workbook-from-a-network-share-path-while-ensuring-unc-handling-by-using-the-file-path-constructor.cs
-- open-an-xlsb-binary-workbook-by-specifying-the-file-path-the-constructor-automatically-recognizes-the-format.cs
-- process-a-collection-of-excel-files-in-a-directory-by-iterating-and-applying-identical-loadoptions-to-each-workbook.cs
-- open-a-workbook-with-password-protection-and-then-remove-the-password-by-clearing-loadoptionspassword-after-loading.cs
-- enable-the-useoptimizedmemory-flag-in-loadoptions-to-improve-performance-when-loading-workbooks-containing-thousands-of-rows.cs
-- load-a-workbook-while-ignoring-all-external-links-by-setting-loadoptionsignoreexternallinks-to-true.cs
-- open-a-workbook-and-retrieve-the-list-of-defined-names-without-loading-any-worksheet-data-using-a-loadfilter.cs
-- configure-loadoptions-to-load-only-the-workbooks-custom-xml-parts-for-metadata-extraction-without-loading-cell-data.cs
-- open-a-workbook-from-a-zip-archive-by-extracting-the-stream-and-passing-it-to-the-workbook-constructor.cs
-- load-a-workbook-with-the-option-to-preserve-original-cell-formatting-while-ignoring-formula-results-using-loadoptions.cs
-- apply-a-loadfilter-that-selects-worksheets-based-on-a-userprovided-list-of-indices-before-loading-the-workbook.cs
-- open-a-workbook-and-immediately-export-its-visible-sheet-names-to-a-json-array-for-downstream-processing.cs
-- load-only-the-summary-and-data-worksheets-from-the-file-using-loadoptionsloadfilter.cs
-- exclude-hidden-worksheets-during-load-by-configuring-loadoptionsloadfilter-to-ignore-them.cs
-- filter-out-defined-names-starting-with-_-during-load-and-verify-their-absence-after-opening.cs
-- load-only-chart-objects-by-setting-loadoptionsloadfilter-to-include-charts-exclusively.cs
-- stream-rows-from-a-large-worksheet-using-lightcells-api-to-avoid-loading-the-entire-workbook.cs
-- implement-an-interruptmonitor-that-aborts-workbook-loading-after-ten-seconds-to-prevent-excessive-processing-time.cs
-- create-a-custom-iwarningcallback-class-that-logs-each-load-warning-to-a-text-file.cs
-- load-a-partially-corrupted-excel-file-while-capturing-warnings-then-continue-processing-the-recoverable-content.cs
-- batch-load-multiple-workbooks-using-the-same-loadoptions-configuration-to-apply-consistent-worksheet-filtering.cs
-- enumerate-all-loaded-worksheets-after-opening-a-workbook-and-output-their-names-to-the-console.cs
-- read-cell-values-with-culturespecific-number-formatting-after-loading-a-workbook-to-ensure-correct-decimals.cs
-- validate-that-required-worksheets-invoice-and-summary-exist-after-loading-throwing-an-exception-if-missing.cs
-- extract-all-formulas-from-loaded-worksheets-and-store-them-in-a-dictionary-keyed-by-cell-address.cs
-- convert-a-loaded-workbook-to-pdf-while-an-interruptmonitor-aborts-the-conversion-if-it-exceeds-twenty-seconds.cs
-- export-a-loaded-workbook-to-html-and-use-interruptmonitor-to-stop-the-process-after-a-defined-timeout.cs
-- save-the-workbook-back-to-xlsx-format-after-modifying-cell-values-using-workbooksave-with-default-options.cs
-- load-a-workbook-while-excluding-chart-objects-then-verify-that-the-resulting-worksheets-contain-zero-charts.cs
-- filter-out-defined-names-that-start-with-temp_-using-loadoptionsloadfilter-during-workbook-loading.cs
-- capture-load-warnings-about-unsupported-features-and-write-each-warning-message-to-the-application-log-file.cs
-- configure-interruptmonitor-to-abort-workbook-loading-after-five-seconds-then-handle-the-resulting-exception-gracefully.cs
-- read-numeric-cells-from-an-applegenerated-spreadsheet-calculate-their-average-and-output-the-result-to-the-console.cs
-- exclude-worksheets-named-temp-during-load-by-adding-their-names-to-loadoptionsloadfilterexcludedsheets-collection.cs
-- include-worksheets-matching-the-pattern-q0-9-using-loadoptionsloadfilter-with-a-regular-expression-filter.cs
-- set-loadoptionsloadfilter-to-load-only-data-cells-skipping-chart-objects-to-reduce-memory-usage.cs
-- log-warnings-about-unsupported-formulas-to-a-file-by-implementing-iwarningcallback-that-appends-messages-with-timestamps.cs
-- copy-columns-a-through-d-from-the-source-worksheet-to-a-new-workbook-using-lightcells-for-efficient-selection.cs
-- set-pdfsaveoptionscompressionlevel-to-high-when-saving-to-reduce-file-size-while-maintaining-visual-fidelity.cs
-- enable-htmlsaveoptionsexportimagesasbase64-to-embed-images-directly-in-the-html-output-for-selfcontained-files.cs
-- configure-htmlsaveoptionsexportchartimageformat-to-png-then-save-the-workbook-as-html-with-highresolution-charts.cs
-- limit-pdf-output-to-the-first-ten-pages-by-setting-pdfsaveoptionspagecount-to-ten-before-saving.cs
-- set-htmlsaveoptionspagetitle-to-the-workbooks-filename-ensuring-each-html-file-displays-a-meaningful-title.cs
-- load-an-xlsx-workbook-using-lightcells-api-while-applying-filterobjects-to-exclude-charts.cs
-- configure-memorysettingmemorypreference-to-low-before-opening-a-massive-xlsx-file-to-reduce-ram-usage.cs
-- apply-filterdefinednames-while-loading-a-workbook-to-include-only-required-named-ranges-for-calculations.cs
-- use-interruptmonitor-to-abort-workbook-loading-if-processing-exceeds-a-predefined-time-limit.cs
-- retrieve-and-log-warning-messages-after-loading-a-workbook-with-filtered-objects-to-diagnose-data-loss.cs
-- load-only-the-first-three-worksheets-from-an-xlsx-file-using-lightcells-to-minimize-memory-consumption.cs
-- exclude-hidden-rows-during-workbook-loading-by-configuring-filterobjects-to-ignore-rows-with-visibility-set-to-false.cs
-- read-numeric-cell-values-with-lightcells-api-and-store-them-in-a-highperformance-inmemory-collection.cs
-- write-formulas-to-cells-while-streaming-data-using-lightcellsdataprovider-to-preserve-calculation-logic.cs
-- save-a-workbook-as-xlsx-while-specifying-a-custom-temporary-folder-for-intermediate-files-to-reduce-disk-io.cs
-- load-a-passwordprotected-xlsx-file-using-lightcells-api-by-providing-the-decryption-password-in-load-options.cs
-- filter-out-all-pictures-from-a-workbook-during-loading-to-improve-performance-for-large-spreadsheets.cs
-- implement-a-custom-lightcellsdataprovider-that-reads-data-from-a-database-and-writes-directly-to-an-excel-worksheet.cs
-- apply-filterdatakind-to-load-only-numeric-and-date-cells-from-a-template-workbook-for-statistical-analysis.cs
-- configure-lightcells-to-process-cells-in-rowmajor-order-for-optimal-cache-utilization-during-large-file-reads.cs
-- load-a-workbook-without-charts-by-applying-filterobjects-then-verify-that-chart-collections-are-empty-after-loading.cs
-- implement-lightcellsdatahandler-to-convert-all-text-cells-to-uppercase-while-reading-a-workbook-for-standardization.cs
-- set-memorysettingmemorypreference-to-normal-for-a-small-xlsx-file-to-achieve-faster-processing-speed.cs
-- use-lightcells-api-to-copy-data-from-one-worksheet-to-another-without-creating-intermediate-workbook-objects.cs
-- save-a-workbook-as-xls-while-enabling-temporary-folder-storage-to-handle-large-file-size-without-exhausting-ram.cs
-- apply-filterobjects-to-exclude-data-validation-rules-during-loading-reducing-memory-footprint-for-simple-data-extraction-tasks.cs
-- read-cell-comments-using-lightcells-api-and-write-them-to-a-separate-json-file-for-documentation-purposes.cs
-- write-cell-comments-while-saving-a-workbook-with-lightcellsdataprovider-to-preserve-user-annotations-in-the-output-file.cs
-- load-a-workbook-and-filter-out-all-conditional-formatting-rules-to-improve-loading-speed-for-analysis-pipelines.cs
-- export-hyperlinks-from-a-workbook-using-lightcells-api-and-generate-a-report-listing-url-targets-and-cell-addresses.cs
-- insert-new-hyperlinks-while-writing-cells-with-lightcellsdataprovider-to-create-navigable-references-in-the-generated-spreadsheet.cs
-- load-only-visible-worksheets-by-applying-filterobjects-then-process-each-visible-sheet-sequentially-using-lightcells.cs
-- save-a-workbook-with-culturespecific-number-formats-by-setting-appropriate-locale-settings-in-lightcellsdataprovider.cs
-- load-a-workbook-containing-pivot-tables-using-lightcells-api-and-extract-pivot-cache-data-for-external-reporting.cs
-- write-pivot-table-definitions-while-saving-with-lightcellsdataprovider-to-recreate-analytical-views-in-the-output-workbook.cs
-- apply-filterdatakind-to-load-only-string-cells-from-a-template-then-concatenate-them-into-a-summary-report.cs
-- use-lightcells-api-to-read-merged-cell-ranges-and-output-their-start-and-end-coordinates-for-layout-analysis.cs
-- write-merged-cells-while-streaming-data-with-lightcellsdataprovider-to-preserve-complex-table-structures-in-large-excel-files.cs
-- load-a-workbook-with-a-specific-page-setup-configuration-and-verify-that-margin-settings-are-retained-after-processing.cs
-- save-a-workbook-using-lightcells-api-while-disabling-automatic-calculation-to-speed-up-writing-of-static-data-sheets.cs
-- implement-lightcellsdatahandler-to-replace-error-values-with-zero-during-load-ensuring-clean-numeric-datasets-for-analysis.cs
-- load-an-xlsx-workbook-from-a-file-path-while-excluding-all-embedded-charts.cs
-- save-the-chartfree-workbook-to-a-pdf-document-preserving-original-cell-formatting.cs
-- apply-printer-paper-size-a5-during-load-and-generate-a-pdf-with-matching-page-dimensions.cs
-- reload-the-same-workbook-with-printer-paper-size-a3-and-compare-pdf-file-sizes-between-a5-and-a3-outputs.cs
-- use-lightcells-api-to-open-a-large-xlsx-file-while-limiting-memory-usage-to-200-mb.cs
-- load-a-large-workbook-with-lightcells-api-and-save-directly-to-pdf.cs
-- load-only-worksheets-with-indexes-0-and-2-using-loadoptions-and-export-them-to-separate-pdf-files.cs
-- filter-defined-names-containing-total-during-load-and-verify-that-only-those-names-are-retained.cs
-- use-loadoptions-to-load-only-defined-names-that-start-with-report-and-generate-a-pdf-containing-those-ranges.cs
-- configure-interruptmonitor-to-abort-loading-if-processing-exceeds-30-seconds-and-log-the-interruption-event.cs
-- after-loading-iterate-through-workbookloadwarnings-collection-and-output-each-warning-message-to-console.cs
-- load-a-workbook-set-printer-paper-size-to-letter-via-loadoptions-and-verify-pdf-page-count-matches-expectations.cs
-- load-a-workbook-using-loadoptions-to-disable-charts-set-printer-paper-size-a5-and-save-to-pdf.cs
-- load-a-workbook-using-loadoptions-to-disable-charts-filter-defined-names-total-and-save-to-pdf.cs
-- load-a-workbook-using-loadoptions-to-disable-charts-load-only-worksheets-0-and-2-and-save-to-pdf.cs
-- load-a-workbook-using-loadoptions-to-disable-charts-configure-interruptmonitor-and-save-to-pdf.cs
-- load-a-workbook-using-loadoptions-to-disable-charts-retrieve-loadwarnings-and-log-them.cs
-- load-a-workbook-with-lightcells-api-exclude-charts-and-save-the-result-to-pdf.cs
-- load-a-workbook-with-lightcells-api-set-printer-paper-size-a3-and-save-to-pdf.cs
-- load-a-workbook-with-lightcells-api-filter-defined-names-containing-total-and-save-to-pdf.cs
-- load-a-workbook-with-lightcells-api-load-only-worksheets-1-and-3-and-save-to-pdf.cs
-- load-a-workbook-with-lightcells-api-configure-interruptmonitor-for-a-30second-timeout-and-save-to-pdf.cs
-- load-a-workbook-with-lightcells-api-retrieve-loadwarnings-after-load-and-output-them.cs
-- batch-process-multiple-excel-files-by-loading-them-without-charts-using-loadoptions-and-saving-each-as-pdf.cs
-- use-lightcells-api-to-open-a-large-workbook-then-monitor-memory-usage-statistics-during-processing.cs
-- load-a-workbook-apply-printer-paper-size-a5-and-verify-that-the-generated-pdf-matches-the-specified-dimensions.cs
-- load-a-workbook-apply-printer-paper-size-letter-and-ensure-the-pdf-page-count-aligns-with-expectations.cs
-- load-a-workbook-filter-defined-names-containing-total-and-generate-a-pdf-that-includes-only-those-named-ranges.cs
+### API ownership matters
+
+Do not move a property or method to a convenient-looking object. Confirm the declaring type, overload, enum, and package version before generating code.
+
+## Canonical API map
+
+| API | Purpose |
+| --- | --- |
+| `Workbook` | Open a file or stream |
+| `LoadOptions` | Configure common load behavior |
+| `TxtLoadOptions` | Load CSV/text with encoding and separators |
+| `LoadFilter` | Select data/object types or worksheets |
+| `LightCellsDataHandler` | Stream large cell datasets with low memory |
+| `FileFormatUtil` | Detect supported file format/encryption state |
+
+## Required namespaces
+
+Start with only the namespaces needed by the scenario:
+
+```csharp
+using System;
+using System.IO;
+using Aspose.Cells;
+```
+
+Add framework or Aspose namespaces only when directly used. Do not import namespaces to imply unsupported capability.
+
+## Example contract
+
+Every new or regenerated example must:
+
+1. Demonstrate one primary workbook loading capability.
+2. Be a complete, single-file C# program.
+3. Use explicit types rather than `var`.
+4. Generate deterministic sample data when practical.
+5. Use the smallest appropriate API surface.
+6. Verify at least one concrete result or postcondition.
+7. Print a deterministic success/result message.
+8. Save a task-specific output when persistence matters.
+9. Avoid unrelated dependencies and abstractions.
+10. Compile and execute with the configured package and target framework.
+11. Match filename, metadata, comments, code, output, and expected result.
+
+## Machine-readable example metadata
+
+New examples should begin with:
+
+```csharp
+/*
+Title: Open an XLSX workbook with explicit load options
+Intent: Open Excel and other spreadsheet formats from files or streams with controlled loading behavior in C#
+Category: open-workbook
+Primary API: Workbook(string, LoadOptions)
+Input: input.xlsx
+Output: None
+Expected Result: `input.xlsx` loads successfully and a positive worksheet count is reported.
+Product: Aspose.Cells for .NET
+Language: C#
+*/
+```
+
+Keep metadata factual, concise, version-aware, and useful when extracted independently by a RAG system.
+
+## Filename and title rules
+
+Use concise, action-first filenames that express one search intent. Prefer `open-xlsx-with-loadoptions.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
+
+## Natural-language opening comment
+
+After metadata, include one sentence stating the operation and expected result:
+
+```csharp
+// Open input.xlsx as XLSX and verify that at least one worksheet was loaded.
+```
+
+The comment must read like a direct answer, not a keyword list.
+
+## Workbook loading rules
+
+- Validate path/stream and format before processing untrusted files.
+- Match passwords and options to encrypted inputs.
+- Use warning callbacks for recoverable issues and preserve diagnostics.
+- Use load filters only when omitted content is documented.
+- Define stream ownership and lifetime explicitly.
+
+## Result verification
+
+Check detected format, worksheet count/names, representative cells, warnings, and requested object availability. For partial loads, assert both included and intentionally excluded content.
+
+An example is incomplete if it performs an operation but never checks the resulting object, value, collection, file, relationship, or rendered artifact.
+
+## Error-handling policy
+
+- Catch only exceptions the scenario can handle meaningfully.
+- Include operation and synthetic input context without leaking credentials or workbook data.
+- Never suppress failures merely to create an output file.
+- Distinguish invalid input, unsupported format/API, corrupt content, unavailable dependencies, and permission failures when possible.
+- Let unexpected exceptions fail validation.
+
+## Load filters and LightCells
+
+Load filters select workbook content; LightCells streams cells through handlers. Do not mix their semantics or retain transient objects beyond documented callbacks.
+
+## Encrypted, damaged, and interrupted loads
+
+Use version-supported password, warning, recovery, and interruption APIs. Distinguish incorrect credentials, corruption, unsupported formats, and intentional cancellation.
+
+## Monitoring and interruption
+
+Use `IWarningCallback` and supported interrupt monitors for bounded diagnostics/cancellation. Callbacks must be lightweight and must not leak workbook content.
+
+Long-running examples must use version-supported interruption/progress APIs, bounded inputs, cancellation where available, and a verified stopped/completed outcome. Never invent callbacks from task wording.
+
+## Performance and memory examples
+
+Use memory-preference settings, filtering, or LightCells only after measuring representative files. Report file size, used range, objects loaded, and peak memory.
+
+Use `Stopwatch`, identical workloads, warm-up where material, multiple iterations, and report package/framework/environment assumptions. Never present one-machine measurements as universal guarantees.
+
+## Input and output strategy
+
+Use small committed/generated fixtures when format loading is the point. For streams, document origin, position, ownership, and seekability. Never depend on machine-specific network paths.
+
+Use relative, deterministic filenames; never developer-specific absolute paths. Do not overwrite inputs unless explicitly requested. Reopen saved output when persistence is part of the claim.
+
+## Security and enterprise safety
+
+Limit file size and processing time, reject path traversal, require passwords from secure configuration, sanitize external links, and treat macros/custom XML/formulas as untrusted.
+
+- Never embed licenses, credentials, tokens, personal data, private keys, or connection secrets.
+- Keep generated output inside the working directory.
+- Treat workbook content and external references as untrusted.
+
+## SEO, GEO, and AEO requirements
+
+### Search intent
+
+Target one primary intent and one or two natural aliases:
+
+- open Excel file in C#
+- load XLSX from stream
+- read large Excel file with LightCells
+- detect Excel file format
+
+Do not stuff every phrase into each example.
+
+### Answer-first structure
+
+The first meaningful comment must identify the operation, primary API, and expected result. An extracted example must reveal what problem is solved, required input, output, and verification without external context.
+
+### Entity consistency
+
+Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, LoadOptions, workbook stream, load filter, LightCells, file format. Avoid ambiguous product nicknames.
+
+### Citation quality
+
+Use official Aspose.Cells documentation and API reference as technical authorities. Keep claims specific and verifiable. Never fabricate support, compatibility, benchmark, or fidelity claims.
+
+## API verification and anti-hallucination gate
+
+Before accepting code:
+
+1. Inspect the installed Aspose.Cells package version.
+2. Search existing examples for the exact symbol.
+3. Confirm it in official API documentation or through compilation.
+4. Confirm its declaring type and overload parameters.
+5. Compile the complete example.
+6. Run it and validate the expected result.
+
+Reject code that derives an API from a filename, invents option properties, confuses adjacent feature models, or reports success without checking the outcome.
+
+## Validation workflow
+
+```text
+Interpret one developer intent
+  -> select the correct object model and smallest API scope
+  -> verify symbols and package compatibility
+  -> create controlled input
+  -> perform one primary operation
+  -> assert the expected result
+  -> save and reopen when relevant
+  -> compile and run
+  -> inspect diagnostics and artifacts
+  -> update retrieval metadata
+```
+
+## Review checklist
+
+### Correctness
+
+- [ ] The API exists and belongs to the expected type.
+- [ ] Indexes, ranges, names, fields, formats, and relationships are valid.
+- [ ] Required source objects/data exist before the operation.
+- [ ] The result is explicitly verified.
+
+### Code quality
+
+- [ ] The program is complete, focused, deterministic, and runnable.
+- [ ] Explicit C# types and minimal namespaces are used.
+- [ ] Resource ownership and errors are handled safely.
+- [ ] No credentials, absolute paths, or unrelated dependencies are present.
+
+### Discoverability
+
+- [ ] Filename and title express one natural intent.
+- [ ] Metadata identifies the primary API and expected result.
+- [ ] Opening comment provides a direct answer.
+- [ ] Canonical product and domain entities are used.
+
+### Validation
+
+- [ ] `dotnet build` succeeds.
+- [ ] `dotnet run` succeeds.
+- [ ] Expected object state or output is confirmed.
+- [ ] Saved output is reopened/inspected when applicable.
+
+## Related knowledge
+
+- [Save workbook](../save-workbook/)
+- [Cell data](../cells-data/)
+- [Encryption and protection](../encryption-and-protection/)
+- [Conversion](../conversion/)
+
+## Definition of done
+
+A `open-workbook` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.

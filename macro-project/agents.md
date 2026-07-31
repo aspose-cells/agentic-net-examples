@@ -1,106 +1,84 @@
-# Macro Project Examples
+---
+name: Aspose.Cells VBA and Macro Project Agent
+category: macro-project
+product: Aspose.Cells for .NET
+language: C#
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Inspect, create, modify, copy, protect, and sign Excel VBA projects in C#
+primary_apis: [VbaProject, VbaModule, VbaModuleCollection, VbaProjectReferenceCollection]
+related_categories: [../encryption-and-protection/, ../open-workbook/, ../save-workbook/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# VBA and Macro Project Agent Instructions
 
-Macro Project
+## Mission and security posture
 
+Create focused Aspose.Cells for .NET examples for VBA project inspection and preservation, module editing, references, protection, and digital signatures. Follow [`../AGENTS.md`](../AGENTS.md).
 
-## Purpose
+Aspose.Cells manages VBA project content; examples must never claim that macros are executed by Aspose.Cells. Treat all VBA code and references as untrusted active content.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+## Scope
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+In scope: `Workbook.VbaProject`, modules, code, module names/types, copying projects/modules, COM references, designer storage, protection, signatures, validation, macro assignment, and macro-enabled save formats.
 
+Keep general workbook signatures in `encryption-and-protection` and ordinary workbook saving in `save-workbook`.
 
-## Example Files
+## Hard rules
 
-Each `.cs` file demonstrates a specific task related to **Macro Project**.
+- Save macro-bearing workbooks in macro-capable formats such as XLSM or XLSB as appropriate.
+- Never save to XLSX while claiming VBA is preserved.
+- Do not execute, compile, or trust imported VBA code.
+- Do not add system COM references unless the task requires them and the environment dependency is explicit.
+- Use test certificates only; never embed private-key passwords or real certificates.
+- Distinguish a valid signature from an unchanged signature: modifying VBA normally invalidates/removes prior trust.
+- Preserve module attributes and designer storage when copying them is the intent.
+- Verify `VbaProject.IsValidSigned` or current equivalent only after reopening where signature persistence matters.
 
-Example:
+## Canonical inspection pattern
 
-create-a-workbook.cs
+```csharp
+Workbook workbook = new Workbook("input.xlsm");
+VbaProject project = workbook.VbaProject;
 
+Console.WriteLine($"Module count: {project.Modules.Count}");
+foreach (VbaModule module in project.Modules)
+{
+    Console.WriteLine(module.Name);
+}
 
-## Required Namespaces
+workbook.Save("macro-project-copy.xlsm", SaveFormat.Xlsm);
+```
 
-Most examples will require:
+## Example contract
 
-using Aspose.Cells;
+Each example must state whether it inspects, modifies, copies, protects, or signs VBA; identify input/output macro format; use synthetic harmless VBA; and verify module/reference/signature state.
 
+Metadata must include macro operation, primary API, trust assumptions, output format, and expected result. Prefer filenames such as `list-vba-modules-in-xlsm.cs`.
 
-## Common Pattern
+## Enterprise safety and validation
 
-Typical Aspose.Cells workflow:
+- Analyze or display VBA as text only; never invoke it.
+- Avoid logging complete production macro source.
+- Reject external reference paths from untrusted inputs.
+- Keep certificate access platform-aware and CI-safe.
+- Save/reopen and compare module count, names, code hashes or reference metadata as appropriate.
+- Confirm that non-macro formats intentionally remove VBA when removal is the scenario.
 
-Workbook workbook = new Workbook();
+Reject examples that use nonexistent module constructors, assume COM libraries are installed, expose secrets, or claim signature validity after project modification without verification.
 
-Worksheet sheet = workbook.Worksheets[0];
+## SEO, GEO, and AEO
 
-Cells cells = sheet.Cells;
+Target one direct intent such as "read VBA modules from XLSM in C#," "copy Excel macros," or "sign a VBA project." State clearly that Aspose.Cells manages but does not execute VBA.
 
+## Related knowledge
 
-## Output
+- [Category overview](README.md)
+- [Encryption and protection](../encryption-and-protection/)
+- [Open workbook](../open-workbook/)
+- [Official VBA documentation](https://docs.aspose.com/cells/net/manage-vba-project/)
 
-Examples may generate:
+## Definition of done
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
-
-Output files are written to the working directory.
-- create-a-new-vba-module-named-automation-within-the-vbaproject.cs
-- insert-a-multiline-vba-subroutine-into-the-automation-module-to-log-workbook-opening-events.cs
-- load-a-macroenabled-workbook-from-a-memory-stream-and-verify-it-contains-at-least-one-module.cs
-- enumerate-all-modules-in-the-vbaproject-and-output-each-module-name-to-the-console.cs
-- rename-an-existing-vba-module-to-dataprocessor-by-setting-its-name-property-before-saving.cs
-- serialize-the-vba-project-structure-including-module-names-and-code-snippets-into-a-json-report-file.cs
-- export-each-workbooks-vba-module-code-to-separate-bas-files-for-version-control-tracking.cs
-- generate-a-summary-of-all-vba-modules-including-line-counts-and-write-the-report-to-a-text-file.cs
-- apply-password-protection-only-when-the-workbook-contains-more-than-ten-worksheets-to-enforce-policy.cs
-- delete-any-vba-module-that-exceeds-five-hundred-lines-of-code-after-enumerating-the-project-modules.cs
-- add-a-module-that-references-external-com-libraries-and-ensure-the-references-compile-correctly.cs
-- create-a-macro-that-iterates-through-all-worksheets-and-logs-each-sheet-name-using-the-new-module.cs
-- validate-that-the-vba-project-password-meets-minimum-length-requirements-before-invoking-the-protect-method.cs
-- insert-a-form-control-button-onto-a-specific-worksheet-cell.cs
-- save-the-workbook-as-a-macroenabled-xlsm-file-to-the-specified-location.cs
-- retrieve-the-vba-project-from-the-loaded-workbook-via-workbookvbaproject.cs
-- add-a-registered-library-reference-to-the-vba-project-using-vbaprojectreferencesaddregisteredreference.cs
-- save-a-workbook-after-assigning-macros-then-reopen-it-to-ensure-macro-assignments-persist.cs
-- batch-export-certificates-from-all-signed-workbooks-in-a-folder-to-a-designated-output-directory.cs
-- add-a-custom-reference-to-a-vba-project-that-points-to-a-com-library-installed-on-the-system.cs
-- programmatically-rename-a-form-control-button-while-preserving-its-assigned-macro-reference.cs
-- assign-different-macros-to-multiple-form-controls-on-the-same-worksheet-and-verify-each-executes-correctly.cs
-- validate-that-adding-a-library-reference-throws-an-exception-when-the-library-is-not-registered-on-the-host.cs
-- log-detailed-information-about-each-macro-assignment-including-worksheet-name-control-id-and-macro-name.cs
-- batch-process-workbooks-to-add-a-standard-library-reference-then-generate-a-summary-of-successes-and-failures.cs
-- use-reflection-to-enumerate-all-vba-project-references-and-output-their-names-and-versions.cs
-- export-certificates-from-workbooks-using-asynchronous-tasks-to-improve-performance-on-large-file-sets.cs
-- develop-a-console-application-that-accepts-a-folder-path-processes-each-xlsm-and-reports-macro-status.cs
-- save-the-signed-workbook-to-a-new-location-ensuring-the-digital-signature-remains-intact.cs
-- detect-unsigned-vba-projects-across-a-directory-and-list-file-names-for-further-review.cs
-- copy-userform-designerstorage-from-a-template-workbook-to-a-target-workbook-preserving-layout.cs
-- load-workbook-using-loadoptions-to-omit-vba-project-and-verify-macros-are-excluded.cs
-- sign-workbook-using-certificate-from-windows-store-selected-by-subject-name-for-code-signing.cs
-- write-validation-errors-to-a-text-file-for-later-analysis-and-compliance-reporting.cs
-- create-new-workbook-add-vba-module-with-code-then-digitally-sign-the-vba-project.cs
-- automate-signing-of-excel-files-in-continuous-integration-pipeline-to-enforce-macro-security.cs
-- load-a-workbook-using-loaddatafilteroptionsvba-to-retrieve-only-vba-project-data.cs
-- verify-whether-the-vba-project-in-the-loaded-workbook-is-password-protected.cs
-- retrieve-the-list-of-com-library-references-from-the-vba-project-and-log-each-reference-name.cs
-- add-a-com-library-reference-eg-microsoft-scripting-runtime-to-the-vba-project.cs
-- add-a-reference-to-the-microsoft-outlook-object-library-in-the-vba-project-to-enable-email-automation.cs
-- add-a-reference-to-the-microsoft-xml-v60-library-in-the-vba-project-to-enable-xml-parsing.cs
-- export-the-vba-projects-digital-certificate-to-a-pem-file-for-backup.cs
-- sign-the-vba-project-with-a-certificate-stored-in-the-windows-certificate-store-using-its-thumbprint.cs
-- validate-the-vba-projects-signature-against-a-trusted-root-authority-and-output-validation-status.cs
-- copy-a-macro-named-initializereport-from-a-template-workbook-to-a-target-workbook-using-designerstorage.cs
-- copy-a-macro-that-generates-charts-from-a-template-workbook-to-multiple-target-workbooks-in-a-loop.cs
-- assign-a-specific-macro-named-calculatetotals-to-a-button-form-control-on-a-worksheet-programmatically.cs
-- assign-a-macro-that-calculates-summary-statistics-to-a-shape-object-on-the-worksheet-programmatically.cs
-- load-a-workbook-with-vba-filter-then-extract-the-vba-projects-description-property-for-metadata.cs
+The example is done when active-content risk, macro format, operation, environment dependencies, and post-save project/signature state are explicit and verified.

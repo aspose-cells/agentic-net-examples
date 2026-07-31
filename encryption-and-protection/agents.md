@@ -1,181 +1,93 @@
-# Encryption and Protection Examples
+---
+name: Aspose.Cells Encryption and Protection Agent
+category: encryption-and-protection
+product: Aspose.Cells for .NET
+language: C#
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Encrypt Excel files and protect workbooks, worksheets, cells, VBA projects, and signatures in C#
+primary_apis: [Worksheet.Protect, Worksheet.Unprotect, ProtectionType, WorkbookSettings, EncryptionType, WriteProtection]
+related_categories: [../open-workbook/, ../save-workbook/, ../macro-project/, ../document-properties/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Encryption and Protection Agent Instructions
 
-Encryption and Protection
+## Mission and security boundary
 
+Create secure, accurate Aspose.Cells for .NET examples that clearly distinguish access control, workbook/worksheet protection, write protection, file encryption, and digital signatures. Follow [`../AGENTS.md`](../AGENTS.md).
 
-## Purpose
+These features are not interchangeable:
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+| Security goal | Mechanism |
+| --- | --- |
+| Require a password to open a file | Workbook file encryption/load password |
+| Restrict worksheet actions | `Worksheet.Protect` with `ProtectionType` and allowed operations |
+| Protect workbook structure/windows | Workbook protection/settings APIs verified for the format |
+| Mark or restrict modification | Write-protection/password-to-modify APIs |
+| Verify origin/integrity | Digital signature APIs and certificates |
+| Protect VBA project | VBA project protection/signing APIs |
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+Never claim worksheet protection encrypts workbook contents or provides strong confidentiality.
 
+## Scope
 
-## Example Files
+In scope: protect/unprotect workflows, locked/unlocked cells, workbook structure, open passwords, encryption providers/types, password-to-modify, signatures, certificate handling, protection verification, and security audits.
 
-Each `.cs` file demonstrates a specific task related to **Encryption and Protection**.
+Use `macro-project` for VBA editing, `open-workbook` for general loading, and `document-properties` for ordinary metadata.
 
-Example:
+## Hard rules
 
-create-a-workbook.cs
+- Use placeholder passwords from environment/configuration in production-oriented examples; never hard-code real secrets.
+- Keep demonstration passwords obviously synthetic and warn that they are not production credentials.
+- Do not print passwords, private keys, certificate secrets, or decrypted content.
+- Use a format that supports the requested protection/encryption feature.
+- Validate by reopening with the correct password and, where safe, confirming failure with an incorrect password.
+- Explain what attackers are and are not prevented from doing.
+- Never weaken encryption silently to maximize compatibility.
+- Do not use a password hint that reveals the password.
 
+## Canonical worksheet pattern
 
-## Required Namespaces
-
-Most examples will require:
-
-using Aspose.Cells;
-
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
-
+```csharp
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue("Protected content");
 
-Worksheet sheet = workbook.Worksheets[0];
+worksheet.Protect(ProtectionType.All, "ExampleOnly-Password", null);
+workbook.Save("protected-worksheet.xlsx");
+```
 
-Cells cells = sheet.Cells;
+For file encryption, use the package-version-supported load/save encryption APIs rather than repurposing worksheet protection.
 
+## Example contract
 
-## Output
+Each example must name the protected asset, threat/intent, mechanism, format, credential source, allowed operations, and verification. Use explicit types and synthetic data. Prefer filenames such as `encrypt-xlsx-with-open-password.cs` or `protect-excel-worksheet-in-csharp.cs`.
 
-Examples may generate:
+Signature examples must identify whether they add a visible signature line or a cryptographic signature. Certificate examples must use a test certificate and never assume access to a machine certificate store in CI.
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+## Enterprise validation
 
+- Verify APIs and algorithms against the installed package and current product documentation.
+- Build and run without exposing secrets.
+- Reopen with valid credentials and verify protected flags/content.
+- Test invalid credentials only when failure can be asserted safely.
+- Confirm the saved format retains the intended control.
+- For signatures, verify signature validity after save and detect post-sign modification.
 
-- verify-whether-a-loaded-xls-file-is-encrypted-and-retrieve-its-encryption-algorithm.cs
-- if-a-loaded-workbook-is-not-encrypted-apply-default-encryption-using-a-preset-password.cs
-- detect-the-encryption-type-of-an-ods-file-and-display-the-algorithm-name.cs
-- detect-legacy-encryption-in-a-workbook-and-automatically-upgrade-it-to-the-latest-standard.cs
-- detect-the-ods-encryption-algorithm-and-output-a-humanreadable-description-of-its-security-level.cs
-- load-an-encrypted-ods-file-in-readonly-mode-verify-its-password-and-extract-cell-values.cs
-- load-a-passwordprotected-excel-file-catch-authentication-exceptions-and-log-detailed-error-information.cs
-- load-an-excel-file-check-for-password-protection-and-prompt-the-user-for-credentials-if-needed.cs
-- protect-the-workbook-structure-and-lock-all-worksheets-then-save-the-workbook-as-an-encrypted-xlsx-file.cs
-- apply-workbook-protection-with-a-password-and-attempt-to-add-a-new-worksheet-to-verify-restriction.cs
-- protect-the-workbook-structure-then-attempt-to-copy-a-worksheet-to-another-workbook-to-test-enforcement.cs
-- protect-the-workbook-structure-and-then-attempt-to-delete-a-worksheet-to-confirm-deletion-is-blocked.cs
-- unprotect-a-workbook-structure-using-a-recovered-password-and-log-the-unprotection-event-for-audit.cs
-- remove-all-password-protection-from-a-workbook-making-it-freely-editable-and-viewable-without-authentication.cs
-- change-the-password-to-modify-on-an-existing-workbook-without-altering-its-content.cs
-- verify-that-a-workbook-encrypted-with-aes256-cannot-be-opened-using-an-older-aes128-password.cs
-- validate-that-a-saved-xlsx-file-is-encrypted-by-reopening-it-and-checking-its-encryption-status.cs
-- verify-the-password-of-an-encrypted-workbook-without-fully-opening-it-using-a-lightweight-validation-method.cs
-- decrypt-an-encrypted-workbook-modify-cell-values-reencrypt-with-a-different-password-and-save-as-ods.cs
-- encrypt-a-workbook-then-attempt-to-modify-a-protected-cell-to-confirm-edit-restrictions-are-enforced.cs
-- batch-encrypt-multiple-excel-files-in-a-directory-using-a-shared-password-and-aes128-encryption.cs
-- batch-encrypt-a-set-of-workbooks-then-generate-a-csv-report-listing-file-names-and-applied-encryption-algorithms.cs
-- create-a-utility-that-scans-a-directory-identifies-encrypted-excel-files-and-generates-a-password-status-report.cs
-- develop-a-console-application-that-accepts-a-file-path-detects-encryption-and-outputs-the-required-password-status.cs
-- build-a-tool-that-reads-a-csv-list-of-file-paths-and-passwords-then-decrypts-each-corresponding-workbook.cs
-- encrypt-a-workbook-then-measure-the-time-required-to-open-it-in-a-headless-automation-environment.cs
-- detect-if-a-workbook-contains-digitally-signed-worksheets-and-list-their-signer-names.cs
-- protect-a-worksheet-then-attempt-to-copy-it-to-a-new-workbook-without-providing-the-password.cs
-- create-a-batch-process-encrypting-all-workbooks-in-a-sharepoint-library-using-a-centralized-password.cs
-- validate-that-changing-a-worksheets-protection-password-does-not-alter-its-cell-formulas-or-values.cs
-- apply-workbook-protection-preventing-changes-to-default-file-properties-such-as-author-and-title.cs
-- encrypt-a-workbook-using-a-password-stored-in-a-hardware-security-module-and-confirm-successful-decryption.cs
-- detect-if-a-workbooks-encryption-uses-a-deprecated-algorithm-and-flag-it-for-migration.cs
-- create-a-utility-extracting-encryption-metadata-from-an-excel-file-and-displaying-it-in-a-readable-format.cs
-- verify-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-older-excel-versions.cs
-- unprotect-a-workbook-structure-rename-several-sheets-and-reprotect-using-a-password-retrieved-from-azure-key-vault.cs
-- detect-whether-a-workbook-is-encrypted-with-a-password-meeting-organizational-complexity-requirements.cs
-- apply-worksheet-protection-disabling-editing-of-pivot-tables-while-allowing-data-refresh-operations.cs
-- encrypt-a-workbook-then-compute-its-sha256-hash-for-integrity-verification.cs
-- ensure-a-digitally-signed-workbook-retains-its-signature-after-being-encrypted-and-then-decrypted.cs
-- apply-workbook-protection-preventing-changes-to-default-view-settings-such-as-zoom-level.cs
-- unprotect-a-worksheet-insert-a-protected-range-then-reprotect-and-verify-the-range-remains-locked.cs
-- create-a-commandline-utility-that-accepts-a-directory-path-encrypts-all-excel-files-and-outputs-a-summary-report.cs
-- apply-worksheet-protection-allowing-comment-insertion-but-preventing-editing-of-existing-comments.cs
-- validate-that-a-workbook-encrypted-with-a-password-cannot-be-opened-by-a-thirdparty-viewer-lacking-decryption-support.cs
-- protect-a-worksheet-then-attempt-to-copy-its-protected-range-to-another-workbook-without-providing-the-password.cs
-- create-a-batch-script-that-decrypts-workbooks-removes-all-protection-and-reencrypts-them-with-a-unified-password.cs
-- detect-whether-a-workbook-contains-hidden-protected-worksheets-and-list-their-names-for-review.cs
-- apply-workbook-protection-disabling-changes-to-the-default-file-format-when-saving.cs
-- unprotect-a-worksheet-add-a-data-validation-rule-then-reprotect-and-verify-validation-remains-active.cs
-- encrypt-a-workbook-then-use-a-checksum-to-ensure-the-encrypted-file-has-not-been-tampered-with.cs
-- detect-the-file-format-of-an-unknown-workbook-and-log-the-identified-format.cs
-- detect-the-format-of-an-encrypted-ooxml-workbook-without-providing-a-password-and-record-the-result.cs
-- combine-file-format-detection-with-encryption-status-check-to-decide-whether-to-decrypt-before-processing.cs
-- check-whether-a-loaded-workbook-is-encrypted-and-display-a-warning-if-encryption-is-detected.cs
-- load-a-passwordprotected-workbook-prompt-the-user-for-the-password-and-open-it-for-reading.cs
-- decrypt-an-existing-passwordprotected-workbook-modify-a-cell-value-and-reencrypt-before-saving.cs
-- encrypt-a-newly-created-workbook-using-a-userspecified-password-and-save-it-as-a-protected-file.cs
-- add-a-signature-line-to-a-specific-worksheet-setting-signer-name-and-title-properties.cs
-- add-multiple-signature-lines-to-different-worksheets-each-with-unique-signer-information-and-comments.cs
-- add-a-signature-line-with-a-visible-image-placeholder-and-customize-its-appearance-using-picture-properties.cs
-- create-a-signature-line-then-digitally-sign-the-workbook-using-an-external-xades-signature-tool.cs
-- save-a-workbook-after-adding-a-signature-line-preserving-the-original-file-extension-and-format.cs
-- remove-password-protection-from-a-workbook-and-save-the-unprotected-version-to-a-new-location.cs
-- programmatically-verify-that-a-workbooks-password-protection-flag-is-set-after-saving-the-encrypted-file.cs
-- encrypt-a-workbook-with-aes256-encryption-strength-and-verify-that-the-file-size-increases-appropriately.cs
-- verify-that-a-workbook-saved-after-encryption-can-be-opened-with-the-same-password-on-another-machine.cs
-- batch-process-all-excel-files-in-a-directory-adding-identical-signature-lines-to-each-workbook.cs
-- validate-that-a-workbook-is-not-encrypted-before-performing-bulk-data-extraction-across-multiple-sheets.cs
-- encrypt-workbooks-using-randomly-generated-passwords-store-passwords-securely-and-log-encryption-timestamps.cs
-- load-a-workbook-remove-all-existing-signature-lines-and-add-a-new-line-with-updated-signer-details.cs
-- add-a-signature-line-to-a-chart-sheet-and-ensure-it-appears-correctly-when-rendered.cs
-- add-a-signature-line-to-the-last-worksheet-in-a-workbook-using-the-worksheet-count-to-locate-it.cs
-- add-a-signature-line-with-a-mandatory-comment-field-requiring-the-signer-to-provide-additional-information.cs
-- add-a-signature-line-that-includes-a-hyperlink-to-the-signers-professional-profile-and-set-the-display-text.cs
-- add-a-signature-line-that-references-a-specific-certificate-thumbprint-stored-in-the-windows-certificate-store.cs
-- add-a-signature-line-with-a-predefined-signer-email-address-and-automatically-populate-the-contact-field.cs
-- add-a-signature-line-with-a-custom-label-and-ensure-the-label-appears-in-the-document-properties-panel.cs
-- add-a-signature-line-then-lock-the-worksheet-to-prevent-further-edits-without-a-password.cs
-- detect-workbook-file-format-and-encryption-status-given-a-file-path.cs
-- scan-a-directory-and-report-encryption-status-for-each-xlsx-and-xls-file.cs
-- load-an-unencrypted-workbook-verify-its-format-and-log-confirmation-to-console.cs
-- use-loadoptions-to-identify-the-file-format-of-an-excel-document-without-fully-loading-its-contents.cs
-- load-a-workbook-from-a-memory-stream-detect-its-encryption-status-and-output-format-to-console.cs
-- save-an-encrypted-workbook-to-a-memory-stream-then-read-stream-length-to-confirm-encryption-overhead.cs
-- detect-an-encrypted-office-open-xml-file-and-extract-its-encryption-algorithm-identifier-for-auditing.cs
-- open-an-encrypted-workbook-with-correct-password-decrypt-contents-and-save-as-new-xlsx-file.cs
-- attempt-to-open-an-encrypted-workbook-with-incorrect-password-and-capture-exception-details.cs
-- encrypt-a-workbook-using-a-strong-password-and-then-programmatically-verify-that-the-password-meets-complexity-rules.cs
-- convert-an-encrypted-xlsx-file-to-an-unencrypted-xlsx-file-while-preserving-formulas-and-formatting.cs
-- compare-file-size-of-an-unencrypted-workbook-versus-its-encrypted-counterpart-to-assess-encryption-impact.cs
-- apply-an-opening-password-to-a-workbook-then-remove-it-and-save-unchanged-file.cs
-- check-whether-a-particular-password-is-required-to-modify-a-workbook-and-return-boolean-result.cs
-- determine-if-a-workbook-requires-a-password-for-opening-versus-modifying-and-log-both-statuses.cs
-- validate-a-supplied-password-for-modifying-a-workbook-without-opening-the-file-returning-true-or-false.cs
-- protect-workbook-structure-with-a-password-to-prevent-adding-or-removing-worksheets-then-verify-protection.cs
-- unprotect-workbook-structure-by-providing-correct-password-and-confirm-sheet-modifications-are-allowed.cs
-- protect-the-workbook-structure-then-attempt-to-rename-a-worksheet-and-confirm-that-the-operation-is-blocked.cs
-- unprotect-the-workbook-structure-rename-a-worksheet-and-then-reapply-structure-protection-with-a-new-password.cs
-- apply-both-an-opening-password-and-workbook-structure-protection-to-a-workbook-then-test-each-protection-independently.cs
-- remove-both-the-opening-password-and-structure-protection-from-a-workbook-in-a-single-operation-and-save.cs
-- enable-worksheetlevel-protection-on-a-specific-sheet-restricting-cell-editing-while-allowing-formatting-changes.cs
-- protect-a-worksheet-while-allowing-users-to-format-cells-then-verify-editing-cell-values-remains-blocked.cs
-- attempt-to-edit-a-protected-worksheet-without-password-and-record-failure-outcome.cs
-- remove-protection-from-a-worksheet-using-correct-password-and-modify-a-cell-value-successfully.cs
-- unprotect-a-worksheet-while-preserving-its-previously-set-formatting-permissions-and-then-update-a-cell-formula.cs
-- apply-worksheet-protection-with-a-password-that-expires-after-a-specified-time-interval-then-test-expiration-behavior.cs
-- load-an-encrypted-workbook-change-its-password-to-a-new-value-and-save-the-updated-encrypted-file.cs
-- batch-encrypt-all-xls-files-in-a-source-folder-using-a-common-password-and-save-to-target-directory.cs
-- batch-decrypt-every-encrypted-xlsx-file-in-a-collection-using-a-list-of-possible-passwords-logging-successes.cs
-- generate-a-csv-report-summarizing-file-name-format-and-encryption-state-for-all-excel-files-in-a-folder.cs
-- create-a-utility-that-accepts-file-paths-determines-which-are-encrypted-and-returns-the-encrypted-files-list.cs
-- implement-error-handling-that-retries-decryption-with-an-alternate-password-when-the-first-attempt-fails.cs
-- implement-a-logging-mechanism-that-records-timestamp-file-name-and-encryption-action-performed-for-each-workbook.cs
-- validate-that-a-workbook-encrypted-with-one-password-cannot-be-opened-with-a-different-similar-password.cs
-- compare-performance-of-encrypting-workbooks-in-parallel-threads-versus-sequential-processing-for-large-datasets.cs
-- create-a-function-that-returns-the-encryption-status-of-a-workbook-as-an-enumeration-value-encrypted-unencrypted-unknown.cs
-- detect-whether-an-excel-file-uses-legacy-binary-format-xls-and-apply-appropriate-encryption-method-for-that-format.cs
-- encrypt-a-workbook-then-immediately-attempt-to-open-it-without-a-password-to-confirm-access-denial.cs
-- save-an-encrypted-workbook-directly-to-a-cloud-storage-stream-ensuring-encryption-metadata-is-preserved.cs
-- load-a-workbook-from-a-network-share-check-encryption-status-and-log-any-access-permission-issues-encountered.cs
-- create-a-batch-job-that-encrypts-every-newly-created-workbook-in-a-folder-with-a-timestamped-password.cs
-- develop-a-script-that-removes-passwords-from-all-workbooks-in-a-directory-and-archives-the-original-encrypted-files.cs
-- verify-that-protecting-a-worksheet-does-not-affect-the-visibility-of-hidden-rows-or-columns-within-that-sheet.cs
-- test-that-unprotecting-a-worksheet-restores-the-ability-to-insert-new-rows-while-maintaining-existing-data-integrity.cs
+Reject examples that confuse protection with encryption, contain real credentials, depend silently on Windows-only certificate state, or claim compliance/certification without evidence.
+
+## SEO, GEO, and AEO
+
+Target one direct question: "password protect Excel in C#," "encrypt XLSX without Excel," "lock cells," or "digitally sign an Excel file." The opening comment must identify the asset and mechanism. Use precise security language over marketing claims.
+
+## Related knowledge
+
+- [Category overview](README.md)
+- [Open workbook](../open-workbook/)
+- [Macro projects](../macro-project/)
+- [Official protection and encryption documentation](https://docs.aspose.com/cells/net/protect-and-unprotect/)
+
+## Definition of done
+
+The example is done when the security objective, mechanism, limitation, credential handling, format support, and verification are explicit and correct.

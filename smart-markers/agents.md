@@ -1,187 +1,320 @@
-# Smart markers Examples
+---
+name: Aspose.Cells Smart Markers Agent
+category: smart-markers
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: C# examples for template-driven Excel reports, Smart Marker syntax, object and DataTable binding, grouping, formulas, images, formatting, and WorkbookDesigner processing
+primary_apis: [WorkbookDesigner, WorkbookDesigner.SetDataSource, WorkbookDesigner.Process, WorkbookDesigner.Workbook, DataTable]
+search_intents: [Smart Markers Aspose.Cells C#, generate Excel report from DataTable, bind objects to Excel template, WorkbookDesigner Process]
+related_categories: [../cells-data/, ../format-cells/, ../manage-formulas/, ../working-with-images/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells Smart Markers Agent Instructions
 
-Smart markers
+## Mission
 
+Act as a senior C# engineer specializing in Smart Markers and template-driven Excel reporting with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
 
-## Purpose
+Every accepted example must use APIs available in the repository's installed Aspose.Cells package, produce a deterministic result where possible, and make that result easy for developers and AI systems to verify.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+## Instruction precedence
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+1. Follow the repository-wide [`AGENTS.md`](../AGENTS.md).
+2. Apply this file to work inside `smart-markers/`.
+3. Follow an explicit task when it is more specific and does not conflict with repository safety or validation rules.
+4. Treat filenames and existing examples as discovery material, not authoritative API documentation.
 
+When this file is more specific than root guidance, this file controls smart markers behavior.
 
-## Example Files
+## Category boundary
 
-Each `.cs` file demonstrates a specific task related to **Smart markers**.
+Use this category when the primary outcome is binding structured data to Smart Marker placeholders through `WorkbookDesigner`.
 
-Example:
+### In scope
 
-create-a-workbook.cs
+- template-driven Excel reports
+- Smart Marker syntax
+- object and DataTable binding
+- grouping
+- formulas
+- images
+- formatting
+- and WorkbookDesigner processing
 
+### Usually out of scope
 
-## Required Namespaces
+- Adjacent features where this category is incidental
+- Microsoft Excel UI automation or Interop
+- Undocumented APIs inferred from filenames
+- Unrelated multi-feature applications
 
-Most examples will require:
+If a scenario spans categories, keep it here only when smart markers is the primary learning objective.
 
+## Canonical answer
+
+The standard answer to "How do I generate an Excel report with Smart Markers in C#?" is:
+
+```csharp
+using System;
+using System.Data;
 using Aspose.Cells;
 
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
-
 Workbook workbook = new Workbook();
+workbook.Worksheets[0].Cells["A1"].PutValue("&=Sales.Product");
+DataTable sales = new DataTable("Sales");
+sales.Columns.Add("Product", typeof(string));
+sales.Rows.Add("Widget");
+WorkbookDesigner designer = new WorkbookDesigner(workbook);
+designer.SetDataSource(sales);
+designer.Process();
+designer.Workbook.Save("smart-marker-report.xlsx");
+```
 
-Worksheet sheet = workbook.Worksheets[0];
+Expected outcome: The marker expands to `Widget` in `smart-marker-report.xlsx`.
 
-Cells cells = sheet.Cells;
+Use this as the default pattern unless the requested scenario requires a more specific API, input format, source object, or output.
 
+## API truths that must be preserved
 
-## Output
+### Marker names must match data-source names
 
-Examples may generate:
+Template prefixes and fields must resolve exactly to bound objects, tables, or variables.
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+### Binding alone does not process markers
 
-Output files are written to the working directory.
-- define-a-variable-in-the-excel-template-and-set-its-value-programmatically-before-processing.cs
-- use-the-if-parameter-within-a-smart-marker-to-display-data-only-when-a-field-exceeds-a-threshold.cs
-- insert-a-formula-parameter-that-calculates-each-rows-total-by-multiplying-quantity-and-unit-price-fields.cs
-- enable-overflow-handling-so-excess-rows-automatically-continue-onto-a-secondary-worksheet-during-processing.cs
-- maintain-conditional-formatting-rules-in-the-template-as-smart-markers-replace-placeholder-values-with-actual-data.cs
-- validate-that-all-smart-marker-tags-have-been-resolved-after-processing-by-checking-the-workbook-for-unresolved-markers.cs
-- implement-error-handling-to-catch-exceptions-when-a-smart-marker-references-a-missing-field-in-the-data-source.cs
-- map-a-collection-of-objects-to-a-table-using-smart-markers-then-calculate-salaries-with-a-formula-marker.cs
-- replace-placeholder-text-in-merged-cells-using-smart-markers-while-preserving-the-original-cell-merge-settings.cs
-- load-a-template-from-a-stream-set-marker-data-sources-and-write-the-result-to-a-byte-array.cs
-- use-the-setdatasource-overload-that-accepts-an-ienumerable-to-populate-smart-markers-from-a-list-of-dto-objects.cs
-- generate-separate-worksheets-for-each-group-in-masterdetail-data-by-using-smart-marker-grouping-with-sheet-break-syntax.cs
-- use-the-formula-parameter-to-compute-cumulative-totals-across-rows-as-smart-markers-import-financial-data.cs
-- add-a-smart-marker-that-calculates-age-from-a-birthdate-field-using-the-formula-parameter-with-date-functions.cs
-- export-the-final-workbook-to-xlsx-format-after-smart-marker-processing-ensuring-all-formulas-remain-editable.cs
-- create-a-template-that-uses-image-markers-to-embed-photos-stored-as-base64-strings-in-the-data-source.cs
-- set-up-workbookdesigner-to-process-smart-markers-in-hidden-worksheets-ensuring-hidden-data-is-also-populated.cs
-- implement-a-custom-logger-that-records-each-smart-marker-replacement-operation-for-audit-purposes.cs
-- generate-a-summary-sheet-that-aggregates-totals-from-multiple-smart-marker-populated-worksheets-using-excel-formulas.cs
-- use-the-if-parameter-to-display-a-custom-message-when-a-collection-is-empty-during-smart-marker-processing.cs
-- create-a-masterdetail-report-where-the-master-table-uses-smart-markers-and-each-detail-section-pulls-related-records.cs
-- use-the-if-parameter-to-display-discount-information-only-when-the-discount-percentage-exceeds-zero.cs
-- use-the-formula-parameter-to-compute-running-totals-across-rows-updating-each-cell-as-data-is-imported.cs
-- create-a-template-that-generates-a-calendar-view-filling-dates-based-on-a-start-date-variable.cs
-- use-the-if-parameter-to-conditionally-hide-columns-when-a-flag-field-is-false-in-the-data-source.cs
-- set-a-custom-data-source-that-merges-multiple-json-arrays-into-a-single-collection-for-smart-marker-consumption.cs
-- implement-logging-of-each-setvariable-call-to-trace-variable-values-used-during-smart-marker-processing.cs
-- use-the-if-parameter-to-display-a-warning-message-when-a-numeric-field-falls-below-a-defined-minimum.cs
-- load-a-workbook-template-and-apply-the-copystyle-attribute-to-inherit-cell-formatting-for-generated-records.cs
-- assign-a-datatable-object-to-workbookdesignerdatasource-before-processing-to-use-a-custom-tabular-data-source.cs
-- group-data-by-adding-groupnormalskip1-to-the-smart-marker-expression-to-insert-blank-rows-between-groups.cs
-- create-hierarchical-grouping-by-nesting-multiple-group-parameters-in-the-smart-marker-expression-for-twocolumn-aggregation.cs
-- specify-label-and-labelposition-attributes-to-place-group-labels-before-data-rows-for-clear-section-headings.cs
-- generate-sequential-invoice-numbers-using-a-custom-label-that-combines-a-prefix-with-the-autoincremented-record-index.cs
-- calculate-a-running-total-using-the-formula-parameter-that-adds-the-current-value-to-the-previous-subtotal-cell.cs
-- preserve-original-cell-borders-while-copying-style-by-ensuring-the-copystyle-attribute-includes-border-properties.cs
-- inherit-background-color-using-copystyle-so-that-generated-rows-match-the-templates-shading-scheme.cs
-- implement-ismartmarkercallback-and-register-it-with-workbookdesigner-to-receive-detailed-processing-notifications.cs
-- capture-each-record-processing-event-in-the-ismartmarkercallback-implementation-to-build-a-detailed-merge-log.cs
-- log-start-and-end-timestamps-of-smart-marker-processing-within-the-callback-to-measure-total-execution-time.cs
-- capture-a-callback-after-each-group-is-processed-to-log-group-identifiers-and-record-counts-for-auditing.cs
-- process-multiple-template-files-in-a-batch-assigning-distinct-data-sources-to-each-workbookdesigner-instance.cs
-- enable-autopopulate-to-additional-worksheets-when-data-exceeds-a-single-sheets-row-limit-ensuring-seamless-continuation.cs
-- save-the-processed-workbook-as-an-xlsx-file-to-preserve-all-smart-marker-generated-content-and-formatting.cs
-- apply-the-formula-parameter-to-a-smart-marker-so-excel-formulas-adjust-for-each-inserted-row.cs
-- place-a-variable-marker-in-a-cell-to-populate-it-with-a-scalar-value-from-the-data-source.cs
-- enable-the-notify-parameter-on-a-smart-marker-to-receive-callbacks-for-each-row-insertion.cs
-- map-a-json-document-to-a-workbook-and-apply-smart-markers-to-populate-cells-with-nested-properties.cs
-- load-a-workbook-from-a-memory-stream-process-smart-markers-and-save-the-result-to-a-byte-array.cs
-- use-the-skip-parameter-to-omit-every-other-row-while-populating-a-template-with-alternating-entries.cs
-- combine-variable-markers-with-conditional-formatting-rules-to-highlight-cells-meeting-specific-thresholds-after-merging.cs
-- insert-a-dynamic-excel-formula-that-references-the-previous-row-using-the-formula-parameter-to-calculate-running-totals.cs
-- apply-data-validation-rules-to-cells-filled-by-smart-markers-to-restrict-user-input-after-generation.cs
-- protect-the-worksheet-after-processing-smart-markers-allowing-only-unlocked-cells-to-be-edited-by-end-users.cs
-- use-the-notify-parameter-together-with-a-custom-logger-to-record-each-successful-smart-marker-merge-event.cs
-- use-linq-to-filter-a-collection-before-assigning-it-to-workbookdesigner-ensuring-rows-appear-via-smart-markers.cs
-- sort-objects-by-a-property-before-merging-so-smart-markers-output-rows-in-the-required-order.cs
-- apply-a-custom-cell-style-to-smart-marker-cells-after-processing-to-maintain-consistent-formatting-across-the-workbook.cs
-- combine-variable-array-markers-with-a-slicer-to-populate-a-rectangular-block-of-cells-from-a-twodimensional-array.cs
-- enable-the-detaillink-parameter-to-create-hyperlinks-from-master-rows-to-their-corresponding-detail-worksheets.cs
-- bind-a-nested-object-hierarchy-such-as-employee-address-using-dot-notation-in-smart-markers.cs
-- use-foreach-syntax-in-smart-markers-to-import-variablelength-collections-like-product-reviews.cs
-- place-a-marker-string-defining-array-index-placeholders-in-a-cell-before-calling-process.cs
-- apply-the-formula-parameter-to-calculate-total-price-by-multiplying-quantity-and-unit-price-during-merge.cs
-- iterate-over-multiple-template-files-applying-identical-masterdetail-smart-markers-to-generate-batch-reports.cs
-- validate-that-each-generated-detail-worksheet-contains-the-expected-number-of-rows-matching-the-source-collection-count.cs
-- add-a-conditional-formula-smart-marker-that-displays-high-when-sales-exceed-a-threshold-and-low-otherwise.cs
-- insert-a-smart-marker-referencing-a-nested-list-of-phone-numbers-using-contacts0number-syntax.cs
-- create-a-master-smart-marker-that-repeats-for-each-department-and-nests-employee-detail-markers-inside.cs
-- generate-a-pdf-report-from-the-processed-workbook-and-embed-hyperlinks-that-open-the-corresponding-excel-worksheets.cs
-- apply-a-custom-cell-style-after-processing-to-highlight-rows-where-the-total-exceeds-a-threshold.cs
-- create-a-smart-marker-that-calculates-running-totals-using-the-formula-parameter-referencing-previous-row-values.cs
-- export-the-merged-workbook-to-xls-format-to-ensure-compatibility-with-older-spreadsheet-applications.cs
-- implement-a-callback-that-modifies-cell-values-after-smart-marker-processing-but-before-saving-the-workbook.cs
-- apply-conditional-smart-markers-that-display-pass-or-fail-based-on-a-numeric-score-property.cs
-- load-an-excel-template-and-assign-a-datatable-as-the-custom-data-source-for-smart-markers.cs
-- enable-autopopulate-feature-to-spill-excess-data-into-a-secondary-worksheet-when-primary-sheet-reaches-row-limit.cs
-- implement-batch-processing-to-load-multiple-workbook-templates-assign-distinct-data-sources-and-save-populated-files.cs
-- apply-a-smart-marker-filter-to-exclude-records-with-null-values-before-rendering-them-into-the-excel-output.cs
-- configure-workbookdesigner-to-treat-leading-apostrophes-as-literal-characters-preserving-original-text-formatting.cs
-- validate-that-all-smart-marker-placeholders-have-been-replaced-by-checking-for-remaining-marker-patterns-after-processing.cs
-- export-the-populated-workbook-to-pdf-format-while-preserving-charts-and-graphics-generated-by-smart-markers.cs
-- set-smart-marker-processing-mode-to-ignore-errors-allowing-partial-data-insertion-without-halting-execution.cs
-- populate-merged-cells-using-smart-markers-and-ensure-merged-ranges-expand-correctly-when-data-rows-increase.cs
-- configure-workbook-options-to-recalculate-formulas-after-smart-marker-insertion-guaranteeing-uptodate-calculations.cs
-- insert-hyperlinks-via-smart-markers-that-point-to-external-web-resources-based-on-dynamic-url-fields.cs
-- embed-comments-in-cells-using-smart-markers-pulling-comment-text-from-a-related-data-source-field.cs
-- implement-a-progress-callback-that-reports-percentage-completion-during-largescale-smart-marker-population.cs
-- add-a-noadd-parameter-to-the-first-template-row-to-keep-header-static-during-merging.cs
-- combine-noadd-and-skip-parameters-on-alternating-rows-to-create-staggered-data-layout.cs
-- use-a-variable-array-marker-across-a-range-to-fill-a-table-with-a-onedimensional-collection.cs
-- insert-an-image-smart-marker-with-the-image-parameter-to-embed-pictures-from-file-paths.cs
-- configure-workbookdesigner-to-use-a-custom-datatable-as-the-data-source-before-processing.cs
-- group-masterdetail-data-by-placing-a-parent-smart-marker-above-a-child-marker-range.cs
-- import-a-specific-array-element-by-index-using-syntax-like-orders2itemname.cs
-- import-a-subset-of-an-array-using-slicer-syntax-such-as-orders13quantity.cs
-- process-multiple-worksheets-in-a-single-workbook-each-containing-distinct-smart-markers-to-generate-a-multisheet-report.cs
-- apply-smart-marker-parameters-to-control-row-insertion-when-merging-a-large-dataset-with-related-tables.cs
-- generate-a-pivot-table-by-placing-smart-markers-in-source-range-then-refresh-the-pivot-after-data-merge.cs
-- configure-workbookdesigner-to-ignore-empty-smart-markers-preventing-unnecessary-row-creation-when-source-collections-are-empty.cs
-- implement-error-handling-around-workbookdesignerprocess-to-catch-and-log-exceptions-caused-by-malformed-smart-marker-syntax.cs
-- batch-process-a-folder-of-template-files-applying-the-same-data-source-to-each-workbook-using-smart-markers.cs
-- create-a-function-that-accepts-a-data-object-and-a-template-path-then-returns-a-populated-workbook-stream.cs
-- load-json-from-a-web-service-map-to-an-object-and-merge-with-smart-markers-in-the-template.cs
-- enable-multithreaded-processing-by-creating-separate-workbookdesigner-instances-for-each-template-then-merging-data-concurrently.cs
-- validate-that-all-required-smart-markers-are-present-in-the-template-before-processing-to-avoid-runtime-merge-errors.cs
-- load-an-excel-template-workbook-from-file-or-stream-before-configuring-smart-markers.cs
-- place-a-master-smart-marker-in-the-template-to-repeat-rows-for-each-master-record.cs
-- insert-detail-smart-markers-and-set-the-detailsheet-parameter-to-target-a-separate-worksheet.cs
-- configure-the-detailtable-parameter-to-map-detail-data-into-a-predefined-table-on-the-target-sheet.cs
-- set-workbookdesignerlinebyline-to-false-when-merging-nested-objects-to-process-them-as-grouped-records.cs
-- set-the-html-property-on-a-smart-marker-to-render-bold-text-inside-the-resulting-cell.cs
-- save-the-merged-workbook-as-xlsx-and-optionally-export-a-pdf-copy-for-reporting-purposes.cs
-- use-workbookdesignersetdatasource-with-a-datatable-to-populate-smart-markers-from-relational-database-results.cs
-- configure-smart-marker-options-to-ignore-empty-rows-when-processing-a-detail-list-that-contains-gaps.cs
-- create-a-custom-class-implementing-icustomtypeprovider-to-expose-additional-properties-for-smart-marker-binding.cs
-- set-workbookdesignerlinebyline-to-true-for-simple-list-merging-while-keeping-master-markers-linebyline.cs
-- apply-a-custom-number-format-to-cells-populated-via-smart-markers-to-display-currency-values-consistently.cs
-- use-the-html-property-to-embed-an-image-tag-within-a-cell-rendering-the-picture-after-merge.cs
-- use-a-smart-marker-with-the-html-property-to-render-a-colored-span-element-inside-a-cell.cs
-- use-a-foreach-smart-marker-to-generate-a-variablelength-list-of-project-milestones-on-a-timeline-sheet.cs
-- add-a-smart-marker-that-inserts-the-current-date-using-the-formula-parameter-with-today-function.cs
-- configure-the-workbook-designer-to-treat-empty-strings-as-blanks-when-merging-string-properties-from-data-source.cs
-- use-a-smart-marker-with-index-syntax-to-fill-a-matrix-of-attendance-records-for-each-day.cs
-- configure-workbookdesigner-to-use-an-ienumerable-collection-as-data-source-for-populating-smart-markers-across-worksheets.cs
-- apply-conditional-smart-marker-syntax-to-display-rows-only-when-numeric-column-values-exceed-a-defined-threshold.cs
-- group-smart-markers-to-aggregate-sales-data-by-region-and-insert-subtotal-rows-within-the-worksheet.cs
-- set-smart-marker-option-to-preserve-original-cell-formatting-while-inserting-data-from-a-custom-object-list.cs
-- define-a-custom-data-source-reading-json-files-and-mapping-properties-to-smart-marker-fields-for-reports.cs
-- insert-images-stored-as-byte-arrays-into-designated-cells-using-smart-markers-while-maintaining-aspect-ratio.cs
-- generate-a-pivot-table-programmatically-after-smart-marker-population-to-summarize-imported-financial-data.cs
+Call `Process()` after all sources/options are configured and before reading output.
+
+### Template structure controls expansion
+
+Marker parameters, row insertion, grouping, formulas, and styles can change layout; verify expanded rows and formulas.
+
+### API ownership matters
+
+Do not move a property or method to a convenient-looking object. Confirm the declaring type, overload, enum, and package version before generating code.
+
+## Canonical API map
+
+| API | Purpose |
+| --- | --- |
+| `WorkbookDesigner` | Process Smart Marker templates |
+| `WorkbookDesigner.SetDataSource` | Bind named data |
+| `WorkbookDesigner.Process` | Expand markers |
+| `WorkbookDesigner.Workbook` | Access template/result workbook |
+| `DataTable` | Provide tabular data |
+
+## Required namespaces
+
+Start with only the namespaces needed by the scenario:
+
+```csharp
+using System;
+using System.Data;
+using Aspose.Cells;
+```
+
+Add framework or Aspose namespaces only when directly used. Do not import namespaces to imply unsupported capability.
+
+## Example contract
+
+Every new or regenerated example must:
+
+1. Demonstrate one primary smart markers capability.
+2. Be a complete, single-file C# program.
+3. Use explicit types rather than `var`.
+4. Generate deterministic sample data when practical.
+5. Use the smallest appropriate API surface.
+6. Verify at least one concrete result or postcondition.
+7. Print a deterministic success/result message.
+8. Save a task-specific output when persistence matters.
+9. Avoid unrelated dependencies and abstractions.
+10. Compile and execute with the configured package and target framework.
+11. Match filename, metadata, comments, code, output, and expected result.
+
+## Machine-readable example metadata
+
+New examples should begin with:
+
+```csharp
+/*
+Title: How do I generate an Excel report with Smart Markers in C#
+Intent: C# examples for template-driven Excel reports, Smart Marker syntax, object and DataTable binding, grouping, formulas, images, formatting, and WorkbookDesigner processing
+Category: smart-markers
+Primary API: WorkbookDesigner
+Input: A controlled Smart Marker template and synthetic data source
+Output: smart-marker-report.xlsx
+Expected Result: The marker expands to `Widget` in `smart-marker-report.xlsx`.
+Product: Aspose.Cells for .NET
+Language: C#
+*/
+```
+
+Keep metadata factual, concise, version-aware, and useful when extracted independently by a RAG system.
+
+## Filename and title rules
+
+Use concise, action-first filenames that express one search intent. Prefer `generate-excel-report-with-smart-markers.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
+
+## Natural-language opening comment
+
+After metadata, include one sentence stating the operation and expected result:
+
+```csharp
+// Bind a Sales DataTable, process its Product marker, and verify the expanded value.
+```
+
+The comment must read like a direct answer, not a keyword list.
+
+## Smart Markers construction and operation rules
+
+- Use valid `&=` marker syntax and documented parameters.
+- Bind every referenced source before processing.
+- Process once after configuration unless repeated processing is intentional.
+- Keep templates deterministic and programmatic where possible.
+- Verify no unresolved markers remain.
+
+## Result verification
+
+Verify the resulting smart markers object state, relationships, representative values, and artifact. Reopen when persistence is claimed.
+
+An example is incomplete if it performs an operation but never checks the resulting object, value, collection, file, relationship, or rendered artifact.
+
+## Error-handling policy
+
+- Catch only exceptions the scenario can handle meaningfully.
+- Include operation and synthetic input context without leaking credentials or workbook data.
+- Never suppress failures merely to create an output file.
+- Distinguish invalid input, unsupported format/API, corrupt content, unavailable dependencies, and permission failures when possible.
+- Let unexpected exceptions fail validation.
+
+## Grouping, formulas, images, and marker parameters
+
+Use documented marker syntax, validate group boundaries and adjusted formulas, and bound image/data sizes.
+
+## Multiple sources and nested data
+
+Use unique source names, explicit relationships, and verify row counts and parent-child alignment.
+
+## Monitoring and interruption
+
+Use documented progress, warning, or interruption APIs only. Keep callbacks lightweight and verify completion or cancellation.
+
+Long-running examples must use version-supported interruption/progress APIs, bounded inputs, cancellation where available, and a verified stopped/completed outcome. Never invent callbacks from task wording.
+
+## Performance and memory examples
+
+Use representative smart markers data, batch compatible changes, and report object counts, dimensions, elapsed time, and memory assumptions.
+
+Use `Stopwatch`, identical workloads, warm-up where material, multiple iterations, and report package/framework/environment assumptions. Never present one-machine measurements as universal guarantees.
+
+## Input and output strategy
+
+Prefer generated fixtures. Load existing workbooks only when preserving smart markers state is essential. Save to `smart-marker-report.xlsx` and reopen when relevant.
+
+Use relative, deterministic filenames; never developer-specific absolute paths. Do not overwrite inputs unless explicitly requested. Reopen saved output when persistence is part of the claim.
+
+## Security and enterprise safety
+
+Validate untrusted content and identifiers before smart markers operations. Bound sizes and avoid logging sensitive values or metadata.
+
+- Never embed licenses, credentials, tokens, personal data, private keys, or connection secrets.
+- Keep generated output inside the working directory.
+- Treat workbook content and external references as untrusted.
+
+## SEO, GEO, and AEO requirements
+
+### Search intent
+
+Target one primary intent and one or two natural aliases:
+
+- Smart Markers Aspose.Cells C#
+- generate Excel report from DataTable
+- bind objects to Excel template
+- WorkbookDesigner Process
+
+Do not stuff every phrase into each example.
+
+### Answer-first structure
+
+The first meaningful comment must identify the operation, primary API, and expected result. An extracted example must reveal what problem is solved, required input, output, and verification without external context.
+
+### Entity consistency
+
+Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, Smart Marker, WorkbookDesigner, report template, data source. Avoid ambiguous product nicknames.
+
+### Citation quality
+
+Use official Aspose.Cells documentation and API reference as technical authorities. Keep claims specific and verifiable. Never fabricate support, compatibility, benchmark, or fidelity claims.
+
+## API verification and anti-hallucination gate
+
+Before accepting code:
+
+1. Inspect the installed Aspose.Cells package version.
+2. Search existing examples for the exact symbol.
+3. Confirm it in official API documentation or through compilation.
+4. Confirm its declaring type and overload parameters.
+5. Compile the complete example.
+6. Run it and validate the expected result.
+
+Reject code that derives an API from a filename, invents option properties, confuses adjacent feature models, or reports success without checking the outcome.
+
+## Validation workflow
+
+```text
+Interpret one developer intent
+  -> select the correct object model and smallest API scope
+  -> verify symbols and package compatibility
+  -> create controlled input
+  -> perform one primary operation
+  -> assert the expected result
+  -> save and reopen when relevant
+  -> compile and run
+  -> inspect diagnostics and artifacts
+  -> update retrieval metadata
+```
+
+## Review checklist
+
+### Correctness
+
+- [ ] The API exists and belongs to the expected type.
+- [ ] Indexes, ranges, names, fields, formats, and relationships are valid.
+- [ ] Required source objects/data exist before the operation.
+- [ ] The result is explicitly verified.
+
+### Code quality
+
+- [ ] The program is complete, focused, deterministic, and runnable.
+- [ ] Explicit C# types and minimal namespaces are used.
+- [ ] Resource ownership and errors are handled safely.
+- [ ] No credentials, absolute paths, or unrelated dependencies are present.
+
+### Discoverability
+
+- [ ] Filename and title express one natural intent.
+- [ ] Metadata identifies the primary API and expected result.
+- [ ] Opening comment provides a direct answer.
+- [ ] Canonical product and domain entities are used.
+
+### Validation
+
+- [ ] `dotnet build` succeeds.
+- [ ] `dotnet run` succeeds.
+- [ ] Expected object state or output is confirmed.
+- [ ] Saved output is reopened/inspected when applicable.
+
+## Related knowledge
+
+- [Cell data](../cells-data/)
+- [Formatting](../format-cells/)
+- [Formulas](../manage-formulas/)
+- [Images](../working-with-images/)
+
+## Definition of done
+
+A `smart-markers` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.

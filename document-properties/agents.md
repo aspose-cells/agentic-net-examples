@@ -1,104 +1,77 @@
-# Document Properties Examples
+---
+name: Aspose.Cells Document Properties Agent
+category: document-properties
+product: Aspose.Cells for .NET
+language: C#
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Read, add, update, remove, copy, and audit Excel workbook metadata in C#
+primary_apis: [BuiltInDocumentPropertyCollection, CustomDocumentPropertyCollection, DocumentProperty]
+related_categories: [../manage-workbook/, ../open-workbook/, ../save-workbook/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Document Properties Agent Instructions
 
-Document Properties
+## Mission and scope
 
+Create focused examples for Excel workbook metadata with Aspose.Cells for .NET. Follow [`../AGENTS.md`](../AGENTS.md) first.
 
-## Purpose
+In scope: built-in properties, custom properties, typed metadata, enumeration, existence checks, updates, removal, cloning, persistence, JSON/report export, and metadata governance.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+Use `manage-workbook` for custom XML parts and content-type properties unless ordinary document properties remain the main intent.
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+## Canonical model
 
+| Intent | API |
+| --- | --- |
+| Standard metadata | `workbook.BuiltInDocumentProperties` |
+| User-defined metadata | `workbook.CustomDocumentProperties` |
+| One property | `DocumentProperty` |
+| Enumerate | Property collection enumerators/indexers verified for the installed version |
 
-## Example Files
+## Hard rules
 
-Each `.cs` file demonstrates a specific task related to **Document Properties**.
+- Choose built-in versus custom properties intentionally.
+- Preserve property types such as string, integer, double, Boolean, and `DateTime`.
+- Check for an existing custom property before adding one with the same name.
+- Treat author, company, manager, comments, and custom values as potentially sensitive metadata.
+- Verify persistence by saving and reopening when the task modifies metadata.
+- Do not assume every property is supported by every output format.
+- Do not confuse document properties with cell values, named ranges, or custom XML parts.
 
-Example:
+## Canonical pattern
 
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
-using Aspose.Cells;
-
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
-
+```csharp
 Workbook workbook = new Workbook();
+workbook.BuiltInDocumentProperties.Title = "Quarterly Report";
+workbook.CustomDocumentProperties.Add("ProjectId", 1001);
+workbook.Save("workbook-metadata.xlsx");
 
-Worksheet sheet = workbook.Worksheets[0];
+Workbook reopened = new Workbook("workbook-metadata.xlsx");
+string title = reopened.BuiltInDocumentProperties.Title;
+Aspose.Cells.Properties.DocumentProperty projectId = reopened.CustomDocumentProperties["ProjectId"];
+```
 
-Cells cells = sheet.Cells;
+## Example contract
 
+Every example must state the property collection, name, type, operation, and expected persisted value. Use synthetic metadata, explicit types, and deterministic timestamps. Prefer filenames such as `add-custom-document-property-to-xlsx.cs`.
 
-## Output
+For audits, report property name, type, and a redacted/synthetic value. Never log real author identities, customer names, internal paths, or classification labels.
 
-Examples may generate:
+## Discoverability and validation
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+Target one intent such as "set Excel title property in C#" or "read custom XLSX metadata." The opening comment must name the property and expected value.
 
-Output files are written to the working directory.
-- load-a-workbook-and-retrieve-the-title-builtin-property-for-verification.cs
-- open-an-excel-file-and-read-the-author-builtin-property-to-identify-the-creator.cs
-- instantiate-a-workbook-and-obtain-the-documentversion-builtin-property-to-check-version-information.cs
-- load-a-spreadsheet-and-read-the-language-builtin-property-to-determine-locale-settings.cs
-- open-a-workbook-and-query-the-scalecrop-builtin-property-to-view-image-scaling-flag.cs
-- load-an-excel-document-and-inspect-the-linksuptodate-builtin-property-for-hyperlink-status.cs
-- create-a-workbook-and-set-the-title-builtin-property-to-a-descriptive-project-name.cs
-- open-a-file-and-update-the-author-builtin-property-with-the-correct-contributor-identifier.cs
-- load-a-workbook-and-assign-the-documentversion-builtin-property-the-value-20.cs
-- open-a-spreadsheet-and-set-the-language-builtin-property-to-fr-fr-for-localization.cs
-- instantiate-a-workbook-and-enable-the-scalecrop-builtin-property-to-preserve-image-proportions.cs
-- load-a-workbook-and-disable-the-linksuptodate-builtin-property-to-prevent-link-checks.cs
-- open-a-workbook-and-add-a-custom-property-processeddate-with-the-current-datetime-value.cs
-- load-an-excel-file-and-create-a-custom-property-projectid-with-an-integer-identifier.cs
-- open-a-workbook-and-add-a-custom-boolean-property-isreviewed-set-to-true.cs
-- instantiate-a-workbook-and-add-a-linktocontent-custom-property-sourceurl-pointing-to-an-external-url.cs
-- load-a-workbook-locate-the-custom-property-projectid-and-update-its-integer-value.cs
-- open-a-spreadsheet-and-remove-the-custom-property-isreviewed-to-clean-obsolete-metadata.cs
-- load-a-workbook-and-check-whether-a-custom-property-clientname-exists-before-adding.cs
-- open-a-file-and-iterate-through-all-builtin-properties-logging-each-name-and-value.cs
-- load-a-workbook-and-enumerate-custom-properties-exporting-their-names-types-and-values-to-json.cs
-- instantiate-two-workbooks-and-copy-all-document-properties-from-source-to-destination-programmatically.cs
-- load-a-template-workbook-and-clone-its-builtin-properties-into-a-newly-created-workbook.cs
-- open-a-workbook-and-validate-that-documentversion-matches-a-semantic-version-pattern-before-saving.cs
-- load-an-excel-file-and-verify-that-language-contains-a-valid-net-culture-code.cs
-- open-a-workbook-set-scalecrop-to-true-and-ensure-the-flag-persists-when-saving-as-pdf.cs
-- instantiate-a-workbook-and-deliberately-access-a-nonexistent-builtin-property-to-demonstrate-exception-handling.cs
-- load-a-spreadsheet-and-use-trycatch-to-safely-read-a-custom-property-reviewer.cs
-- open-a-workbook-and-confirm-that-application-metadata-fields-appear-in-saved-file-properties.cs
-- load-a-workbook-modify-several-properties-and-save-the-file-to-xlsx-format-preserving-changes.cs
-- open-a-workbook-update-document-properties-and-export-the-result-to-csv-format-for-downstream-processing.cs
-- instantiate-a-workbook-adjust-builtin-properties-and-save-the-document-as-pdf-to-embed-metadata.cs
-- batch-process-all-workbooks-in-a-folder-setting-each-files-language-property-to-en-gb.cs
-- iterate-through-a-directory-of-excel-files-and-update-every-documentversion-property-to-30.cs
-- create-a-utility-that-reads-custom-properties-from-a-workbook-and-writes-them-into-a-metadata-worksheet.cs
-- generate-a-summary-report-that-aggregates-builtin-property-values-from-multiple-workbooks-into-a-consolidated-excel-file.cs
-- validate-that-the-title-builtin-property-is-not-empty-before-exporting-the-workbook-to-any-external-format.cs
-- set-the-linksuptodate-property-based-on-presence-of-external-hyperlinks-disabling-it-if-none-exist.cs
-- use-documentpropertycollection-to-retrieve-the-total-count-of-properties-and-display-the-number-in-logs.cs
-- compare-custom-property-sets-between-two-workbooks-and-generate-a-list-of-differences-for-auditing.cs
-- remove-all-custom-properties-whose-names-start-with-the-prefix-temp_-to-clean-temporary-entries.cs
-- add-a-custom-property-containing-an-array-of-string-tags-to-categorize-workbook-content.cs
-- set-the-builtin-comments-property-to-a-multiline-description-providing-detailed-notes-about-the-workbook.cs
-- read-the-keywords-builtin-property-and-use-its-values-to-populate-a-search-index.cs
-- update-the-subject-builtin-property-based-on-worksheet-content-analysis-to-reflect-the-main-topic.cs
-- validate-that-scalecrop-cannot-be-enabled-when-the-workbook-contains-chart-objects.cs
-- log-a-warning-whenever-code-attempts-to-modify-application-metadata-which-is-immutable.cs
-- create-a-unit-test-that-adds-a-custom-property-saves-the-workbook-reloads-it-and-verifies-persistence.cs
+Verify collection members and property conversions against the installed package. Compile, run, reopen output, and compare type and value. Reject examples that stringify all values, overwrite metadata silently, or claim preservation without reopening.
+
+## Related knowledge
+
+- [Category overview](README.md)
+- [Manage workbook](../manage-workbook/)
+- [Open workbook](../open-workbook/)
+- [Official document properties documentation](https://docs.aspose.com/cells/net/managing-document-properties/)
+
+## Definition of done
+
+The example is done when collection, property name/type, privacy treatment, and persisted result are explicit and verified.

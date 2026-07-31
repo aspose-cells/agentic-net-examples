@@ -1,236 +1,106 @@
-# Working With PDF Examples
+---
+name: Aspose.Cells PDF Export Agent
+category: working-with-pdf
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Convert Excel workbooks and selected worksheets to PDF in C#
+primary_apis: [Workbook.Save, SaveFormat.Pdf, PdfSaveOptions, Worksheet.PageSetup]
+search_intents: [Excel to PDF C#, convert XLSX to PDF without Excel, PDF/A from Excel, selected sheets to PDF]
+related_categories: [../conversion/, ../working-with-worksheets/, ../calculate-formulas/, ../working-with-images/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells PDF Export Agent Instructions
 
-Working With PDF
+## Mission, precedence, and boundary
 
+Create enterprise-ready C# examples for rendering Excel workbooks or selected worksheets to PDF. Follow [`../AGENTS.md`](../AGENTS.md), then this guide. Generated examples are discovery material, not blanket proof of API support.
 
-## Purpose
+In scope: `Workbook.Save` to PDF, `PdfSaveOptions`, pagination, sheet/page selection, PDF/A settings, optimization, image resampling, formula refresh, fonts/warnings, and verified PDF security.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+Out of scope: parsing, decrypting, extracting text from, or independently validating existing PDFs; third-party PDF libraries; inferred JavaScript, multimedia, attachments, watermark, or signature APIs.
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+## Canonical answer
 
-
-## Example Files
-
-Each `.cs` file demonstrates a specific task related to **Working With PDF**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+```csharp
+using System;
+using System.IO;
 using Aspose.Cells;
 
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
-
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue("Item");
+worksheet.Cells["B1"].PutValue("Quantity");
+worksheet.Cells["A2"].PutValue("Apples");
+worksheet.Cells["B2"].PutValue(10);
+worksheet.AutoFitColumns();
 
-Worksheet sheet = workbook.Worksheets[0];
+PdfSaveOptions options = new PdfSaveOptions
+{
+    CalculateFormula = true
+};
 
-Cells cells = sheet.Cells;
+workbook.Save("workbook.pdf", options);
 
+if (!File.Exists("workbook.pdf") || new FileInfo("workbook.pdf").Length == 0)
+{
+    throw new InvalidOperationException("PDF output was not created.");
+}
 
-## Output
+Console.WriteLine("Saved workbook.pdf.");
+```
 
-Examples may generate:
+Simplest conversion:
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+```csharp
+workbook.Save("workbook.pdf", SaveFormat.Pdf);
+```
 
-Output files are written to the working directory.
-- convert-an-xlsx-workbook-to-pdf-using-default-settings-and-verify-output-file-size.cs
-- convert-a-csv-file-to-pdf-and-ensure-column-alignment-matches-source-data.cs
-- convert-a-tsv-document-to-pdf-applying-custom-page-margins-for-better-readability.cs
-- convert-a-txt-workbook-to-pdf-inserting-page-breaks-after-each-paragraph-for-clarity.cs
-- convert-an-xls-workbook-to-pdfa1b-compliant-file-and-verify-compliance-with-external-validator.cs
-- convert-an-xlsb-file-to-pdf-and-set-pdf-creation-time-to-current-utc-timestamp.cs
-- set-pdf-compliance-to-pdfa3u-and-embed-xml-metadata-for-enhanced-accessibility.cs
-- set-pdf-compliance-to-pdfa2b-while-preserving-original-color-profiles-for-accurate-color-reproduction.cs
-- set-pdf-compliance-to-pdfa1a-and-ensure-all-fonts-are-embedded-correctly.cs
-- set-pdf-version-to-14-using-pdfsaveoptions-for-compatibility-with-older-pdf-viewers.cs
-- set-pdf-version-to-16-to-enable-advanced-features-such-as-transparency-handling.cs
-- convert-a-csv-file-to-pdf-and-set-pdf-creation-time-to-a-specific-historical-date.cs
-- convert-a-tsv-document-to-pdf-while-applying-pdfa2b-compliance-for-archival-purposes.cs
-- add-a-text-watermark-with-45degree-rotation-and-60-opacity-on-oddnumbered-pages.cs
-- add-a-text-watermark-with-no-rotation-and-20-opacity-on-evennumbered-pages.cs
-- add-an-image-watermark-from-png-byte-array-scaling-to-page-size-with-40-opacity.cs
-- create-pdf-bookmarks-for-each-worksheet-using-worksheet-names-as-bookmark-titles.cs
-- create-hierarchical-pdf-bookmarks-with-parent-chapter-and-child-section-entries-for-navigation.cs
-- enable-printing-of-cell-comments-while-saving-workbook-to-pdf-preserving-comment-formatting.cs
-- disable-printing-of-cell-comments-during-pdf-conversion-to-produce-cleaner-document-layout.cs
-- save-the-workbook-to-pdf-using-pdfsaveoptions-with-configured-settings-and-verify-output.cs
-- load-an-xlsx-workbook-from-a-file-path-and-save-it-as-a-pdf-document.cs
-- create-a-pdfbookmarkentry-for-a-specific-worksheet-and-assign-a-stable-destination-name.cs
-- iterate-through-all-worksheets-and-add-a-pdf-bookmark-for-each-using-worksheet-names-as-destinations.cs
-- set-pdfsaveoptionsoutputblankpagewhennothingtoprint-to-false-to-trigger-cellsexception-on-empty-workbooks.cs
-- set-pdfsaveoptionspdfcompliance-to-pdfa1a-to-produce-pdfa1a-compliant-output-for-archival-purposes.cs
-- programmatically-remove-a-specific-worksheet-before-saving-the-workbook-as-pdf-to-exclude-its-content.cs
-- apply-a-custom-page-margin-setting-via-pdfsaveoptions-to-control-pdf-page-layout.cs
-- set-pdfsaveoptionsonepagepersheet-to-true-to-force-each-worksheet-onto-a-separate-pdf-page.cs
-- implement-batch-conversion-of-multiple-xlsx-files-in-a-directory-to-individual-pdf-files.cs
-- detect-empty-worksheets-and-skip-them-when-generating-pdf-to-avoid-unnecessary-blank-pages.cs
-- configure-pdfsaveoptions-to-use-a-specific-pdf-version-for-compatibility-with-older-readers.cs
-- export-a-workbook-containing-embedded-hyperlinks-and-verify-that-links-remain-functional-in-the-pdf.cs
-- set-pdfsaveoptionscompressionlevel-to-maximum-to-reduce-the-size-of-the-generated-pdf-file.cs
-- use-workbookcalculateformula-to-ensure-all-formulas-are-evaluated-before-exporting-to-pdf.cs
-- apply-a-custom-font-substitution-rule-via-pdfsaveoptions-to-handle-missing-fonts-during-pdf-generation.cs
-- implement-error-handling-that-retries-pdf-export-with-outputblankpagewhennothingtoprint-set-to-true-after-failure.cs
-- extract-the-list-of-named-destinations-from-an-exported-pdf-using-a-pdf-parsing-library.cs
-- programmatically-set-the-pdf-document-title-metadata-based-on-the-workbooks-name-property.cs
-- create-a-pdf-bookmark-that-navigates-to-a-specific-cell-range-using-a-named-destination-reference.cs
-- load-an-excel-workbook-xls-or-xlsx-using-the-workbook-constructor-or-workbookload-method.cs
-- call-workbookcalculateformula-to-recalculate-all-formulas-before-exporting-to-pdf.cs
-- instantiate-pdfsaveoptions-and-configure-desired-pdf-export-settings-for-the-workbook-conversion-process.cs
-- set-pdfsaveoptionsonepagepersheet-to-true-to-generate-a-separate-pdf-page-for-each-worksheet.cs
-- set-pdfsaveoptionscompliance-to-pdfcompliancepdfa1a-for-pdfa1a-compliant-output-that-meets-archival-standards.cs
-- set-pdfsaveoptionsfitallcolumnsononepage-to-true-to-fit-all-worksheet-columns-onto-a-single-pdf-page.cs
-- define-pdfsaveoptionsmaxpages-to-limit-the-total-number-of-pages-generated-during-conversion.cs
-- set-pdfsaveoptionsignoreerrors-to-true-to-continue-pdf-generation-despite-rendering-errors.cs
-- save-the-workbook-to-pdf-using-workbooksaveoutputpath-saveformatpdf-pdfsaveoptions-for-the-configured-export-options.cs
-- retrieve-draw-object-and-bound-information-from-the-drawobjecteventhandler-callback-for-custom-processing.cs
-- confirm-that-solid-gridlines-appear-correctly-in-the-pdf-when-rendersolidgridlines-is-enabled.cs
-- ensure-that-each-worksheet-starts-on-a-new-pdf-page-when-onepagepersheet-is-set.cs
-- check-that-the-pdf-complies-with-pdfa1a-standards-when-compliance-is-set-accordingly.cs
-- validate-that-all-columns-fit-within-a-single-page-for-each-worksheet-when-fitallcolumnsononepage-is-true.cs
-- verify-that-no-exceptions-are-thrown-during-export-when-ignoreerrors-is-enabled-and-source-errors-exist.cs
-- confirm-that-string-crossing-behavior-follows-the-crossstringinpdf-setting-in-the-final-pdf.cs
-- review-the-generated-pdf-to-confirm-that-all-configured-options-have-been-applied-correctly.cs
-- load-a-tsv-workbook-enable-onepagepersheet-and-export-to-pdf-with-default-security.cs
-- set-onepagepersheet-to-true-then-save-each-worksheet-on-a-single-pdf-page.cs
-- set-onepagepersheet-to-true-and-limit-pdf-to-a-maximum-of-ten-pages.cs
-- set-onepagepersheet-to-true-and-fit-all-columns-on-one-pdf-page.cs
-- convert-a-tsv-workbook-to-pdf-with-one-page-per-sheet-and-no-blank-pages.cs
-- apply-aes256-encryption-with-only-a-user-password-to-protect-the-pdf.cs
-- apply-aes256-encryption-with-both-user-and-owner-passwords-then-save-workbook-as-pdf.cs
-- configure-pdfsaveoptionspassword-and-encryptiontype-to-encrypt-pdf-with-a-strong-password.cs
-- use-crossstring-to-overlay-the-word-confidential-at-the-bottom-of-each-pdf-page.cs
-- activate-pdfsaveoptionscrossstring-to-customize-text-placement-coordinates-for-precise-pdf-layout-control.cs
-- use-crossstring-to-place-a-confidential-stamp-over-the-center-of-each-pdf-page.cs
-- apply-crossstring-to-place-a-watermark-text-at-coordinates-50400-on-each-pdf-page.cs
-- use-crossstring-to-embed-a-qr-code-image-at-coordinates-200300-in-the-pdf.cs
-- use-crossstring-to-align-header-text-at-the-top-center-of-each-pdf-page.cs
-- render-office-addins-while-converting-an-xls-workbook-to-pdf-preserving-interactive-controls.cs
-- render-office-addins-while-converting-an-xlsb-workbook-to-pdf-preserving-interactive-elements.cs
-- render-office-addins-while-converting-an-xlsm-workbook-to-pdf-preserving-macros-ui-elements.cs
-- load-an-xlsx-workbook-from-disk-using-the-workbook-class.cs
-- recalculate-all-formulas-in-the-workbook-by-calling-workbookcalculateformula-before-conversion.cs
-- set-pdfsaveoptionspdfacompliance-to-pdfacompliancepdfa1a-to-generate-pdfa1a-compliant-files-output.cs
-- assign-specific-worksheet-indices-to-pdfsaveoptionssheetset-to-export-selected-sheets-as-a-single-pdf.cs
-- loop-through-each-worksheet-set-sheetset-individually-and-save-each-as-separate-pdf-files.cs
-- configure-pdfsaveoptionsimageresample-to-150-dpi-to-reduce-pdf-size-while-maintaining-image-clarity.cs
-- set-pdfsaveoptionsfitallcolumnsinonepage-to-true-to-fit-all-columns-on-a-single-pdf-page.cs
-- limit-pdf-output-to-ten-pages-by-setting-pdfsaveoptionsmaxpagecount-to-10.cs
-- add-a-semitransparent-watermark-text-across-each-pdf-page-using-pdfsaveoptionswatermarktext.cs
-- apply-pdf-encryption-with-a-user-password-and-restrict-printing-using-pdfsaveoptionsencryptionoptions.cs
-- disable-gridline-rendering-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-cleaner-pdf-layout.cs
-- increase-image-resampling-quality-to-300-dpi-for-sharper-images-in-the-generated-pdf.cs
-- configure-pdf-page-size-to-a4-and-orientation-to-landscape-before-saving-the-workbook.cs
-- preserve-excel-charts-as-vector-graphics-in-the-pdf-to-maintain-scalability-and-clarity.cs
-- render-merged-cells-correctly-in-the-pdf-by-preserving-their-spanning-across-rows-and-columns.cs
-- enable-hyperlink-preservation-so-that-clickable-links-remain-functional-in-the-generated-pdf.cs
-- preserve-cell-background-colors-in-the-pdf-by-enabling-appropriate-rendering-settings.cs
-- fit-all-worksheet-columns-onto-a-single-pdf-page-during-conversion.cs
-- limit-generated-pdf-pages-by-specifying-a-maximum-page-count-for-conversion.cs
-- retrieve-and-log-font-substitution-warnings-after-rendering-excel-to-pdf.cs
-- replace-specific-unicode-characters-with-a-custom-font-when-saving-excel-as-pdf.cs
-- enable-pdfa-compliance-to-ensure-longterm-archival-compatibility-of-converted-documents.cs
-- set-pdf-document-title-metadata-based-on-the-original-excel-workbook-name.cs
-- add-a-semitransparent-watermark-text-to-each-page-of-the-resulting-pdf.cs
-- encrypt-the-generated-pdf-with-a-user-password-and-restrict-printing-permissions.cs
-- produce-a-landscapeoriented-pdf-for-wide-excel-sheets-to-improve-readability.cs
-- set-a-custom-pdf-page-size-matching-excel-worksheet-dimensions-for-precise-layout-rendering.cs
-- add-header-and-footer-with-page-numbers-to-each-pdf-page-derived-from-excel.cs
-- preserve-hyperlinks-so-that-links-in-excel-cells-remain-clickable-in-the-pdf-output.cs
-- convert-only-selected-ranges-of-an-excel-worksheet-to-pdf-excluding-hidden-rows-and-columns.cs
-- embed-javascript-in-the-pdf-to-open-a-specific-url-when-the-document-loads.cs
-- convert-excel-formulas-to-their-calculated-values-in-the-pdf-to-display-static-results.cs
-- apply-a-custom-pdf-compression-level-to-reduce-file-size-while-maintaining-image-quality.cs
-- convert-an-xls-workbook-to-pdf-using-minimumsize-optimization-while-preserving-worksheet-colors.cs
-- load-an-xls-file-set-optimizationtype-to-minimumsize-and-save-as-pdf.cs
-- load-an-xlsb-file-apply-minimumsize-optimization-and-save-as-pdf.cs
-- render-solid-gridlines-in-the-pdf-output-by-setting-pdfsaveoptionsrendersolidgridlines-to-true.cs
-- configure-fontsettings-with-a-unicode-font-to-correctly-render-supplementary-characters-in-pdf.cs
-- verify-that-unicode-supplementary-characters-such-as-emojis-render-correctly-in-the-pdf-output.cs
-- render-solid-gridlines-false-verification-ensure-only-cell-borders-appear-without-solid-lines.cs
-- enable-exportdocumentstructure-to-retain-excel-bookmarks-as-pdf-outline-entries-during-conversion.cs
-- verify-that-exportdocumentstructure-creates-a-pdf-outline-matching-excel-sheet-hierarchy.cs
-- verify-that-exportdocumentstructure-generates-a-pdf-outline-reflecting-nested-worksheet-groups.cs
-- embed-an-image-file-as-a-pdf-attachment-using-pdfsaveoptions.cs
-- embed-multiple-excel-worksheets-as-separate-attachments-in-the-pdf-for-detailed-review.cs
-- apply-standardsize-optimization-and-verify-that-resulting-pdf-file-size-is-within-expected-limits.cs
-- apply-minimumsize-optimization-and-verify-that-resulting-pdf-file-size-is-reduced-compared-to-standardsize.cs
-- apply-minimumsize-optimization-and-enable-font-subsetting-to-further-reduce-pdf-file-size.cs
-- set-pdfsaveoptionsoptimizationtype-to-minimumsize-for-an-xlsx-workbook-and-save-as-pdf.cs
-- set-pdfsaveoptionsoptimizationtype-to-minimumsize-while-preserving-original-column-widths-in-pdf.cs
-- enable-pdfsaveoptionsrendersolidgridlines-to-preserve-original-excel-cell-borders-in-the-pdf-output.cs
-- create-hierarchical-pdf-bookmarks-for-each-worksheet-by-populating-pdfsaveoptionsbookmarks-collection.cs
-- enable-pdfsaveoptionsembedattachments-and-add-file-paths-to-embed-multiple-external-files-into-the-pdf.cs
-- set-pdf-metadata-such-as-title-author-and-subject-before-saving-the-workbook.cs
-- convert-a-batch-of-xlsx-files-in-a-directory-to-pdfa1a-format-using-parallel-processing.cs
-- set-custom-pdf-margins-of-05-inches-on-all-sides-using-pdfsaveoptions.cs
-- compress-pdf-content-using-flate-compression-to-reduce-file-size-while-preserving-quality.cs
-- embed-all-fonts-used-in-the-workbook-into-the-pdf-to-ensure-consistent-rendering-on-any-device.cs
-- add-a-header-containing-the-workbook-name-on-each-pdf-page-via-pdfsaveoptions.cs
-- preserve-cell-comments-in-the-pdf-output-by-enabling-the-option-to-retain-comments.cs
-- export-pivot-tables-as-static-images-in-the-pdf-to-capture-their-current-state.cs
-- maintain-conditional-formatting-colors-in-the-pdf-by-enabling-appropriate-rendering-options.cs
-- include-data-validation-dropdowns-as-static-text-in-the-pdf-to-reflect-cell-constraints.cs
-- hide-rows-and-columns-marked-as-hidden-in-excel-when-generating-the-pdf-output.cs
-- apply-print-titles-to-repeat-header-rows-on-each-pdf-page-for-better-readability.cs
-- set-pdf-page-breaks-based-on-excel-page-breaks-to-maintain-original-pagination.cs
-- include-row-and-column-headings-on-each-pdf-page-for-reference-using-pdfsaveoptions.cs
-- add-a-digital-signature-to-the-pdf-using-pdfsaveoptions-to-ensure-document-authenticity.cs
-- set-pdf-version-to-17-for-compatibility-with-modern-pdf-readers-ensuring-proper-rendering.cs
-- convert-a-workbook-containing-sparklines-ensuring-they-appear-as-inline-graphics-in-the-pdf.cs
-- export-worksheets-with-slicers-rendering-slicer-controls-as-static-images-in-the-pdf.cs
-- apply-custom-pdf-page-margins-to-control-content-positioning-during-excel-conversion.cs
-- embed-all-used-fonts-in-the-generated-pdf-to-prevent-missing-glyphs.cs
-- configure-highresolution-image-quality-for-charts-when-converting-excel-worksheets-to-pdf.cs
-- split-the-output-pdf-into-separate-files-per-worksheet-using-custom-naming-conventions.cs
-- merge-multiple-excel-worksheets-into-a-single-pdf-while-preserving-original-sheet-order.cs
-- decrypt-a-passwordprotected-pdf-generated-from-excel-and-programmatically-extract-its-text.cs
-- apply-conditional-formatting-during-conversion-to-reflect-cell-color-changes-in-the-pdf.cs
-- set-pdf-document-language-property-based-on-excel-workbook-locale-for-accessibility-tools.cs
-- generate-a-pdf-with-a-table-of-contents-derived-from-worksheet-names-and-page-numbers.cs
-- include-excel-comments-as-footnotes-on-corresponding-pdf-pages-for-reference.cs
-- preserve-excel-cell-borders-and-gridlines-in-the-pdf-output-for-exact-visual-replication.cs
-- enable-pdf-document-tagging-to-improve-accessibility-for-screen-readers-after-conversion.cs
-- add-a-digital-signature-to-the-pdf-generated-from-an-excel-workbook-for-authenticity.cs
-- load-an-xlsm-file-apply-standardsize-optimization-and-export-to-pdf.cs
-- disable-solid-gridlines-by-setting-pdfsaveoptionsrendersolidgridlines-to-false-for-a-gridfree-pdf.cs
-- disable-solid-gridlines-when-converting-an-xlsm-workbook-to-pdf.cs
-- render-solid-gridlines-true-verification-ensure-gridlines-appear-as-continuous-lines-in-pdf.cs
-- add-a-text-file-attachment-to-the-generated-pdf-via-pdfsaveoptionsattachments-collection.cs
-- embed-a-pdf-document-as-an-attachment-inside-the-generated-exceltopdf-conversion.cs
-- embed-a-video-file-as-an-attachment-in-the-pdf-and-reference-it-in-the-document.cs
-- embed-an-excel-macro-file-as-an-attachment-within-the-pdf-for-reference-purposes.cs
-- include-a-json-configuration-file-as-a-pdf-attachment-using-pdfsaveoptions.cs
-- add-a-custom-pdf-attachment-containing-a-summary-report-generated-from-workbook-data.cs
-- embed-multiple-attachments-such-as-images-and-csv-files-into-the-pdf-using-pdfsaveoptions.cs
-- batch-convert-a-folder-of-xlsm-files-to-pdfs-applying-minimumsize-optimization-to-each-file.cs
-- export-document-structure-with-bookmarks-and-confirm-they-appear-in-pdf-outline-viewer.cs
-- set-pdfsaveoptionsoptimizationtype-to-standardsize-for-an-xls-workbook-and-save-as-pdf.cs
-- render-solid-gridlines-in-a-pdf-generated-from-an-xlsx-workbook.cs
-- embed-a-text-document-as-a-pdf-attachment-using-pdfsaveoptions.cs
-- use-fontsettings-to-load-a-font-that-supports-unicode-supplementary-characters-before-pdf-conversion.cs
-- apply-standardsize-optimization-while-preserving-original-column-widths-in-pdf.cs
-- set-print-area-to-a-named-range-before-conversion-to-limit-pdf-content-to-specific-cells.cs
-- load-an-xlsx-workbook-set-pdfsaveoptionsoptimizationtype-to-standardsize-and-save-as-pdf.cs
-- embed-a-csv-file-as-an-attachment-in-the-pdf-using-pdfsaveoptions.cs
-- attach-a-pdfa1a-compliant-report-as-a-pdf-attachment-within-the-main-pdf-document.cs
+## API truths and map
+
+| Goal | API |
+| --- | --- |
+| Default conversion | `Workbook.Save(path, SaveFormat.Pdf)` |
+| Customized conversion | `Workbook.Save(path, PdfSaveOptions)` |
+| Page layout | `Worksheet.PageSetup` |
+| Select worksheets | `PdfSaveOptions.SheetSet` |
+| Select pages | `PageIndex`, `PageCount` |
+| PDF/A setting | `Compliance` |
+| PDF security | `SecurityOptions` |
+| Optimize size | `OptimizationType`, `SetImageResample` |
+| Refresh formulas | `CalculateFormula` or `Workbook.CalculateFormula` |
+
+- Use an explicit PDF save format or options, especially for streams.
+- Margins, orientation, print area, paper size, and print titles primarily belong to `Worksheet.PageSetup`.
+- `PageIndex` is zero-based; `PageCount` limits pages.
+- `OnePagePerSheet` and all-columns-on-one-page solve different layout problems.
+- Configuring PDF/A does not independently certify compliance.
+- Aspose.Cells generates PDFs but is not a general PDF parser.
+- Formula values and fonts must be current before rendering.
+
+## Example contract and validation
+
+Use explicit types, deterministic workbook data, one PDF concern, and a named output. Include metadata for title, intent, APIs, input, output, and expected result. Build, run, check nonzero output and `%PDF-` signature, inspect warnings, and validate page layout visually or with an approved independent tool when required. Never hard-code production passwords.
+
+## Performance, security, and anti-patterns
+
+Bound workbook size, page count, image DPI, concurrent exports, and temporary storage. Configure font folders in controlled deployments. Do not promise pixel-perfect output across font environments, claim configured PDF/A is certified, mix third-party parsing into a focused example, or infer APIs from filenames.
+
+## AI retrieval and FAQ
+
+Use `SaveFormat.Pdf` for default conversion and `PdfSaveOptions` for selection, compliance, security, or optimization. Recalculate formulas before output when displayed values matter. Use `PageSetup` for print layout. A separate PDF component is required for parsing or certification.
+
+## Official resources
+
+- [Excel to PDF documentation](https://docs.aspose.com/cells/net/convert-excel-to-pdf/)
+- [PdfSaveOptions API](https://reference.aspose.com/cells/net/aspose.cells/pdfsaveoptions/)
+- [PageSetup API](https://reference.aspose.com/cells/net/aspose.cells/pagesetup/)
+- [Aspose.Cells NuGet](https://www.nuget.org/packages/Aspose.Cells/)
+
+## Definition of done
+
+The example compiles, runs, uses verified PDF options, produces a nonempty PDF, validates its stated layout or option, reports warnings, and introduces no unrelated PDF dependency.

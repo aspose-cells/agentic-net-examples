@@ -1,86 +1,95 @@
-# Workbook Merger Examples
+---
+name: Aspose.Cells Workbook Merger Agent
+category: workbook-merger
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Merge Excel workbooks or selected worksheets in C#
+primary_apis: [Workbook.Combine, Worksheet.Copy, WorksheetCollection.Add, Workbook.Save]
+search_intents: [merge Excel files C#, combine XLSX without Excel, copy worksheet between workbooks, consolidate Excel workbooks]
+related_categories: [../working-with-worksheets/, ../calculate-formulas/, ../working-with-charts/, ../working-with-images/, ../save-workbook/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells Workbook Merger Agent Instructions
 
-Workbook Merger
+## Mission and boundary
 
+Create correct, runnable C# examples for combining complete workbooks or copying selected worksheets between workbooks. Follow [`../AGENTS.md`](../AGENTS.md), then this guide. Generated examples are discovery candidates only.
 
-## Purpose
+In scope: `Workbook.Combine`, selected-sheet `Worksheet.Copy`, multiple-source consolidation, preservation checks for cells/formulas/styles/drawings, and file or stream output.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+Out of scope: appending relational rows into one table, ordinary same-workbook sheet management, formula-engine tutorials, format conversion, and protection as the primary goal.
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+## Canonical answer
 
-
-## Example Files
-
-Each `.cs` file demonstrates a specific task related to **Workbook Merger**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+```csharp
+using System;
 using Aspose.Cells;
 
+Workbook destination = new Workbook();
+Worksheet north = destination.Worksheets[0];
+north.Name = "North";
+north.Cells["A1"].PutValue("North revenue");
+north.Cells["B1"].PutValue(1250);
 
-## Common Pattern
+Workbook source = new Workbook();
+Worksheet south = source.Worksheets[0];
+south.Name = "South";
+south.Cells["A1"].PutValue("South revenue");
+south.Cells["B1"].PutValue(1750);
 
-Typical Aspose.Cells workflow:
+destination.Combine(source);
 
-Workbook workbook = new Workbook();
+if (destination.Worksheets.Count != 2 ||
+    destination.Worksheets["South"].Cells["B1"].IntValue != 1750)
+{
+    throw new InvalidOperationException("Workbook merge validation failed.");
+}
 
-Worksheet sheet = workbook.Worksheets[0];
+destination.Save("merged-workbooks.xlsx", SaveFormat.Xlsx);
+Console.WriteLine("Created merged-workbooks.xlsx with 2 worksheets.");
+```
 
-Cells cells = sheet.Cells;
+## API truths and map
 
+| Goal | API |
+| --- | --- |
+| Append complete source workbook | `Workbook.Combine` |
+| Copy selected source worksheet | `Worksheet.Copy` |
+| Create copy destination | `WorksheetCollection.Add` |
+| Recalculate results | `Workbook.CalculateFormula` |
+| Persist merge | `Workbook.Save` |
 
-## Output
+- `Combine` mutates the destination. Account for its initial default sheet.
+- For selected cross-workbook copy, add a destination worksheet and call `target.Copy(source)`.
+- `Worksheets.AddCopy` copies within the same workbook; do not present it as the cross-workbook API.
+- Structural workbook merge is not relational row consolidation.
+- Resolve worksheet and defined-name collisions deterministically.
+- Validate formulas, external links, styles, charts, images, VBA, and chosen output format after save/reload; never promise universal losslessness.
+- Calculate formulas explicitly when current results are required.
+- Preserve macros only with a compatible format and verified behavior.
 
-Examples may generate:
+## Contract, validation, and safety
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+Use explicit types, generated sources by default, unique valid sheet names, expected counts/names/cells, a deterministic output, and metadata describing the merge. Validate before save and preferably after reopen. Check formulas and values separately; check drawing counts and render when fidelity matters.
 
-Output files are written to the working directory.
-- add-the-library-reference-to-a-net-project-via-nuget-before-implementing-merge-logic.cs
-- create-a-console-application-project-in-visual-studio-to-host-the-workbook-merging-code.cs
-- load-source-xls-workbooks-using-new-workbookfilepath-for-each-file-to-be-merged.cs
-- load-large-xls-files-with-cellshelpermergefiles-by-providing-an-array-of-file-paths-and-output-path.cs
-- use-workbookcombine-to-merge-two-or-more-workbooks-when-file-sizes-are-moderate.cs
-- copy-specific-worksheets-from-source-workbooks-into-the-target-workbook-using-worksheetcopy-method.cs
-- preserve-charts-and-images-during-merge-by-employing-default-workbookcombine-behavior-without-additional-options.cs
-- ensure-formulas-remain-intact-by-keeping-calculation-mode-set-to-automatic-before-and-after-merging.cs
-- maintain-original-cell-formatting-by-not-altering-style-settings-during-the-combine-operation.cs
-- verify-that-the-merged-workbook-contains-the-expected-number-of-worksheets-after-combination.cs
-- check-that-all-charts-from-source-workbooks-appear-correctly-in-the-combined-workbook.cs
-- confirm-that-embedded-images-are-retained-in-the-merged-workbook-after-using-workbookcombine.cs
-- save-the-merged-workbook-to-a-specified-output-path-using-workbooksave-method.cs
-- export-the-combined-workbook-to-pdf-format-to-verify-visual-fidelity-of-charts-and-images.cs
-- export-each-worksheet-of-the-merged-workbook-to-csv-files-for-data-extraction-validation.cs
-- generate-an-html-representation-of-the-merged-workbook-to-inspect-content-in-a-web-browser.cs
-- save-the-merged-workbook-into-a-memory-stream-for-immediate-transmission-via-a-web-api.cs
-- attach-the-merged-workbook-file-to-an-email-using-systemnetmail-after-successful-combination.cs
-- encrypt-the-merged-workbook-with-a-password-before-saving-to-protect-confidential-data.cs
-- set-the-author-property-of-the-merged-workbook-to-the-current-user-name-after-merging.cs
-- assign-a-descriptive-title-property-to-the-merged-workbook-reflecting-the-combined-source-files.cs
-- add-a-timestamp-worksheet-indicating-the-exact-date-and-time-of-the-merge-operation.cs
-- insert-a-company-logo-image-on-the-first-worksheet-of-the-merged-workbook-after-combining-files.cs
-- apply-autofit-to-all-columns-in-the-merged-workbook-to-improve-readability-of-combined-data.cs
-- apply-autofit-to-all-rows-in-the-merged-workbook-to-ensure-proper-row-height-for-content.cs
-- protect-the-merged-workbook-with-a-password-to-restrict-editing-after-the-combine-operation.cs
-- set-workbook-calculation-mode-to-automatic-after-merging-to-refresh-dependent-formulas-instantly.cs
-- recalculate-all-formulas-in-the-merged-workbook-by-invoking-the-calculate-method-postmerge.cs
-- validate-that-no-ref-errors-exist-in-any-cell-after-merging-workbooks-with-formulas.cs
-- log-the-file-size-of-the-merged-workbook-after-saving-to-monitor-storage-impact-of-the-combine-process.cs
+Reject path traversal and unsupported formats, avoid overwriting inputs, limit source count/size, reset output stream position for consumers, and do not log sensitive workbook data. Avoid legacy merge helpers as the default unless explicitly required and verified.
+
+## AI retrieval and FAQ
+
+Use `Combine` for whole workbooks and `Worksheet.Copy` for selected sheets. A blank destination can produce an unwanted blank tab; start from the intended first workbook or handle the default sheet. Use streams for in-memory output. Benchmark large merges instead of claiming constant memory.
+
+## Official resources
+
+- [Combine workbooks documentation](https://docs.aspose.com/cells/net/combining-multiple-workbooks-into-a-single-workbook/)
+- [Workbook.Combine](https://reference.aspose.com/cells/net/aspose.cells/workbook/combine/)
+- [Worksheet.Copy](https://reference.aspose.com/cells/net/aspose.cells/worksheet/copy/)
+- [Aspose.Cells NuGet](https://www.nuget.org/packages/Aspose.Cells/)
+
+## Definition of done
+
+The example compiles, runs, merges the intended workbook content, validates exact sheet/data state and round-trip output, and does not overwrite or silently lose source content.

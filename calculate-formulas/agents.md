@@ -1,164 +1,609 @@
-# Calculate Formulas Examples
+---
+name: Aspose.Cells Formula Calculation Agent
+category: calculate-formulas
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Calculate and recalculate Excel formulas in C# without Microsoft Excel
+primary_apis:
+  - Workbook.CalculateFormula
+  - Worksheet.CalculateFormula
+  - Cell.Calculate
+  - CalculationOptions
+  - FormulaSettings
+  - AbstractCalculationEngine
+  - AbstractCalculationMonitor
+  - CalculationData
+search_intents:
+  - calculate Excel formulas in C#
+  - recalculate an Excel workbook with Aspose.Cells
+  - evaluate an Excel formula without Microsoft Excel
+  - calculate one cell or worksheet
+  - configure formula calculation options
+  - create a custom Excel calculation engine
+  - detect circular references in Excel formulas
+related_categories:
+  - ../manage-formulas/
+  - ../cells-data/
+  - ../open-workbook/
+  - ../save-workbook/
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells Formula Calculation Agent Instructions
 
-Calculate Formulas
+## Mission
 
+Act as a senior C# and spreadsheet-calculation engineer. Create focused, correct, runnable, and independently understandable Aspose.Cells for .NET examples for calculating Excel formulas.
 
-## Purpose
+Every accepted example must solve one clear developer problem, use APIs available in the repository's installed Aspose.Cells package, calculate a deterministic result, and make that result easy for a developer or AI system to verify.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+## Instruction precedence
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+1. Follow the repository-wide [`AGENTS.md`](../AGENTS.md).
+2. Apply this file for work inside `calculate-formulas/`.
+3. Follow the explicit task when it is more specific and does not conflict with repository safety or validation rules.
+4. Treat existing filenames and examples as discovery material, not as authoritative API documentation.
 
+When this file is more specific than the root instructions, this file controls formula-calculation behavior.
 
-## Example Files
+## Category boundary
 
-Each `.cs` file demonstrates a specific task related to **Calculate Formulas**.
+Use this category when the primary outcome is evaluating, recalculating, monitoring, controlling, or extending the formula calculation engine.
 
-Example:
+In scope:
 
-create-a-workbook.cs
+- Calculating all formulas in a workbook
+- Calculating formulas in one worksheet
+- Calculating one cell
+- Evaluating a formula expression without storing it in a cell
+- Recalculating after source values or formulas change
+- Configuring `CalculationOptions`
+- Configuring workbook `FormulaSettings`
+- Handling calculation errors
+- Detecting and resolving circular references
+- Monitoring or interrupting long calculations
+- Implementing a custom calculation engine
+- Processing formula parameters and returned ranges
+- Measuring formula-calculation performance
+- Inspecting calculated results and formula text
 
+Usually out of scope:
 
-## Required Namespaces
+- Creating or editing formulas without calculating them: use [`manage-formulas`](../manage-formulas/)
+- General cell import or export: use [`cells-data`](../cells-data/)
+- Loading behavior unrelated to formulas: use [`open-workbook`](../open-workbook/)
+- Format conversion as the primary task: use the appropriate conversion category
+- Saving behavior as the primary task: use [`save-workbook`](../save-workbook/)
+- UI automation, Excel Interop, Office Scripts, VBA, or Microsoft Excel installation
 
-Most examples will require:
+If a scenario spans categories, keep it here only when formula evaluation is the dominant learning objective.
 
+## Canonical answer
+
+The standard answer to "How do I calculate Excel formulas in C#?" is:
+
+```csharp
+using System;
 using Aspose.Cells;
 
+namespace AsposeCellsFormulaCalculation
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-## Common Pattern
+            worksheet.Cells["A1"].PutValue(10);
+            worksheet.Cells["A2"].PutValue(20);
+            worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
 
-Typical Aspose.Cells workflow:
+            workbook.CalculateFormula();
 
+            Console.WriteLine($"Calculated value: {worksheet.Cells["A3"].DoubleValue}");
+            workbook.Save("calculate-formulas-result.xlsx");
+        }
+    }
+}
+```
+
+Expected console result:
+
+```text
+Calculated value: 30
+```
+
+This pattern is the default unless the requested scenario specifically requires worksheet-level calculation, cell-level calculation, direct expression evaluation, custom options, or a custom engine.
+
+## API truths that must be preserved
+
+### Assigning a formula does not calculate it
+
+Setting `Cell.Formula` or calling a formula setter stores the formula expression. It does not guarantee that the calculated value is refreshed at runtime. Call the appropriate calculation method before reading the result.
+
+```csharp
+cell.Formula = "=SUM(A1:A2)";
+workbook.CalculateFormula();
+object result = cell.Value;
+```
+
+### Choose calculation scope deliberately
+
+| Scope | Preferred API | Use when |
+| --- | --- | --- |
+| Workbook | `Workbook.CalculateFormula()` | All workbook formulas must be current |
+| Workbook with controls | `Workbook.CalculateFormula(CalculationOptions)` | Error, recursion, precision, monitoring, linked-data, dynamic-array, or custom-engine behavior must be configured |
+| Worksheet | `Worksheet.CalculateFormula(CalculationOptions, bool)` | One worksheet is the intended scope |
+| Direct expression | `Worksheet.CalculateFormula(string)` | A formula result is needed without storing the formula in a cell |
+| Direct expression with controls | `Worksheet.CalculateFormula(string, CalculationOptions)` | A transient formula needs calculation options |
+| Cell | `Cell.Calculate(CalculationOptions)` | One stored formula must be evaluated |
+
+Do not calculate a whole workbook when the task is explicitly about a single formula unless doing so is necessary for dependencies and is explained.
+
+### Calculation mode is not runtime calculation
+
+`workbook.Settings.FormulaSettings.CalculationMode` controls the calculation-mode setting stored in the workbook for spreadsheet applications. It does not replace an explicit Aspose.Cells calculation call.
+
+```csharp
+workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+workbook.CalculateFormula();
+```
+
+Never claim that setting `CalcModeType.Automatic` alone causes Aspose.Cells to recalculate formulas immediately.
+
+### Runtime options and workbook settings are different
+
+Use `CalculationOptions` for a calculation invocation. Depending on the installed package, verified properties can include:
+
+- `CalcStackSize`
+- `CalculationMonitor`
+- `CharacterEncoding`
+- `CustomEngine`
+- `IgnoreError`
+- `LinkedDataSources`
+- `PrecisionStrategy`
+- `Recursive`
+- `RefreshDynamicArrayFormula`
+
+Use `workbook.Settings.FormulaSettings` for workbook-level formula settings such as:
+
+- `CalculateOnOpen`
+- `CalculateOnSave`
+- `CalculationId`
+- `CalculationMode`
+- `EnableCalculationChain`
+- `EnableIterativeCalculation`
+- `ForceFullCalculation`
+- `MaxChange`
+- `MaxIteration`
+- `PrecisionAsDisplayed`
+
+Do not invent a `CalculationOptions` property by converting task wording into PascalCase. Verify every property and enum against the installed package or official API reference.
+
+### Custom engines must not mutate the workbook during calculation
+
+Implement custom functions by deriving from `AbstractCalculationEngine` and overriding `Calculate(CalculationData)`. Treat workbook, worksheet, cell, and parameter objects exposed through `CalculationData` as read-only during calculation. Set only `CalculationData.CalculatedValue` for the function result.
+
+Collect any required post-processing information and modify the workbook only after calculation has completed.
+
+## Canonical API map
+
+| API | Purpose | Retrieval aliases |
+| --- | --- | --- |
+| `Workbook.CalculateFormula` | Calculate formulas throughout a workbook | recalculate workbook, refresh formulas, calculate Excel file |
+| `Worksheet.CalculateFormula` | Calculate a worksheet or transient formula expression | calculate sheet, evaluate formula string |
+| `Cell.Calculate` | Calculate one stored cell formula | calculate single cell, selective recalculation |
+| `CalculationOptions` | Control one calculation operation | ignore errors, recursive calculation, custom engine, calculation monitor |
+| `FormulaSettings` | Persist workbook calculation behavior and iterative settings | manual calculation mode, calculate on save, circular formulas |
+| `CalcModeType` | Select the workbook calculation mode | automatic, manual, automatic except tables |
+| `AbstractCalculationEngine` | Extend the formula engine with custom behavior | custom Excel function, custom calculation engine |
+| `CalculationData` | Read function context and provide a custom result | function parameters, referred area, calculated value |
+| `AbstractCalculationMonitor` | Observe or interrupt calculation | progress callback, circular-reference callback, cancellation |
+| `ReferredArea` | Access values supplied as range parameters | custom function range, formula range argument |
+
+## Required namespaces
+
+Start with only the namespaces needed by the example:
+
+```csharp
+using System;
+using Aspose.Cells;
+```
+
+Add framework namespaces such as `System.Diagnostics`, `System.IO`, `System.Text`, or `System.Collections` only when directly used. Do not add unrelated Aspose namespaces.
+
+## Example contract
+
+Every new or regenerated example must:
+
+1. Demonstrate one primary calculation capability.
+2. Be a complete single-file C# program.
+3. Use explicit types rather than `var`.
+4. Generate sample data programmatically unless file loading is the subject.
+5. Use valid Excel formula syntax beginning with `=`.
+6. Invoke the smallest appropriate calculation scope.
+7. Read and verify at least one calculated result.
+8. Print a deterministic success or result message.
+9. Save a deterministic output workbook when persistence is relevant.
+10. Avoid unrelated third-party dependencies.
+11. Compile and execute with the repository's configured package and target framework.
+12. Match the filename, metadata, comments, code, output, and expected result.
+
+## Machine-readable example metadata
+
+New examples should begin with a compact metadata block:
+
+```csharp
+/*
+Title: Calculate Excel formulas after updating source data in C#
+Intent: Recalculate workbook formulas after changing dependent cells
+Category: calculate-formulas
+Primary API: Workbook.CalculateFormula
+Secondary APIs: Cell.Formula, Cell.DoubleValue, Workbook.Save
+Input: Programmatically generated workbook
+Output: calculate-formulas-result.xlsx
+Expected Result: A3 equals 30
+Product: Aspose.Cells for .NET
+Language: C#
+*/
+```
+
+Metadata rules:
+
+- Describe what the code actually does.
+- Use canonical API names with correct casing.
+- State a concrete expected result.
+- Do not add unverified claims such as performance percentages.
+- Do not repeat keywords unnaturally.
+- Keep the block useful when extracted independently by a RAG system.
+
+## Filename and title rules
+
+Use concise, intent-first filenames. Prefer natural developer language and the primary differentiator.
+
+Preferred:
+
+```text
+calculate-workbook-formulas-after-updating-cells.cs
+evaluate-excel-formula-without-storing-it.cs
+calculate-one-cell-with-calculationoptions.cs
+detect-circular-references-during-calculation.cs
+implement-custom-formula-function.cs
+```
+
+Avoid:
+
+```text
+example1.cs
+formula-demo.cs
+calculate.cs
+test-new-api.cs
+```
+
+Do not encode every implementation step into the filename. The title and metadata can carry supporting detail.
+
+## Natural-language opening comment
+
+After metadata, include one concise comment near the first operation that states the problem and result:
+
+```csharp
+// Calculate all workbook formulas after changing source values and verify the updated total.
+```
+
+This comment should read naturally as an answer to a developer query. It must not be a keyword list.
+
+## Formula construction rules
+
+- Begin formula strings with `=`.
+- Use commas as function-argument delimiters unless a locale-specific example explicitly requires different behavior.
+- Use deterministic values and culture-safe formulas.
+- Escape string literals correctly inside C# strings.
+- Use valid sheet-name quoting for names containing spaces.
+- Explain external links, array formulas, dynamic arrays, and custom functions when used.
+- Do not assume every Microsoft Excel function or newest function variant is supported; verify support for the installed package version.
+- Do not silently replace an unsupported function with a different formula that changes the task.
+
+## Result verification
+
+An example is incomplete if it calculates but never checks the result.
+
+Prefer typed accessors when the result type is known:
+
+```csharp
+double result = worksheet.Cells["A3"].DoubleValue;
+if (Math.Abs(result - 30.0) > 0.000001)
+{
+    throw new InvalidOperationException($"Expected 30 but received {result}.");
+}
+```
+
+Use `StringValue`, `IntValue`, `DoubleValue`, `BoolValue`, or `Value` according to the expected type. For floating-point values, compare with an explicit tolerance.
+
+Do not use current time, random values, environment-specific usernames, or machine-dependent paths unless those values are the explicit subject of the example. If unavoidable, clearly label the output as non-deterministic.
+
+## Error-handling policy
+
+Use `CalculationOptions.IgnoreError = false` when the example is meant to detect or demonstrate calculation failures.
+
+```csharp
+CalculationOptions options = new CalculationOptions
+{
+    IgnoreError = false,
+    Recursive = true
+};
+
+workbook.CalculateFormula(options);
+```
+
+Rules:
+
+- Never suppress exceptions merely to make an example appear successful.
+- Catch only exceptions the scenario can handle meaningfully.
+- Include the cell, formula, or operation context in diagnostic messages when available.
+- Do not expose credentials, license paths, network locations, or sensitive workbook content in logs.
+- Distinguish unsupported formulas, broken external links, circular references, and invalid syntax when the API provides enough information.
+
+## Circular references and iterative calculation
+
+For intentional circular-reference examples, configure iteration through `FormulaSettings` and state the convergence criteria:
+
+```csharp
+FormulaSettings settings = workbook.Settings.FormulaSettings;
+settings.EnableIterativeCalculation = true;
+settings.MaxIteration = 100;
+settings.MaxChange = 0.001;
+```
+
+Requirements:
+
+- Explain why the circular reference is intentional.
+- Set finite iteration and convergence limits.
+- Verify the converged result or monitor callback.
+- Never create an unbounded calculation loop.
+- For accidental circular-reference examples, detect and report the affected cells instead of enabling iteration silently.
+
+## Custom calculation engines
+
+Use `AbstractCalculationEngine` for version-appropriate custom-function examples.
+
+```csharp
+internal sealed class MultiplyEngine : AbstractCalculationEngine
+{
+    public override void Calculate(CalculationData data)
+    {
+        if (!string.Equals(data.FunctionName, "MYMULTIPLY", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        double left = Convert.ToDouble(data.GetParamValue(0));
+        double right = Convert.ToDouble(data.GetParamValue(1));
+        data.CalculatedValue = left * right;
+    }
+}
+```
+
+Custom-engine rules:
+
+- Match function names case-insensitively when appropriate.
+- Validate `ParamCount` before reading parameters.
+- Handle scalar values and `ReferredArea` deliberately.
+- Set `CalculatedValue` only for functions owned by the custom engine.
+- Do not override built-in functions unless the example explicitly demonstrates that advanced behavior.
+- Do not mutate workbook state inside `Calculate`.
+- Use `ForceRecalculate` only for functions whose semantics require it.
+- Prefer `AbstractCalculationEngine` over legacy mechanisms unless the task or package version specifically requires the legacy API.
+
+## Monitoring and interruption
+
+Derive from `AbstractCalculationMonitor` when the task requires progress observation, before/after callbacks, circular-reference handling, or interruption.
+
+Rules:
+
+- Keep callbacks lightweight.
+- Avoid workbook mutation inside callbacks.
+- Make interruption conditions deterministic in examples.
+- State whether a callback continues or stops calculation.
+- Do not call blocking network or filesystem operations for every calculated cell.
+- Verify the observed callback or interruption outcome.
+
+## Performance and memory examples
+
+Performance examples must be honest, reproducible, and scoped.
+
+- Use `Stopwatch` for elapsed-time measurement.
+- Include a warm-up when comparing execution paths if it materially affects the result.
+- Use identical data and formulas for compared runs.
+- Report workbook size, formula count, iteration count, package version, framework, and environment assumptions.
+- Run multiple iterations for comparative benchmarks.
+- Do not claim universal performance improvements from one machine.
+- Do not add thread-related properties unless they exist in the installed package and are documented for formula calculation.
+- Keep default examples small; isolate intentionally large benchmarks and label them clearly.
+
+## Input and output strategy
+
+Prefer programmatically generated input:
+
+```csharp
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue(10);
+```
 
-Worksheet sheet = workbook.Worksheets[0];
+Load a file only when the scenario concerns imported formulas, cached values, external links, or recalculation of an existing workbook.
 
-Cells cells = sheet.Cells;
+For file-based examples:
 
+- Use a clear relative input name such as `input.xlsx`.
+- Check that the file exists when a friendly failure improves the example.
+- State the required workbook content.
+- Never use developer-specific absolute paths.
+- Save to the working directory with a task-specific name such as `recalculated-workbook.xlsx`.
+- Do not overwrite the input unless that behavior is explicitly requested.
 
-## Output
+## Security and enterprise safety
 
-Examples may generate:
+- Do not embed licenses, credentials, tokens, connection strings, or personal data.
+- Do not download workbooks or formulas from untrusted URLs.
+- Treat external workbook links as untrusted input.
+- Bound recursion, stack size, iteration count, input size, and calculation time in service-oriented examples.
+- Avoid writing formula contents or workbook data to logs unless the example explicitly demonstrates diagnostics with synthetic data.
+- Do not use macros, shell commands, reflection, or dynamic code execution to calculate formulas.
+- Keep generated output inside the working directory.
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+## SEO, GEO, and AEO requirements
 
-Output files are written to the working directory.
+### Search intent
 
-- load-a-workbook-from-a-file-stream-modify-cells-then-call-workbookcalculateformula-to-recalculate.cs
-- load-a-workbook-from-a-memory-stream-change-a-formula-and-invoke-workbookcalculateformula-with-options.cs
-- return-a-scalar-numeric-result-from-a-custom-function-after-processing-reference-values.cs
-- replace-icustomfunction-implementation-with-an-abstractcalculationengine-subclass-for-newer-api-support.cs
-- create-a-class-derived-from-abstractcalculationmonitor-and-override-beforecalculate-to-inspect-each-cell.cs
-- assign-a-custom-monitor-instance-to-calculationoptionscalculationmonitor-to-enable-interruption.cs
-- set-calculationoptionscalculationmode-to-manual-before-invoking-workbookcalculateformula-for-controlled-execution.cs
-- invoke-workbookcalculateformulacalculationoptions-to-recalculate-formulas-with-custom-monitor-enabled-for-each-calculation.cs
-- evaluate-the-builtin-ifna-function-by-writing-ifnaa1-fallback-and-calling-workbookcalculateformula.cs
-- use-workbookcalculateformula-without-options-to-compute-all-formulas-using-default-calculation-settings.cs
-- set-calculationoptionsenableiterativecalculation-to-true-to-allow-circular-reference-evaluation-during-calculations.cs
-- set-calculationoptionsmaxiterationcount-to-100-to-limit-the-number-of-iterative-calculation-cycles.cs
-- set-calculationoptionsignoreerrorvalue-to-true-to-skip-errors-during-formula-evaluation.cs
-- enable-rounding-to-displayed-format-by-setting-calculationoptionsprecisionasdisplayed-to-true.cs
-- after-inserting-a-new-row-call-workbookcalculateformula-to-update-dependent-formulas-automatically.cs
-- after-deleting-a-column-call-workbookcalculateformula-to-ensure-remaining-formulas-recalculate-correctly.cs
-- after-renaming-a-worksheet-call-workbookcalculateformula-to-refresh-formulas-that-reference-the-sheet.cs
-- after-applying-data-validation-call-workbookcalculateformula-to-evaluate-any-dependent-formulas.cs
-- after-applying-conditional-formatting-call-workbookcalculateformula-to-ensure-conditional-formulas-recalculate.cs
-- after-protecting-a-worksheet-call-workbookcalculateformula-to-verify-that-protected-cells-still-calculate.cs
-- set-calculationoptionscalculationmode-to-automatic-and-call-workbookcalculateformula-to-trigger-full-recalculation.cs
-- use-calculationoptions-to-ignore-errors-and-then-evaluate-a-formula-containing-ref-references.cs
-- register-the-custom-calculation-engine-with-the-workbooks-calculationengine-before-invoking-any-formulas.cs
-- assign-a-formula-that-calls-the-custom-function-to-a-target-cell-with-required-parameters.cs
-- call-workbookcalculate-to-evaluate-all-formulas-using-the-registered-custom-calculation-engine.cs
-- add-multiple-cells-to-the-watch-window-in-a-loop-to-monitor-a-batch-of-formulas.cs
-- remove-a-cell-from-the-watch-window-programmatically-after-its-evaluation-completes.cs
-- retrieve-the-list-of-cells-currently-monitored-by-the-watch-window-for-reporting-purposes.cs
-- open-the-saved-workbook-in-excel-and-verify-that-the-specified-cells-appear-in-the-watch-window.cs
-- resume-a-paused-calculation-session-and-verify-that-results-match-uninterrupted-execution.cs
-- identify-cells-that-participate-in-circular-references-and-highlight-them-for-user-correction.cs
-- highlight-cells-with-error-values-after-calculation-using-conditional-formatting-rules-automatically.cs
-- apply-conditional-formatting-based-on-formula-results-to-visually-emphasize-threshold-breaches.cs
-- programmatically-clear-the-watch-window-before-adding-a-new-set-of-cells-for-monitoring.cs
-- serialize-the-watch-window-configuration-to-json-for-external-storage-and-later-restoration.cs
-- register-a-custom-function-implementing-icustomfunction-eg-mysum-and-call-it-via-calculateformula-for-testing.cs
-- add-a-custom-function-that-returns-the-user-name-register-it-and-invoke-via-calculateformula-for-audit-logs.cs
-- create-a-subclass-of-abstractcalculationengine-that-overrides-calculate-to-replace-today-with-a-fixed-date.cs
-- register-the-custom-engine-via-workbooksettingscustomengine-and-verify-all-formulas-use-the-overridden-today-implementation.cs
-- set-calculationoptionsprecision-to-a-higher-value-when-evaluating-financial-formulas-requiring-exact-decimal-handling.cs
-- switch-workbooksettingscalculationmode-to-manual-perform-bulk-updates-then-call-workbookcalculate-once.cs
-- set-calculationmode-to-semiautomatic-to-recalculate-only-dependent-cells-after-each-modification.cs
-- disable-automatic-calculation-import-data-from-a-database-then-manually-trigger-calculation-for-consistency.cs
-- load-an-xlsx-workbook-from-a-file-path-and-set-calculation-mode-to-manual.cs
-- set-the-workbooks-calculation-mode-to-automatic-for-immediate-formula-updates.cs
-- set-calculation-mode-to-automaticexcepttables-to-exclude-table-formulas-from-automatic-updates.cs
-- programmatically-disable-automatic-calculation-for-tables-only-while-keeping-other-formulas-in-automatic-mode.cs
-- load-multiple-xlsx-files-from-a-directory-set-each-to-automatic-and-recalculate-formulas.cs
-- recalculate-all-formulas-using-workbookcalculateformula-after-modifying-worksheet-data-in-the-workbook.cs
-- evaluate-a-single-cells-formula-with-cellcalculate-for-isolated-computation.cs
-- implement-a-custom-worksheet-function-by-creating-a-class-that-implements-icustomfunction.cs
-- register-the-icustomfunction-implementation-with-the-workbook-to-enable-its-use-in-formulas.cs
-- derive-a-custom-calculation-engine-from-abstractcalculationengine-and-assign-it-to-the-workbook.cs
-- configure-the-custom-engine-to-log-each-cell-evaluation-for-performance-analysis.cs
-- apply-a-custom-calculation-engine-that-substitutes-missing-functions-with-userdefined-equivalents-during-evaluation.cs
-- interrupt-an-ongoing-workbookcalculateformula-operation-using-a-cancellation-token-after-a-timeout.cs
-- generate-a-report-listing-all-cells-containing-volatile-functions-after-workbook-recalculation.cs
-- validate-minifs-functions-return-correct-results-after-setting-workbook-to-excel-2016-compatibility-mode.cs
-- verify-minifs-calculations-respect-filtered-rows-by-applying-a-filter-before-invoking-workbookcalculateformula.cs
-- measure-performance-difference-between-automatic-and-manual-modes-by-timing-workbookcalculateformula-execution.cs
-- measure-memory-consumption-differences-between-automatic-and-automaticexcepttables-modes-on-large-workbooks.cs
-- log-time-taken-for-each-cell-calculation-when-using-cellcalculate-within-a-processing-loop.cs
-- create-a-utility-that-toggles-calculation-mode-based-on-workbook-size-to-optimize-memory-usage.cs
-- test-that-manual-calculation-mode-prevents-any-formula-evaluation-until-workbookcalculateformula-is-called.cs
-- create-a-commandline-tool-that-accepts-a-folder-path-recalculates-all-workbooks-and-outputs-summary-statistics.cs
-- write-a-utility-that-iterates-through-all-worksheets-sets-each-to-manual-mode-and-saves-changes.cs
-- develop-a-plugin-that-replaces-the-default-calculation-engine-with-a-parallelized-version-to-accelerate-large-workbooks.cs
-- implement-a-progress-callback-that-reports-percentage-completion-during-extensive-calculations.cs
-- pause-calculation-after-a-predefined-time-threshold-and-resume-it-later-without-data-loss.cs
-- disable-automatic-recalculation-in-workbook-settings-to-control-when-formulas-are-evaluated.cs
-- trigger-manual-recalculation-only-for-cells-that-have-changed-since-the-last-calculation.cs
-- use-cellcalculate-method-to-evaluate-a-single-cells-formula-independently-of-the-workbook.cs
-- compare-results-of-cellcalculate-with-those-obtained-from-workbookcalculate-for-consistency.cs
-- generate-a-csv-file-containing-all-formulas-in-the-workbook-along-with-their-cell-addresses.cs
-- filter-formulas-that-contain-specific-functions-such-as-vlookup-or-sumifs-for-targeted-review.cs
-- count-the-number-of-array-formulas-present-in-a-worksheet-and-report-the-total.cs
-- load-a-previously-saved-watch-window-configuration-and-apply-it-to-the-active-workbook.cs
-- use-a-custom-function-to-perform-a-lookup-across-multiple-worksheets-and-return-matching-range.cs
-- implement-a-class-inheriting-abstractcalculationmonitor-and-override-oncircular-to-log-cell-addresses.cs
-- assign-the-custom-monitor-to-workbooksettingscalculationmonitor-before-loading-the-workbook.cs
-- trigger-circular-reference-detection-by-invoking-workbookcalculate-after-modifying-interdependent-formulas.cs
-- write-unit-tests-verifying-oncircular-receives-correct-cell-enumeration-for-a-known-circular-loop.cs
-- use-calculationcell-objects-from-oncircular-to-extract-row-and-column-indices-for-detailed-error-reporting.cs
-- configure-calculationoptionsignoreerror-to-true-when-evaluating-formulas-that-may-cause-divisionbyzero.cs
-- enable-iterative-calculation-by-setting-calculationoptionsenableiterativecalculation-true-for-formulas-with-recursive-dependencies.cs
-- test-iterative-calculation-stability-by-configuring-calculationoptionsmaxiterations-to-100-and-observing-convergence.cs
-- in-the-overridden-calculate-method-fallback-to-basecalculate-for-any-unsupported-functions.cs
-- implement-a-custom-engine-that-caches-intermediate-results-to-avoid-redundant-calculations-for-identical-subexpressions.cs
-- provide-a-public-method-to-clear-the-custom-engines-cache-ensuring-fresh-computation-after-data-changes.cs
-- verify-workbooksettingscustomengine-is-null-after-resetting-settings-to-default-confirming-no-residual-custom-logic.cs
-- programmatically-disable-automatic-calculation-import-a-csv-file-then-enable-calculation-mode-to-recompute-dependent-cells.cs
-- improve-performance-by-setting-workbooksettingsenablefastformulacalculation-true-before-invoking-cellcalculate-on-large-datasets.cs
-- reduce-overhead-in-simple-workbooks-by-setting-workbooksettingsusethreadedcalculation-false-to-improve-stability.cs
-- iterate-through-each-worksheet-enable-fast-formula-calculation-and-compare-total-calculation-time-before-and-after.cs
-- create-a-benchmark-measuring-cellcalculate-latency-with-and-without-enablefastformulacalculation-across-multiple-workbook-sizes.cs
-- compare-memory-consumption-of-default-versus-custom-calculation-engines-by-profiling-heap-usage-during-large-workbook-evaluation.cs
-- create-a-test-suite-verifying-custom-engine-correctly-overrides-builtin-sum-function-while-leaving-other-functions-unchanged.cs
-- write-a-utility-that-enumerates-all-worksheets-sets-calculationmode-to-manual-and-logs-the-previous-mode-for-each.cs
-- demonstrate-worksheetcalculateformula-with-a-formula-referencing-external-workbook-cells-by-providing-appropriate-options.cs
-- implement-a-cancellation-token-that-stops-formula-calculation-when-the-user-requests-an-abort-operation.cs
-- handle-calculationexception-during-formula-recalculation-to-detect-circular-reference-errors.cs
-- extract-and-log-the-formula-dependency-graph-after-calling-workbookcalculateformula-for-debugging.cs
-- implement-a-logger-that-records-the-order-of-formula-evaluations-during-workbookcalculateformula-for-debugging.cs
-- compare-maxifs-calculation-accuracy-between-default-engine-and-a-custom-engine-with-advanced-caching.cs
-- test-that-automaticexcepttables-mode-does-not-recalculate-formulas-inside-structured-tables.cs
-- create-a-batch-process-that-loads-workbooks-applies-a-custom-function-recalculates-and-saves-results.cs
-- implement-a-routine-that-clears-all-cached-calculation-results-before-invoking-a-fresh-workbookcalculateformula-run.cs
+Each example must target one primary intent and, where natural, one or two aliases:
+
+- calculate Excel formulas in C#
+- recalculate XLSX formulas without Microsoft Excel
+- evaluate an Excel formula using Aspose.Cells for .NET
+- calculate one Excel cell or worksheet
+- handle Excel formula calculation errors
+- implement a custom Excel function in C#
+- detect circular references in Excel formulas
+
+Do not stuff every phrase into each example.
+
+### Answer-first structure
+
+The first meaningful comment must identify the operation and expected outcome. Code should show the primary API early, then verify the result.
+
+An extracted example should let an answer engine determine:
+
+- What problem is solved?
+- Which API performs the calculation?
+- What inputs are required?
+- What result is expected?
+- What file is generated?
+- Which package and language are used?
+
+### Entity consistency
+
+Use these canonical names:
+
+- Aspose.Cells for .NET
+- C#
+- Microsoft Excel
+- Excel workbook
+- Excel worksheet
+- Excel formula calculation engine
+- XLSX
+
+Do not refer to the product as "Aspose Excel," "Cells API," or another ambiguous variant in titles and metadata.
+
+### Citation quality
+
+- Link documentation pages from `README.md`, not from every code file.
+- Use official Aspose.Cells documentation and API reference as technical authorities.
+- Keep factual claims specific and verifiable.
+- Include exact API identifiers rather than generic phrases such as "the calculation method."
+- Never fabricate benchmark statistics, compatibility claims, or supported-function counts.
+
+## API verification and anti-hallucination gate
+
+Before writing or accepting code:
+
+1. Inspect the installed Aspose.Cells package version used by the repository.
+2. Search existing validated examples for the exact symbol.
+3. Confirm the symbol in the official Aspose.Cells for .NET API reference or through compilation.
+4. Confirm the symbol belongs to the expected type.
+5. Confirm enum member casing and method overload parameters.
+6. Compile the complete example.
+7. Run it and validate the expected result.
+
+Reject code that:
+
+- Derives an API name only from a filename or task sentence
+- Assigns iterative-calculation settings to the wrong object
+- Confuses Excel's saved calculation mode with Aspose.Cells runtime calculation
+- Uses a non-existent overload
+- Reads a cached result before calculating
+- Claims successful cancellation without verifying it
+- Uses obsolete custom-function APIs without an explicit compatibility reason
+
+## Validation workflow
+
+Use this sequence:
+
+```text
+Interpret one developer intent
+  -> identify the smallest calculation scope
+  -> verify APIs and package compatibility
+  -> create deterministic workbook data
+  -> assign or load formulas
+  -> invoke calculation
+  -> assert expected values or behavior
+  -> save relevant output
+  -> compile and run
+  -> inspect diagnostics and generated files
+  -> update retrieval metadata
+```
+
+Required validation evidence:
+
+- Build succeeds without warnings caused by the example.
+- Process exits successfully for success-path examples.
+- Expected calculated value or callback behavior is observed.
+- Output exists and can be reopened when a file is generated.
+- Reopened output retains the expected formula and value when persistence is part of the scenario.
+- No unrelated files are modified.
+
+## Review checklist
+
+### Correctness
+
+- [ ] The formula is syntactically valid and begins with `=`.
+- [ ] All APIs exist in the installed package.
+- [ ] Calculation settings are assigned to the correct object.
+- [ ] The smallest appropriate calculation scope is used.
+- [ ] Results are read only after calculation.
+- [ ] The expected result is asserted or clearly printed.
+
+### Code quality
+
+- [ ] The program is complete, focused, and runnable.
+- [ ] Explicit C# types are used.
+- [ ] Namespaces are minimal and correct.
+- [ ] Sample values and output names are deterministic.
+- [ ] Error handling adds context rather than hiding failures.
+- [ ] No credentials, absolute local paths, or unrelated dependencies are present.
+
+### Discoverability
+
+- [ ] The filename begins with an action and expresses one intent.
+- [ ] Metadata names the primary API and expected result.
+- [ ] The opening comment provides a direct natural-language answer.
+- [ ] Canonical product and API names are used.
+- [ ] Related intent terms appear naturally rather than as keyword stuffing.
+
+### Validation
+
+- [ ] `dotnet build` succeeds.
+- [ ] `dotnet run` succeeds.
+- [ ] The calculated result matches the documented expectation.
+- [ ] Generated output is verified when applicable.
+
+## Related knowledge
+
+- [Category overview and featured examples](README.md)
+- [Repository agent instructions](../AGENTS.md)
+- [Structured repository index](../index.json)
+- [Create and edit formulas](../manage-formulas/)
+- [Read and write cell data](../cells-data/)
+- [Open existing workbooks](../open-workbook/)
+- [Save workbooks](../save-workbook/)
+- [Official formula-calculation documentation](https://docs.aspose.com/cells/net/calculate-formulas/)
+- [Workbook.CalculateFormula API reference](https://reference.aspose.com/cells/net/aspose.cells/workbook/calculateformula/)
+- [CalculationOptions API reference](https://reference.aspose.com/cells/net/aspose.cells/calculationoptions/)
+
+## Definition of done
+
+A `calculate-formulas` example is done only when it is technically correct, version-verified, deterministic, runnable, result-checked, safe, clearly named, independently understandable, and retrievable by both developers and AI systems.

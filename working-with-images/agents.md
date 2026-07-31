@@ -1,92 +1,122 @@
-# Working With Images Examples
+---
+name: Aspose.Cells Image Rendering Agent
+category: working-with-images
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: Render Excel worksheets, workbooks, and charts to image formats in C#
+primary_apis: [SheetRender, WorkbookRender, ImageOrPrintOptions, Chart.ToImage]
+search_intents: [convert Excel to PNG in C#, render worksheet to image, Excel to TIFF without Microsoft Excel, export chart to SVG]
+related_categories: [../working-with-charts/, ../working-with-pdf/, ../working-with-html/, ../working-with-worksheets/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells Image Rendering Agent Instructions
 
-Working With Images
+## Mission and precedence
 
+Act as a senior C# spreadsheet-rendering engineer. Produce focused, runnable examples for rendering worksheets, workbooks, or charts to PNG, JPEG, BMP, SVG, and TIFF. Follow [`../AGENTS.md`](../AGENTS.md), then this guide. Existing generated filenames are discovery material, not proof of valid APIs or successful execution.
 
-## Purpose
+## Category boundary
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+In scope: `SheetRender`, `WorkbookRender`, `Chart.ToImage`, page rendering, multipage TIFF, files and streams, DPI, JPEG quality, transparency, TIFF compression/color depth, and page-saving callbacks.
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+Out of scope: inserting or extracting worksheet pictures, PDF/HTML as the primary output, cloud uploads, email, Redis, React/WPF, QR generation, and third-party conversion.
 
+## Canonical answer
 
-## Example Files
-
-Each `.cs` file demonstrates a specific task related to **Working With Images**.
-
-Example:
-
-create-a-workbook.cs
-
-
-## Required Namespaces
-
-Most examples will require:
-
+```csharp
+using System;
+using System.IO;
 using Aspose.Cells;
-
-
-## Common Pattern
-
-Typical Aspose.Cells workflow:
+using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
 Workbook workbook = new Workbook();
+Worksheet worksheet = workbook.Worksheets[0];
+worksheet.Cells["A1"].PutValue("Quarter");
+worksheet.Cells["B1"].PutValue("Revenue");
+worksheet.Cells["A2"].PutValue("Q1");
+worksheet.Cells["B2"].PutValue(125000);
+worksheet.AutoFitColumns();
 
-Worksheet sheet = workbook.Worksheets[0];
+ImageOrPrintOptions options = new ImageOrPrintOptions
+{
+    ImageType = ImageType.Png,
+    HorizontalResolution = 150,
+    VerticalResolution = 150
+};
 
-Cells cells = sheet.Cells;
+SheetRender renderer = new SheetRender(worksheet, options);
+renderer.ToImage(0, "worksheet-page-1.png");
 
+if (!File.Exists("worksheet-page-1.png") ||
+    new FileInfo("worksheet-page-1.png").Length == 0)
+{
+    throw new InvalidOperationException("PNG output was not created.");
+}
 
-## Output
+Console.WriteLine($"Rendered {renderer.PageCount} page(s).");
+```
 
-Examples may generate:
+## API truths and map
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+| Goal | API |
+| --- | --- |
+| Render worksheet pages | `SheetRender.ToImage` |
+| Read page count | `SheetRender.PageCount` |
+| Render worksheet TIFF | `SheetRender.ToTiff` |
+| Render workbook | `WorkbookRender` |
+| Render chart | `Chart.ToImage` |
+| Configure format and quality | `ImageOrPrintOptions` |
+| Observe page saving | `IPageSavingCallback` |
 
-Output files are written to the working directory.
-- render-a-workbook-as-tiff-using-300-dpi-resolution-to-improve-image-clarity.cs
-- convert-a-workbook-to-tiff-using-eightbit-color-depth-for-smaller-output-files.cs
-- render-a-workbook-to-tiff-and-write-the-result-into-a-memory-stream-for-further-processing.cs
-- embed-the-resulting-tiff-image-into-an-html-page-using-an-img-tag-with-appropriate-source-attribute.cs
-- attach-the-converted-tiff-image-to-an-email-message-as-an-attachment-for-distribution.cs
-- measure-conversion-duration-using-stopwatch-and-log-elapsed-time-for-performance-analysis.cs
-- convert-a-workbook-to-tiff-using-twentyfourbit-color-depth-for-highquality-images.cs
-- set-custom-page-margins-in-imageorprintoptions-before-converting-workbook-to-tiff-for-layout-control.cs
-- convert-the-first-worksheet-of-a-workbook-to-png-using-default-resolution-for-quick-preview.cs
-- generate-a-jpeg-image-from-a-worksheet-with-custom-image-quality-set-to-80-percent.cs
-- send-the-png-worksheet-image-via-http-post-to-a-rest-endpoint-for-downstream-processing.cs
-- convert-a-worksheet-to-svg-with-the-viewbox-attribute-enabled-for-scalable-rendering.cs
-- render-a-chart-object-from-the-workbook-to-a-png-image-using-the-chartrender-api.cs
-- attach-the-jpeg-chart-image-to-an-email-body-using-inline-html-to-display-within-the-message.cs
-- set-chart-image-resolution-to-300-dpi-during-png-conversion-to-achieve-highdefinition-output.cs
-- write-the-png-chart-image-to-a-temporary-file-and-schedule-automatic-deletion-after-processing.cs
-- iterate-through-each-worksheet-in-a-workbook-and-save-each-as-a-separate-png-file.cs
-- extract-every-chart-from-a-workbook-and-export-them-as-svg-files-into-a-designated-subfolder.cs
-- split-a-multipage-tiff-workbook-output-into-individual-singlepage-tiff-files-for-separate-handling.cs
-- convert-the-workbook-tiff-to-pdf-by-invoking-a-thirdparty-converter-after-image-generation.cs
-- generate-a-thumbnail-image-of-the-first-page-of-the-tiff-workbook-for-quick-visual-reference.cs
-- notify-an-external-webhook-with-conversion-results-after-successfully-creating-the-tiff-workbook-image.cs
-- increase-the-brightness-of-the-png-worksheet-image-by-twenty-percent-using-systemdrawing-adjustments.cs
-- resize-the-png-worksheet-image-to-800-by-600-pixels-to-fit-standard-display-dimensions.cs
-- generate-an-html-img-tag-referencing-the-saved-png-worksheet-file-for-inclusion-in-web-pages.cs
-- minify-the-svg-worksheet-content-by-removing-whitespace-and-comments-to-reduce-file-size.cs
-- combine-a-chart-png-image-with-a-data-table-overlay-to-produce-a-composite-visualization.cs
-- generate-multiple-resolution-png-versions-of-the-chart-for-responsive-web-design-across-devices.cs
-- apply-a-css-rotate-transform-to-the-svg-chart-element-to-display-it-at-a-45degree-angle.cs
-- save-the-svg-chart-with-a-timestamped-filename-to-avoid-overwriting-previous-exports.cs
-- validate-that-the-viewbox-dimensions-in-the-svg-chart-match-the-original-worksheet-size-for-accuracy.cs
-- log-memory-consumption-before-and-after-tiff-conversion-to-assess-resource-usage-impact-on-the-application.cs
-- embed-the-png-worksheet-image-in-a-markdown-document-using-the-standard-altpath-syntax.cs
-- send-the-png-worksheet-image-to-a-slack-channel-via-webhook-for-team-notification.cs
-- use-the-png-worksheet-image-as-a-texture-in-a-3d-rendering-engine-for-visual-effects.cs
-- document-the-conversion-steps-and-options-used-for-png-worksheet-rendering-in-a-generated-readme-file.cs
+- Construct renderers after data, styles, charts, page setup, formulas, and font settings are final.
+- Page indexes are zero-based and one worksheet may produce multiple pages.
+- `Quality` is JPEG-specific; TIFF settings are format-specific.
+- Higher DPI increases memory, time, and output size; do not promise universal quality gains.
+- Fonts affect glyphs, chart layout, and pagination.
+- Use `Chart.ToImage`; do not invent `ChartRender` or progress events.
+
+## Example contract
+
+Every example must be a complete single-file program, use explicit types, generate deterministic content by default, demonstrate one rendering capability, use a specific output filename, and verify page count plus nonempty output. New examples should include metadata fields for Title, Intent, Category, Primary API, Secondary APIs, Input, Output, Expected Result, Product, and Language.
+
+Required namespaces start with `System`, `Aspose.Cells`, and `Aspose.Cells.Rendering`; add chart or drawing namespaces only when used.
+
+## Validation and production rules
+
+1. Verify APIs against the installed package.
+2. Run `dotnet build` and `dotnet run`.
+3. Assert `PageCount`, file/stream length, format signature, and stable dimensions where appropriate.
+4. Use visual or pixel comparisons only in a fixed font/rendering environment.
+5. Bound workbook size, page count, DPI, image dimensions, and concurrent rendering.
+6. Validate paths and never download untrusted remote assets implicitly.
+7. Do not claim external integrations or third-party processing are Aspose.Cells features.
+
+## Anti-patterns
+
+Do not render before layout is final, assume page zero is the only page, apply JPEG settings to every format, hard-code environment-dependent pixel expectations, swallow render failures, or report success from file existence alone.
+
+## AI retrieval and FAQ
+
+- Worksheet page image: `SheetRender`.
+- Entire workbook or multipage TIFF: `WorkbookRender`.
+- One chart: `Chart.ToImage`.
+- Responsive vector output: SVG through verified image options.
+
+Aspose.Cells renders without Microsoft Excel. Different machines can produce different pagination when fonts differ. Use callbacks only through verified interfaces, and create a new renderer when workbook layout changes.
+
+## Official resources
+
+- [Rendering namespace](https://reference.aspose.com/cells/net/aspose.cells.rendering/)
+- [SheetRender API](https://reference.aspose.com/cells/net/aspose.cells.rendering/sheetrender/)
+- [ImageOrPrintOptions API](https://reference.aspose.com/cells/net/aspose.cells.rendering/imageorprintoptions/)
+- [Aspose.Cells NuGet](https://www.nuget.org/packages/Aspose.Cells/)
+
+## Definition of done
+
+The example compiles, runs, uses a verified rendering API, produces a nonempty image of the stated format, checks the claimed page or chart result, and introduces no unrelated dependency.

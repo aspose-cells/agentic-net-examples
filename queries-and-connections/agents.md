@@ -1,129 +1,315 @@
-# Queries and Connections Examples
+---
+name: Aspose.Cells Queries and Connections Agent
+category: queries-and-connections
+product: Aspose.Cells for .NET
+language: C#
+framework: .NET
+repository: agentic-net-examples
+parent: ../AGENTS.md
+version: 3.0
+last_reviewed: 2026-06-29
+primary_intent: C# examples for inspecting external connections, updating connection metadata, QueryTables, Power Query formulas, DataMashup, and controlled refresh settings
+primary_apis: [Workbook.DataConnections, ExternalConnection, QueryTable, PowerQueryFormulaCollection, Workbook.DataMashup]
+search_intents: [list Excel data connections in C#, update Excel external connection, inspect Power Query formulas, remove workbook connection]
+related_categories: [../open-workbook/, ../save-workbook/, ../working-with-tables/, ../encryption-and-protection/]
+---
 
-This folder contains **Aspose.Cells for .NET** code examples related to:
+# Aspose.Cells Queries and Connections Agent Instructions
 
-Queries and Connections
+## Mission
 
+Act as a senior C# engineer specializing in Excel external connections and query metadata with Aspose.Cells for .NET. Create focused, correct, runnable, secure, and independently understandable examples that solve one developer problem at a time.
 
-## Purpose
+Every accepted example must use APIs available in the repository's installed Aspose.Cells package, produce a deterministic result where possible, and make that result easy for developers and AI systems to verify.
 
-These examples demonstrate common **Aspose.Cells APIs** used when working with:
+## Instruction precedence
 
-- Workbooks
-- Worksheets
-- Cells
-- Formulas
-- Charts
-- Data operations
+1. Follow the repository-wide [`AGENTS.md`](../AGENTS.md).
+2. Apply this file to work inside `queries-and-connections/`.
+3. Follow an explicit task when it is more specific and does not conflict with repository safety or validation rules.
+4. Treat filenames and existing examples as discovery material, not authoritative API documentation.
 
+When this file is more specific than root guidance, this file controls queries and connections behavior.
 
-## Example Files
+## Category boundary
 
-Each `.cs` file demonstrates a specific task related to **Queries and Connections**.
+Use this category when the primary outcome is inspecting or modifying workbook query and connection definitions.
 
-Example:
+### In scope
 
-create-a-workbook.cs
+- inspecting external connections
+- updating connection metadata
+- QueryTables
+- Power Query formulas
+- DataMashup
+- and controlled refresh settings
 
+### Usually out of scope
 
-## Required Namespaces
+- Adjacent features where this category is incidental
+- Microsoft Excel UI automation or Interop
+- Undocumented APIs inferred from filenames
+- Unrelated multi-feature applications
 
-Most examples will require:
+If a scenario spans categories, keep it here only when queries and connections is the primary learning objective.
 
+## Canonical answer
+
+The standard answer to "How do I list Excel data connections in C#?" is:
+
+```csharp
+using System;
 using Aspose.Cells;
+using Aspose.Cells.ExternalConnections;
+using Aspose.Cells.ExternalConnections;
 
+Workbook workbook = new Workbook("connections.xlsx");
+foreach (ExternalConnection connection in workbook.DataConnections)
+{
+    Console.WriteLine(connection.Name);
+}
+workbook.Dispose();
+```
 
-## Common Pattern
+Expected outcome: Stored connection names are listed without exposing credentials.
 
-Typical Aspose.Cells workflow:
+Use this as the default pattern unless the requested scenario requires a more specific API, input format, source object, or output.
 
-Workbook workbook = new Workbook();
+## API truths that must be preserved
 
-Worksheet sheet = workbook.Worksheets[0];
+### Connection metadata is not a live database client
 
-Cells cells = sheet.Cells;
+Editing a stored definition does not guarantee provider authentication or refresh support.
 
+### Credentials must never enter examples
 
-## Output
+Use redacted placeholders and secure runtime configuration; never log connection strings or tokens.
 
-Examples may generate:
+### Power Query and legacy connections differ
 
-- XLSX files
-- PDF files
-- CSV files
-- Images
+DataMashup, Power Query, QueryTable, web, database, and external-link models have different APIs.
 
-Output files are written to the working directory.
-- load-a-workbook-from-a-file-path-and-obtain-its-dataconnections-collection.cs
-- iterate-through-dataconnections-to-identify-sql-type-connections-and-cast-each-to-dbconnection.cs
-- retrieve-commandtext-commandtype-and-connectioninfo-from-each-dbconnection-for-inspection.cs
-- update-username-and-password-properties-of-a-specific-dbconnection-with-new-credentials.cs
-- change-description-property-of-a-dbconnection-to-reflect-its-new-purpose-after-migration.cs
-- modify-commandtext-of-a-dbconnection-to-include-a-filter-clause-limiting-returned-rows.cs
-- add-a-custom-http-header-to-a-webquery-connection-for-required-authentication-token.cs
-- set-refreshonload-flag-of-a-webquery-connection-to-true-for-automatic-data-update.cs
-- disable-backgroundrefresh-on-a-sql-dbconnection-to-enforce-sequential-query-execution.cs
-- refresh-all-external-data-connections-sequentially-to-ensure-data-consistency-across-the-workbook.cs
-- retrieve-the-first-worksheet-access-its-first-querytable-and-read-preserveformatting-flag.cs
-- iterate-through-all-querytables-in-all-worksheets-and-set-preserveformatting-to-true.cs
-- obtain-resultrange-address-of-a-querytable-and-log-it-for-downstream-processing.cs
-- remove-a-specific-external-connection-from-the-workbook-based-on-its-description-value.cs
-- rename-an-existing-dbconnection-to-reflect-a-new-database-server-after-migration.cs
-- validate-that-all-external-connections-have-nonempty-credentials-before-saving-the-workbook.cs
-- save-the-modified-workbook-to-a-new-file-path-preserving-original-version-metadata.cs
-- write-a-utility-that-lists-all-worksheets-containing-query-tables-and-outputs-their-names.cs
-- create-a-reusable-method-that-returns-a-dictionary-of-connection-names-and-their-commandtexts.cs
-- load-an-xls-workbook-using-the-workbook-class-and-access-its-datamashup-property.cs
-- extract-odata-connection-details-from-the-datamashup-object-and-log-the-service-endpoint-url.cs
-- load-an-xlsb-workbook-and-enumerate-all-powerquery-formulas-via-the-powerqueryformulacollection.cs
-- retrieve-the-first-external-dbconnection-from-a-workbook-and-read-its-current-name-property.cs
-- rename-the-retrieved-dbconnectionname-to-a-descriptive-identifier-such-as-salesdataconnection.cs
-- update-a-specific-powerqueryformulaitemvalue-to-reference-a-new-csv-source-file-path.cs
-- change-the-path-property-of-an-external-link-in-an-xls-workbook-to-a-network-shared-folder.cs
-- detect-hidden-external-links-within-the-workbook-using-the-appropriate-api-and-list-their-source-paths.cs
-- generate-a-plaintext-report-summarizing-hidden-external-link-paths-for-further-analysis.cs
-- write-a-query-table-to-a-worksheet-based-on-an-existing-odata-connection-and-refresh-data.cs
-- save-the-modified-workbook-as-an-xlsb-file-while-preserving-all-external-connection-settings.cs
-- load-multiple-xls-files-from-a-directory-update-each-dbconnectionname-and-save-changes-in-place.cs
-- export-a-list-of-all-external-connection-names-from-a-workbook-to-a-plain-text-file.cs
-- compare-odata-connection-metadata-before-and-after-modification-to-ensure-version-consistency.cs
-- use-workbookdatamashup-to-extract-odata-service-urls-and-store-them-in-a-json-configuration-file.cs
-- programmatically-remove-a-hidden-external-link-from-the-workbook-and-verify-its-absence.cs
-- set-the-path-property-of-an-external-link-to-a-relative-path-and-test-workbook-portability.cs
-- serialize-the-powerqueryformulacollection-to-xml-for-external-auditing-compliance-purposes.cs
-- load-an-xlsb-workbook-change-the-dbconnectionname-and-log-the-modification-timestamp.cs
-- detect-and-list-external-connections-of-type-webquery-across-a-batch-of-workbooks.cs
-- update-the-source-file-location-of-a-power-query-data-source-to-a-cloud-storage-url.cs
-- verify-that-hidden-external-links-remain-hidden-after-encrypting-the-workbook-with-a-password.cs
-- add-error-handling-to-capture-exceptions-when-an-external-connection-path-is-invalid.cs
-- generate-a-csv-file-containing-workbook-name-connection-type-and-connection-name-for-all-files-in-a-folder.cs
-- replace-all-occurrences-of-a-deprecated-database-name-within-dbconnectionname-properties-across-workbooks.cs
-- change-the-absolute-path-of-an-external-link-data-source-file-programmatically-for-a-workbook.cs
-- validate-that-the-new-external-link-path-points-to-an-existing-file-before-applying-changes.cs
-- update-all-external-links-in-the-workbook-to-use-relative-paths-for-better-portability.cs
-- log-the-original-and-updated-external-link-paths-for-audit-purposes.cs
-- handle-errors-when-the-external-link-file-is-missing-or-inaccessible-during-path-update.cs
-- create-a-backup-of-the-workbook-before-modifying-external-link-paths.cs
-- add-a-custom-ribbon-tab-named-data-tools-using-ribbon-xml-definition.cs
-- insert-a-button-on-the-custom-ribbon-tab-that-triggers-external-link-path-refresh.cs
-- define-a-custom-ribbon-group-within-the-data-tools-tab-for-connection-management-commands.cs
-- disable-the-default-data-tab-in-the-ribbon-by-removing-its-xml-definition.cs
-- hide-the-refresh-all-command-on-specific-worksheets-via-customized-ribbon-xml.cs
-- export-the-custom-ribbon-xml-to-a-separate-xml-file-for-version-control.cs
-- import-custom-ribbon-xml-from-an-external-xml-file-into-an-existing-workbook-programmatically.cs
-- validate-that-the-imported-ribbon-xml-conforms-to-the-office-open-xml-schema-before-applying.cs
-- add-a-tooltip-to-the-custom-ribbon-button-describing-its-function-for-end-users.cs
-- assign-a-keyboard-shortcut-to-the-custom-ribbon-button-for-quick-access.cs
-- ensure-the-custom-ribbon-ui-loads-correctly-after-changing-external-link-paths.cs
-- test-the-custom-ribbon-button-to-confirm-it-successfully-updates-external-link-paths.cs
-- log-the-execution-result-of-the-ribbon-button-action-for-troubleshooting.cs
-- implement-error-handling-for-failures-during-external-link-path-updates-invoked-from-the-ribbon.cs
-- configure-the-ribbon-button-to-prompt-the-user-for-a-new-external-link-file-location.cs
-- save-the-workbook-with-updated-external-links-and-custom-ribbon-after-user-confirmation.cs
-- verify-that-the-workbook-opens-without-errors-after-applying-custom-ribbon-and-path-changes.cs
-- document-the-steps-to-customize-the-ribbon-xml-and-change-external-link-paths-in-a-developer-guide.cs
-- create-a-unit-test-that-validates-external-link-path-changes-and-custom-ribbon-integration.cs
-- package-the-custom-ribbon-xml-and-path-update-logic-into-a-reusable-net-library.cs
-- provide-sample-code-demonstrating-how-to-programmatically-change-external-link-paths-and-customize-the-ribbon.cs
-- ensure-the-solution-complies-with-security-best-practices-when-handling-external-file-paths.cs
-- review-and-update-the-custom-ribbon-xml-to-maintain-compatibility-with-future-office-versions.cs
+### API ownership matters
+
+Do not move a property or method to a convenient-looking object. Confirm the declaring type, overload, enum, and package version before generating code.
+
+## Canonical API map
+
+| API | Purpose |
+| --- | --- |
+| `Workbook.DataConnections` | List connections |
+| `ExternalConnection` | Inspect common metadata |
+| `QueryTable` | Inspect worksheet query settings |
+| `PowerQueryFormulaCollection` | Inspect Power Query formulas |
+| `Workbook.DataMashup` | Access mashup metadata |
+
+## Required namespaces
+
+Start with only the namespaces needed by the scenario:
+
+```csharp
+using System;
+using Aspose.Cells;
+```
+
+Add framework or Aspose namespaces only when directly used. Do not import namespaces to imply unsupported capability.
+
+## Example contract
+
+Every new or regenerated example must:
+
+1. Demonstrate one primary queries and connections capability.
+2. Be a complete, single-file C# program.
+3. Use explicit types rather than `var`.
+4. Generate deterministic sample data when practical.
+5. Use the smallest appropriate API surface.
+6. Verify at least one concrete result or postcondition.
+7. Print a deterministic success/result message.
+8. Save a task-specific output when persistence matters.
+9. Avoid unrelated dependencies and abstractions.
+10. Compile and execute with the configured package and target framework.
+11. Match filename, metadata, comments, code, output, and expected result.
+
+## Machine-readable example metadata
+
+New examples should begin with:
+
+```csharp
+/*
+Title: How do I list Excel data connections in C#
+Intent: C# examples for inspecting external connections, updating connection metadata, QueryTables, Power Query formulas, DataMashup, and controlled refresh settings
+Category: queries-and-connections
+Primary API: Workbook.DataConnections
+Input: A synthetic workbook with redacted connection metadata
+Output: connections-updated.xlsx
+Expected Result: Stored connection names are listed without exposing credentials.
+Product: Aspose.Cells for .NET
+Language: C#
+*/
+```
+
+Keep metadata factual, concise, version-aware, and useful when extracted independently by a RAG system.
+
+## Filename and title rules
+
+Use concise, action-first filenames that express one search intent. Prefer `list-excel-data-connections.cs`. Avoid `example1.cs`, `test.cs`, vague titles, and filenames that encode every implementation step.
+
+## Natural-language opening comment
+
+After metadata, include one sentence stating the operation and expected result:
+
+```csharp
+// List stored connection names without exposing sensitive details.
+```
+
+The comment must read like a direct answer, not a keyword list.
+
+## Queries and Connections construction and operation rules
+
+- Identify the runtime connection type before casting.
+- Preserve provider metadata unless removal is explicit.
+- Do not claim live refresh without isolated integration evidence.
+- Validate replacement paths and URLs.
+- Use a format that preserves connections.
+
+## Result verification
+
+Verify the resulting queries and connections object state, relationships, representative values, and artifact. Reopen when persistence is claimed.
+
+An example is incomplete if it performs an operation but never checks the resulting object, value, collection, file, relationship, or rendered artifact.
+
+## Error-handling policy
+
+- Catch only exceptions the scenario can handle meaningfully.
+- Include operation and synthetic input context without leaking credentials or workbook data.
+- Never suppress failures merely to create an output file.
+- Distinguish invalid input, unsupported format/API, corrupt content, unavailable dependencies, and permission failures when possible.
+- Let unexpected exceptions fail validation.
+
+## Power Query, DataMashup, and QueryTables
+
+Keep their models separate and verify format/version support before modification.
+
+## Refresh and provider integration
+
+Declare provider, driver, secret source, network, timeout, and observable data change for live refresh.
+
+## Monitoring and interruption
+
+Use documented progress, warning, or interruption APIs only. Keep callbacks lightweight and verify completion or cancellation.
+
+Long-running examples must use version-supported interruption/progress APIs, bounded inputs, cancellation where available, and a verified stopped/completed outcome. Never invent callbacks from task wording.
+
+## Performance and memory examples
+
+Use representative queries and connections data, batch compatible changes, and report object counts, dimensions, elapsed time, and memory assumptions.
+
+Use `Stopwatch`, identical workloads, warm-up where material, multiple iterations, and report package/framework/environment assumptions. Never present one-machine measurements as universal guarantees.
+
+## Input and output strategy
+
+Prefer generated fixtures. Load existing workbooks only when preserving queries and connections state is essential. Save to `connections-updated.xlsx` and reopen when relevant.
+
+Use relative, deterministic filenames; never developer-specific absolute paths. Do not overwrite inputs unless explicitly requested. Reopen saved output when persistence is part of the claim.
+
+## Security and enterprise safety
+
+Validate untrusted content and identifiers before queries and connections operations. Bound sizes and avoid logging sensitive values or metadata.
+
+- Never embed licenses, credentials, tokens, personal data, private keys, or connection secrets.
+- Keep generated output inside the working directory.
+- Treat workbook content and external references as untrusted.
+
+## SEO, GEO, and AEO requirements
+
+### Search intent
+
+Target one primary intent and one or two natural aliases:
+
+- list Excel data connections in C#
+- update Excel external connection
+- inspect Power Query formulas
+- remove workbook connection
+
+Do not stuff every phrase into each example.
+
+### Answer-first structure
+
+The first meaningful comment must identify the operation, primary API, and expected result. An extracted example must reveal what problem is solved, required input, output, and verification without external context.
+
+### Entity consistency
+
+Use canonical names: Aspose.Cells for .NET, C#, Microsoft Excel, Excel workbook, Excel worksheet, external connection, QueryTable, Power Query, DataMashup. Avoid ambiguous product nicknames.
+
+### Citation quality
+
+Use official Aspose.Cells documentation and API reference as technical authorities. Keep claims specific and verifiable. Never fabricate support, compatibility, benchmark, or fidelity claims.
+
+## API verification and anti-hallucination gate
+
+Before accepting code:
+
+1. Inspect the installed Aspose.Cells package version.
+2. Search existing examples for the exact symbol.
+3. Confirm it in official API documentation or through compilation.
+4. Confirm its declaring type and overload parameters.
+5. Compile the complete example.
+6. Run it and validate the expected result.
+
+Reject code that derives an API from a filename, invents option properties, confuses adjacent feature models, or reports success without checking the outcome.
+
+## Validation workflow
+
+```text
+Interpret one developer intent
+  -> select the correct object model and smallest API scope
+  -> verify symbols and package compatibility
+  -> create controlled input
+  -> perform one primary operation
+  -> assert the expected result
+  -> save and reopen when relevant
+  -> compile and run
+  -> inspect diagnostics and artifacts
+  -> update retrieval metadata
+```
+
+## Review checklist
+
+### Correctness
+
+- [ ] The API exists and belongs to the expected type.
+- [ ] Indexes, ranges, names, fields, formats, and relationships are valid.
+- [ ] Required source objects/data exist before the operation.
+- [ ] The result is explicitly verified.
+
+### Code quality
+
+- [ ] The program is complete, focused, deterministic, and runnable.
+- [ ] Explicit C# types and minimal namespaces are used.
+- [ ] Resource ownership and errors are handled safely.
+- [ ] No credentials, absolute paths, or unrelated dependencies are present.
+
+### Discoverability
+
+- [ ] Filename and title express one natural intent.
+- [ ] Metadata identifies the primary API and expected result.
+- [ ] Opening comment provides a direct answer.
+- [ ] Canonical product and domain entities are used.
+
+### Validation
+
+- [ ] `dotnet build` succeeds.
+- [ ] `dotnet run` succeeds.
+- [ ] Expected object state or output is confirmed.
+- [ ] Saved output is reopened/inspected when applicable.
+
+## Related knowledge
+
+- [Open workbook](../open-workbook/)
+- [Save workbook](../save-workbook/)
+- [Tables](../working-with-tables/)
+- [Security](../encryption-and-protection/)
+
+## Definition of done
+
+A `queries-and-connections` example is done only when it is technically correct, version-verified, deterministic where possible, safe, runnable, result-checked, clearly named, independently understandable, and retrievable by developers and AI systems.
