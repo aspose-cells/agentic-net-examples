@@ -1671,6 +1671,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-an-array-formula-to-a-rectangular-range-that-calculates-the-sum-of-corresponding-rows-across-sheets.cs",
+      "title": "Apply an array formula to a rectangular range that calculates the sum of corresponding rows across sheets."
+    },
+    {
+      "category": "manage-formulas",
       "file": "calculate-formulas-only-for-the-worksheet-named-summary-using-workbookcalculateformula-with-a-specific-sheet-parameter.cs",
       "title": "Calculate formulas only for the worksheet named 'Summary' using workbook.CalculateFormula with a specific sheet parameter."
     },
