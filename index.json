@@ -2016,6 +2016,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-the-workbooks-formula-evaluation-order-to-a-text-file-for-debugging-complex-dependency-chains.cs",
+      "title": "Export the workbook's formula evaluation order to a text file for debugging complex dependency chains."
+    },
+    {
+      "category": "manage-formulas",
       "file": "extract-formula-text-from-array-formulas-and-save-them-to-a-json-array.cs",
       "title": "Extract formula text from array formulas and save them to a JSON array."
     },
