@@ -2160,6 +2160,11 @@
       "title": "Validate that changing a named range\u2019s address updates all formulas referencing it without manual intervention."
     },
     {
+      "category": "manage-formulas",
+      "file": "validate-the-syntax-of-a-userprovided-formula-string-before-inserting-it-into-a-worksheet-cell.cs",
+      "title": "Validate the syntax of a user\u2011provided formula string before inserting it into a worksheet cell."
+    },
+    {
       "category": "managing-ranges",
       "file": "access-a-global-named-range-from-sheet3-and-read-its-address-using-the-workbook-names-collection.cs",
       "title": "Access a global named range from Sheet3 and read its address using the workbook Names collection."
