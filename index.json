@@ -1856,6 +1856,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "programmatically-disable-automatic-formula-recalculation-while-importing-large-data-sets-to-improve-import-speed.cs",
+      "title": "Programmatically disable automatic formula recalculation while importing large data sets to improve import speed."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-disable-calculation-perform-bulk-rename-of-named-ranges-using-a-prefix-then-enable-calculation-and-recalc.cs",
       "title": "Programmatically disable calculation, perform bulk rename of named ranges using a prefix, then enable calculation and recalc."
     },
