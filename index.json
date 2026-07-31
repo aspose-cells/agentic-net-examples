@@ -1951,6 +1951,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-a-list-of-all-formulas-in-the-workbook-to-a-json-file-for-external-analysis.cs",
+      "title": "Export a list of all formulas in the workbook to a JSON file for external analysis."
+    },
+    {
+      "category": "manage-formulas",
       "file": "extract-formula-text-from-array-formulas-and-save-them-to-a-json-array.cs",
       "title": "Extract formula text from array formulas and save them to a JSON array."
     },
