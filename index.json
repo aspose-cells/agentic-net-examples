@@ -6571,6 +6571,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "detect-worksheets-with-only-column-headers-by-checking-maxdatarow-equals-1-and-maxdatacolumn-greater-than-zero.cs",
+      "title": "Detect worksheets with only column headers by checking MaxDataRow equals -1 and MaxDataColumn greater than zero."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "determine-the-number-of-header-columns-to-freeze-and-store-the-count.cs",
       "title": "Determine the number of header columns to freeze and store the count."
     },
