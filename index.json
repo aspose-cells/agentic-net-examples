@@ -1661,6 +1661,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "insert-a-new-row-into-salestable-and-confirm-the-column-formula-automatically-calculates-for-the-new-entry.cs",
+      "title": "Insert a new row into SalesTable and confirm the column formula automatically calculates for the new entry."
+    },
+    {
+      "category": "manage-formulas",
       "file": "programmatically-clear-the-spilled-range-of-a-dynamic-array-formula-without-deleting-the-original-formula-cell.cs",
       "title": "Programmatically clear the spilled range of a dynamic array formula without deleting the original formula cell."
     },
