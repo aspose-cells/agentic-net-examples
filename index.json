@@ -7261,6 +7261,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "save-names-of-worksheets-containing-only-formattingonly-cells-to-a-text-file-for-further-analysis.cs",
+      "title": "Save names of worksheets containing only formatting\u2011only cells to a text file for further analysis."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "serialize-the-frozen-state-information-of-worksheets-into-a-json-file-for-auditing.cs",
       "title": "Serialize the frozen state information of worksheets into a JSON file for auditing."
     },
