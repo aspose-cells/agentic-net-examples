@@ -1946,6 +1946,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "identify-formulas-that-contain-error-handling-constructs-such-as-iferror-or-ifna-for-export.cs",
+      "title": "Identify formulas that contain error handling constructs such as IFERROR or IFNA for export."
+    },
+    {
+      "category": "manage-formulas",
       "file": "identify-formulas-that-contain-hardcoded-constants-and-suggest-converting-them-to-named-parameters.cs",
       "title": "Identify formulas that contain hard\u2011coded constants and suggest converting them to named parameters."
     },
