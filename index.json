@@ -7131,6 +7131,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "reset-all-worksheet-tabids-to-sequential-numbers-starting-from-one-for-standardized-ordering-across-the-workbook.cs",
+      "title": "Reset all worksheet TabIds to sequential numbers starting from one for standardized ordering across the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "retrieve-a-worksheet-by-name-display-its-formulas-instead-of-values-and-save-the-changes.cs",
       "title": "Retrieve a worksheet by name, display its formulas instead of values, and save the changes."
     },
