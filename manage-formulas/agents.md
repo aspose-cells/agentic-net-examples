@@ -90,3 +90,4 @@ Output files are written to the working directory.
 - load-a-workbook-replace-all-occurrences-of-a-specific-named-range-with-a-new-range-and-recalc.cs
 - programmatically-disable-calculation-perform-bulk-rename-of-named-ranges-using-a-prefix-then-enable-calculation-and-recalc.cs
 - create-a-macrolike-routine-that-toggles-calculation-mode-between-automatic-and-manual-based-on-file-size.cs
+- set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs
