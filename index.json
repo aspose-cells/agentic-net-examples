@@ -1996,6 +1996,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "export-all-formulas-that-use-the-sumproduct-function-to-a-separate-worksheet-for-performance-review.cs",
+      "title": "Export all formulas that use the SUMPRODUCT function to a separate worksheet for performance review."
+    },
+    {
+      "category": "manage-formulas",
       "file": "export-the-workbooks-formula-dependency-matrix-to-a-csv-file-for-external-processing.cs",
       "title": "Export the workbook's formula dependency matrix to a CSV file for external processing."
     },
