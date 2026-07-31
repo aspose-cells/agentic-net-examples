@@ -77,3 +77,6 @@ Output files are written to the working directory.
 - retrieve-and-display-the-total-number-of-threaded-comments-present-in-a-workbook.cs
 - replace-the-background-picture-of-a-comment-with-a-semi-transparent-overlay-image.cs
 - copy-formatting-of-a-comments-shape-including-background-color-and-font-color-to-another-comment.cs
+- add-a-threaded-comment-with-multi-line-text-to-cell-h2-and-preserve-line-breaks.cs
+- update-the-text-direction-of-all-comments-in-a-worksheet-to-lefttoright-for-standard-layout.cs
+- add-a-threaded-comment-to-merged-cell-range-a1b2-ensuring-the-comment-appears-centered.cs
