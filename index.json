@@ -7046,6 +7046,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "log-the-number-of-initialized-cells-per-worksheet-and-highlight-those-exceeding-a-specified-threshold.cs",
+      "title": "Log the number of initialized cells per worksheet and highlight those exceeding a specified threshold."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "log-the-time-taken-to-detect-empty-worksheets-across-a-collection-of-large-workbooks-for-performance-analysis.cs",
       "title": "Log the time taken to detect empty worksheets across a collection of large workbooks for performance analysis."
     },
