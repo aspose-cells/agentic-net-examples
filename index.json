@@ -7476,6 +7476,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "update-tabids-to-sequential-numbers-verify-uniqueness-across-all-worksheets-then-save-the-workbook.cs",
+      "title": "Update TabIds to sequential numbers, verify uniqueness across all worksheets, then save the workbook."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "update-workbook-properties-such-as-author-and-title-then-freeze-the-first-row-to-keep-metadata-visible.cs",
       "title": "Update workbook properties such as author and title, then freeze the first row to keep metadata visible."
     },
