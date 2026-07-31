@@ -2026,6 +2026,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-external-links-with-relative-paths-to-make-the-workbook-portable-across-environments.cs",
+      "title": "Replace external links with relative paths to make the workbook portable across environments."
+    },
+    {
+      "category": "manage-formulas",
       "file": "retrieve-external-links-from-a-workbook-and-list-their-source-file-paths-for-audit-purposes.cs",
       "title": "Retrieve external links from a workbook and list their source file paths for audit purposes."
     },
