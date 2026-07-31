@@ -161,3 +161,4 @@ Output files are written to the working directory.
 - validate-that-all-formulas-in-a-workbook-reference-existing-cells-and-report-any-broken-references.cs
 - validate-the-syntax-of-a-userprovided-formula-string-before-inserting-it-into-a-worksheet-cell.cs
 - validate-that-formulas-do-not-exceed-a-specified-length-using-a-data-validation-rule.cs
+- replace-all-instances-of-the-deprecated-sumif-function-with-sumifs-across-the-workbook.cs
