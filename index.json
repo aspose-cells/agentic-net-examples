@@ -6411,6 +6411,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "clone-a-workbook-assign-new-tabids-remove-empty-worksheets-and-save-the-optimized-copy.cs",
+      "title": "Clone a workbook, assign new TabIds, remove empty worksheets, and save the optimized copy."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "clone-a-worksheet-preserve-its-original-tabid-then-assign-a-distinct-tabid-to-the-cloned-sheet.cs",
       "title": "Clone a worksheet, preserve its original TabId, then assign a distinct TabId to the cloned sheet."
     },
