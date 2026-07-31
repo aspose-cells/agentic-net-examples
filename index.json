@@ -7031,6 +7031,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "log-a-warning-when-a-worksheets-tabid-duplicates-another-sheets-identifier-to-prevent-conflicts.cs",
+      "title": "Log a warning when a worksheet's TabId duplicates another sheet's identifier to prevent conflicts."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "log-the-frozen-state-of-each-processed-worksheet-to-the-console-for-diagnostics.cs",
       "title": "Log the frozen state of each processed worksheet to the console for diagnostics."
     },
