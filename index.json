@@ -1796,6 +1796,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "load-workbook-from-file-stream-and-enable-iterative-calculation-for-complex-formulas.cs",
+      "title": "Load workbook from file stream and enable iterative calculation for complex formulas."
+    },
+    {
+      "category": "manage-formulas",
       "file": "merge-cells-across-columns-a-to-d-in-a-range-then-set-the-merged-cells-formula-to-calculate-total.cs",
       "title": "Merge cells across columns A to D in a range, then set the merged cell\u2019s formula to calculate total."
     },
