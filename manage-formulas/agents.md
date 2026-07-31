@@ -204,3 +204,4 @@ Output files are written to the working directory.
 - create-a-macrostyle-loop-that-inserts-a-running-total-formula-in-each-row-of-a-financial-sheet.cs
 - create-a-macrostyle-routine-that-inserts-a-conditional-sumif-formula-into-each-row-based-on-a-flag-column.cs
 - programmatically-recalculate-formulas-after-bulk-inserting-rows-to-ensure-dependent-calculations-remain-accurate.cs
+- programmatically-enable-workbook-events-that-trigger-formula-recalculation-only-when-specific-cells-are-modified.cs
