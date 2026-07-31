@@ -1816,6 +1816,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "set-workbook-calculation-mode-to-automatic-then-use-the-evaluateformula-method-to-obtain-a-single-cells-result.cs",
+      "title": "Set workbook calculation mode to Automatic, then use the EvaluateFormula method to obtain a single cell\u2019s result."
+    },
+    {
+      "category": "manage-formulas",
       "file": "set-workbook-calculation-mode-to-manual-modify-several-cells-then-selectively-recalculate-only-the-affected-range.cs",
       "title": "Set workbook calculation mode to Manual, modify several cells, then selectively recalculate only the affected range."
     },
