@@ -1770,6 +1770,11 @@
       "title": "Update the formula of a table column to include IF logic, then add rows to verify new behavior."
     },
     {
+      "category": "manage-formulas",
+      "file": "validate-that-changing-a-named-ranges-address-updates-all-formulas-referencing-it-without-manual-intervention.cs",
+      "title": "Validate that changing a named range\u2019s address updates all formulas referencing it without manual intervention."
+    },
+    {
       "category": "managing-ranges",
       "file": "access-a-global-named-range-from-sheet3-and-read-its-address-using-the-workbook-names-collection.cs",
       "title": "Access a global named range from Sheet3 and read its address using the workbook Names collection."
