@@ -1646,6 +1646,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "add-a-comment-to-each-named-range-describing-its-purpose-and-any-associated-business-rules.cs",
+      "title": "Add a comment to each named range describing its purpose and any associated business rules."
+    },
+    {
+      "category": "manage-formulas",
       "file": "add-a-new-worksheet-copy-a-table-with-formulas-and-ensure-calculation-mode-remains-consistent-across-sheets.cs",
       "title": "Add a new worksheet, copy a table with formulas, and ensure calculation mode remains consistent across sheets."
     },
