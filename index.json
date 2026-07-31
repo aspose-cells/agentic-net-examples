@@ -6451,6 +6451,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "compare-the-number-of-initialized-cells-before-and-after-removing-formattingonly-cells-to-assess-reduction.cs",
+      "title": "Compare the number of initialized cells before and after removing formatting\u2011only cells to assess reduction."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "configure-chart-axes-then-freeze-the-rows-that-contain-axis-labels-to-maintain-context-while-scrolling.cs",
       "title": "Configure chart axes, then freeze the rows that contain axis labels to maintain context while scrolling."
     },
