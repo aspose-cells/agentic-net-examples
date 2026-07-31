@@ -1681,6 +1681,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "create-two-separate-range-objects-perform-union-operation-and-iterate-through-the-resulting-collection.cs",
+      "title": "Create two separate Range objects, perform Union operation, and iterate through the resulting collection."
+    },
+    {
+      "category": "manage-formulas",
       "file": "define-a-named-range-called-dataset-covering-a1c10-then-rename-it-to-reportdata-using-nametext.cs",
       "title": "Define a named range called DataSet covering A1:C10, then rename it to ReportData using Name.Text."
     },
