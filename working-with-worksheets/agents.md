@@ -338,3 +338,4 @@ Output files are written to the working directory.
 - reset-all-worksheet-tabids-to-sequential-numbers-starting-from-one-for-standardized-ordering-across-the-workbook.cs
 - log-the-time-taken-to-enumerate-all-initialized-cells-across-all-worksheets-in-a-large-workbook.cs
 - return-true-if-a-worksheet-contains-both-data-rows-and-at-least-one-shape-for-mixedcontent-detection.cs
+- process-all-excel-files-in-a-directory-update-tabids-and-generate-a-summary-csv-of-changes.cs
