@@ -6371,6 +6371,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "automatically-back-up-a-workbook-before-modifying-any-worksheet-tabid-values-to-preserve-original-data.cs",
+      "title": "Automatically back up a workbook before modifying any worksheet TabId values to preserve original data."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "automatically-remove-all-formattingonly-initialized-cells-from-a-worksheet-to-reduce-file-size.cs",
       "title": "Automatically remove all formatting\u2011only initialized cells from a worksheet to reduce file size."
     },
