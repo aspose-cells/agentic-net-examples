@@ -7016,6 +7016,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "log-the-time-taken-to-detect-empty-worksheets-across-a-collection-of-large-workbooks-for-performance-analysis.cs",
+      "title": "Log the time taken to detect empty worksheets across a collection of large workbooks for performance analysis."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "log-the-time-taken-to-enumerate-all-initialized-cells-across-all-worksheets-in-a-large-workbook.cs",
       "title": "Log the time taken to enumerate all initialized cells across all worksheets in a large workbook."
     },
