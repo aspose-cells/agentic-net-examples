@@ -6676,6 +6676,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "enumerate-cells-to-identify-those-with-custom-number-formats-and-report-the-count-per-worksheet.cs",
+      "title": "Enumerate cells to identify those with custom number formats and report the count per worksheet."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "evaluate-all-formulas-in-the-worksheet-and-retrieve-the-calculated-value-of-cell-g10.cs",
       "title": "Evaluate all formulas in the worksheet and retrieve the calculated value of cell G10."
     },
