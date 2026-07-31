@@ -61,3 +61,4 @@ Output files are written to the working directory.
 - create-a-dynamic-array-formula-that-references-a-table-column-then-delete-the-table-and-observe-formula-error.cs
 - create-a-dynamic-array-formula-that-references-a-spill-then-use-it-in-a-sum-formula-on-another-sheet.cs
 - create-a-listobject-named-salestable-add-a-column-with-a-sum-formula-and-test-propagation.cs
+- insert-a-new-row-into-salestable-and-confirm-the-column-formula-automatically-calculates-for-the-new-entry.cs
