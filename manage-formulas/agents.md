@@ -131,3 +131,4 @@ Output files are written to the working directory.
 - create-a-named-range-that-spans-multiple-worksheets-and-use-it-in-a-crosssheet-formula.cs
 - create-a-dynamic-named-range-that-expands-automatically-when-new-rows-are-added-to-a-table.cs
 - create-a-named-range-that-automatically-expands-when-new-columns-are-added-to-the-side-of-a-table.cs
+- extract-the-formula-text-from-each-cell-in-a-named-range-and-write-them-to-a-text-file.cs
