@@ -74,3 +74,4 @@ Output files are written to the working directory.
 - identify-overlapping-cells-between-range-a5b15-and-range-b10c20-using-intersect-method.cs
 - detect-intersecting-area-between-two-named-ranges-then-highlight-the-intersected-cells-with-yellow-fill.cs
 - create-a-style-object-set-solid-fill-to-light-blue-bold-font-and-apply-to-dataset-range.cs
+- apply-a-background-color-to-the-intersected-area-of-two-named-ranges-and-save-the-workbook-as-xlsx.cs
