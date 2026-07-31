@@ -334,3 +334,4 @@ Output files are written to the working directory.
 - automatically-assign-incremental-tabids-to-newly-added-worksheets-based-on-the-highest-existing-identifier.cs
 - extract-tabid-information-from-an-openxml-package-without-loading-the-full-workbook-into-memory.cs
 - prevent-saving-a-workbook-if-any-worksheet-has-a-duplicate-tabid-after-modifications-are-applied.cs
+- list-worksheets-with-shape-count-greater-than-ten-indicating-complex-graphical-content-that-may-need-review.cs
