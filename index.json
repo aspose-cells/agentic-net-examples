@@ -7021,6 +7021,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "prevent-saving-a-workbook-if-any-worksheet-has-a-duplicate-tabid-after-modifications-are-applied.cs",
+      "title": "Prevent saving a workbook if any worksheet has a duplicate TabId after modifications are applied."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "process-a-batch-of-ten-workbooks-applying-the-same-row-freeze-configuration-to-each.cs",
       "title": "Process a batch of ten workbooks, applying the same row freeze configuration to each."
     },
