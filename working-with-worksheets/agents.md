@@ -340,3 +340,4 @@ Output files are written to the working directory.
 - return-true-if-a-worksheet-contains-both-data-rows-and-at-least-one-shape-for-mixedcontent-detection.cs
 - process-all-excel-files-in-a-directory-update-tabids-and-generate-a-summary-csv-of-changes.cs
 - detect-worksheets-with-only-column-headers-by-checking-maxdatarow-equals-1-and-maxdatacolumn-greater-than-zero.cs
+- flag-worksheets-where-maxdatarow-is-greater-than-zero-but-all-cells-lack-values-indicating-formattingonly-content.cs
