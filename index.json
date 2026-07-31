@@ -1671,6 +1671,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "apply-a-formula-that-calculates-the-moving-average-over-a-sliding-window-of-ten-rows-for-each-column.cs",
+      "title": "Apply a formula that calculates the moving average over a sliding window of ten rows for each column."
+    },
+    {
+      "category": "manage-formulas",
       "file": "apply-an-array-formula-to-a-rectangular-range-that-calculates-the-sum-of-corresponding-rows-across-sheets.cs",
       "title": "Apply an array formula to a rectangular range that calculates the sum of corresponding rows across sheets."
     },
