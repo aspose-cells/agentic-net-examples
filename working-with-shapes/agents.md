@@ -496,3 +496,15 @@ Output files are written to the working directory.
 - adjust-a-shapes-z-order-to-just-above-a-specific-existing-shape.cs
 - add-a-shape-link-it-to-a-cell-with-a-custom-number-format-including-thousand-separator-and-display.cs
 - programmatically-retrieve-all-shapes-sort-them-by-z-order-and-output-sorted-list-to-console.cs
+- export-nonprimitive-shape-geometry-to-an-xml-file-for-external-analysis.cs
+- add-a-shape-link-it-to-a-cell-with-a-validation-list-and-ensure-shape-text-reflects-selection.cs
+- create-a-shape-set-its-z-order-to-zero-then-incrementally-increase-z-order-and-observe-layering-effect.cs
+- retrieve-a-shapes-absolute-position-then-align-another-shape-to-the-same-coordinates.cs
+- add-a-shape-retrieve-its-connection-points-and-compare-them-with-expected-points-stored-in-a-database.cs
+- add-a-shape-set-its-linked-cell-to-a-cell-with-custom-text-format-and-verify-formatted-text-appears.cs
+- add-a-shape-set-its-linked-cell-to-a-cell-with-a-custom-array-constant-and-display-values.cs
+- link-a-shape-to-a-cell-containing-a-dynamic-array-formula-and-ensure-shape-updates-with-array-changes.cs
+- add-a-shape-link-it-to-a-cell-with-a-volatile-function-and-test-automatic-updates.cs
+- add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-scientific-notation-and-verify.cs
+- add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-custom-date-and-verify.cs
+- add-a-shape-link-it-to-a-cell-using-text-for-number-format-with-custom-text-and-verify.cs
