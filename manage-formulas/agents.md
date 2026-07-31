@@ -159,3 +159,4 @@ Output files are written to the working directory.
 - identify-formulas-that-contain-error-handling-constructs-such-as-iferror-or-ifna-for-export.cs
 - identify-formulas-that-use-the-now-deprecated-function-and-replace-them-with-the-recommended-alternative.cs
 - validate-that-all-formulas-in-a-workbook-reference-existing-cells-and-report-any-broken-references.cs
+- validate-the-syntax-of-a-userprovided-formula-string-before-inserting-it-into-a-worksheet-cell.cs
