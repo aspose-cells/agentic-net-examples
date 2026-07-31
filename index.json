@@ -2096,6 +2096,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "replace-all-vlookup-formulas-with-indexmatch-combinations-to-enhance-lookup-performance.cs",
+      "title": "Replace all VLOOKUP formulas with INDEX\u2011MATCH combinations to enhance lookup performance."
+    },
+    {
+      "category": "manage-formulas",
       "file": "replace-an-existing-named-range-with-a-larger-area-using-the-namerefersto-property-and-recalculate-formulas.cs",
       "title": "Replace an existing named range with a larger area using the Name.RefersTo property and recalculate formulas."
     },
