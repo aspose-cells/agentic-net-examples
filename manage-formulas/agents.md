@@ -135,3 +135,4 @@ Output files are written to the working directory.
 - extract-formula-text-from-array-formulas-and-save-them-to-a-json-array.cs
 - create-a-named-range-that-references-a-dynamic-list-generated-by-a-formula-enabling-dependent-calculations.cs
 - create-a-named-range-that-automatically-expands-horizontally-when-new-columns-are-added-to-the-right.cs
+- create-a-named-range-that-includes-cells-from-a-filtered-table-and-use-it-in-a-subtotal-formula.cs
