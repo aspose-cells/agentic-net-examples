@@ -76,3 +76,4 @@ Output files are written to the working directory.
 - create-a-style-object-set-solid-fill-to-light-blue-bold-font-and-apply-to-dataset-range.cs
 - apply-a-background-color-to-the-intersected-area-of-two-named-ranges-and-save-the-workbook-as-xlsx.cs
 - clear-contents-of-the-named-range-reportdata-without-deleting-the-range-definition-itself.cs
+- remove-the-named-range-summarydata-from-the-workbook-and-verify-it-no-longer-appears-in-the-collection.cs
