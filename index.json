@@ -1761,6 +1761,11 @@
     },
     {
       "category": "manage-formulas",
+      "file": "enable-iterative-calculation-with-a-maximum-of-100-iterations-and-a-convergence-threshold-of-0001.cs",
+      "title": "Enable iterative calculation with a maximum of 100 iterations and a convergence threshold of 0.001."
+    },
+    {
+      "category": "manage-formulas",
       "file": "evaluate-formulas-within-a-defined-range-a1d20-without-recalculating-the-entire-workbook.cs",
       "title": "Evaluate formulas within a defined range A1:D20 without recalculating the entire workbook."
     },
