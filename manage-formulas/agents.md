@@ -70,3 +70,4 @@ Output files are written to the working directory.
 - replace-an-existing-named-range-with-a-larger-area-using-the-namerefersto-property-and-recalculate-formulas.cs
 - create-a-named-range-that-references-a-dynamic-array-spill-and-use-it-in-subsequent-formulas.cs
 - create-a-composite-named-range-by-unioning-three-separate-ranges-and-assign-a-custom-style-to-the-result.cs
+- create-two-separate-range-objects-perform-union-operation-and-iterate-through-the-resulting-collection.cs
