@@ -7181,6 +7181,11 @@
     },
     {
       "category": "working-with-worksheets",
+      "file": "return-a-dictionary-mapping-worksheet-names-to-a-boolean-indicating-whether-each-sheet-is-empty.cs",
+      "title": "Return a dictionary mapping worksheet names to a boolean indicating whether each sheet is empty."
+    },
+    {
+      "category": "working-with-worksheets",
       "file": "return-true-if-a-worksheet-contains-both-data-rows-and-at-least-one-shape-for-mixedcontent-detection.cs",
       "title": "Return true if a worksheet contains both data rows and at least one shape for mixed\u2011content detection."
     },
