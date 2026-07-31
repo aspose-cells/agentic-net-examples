@@ -330,3 +330,4 @@ Output files are written to the working directory.
 - set-tabid-to-a-hash-of-the-worksheet-name-for-deterministic-identifier-generation-across-multiple-workbooks.cs
 - count-how-many-initialized-cells-contain-only-formatting-applied-and-log-the-result-for-each-worksheet.cs
 - flag-worksheets-where-maxdatarow-is-1-but-shapecollectioncount-exceeds-zero-indicating-shapeonly-content.cs
+- duplicate-a-worksheet-assign-a-new-tabid-and-clear-all-cell-values-while-preserving-formatting.cs
