@@ -156,3 +156,4 @@ Output files are written to the working directory.
 - identify-and-list-formulas-that-use-the-indirect-function-noting-their-potential-impact-on-calculation-speed.cs
 - identify-and-list-formulas-that-use-volatile-functions-and-log-their-locations-for-performance-optimization.cs
 - identify-formulas-that-contain-hardcoded-constants-and-suggest-converting-them-to-named-parameters.cs
+- identify-formulas-that-contain-error-handling-constructs-such-as-iferror-or-ifna-for-export.cs
